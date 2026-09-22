@@ -37,13 +37,12 @@ The decisions everything else inherits, and the repo that holds them.
 
 ## tokens — Token pipeline
 
-`#######···` 69% · 9 of 13 done · due 2026-10-25
+`########··` 77% · 10 of 13 done · due 2026-10-25
 
 Design decisions as data, compiled to CSS custom properties.
 
 ### backlog
 
-- [ ] [`0020`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0020-compile-tokens-to-css-custom-properties-with-terrazzo.md) Compile tokens to CSS custom properties with Terrazzo <sup>feature · tokens · p0</sup>
 - [ ] [`0021`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0021-express-light-and-dark-through-the-dtcg-resolver-module.md) Express light and dark through the DTCG Resolver module <sup>feature · tokens · p0</sup>
 - [ ] [`0022`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0022-check-contrast-for-every-semantic-fg-bg-pair-in-ci.md) Check contrast for every semantic fg/bg pair in CI <sup>feature · tokens · p1</sup>
 - [ ] [`0023`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0023-generate-a-token-reference-page-from-the-sources.md) Generate a token reference page from the sources <sup>docs · docs · p2</sup>
@@ -55,6 +54,7 @@ Design decisions as data, compiled to CSS custom properties.
 - [x] [`0017`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0017-write-dtcg-sources-for-colour-space-size-radius-type-motion-and-elevation.md) Write DTCG sources for colour, space, size, radius, type, motion and elevation <sup>feature · tokens · p0</sup>
 - [x] [`0018`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0018-generate-the-colour-scales-in-oklch.md) Generate the colour scales in OKLCH <sup>feature · tokens · p0</sup>
 - [x] [`0019`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0019-build-the-semantic-colour-tier-surface-fg-border-accent-and-status-roles.md) Build the semantic colour tier: surface, fg, border, accent and status roles <sup>feature · tokens · p0</sup>
+- [x] [`0020`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0020-compile-tokens-to-css-custom-properties-with-terrazzo.md) Compile tokens to CSS custom properties with Terrazzo <sup>feature · tokens · p0</sup>
 - [x] [`0058`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0058-adopt-the-theme-model-seven-inputs-every-token-derived.md) Adopt the theme model: seven inputs, every token derived <sup>decision · tokens · p0</sup>
 - [x] [`0059`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0059-choose-the-typeface-inter.md) Choose the typeface: Inter <sup>decision · tokens · p0</sup>
 - [x] [`0060`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0060-set-the-elevation-rules-surfaces-follow-the-input-overlays-always-lift.md) Set the elevation rules: surfaces follow the input, overlays always lift <sup>decision · tokens · p1</sup>

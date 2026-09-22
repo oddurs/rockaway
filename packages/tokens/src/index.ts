@@ -32,6 +32,7 @@ export {
   type TypePairing,
 } from './inputs.ts';
 export { durations, easings, motion } from './motion.ts';
+export { type TokenName, vars } from './names.ts';
 export {
   type Hue,
   huePalette,
