@@ -17,15 +17,14 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "peerDependencies": {
-    "@rockaway/css": "workspace:^",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "dependencies": {
+    "@rockaway/css": "workspace:^",
     "react-aria-components": "1.21.1"
   },
   "devDependencies": {
-    "@rockaway/css": "workspace:*",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "react": "19.3.0",
