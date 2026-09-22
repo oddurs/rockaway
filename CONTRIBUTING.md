@@ -35,9 +35,9 @@ the decision first, in its own pull request, with the reasoning.
 
 ## The rules that keep the system coherent
 
-- **Semantic tokens only.** Component CSS reads `var(--ds-*)` semantic tokens. Needing a reference value means a semantic token is missing; add it.
+- **Semantic tokens only.** Component CSS reads `var(--rk-*)` semantic tokens. Needing a reference value means a semantic token is missing; add it.
 - **Style from state.** Component CSS keys off class names and the `data-*` attributes React Aria emits. It never depends on a React API.
-- **Stay in the layers.** All CSS lives inside `@layer ds.*`.
+- **Stay in the layers.** All CSS lives inside `@layer rk.*`.
 - **Every state has a story.** Stories are the tests. A component without stories for each state is not done.
 - **The browser floor is Baseline 2024.** Newer CSS goes behind `@supports` with a working fallback.
 

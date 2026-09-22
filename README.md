@@ -32,7 +32,7 @@ The tokens and CSS are framework-free. Only the behaviour layer is React.
 
 - **Semantic tokens only.** A component that needs a raw value has found a missing semantic token.
 - **The platform first.** OKLCH, `light-dark()`, relative colour syntax, `@layer` and container queries do the work a styling library used to. The browser floor is [Baseline 2024](https://web.dev/baseline).
-- **Your CSS wins.** Everything ships inside `@layer ds.*`, so unlayered consumer styles override it without `!important`.
+- **Your CSS wins.** Everything ships inside `@layer rk.*`, so unlayered consumer styles override it without `!important`.
 - **Accessibility is a test, not a review.** Every story runs in a real browser with axe; a violation fails the build.
 - **Decisions are written down.** Each architecture choice is a cairn item with its context, options and consequences.
 

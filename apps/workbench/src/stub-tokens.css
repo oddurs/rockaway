@@ -3,19 +3,19 @@
  * has something to render before the token pipeline exists. Delete this file
  * when the generator (cairn 0062) emits @rockaway/tokens CSS.
  */
-@layer ds.tokens {
+@layer rk.tokens {
   :root {
     color-scheme: light dark;
-    --ds-font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-    --ds-bg: light-dark(oklch(0.978 0.006 262), oklch(0.165 0.006 262));
-    --ds-surface: light-dark(oklch(1 0 0), oklch(0.205 0.006 262));
-    --ds-border: light-dark(oklch(0.905 0.006 262), oklch(0.31 0.006 262));
-    --ds-fg: light-dark(oklch(0.2 0.012 262), oklch(0.965 0.004 262));
-    --ds-fg-muted: light-dark(oklch(0.47 0.006 262), oklch(0.74 0.006 262));
-    --ds-accent: light-dark(oklch(0.52 0.17 262), oklch(0.74 0.15 262));
-    --ds-on-accent: light-dark(oklch(1 0 0), oklch(0.2 0.04 262));
-    --ds-space: 4px;
-    --ds-radius: 6px;
+    --rk-font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+    --rk-bg: light-dark(oklch(0.978 0.006 262), oklch(0.165 0.006 262));
+    --rk-surface: light-dark(oklch(1 0 0), oklch(0.205 0.006 262));
+    --rk-border: light-dark(oklch(0.905 0.006 262), oklch(0.31 0.006 262));
+    --rk-fg: light-dark(oklch(0.2 0.012 262), oklch(0.965 0.004 262));
+    --rk-fg-muted: light-dark(oklch(0.47 0.006 262), oklch(0.74 0.006 262));
+    --rk-accent: light-dark(oklch(0.52 0.17 262), oklch(0.74 0.15 262));
+    --rk-on-accent: light-dark(oklch(1 0 0), oklch(0.2 0.04 262));
+    --rk-space: 4px;
+    --rk-radius: 6px;
   }
 
   :root[data-theme="light"] {
@@ -27,19 +27,19 @@
   }
 
   :root[data-density="compact"] {
-    --ds-space: 3px;
+    --rk-space: 3px;
   }
 
   :root[data-density="comfortable"] {
-    --ds-space: 5px;
+    --rk-space: 5px;
   }
 }
 
-@layer ds.base {
+@layer rk.base {
   body {
-    background: var(--ds-bg);
-    color: var(--ds-fg);
-    font-family: var(--ds-font-sans);
+    background: var(--rk-bg);
+    color: var(--rk-fg);
+    font-family: var(--rk-font-sans);
     font-optical-sizing: auto;
   }
 }
