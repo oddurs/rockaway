@@ -19,6 +19,7 @@ effort: l
 - [ ] Every category exists as DTCG 2025.10 JSON, and validates
 - [ ] Reference tier holds raw values only; nothing references upward
 - [ ] Type scale and spacing are generated from ratios, not listed by hand
+- [ ] Every value on the concept canvas's Default board is reproduced, or the difference is recorded with its reason
 
 ## 2026-09-22
 

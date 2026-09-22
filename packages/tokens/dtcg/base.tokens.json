@@ -1,0 +1,53 @@
+{
+  "font": {
+    "$description": "Font primitives (reference tier). Read through the text styles, not directly.",
+    "family": {
+      "$type": "fontFamily",
+      "sans": {
+        "$value": [
+          "Inter Variable",
+          "Inter",
+          "Inter Fallback",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif"
+        ]
+      },
+      "display": {
+        "$value": [
+          "Inter Variable",
+          "Inter",
+          "Inter Fallback",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif"
+        ]
+      },
+      "mono": {
+        "$value": [
+          "ui-monospace",
+          "SF Mono",
+          "Cascadia Code",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ]
+      }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": {
+        "$value": 400
+      },
+      "medium": {
+        "$value": 500
+      },
+      "semibold": {
+        "$value": 600
+      },
+      "bold": {
+        "$value": 700
+      }
+    }
+  }
+}

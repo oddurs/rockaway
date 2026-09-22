@@ -1,0 +1,65 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+  "version": "2025.10",
+  "name": "rockaway",
+  "description": "Theme tokens generated from the theme inputs. Mode and density are runtime contexts (cairn 0058).",
+  "sets": {
+    "base": {
+      "sources": [
+        {
+          "$ref": "base.tokens.json"
+        }
+      ]
+    }
+  },
+  "modifiers": {
+    "mode": {
+      "description": "Colour mode. Overrides palette.* only.",
+      "contexts": {
+        "light": [
+          {
+            "$ref": "palette.light.tokens.json"
+          }
+        ],
+        "dark": [
+          {
+            "$ref": "palette.dark.tokens.json"
+          }
+        ]
+      },
+      "default": "light"
+    },
+    "density": {
+      "description": "Density. Overrides space.* and size.* only.",
+      "contexts": {
+        "compact": [
+          {
+            "$ref": "density.compact.tokens.json"
+          }
+        ],
+        "regular": [
+          {
+            "$ref": "density.regular.tokens.json"
+          }
+        ],
+        "comfortable": [
+          {
+            "$ref": "density.comfortable.tokens.json"
+          }
+        ]
+      },
+      "default": "regular"
+    }
+  },
+  "resolutionOrder": [
+    {
+      "$ref": "#/sets/base"
+    },
+    {
+      "$ref": "#/modifiers/mode"
+    },
+    {
+      "$ref": "#/modifiers/density"
+    }
+  ]
+}

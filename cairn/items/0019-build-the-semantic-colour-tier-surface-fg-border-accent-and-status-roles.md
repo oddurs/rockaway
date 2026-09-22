@@ -17,6 +17,7 @@ effort: m
 
 ## Acceptance criteria
 
+- [ ] Semantic colour tokens are aliases to palette steps, written once for both modes
 - [ ] Roles named by intent (`surface.raised`, `fg.muted`, `border.focus`), never by hue
 - [ ] Interactive states come from relative colour syntax, not extra tokens where possible
 
