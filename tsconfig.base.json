@@ -13,6 +13,7 @@
     "isolatedDeclarations": true,
     "declaration": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "customConditions": ["@rockaway/source"]
   }
 }

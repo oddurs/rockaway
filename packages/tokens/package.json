@@ -8,7 +8,10 @@
     "*.css"
   ],
   "exports": {
-    ".": "./dist/index.js",
+    ".": {
+      "@rockaway/source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
     "./tokens.css": "./css/tokens.css",
     "./dtcg/*": "./dtcg/*",
     "./themes/*": "./themes/*",
