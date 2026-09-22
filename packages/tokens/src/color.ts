@@ -74,3 +74,31 @@ export function round(color: Oklch): Oklch {
     h: Math.round(color.h * 10) / 10,
   };
 }
+
+/** Linear-light to gamma-encoded sRGB, per channel. */
+function encode(v: number): number {
+  const c = Math.min(1, Math.max(0, v));
+  return c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
+}
+
+/**
+ * APCA lightness contrast (Lc), 0.0.98G-4g constants. Positive for dark text
+ * on light, negative for light on dark. Reported next to WCAG 2, not enforced:
+ * WCAG 3 is not yet a standard.
+ */
+export function apca(text: Oklch, background: Oklch): number {
+  const y = (color: Oklch) => {
+    const [r, g, b] = toLinearSrgb(toSrgbGamut(color)).map(encode) as [number, number, number];
+    const raw = 0.2126729 * r ** 2.4 + 0.7151522 * g ** 2.4 + 0.072175 * b ** 2.4;
+    // biome-ignore lint/suspicious/noApproximativeNumericConstant: APCA's published black-clamp exponent, not √2.
+    return raw > 0.022 ? raw : raw + (0.022 - raw) ** 1.414;
+  };
+  const [t, bg] = [y(text), y(background)];
+  if (Math.abs(bg - t) < 0.0005) return 0;
+  if (bg > t) {
+    const sapc = (bg ** 0.56 - t ** 0.57) * 1.14;
+    return sapc < 0.1 ? 0 : (sapc - 0.027) * 100;
+  }
+  const sapc = (bg ** 0.65 - t ** 0.62) * 1.14;
+  return sapc > -0.1 ? 0 : (sapc + 0.027) * 100;
+}

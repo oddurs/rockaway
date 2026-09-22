@@ -83,10 +83,10 @@ describe.each(cases.map((c) => [c.name, c] as const))('contrast: %s', (_, { all 
       }
   });
 
-  test('control borders (8) and solids (9) reach 3:1 against both surfaces', () => {
+  test('control borders (8) and solids (9) reach 3:1 against every page and surface step', () => {
     for (const hue of hues)
       for (const step of [8, 9] as const)
-        for (const bg of [1, 2] as const) {
+        for (const bg of [1, 2, 3] as const) {
           expect(
             contrast(all[hue][step], all.neutral[bg]),
             `${hue}.${step} on neutral.${bg}`,

@@ -77,7 +77,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.645,
+            0.62,
             0.006,
             262
           ]
@@ -209,7 +209,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.62,
+            0.6,
             0.15,
             262
           ]
@@ -341,7 +341,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.62,
+            0.6,
             0.15,
             262
           ]
@@ -473,7 +473,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.62,
+            0.6,
             0.15,
             150
           ]
@@ -605,7 +605,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.62,
+            0.6,
             0.15,
             75
           ]
@@ -737,7 +737,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.62,
+            0.6,
             0.15,
             27
           ]

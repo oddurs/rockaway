@@ -1,4 +1,5 @@
 export {
+  apca,
   contrast,
   inSrgbGamut,
   luminance,
@@ -7,6 +8,7 @@ export {
   toLinearSrgb,
   toSrgbGamut,
 } from './color.ts';
+export { type ContrastResult, checkContrast, describeFailure } from './contrast-check.ts';
 export { controlHeight, controlSizes, space, spaceSteps, unit } from './density.ts';
 export type {
   ColorValue,
@@ -33,6 +35,7 @@ export {
 } from './inputs.ts';
 export { durations, easings, motion } from './motion.ts';
 export { type TokenName, vars } from './names.ts';
+export { type Pair, pairs } from './pairs.ts';
 export {
   type Hue,
   huePalette,
@@ -47,6 +50,7 @@ export {
   steps,
 } from './palette.ts';
 export { radii } from './radius.ts';
+export { resolveTree, resolveValue } from './resolve.ts';
 export { type Intent, intents, semanticColors } from './semantic.ts';
 export {
   baseSize,

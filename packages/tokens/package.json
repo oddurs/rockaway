@@ -25,7 +25,8 @@
     "generate": "node scripts/generate.ts && tz build",
     "generate:check": "node scripts/generate.ts --check && node scripts/check-css.ts",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "contrast": "node scripts/contrast.ts"
   },
   "repository": {
     "type": "git",

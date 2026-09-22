@@ -6,7 +6,8 @@
  *   2      page background
  *   3–5    element background: rest, hover, active
  *   6–7    border: subtle, default (decorative: separators, cards)
- *   8      control border: 3:1 against steps 1 and 2 (WCAG 1.4.11)
+ *   8      control border: 3:1 against steps 1, 2 and 3 (WCAG 1.4.11),
+ *          so it holds on any page, including a tone-elevation one
  *   9–10   solid fill and its hover
  *   11     low-contrast text
  *   12     high-contrast text
@@ -48,14 +49,14 @@ type Ramp = readonly [
 
 /** Lightness per step for neutrals. */
 const neutralL: Record<Mode, Ramp> = {
-  light: [1, 0.978, 0.956, 0.935, 0.914, 0.905, 0.875, 0.645, 0.555, 0.52, 0.48, 0.21],
-  dark: [0.205, 0.165, 0.245, 0.27, 0.295, 0.31, 0.37, 0.52, 0.6, 0.64, 0.76, 0.965],
+  light: [1, 0.978, 0.956, 0.935, 0.914, 0.905, 0.875, 0.62, 0.555, 0.52, 0.48, 0.21],
+  dark: [0.205, 0.165, 0.245, 0.27, 0.295, 0.31, 0.37, 0.54, 0.6, 0.64, 0.76, 0.965],
 };
 
 /** Lightness and relative chroma per step for coloured hues. */
 const hueL: Record<Mode, Ramp> = {
-  light: [0.99, 0.975, 0.955, 0.93, 0.905, 0.87, 0.82, 0.62, 0.52, 0.47, 0.45, 0.28],
-  dark: [0.21, 0.18, 0.27, 0.31, 0.35, 0.4, 0.46, 0.54, 0.74, 0.78, 0.84, 0.93],
+  light: [0.99, 0.975, 0.955, 0.93, 0.905, 0.87, 0.82, 0.6, 0.52, 0.47, 0.45, 0.28],
+  dark: [0.21, 0.18, 0.27, 0.31, 0.35, 0.4, 0.46, 0.56, 0.74, 0.78, 0.84, 0.93],
 };
 const hueC: Record<Mode, Ramp> = {
   light: [0.005, 0.012, 0.03, 0.045, 0.06, 0.075, 0.1, 0.15, 0.17, 0.165, 0.15, 0.08],
