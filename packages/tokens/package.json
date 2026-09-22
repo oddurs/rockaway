@@ -7,15 +7,21 @@
   "sideEffects": false,
   "exports": {
     ".": "./dist/index.js",
+    "./dtcg/*": "./dtcg/*",
+    "./themes/*": "./themes/*",
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "dtcg",
+    "themes"
   ],
   "scripts": {
     "build": "tsdown",
-    "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "generate": "node scripts/generate.ts",
+    "generate:check": "node scripts/generate.ts --check",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -27,6 +33,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@terrazzo/cli": "2.7.1",
     "@types/node": "26.6.2",
     "vite": "8.3.0",
     "vitest": "4.1.11"

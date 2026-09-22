@@ -6,7 +6,14 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/dist", "!cairn/items", "!ROADMAP.md", "!CLAUDE.md"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!packages/tokens/dtcg",
+      "!cairn/items",
+      "!ROADMAP.md",
+      "!CLAUDE.md"
+    ]
   },
   "formatter": {
     "enabled": true,
