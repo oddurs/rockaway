@@ -1,0 +1,290 @@
+# cairn.toml — the schema for rockaway's roadmap and issues.
+#
+# The architecture has three contracts, and this schema is shaped around them:
+#
+#   tokens     decisions as data (DTCG 2025.10, reference → semantic → component)
+#   behaviour  accessibility, focus, state — headless, unstyled
+#   style      CSS that reads tokens and behaviour state, nothing else
+#
+# Every item carries a `layer` so the board can show which contract it touches.
+#
+#   cairn config          show the resolved schema
+#   cairn check           validate every item against it
+#   cairn roadmap -i      milestones with progress and their items
+#
+# Order is behaviour: the order of [[status]] blocks is the board's column order,
+# and the order of an enum's `values` is its sort order. Do not tidy it.
+
+format = 3
+
+[project]
+name = "rockaway"
+description = "A design system built on three contracts: tokens, behaviour, style."
+dir = "cairn/items"
+id_width = 4
+default_type = "feature"
+default_status = "backlog"
+url = "https://github.com/oddurs/rockaway/blob/main"
+
+# ─── Item types ──────────────────────────────────────────────────────────────
+# Work types first, then the one type work is filed under.
+
+[[type]]
+name = "component"
+icon = "◇"
+color = "magenta"
+description = "A component: its anatomy, states, tokens and accessibility contract."
+template = """
+## Purpose
+
+What it is for, and what it is deliberately not for.
+
+## Anatomy
+
+Parts and slots, e.g. `<Select.Trigger>`, `<Select.Popover>`.
+
+## States
+
+The `data-*` attributes it exposes. These are public API.
+
+## Tokens consumed
+
+Semantic tokens only. A component that needs a reference token is a missing semantic.
+
+## Accessibility
+
+Role, keyboard map, focus behaviour, announcements.
+
+## Acceptance criteria
+
+- [ ] Built on the behaviour layer; no hand-rolled focus or keyboard logic
+- [ ] Styled from `data-*` state and semantic tokens only
+- [ ] Stories cover every state, and run as Vitest browser tests
+- [ ] axe passes; keyboard walkthrough recorded in the story
+- [ ] Light, dark and forced-colors verified
+- [ ] Metadata written: props, anatomy, when to use, when not to
+"""
+
+[[type]]
+name = "feature"
+icon = "+"
+color = "cyan"
+description = "A capability of the system that is not a component."
+template = """
+## Problem
+
+## Proposal
+
+## Acceptance criteria
+
+- [ ]
+"""
+
+[[type]]
+name = "decision"
+icon = "◆"
+color = "yellow"
+description = "An architecture decision, recorded with its reasoning."
+template = """
+## Context
+
+What forces the decision, and what it constrains downstream.
+
+## Options
+
+## Decision
+
+## Consequences
+
+What becomes easy, what becomes hard, and what would make us revisit it.
+"""
+
+[[type]]
+name = "spike"
+icon = "?"
+color = "blue"
+description = "Time-boxed research that ends in a finding, not in code."
+template = """
+## Question
+
+One question this spike answers.
+
+## Time box
+
+## Findings
+
+## Recommendation
+"""
+
+[[type]]
+name = "bug"
+icon = "!"
+color = "red"
+template = """
+## What happens
+
+## What should happen
+
+## Reproduction
+
+1.
+"""
+
+[[type]]
+name = "chore"
+icon = "~"
+color = "gray"
+
+[[type]]
+name = "docs"
+icon = "¶"
+color = "white"
+
+[[type]]
+name = "milestone"
+icon = "▲"
+color = "green"
+description = "A stage of the system, in the order it has to be built."
+groups = "one"
+inverse = "scheduled"
+
+# ─── Statuses ────────────────────────────────────────────────────────────────
+# `category` is what cairn reasons about; the names are ours.
+
+[[status]]
+name = "backlog"
+category = "open"
+color = "gray"
+
+[[status]]
+name = "ready"
+category = "open"
+color = "blue"
+
+[[status]]
+name = "doing"
+label = "in progress"
+category = "active"
+color = "yellow"
+
+[[status]]
+name = "review"
+label = "in review"
+category = "active"
+color = "magenta"
+
+[[status]]
+name = "blocked"
+category = "active"
+color = "red"
+
+[[status]]
+name = "done"
+category = "done"
+color = "green"
+
+[[status]]
+name = "dropped"
+category = "dropped"
+color = "gray"
+board = false
+
+# ─── Fields ──────────────────────────────────────────────────────────────────
+
+[[field]]
+name = "layer"
+kind = "enum"
+values = ["tokens", "css", "behaviour", "components", "docs", "tooling", "distribution"]
+column = true
+description = "Which contract this touches, in dependency order"
+
+[[field]]
+name = "priority"
+kind = "enum"
+values = ["p0", "p1", "p2", "p3"]
+default = "p2"
+column = true
+description = "p0 blocks the milestone"
+
+[[field]]
+name = "effort"
+kind = "enum"
+values = ["s", "m", "l", "xl"]
+description = "Rough size, not an estimate"
+
+[[field]]
+name = "due"
+kind = "date"
+description = "When a milestone is meant to land"
+
+[[field]]
+name = "part_of"
+kind = "ref"
+target = "*"
+cardinality = "many"
+acyclic = true
+rollup = true
+inverse = "contains"
+description = "A larger piece of work this belongs to"
+
+# ─── Saved views ─────────────────────────────────────────────────────────────
+# `cairn list --view NAME`, `cairn board --view NAME`
+
+[[view]]
+name = "now"
+description = "What is actually being worked on"
+filter = "category=active"
+sort = "priority,id"
+
+[[view]]
+name = "next"
+description = "Ready work, nearest milestone first"
+filter = "ready=true,category=open"
+sort = "milestone,priority,id"
+
+[[view]]
+name = "decisions"
+description = "Open architecture decisions: these gate everything downstream"
+filter = "type=decision|spike,category!=done,category!=dropped"
+sort = "priority,milestone"
+columns = ["id", "type", "title", "milestone", "priority"]
+
+[[view]]
+name = "components"
+description = "The component inventory"
+filter = "type=component,category!=dropped"
+sort = "milestone,status,id"
+columns = ["id", "title", "status", "milestone", "priority"]
+
+[[view]]
+name = "tokens"
+description = "Everything touching the token pipeline"
+filter = "layer=tokens,category!=done"
+sort = "priority,id"
+
+[[view]]
+name = "triage"
+description = "Items that still need a milestone"
+filter = "milestone=,category!=done,category!=dropped"
+columns = ["id", "type", "title", "created"]
+
+# ─── Hooks ───────────────────────────────────────────────────────────────────
+
+[hooks]
+after-create = "cairn render -q"
+after-change = "cairn render -q"
+after-remove = "cairn render -q"
+
+# ─── Rendered roadmap ────────────────────────────────────────────────────────
+
+[render]
+target = "ROADMAP.md"
+title = "rockaway — Roadmap"
+header = "cairn/roadmap-intro.md"
+group_by = "milestone"
+include = "category!=dropped"
+checkbox = true
+show_ids = true
+progress = true
+group_by_status = true
+link_items = true

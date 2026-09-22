@@ -1,0 +1,10 @@
+packages:
+  - packages/*
+  - apps/*
+
+# Exact versions, so a lockfile diff is always a deliberate change.
+savePrefix: ''
+
+# Install scripts are blocked by default; allow only what is known to need one.
+allowBuilds:
+  esbuild: true

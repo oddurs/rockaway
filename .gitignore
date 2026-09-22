@@ -1,0 +1,8 @@
+node_modules/
+dist/
+storybook-static/
+coverage/
+.vitest-attachments/
+__screenshots__/
+*.tsbuildinfo
+.DS_Store

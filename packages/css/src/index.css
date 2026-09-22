@@ -1,0 +1,8 @@
+/*
+ * @rockaway/css
+ *
+ * The layer order is declared once, first, so it holds no matter which file a
+ * consumer imports. Consumer CSS outside these layers always wins, without
+ * !important (cairn 0009, 0024).
+ */
+@layer ds.reset, ds.tokens, ds.base, ds.components, ds.utilities, ds.overrides;

@@ -1,0 +1,23 @@
+name: Bug
+description: Something in rockaway behaves incorrectly
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should happen
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Package versions, browser, and the smallest code that shows it.
+    validations:
+      required: true

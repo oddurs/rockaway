@@ -1,0 +1,43 @@
+{
+  "name": "@rockaway/react",
+  "version": "0.0.0",
+  "description": "React primitives for rockaway, built on React Aria Components.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "@rockaway/css": "workspace:^",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "react-aria-components": "1.21.1"
+  },
+  "devDependencies": {
+    "@rockaway/css": "workspace:*",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oddurs/rockaway.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/oddurs/rockaway",
+  "publishConfig": {
+    "access": "public"
+  }
+}

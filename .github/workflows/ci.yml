@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Lint, typecheck, build, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Lint and format
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Install Chromium
+        run: pnpm --filter workbench exec playwright install --with-deps chromium
+
+      - name: Stories as tests (Vitest browser mode + axe)
+        run: pnpm test
+
+  roadmap:
+    name: Roadmap is valid and rendered
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install cairn
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/oddurs/cairn/main/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        env:
+          CAIRN_VERSION: v0.2.1
+          CAIRN_BINDIR: /home/runner/.local/bin
+
+      - name: Items match the schema
+        run: cairn check
+
+      - name: ROADMAP.md is up to date
+        run: cairn render --check

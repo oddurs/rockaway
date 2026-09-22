@@ -1,0 +1,28 @@
+{
+  "name": "@rockaway/tokens",
+  "version": "0.0.0",
+  "description": "Design tokens for rockaway: DTCG sources, the resolver, and CSS custom properties.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oddurs/rockaway.git",
+    "directory": "packages/tokens"
+  },
+  "homepage": "https://github.com/oddurs/rockaway",
+  "publishConfig": {
+    "access": "public"
+  }
+}

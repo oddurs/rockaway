@@ -1,0 +1,26 @@
+{
+  "name": "@rockaway/css",
+  "version": "0.0.0",
+  "description": "The CSS contract for rockaway: cascade layers, reset, base and component styles.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./src/index.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oddurs/rockaway.git",
+    "directory": "packages/css"
+  },
+  "homepage": "https://github.com/oddurs/rockaway",
+  "publishConfig": {
+    "access": "public"
+  }
+}
