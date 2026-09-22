@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,10 @@
   "homepage": "https://github.com/oddurs/rockaway",
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.2",
+    "vite": "8.3.0",
+    "vitest": "4.1.11"
   }
 }
