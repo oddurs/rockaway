@@ -39,3 +39,7 @@ depend on nothing.
 - Zero runtime, no build step for consumers, legible in DevTools
 - No type checking of class names. Mitigated by the React package being the only producer of them, and by stories covering every variant
 - Tailwind v4 becomes an adapter generated from tokens, not the authoring language
+
+## 2026-09-22
+
+Prefix renamed from `ds` to `rk` by 0016: classes are `.rk-*`, layers `rk.*`, custom properties `--rk-*`. The decision is otherwise unchanged.

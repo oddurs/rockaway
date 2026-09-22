@@ -11,19 +11,19 @@ function Surfaces() {
   const card: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 'calc(var(--ds-space) * 3)',
-    padding: 'calc(var(--ds-space) * 6)',
+    gap: 'calc(var(--rk-space) * 3)',
+    padding: 'calc(var(--rk-space) * 6)',
     width: 360,
-    background: 'var(--ds-surface)',
-    border: '1px solid var(--ds-border)',
-    borderRadius: 'calc(var(--ds-radius) * 1.5)',
+    background: 'var(--rk-surface)',
+    border: '1px solid var(--rk-border)',
+    borderRadius: 'calc(var(--rk-radius) * 1.5)',
   };
   return (
     <section aria-labelledby="surfaces-title" style={card}>
       <h1 id="surfaces-title" style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>
         Timeless bones, any skin.
       </h1>
-      <p style={{ margin: 0, color: 'var(--ds-fg-muted)', lineHeight: 1.55 }}>
+      <p style={{ margin: 0, color: 'var(--rk-fg-muted)', lineHeight: 1.55 }}>
         Rendered from stub tokens until the generator lands.
       </p>
       <button
@@ -31,11 +31,11 @@ function Surfaces() {
         style={{
           alignSelf: 'flex-start',
           height: 38,
-          padding: '0 calc(var(--ds-space) * 4)',
+          padding: '0 calc(var(--rk-space) * 4)',
           border: 'none',
-          borderRadius: 'var(--ds-radius)',
-          background: 'var(--ds-accent)',
-          color: 'var(--ds-on-accent)',
+          borderRadius: 'var(--rk-radius)',
+          background: 'var(--rk-accent)',
+          color: 'var(--rk-on-accent)',
           font: 'inherit',
           fontWeight: 500,
         }}

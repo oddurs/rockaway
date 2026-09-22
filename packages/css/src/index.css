@@ -5,4 +5,4 @@
  * consumer imports. Consumer CSS outside these layers always wins, without
  * !important (cairn 0009, 0024).
  */
-@layer ds.reset, ds.tokens, ds.base, ds.components, ds.utilities, ds.overrides;
+@layer rk.reset, rk.tokens, rk.base, rk.components, rk.utilities, rk.overrides;

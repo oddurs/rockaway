@@ -13,7 +13,7 @@ effort: s
 
 ## Decision
 
-One focus treatment everywhere: `box-shadow: 0 0 0 2px var(--ds-surface), 0 0 0 4px var(--ds-border-focus)`,
+One focus treatment everywhere: `box-shadow: 0 0 0 2px var(--rk-surface), 0 0 0 4px var(--rk-border-focus)`,
 shown on `:focus-visible` only. Invalid fields use a 3px tinted halo in the
 danger tone instead of a second ring.
 
