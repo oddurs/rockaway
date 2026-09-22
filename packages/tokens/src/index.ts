@@ -16,6 +16,7 @@ export type {
   Token,
   TokenType,
 } from './dtcg.ts';
+export { shadowPalette, shadows } from './elevation.ts';
 export { type GeneratedFiles, generate, resolverFile, serialize } from './generate.ts';
 export {
   type Density,
@@ -30,6 +31,7 @@ export {
   type ThemeInputs,
   type TypePairing,
 } from './inputs.ts';
+export { durations, easings, motion } from './motion.ts';
 export {
   type Hue,
   huePalette,
@@ -43,6 +45,21 @@ export {
   statusHue,
   steps,
 } from './palette.ts';
+export { radii } from './radius.ts';
 export { type Intent, intents, semanticColors } from './semantic.ts';
-export { type FontFamilies, families, weights } from './type.ts';
+export {
+  baseSize,
+  type FontFamilies,
+  families,
+  pairingWeights,
+  ratio,
+  type Size,
+  sizePx,
+  sizeRem,
+  sizeSteps,
+  type TextStyle,
+  textStyles,
+  type Weight,
+  weights,
+} from './type.ts';
 export { parseTheme } from './validate.ts';

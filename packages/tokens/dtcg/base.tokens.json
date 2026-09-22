@@ -48,6 +48,82 @@
       "bold": {
         "$value": 700
       }
+    },
+    "size": {
+      "$type": "dimension",
+      "$description": "The type scale: 14px, ratio 1.2, in rem.",
+      "xs": {
+        "$value": {
+          "value": 0.75,
+          "unit": "rem"
+        }
+      },
+      "sm": {
+        "$value": {
+          "value": 0.8125,
+          "unit": "rem"
+        }
+      },
+      "md": {
+        "$value": {
+          "value": 0.875,
+          "unit": "rem"
+        }
+      },
+      "lg": {
+        "$value": {
+          "value": 1.0625,
+          "unit": "rem"
+        }
+      },
+      "xl": {
+        "$value": {
+          "value": 1.25,
+          "unit": "rem"
+        }
+      },
+      "2xl": {
+        "$value": {
+          "value": 1.5,
+          "unit": "rem"
+        }
+      },
+      "3xl": {
+        "$value": {
+          "value": 1.8125,
+          "unit": "rem"
+        }
+      },
+      "4xl": {
+        "$value": {
+          "value": 2.1875,
+          "unit": "rem"
+        }
+      },
+      "5xl": {
+        "$value": {
+          "value": 2.625,
+          "unit": "rem"
+        }
+      },
+      "6xl": {
+        "$value": {
+          "value": 3.125,
+          "unit": "rem"
+        }
+      },
+      "7xl": {
+        "$value": {
+          "value": 3.75,
+          "unit": "rem"
+        }
+      },
+      "8xl": {
+        "$value": {
+          "value": 4.5,
+          "unit": "rem"
+        }
+      }
     }
   }
 }

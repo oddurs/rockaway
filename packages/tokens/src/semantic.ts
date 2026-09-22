@@ -24,9 +24,9 @@ function surfaces(elevation: Elevation): { page: Token; border: Token } {
     case 'tone':
       return { page: p('neutral', 3), border: transparent };
     case 'shadow':
-      return { page: p('neutral', 2), border: p('neutral', 6) };
+      return { page: p('neutral', 2), border: p('neutral', 5) };
     default:
-      return { page: p('neutral', 2), border: p('neutral', 7) };
+      return { page: p('neutral', 2), border: p('neutral', 6) };
   }
 }
 

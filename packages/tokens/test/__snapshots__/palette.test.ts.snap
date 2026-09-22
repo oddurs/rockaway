@@ -248,7 +248,7 @@ exports[`palette shape > the default theme matches its snapshot 1`] = `
       "6": {
         "c": 0.006,
         "h": 262,
-        "l": 0.32,
+        "l": 0.31,
       },
       "7": {
         "c": 0.006,
@@ -650,14 +650,14 @@ exports[`palette shape > the default theme matches its snapshot 1`] = `
         "l": 0.914,
       },
       "6": {
-        "c": 0.0038,
+        "c": 0.0036,
         "h": 262,
-        "l": 0.893,
+        "l": 0.905,
       },
       "7": {
-        "c": 0.0044,
+        "c": 0.0041,
         "h": 262,
-        "l": 0.86,
+        "l": 0.875,
       },
       "8": {
         "c": 0.006,

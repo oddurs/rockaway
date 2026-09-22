@@ -4,7 +4,16 @@
  */
 import type { Oklch } from './color.ts';
 
-export type TokenType = 'color' | 'dimension' | 'fontFamily' | 'fontWeight' | 'number';
+export type TokenType =
+  | 'color'
+  | 'cubicBezier'
+  | 'dimension'
+  | 'duration'
+  | 'fontFamily'
+  | 'fontWeight'
+  | 'number'
+  | 'shadow'
+  | 'typography';
 
 export interface ColorValue {
   readonly colorSpace: 'oklch';
