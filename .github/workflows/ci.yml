@@ -40,8 +40,11 @@ jobs:
       - name: Install Chromium
         run: pnpm --filter workbench exec playwright install --with-deps chromium
 
-      - name: Stories as tests (Vitest browser mode + axe)
+      - name: Tests (tokens, and stories in Vitest browser mode with axe)
         run: pnpm test
+
+      - name: Contrast report (every declared pair, both modes)
+        run: pnpm --filter @rockaway/tokens contrast
 
   roadmap:
     name: Roadmap is valid and rendered

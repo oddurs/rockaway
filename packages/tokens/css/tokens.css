@@ -110,7 +110,7 @@
     --rk-palette-accent-5: oklch(90.17% 0.0482 256.1);
     --rk-palette-accent-6: oklch(86.72% 0.0655 258.6);
     --rk-palette-accent-7: oklch(81.73% 0.0916 260);
-    --rk-palette-accent-8: oklch(62% 0.15 262);
+    --rk-palette-accent-8: oklch(60% 0.15 262);
     --rk-palette-accent-9: oklch(52% 0.17 262);
     --rk-palette-accent-10: oklch(47% 0.165 262);
     --rk-palette-accent-11: oklch(45% 0.15 262);
@@ -123,7 +123,7 @@
     --rk-palette-danger-5: oklch(89.9% 0.0527 28.11);
     --rk-palette-danger-6: oklch(86.69% 0.0714 27.37);
     --rk-palette-danger-7: oklch(82% 0.1 27);
-    --rk-palette-danger-8: oklch(62% 0.15 27);
+    --rk-palette-danger-8: oklch(60% 0.15 27);
     --rk-palette-danger-9: oklch(52% 0.17 27);
     --rk-palette-danger-10: oklch(47% 0.165 27);
     --rk-palette-danger-11: oklch(45% 0.15 27);
@@ -136,7 +136,7 @@
     --rk-palette-info-5: oklch(90.17% 0.0482 256.1);
     --rk-palette-info-6: oklch(86.72% 0.0655 258.6);
     --rk-palette-info-7: oklch(81.73% 0.0916 260);
-    --rk-palette-info-8: oklch(62% 0.15 262);
+    --rk-palette-info-8: oklch(60% 0.15 262);
     --rk-palette-info-9: oklch(52% 0.17 262);
     --rk-palette-info-10: oklch(47% 0.165 262);
     --rk-palette-info-11: oklch(45% 0.15 262);
@@ -149,7 +149,7 @@
     --rk-palette-neutral-5: oklch(91.4% 0.0034 262);
     --rk-palette-neutral-6: oklch(90.5% 0.0036 262);
     --rk-palette-neutral-7: oklch(87.5% 0.0041 262);
-    --rk-palette-neutral-8: oklch(64.5% 0.006 262);
+    --rk-palette-neutral-8: oklch(62% 0.006 262);
     --rk-palette-neutral-9: oklch(55.5% 0.006 262);
     --rk-palette-neutral-10: oklch(52% 0.006 262);
     --rk-palette-neutral-11: oklch(48% 0.006 262);
@@ -168,7 +168,7 @@
     --rk-palette-success-5: oklch(90.5% 0.06 150);
     --rk-palette-success-6: oklch(87% 0.075 150);
     --rk-palette-success-7: oklch(82% 0.1 150);
-    --rk-palette-success-8: oklch(62% 0.15 150);
+    --rk-palette-success-8: oklch(60% 0.15 150);
     --rk-palette-success-9: oklch(52.78% 0.1582 146.7);
     --rk-palette-success-10: oklch(47.9% 0.147 145.8);
     --rk-palette-success-11: oklch(45.75% 0.1385 146.3);
@@ -181,7 +181,7 @@
     --rk-palette-warning-5: oklch(90.5% 0.06 75);
     --rk-palette-warning-6: oklch(87% 0.075 75);
     --rk-palette-warning-7: oklch(82% 0.1 75);
-    --rk-palette-warning-8: oklch(62.19% 0.1348 69.89);
+    --rk-palette-warning-8: oklch(60.19% 0.1306 69.7);
     --rk-palette-warning-9: oklch(52.18% 0.1138 68.91);
     --rk-palette-warning-10: oklch(47.18% 0.1033 68.29);
     --rk-palette-warning-11: oklch(45.18% 0.0992 68.01);
@@ -343,7 +343,7 @@
       --rk-palette-success-10: oklch(47% 0.165 150);
       --rk-palette-success-11: oklch(45% 0.15 150);
       --rk-palette-success-12: oklch(28% 0.08 150);
-      --rk-palette-warning-8: oklch(62% 0.15 75);
+      --rk-palette-warning-8: oklch(60.04% 0.1463 73.86);
       --rk-palette-warning-9: oklch(52.16% 0.13 69.59);
       --rk-palette-warning-10: oklch(47.16% 0.1179 69.01);
       --rk-palette-warning-11: oklch(45.16% 0.1131 68.77);
@@ -394,7 +394,7 @@
       --rk-palette-success-10: oklch(47% 0.165 150);
       --rk-palette-success-11: oklch(45% 0.15 150);
       --rk-palette-success-12: oklch(28% 0.08 150);
-      --rk-palette-warning-8: oklch(62% 0.15 75);
+      --rk-palette-warning-8: oklch(60.01% 0.1484 74.54);
       --rk-palette-warning-9: oklch(52.12% 0.1319 69.71);
       --rk-palette-warning-10: oklch(47.12% 0.1196 69.17);
       --rk-palette-warning-11: oklch(45.12% 0.1147 68.91);
@@ -484,7 +484,7 @@
     --rk-palette-accent-5: oklch(90.17% 0.0482 256.1);
     --rk-palette-accent-6: oklch(86.72% 0.0655 258.6);
     --rk-palette-accent-7: oklch(81.73% 0.0916 260);
-    --rk-palette-accent-8: oklch(62% 0.15 262);
+    --rk-palette-accent-8: oklch(60% 0.15 262);
     --rk-palette-accent-9: oklch(52% 0.17 262);
     --rk-palette-accent-10: oklch(47% 0.165 262);
     --rk-palette-accent-11: oklch(45% 0.15 262);
@@ -497,7 +497,7 @@
     --rk-palette-danger-5: oklch(89.9% 0.0527 28.11);
     --rk-palette-danger-6: oklch(86.69% 0.0714 27.37);
     --rk-palette-danger-7: oklch(82% 0.1 27);
-    --rk-palette-danger-8: oklch(62% 0.15 27);
+    --rk-palette-danger-8: oklch(60% 0.15 27);
     --rk-palette-danger-9: oklch(52% 0.17 27);
     --rk-palette-danger-10: oklch(47% 0.165 27);
     --rk-palette-danger-11: oklch(45% 0.15 27);
@@ -510,7 +510,7 @@
     --rk-palette-info-5: oklch(90.17% 0.0482 256.1);
     --rk-palette-info-6: oklch(86.72% 0.0655 258.6);
     --rk-palette-info-7: oklch(81.73% 0.0916 260);
-    --rk-palette-info-8: oklch(62% 0.15 262);
+    --rk-palette-info-8: oklch(60% 0.15 262);
     --rk-palette-info-9: oklch(52% 0.17 262);
     --rk-palette-info-10: oklch(47% 0.165 262);
     --rk-palette-info-11: oklch(45% 0.15 262);
@@ -523,7 +523,7 @@
     --rk-palette-neutral-5: oklch(91.4% 0.0034 262);
     --rk-palette-neutral-6: oklch(90.5% 0.0036 262);
     --rk-palette-neutral-7: oklch(87.5% 0.0041 262);
-    --rk-palette-neutral-8: oklch(64.5% 0.006 262);
+    --rk-palette-neutral-8: oklch(62% 0.006 262);
     --rk-palette-neutral-9: oklch(55.5% 0.006 262);
     --rk-palette-neutral-10: oklch(52% 0.006 262);
     --rk-palette-neutral-11: oklch(48% 0.006 262);
@@ -542,7 +542,7 @@
     --rk-palette-success-5: oklch(90.5% 0.06 150);
     --rk-palette-success-6: oklch(87% 0.075 150);
     --rk-palette-success-7: oklch(82% 0.1 150);
-    --rk-palette-success-8: oklch(62% 0.15 150);
+    --rk-palette-success-8: oklch(60% 0.15 150);
     --rk-palette-success-9: oklch(52.78% 0.1582 146.7);
     --rk-palette-success-10: oklch(47.9% 0.147 145.8);
     --rk-palette-success-11: oklch(45.75% 0.1385 146.3);
@@ -555,7 +555,7 @@
     --rk-palette-warning-5: oklch(90.5% 0.06 75);
     --rk-palette-warning-6: oklch(87% 0.075 75);
     --rk-palette-warning-7: oklch(82% 0.1 75);
-    --rk-palette-warning-8: oklch(62.19% 0.1348 69.89);
+    --rk-palette-warning-8: oklch(60.19% 0.1306 69.7);
     --rk-palette-warning-9: oklch(52.18% 0.1138 68.91);
     --rk-palette-warning-10: oklch(47.18% 0.1033 68.29);
     --rk-palette-warning-11: oklch(45.18% 0.0992 68.01);
@@ -609,7 +609,7 @@
       --rk-palette-success-10: oklch(47% 0.165 150);
       --rk-palette-success-11: oklch(45% 0.15 150);
       --rk-palette-success-12: oklch(28% 0.08 150);
-      --rk-palette-warning-8: oklch(62% 0.15 75);
+      --rk-palette-warning-8: oklch(60.04% 0.1463 73.86);
       --rk-palette-warning-9: oklch(52.16% 0.13 69.59);
       --rk-palette-warning-10: oklch(47.16% 0.1179 69.01);
       --rk-palette-warning-11: oklch(45.16% 0.1131 68.77);
@@ -660,7 +660,7 @@
       --rk-palette-success-10: oklch(47% 0.165 150);
       --rk-palette-success-11: oklch(45% 0.15 150);
       --rk-palette-success-12: oklch(28% 0.08 150);
-      --rk-palette-warning-8: oklch(62% 0.15 75);
+      --rk-palette-warning-8: oklch(60.01% 0.1484 74.54);
       --rk-palette-warning-9: oklch(52.12% 0.1319 69.71);
       --rk-palette-warning-10: oklch(47.12% 0.1196 69.17);
       --rk-palette-warning-11: oklch(45.12% 0.1147 68.91);
@@ -751,7 +751,7 @@
       --rk-palette-accent-5: oklch(35% 0.085 262);
       --rk-palette-accent-6: oklch(40% 0.1 262);
       --rk-palette-accent-7: oklch(46% 0.12 262);
-      --rk-palette-accent-8: oklch(54% 0.14 262);
+      --rk-palette-accent-8: oklch(56% 0.14 262);
       --rk-palette-accent-9: oklch(73.49% 0.1372 260.3);
       --rk-palette-accent-10: oklch(77.35% 0.1158 258.9);
       --rk-palette-accent-11: oklch(83.43% 0.0831 257.3);
@@ -764,7 +764,7 @@
       --rk-palette-danger-5: oklch(35% 0.085 27);
       --rk-palette-danger-6: oklch(40% 0.1 27);
       --rk-palette-danger-7: oklch(46% 0.12 27);
-      --rk-palette-danger-8: oklch(54% 0.14 27);
+      --rk-palette-danger-8: oklch(56% 0.14 27);
       --rk-palette-danger-9: oklch(74% 0.15 27);
       --rk-palette-danger-10: oklch(77.3% 0.1336 27.19);
       --rk-palette-danger-11: oklch(82.71% 0.0964 27.84);
@@ -777,7 +777,7 @@
       --rk-palette-info-5: oklch(35% 0.085 262);
       --rk-palette-info-6: oklch(40% 0.1 262);
       --rk-palette-info-7: oklch(46% 0.12 262);
-      --rk-palette-info-8: oklch(54% 0.14 262);
+      --rk-palette-info-8: oklch(56% 0.14 262);
       --rk-palette-info-9: oklch(73.49% 0.1372 260.3);
       --rk-palette-info-10: oklch(77.35% 0.1158 258.9);
       --rk-palette-info-11: oklch(83.43% 0.0831 257.3);
@@ -790,7 +790,7 @@
       --rk-palette-neutral-5: oklch(29.5% 0.006 262);
       --rk-palette-neutral-6: oklch(31% 0.006 262);
       --rk-palette-neutral-7: oklch(37% 0.006 262);
-      --rk-palette-neutral-8: oklch(52% 0.006 262);
+      --rk-palette-neutral-8: oklch(54% 0.006 262);
       --rk-palette-neutral-9: oklch(60% 0.006 262);
       --rk-palette-neutral-10: oklch(64% 0.006 262);
       --rk-palette-neutral-11: oklch(76% 0.0059 262);
@@ -809,7 +809,7 @@
       --rk-palette-success-5: oklch(35% 0.085 150);
       --rk-palette-success-6: oklch(40% 0.1 150);
       --rk-palette-success-7: oklch(46% 0.12 150);
-      --rk-palette-success-8: oklch(54% 0.14 150);
+      --rk-palette-success-8: oklch(56% 0.14 150);
       --rk-palette-success-9: oklch(74% 0.15 150);
       --rk-palette-success-10: oklch(78% 0.14 150);
       --rk-palette-success-11: oklch(84% 0.11 150);
@@ -822,7 +822,7 @@
       --rk-palette-warning-5: oklch(35.11% 0.0762 69.75);
       --rk-palette-warning-6: oklch(40.15% 0.0878 68.6);
       --rk-palette-warning-7: oklch(46.18% 0.1012 68.15);
-      --rk-palette-warning-8: oklch(54.18% 0.118 69.14);
+      --rk-palette-warning-8: oklch(56.19% 0.1222 69.34);
       --rk-palette-warning-9: oklch(74% 0.15 75);
       --rk-palette-warning-10: oklch(78% 0.14 75);
       --rk-palette-warning-11: oklch(84% 0.11 75);
@@ -869,7 +869,7 @@
         --rk-palette-warning-5: oklch(35% 0.0849 74.94);
         --rk-palette-warning-6: oklch(40.03% 0.0975 73.86);
         --rk-palette-warning-7: oklch(46.08% 0.1131 72.24);
-        --rk-palette-warning-8: oklch(54.08% 0.1326 72.48);
+        --rk-palette-warning-8: oklch(56.04% 0.1365 73.86);
       }
     }
   }
@@ -909,7 +909,7 @@
         --rk-palette-warning-5: oklch(35% 0.085 75);
         --rk-palette-warning-6: oklch(40.01% 0.099 74.54);
         --rk-palette-warning-7: oklch(46.04% 0.1147 72.94);
-        --rk-palette-warning-8: oklch(54.05% 0.1345 73.17);
+        --rk-palette-warning-8: oklch(56.01% 0.1385 74.54);
       }
     }
   }
@@ -996,7 +996,7 @@
     --rk-palette-accent-5: oklch(35% 0.085 262);
     --rk-palette-accent-6: oklch(40% 0.1 262);
     --rk-palette-accent-7: oklch(46% 0.12 262);
-    --rk-palette-accent-8: oklch(54% 0.14 262);
+    --rk-palette-accent-8: oklch(56% 0.14 262);
     --rk-palette-accent-9: oklch(73.49% 0.1372 260.3);
     --rk-palette-accent-10: oklch(77.35% 0.1158 258.9);
     --rk-palette-accent-11: oklch(83.43% 0.0831 257.3);
@@ -1009,7 +1009,7 @@
     --rk-palette-danger-5: oklch(35% 0.085 27);
     --rk-palette-danger-6: oklch(40% 0.1 27);
     --rk-palette-danger-7: oklch(46% 0.12 27);
-    --rk-palette-danger-8: oklch(54% 0.14 27);
+    --rk-palette-danger-8: oklch(56% 0.14 27);
     --rk-palette-danger-9: oklch(74% 0.15 27);
     --rk-palette-danger-10: oklch(77.3% 0.1336 27.19);
     --rk-palette-danger-11: oklch(82.71% 0.0964 27.84);
@@ -1022,7 +1022,7 @@
     --rk-palette-info-5: oklch(35% 0.085 262);
     --rk-palette-info-6: oklch(40% 0.1 262);
     --rk-palette-info-7: oklch(46% 0.12 262);
-    --rk-palette-info-8: oklch(54% 0.14 262);
+    --rk-palette-info-8: oklch(56% 0.14 262);
     --rk-palette-info-9: oklch(73.49% 0.1372 260.3);
     --rk-palette-info-10: oklch(77.35% 0.1158 258.9);
     --rk-palette-info-11: oklch(83.43% 0.0831 257.3);
@@ -1035,7 +1035,7 @@
     --rk-palette-neutral-5: oklch(29.5% 0.006 262);
     --rk-palette-neutral-6: oklch(31% 0.006 262);
     --rk-palette-neutral-7: oklch(37% 0.006 262);
-    --rk-palette-neutral-8: oklch(52% 0.006 262);
+    --rk-palette-neutral-8: oklch(54% 0.006 262);
     --rk-palette-neutral-9: oklch(60% 0.006 262);
     --rk-palette-neutral-10: oklch(64% 0.006 262);
     --rk-palette-neutral-11: oklch(76% 0.0059 262);
@@ -1054,7 +1054,7 @@
     --rk-palette-success-5: oklch(35% 0.085 150);
     --rk-palette-success-6: oklch(40% 0.1 150);
     --rk-palette-success-7: oklch(46% 0.12 150);
-    --rk-palette-success-8: oklch(54% 0.14 150);
+    --rk-palette-success-8: oklch(56% 0.14 150);
     --rk-palette-success-9: oklch(74% 0.15 150);
     --rk-palette-success-10: oklch(78% 0.14 150);
     --rk-palette-success-11: oklch(84% 0.11 150);
@@ -1067,7 +1067,7 @@
     --rk-palette-warning-5: oklch(35.11% 0.0762 69.75);
     --rk-palette-warning-6: oklch(40.15% 0.0878 68.6);
     --rk-palette-warning-7: oklch(46.18% 0.1012 68.15);
-    --rk-palette-warning-8: oklch(54.18% 0.118 69.14);
+    --rk-palette-warning-8: oklch(56.19% 0.1222 69.34);
     --rk-palette-warning-9: oklch(74% 0.15 75);
     --rk-palette-warning-10: oklch(78% 0.14 75);
     --rk-palette-warning-11: oklch(84% 0.11 75);
@@ -1112,7 +1112,7 @@
       --rk-palette-warning-5: oklch(35% 0.0849 74.94);
       --rk-palette-warning-6: oklch(40.03% 0.0975 73.86);
       --rk-palette-warning-7: oklch(46.08% 0.1131 72.24);
-      --rk-palette-warning-8: oklch(54.08% 0.1326 72.48);
+      --rk-palette-warning-8: oklch(56.04% 0.1365 73.86);
     }
   }
 }
@@ -1150,7 +1150,7 @@
       --rk-palette-warning-5: oklch(35% 0.085 75);
       --rk-palette-warning-6: oklch(40.01% 0.099 74.54);
       --rk-palette-warning-7: oklch(46.04% 0.1147 72.94);
-      --rk-palette-warning-8: oklch(54.05% 0.1345 73.17);
+      --rk-palette-warning-8: oklch(56.01% 0.1385 74.54);
     }
   }
 }

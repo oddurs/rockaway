@@ -53,3 +53,7 @@ are OKLCH lightness unless noted.
 | focus ring | 2px gap + 2px accent | `focus.width` 2, `focus.offset` 2, `border.focus` = accent 9 | same |
 
 Everything else on the board (status tones, avatars, tags) reads these tokens.
+
+## 2026-09-22
+
+Superseded by 0022: `border.control` is now L 0.62 light / 0.54 dark, so it also clears 3:1 on a tone-elevation page.
