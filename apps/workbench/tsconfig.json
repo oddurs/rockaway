@@ -4,7 +4,8 @@
     "isolatedDeclarations": false,
     "declaration": false,
     "allowImportingTsExtensions": true,
-    "types": ["vite/client", "node"]
+    "types": ["vite/client", "node"],
+    "resolveJsonModule": true
   },
   "include": ["src", ".storybook", "vitest.config.ts"]
 }
