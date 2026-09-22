@@ -2,10 +2,9 @@
 id: 14
 title: 'CI: typecheck, lint, tests and cairn check on every push'
 type: chore
-status: doing
+status: done
 milestone: foundations
 assignee: Oddur Sigurdsson
-claimed: 2026-09-22
 depends_on:
 - 12
 created: 2026-09-22
@@ -17,5 +16,9 @@ effort: s
 
 ## Acceptance criteria
 
-- [ ] Typecheck, lint and Vitest run in CI
-- [ ] `cairn check` and `cairn render --check` fail the build when out of date
+- [x] Typecheck, lint and Vitest run in CI
+- [x] `cairn check` and `cairn render --check` fail the build when out of date
+
+## 2026-09-22
+
+Green on the first run: https://github.com/oddurs/rockaway/actions/runs/35687186724

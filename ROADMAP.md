@@ -20,13 +20,9 @@ by `cairn render`; edit the items, not this page.
 
 ## foundations — Foundations
 
-`#########·` 88% · 7 of 8 done · due 2026-10-04
+`##########` 100% · 8 of 8 done · due 2026-10-04
 
 The decisions everything else inherits, and the repo that holds them.
-
-### in progress
-
-- [ ] [`0014`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0014-ci-typecheck-lint-tests-and-cairn-check-on-every-push.md) CI: typecheck, lint, tests and cairn check on every push <sup>chore · tooling · p1</sup>
 
 ### done
 
@@ -37,6 +33,7 @@ The decisions everything else inherits, and the repo that holds them.
 - [x] [`0011`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0011-choose-the-distribution-model-versioned-package-plus-copy-in-registry.md) Choose the distribution model: versioned package plus copy-in registry <sup>decision · distribution · p1</sup>
 - [x] [`0012`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0012-scaffold-the-monorepo-pnpm-workspaces-tsdown-changesets-biome.md) Scaffold the monorepo: pnpm workspaces, tsdown, Changesets, Biome <sup>chore · tooling · p0</sup>
 - [x] [`0013`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0013-set-up-storybook-10-with-stories-running-as-vitest-browser-tests.md) Set up Storybook 10 with stories running as Vitest browser tests <sup>chore · tooling · p0</sup>
+- [x] [`0014`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0014-ci-typecheck-lint-tests-and-cairn-check-on-every-push.md) CI: typecheck, lint, tests and cairn check on every push <sup>chore · tooling · p1</sup>
 
 ## tokens — Token pipeline
 

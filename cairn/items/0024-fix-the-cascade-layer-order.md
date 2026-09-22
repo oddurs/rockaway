@@ -22,3 +22,7 @@ first. Consumers' unlayered CSS beats everything, which is the point.
 
 - [ ] Order declared in one file that every entry point imports first
 - [ ] A consumer can override any component style without `!important`
+
+## 2026-09-22
+
+The layer statement already exists in packages/css/src/index.css (from the scaffold). What is left here is the override test in the acceptance criteria.
