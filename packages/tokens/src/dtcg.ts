@@ -9,6 +9,7 @@ export type TokenType = 'color' | 'dimension' | 'fontFamily' | 'fontWeight' | 'n
 export interface ColorValue {
   readonly colorSpace: 'oklch';
   readonly components: readonly [number, number, number];
+  readonly alpha?: number;
 }
 
 export interface DimensionValue {

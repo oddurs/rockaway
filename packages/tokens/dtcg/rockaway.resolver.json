@@ -8,6 +8,9 @@
       "sources": [
         {
           "$ref": "base.tokens.json"
+        },
+        {
+          "$ref": "semantic.tokens.json"
         }
       ]
     }
