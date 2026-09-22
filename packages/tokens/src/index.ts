@@ -43,5 +43,6 @@ export {
   statusHue,
   steps,
 } from './palette.ts';
+export { type Intent, intents, semanticColors } from './semantic.ts';
 export { type FontFamilies, families, weights } from './type.ts';
 export { parseTheme } from './validate.ts';

@@ -1,0 +1,185 @@
+{
+  "bg": {
+    "$type": "color",
+    "$description": "Backgrounds. Components read these, never palette steps.",
+    "page": {
+      "$value": "{palette.neutral.2}",
+      "$description": "The page behind everything."
+    },
+    "surface": {
+      "$value": "{palette.neutral.1}",
+      "$description": "Raised surfaces: cards, panels, menus, dialogs."
+    },
+    "subtle": {
+      "$value": "{palette.neutral.3}",
+      "$description": "Quiet element backgrounds: inputs in tone, wells, code."
+    },
+    "hover": {
+      "$value": "{palette.neutral.4}",
+      "$description": "An element under the pointer."
+    },
+    "active": {
+      "$value": "{palette.neutral.5}",
+      "$description": "An element being pressed, or selected."
+    },
+    "inverse": {
+      "$value": "{palette.neutral.12}",
+      "$description": "Tooltips and toasts: the opposite of the page."
+    },
+    "accent": {
+      "solid": {
+        "$value": "{palette.accent.9}",
+        "$description": "Filled accent backgrounds: buttons, badges, selected states."
+      },
+      "solid-hover": {
+        "$value": "{palette.accent.10}"
+      },
+      "subtle": {
+        "$value": "{palette.accent.3}",
+        "$description": "Tinted accent backgrounds: callouts, highlights."
+      }
+    },
+    "info": {
+      "solid": {
+        "$value": "{palette.info.9}",
+        "$description": "Filled info backgrounds: buttons, badges, selected states."
+      },
+      "solid-hover": {
+        "$value": "{palette.info.10}"
+      },
+      "subtle": {
+        "$value": "{palette.info.3}",
+        "$description": "Tinted info backgrounds: callouts, highlights."
+      }
+    },
+    "success": {
+      "solid": {
+        "$value": "{palette.success.9}",
+        "$description": "Filled success backgrounds: buttons, badges, selected states."
+      },
+      "solid-hover": {
+        "$value": "{palette.success.10}"
+      },
+      "subtle": {
+        "$value": "{palette.success.3}",
+        "$description": "Tinted success backgrounds: callouts, highlights."
+      }
+    },
+    "warning": {
+      "solid": {
+        "$value": "{palette.warning.9}",
+        "$description": "Filled warning backgrounds: buttons, badges, selected states."
+      },
+      "solid-hover": {
+        "$value": "{palette.warning.10}"
+      },
+      "subtle": {
+        "$value": "{palette.warning.3}",
+        "$description": "Tinted warning backgrounds: callouts, highlights."
+      }
+    },
+    "danger": {
+      "solid": {
+        "$value": "{palette.danger.9}",
+        "$description": "Filled danger backgrounds: buttons, badges, selected states."
+      },
+      "solid-hover": {
+        "$value": "{palette.danger.10}"
+      },
+      "subtle": {
+        "$value": "{palette.danger.3}",
+        "$description": "Tinted danger backgrounds: callouts, highlights."
+      }
+    }
+  },
+  "fg": {
+    "$type": "color",
+    "$description": "Text and icons.",
+    "default": {
+      "$value": "{palette.neutral.12}",
+      "$description": "Body text. At least 7:1 on every background."
+    },
+    "muted": {
+      "$value": "{palette.neutral.11}",
+      "$description": "Secondary text. At least 4.5:1 on every background."
+    },
+    "disabled": {
+      "$value": "{palette.neutral.8}",
+      "$description": "Disabled text. Exempt from contrast minimums, and so not for anything that must be read."
+    },
+    "on-inverse": {
+      "$value": "{palette.neutral.1}"
+    },
+    "accent": {
+      "$value": "{palette.accent.11}",
+      "$description": "Links and accent text."
+    },
+    "info": {
+      "$value": "{palette.info.11}"
+    },
+    "success": {
+      "$value": "{palette.success.11}"
+    },
+    "warning": {
+      "$value": "{palette.warning.11}"
+    },
+    "danger": {
+      "$value": "{palette.danger.11}"
+    },
+    "on-accent": {
+      "$value": "{palette.accent.contrast}",
+      "$description": "Text on bg.accent.solid."
+    },
+    "on-info": {
+      "$value": "{palette.info.contrast}"
+    },
+    "on-success": {
+      "$value": "{palette.success.contrast}"
+    },
+    "on-warning": {
+      "$value": "{palette.warning.contrast}"
+    },
+    "on-danger": {
+      "$value": "{palette.danger.contrast}"
+    }
+  },
+  "border": {
+    "$type": "color",
+    "$description": "Borders and outlines.",
+    "subtle": {
+      "$value": "{palette.neutral.6}",
+      "$description": "Separators inside a surface."
+    },
+    "default": {
+      "$value": "{palette.neutral.7}",
+      "$description": "Decorative edges: cards, dividers."
+    },
+    "control": {
+      "$value": "{palette.neutral.8}",
+      "$description": "The boundary of an input or control. At least 3:1 (WCAG 1.4.11)."
+    },
+    "surface": {
+      "$value": "{palette.neutral.7}",
+      "$description": "Resting surfaces. Follows the elevation input (0060)."
+    },
+    "focus": {
+      "$value": "{palette.accent.9}",
+      "$description": "The focus ring (0061)."
+    },
+    "accent": {
+      "$value": "{palette.accent.8}"
+    },
+    "info": {
+      "$value": "{palette.info.8}"
+    },
+    "success": {
+      "$value": "{palette.success.8}"
+    },
+    "warning": {
+      "$value": "{palette.warning.8}"
+    },
+    "danger": {
+      "$value": "{palette.danger.8}"
+    }
+  }
+}

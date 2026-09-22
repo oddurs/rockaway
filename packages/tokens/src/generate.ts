@@ -3,6 +3,7 @@
  * The output is committed and reviewed, so a changed rule is a visible diff.
  *
  *   base.tokens.json               font primitives (reference tier)
+ *   semantic.tokens.json           semantic colours, aliases to palette steps
  *   palette.{mode}.tokens.json     palettes, one file per `mode` context
  *   density.{density}.tokens.json  space and control sizes, one per `density` context
  *   rockaway.resolver.json         how they combine
@@ -12,6 +13,7 @@ import { controlSizes, space } from './density.ts';
 import { color, type Group, px, type ResolverDocument } from './dtcg.ts';
 import { type Density, densities, type Mode, modes, type ThemeInputs } from './inputs.ts';
 import { hues, type PaletteKey, palettes, steps } from './palette.ts';
+import { semanticColors } from './semantic.ts';
 import { families, weights } from './type.ts';
 
 export type GeneratedFiles = ReadonlyMap<string, unknown>;
@@ -82,7 +84,7 @@ function resolver(): ResolverDocument {
     name: 'rockaway',
     description:
       'Theme tokens generated from the theme inputs. Mode and density are runtime contexts (cairn 0058).',
-    sets: { base: { sources: [ref('base.tokens.json')] } },
+    sets: { base: { sources: [ref('base.tokens.json'), ref('semantic.tokens.json')] } },
     modifiers: {
       mode: {
         description: 'Colour mode. Overrides palette.* only.',
@@ -102,6 +104,7 @@ function resolver(): ResolverDocument {
 export function generate(inputs: ThemeInputs): GeneratedFiles {
   const files = new Map<string, unknown>();
   files.set('base.tokens.json', base(inputs));
+  files.set('semantic.tokens.json', semanticColors(inputs.elevation));
   for (const m of modes) files.set(`palette.${m}.tokens.json`, palette(inputs, m));
   for (const d of densities) files.set(`density.${d}.tokens.json`, density(d));
   files.set(resolverFile, resolver());

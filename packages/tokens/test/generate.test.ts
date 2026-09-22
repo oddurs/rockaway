@@ -54,7 +54,7 @@ describe('generated files', () => {
     for (const [name, doc] of files) {
       if (name === resolverFile) continue;
       for (const [id, token, type] of tokens(doc as Node)) {
-        if (type !== 'color') continue;
+        if (type !== 'color' || typeof token.$value === 'string') continue;
         const v = token.$value as { colorSpace: string; components: number[] };
         expect(v.colorSpace, id).toBe('oklch');
         const [l, c, h] = v.components as [number, number, number];
@@ -79,7 +79,39 @@ describe('generated files', () => {
       const groups = Object.keys(doc as Node).filter((k) => !k.startsWith('$'));
       if (name.startsWith('palette.')) expect(groups, name).toEqual(['palette']);
       if (name.startsWith('density.')) expect(groups, name).toEqual(['space', 'size']);
+      if (name === 'semantic.tokens.json') expect(groups, name).toEqual(['bg', 'fg', 'border']);
     }
+  });
+
+  test('every semantic alias names a palette step that exists in both modes (0019)', () => {
+    const semantic = files.get('semantic.tokens.json') as Node;
+    const aliases = [...tokens(semantic)].filter(([, t]) => typeof t.$value === 'string');
+    expect(aliases.length).toBeGreaterThan(30);
+    for (const mode of ['light', 'dark']) {
+      const palette = files.get(`palette.${mode}.tokens.json`) as Node;
+      for (const [id, t] of aliases) {
+        const target = (t.$value as string).slice(1, -1).split('.');
+        expect(target[0], id).toBe('palette');
+        const found = target.reduce<unknown>((n, k) => (n as Node | undefined)?.[k], palette);
+        expect(found, `${id} → ${t.$value} in ${mode}`).toBeDefined();
+      }
+    }
+  });
+
+  test('surfaces follow the elevation input (0060)', () => {
+    const page = (e: 'border' | 'shadow' | 'tone') =>
+      ((generate({ ...defaultTheme, elevation: e }).get('semantic.tokens.json') as Node).bg as Node)
+        .page as Node;
+    const border = (e: 'border' | 'shadow' | 'tone') =>
+      (
+        (generate({ ...defaultTheme, elevation: e }).get('semantic.tokens.json') as Node)
+          .border as Node
+      ).surface as Node;
+    expect(page('border').$value).toBe('{palette.neutral.2}');
+    expect(page('tone').$value).toBe('{palette.neutral.3}');
+    expect(border('border').$value).toBe('{palette.neutral.7}');
+    expect(border('shadow').$value).toBe('{palette.neutral.6}');
+    expect((border('tone').$value as { alpha: number }).alpha).toBe(0);
   });
 });
 
