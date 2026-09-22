@@ -37,7 +37,7 @@ The decisions everything else inherits, and the repo that holds them.
 
 ## tokens — Token pipeline
 
-`###·······` 23% · 3 of 13 done · due 2026-10-25
+`####······` 31% · 4 of 13 done · due 2026-10-25
 
 Design decisions as data, compiled to CSS custom properties.
 
@@ -53,15 +53,12 @@ Design decisions as data, compiled to CSS custom properties.
 - [ ] [`0023`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0023-generate-a-token-reference-page-from-the-sources.md) Generate a token reference page from the sources <sup>docs · docs · p2</sup>
 - [ ] [`0062`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0062-build-the-theme-generator-inputs-in-dtcg-sources-out.md) Build the theme generator: inputs in, DTCG sources out <sup>feature · tokens · p0</sup>
 
-### ready
-
-- [ ] [`0060`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0060-set-the-elevation-rules-surfaces-follow-the-input-overlays-always-lift.md) Set the elevation rules: surfaces follow the input, overlays always lift <sup>decision · tokens · p1</sup>
-
 ### done
 
 - [x] [`0016`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0016-define-the-token-taxonomy-and-naming-reference-semantic-component.md) Define the token taxonomy and naming: reference, semantic, component <sup>decision · tokens · p0</sup>
 - [x] [`0058`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0058-adopt-the-theme-model-seven-inputs-every-token-derived.md) Adopt the theme model: seven inputs, every token derived <sup>decision · tokens · p0</sup>
 - [x] [`0059`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0059-choose-the-typeface-inter.md) Choose the typeface: Inter <sup>decision · tokens · p0</sup>
+- [x] [`0060`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0060-set-the-elevation-rules-surfaces-follow-the-input-overlays-always-lift.md) Set the elevation rules: surfaces follow the input, overlays always lift <sup>decision · tokens · p1</sup>
 
 ## runtime — Runtime CSS
 
