@@ -2,8 +2,9 @@
 id: 21
 title: Express light and dark through the DTCG Resolver module
 type: feature
-status: backlog
+status: done
 milestone: tokens
+assignee: Oddur Sigurdsson
 depends_on:
 - 19
 - 20
@@ -17,8 +18,9 @@ effort: m
 
 ## Acceptance criteria
 
-- [ ] One semantic tier, two resolutions; no component knows which is active
-- [ ] Output uses `light-dark()` with `color-scheme`, plus an explicit `[data-theme]` override
+- [x] One semantic tier, two resolutions; no component knows which is active
+- [x] Per-context blocks (0015): `prefers-color-scheme` by default, `[data-theme]` and `[data-density]` on any element, each mode block setting `color-scheme`
+- [x] Contexts nest, verified in a real browser
 
 ## 2026-09-22
 

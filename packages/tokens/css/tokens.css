@@ -4,6 +4,7 @@
 
 @layer rk.tokens {
   :root {
+    color-scheme: light;
     /* Filled accent backgrounds: buttons, badges, selected states. */
     --rk-bg-accent-solid: var(--rk-palette-accent-9);
     --rk-bg-accent-solid-hover: var(--rk-palette-accent-10);
@@ -303,6 +304,7 @@
 @media (color-gamut: p3) {
   @layer rk.tokens {
     :root {
+      color-scheme: light;
       /* Tinted accent backgrounds: callouts, highlights. */
       --rk-bg-accent-subtle: var(--rk-palette-accent-3);
       /* Tinted danger backgrounds: callouts, highlights. */
@@ -353,6 +355,7 @@
 @media (color-gamut: rec2020) {
   @layer rk.tokens {
     :root {
+      color-scheme: light;
       /* Tinted accent backgrounds: callouts, highlights. */
       --rk-bg-accent-subtle: var(--rk-palette-accent-3);
       /* Tinted danger backgrounds: callouts, highlights. */
@@ -397,5 +400,826 @@
       --rk-palette-warning-11: oklch(45.12% 0.1147 68.91);
       --rk-palette-warning-12: oklch(28.07% 0.0712 69.32);
     }
+  }
+}
+
+@layer rk.tokens {
+  [data-theme='light'] {
+    color-scheme: light;
+    /* Filled accent backgrounds: buttons, badges, selected states. */
+    --rk-bg-accent-solid: var(--rk-palette-accent-9);
+    --rk-bg-accent-solid-hover: var(--rk-palette-accent-10);
+    /* Tinted accent backgrounds: callouts, highlights. */
+    --rk-bg-accent-subtle: var(--rk-palette-accent-3);
+    /* An element being pressed, or selected. */
+    --rk-bg-active: var(--rk-palette-neutral-5);
+    /* Filled danger backgrounds: buttons, badges, selected states. */
+    --rk-bg-danger-solid: var(--rk-palette-danger-9);
+    --rk-bg-danger-solid-hover: var(--rk-palette-danger-10);
+    /* Tinted danger backgrounds: callouts, highlights. */
+    --rk-bg-danger-subtle: var(--rk-palette-danger-3);
+    /* An element under the pointer. */
+    --rk-bg-hover: var(--rk-palette-neutral-4);
+    /* Filled info backgrounds: buttons, badges, selected states. */
+    --rk-bg-info-solid: var(--rk-palette-info-9);
+    --rk-bg-info-solid-hover: var(--rk-palette-info-10);
+    /* Tinted info backgrounds: callouts, highlights. */
+    --rk-bg-info-subtle: var(--rk-palette-info-3);
+    /* Tooltips and toasts: the opposite of the page. */
+    --rk-bg-inverse: var(--rk-palette-neutral-12);
+    /* The page behind everything. */
+    --rk-bg-page: var(--rk-palette-neutral-2);
+    /* Quiet element backgrounds: inputs in tone, wells, code. */
+    --rk-bg-subtle: var(--rk-palette-neutral-3);
+    /* Filled success backgrounds: buttons, badges, selected states. */
+    --rk-bg-success-solid: var(--rk-palette-success-9);
+    --rk-bg-success-solid-hover: var(--rk-palette-success-10);
+    /* Tinted success backgrounds: callouts, highlights. */
+    --rk-bg-success-subtle: var(--rk-palette-success-3);
+    /* Raised surfaces: cards, panels, menus, dialogs. */
+    --rk-bg-surface: var(--rk-palette-neutral-1);
+    /* Filled warning backgrounds: buttons, badges, selected states. */
+    --rk-bg-warning-solid: var(--rk-palette-warning-9);
+    --rk-bg-warning-solid-hover: var(--rk-palette-warning-10);
+    /* Tinted warning backgrounds: callouts, highlights. */
+    --rk-bg-warning-subtle: var(--rk-palette-warning-3);
+    --rk-border-accent: var(--rk-palette-accent-8);
+    /* The boundary of an input or control. At least 3:1 (WCAG 1.4.11). */
+    --rk-border-control: var(--rk-palette-neutral-8);
+    --rk-border-danger: var(--rk-palette-danger-8);
+    /* Decorative edges: cards, dividers. */
+    --rk-border-default: var(--rk-palette-neutral-7);
+    /* The focus ring (0061). */
+    --rk-border-focus: var(--rk-palette-accent-9);
+    --rk-border-info: var(--rk-palette-info-8);
+    /* Separators inside a surface. */
+    --rk-border-subtle: var(--rk-palette-neutral-6);
+    --rk-border-success: var(--rk-palette-success-8);
+    /* Resting surfaces. Follows the elevation input (0060). */
+    --rk-border-surface: var(--rk-palette-neutral-6);
+    --rk-border-warning: var(--rk-palette-warning-8);
+    /* Links and accent text. */
+    --rk-fg-accent: var(--rk-palette-accent-11);
+    --rk-fg-danger: var(--rk-palette-danger-11);
+    /* Body text. At least 7:1 on every background. */
+    --rk-fg-default: var(--rk-palette-neutral-12);
+    /* Disabled text. Exempt from contrast minimums, and so not for anything that must be read. */
+    --rk-fg-disabled: var(--rk-palette-neutral-8);
+    --rk-fg-info: var(--rk-palette-info-11);
+    /* Secondary text. At least 4.5:1 on every background. */
+    --rk-fg-muted: var(--rk-palette-neutral-11);
+    /* Text on bg.accent.solid. */
+    --rk-fg-on-accent: var(--rk-palette-accent-contrast);
+    --rk-fg-on-danger: var(--rk-palette-danger-contrast);
+    --rk-fg-on-info: var(--rk-palette-info-contrast);
+    --rk-fg-on-inverse: var(--rk-palette-neutral-1);
+    --rk-fg-on-success: var(--rk-palette-success-contrast);
+    --rk-fg-on-warning: var(--rk-palette-warning-contrast);
+    --rk-fg-success: var(--rk-palette-success-11);
+    --rk-fg-warning: var(--rk-palette-warning-11);
+    --rk-palette-accent-1: oklch(98.99% 0.0047 260.4);
+    --rk-palette-accent-2: oklch(97.49% 0.0118 261.5);
+    --rk-palette-accent-3: oklch(95.31% 0.0228 253.8);
+    --rk-palette-accent-4: oklch(92.74% 0.0354 255.2);
+    --rk-palette-accent-5: oklch(90.17% 0.0482 256.1);
+    --rk-palette-accent-6: oklch(86.72% 0.0655 258.6);
+    --rk-palette-accent-7: oklch(81.73% 0.0916 260);
+    --rk-palette-accent-8: oklch(62% 0.15 262);
+    --rk-palette-accent-9: oklch(52% 0.17 262);
+    --rk-palette-accent-10: oklch(47% 0.165 262);
+    --rk-palette-accent-11: oklch(45% 0.15 262);
+    --rk-palette-accent-12: oklch(28% 0.08 262);
+    --rk-palette-accent-contrast: oklch(100% 0 262);
+    --rk-palette-danger-1: oklch(98.99% 0.0049 27.27);
+    --rk-palette-danger-2: oklch(97.5% 0.012 27);
+    --rk-palette-danger-3: oklch(95.08% 0.0246 29.02);
+    --rk-palette-danger-4: oklch(92.47% 0.0384 28.48);
+    --rk-palette-danger-5: oklch(89.9% 0.0527 28.11);
+    --rk-palette-danger-6: oklch(86.69% 0.0714 27.37);
+    --rk-palette-danger-7: oklch(82% 0.1 27);
+    --rk-palette-danger-8: oklch(62% 0.15 27);
+    --rk-palette-danger-9: oklch(52% 0.17 27);
+    --rk-palette-danger-10: oklch(47% 0.165 27);
+    --rk-palette-danger-11: oklch(45% 0.15 27);
+    --rk-palette-danger-12: oklch(28% 0.08 27);
+    --rk-palette-danger-contrast: oklch(100% 0 27);
+    --rk-palette-info-1: oklch(98.99% 0.0047 260.4);
+    --rk-palette-info-2: oklch(97.49% 0.0118 261.5);
+    --rk-palette-info-3: oklch(95.31% 0.0228 253.8);
+    --rk-palette-info-4: oklch(92.74% 0.0354 255.2);
+    --rk-palette-info-5: oklch(90.17% 0.0482 256.1);
+    --rk-palette-info-6: oklch(86.72% 0.0655 258.6);
+    --rk-palette-info-7: oklch(81.73% 0.0916 260);
+    --rk-palette-info-8: oklch(62% 0.15 262);
+    --rk-palette-info-9: oklch(52% 0.17 262);
+    --rk-palette-info-10: oklch(47% 0.165 262);
+    --rk-palette-info-11: oklch(45% 0.15 262);
+    --rk-palette-info-12: oklch(28% 0.08 262);
+    --rk-palette-info-contrast: oklch(100% 0 262);
+    --rk-palette-neutral-1: oklch(100% 0 262);
+    --rk-palette-neutral-2: oklch(97.8% 0.002 262);
+    --rk-palette-neutral-3: oklch(95.6% 0.0025 262);
+    --rk-palette-neutral-4: oklch(93.5% 0.003 262);
+    --rk-palette-neutral-5: oklch(91.4% 0.0034 262);
+    --rk-palette-neutral-6: oklch(90.5% 0.0036 262);
+    --rk-palette-neutral-7: oklch(87.5% 0.0041 262);
+    --rk-palette-neutral-8: oklch(64.5% 0.006 262);
+    --rk-palette-neutral-9: oklch(55.5% 0.006 262);
+    --rk-palette-neutral-10: oklch(52% 0.006 262);
+    --rk-palette-neutral-11: oklch(48% 0.006 262);
+    --rk-palette-neutral-12: oklch(21% 0.0055 262);
+    --rk-palette-neutral-contrast: oklch(100% 0 262);
+    --rk-palette-scrim: oklch(25% 0.02 262 / 0.28);
+    --rk-palette-shadow-ambient: oklch(20% 0.02 262 / 0.07);
+    --rk-palette-shadow-contact: oklch(20% 0.02 262 / 0.05);
+    --rk-palette-shadow-control: oklch(20% 0.02 262 / 0.06);
+    --rk-palette-shadow-overlay-ambient: oklch(20% 0.02 262 / 0.14);
+    --rk-palette-shadow-overlay-contact: oklch(20% 0.02 262 / 0.08);
+    --rk-palette-success-1: oklch(99% 0.005 150);
+    --rk-palette-success-2: oklch(97.5% 0.012 150);
+    --rk-palette-success-3: oklch(95.5% 0.03 150);
+    --rk-palette-success-4: oklch(93% 0.045 150);
+    --rk-palette-success-5: oklch(90.5% 0.06 150);
+    --rk-palette-success-6: oklch(87% 0.075 150);
+    --rk-palette-success-7: oklch(82% 0.1 150);
+    --rk-palette-success-8: oklch(62% 0.15 150);
+    --rk-palette-success-9: oklch(52.78% 0.1582 146.7);
+    --rk-palette-success-10: oklch(47.9% 0.147 145.8);
+    --rk-palette-success-11: oklch(45.75% 0.1385 146.3);
+    --rk-palette-success-12: oklch(28.09% 0.0787 149.3);
+    --rk-palette-success-contrast: oklch(100% 0 150);
+    --rk-palette-warning-1: oklch(99% 0.005 75);
+    --rk-palette-warning-2: oklch(97.5% 0.012 75);
+    --rk-palette-warning-3: oklch(95.5% 0.03 75);
+    --rk-palette-warning-4: oklch(93% 0.045 75);
+    --rk-palette-warning-5: oklch(90.5% 0.06 75);
+    --rk-palette-warning-6: oklch(87% 0.075 75);
+    --rk-palette-warning-7: oklch(82% 0.1 75);
+    --rk-palette-warning-8: oklch(62.19% 0.1348 69.89);
+    --rk-palette-warning-9: oklch(52.18% 0.1138 68.91);
+    --rk-palette-warning-10: oklch(47.18% 0.1033 68.29);
+    --rk-palette-warning-11: oklch(45.18% 0.0992 68.01);
+    --rk-palette-warning-12: oklch(28.17% 0.0637 64);
+    --rk-palette-warning-contrast: oklch(100% 0 75);
+    --rk-shadow-control: 0px 1px 2px 0px var(--rk-palette-shadow-control);
+    --rk-shadow-overlay: 0px 1px 2px 0px var(--rk-palette-shadow-overlay-contact), 0px 14px 36px 0px var(--rk-palette-shadow-overlay-ambient);
+    --rk-shadow-surface: 0px 0px 0px 0px var(--rk-palette-shadow-control);
+  }
+}
+
+@media (color-gamut: p3) {
+  @layer rk.tokens {
+    [data-theme='light'] {
+      color-scheme: light;
+      /* Tinted accent backgrounds: callouts, highlights. */
+      --rk-bg-accent-subtle: var(--rk-palette-accent-3);
+      /* Tinted danger backgrounds: callouts, highlights. */
+      --rk-bg-danger-subtle: var(--rk-palette-danger-3);
+      /* Tinted info backgrounds: callouts, highlights. */
+      --rk-bg-info-subtle: var(--rk-palette-info-3);
+      /* Filled success backgrounds: buttons, badges, selected states. */
+      --rk-bg-success-solid: var(--rk-palette-success-9);
+      --rk-bg-success-solid-hover: var(--rk-palette-success-10);
+      /* Filled warning backgrounds: buttons, badges, selected states. */
+      --rk-bg-warning-solid: var(--rk-palette-warning-9);
+      --rk-bg-warning-solid-hover: var(--rk-palette-warning-10);
+      --rk-border-warning: var(--rk-palette-warning-8);
+      --rk-fg-success: var(--rk-palette-success-11);
+      --rk-fg-warning: var(--rk-palette-warning-11);
+      --rk-palette-accent-1: oklch(99% 0.005 262);
+      --rk-palette-accent-2: oklch(97.5% 0.012 262);
+      --rk-palette-accent-3: oklch(95.36% 0.0245 256.3);
+      --rk-palette-accent-4: oklch(92.82% 0.0381 257.5);
+      --rk-palette-accent-5: oklch(90.27% 0.052 258.3);
+      --rk-palette-accent-6: oklch(86.87% 0.0705 260.6);
+      --rk-palette-accent-7: oklch(81.95% 0.0984 261.6);
+      --rk-palette-danger-1: oklch(99% 0.005 27);
+      --rk-palette-danger-3: oklch(95.46% 0.0294 27.23);
+      --rk-palette-danger-4: oklch(93% 0.045 27);
+      --rk-palette-danger-5: oklch(90.5% 0.06 27);
+      --rk-palette-danger-6: oklch(87% 0.075 27);
+      --rk-palette-info-1: oklch(99% 0.005 262);
+      --rk-palette-info-2: oklch(97.5% 0.012 262);
+      --rk-palette-info-3: oklch(95.36% 0.0245 256.3);
+      --rk-palette-info-4: oklch(92.82% 0.0381 257.5);
+      --rk-palette-info-5: oklch(90.27% 0.052 258.3);
+      --rk-palette-info-6: oklch(86.87% 0.0705 260.6);
+      --rk-palette-info-7: oklch(81.95% 0.0984 261.6);
+      --rk-palette-success-9: oklch(52% 0.17 150);
+      --rk-palette-success-10: oklch(47% 0.165 150);
+      --rk-palette-success-11: oklch(45% 0.15 150);
+      --rk-palette-success-12: oklch(28% 0.08 150);
+      --rk-palette-warning-8: oklch(62% 0.15 75);
+      --rk-palette-warning-9: oklch(52.16% 0.13 69.59);
+      --rk-palette-warning-10: oklch(47.16% 0.1179 69.01);
+      --rk-palette-warning-11: oklch(45.16% 0.1131 68.77);
+      --rk-palette-warning-12: oklch(28.1% 0.0704 68.6);
+    }
+  }
+}
+
+@media (color-gamut: rec2020) {
+  @layer rk.tokens {
+    [data-theme='light'] {
+      color-scheme: light;
+      /* Tinted accent backgrounds: callouts, highlights. */
+      --rk-bg-accent-subtle: var(--rk-palette-accent-3);
+      /* Tinted danger backgrounds: callouts, highlights. */
+      --rk-bg-danger-subtle: var(--rk-palette-danger-3);
+      /* Tinted info backgrounds: callouts, highlights. */
+      --rk-bg-info-subtle: var(--rk-palette-info-3);
+      /* Filled success backgrounds: buttons, badges, selected states. */
+      --rk-bg-success-solid: var(--rk-palette-success-9);
+      --rk-bg-success-solid-hover: var(--rk-palette-success-10);
+      /* Filled warning backgrounds: buttons, badges, selected states. */
+      --rk-bg-warning-solid: var(--rk-palette-warning-9);
+      --rk-bg-warning-solid-hover: var(--rk-palette-warning-10);
+      --rk-border-warning: var(--rk-palette-warning-8);
+      --rk-fg-success: var(--rk-palette-success-11);
+      --rk-fg-warning: var(--rk-palette-warning-11);
+      --rk-palette-accent-1: oklch(99% 0.005 262);
+      --rk-palette-accent-2: oklch(97.5% 0.012 262);
+      --rk-palette-accent-3: oklch(95.4% 0.0246 257.2);
+      --rk-palette-accent-4: oklch(92.87% 0.0383 258.4);
+      --rk-palette-accent-5: oklch(90.34% 0.0522 259.1);
+      --rk-palette-accent-6: oklch(86.92% 0.0712 261);
+      --rk-palette-accent-7: oklch(81.99% 0.0995 261.9);
+      --rk-palette-danger-1: oklch(99% 0.005 27);
+      --rk-palette-danger-3: oklch(95.5% 0.03 27);
+      --rk-palette-danger-4: oklch(93% 0.045 27);
+      --rk-palette-danger-5: oklch(90.5% 0.06 27);
+      --rk-palette-danger-6: oklch(87% 0.075 27);
+      --rk-palette-info-1: oklch(99% 0.005 262);
+      --rk-palette-info-2: oklch(97.5% 0.012 262);
+      --rk-palette-info-3: oklch(95.4% 0.0246 257.2);
+      --rk-palette-info-4: oklch(92.87% 0.0383 258.4);
+      --rk-palette-info-5: oklch(90.34% 0.0522 259.1);
+      --rk-palette-info-6: oklch(86.92% 0.0712 261);
+      --rk-palette-info-7: oklch(81.99% 0.0995 261.9);
+      --rk-palette-success-9: oklch(52% 0.17 150);
+      --rk-palette-success-10: oklch(47% 0.165 150);
+      --rk-palette-success-11: oklch(45% 0.15 150);
+      --rk-palette-success-12: oklch(28% 0.08 150);
+      --rk-palette-warning-8: oklch(62% 0.15 75);
+      --rk-palette-warning-9: oklch(52.12% 0.1319 69.71);
+      --rk-palette-warning-10: oklch(47.12% 0.1196 69.17);
+      --rk-palette-warning-11: oklch(45.12% 0.1147 68.91);
+      --rk-palette-warning-12: oklch(28.07% 0.0712 69.32);
+    }
+  }
+}
+
+@layer rk.tokens {
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      color-scheme: dark;
+      /* Filled accent backgrounds: buttons, badges, selected states. */
+      --rk-bg-accent-solid: var(--rk-palette-accent-9);
+      --rk-bg-accent-solid-hover: var(--rk-palette-accent-10);
+      /* Tinted accent backgrounds: callouts, highlights. */
+      --rk-bg-accent-subtle: var(--rk-palette-accent-3);
+      /* An element being pressed, or selected. */
+      --rk-bg-active: var(--rk-palette-neutral-5);
+      /* Filled danger backgrounds: buttons, badges, selected states. */
+      --rk-bg-danger-solid: var(--rk-palette-danger-9);
+      --rk-bg-danger-solid-hover: var(--rk-palette-danger-10);
+      /* Tinted danger backgrounds: callouts, highlights. */
+      --rk-bg-danger-subtle: var(--rk-palette-danger-3);
+      /* An element under the pointer. */
+      --rk-bg-hover: var(--rk-palette-neutral-4);
+      /* Filled info backgrounds: buttons, badges, selected states. */
+      --rk-bg-info-solid: var(--rk-palette-info-9);
+      --rk-bg-info-solid-hover: var(--rk-palette-info-10);
+      /* Tinted info backgrounds: callouts, highlights. */
+      --rk-bg-info-subtle: var(--rk-palette-info-3);
+      /* Tooltips and toasts: the opposite of the page. */
+      --rk-bg-inverse: var(--rk-palette-neutral-12);
+      /* The page behind everything. */
+      --rk-bg-page: var(--rk-palette-neutral-2);
+      /* Quiet element backgrounds: inputs in tone, wells, code. */
+      --rk-bg-subtle: var(--rk-palette-neutral-3);
+      /* Filled success backgrounds: buttons, badges, selected states. */
+      --rk-bg-success-solid: var(--rk-palette-success-9);
+      --rk-bg-success-solid-hover: var(--rk-palette-success-10);
+      /* Tinted success backgrounds: callouts, highlights. */
+      --rk-bg-success-subtle: var(--rk-palette-success-3);
+      /* Raised surfaces: cards, panels, menus, dialogs. */
+      --rk-bg-surface: var(--rk-palette-neutral-1);
+      /* Filled warning backgrounds: buttons, badges, selected states. */
+      --rk-bg-warning-solid: var(--rk-palette-warning-9);
+      --rk-bg-warning-solid-hover: var(--rk-palette-warning-10);
+      /* Tinted warning backgrounds: callouts, highlights. */
+      --rk-bg-warning-subtle: var(--rk-palette-warning-3);
+      --rk-border-accent: var(--rk-palette-accent-8);
+      /* The boundary of an input or control. At least 3:1 (WCAG 1.4.11). */
+      --rk-border-control: var(--rk-palette-neutral-8);
+      --rk-border-danger: var(--rk-palette-danger-8);
+      /* Decorative edges: cards, dividers. */
+      --rk-border-default: var(--rk-palette-neutral-7);
+      /* The focus ring (0061). */
+      --rk-border-focus: var(--rk-palette-accent-9);
+      --rk-border-info: var(--rk-palette-info-8);
+      /* Separators inside a surface. */
+      --rk-border-subtle: var(--rk-palette-neutral-6);
+      --rk-border-success: var(--rk-palette-success-8);
+      /* Resting surfaces. Follows the elevation input (0060). */
+      --rk-border-surface: var(--rk-palette-neutral-6);
+      --rk-border-warning: var(--rk-palette-warning-8);
+      /* Links and accent text. */
+      --rk-fg-accent: var(--rk-palette-accent-11);
+      --rk-fg-danger: var(--rk-palette-danger-11);
+      /* Body text. At least 7:1 on every background. */
+      --rk-fg-default: var(--rk-palette-neutral-12);
+      /* Disabled text. Exempt from contrast minimums, and so not for anything that must be read. */
+      --rk-fg-disabled: var(--rk-palette-neutral-8);
+      --rk-fg-info: var(--rk-palette-info-11);
+      /* Secondary text. At least 4.5:1 on every background. */
+      --rk-fg-muted: var(--rk-palette-neutral-11);
+      /* Text on bg.accent.solid. */
+      --rk-fg-on-accent: var(--rk-palette-accent-contrast);
+      --rk-fg-on-danger: var(--rk-palette-danger-contrast);
+      --rk-fg-on-info: var(--rk-palette-info-contrast);
+      --rk-fg-on-inverse: var(--rk-palette-neutral-1);
+      --rk-fg-on-success: var(--rk-palette-success-contrast);
+      --rk-fg-on-warning: var(--rk-palette-warning-contrast);
+      --rk-fg-success: var(--rk-palette-success-11);
+      --rk-fg-warning: var(--rk-palette-warning-11);
+      --rk-palette-accent-1: oklch(21% 0.02 262);
+      --rk-palette-accent-2: oklch(18% 0.02 262);
+      --rk-palette-accent-3: oklch(27% 0.05 262);
+      --rk-palette-accent-4: oklch(31% 0.07 262);
+      --rk-palette-accent-5: oklch(35% 0.085 262);
+      --rk-palette-accent-6: oklch(40% 0.1 262);
+      --rk-palette-accent-7: oklch(46% 0.12 262);
+      --rk-palette-accent-8: oklch(54% 0.14 262);
+      --rk-palette-accent-9: oklch(73.49% 0.1372 260.3);
+      --rk-palette-accent-10: oklch(77.35% 0.1158 258.9);
+      --rk-palette-accent-11: oklch(83.43% 0.0831 257.3);
+      --rk-palette-accent-12: oklch(92.62% 0.0364 252.5);
+      --rk-palette-accent-contrast: oklch(20% 0.04 262);
+      --rk-palette-danger-1: oklch(21% 0.02 27);
+      --rk-palette-danger-2: oklch(18% 0.02 27);
+      --rk-palette-danger-3: oklch(27% 0.05 27);
+      --rk-palette-danger-4: oklch(31% 0.07 27);
+      --rk-palette-danger-5: oklch(35% 0.085 27);
+      --rk-palette-danger-6: oklch(40% 0.1 27);
+      --rk-palette-danger-7: oklch(46% 0.12 27);
+      --rk-palette-danger-8: oklch(54% 0.14 27);
+      --rk-palette-danger-9: oklch(74% 0.15 27);
+      --rk-palette-danger-10: oklch(77.3% 0.1336 27.19);
+      --rk-palette-danger-11: oklch(82.71% 0.0964 27.84);
+      --rk-palette-danger-12: oklch(92.19% 0.04 29.14);
+      --rk-palette-danger-contrast: oklch(20% 0.04 27);
+      --rk-palette-info-1: oklch(21% 0.02 262);
+      --rk-palette-info-2: oklch(18% 0.02 262);
+      --rk-palette-info-3: oklch(27% 0.05 262);
+      --rk-palette-info-4: oklch(31% 0.07 262);
+      --rk-palette-info-5: oklch(35% 0.085 262);
+      --rk-palette-info-6: oklch(40% 0.1 262);
+      --rk-palette-info-7: oklch(46% 0.12 262);
+      --rk-palette-info-8: oklch(54% 0.14 262);
+      --rk-palette-info-9: oklch(73.49% 0.1372 260.3);
+      --rk-palette-info-10: oklch(77.35% 0.1158 258.9);
+      --rk-palette-info-11: oklch(83.43% 0.0831 257.3);
+      --rk-palette-info-12: oklch(92.62% 0.0364 252.5);
+      --rk-palette-info-contrast: oklch(20% 0.04 262);
+      --rk-palette-neutral-1: oklch(20.5% 0.0054 262);
+      --rk-palette-neutral-2: oklch(16.5% 0.0048 262);
+      --rk-palette-neutral-3: oklch(24.5% 0.0059 262);
+      --rk-palette-neutral-4: oklch(27% 0.006 262);
+      --rk-palette-neutral-5: oklch(29.5% 0.006 262);
+      --rk-palette-neutral-6: oklch(31% 0.006 262);
+      --rk-palette-neutral-7: oklch(37% 0.006 262);
+      --rk-palette-neutral-8: oklch(52% 0.006 262);
+      --rk-palette-neutral-9: oklch(60% 0.006 262);
+      --rk-palette-neutral-10: oklch(64% 0.006 262);
+      --rk-palette-neutral-11: oklch(76% 0.0059 262);
+      --rk-palette-neutral-12: oklch(96.5% 0.0023 262);
+      --rk-palette-neutral-contrast: oklch(16.5% 0.0048 262);
+      --rk-palette-scrim: oklch(0% 0 0 / 0.45);
+      --rk-palette-shadow-ambient: oklch(0% 0 262 / 0.32);
+      --rk-palette-shadow-contact: oklch(0% 0 262 / 0.4);
+      --rk-palette-shadow-control: oklch(0% 0 262 / 0);
+      --rk-palette-shadow-overlay-ambient: oklch(0% 0 262 / 0.5);
+      --rk-palette-shadow-overlay-contact: oklch(0% 0 262 / 0.5);
+      --rk-palette-success-1: oklch(21% 0.02 150);
+      --rk-palette-success-2: oklch(18% 0.02 150);
+      --rk-palette-success-3: oklch(27% 0.05 150);
+      --rk-palette-success-4: oklch(31% 0.07 150);
+      --rk-palette-success-5: oklch(35% 0.085 150);
+      --rk-palette-success-6: oklch(40% 0.1 150);
+      --rk-palette-success-7: oklch(46% 0.12 150);
+      --rk-palette-success-8: oklch(54% 0.14 150);
+      --rk-palette-success-9: oklch(74% 0.15 150);
+      --rk-palette-success-10: oklch(78% 0.14 150);
+      --rk-palette-success-11: oklch(84% 0.11 150);
+      --rk-palette-success-12: oklch(93% 0.05 150);
+      --rk-palette-success-contrast: oklch(20% 0.04 150);
+      --rk-palette-warning-1: oklch(21% 0.02 75);
+      --rk-palette-warning-2: oklch(18% 0.02 75);
+      --rk-palette-warning-3: oklch(27% 0.05 75);
+      --rk-palette-warning-4: oklch(31.05% 0.0663 72.53);
+      --rk-palette-warning-5: oklch(35.11% 0.0762 69.75);
+      --rk-palette-warning-6: oklch(40.15% 0.0878 68.6);
+      --rk-palette-warning-7: oklch(46.18% 0.1012 68.15);
+      --rk-palette-warning-8: oklch(54.18% 0.118 69.14);
+      --rk-palette-warning-9: oklch(74% 0.15 75);
+      --rk-palette-warning-10: oklch(78% 0.14 75);
+      --rk-palette-warning-11: oklch(84% 0.11 75);
+      --rk-palette-warning-12: oklch(93% 0.05 75);
+      --rk-palette-warning-contrast: oklch(20% 0.04 75);
+      --rk-shadow-control: 0px 1px 2px 0px var(--rk-palette-shadow-control);
+      --rk-shadow-overlay: 0px 1px 2px 0px var(--rk-palette-shadow-overlay-contact), 0px 14px 36px 0px var(--rk-palette-shadow-overlay-ambient);
+      --rk-shadow-surface: 0px 0px 0px 0px var(--rk-palette-shadow-control);
+    }
+  }
+}
+
+@media (color-gamut: p3) {
+  @layer rk.tokens {
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme='light']) {
+        color-scheme: dark;
+        /* Filled accent backgrounds: buttons, badges, selected states. */
+        --rk-bg-accent-solid: var(--rk-palette-accent-9);
+        --rk-bg-accent-solid-hover: var(--rk-palette-accent-10);
+        --rk-bg-danger-solid-hover: var(--rk-palette-danger-10);
+        /* Filled info backgrounds: buttons, badges, selected states. */
+        --rk-bg-info-solid: var(--rk-palette-info-9);
+        --rk-bg-info-solid-hover: var(--rk-palette-info-10);
+        /* The focus ring (0061). */
+        --rk-border-focus: var(--rk-palette-accent-9);
+        --rk-border-warning: var(--rk-palette-warning-8);
+        /* Links and accent text. */
+        --rk-fg-accent: var(--rk-palette-accent-11);
+        --rk-fg-danger: var(--rk-palette-danger-11);
+        --rk-fg-info: var(--rk-palette-info-11);
+        --rk-palette-accent-9: oklch(73.85% 0.1463 261.5);
+        --rk-palette-accent-10: oklch(77.44% 0.1252 259.7);
+        --rk-palette-accent-11: oklch(83.42% 0.0907 257.8);
+        --rk-palette-accent-12: oklch(92.7% 0.0391 255);
+        --rk-palette-danger-10: oklch(78% 0.14 27);
+        --rk-palette-danger-11: oklch(84% 0.11 27);
+        --rk-palette-danger-12: oklch(92.82% 0.0474 27.54);
+        --rk-palette-info-9: oklch(73.85% 0.1463 261.5);
+        --rk-palette-info-10: oklch(77.44% 0.1252 259.7);
+        --rk-palette-info-11: oklch(83.42% 0.0907 257.8);
+        --rk-palette-info-12: oklch(92.7% 0.0391 255);
+        --rk-palette-warning-4: oklch(31% 0.07 75);
+        --rk-palette-warning-5: oklch(35% 0.0849 74.94);
+        --rk-palette-warning-6: oklch(40.03% 0.0975 73.86);
+        --rk-palette-warning-7: oklch(46.08% 0.1131 72.24);
+        --rk-palette-warning-8: oklch(54.08% 0.1326 72.48);
+      }
+    }
+  }
+}
+
+@media (color-gamut: rec2020) {
+  @layer rk.tokens {
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme='light']) {
+        color-scheme: dark;
+        /* Filled accent backgrounds: buttons, badges, selected states. */
+        --rk-bg-accent-solid: var(--rk-palette-accent-9);
+        --rk-bg-accent-solid-hover: var(--rk-palette-accent-10);
+        --rk-bg-danger-solid-hover: var(--rk-palette-danger-10);
+        /* Filled info backgrounds: buttons, badges, selected states. */
+        --rk-bg-info-solid: var(--rk-palette-info-9);
+        --rk-bg-info-solid-hover: var(--rk-palette-info-10);
+        /* The focus ring (0061). */
+        --rk-border-focus: var(--rk-palette-accent-9);
+        --rk-border-warning: var(--rk-palette-warning-8);
+        /* Links and accent text. */
+        --rk-fg-accent: var(--rk-palette-accent-11);
+        --rk-fg-danger: var(--rk-palette-danger-11);
+        --rk-fg-info: var(--rk-palette-info-11);
+        --rk-palette-accent-9: oklch(73.93% 0.1477 261.8);
+        --rk-palette-accent-10: oklch(77.61% 0.1257 260.5);
+        --rk-palette-accent-11: oklch(83.55% 0.091 258.6);
+        --rk-palette-accent-12: oklch(92.78% 0.0391 256.2);
+        --rk-palette-danger-10: oklch(78% 0.14 27);
+        --rk-palette-danger-11: oklch(84% 0.11 27);
+        --rk-palette-danger-12: oklch(93% 0.05 27);
+        --rk-palette-info-9: oklch(73.93% 0.1477 261.8);
+        --rk-palette-info-10: oklch(77.61% 0.1257 260.5);
+        --rk-palette-info-11: oklch(83.55% 0.091 258.6);
+        --rk-palette-info-12: oklch(92.78% 0.0391 256.2);
+        --rk-palette-warning-4: oklch(31% 0.07 75);
+        --rk-palette-warning-5: oklch(35% 0.085 75);
+        --rk-palette-warning-6: oklch(40.01% 0.099 74.54);
+        --rk-palette-warning-7: oklch(46.04% 0.1147 72.94);
+        --rk-palette-warning-8: oklch(54.05% 0.1345 73.17);
+      }
+    }
+  }
+}
+
+@layer rk.tokens {
+  [data-theme='dark'] {
+    color-scheme: dark;
+    /* Filled accent backgrounds: buttons, badges, selected states. */
+    --rk-bg-accent-solid: var(--rk-palette-accent-9);
+    --rk-bg-accent-solid-hover: var(--rk-palette-accent-10);
+    /* Tinted accent backgrounds: callouts, highlights. */
+    --rk-bg-accent-subtle: var(--rk-palette-accent-3);
+    /* An element being pressed, or selected. */
+    --rk-bg-active: var(--rk-palette-neutral-5);
+    /* Filled danger backgrounds: buttons, badges, selected states. */
+    --rk-bg-danger-solid: var(--rk-palette-danger-9);
+    --rk-bg-danger-solid-hover: var(--rk-palette-danger-10);
+    /* Tinted danger backgrounds: callouts, highlights. */
+    --rk-bg-danger-subtle: var(--rk-palette-danger-3);
+    /* An element under the pointer. */
+    --rk-bg-hover: var(--rk-palette-neutral-4);
+    /* Filled info backgrounds: buttons, badges, selected states. */
+    --rk-bg-info-solid: var(--rk-palette-info-9);
+    --rk-bg-info-solid-hover: var(--rk-palette-info-10);
+    /* Tinted info backgrounds: callouts, highlights. */
+    --rk-bg-info-subtle: var(--rk-palette-info-3);
+    /* Tooltips and toasts: the opposite of the page. */
+    --rk-bg-inverse: var(--rk-palette-neutral-12);
+    /* The page behind everything. */
+    --rk-bg-page: var(--rk-palette-neutral-2);
+    /* Quiet element backgrounds: inputs in tone, wells, code. */
+    --rk-bg-subtle: var(--rk-palette-neutral-3);
+    /* Filled success backgrounds: buttons, badges, selected states. */
+    --rk-bg-success-solid: var(--rk-palette-success-9);
+    --rk-bg-success-solid-hover: var(--rk-palette-success-10);
+    /* Tinted success backgrounds: callouts, highlights. */
+    --rk-bg-success-subtle: var(--rk-palette-success-3);
+    /* Raised surfaces: cards, panels, menus, dialogs. */
+    --rk-bg-surface: var(--rk-palette-neutral-1);
+    /* Filled warning backgrounds: buttons, badges, selected states. */
+    --rk-bg-warning-solid: var(--rk-palette-warning-9);
+    --rk-bg-warning-solid-hover: var(--rk-palette-warning-10);
+    /* Tinted warning backgrounds: callouts, highlights. */
+    --rk-bg-warning-subtle: var(--rk-palette-warning-3);
+    --rk-border-accent: var(--rk-palette-accent-8);
+    /* The boundary of an input or control. At least 3:1 (WCAG 1.4.11). */
+    --rk-border-control: var(--rk-palette-neutral-8);
+    --rk-border-danger: var(--rk-palette-danger-8);
+    /* Decorative edges: cards, dividers. */
+    --rk-border-default: var(--rk-palette-neutral-7);
+    /* The focus ring (0061). */
+    --rk-border-focus: var(--rk-palette-accent-9);
+    --rk-border-info: var(--rk-palette-info-8);
+    /* Separators inside a surface. */
+    --rk-border-subtle: var(--rk-palette-neutral-6);
+    --rk-border-success: var(--rk-palette-success-8);
+    /* Resting surfaces. Follows the elevation input (0060). */
+    --rk-border-surface: var(--rk-palette-neutral-6);
+    --rk-border-warning: var(--rk-palette-warning-8);
+    /* Links and accent text. */
+    --rk-fg-accent: var(--rk-palette-accent-11);
+    --rk-fg-danger: var(--rk-palette-danger-11);
+    /* Body text. At least 7:1 on every background. */
+    --rk-fg-default: var(--rk-palette-neutral-12);
+    /* Disabled text. Exempt from contrast minimums, and so not for anything that must be read. */
+    --rk-fg-disabled: var(--rk-palette-neutral-8);
+    --rk-fg-info: var(--rk-palette-info-11);
+    /* Secondary text. At least 4.5:1 on every background. */
+    --rk-fg-muted: var(--rk-palette-neutral-11);
+    /* Text on bg.accent.solid. */
+    --rk-fg-on-accent: var(--rk-palette-accent-contrast);
+    --rk-fg-on-danger: var(--rk-palette-danger-contrast);
+    --rk-fg-on-info: var(--rk-palette-info-contrast);
+    --rk-fg-on-inverse: var(--rk-palette-neutral-1);
+    --rk-fg-on-success: var(--rk-palette-success-contrast);
+    --rk-fg-on-warning: var(--rk-palette-warning-contrast);
+    --rk-fg-success: var(--rk-palette-success-11);
+    --rk-fg-warning: var(--rk-palette-warning-11);
+    --rk-palette-accent-1: oklch(21% 0.02 262);
+    --rk-palette-accent-2: oklch(18% 0.02 262);
+    --rk-palette-accent-3: oklch(27% 0.05 262);
+    --rk-palette-accent-4: oklch(31% 0.07 262);
+    --rk-palette-accent-5: oklch(35% 0.085 262);
+    --rk-palette-accent-6: oklch(40% 0.1 262);
+    --rk-palette-accent-7: oklch(46% 0.12 262);
+    --rk-palette-accent-8: oklch(54% 0.14 262);
+    --rk-palette-accent-9: oklch(73.49% 0.1372 260.3);
+    --rk-palette-accent-10: oklch(77.35% 0.1158 258.9);
+    --rk-palette-accent-11: oklch(83.43% 0.0831 257.3);
+    --rk-palette-accent-12: oklch(92.62% 0.0364 252.5);
+    --rk-palette-accent-contrast: oklch(20% 0.04 262);
+    --rk-palette-danger-1: oklch(21% 0.02 27);
+    --rk-palette-danger-2: oklch(18% 0.02 27);
+    --rk-palette-danger-3: oklch(27% 0.05 27);
+    --rk-palette-danger-4: oklch(31% 0.07 27);
+    --rk-palette-danger-5: oklch(35% 0.085 27);
+    --rk-palette-danger-6: oklch(40% 0.1 27);
+    --rk-palette-danger-7: oklch(46% 0.12 27);
+    --rk-palette-danger-8: oklch(54% 0.14 27);
+    --rk-palette-danger-9: oklch(74% 0.15 27);
+    --rk-palette-danger-10: oklch(77.3% 0.1336 27.19);
+    --rk-palette-danger-11: oklch(82.71% 0.0964 27.84);
+    --rk-palette-danger-12: oklch(92.19% 0.04 29.14);
+    --rk-palette-danger-contrast: oklch(20% 0.04 27);
+    --rk-palette-info-1: oklch(21% 0.02 262);
+    --rk-palette-info-2: oklch(18% 0.02 262);
+    --rk-palette-info-3: oklch(27% 0.05 262);
+    --rk-palette-info-4: oklch(31% 0.07 262);
+    --rk-palette-info-5: oklch(35% 0.085 262);
+    --rk-palette-info-6: oklch(40% 0.1 262);
+    --rk-palette-info-7: oklch(46% 0.12 262);
+    --rk-palette-info-8: oklch(54% 0.14 262);
+    --rk-palette-info-9: oklch(73.49% 0.1372 260.3);
+    --rk-palette-info-10: oklch(77.35% 0.1158 258.9);
+    --rk-palette-info-11: oklch(83.43% 0.0831 257.3);
+    --rk-palette-info-12: oklch(92.62% 0.0364 252.5);
+    --rk-palette-info-contrast: oklch(20% 0.04 262);
+    --rk-palette-neutral-1: oklch(20.5% 0.0054 262);
+    --rk-palette-neutral-2: oklch(16.5% 0.0048 262);
+    --rk-palette-neutral-3: oklch(24.5% 0.0059 262);
+    --rk-palette-neutral-4: oklch(27% 0.006 262);
+    --rk-palette-neutral-5: oklch(29.5% 0.006 262);
+    --rk-palette-neutral-6: oklch(31% 0.006 262);
+    --rk-palette-neutral-7: oklch(37% 0.006 262);
+    --rk-palette-neutral-8: oklch(52% 0.006 262);
+    --rk-palette-neutral-9: oklch(60% 0.006 262);
+    --rk-palette-neutral-10: oklch(64% 0.006 262);
+    --rk-palette-neutral-11: oklch(76% 0.0059 262);
+    --rk-palette-neutral-12: oklch(96.5% 0.0023 262);
+    --rk-palette-neutral-contrast: oklch(16.5% 0.0048 262);
+    --rk-palette-scrim: oklch(0% 0 0 / 0.45);
+    --rk-palette-shadow-ambient: oklch(0% 0 262 / 0.32);
+    --rk-palette-shadow-contact: oklch(0% 0 262 / 0.4);
+    --rk-palette-shadow-control: oklch(0% 0 262 / 0);
+    --rk-palette-shadow-overlay-ambient: oklch(0% 0 262 / 0.5);
+    --rk-palette-shadow-overlay-contact: oklch(0% 0 262 / 0.5);
+    --rk-palette-success-1: oklch(21% 0.02 150);
+    --rk-palette-success-2: oklch(18% 0.02 150);
+    --rk-palette-success-3: oklch(27% 0.05 150);
+    --rk-palette-success-4: oklch(31% 0.07 150);
+    --rk-palette-success-5: oklch(35% 0.085 150);
+    --rk-palette-success-6: oklch(40% 0.1 150);
+    --rk-palette-success-7: oklch(46% 0.12 150);
+    --rk-palette-success-8: oklch(54% 0.14 150);
+    --rk-palette-success-9: oklch(74% 0.15 150);
+    --rk-palette-success-10: oklch(78% 0.14 150);
+    --rk-palette-success-11: oklch(84% 0.11 150);
+    --rk-palette-success-12: oklch(93% 0.05 150);
+    --rk-palette-success-contrast: oklch(20% 0.04 150);
+    --rk-palette-warning-1: oklch(21% 0.02 75);
+    --rk-palette-warning-2: oklch(18% 0.02 75);
+    --rk-palette-warning-3: oklch(27% 0.05 75);
+    --rk-palette-warning-4: oklch(31.05% 0.0663 72.53);
+    --rk-palette-warning-5: oklch(35.11% 0.0762 69.75);
+    --rk-palette-warning-6: oklch(40.15% 0.0878 68.6);
+    --rk-palette-warning-7: oklch(46.18% 0.1012 68.15);
+    --rk-palette-warning-8: oklch(54.18% 0.118 69.14);
+    --rk-palette-warning-9: oklch(74% 0.15 75);
+    --rk-palette-warning-10: oklch(78% 0.14 75);
+    --rk-palette-warning-11: oklch(84% 0.11 75);
+    --rk-palette-warning-12: oklch(93% 0.05 75);
+    --rk-palette-warning-contrast: oklch(20% 0.04 75);
+    --rk-shadow-control: 0px 1px 2px 0px var(--rk-palette-shadow-control);
+    --rk-shadow-overlay: 0px 1px 2px 0px var(--rk-palette-shadow-overlay-contact), 0px 14px 36px 0px var(--rk-palette-shadow-overlay-ambient);
+    --rk-shadow-surface: 0px 0px 0px 0px var(--rk-palette-shadow-control);
+  }
+}
+
+@media (color-gamut: p3) {
+  @layer rk.tokens {
+    [data-theme='dark'] {
+      color-scheme: dark;
+      /* Filled accent backgrounds: buttons, badges, selected states. */
+      --rk-bg-accent-solid: var(--rk-palette-accent-9);
+      --rk-bg-accent-solid-hover: var(--rk-palette-accent-10);
+      --rk-bg-danger-solid-hover: var(--rk-palette-danger-10);
+      /* Filled info backgrounds: buttons, badges, selected states. */
+      --rk-bg-info-solid: var(--rk-palette-info-9);
+      --rk-bg-info-solid-hover: var(--rk-palette-info-10);
+      /* The focus ring (0061). */
+      --rk-border-focus: var(--rk-palette-accent-9);
+      --rk-border-warning: var(--rk-palette-warning-8);
+      /* Links and accent text. */
+      --rk-fg-accent: var(--rk-palette-accent-11);
+      --rk-fg-danger: var(--rk-palette-danger-11);
+      --rk-fg-info: var(--rk-palette-info-11);
+      --rk-palette-accent-9: oklch(73.85% 0.1463 261.5);
+      --rk-palette-accent-10: oklch(77.44% 0.1252 259.7);
+      --rk-palette-accent-11: oklch(83.42% 0.0907 257.8);
+      --rk-palette-accent-12: oklch(92.7% 0.0391 255);
+      --rk-palette-danger-10: oklch(78% 0.14 27);
+      --rk-palette-danger-11: oklch(84% 0.11 27);
+      --rk-palette-danger-12: oklch(92.82% 0.0474 27.54);
+      --rk-palette-info-9: oklch(73.85% 0.1463 261.5);
+      --rk-palette-info-10: oklch(77.44% 0.1252 259.7);
+      --rk-palette-info-11: oklch(83.42% 0.0907 257.8);
+      --rk-palette-info-12: oklch(92.7% 0.0391 255);
+      --rk-palette-warning-4: oklch(31% 0.07 75);
+      --rk-palette-warning-5: oklch(35% 0.0849 74.94);
+      --rk-palette-warning-6: oklch(40.03% 0.0975 73.86);
+      --rk-palette-warning-7: oklch(46.08% 0.1131 72.24);
+      --rk-palette-warning-8: oklch(54.08% 0.1326 72.48);
+    }
+  }
+}
+
+@media (color-gamut: rec2020) {
+  @layer rk.tokens {
+    [data-theme='dark'] {
+      color-scheme: dark;
+      /* Filled accent backgrounds: buttons, badges, selected states. */
+      --rk-bg-accent-solid: var(--rk-palette-accent-9);
+      --rk-bg-accent-solid-hover: var(--rk-palette-accent-10);
+      --rk-bg-danger-solid-hover: var(--rk-palette-danger-10);
+      /* Filled info backgrounds: buttons, badges, selected states. */
+      --rk-bg-info-solid: var(--rk-palette-info-9);
+      --rk-bg-info-solid-hover: var(--rk-palette-info-10);
+      /* The focus ring (0061). */
+      --rk-border-focus: var(--rk-palette-accent-9);
+      --rk-border-warning: var(--rk-palette-warning-8);
+      /* Links and accent text. */
+      --rk-fg-accent: var(--rk-palette-accent-11);
+      --rk-fg-danger: var(--rk-palette-danger-11);
+      --rk-fg-info: var(--rk-palette-info-11);
+      --rk-palette-accent-9: oklch(73.93% 0.1477 261.8);
+      --rk-palette-accent-10: oklch(77.61% 0.1257 260.5);
+      --rk-palette-accent-11: oklch(83.55% 0.091 258.6);
+      --rk-palette-accent-12: oklch(92.78% 0.0391 256.2);
+      --rk-palette-danger-10: oklch(78% 0.14 27);
+      --rk-palette-danger-11: oklch(84% 0.11 27);
+      --rk-palette-danger-12: oklch(93% 0.05 27);
+      --rk-palette-info-9: oklch(73.93% 0.1477 261.8);
+      --rk-palette-info-10: oklch(77.61% 0.1257 260.5);
+      --rk-palette-info-11: oklch(83.55% 0.091 258.6);
+      --rk-palette-info-12: oklch(92.78% 0.0391 256.2);
+      --rk-palette-warning-4: oklch(31% 0.07 75);
+      --rk-palette-warning-5: oklch(35% 0.085 75);
+      --rk-palette-warning-6: oklch(40.01% 0.099 74.54);
+      --rk-palette-warning-7: oklch(46.04% 0.1147 72.94);
+      --rk-palette-warning-8: oklch(54.05% 0.1345 73.17);
+    }
+  }
+}
+
+@layer rk.tokens {
+  [data-density='compact'] {
+    --rk-size-control-lg: 40px;
+    --rk-size-control-md: 32px;
+    --rk-size-control-sm: 24px;
+    --rk-space-0: 0px;
+    --rk-space-0-5: 2px;
+    --rk-space-1: 3px;
+    --rk-space-1-5: 5px;
+    --rk-space-2: 6px;
+    --rk-space-2-5: 8px;
+    --rk-space-3: 9px;
+    --rk-space-3-5: 11px;
+    --rk-space-4: 12px;
+    --rk-space-5: 15px;
+    --rk-space-6: 18px;
+    --rk-space-8: 24px;
+    --rk-space-10: 30px;
+    --rk-space-12: 36px;
+    --rk-space-16: 48px;
+  }
+}
+
+@layer rk.tokens {
+  [data-density='regular'] {
+    --rk-size-control-lg: 46px;
+    --rk-size-control-md: 38px;
+    --rk-size-control-sm: 30px;
+    --rk-space-0: 0px;
+    --rk-space-0-5: 2px;
+    --rk-space-1: 4px;
+    --rk-space-1-5: 6px;
+    --rk-space-2: 8px;
+    --rk-space-2-5: 10px;
+    --rk-space-3: 12px;
+    --rk-space-3-5: 14px;
+    --rk-space-4: 16px;
+    --rk-space-5: 20px;
+    --rk-space-6: 24px;
+    --rk-space-8: 32px;
+    --rk-space-10: 40px;
+    --rk-space-12: 48px;
+    --rk-space-16: 64px;
+  }
+}
+
+@layer rk.tokens {
+  [data-density='comfortable'] {
+    --rk-size-control-lg: 52px;
+    --rk-size-control-md: 44px;
+    --rk-size-control-sm: 36px;
+    --rk-space-0: 0px;
+    --rk-space-0-5: 3px;
+    --rk-space-1: 5px;
+    --rk-space-1-5: 8px;
+    --rk-space-2: 10px;
+    --rk-space-2-5: 13px;
+    --rk-space-3: 15px;
+    --rk-space-3-5: 18px;
+    --rk-space-4: 20px;
+    --rk-space-5: 25px;
+    --rk-space-6: 30px;
+    --rk-space-8: 40px;
+    --rk-space-10: 50px;
+    --rk-space-12: 60px;
+    --rk-space-16: 80px;
   }
 }

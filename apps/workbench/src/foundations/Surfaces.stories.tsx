@@ -3,41 +3,41 @@ import type { CSSProperties } from 'react';
 import { expect, within } from 'storybook/test';
 
 /**
- * A smoke test for the workbench itself: tokens load, contexts switch, and the
- * accessibility check runs. Replaced by real component stories from the
- * primitives milestone onward.
+ * A smoke test for the workbench: tokens load, contexts switch, and the
+ * accessibility check runs. Replaced by component stories from the primitives
+ * milestone onward.
  */
 function Surfaces() {
   const card: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 'calc(var(--rk-space) * 3)',
-    padding: 'calc(var(--rk-space) * 6)',
+    gap: 'var(--rk-space-3)',
+    padding: 'var(--rk-space-6)',
     width: 360,
-    background: 'var(--rk-surface)',
-    border: '1px solid var(--rk-border)',
-    borderRadius: 'calc(var(--rk-radius) * 1.5)',
+    background: 'var(--rk-bg-surface)',
+    border: '1px solid var(--rk-border-surface)',
+    borderRadius: 'var(--rk-radius-surface)',
+    boxShadow: 'var(--rk-shadow-surface)',
   };
   return (
     <section aria-labelledby="surfaces-title" style={card}>
-      <h1 id="surfaces-title" style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>
+      <h1 id="surfaces-title" style={{ margin: 0, font: 'var(--rk-text-heading-sm)' }}>
         Timeless bones, any skin.
       </h1>
-      <p style={{ margin: 0, color: 'var(--rk-fg-muted)', lineHeight: 1.55 }}>
-        Rendered from stub tokens until the generator lands.
+      <p style={{ margin: 0, font: 'var(--rk-text-body)', color: 'var(--rk-fg-muted)' }}>
+        Rendered from the generated tokens.
       </p>
       <button
         type="button"
         style={{
           alignSelf: 'flex-start',
-          height: 38,
-          padding: '0 calc(var(--rk-space) * 4)',
+          height: 'var(--rk-size-control-md)',
+          padding: '0 var(--rk-space-4)',
           border: 'none',
-          borderRadius: 'var(--rk-radius)',
-          background: 'var(--rk-accent)',
-          color: 'var(--rk-on-accent)',
-          font: 'inherit',
-          fontWeight: 500,
+          borderRadius: 'var(--rk-radius-control)',
+          background: 'var(--rk-bg-accent-solid)',
+          color: 'var(--rk-fg-on-accent)',
+          font: 'var(--rk-text-label)',
         }}
       >
         Publish
