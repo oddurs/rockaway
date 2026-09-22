@@ -15,15 +15,31 @@ mode and density are runtime contexts, resolved through the DTCG Resolver.
 | `typePairing` | `inter`, `editorial`, `friendly`, `technical` |
 | `elevation` | `border`, `shadow`, `tone` |
 
+## Use
+
+```css
+@import '@rockaway/tokens/tokens.css';
+```
+
+Every token is a custom property in `@layer rk.tokens`: `fg.muted` is
+`--rk-fg-muted`. From TypeScript, `vars` maps each DTCG path to its `var()`:
+
+```ts
+import { vars } from '@rockaway/tokens';
+
+vars['fg.muted']; // 'var(--rk-fg-muted)'
+```
+
 ## Generated DTCG
 
 ```sh
-pnpm --filter @rockaway/tokens generate        # themes/default.json → dtcg/
-pnpm --filter @rockaway/tokens generate:check  # fails if dtcg/ is stale
+pnpm --filter @rockaway/tokens generate        # themes/default.json → dtcg/ → css/ and src/names.ts
+pnpm --filter @rockaway/tokens generate:check  # fails if anything generated is stale
 ```
 
-[`dtcg/`](dtcg) is committed so changes to the rules show up in review. Do not
-edit it by hand. The tests fail if it is stale, and Terrazzo validates it.
+[`dtcg/`](dtcg), [`css/tokens.css`](css/tokens.css) and `src/names.ts` are
+committed so changes to the rules show up in review. Do not edit them by hand.
+The tests fail if any of them is stale, and Terrazzo validates the DTCG.
 
 | File | Holds |
 | --- | --- |

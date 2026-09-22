@@ -138,6 +138,11 @@ test('Terrazzo accepts the resolver with no errors or lint warnings', async () =
   expect(out).not.toMatch(/warning/i);
 }, 30_000);
 
+test('css/tokens.css and src/names.ts match a fresh Terrazzo build (0020)', async () => {
+  const { stdout } = await promisify(execFile)('node', ['scripts/check-css.ts'], { cwd: root });
+  expect(stdout).toContain('up to date');
+}, 60_000);
+
 describe('density rules', () => {
   test('space is a 4px grid scaled by density', () => {
     expect(space('regular')).toMatchObject({ '0': 0, '0-5': 2, '1': 4, '2': 8, '4': 16, '16': 64 });

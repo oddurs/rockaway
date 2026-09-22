@@ -4,22 +4,26 @@
   "description": "Design tokens for rockaway: DTCG sources, the resolver, and CSS custom properties.",
   "license": "MIT",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css"
+  ],
   "exports": {
     ".": "./dist/index.js",
+    "./tokens.css": "./css/tokens.css",
     "./dtcg/*": "./dtcg/*",
     "./themes/*": "./themes/*",
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
+    "css",
     "dtcg",
     "themes"
   ],
   "scripts": {
     "build": "tsdown",
-    "generate": "node scripts/generate.ts",
-    "generate:check": "node scripts/generate.ts --check",
+    "generate": "node scripts/generate.ts && tz build",
+    "generate:check": "node scripts/generate.ts --check && node scripts/check-css.ts",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json"
   },
@@ -34,6 +38,8 @@
   },
   "devDependencies": {
     "@terrazzo/cli": "2.7.1",
+    "@terrazzo/parser": "2.7.1",
+    "@terrazzo/plugin-css": "2.7.1",
     "@types/node": "26.6.2",
     "vite": "8.3.0",
     "vitest": "4.1.11"
