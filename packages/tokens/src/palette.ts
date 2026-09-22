@@ -48,8 +48,8 @@ type Ramp = readonly [
 
 /** Lightness per step for neutrals. */
 const neutralL: Record<Mode, Ramp> = {
-  light: [1, 0.978, 0.956, 0.935, 0.914, 0.893, 0.86, 0.645, 0.555, 0.52, 0.48, 0.21],
-  dark: [0.205, 0.165, 0.245, 0.27, 0.295, 0.32, 0.37, 0.52, 0.6, 0.64, 0.76, 0.965],
+  light: [1, 0.978, 0.956, 0.935, 0.914, 0.905, 0.875, 0.645, 0.555, 0.52, 0.48, 0.21],
+  dark: [0.205, 0.165, 0.245, 0.27, 0.295, 0.31, 0.37, 0.52, 0.6, 0.64, 0.76, 0.965],
 };
 
 /** Lightness and relative chroma per step for coloured hues. */
@@ -62,7 +62,10 @@ const hueC: Record<Mode, Ramp> = {
   dark: [0.02, 0.02, 0.05, 0.07, 0.085, 0.1, 0.12, 0.14, 0.15, 0.14, 0.11, 0.05],
 };
 
-function neutralTint(temperature: NeutralTemperature, accentHue: number): { h: number; c: number } {
+export function neutralTint(
+  temperature: NeutralTemperature,
+  accentHue: number,
+): { h: number; c: number } {
   if (temperature === 'cool') return { h: 250, c: 0.014 };
   if (temperature === 'warm') return { h: 75, c: 0.014 };
   return { h: accentHue, c: 0.006 };

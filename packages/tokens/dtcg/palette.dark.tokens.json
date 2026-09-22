@@ -57,7 +57,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.32,
+            0.31,
             0.006,
             262
           ]
@@ -792,6 +792,74 @@
             27
           ]
         }
+      }
+    },
+    "shadow": {
+      "control": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            262
+          ],
+          "alpha": 0
+        }
+      },
+      "contact": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            262
+          ],
+          "alpha": 0.4
+        }
+      },
+      "ambient": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            262
+          ],
+          "alpha": 0.32
+        }
+      },
+      "overlay-contact": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            262
+          ],
+          "alpha": 0.5
+        }
+      },
+      "overlay-ambient": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            262
+          ],
+          "alpha": 0.5
+        }
+      }
+    },
+    "scrim": {
+      "$value": {
+        "colorSpace": "oklch",
+        "components": [
+          0,
+          0,
+          0
+        ],
+        "alpha": 0.45
       }
     }
   }

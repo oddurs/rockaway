@@ -39,3 +39,7 @@ Decided 2026-09-22, as proven on the concept canvas.
 - Three shadow tokens: `shadow.control`, `shadow.surface` (varies with the input), `shadow.overlay` (fixed across inputs)
 - One border token varies with the input: `border.surface`
 - Forced-colors mode drops shadows entirely, so every overlay keeps a real border: that is why the hairline is not optional
+
+## 2026-09-22
+
+Refined by 0017 against the canvas: with the `border` input, `border.surface` is palette step 6 (L 0.905 light, 0.31 dark, the canvas's card border), and with `shadow` it is step 5. The rules are unchanged.

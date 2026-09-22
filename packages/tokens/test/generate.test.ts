@@ -79,13 +79,25 @@ describe('generated files', () => {
       const groups = Object.keys(doc as Node).filter((k) => !k.startsWith('$'));
       if (name.startsWith('palette.')) expect(groups, name).toEqual(['palette']);
       if (name.startsWith('density.')) expect(groups, name).toEqual(['space', 'size']);
-      if (name === 'semantic.tokens.json') expect(groups, name).toEqual(['bg', 'fg', 'border']);
+      if (name === 'semantic.tokens.json') {
+        expect(groups, name).toEqual([
+          'bg',
+          'fg',
+          'border',
+          'radius',
+          'shadow',
+          'text',
+          'motion',
+          'focus',
+        ]);
+      }
     }
   });
 
   test('every semantic alias names a palette step that exists in both modes (0019)', () => {
     const semantic = files.get('semantic.tokens.json') as Node;
-    const aliases = [...tokens(semantic)].filter(([, t]) => typeof t.$value === 'string');
+    const colours = { bg: semantic.bg, fg: semantic.fg, border: semantic.border } as Node;
+    const aliases = [...tokens(colours)].filter(([, t]) => typeof t.$value === 'string');
     expect(aliases.length).toBeGreaterThan(30);
     for (const mode of ['light', 'dark']) {
       const palette = files.get(`palette.${mode}.tokens.json`) as Node;
@@ -109,8 +121,8 @@ describe('generated files', () => {
       ).surface as Node;
     expect(page('border').$value).toBe('{palette.neutral.2}');
     expect(page('tone').$value).toBe('{palette.neutral.3}');
-    expect(border('border').$value).toBe('{palette.neutral.7}');
-    expect(border('shadow').$value).toBe('{palette.neutral.6}');
+    expect(border('border').$value).toBe('{palette.neutral.6}');
+    expect(border('shadow').$value).toBe('{palette.neutral.5}');
     expect((border('tone').$value as { alpha: number }).alpha).toBe(0);
   });
 });
