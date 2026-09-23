@@ -35,7 +35,7 @@ same.
 - [x] Merging is commutative and associative, proven over generated input
 - [x] Mixed weights resolve to the heavier glyph where Unicode has one (`┝`, `╪`), and to a documented substitute where it does not
 - [x] The `ascii` set resolves the same keys to `+ - |`, so geometry is identical across sets
-- [ ] A grid of two panes sharing an edge renders one line, not two
+- [x] A grid of two panes sharing an edge renders one line, not two
 
 ## 2026-09-22
 
