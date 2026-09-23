@@ -16,16 +16,20 @@ export interface ThemeInputs {
   readonly neutralTemperature: NeutralTemperature;
   /** The type pairing: which monospace family, and how heavy its weights are. */
   readonly typePairing: TypePairing;
+  /** Which set the theme draws its chrome with (0091). */
+  readonly borderSet: BorderSetName;
   /** How strictly this theme holds the grid (0072). */
   readonly conformance: Conformance;
 }
+
+export type BorderSetName = 'single' | 'double' | 'heavy' | 'rounded' | 'ascii';
 
 /** Strictness is a dial, not a law (cairn 0072). */
 export type Conformance = 'strict' | 'standard' | 'loose';
 export const conformanceLevels: readonly Conformance[] = ['strict', 'standard', 'loose'];
 
 export type NeutralTemperature = 'cool' | 'neutral' | 'warm';
-export type TypePairing = 'inter' | 'editorial' | 'friendly' | 'technical';
+export type TypePairing = 'system' | 'jetbrains' | 'ibm-plex' | 'berkeley';
 
 export type Mode = 'light' | 'dark';
 export type Density = 'dense' | 'normal' | 'airy' | 'touch';
@@ -43,7 +47,8 @@ export const densities: readonly Density[] = ['dense', 'normal', 'airy', 'touch'
 export const defaultTheme: ThemeInputs = {
   accentHue: 262,
   neutralTemperature: 'neutral',
-  typePairing: 'inter',
+  typePairing: 'system',
+  borderSet: 'single',
   conformance: 'standard',
 };
 

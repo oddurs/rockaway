@@ -172,7 +172,8 @@ describe('theme validation', () => {
         unknown input "extra"
         accentHue must be a number from 0 up to 360
         neutralTemperature must be one of cool, neutral, warm
-        typePairing must be one of inter, editorial, friendly, technical
+        typePairing must be one of system, jetbrains, ibm-plex, berkeley
+        borderSet must be one of single, double, heavy, rounded, ascii
         conformance must be one of strict, standard, loose]
     `);
   });

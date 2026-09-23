@@ -42,6 +42,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@rockaway/grid": "workspace:*",
     "@terrazzo/cli": "2.7.1",
     "@terrazzo/parser": "2.7.1",
     "@terrazzo/plugin-css": "2.7.1",

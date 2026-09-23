@@ -33,6 +33,18 @@ export type {
 } from './dtcg.ts';
 export { type GeneratedFiles, generate, resolverFile, serialize } from './generate.ts';
 export {
+  attributes,
+  type BorderGlyphs,
+  bars,
+  blocks,
+  borderSetNames,
+  borderSets,
+  glyphs,
+  marks,
+  spinnerFrames,
+} from './glyph.ts';
+export {
+  type BorderSetName,
   type Conformance,
   conformanceLevels,
   type Density,

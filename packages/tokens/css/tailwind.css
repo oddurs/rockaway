@@ -59,7 +59,6 @@
   --color-warning-ink: var(--rk-fg-warning);
   --font-display: var(--rk-font-family-display);
   --font-mono: var(--rk-font-family-mono);
-  --font-sans: var(--rk-font-family-sans);
   --ease-enter: var(--rk-motion-easing-enter);
   --ease-exit: var(--rk-motion-easing-exit);
   --ease-standard: var(--rk-motion-easing-standard);

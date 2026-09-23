@@ -332,6 +332,29 @@
   inherits: true;
 }
 
+@property --rk-attribute-bold {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 700;
+}
+
+@property --rk-attribute-dim {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-attribute-underline-offset {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 2px;
+}
+
+@property --rk-attribute-underline-thickness {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 1px;
+}
+
 @property --rk-bg-accent-solid {
   syntax: '*';
   inherits: true;
@@ -585,11 +608,6 @@
   inherits: true;
 }
 
-@property --rk-font-family-sans {
-  syntax: '*';
-  inherits: true;
-}
-
 @property --rk-font-weight-bold {
   syntax: '<integer>';
   inherits: true;
@@ -612,6 +630,501 @@
   syntax: '<integer>';
   inherits: true;
   initial-value: 600;
+}
+
+@property --rk-glyph-bar-1 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-bar-2 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-bar-3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-bar-4 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-bar-5 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-bar-6 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-bar-7 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-bar-8 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-block-caret {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-block-dark {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-block-full {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-block-light {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-block-medium {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-ascii-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-current-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-double-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-heavy-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-rounded-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-single-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-bullet {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-check {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-collapsed {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-cursor {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-dash {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-ellipsis {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-expanded {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-radio {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-radio-empty {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-1 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-2 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-4 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-5 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-6 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-7 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-8 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-9 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-spinner-10 {
+  syntax: '*';
+  inherits: true;
 }
 
 @property --rk-motion-duration-base {
@@ -858,6 +1371,11 @@
     --rk-ansi-tint-yellow: oklch(95% 0.045 85);
     --rk-ansi-white: oklch(93% 0.0031 262);
     --rk-ansi-yellow: oklch(52.18% 0.108 80.13);
+    /* Bold: the weight a heading or a label takes. */
+    --rk-attribute-bold: 700;
+    --rk-attribute-dim: var(--rk-ansi-muted);
+    --rk-attribute-underline-offset: 2px;
+    --rk-attribute-underline-thickness: 1px;
     --rk-bg-accent-solid: var(--rk-ansi-blue);
     --rk-bg-accent-solid-hover: var(--rk-ansi-bright-blue);
     --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
@@ -906,13 +1424,111 @@
     --rk-fg-warning: var(--rk-ansi-yellow);
     --rk-focus-offset: 2px;
     --rk-focus-width: 2px;
-    --rk-font-family-display: "Inter Variable", "Inter", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
-    --rk-font-family-mono: ui-monospace, "SF Mono", "Cascadia Code", "Menlo", "Consolas", monospace;
-    --rk-font-family-sans: "Inter Variable", "Inter", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
+    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
     --rk-font-weight-medium: 500;
     --rk-font-weight-regular: 400;
     --rk-font-weight-semibold: 600;
+    --rk-glyph-bar-1: "▁";
+    --rk-glyph-bar-2: "▂";
+    --rk-glyph-bar-3: "▃";
+    --rk-glyph-bar-4: "▄";
+    --rk-glyph-bar-5: "▅";
+    --rk-glyph-bar-6: "▆";
+    --rk-glyph-bar-7: "▇";
+    --rk-glyph-bar-8: "█";
+    --rk-glyph-block-caret: "▏";
+    --rk-glyph-block-dark: "▓";
+    --rk-glyph-block-full: "█";
+    --rk-glyph-block-light: "░";
+    --rk-glyph-block-medium: "▒";
+    --rk-glyph-border-ascii-bottom-left: "+";
+    --rk-glyph-border-ascii-bottom-right: "+";
+    --rk-glyph-border-ascii-cross: "+";
+    --rk-glyph-border-ascii-horizontal: -;
+    --rk-glyph-border-ascii-tee-down: "+";
+    --rk-glyph-border-ascii-tee-left: "+";
+    --rk-glyph-border-ascii-tee-right: "+";
+    --rk-glyph-border-ascii-tee-up: "+";
+    --rk-glyph-border-ascii-top-left: "+";
+    --rk-glyph-border-ascii-top-right: "+";
+    --rk-glyph-border-ascii-vertical: "|";
+    --rk-glyph-border-current-bottom-left: "└";
+    --rk-glyph-border-current-bottom-right: "┘";
+    --rk-glyph-border-current-cross: "┼";
+    --rk-glyph-border-current-horizontal: "─";
+    --rk-glyph-border-current-tee-down: "┬";
+    --rk-glyph-border-current-tee-left: "┤";
+    --rk-glyph-border-current-tee-right: "├";
+    --rk-glyph-border-current-tee-up: "┴";
+    --rk-glyph-border-current-top-left: "┌";
+    --rk-glyph-border-current-top-right: "┐";
+    --rk-glyph-border-current-vertical: "│";
+    --rk-glyph-border-double-bottom-left: "╚";
+    --rk-glyph-border-double-bottom-right: "╝";
+    --rk-glyph-border-double-cross: "╬";
+    --rk-glyph-border-double-horizontal: "═";
+    --rk-glyph-border-double-tee-down: "╦";
+    --rk-glyph-border-double-tee-left: "╣";
+    --rk-glyph-border-double-tee-right: "╠";
+    --rk-glyph-border-double-tee-up: "╩";
+    --rk-glyph-border-double-top-left: "╔";
+    --rk-glyph-border-double-top-right: "╗";
+    --rk-glyph-border-double-vertical: "║";
+    --rk-glyph-border-heavy-bottom-left: "┗";
+    --rk-glyph-border-heavy-bottom-right: "┛";
+    --rk-glyph-border-heavy-cross: "╋";
+    --rk-glyph-border-heavy-horizontal: "━";
+    --rk-glyph-border-heavy-tee-down: "┳";
+    --rk-glyph-border-heavy-tee-left: "┫";
+    --rk-glyph-border-heavy-tee-right: "┣";
+    --rk-glyph-border-heavy-tee-up: "┻";
+    --rk-glyph-border-heavy-top-left: "┏";
+    --rk-glyph-border-heavy-top-right: "┓";
+    --rk-glyph-border-heavy-vertical: "┃";
+    --rk-glyph-border-rounded-bottom-left: "╰";
+    --rk-glyph-border-rounded-bottom-right: "╯";
+    --rk-glyph-border-rounded-cross: "┼";
+    --rk-glyph-border-rounded-horizontal: "─";
+    --rk-glyph-border-rounded-tee-down: "┬";
+    --rk-glyph-border-rounded-tee-left: "┤";
+    --rk-glyph-border-rounded-tee-right: "├";
+    --rk-glyph-border-rounded-tee-up: "┴";
+    --rk-glyph-border-rounded-top-left: "╭";
+    --rk-glyph-border-rounded-top-right: "╮";
+    --rk-glyph-border-rounded-vertical: "│";
+    --rk-glyph-border-single-bottom-left: "└";
+    --rk-glyph-border-single-bottom-right: "┘";
+    --rk-glyph-border-single-cross: "┼";
+    --rk-glyph-border-single-horizontal: "─";
+    --rk-glyph-border-single-tee-down: "┬";
+    --rk-glyph-border-single-tee-left: "┤";
+    --rk-glyph-border-single-tee-right: "├";
+    --rk-glyph-border-single-tee-up: "┴";
+    --rk-glyph-border-single-top-left: "┌";
+    --rk-glyph-border-single-top-right: "┐";
+    --rk-glyph-border-single-vertical: "│";
+    --rk-glyph-mark-bullet: "·";
+    --rk-glyph-mark-check: "✓";
+    --rk-glyph-mark-collapsed: "▸";
+    --rk-glyph-mark-cross: "✗";
+    --rk-glyph-mark-cursor: "▸";
+    --rk-glyph-mark-dash: "–";
+    --rk-glyph-mark-ellipsis: "…";
+    --rk-glyph-mark-expanded: "▾";
+    --rk-glyph-mark-radio: "●";
+    --rk-glyph-mark-radio-empty: "○";
+    --rk-glyph-spinner-1: "⠋";
+    --rk-glyph-spinner-2: "⠙";
+    --rk-glyph-spinner-3: "⠹";
+    --rk-glyph-spinner-4: "⠸";
+    --rk-glyph-spinner-5: "⠼";
+    --rk-glyph-spinner-6: "⠴";
+    --rk-glyph-spinner-7: "⠦";
+    --rk-glyph-spinner-8: "⠧";
+    --rk-glyph-spinner-9: "⠇";
+    --rk-glyph-spinner-10: "⠏";
     --rk-motion-duration-base: 200ms;
     --rk-motion-duration-fast: 120ms;
     --rk-motion-duration-slow: 320ms;

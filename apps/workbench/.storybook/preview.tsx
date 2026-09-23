@@ -1,6 +1,6 @@
 import { expectConformance } from '@rockaway/react';
 import type { Decorator, Preview } from '@storybook/react-vite';
-import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
 import '@rockaway/css';
 import '@rockaway/tokens/tokens.css';
 
