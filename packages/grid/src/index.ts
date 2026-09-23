@@ -27,6 +27,16 @@ export {
   mergeEdges,
 } from './junction.ts';
 export {
+  columns,
+  fixed,
+  grow,
+  rows,
+  type Solution,
+  type SolveOptions,
+  solve,
+  type Track,
+} from './layout.ts';
+export {
   Attr,
   type Attrs,
   EMPTY_STYLE,

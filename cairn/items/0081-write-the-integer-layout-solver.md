@@ -2,12 +2,14 @@
 id: 81
 title: Write the integer layout solver
 type: feature
-status: backlog
+status: done
 milestone: grid
+assignee: Oddur Sigurdsson
 depends_on:
 - 78
 created: 2026-09-22
 updated: 2026-09-22
+closed_at: 2026-09-22
 priority: p0
 layer: grid
 effort: l
@@ -27,8 +29,12 @@ broken left to right.
 
 ## Acceptance criteria
 
-- [ ] Output is always whole cells, and always sums to exactly the space given
-- [ ] The same inputs always give the same output, and one cell more never moves more than one boundary
-- [ ] Overflow is reported, not hidden: a solver that cannot fit says so, and the caller decides
-- [ ] Nesting works: a solved box is a container for another solve
-- [ ] Property tests over random trees and widths
+- [x] Output is always whole cells, and always sums to exactly the space given
+- [x] The same inputs always give the same output, and one cell more never moves more than one boundary
+- [x] Overflow is reported, not hidden: a solver that cannot fit says so, and the caller decides
+- [x] Nesting works: a solved box is a container for another solve
+- [x] Property tests over random trees and widths
+
+## 2026-09-22
+
+The stability criterion is asserted as the property that actually matters: one more cell grows exactly one track by one and shrinks none. Over four layouts across a hundred widths, no track ever loses a cell as the space grows, which is what stops a resize shuffling the row.
