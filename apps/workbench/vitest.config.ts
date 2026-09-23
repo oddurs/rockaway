@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
+import type { BrowserInstanceOption } from 'vitest/node';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
@@ -10,10 +11,10 @@ const forcedColorsStories = ['**/ForcedColors.stories.tsx'];
 const everythingElse = ['**/!(ForcedColors).stories.tsx'];
 
 const browser = (contextOptions?: { forcedColors: 'active' }) => ({
-  enabled: true,
-  headless: true,
+  enabled: true as const,
+  headless: true as const,
   provider: playwright(contextOptions ? { contextOptions } : {}),
-  instances: [{ browser: 'chromium' }],
+  instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
 });
 
 /**
