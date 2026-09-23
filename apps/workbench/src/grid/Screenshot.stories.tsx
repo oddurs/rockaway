@@ -16,8 +16,8 @@ function draw({ width, height }: Size): Buffer {
 /** A screen with real elements over the painted chrome. */
 function Composed() {
   return (
-    <div data-testid="host" style={{ width: 'calc(1ch * 30)', height: 'calc(1.25em * 6)' }}>
-      <Screen draw={draw} cols={30} rows={6} style={{ width: '100%', height: '100%' }}>
+    <div data-testid="host">
+      <Screen draw={draw} cols={30} rows={6}>
         <button
           type="button"
           data-attrs="reverse"
