@@ -1,0 +1,30 @@
+/* Stands in for a component stylesheet that answers to its container. */
+@layer rk.components {
+  .demo-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--rk-space-3);
+    padding: var(--rk-space-4);
+    background: var(--rk-bg-surface);
+    border: 1px solid var(--rk-border-surface);
+    border-radius: var(--rk-radius-surface);
+  }
+
+  .demo-card__media {
+    block-size: 64px;
+    border-radius: var(--rk-radius-tag);
+    background: var(--rk-bg-accent-subtle);
+  }
+
+  @container rk (min-width: 32rem) {
+    .demo-card {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .demo-card__media {
+      inline-size: 96px;
+      flex-shrink: 0;
+    }
+  }
+}

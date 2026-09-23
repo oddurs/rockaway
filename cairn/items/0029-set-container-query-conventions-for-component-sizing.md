@@ -2,8 +2,9 @@
 id: 29
 title: Set container-query conventions for component sizing
 type: feature
-status: backlog
+status: done
 milestone: runtime
+assignee: Oddur Sigurdsson
 depends_on:
 - 24
 created: 2026-09-22
@@ -19,4 +20,7 @@ effort: s
 
 ## Acceptance criteria
 
-- [ ]
+- [x] One named container (`rk`), opted into with a single utility class
+- [x] Component CSS asks the container, never the viewport
+- [x] The width steps are written down, with the reason they are literals
+- [x] Proven in a browser: the same component differs by the space it is in, at one window size
