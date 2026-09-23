@@ -1,0 +1,37 @@
+{
+  "name": "@rockaway/grid",
+  "version": "0.0.0",
+  "description": "The character-grid engine: integer geometry, boxes, junctions, text measurement and painters. No DOM.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "@rockaway/source": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oddurs/rockaway.git",
+    "directory": "packages/grid"
+  },
+  "homepage": "https://github.com/oddurs/rockaway",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.2",
+    "vite": "8.3.0",
+    "vitest": "4.1.11"
+  }
+}
