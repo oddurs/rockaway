@@ -9,18 +9,11 @@
  * The title is the frame's accessible name, taken from the string rather than
  * from the glyphs around it: a reader hears "tokens, group", not `┌ tokens ─┐`.
  */
-import {
-  type BorderSetName,
-  Buffer,
-  borderSets,
-  drawBox,
-  drawDivider,
-  rect,
-  type Size,
-} from '@rockaway/grid';
+import { type BorderSetName, Buffer, borderSets, drawBox, rect, type Size } from '@rockaway/grid';
 import { type ReactNode, useMemo } from 'react';
 import { cx } from '../cx.ts';
 import { type Inset, Screen, type ScreenProps } from '../screen.tsx';
+import { drawRule } from './divider.tsx';
 
 export interface FrameOptions {
   /** Set into the top edge, truncated by the engine so it never runs past it. */
@@ -54,7 +47,13 @@ export function frameBuffer(size: Size, options: FrameOptions = {}): Buffer {
     for (const y of options.dividers ?? []) {
       // A divider on the border is the border; one outside the frame is not a
       // divider. Both are dropped rather than clipped, so the seam stays sound.
-      if (y > 0 && y < size.height - 1) drawDivider(draft, area, y, { set });
+      //
+      // The same rule `Divider` draws. The tee is not drawn here: the frame's
+      // sides already carry the crossing edges, so the table resolves ├ and ┤
+      // when the rule's east and west edges merge into them.
+      if (y > 0 && y < size.height - 1) {
+        drawRule(draft, rect(area.x, y, area.width, 1), { border: options.border ?? 'single' });
+      }
     }
   });
 }
