@@ -14,6 +14,10 @@
     "./paint": {
       "@rockaway/source": "./src/paint/index.ts",
       "default": "./dist/paint.js"
+    },
+    "./testing": {
+      "@rockaway/source": "./src/testing/screenshot.ts",
+      "default": "./dist/screenshot.js"
     }
   },
   "files": [
