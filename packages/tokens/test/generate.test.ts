@@ -80,16 +80,7 @@ describe('generated files', () => {
       if (name.startsWith('palette.')) expect(groups, name).toEqual(['palette']);
       if (name.startsWith('density.')) expect(groups, name).toEqual(['space', 'size']);
       if (name === 'semantic.tokens.json') {
-        expect(groups, name).toEqual([
-          'bg',
-          'fg',
-          'border',
-          'radius',
-          'shadow',
-          'text',
-          'motion',
-          'focus',
-        ]);
+        expect(groups, name).toEqual(['bg', 'fg', 'border', 'motion', 'focus']);
       }
     }
   });
@@ -108,22 +99,6 @@ describe('generated files', () => {
         expect(found, `${id} → ${t.$value} in ${mode}`).toBeDefined();
       }
     }
-  });
-
-  test('surfaces follow the elevation input (0060)', () => {
-    const page = (e: 'border' | 'shadow' | 'tone') =>
-      ((generate({ ...defaultTheme, elevation: e }).get('semantic.tokens.json') as Node).bg as Node)
-        .page as Node;
-    const border = (e: 'border' | 'shadow' | 'tone') =>
-      (
-        (generate({ ...defaultTheme, elevation: e }).get('semantic.tokens.json') as Node)
-          .border as Node
-      ).surface as Node;
-    expect(page('border').$value).toBe('{palette.neutral.2}');
-    expect(page('tone').$value).toBe('{palette.neutral.3}');
-    expect(border('border').$value).toBe('{palette.neutral.6}');
-    expect(border('shadow').$value).toBe('{palette.neutral.5}');
-    expect((border('tone').$value as { alpha: number }).alpha).toBe(0);
   });
 });
 
@@ -171,9 +146,7 @@ describe('theme validation', () => {
       parseTheme({
         accentHue: 400,
         neutralTemperature: 'hot',
-        radius: 2.5,
         typePairing: 'comic',
-        elevation: 'float',
         extra: 1,
       }),
     ).toThrowErrorMatchingInlineSnapshot(`
@@ -181,9 +154,7 @@ describe('theme validation', () => {
         unknown input "extra"
         accentHue must be a number from 0 up to 360
         neutralTemperature must be one of cool, neutral, warm
-        radius must be a whole number of px from 0 to 24
-        typePairing must be one of inter, editorial, friendly, technical
-        elevation must be one of border, shadow, tone]
+        typePairing must be one of inter, editorial, friendly, technical]
     `);
   });
 });

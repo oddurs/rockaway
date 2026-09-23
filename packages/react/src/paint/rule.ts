@@ -63,7 +63,7 @@ export function paintRule(
 ): void {
   const doc = target.ownerDocument;
   target.setAttribute('aria-hidden', 'true');
-  target.dataset.rkPainter = 'rule';
+  target.dataset.rkPainted = 'rule';
   target.replaceChildren();
 
   for (let y = 0; y < buffer.height; y++) {

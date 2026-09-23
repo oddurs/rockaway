@@ -2,13 +2,9 @@
 @layer rk.components {
   .demo-surface {
     padding: var(--rk-space-4);
-    border-radius: var(--rk-radius-surface);
     background: var(--rk-bg-accent-solid);
     color: var(--rk-fg-on-accent);
-    font-family: var(--rk-text-body-font-family);
-    font-size: var(--rk-text-body-font-size);
-    font-weight: var(--rk-text-body-font-weight);
-    line-height: var(--rk-text-body-line-height);
+    font-family: var(--rk-font-family-mono);
   }
 }
 

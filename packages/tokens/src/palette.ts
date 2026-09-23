@@ -7,7 +7,7 @@
  *   3–5    element background: rest, hover, active
  *   6–7    border: subtle, default (decorative: separators, cards)
  *   8      control border: 3:1 against steps 1, 2 and 3 (WCAG 1.4.11),
- *          so it holds on any page, including a tone-elevation one
+ *          so it holds on any background a page can have
  *   9–10   solid fill and its hover
  *   11     low-contrast text
  *   12     high-contrast text

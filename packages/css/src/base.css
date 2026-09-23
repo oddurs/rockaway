@@ -17,61 +17,31 @@
   body {
     background: var(--rk-bg-page);
     color: var(--rk-fg-default);
-    font-family: var(--rk-text-body-font-family);
-    font-size: var(--rk-text-body-font-size);
-    font-weight: var(--rk-text-body-font-weight);
-    line-height: var(--rk-text-body-line-height);
-    font-optical-sizing: auto;
+    font-family: var(--rk-font-family-mono);
+    font-size: 1rem;
+    line-height: 1.25;
+    font-variant-ligatures: none;
     -webkit-font-smoothing: antialiased;
   }
 
-  h1 {
-    font-family: var(--rk-text-heading-xl-font-family);
-    font-size: var(--rk-text-heading-xl-font-size);
-    font-weight: var(--rk-text-heading-xl-font-weight);
-    line-height: var(--rk-text-heading-xl-line-height);
-  }
-
-  h2 {
-    font-family: var(--rk-text-heading-lg-font-family);
-    font-size: var(--rk-text-heading-lg-font-size);
-    font-weight: var(--rk-text-heading-lg-font-weight);
-    line-height: var(--rk-text-heading-lg-line-height);
-  }
-
-  h3 {
-    font-family: var(--rk-text-heading-md-font-family);
-    font-size: var(--rk-text-heading-md-font-size);
-    font-weight: var(--rk-text-heading-md-font-weight);
-    line-height: var(--rk-text-heading-md-line-height);
-  }
-
-  h4 {
-    font-family: var(--rk-text-heading-sm-font-family);
-    font-size: var(--rk-text-heading-sm-font-size);
-    font-weight: var(--rk-text-heading-sm-font-weight);
-    line-height: var(--rk-text-heading-sm-line-height);
-  }
-
-  h5 {
-    font-family: var(--rk-text-heading-xs-font-family);
-    font-size: var(--rk-text-heading-xs-font-size);
-    font-weight: var(--rk-text-heading-xs-font-weight);
-    line-height: var(--rk-text-heading-xs-line-height);
-  }
-
+  /* One size on a character grid: weight and case carry a heading (0075). */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
   h6 {
-    font-family: var(--rk-text-label-font-family);
-    font-size: var(--rk-text-label-font-size);
-    font-weight: var(--rk-text-label-font-weight);
-    line-height: var(--rk-text-label-line-height);
+    font-size: inherit;
+    font-weight: var(--rk-font-weight-bold);
+  }
+
+  h1 {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   small {
-    font-family: var(--rk-text-small-font-family);
-    font-size: var(--rk-text-small-font-size);
-    font-weight: var(--rk-text-small-font-weight);
-    line-height: var(--rk-text-small-line-height);
+    color: var(--rk-fg-muted);
   }
 
   a {
@@ -84,10 +54,7 @@
   kbd,
   samp,
   pre {
-    font-family: var(--rk-text-code-font-family);
-    font-size: var(--rk-text-code-font-size);
-    font-weight: var(--rk-text-code-font-weight);
-    line-height: var(--rk-text-code-line-height);
+    font-family: var(--rk-font-family-mono);
   }
 
   hr {

@@ -7,7 +7,6 @@
  * so they are contrast-tested with everything else rather than computed in CSS.
  */
 import { alias, type Group, type Token } from './dtcg.ts';
-import type { Elevation } from './inputs.ts';
 import type { Hue, PaletteKey } from './palette.ts';
 
 const p = (hue: Hue, key: PaletteKey): Token => alias(`palette.${hue}.${key}`);
@@ -18,24 +17,12 @@ export type Intent = (typeof intents)[number];
 /** A colour with nothing in it, for surfaces that separate by tone alone. */
 const transparent: Token = { $value: { colorSpace: 'oklch', components: [0, 0, 0], alpha: 0 } };
 
-/** Where resting surfaces sit, per the elevation input (0060). */
-function surfaces(elevation: Elevation): { page: Token; border: Token } {
-  switch (elevation) {
-    case 'tone':
-      return { page: p('neutral', 3), border: transparent };
-    case 'shadow':
-      return { page: p('neutral', 2), border: p('neutral', 5) };
-    default:
-      return { page: p('neutral', 2), border: p('neutral', 6) };
-  }
-}
-
 function perIntent(fn: (hue: Intent) => Group): Group {
   return Object.fromEntries(intents.map((i) => [i, fn(i)]));
 }
 
-export function semanticColors(elevation: Elevation): Group {
-  const surface = surfaces(elevation);
+export function semanticColors(): Group {
+  const surface = { page: p('neutral', 2), border: p('neutral', 6) };
   return {
     bg: {
       $type: 'color',
@@ -103,7 +90,7 @@ export function semanticColors(elevation: Elevation): Group {
       },
       surface: {
         ...surface.border,
-        $description: 'Resting surfaces. Follows the elevation input (0060).',
+        $description: 'The edge of a resting surface. On a grid, a surface is its border.',
       },
       focus: { ...p('accent', 9), $description: 'The focus ring (0061).' },
       accent: p('accent', 8),

@@ -4,8 +4,7 @@
     --rk-cell-width: 1ch;
     --rk-cell-height: 1.25em;
     position: relative;
-    font-family: var(--rk-text-code-font-family);
-    font-size: var(--rk-text-code-font-size);
+    font-family: var(--rk-font-family-mono);
     line-height: var(--rk-cell-height);
     white-space: pre;
     color: var(--rk-fg-default);
