@@ -20,7 +20,7 @@ Everything else waits on this, because a frame drawn four different ways has
 to come from one geometry. Done means a screen can be composed in cells,
 rendered to characters, to the DOM, to ANSI, and compared as text in a test.
 
-Concept: https://claude.ai/artifact/7nLZVoPtzJqMJuciyhfZjV
+Concept: [docs/concept.md](../../docs/concept.md)
 
 ## 2026-09-23
 

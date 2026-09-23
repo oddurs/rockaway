@@ -45,3 +45,9 @@ Role, keyboard map, focus behaviour, announcements.
 ## 2026-09-22
 
 Moved into primitives by the pivot: a grid-drawn table is the thing this system should be best at, and it exercises junctions, alignment and truncation at once.
+- [ ] Sized in cells, and drawn by the frame engine: no box characters written by hand
+- [ ] Frame glyphs are `aria-hidden`; the accessible name never contains one
+- [ ] Ships a text snapshot, which is its documentation as much as its test
+- [ ] Operable by keyboard alone, and usable with a finger at touch density
+- [ ] State reads without colour: an attribute or a mark carries it too
+- [ ] Conforms at `strict`, or declares its exception with a reason

@@ -13,7 +13,7 @@ effort: m
 
 ## Context
 
-The concept canvas (https://claude.ai/artifact/KqKaAtwA6LJePUkpmRpej3) showed one component sheet rendered from seven
+The concept canvas showed one component sheet rendered from seven
 inputs, and three variants (Editorial, Instrument, Soft) that are the same sheet
 with different inputs. The proportions never change; the inputs do.
 
@@ -56,3 +56,11 @@ DTCG, not the inputs.
 ## 2026-09-22
 
 Decided 2026-09-22: the default-plus-variants concept was chosen on the canvas, with Inter replacing Geist as the default face.
+
+## 2026-09-23
+
+The canvas this cites has since been deleted, and this decision was superseded
+by the retheme milestone: 0092 retired radius and shadow, 0089 replaced the
+twelve-step palette with the ANSI 16, and the type scale went with them. What
+survives is the shape of the decision — a theme is a handful of inputs, every
+token derived — now five inputs instead of seven. See docs/concept.md.
