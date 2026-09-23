@@ -7,6 +7,7 @@
  *   @import '@rockaway/tokens/tokens.css';
  */
 @import "./layers.css";
+@import "./cell.css";
 @import "./reset.css";
 @import "./base.css";
 @import "./focus.css";

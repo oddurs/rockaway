@@ -1,25 +1,24 @@
 /*
- * Container queries (cairn 0029).
+ * Container queries (cairn 0029, 0093).
  *
  * A component answers to the space it is given, never to the size of the
- * window: the same card in a sidebar and in a main column should differ,
- * and a viewport query cannot tell them apart.
+ * window: the same panel in a sidebar and in a main column should differ, and
+ * a viewport query cannot tell them apart.
  *
  * The convention:
  *
  *   1. The consumer marks the box that defines the space with `.rk-container`.
  *      It names the container `rk`, so component CSS can ask about that
- *      ancestor specifically and ignore any container the app has of its own.
+ *      ancestor and ignore any container the app has of its own.
  *   2. Component CSS asks `@container rk (min-width: …)`, never `@media`.
- *   3. Widths are written as literals, because a container query condition
- *      cannot read a custom property. The steps the system uses:
+ *   3. Widths are written in `ch`, because a container query condition cannot
+ *      read a custom property, and because a screen is measured in columns.
+ *      The steps are the ones terminals have always used:
  *
- *        24rem   384px   a narrow column: stack everything
- *        32rem   512px   room for a label beside a control
- *        48rem   768px   room for two columns
- *
- * Nothing forces a component to be responsive. Most are not: they inherit
- * their size from the space and the density context.
+ *        40ch   a phone, or a sidebar: one column, stacked
+ *        60ch   room for a label beside a control
+ *        80ch   the classic terminal: two columns
+ *       120ch   room for a third
  */
 @layer rk.utilities {
   .rk-container {

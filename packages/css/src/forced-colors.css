@@ -17,6 +17,26 @@
 @layer rk.base {
   @media (forced-colors: active) {
     :root {
+      /* The palette first: everything else aliases it (0089). */
+      --rk-ansi-background: Canvas;
+      --rk-ansi-surface: Canvas;
+      --rk-ansi-subtle: Canvas;
+      --rk-ansi-hover: Canvas;
+      --rk-ansi-active: Canvas;
+      --rk-ansi-foreground: CanvasText;
+      --rk-ansi-muted: CanvasText;
+      --rk-ansi-faint: GrayText;
+      --rk-ansi-border-subtle: CanvasText;
+      --rk-ansi-border: CanvasText;
+      --rk-ansi-border-strong: CanvasText;
+      --rk-ansi-blue: Highlight;
+      --rk-ansi-cyan: Highlight;
+      --rk-ansi-green: Highlight;
+      --rk-ansi-yellow: Highlight;
+      --rk-ansi-red: Highlight;
+      --rk-ansi-selection: Highlight;
+      --rk-ansi-cursor: CanvasText;
+
       /* Surfaces collapse to the reader's canvas; borders do the separating. */
       --rk-bg-page: Canvas;
       --rk-bg-surface: Canvas;

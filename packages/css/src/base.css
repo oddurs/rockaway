@@ -1,17 +1,16 @@
 /*
- * Base (cairn 0025, 0091). Element defaults, all of them reading semantic
- * tokens.
+ * Base (cairn 0025, 0093). Element defaults, all of them reading semantic
+ * tokens, on a character grid.
  *
- * There is no metric-matched fallback face any more: every family in the
- * system is monospace, and the system stack is already there, so text has a
- * cell from the first paint whether a web font arrives or not.
+ * One size: a heading is weight, case or reverse, never a larger font (0075).
+ * Ligatures are off, because a ligature is two characters in one cell.
+ * Density is the line box, so the cells get taller and nothing moves.
+ *
+ * `color-scheme` is not set here: it belongs to the mode context, and this
+ * layer is later than the tokens, so setting it here would overrule the mode
+ * and leave form controls in the wrong scheme.
  */
-
 @layer rk.base {
-  /*
-   * Density is the line box (cairn 0090): the cell gets taller, and nothing
-   * about a layout moves. The full grid rhythm is 0093.
-   */
   body,
   [data-density] {
     line-height: var(--rk-cell-line);
@@ -23,10 +22,11 @@
     font-family: var(--rk-font-family-mono);
     font-size: 1rem;
     font-variant-ligatures: none;
+    font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* One size on a character grid: weight and case carry a heading (0075). */
+  /* One size on a character grid: weight and case carry a heading. */
   h1,
   h2,
   h3,
@@ -34,7 +34,7 @@
   h5,
   h6 {
     font-size: inherit;
-    font-weight: var(--rk-font-weight-bold);
+    font-weight: var(--rk-attribute-bold);
   }
 
   h1 {
@@ -42,14 +42,10 @@
     letter-spacing: 0.08em;
   }
 
-  small {
-    color: var(--rk-fg-muted);
-  }
-
   a {
     color: var(--rk-fg-accent);
-    text-decoration-thickness: from-font;
-    text-underline-offset: 0.15em;
+    text-decoration-thickness: var(--rk-attribute-underline-thickness);
+    text-underline-offset: var(--rk-attribute-underline-offset);
   }
 
   code,
@@ -57,6 +53,10 @@
   samp,
   pre {
     font-family: var(--rk-font-family-mono);
+  }
+
+  small {
+    color: var(--rk-fg-muted);
   }
 
   hr {
@@ -68,20 +68,38 @@
     border-collapse: collapse;
   }
 
+  /* State is an attribute, not a new colour (0076). */
   ::placeholder {
     color: var(--rk-fg-muted);
   }
 
   ::selection {
-    background: var(--rk-bg-accent-subtle);
+    background: var(--rk-ansi-selection);
     color: var(--rk-fg-default);
   }
 
-  /* Numbers that line up: tables, inputs, meters. */
-  td,
-  th,
-  input[type="number"],
-  output {
-    font-variant-numeric: tabular-nums;
+  :disabled,
+  [aria-disabled="true"] {
+    color: var(--rk-attribute-dim);
+  }
+
+  [data-attrs~="bold"] {
+    font-weight: var(--rk-attribute-bold);
+  }
+
+  [data-attrs~="dim"] {
+    color: var(--rk-attribute-dim);
+  }
+
+  [data-attrs~="underline"] {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* Reverse video: the ground and the figure swap, which is how a terminal
+   * shows selection, a cursor and a focused fill. */
+  [data-attrs~="reverse"] {
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
   }
 }
