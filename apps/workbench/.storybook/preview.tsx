@@ -1,3 +1,4 @@
+import { expectConformance } from '@rockaway/react';
 import type { Decorator, Preview } from '@storybook/react-vite';
 import '@fontsource-variable/inter';
 import '@rockaway/css';
@@ -49,6 +50,24 @@ const preview: Preview = {
     // Every story is an accessibility test: a violation fails the run.
     a11y: { test: 'error' },
   },
+};
+
+/**
+ * Every story that draws a screen is checked against the grid (cairn 0088).
+ * A box off the grid fails here unless it carries a reason, so conformance is
+ * not something a component has to remember to assert.
+ */
+export const afterEach = ({
+  canvasElement,
+  parameters,
+}: {
+  canvasElement: HTMLElement;
+  parameters: { conformance?: boolean };
+}): void => {
+  if (parameters.conformance === false) return;
+  for (const screen of canvasElement.querySelectorAll<HTMLElement>('.rk-screen')) {
+    expectConformance(screen);
+  }
 };
 
 export default preview;

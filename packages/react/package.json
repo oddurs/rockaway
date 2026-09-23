@@ -16,8 +16,8 @@
       "default": "./dist/paint.js"
     },
     "./testing": {
-      "@rockaway/source": "./src/testing/screenshot.ts",
-      "default": "./dist/screenshot.js"
+      "@rockaway/source": "./src/testing/index.ts",
+      "default": "./dist/index.js"
     }
   },
   "files": [

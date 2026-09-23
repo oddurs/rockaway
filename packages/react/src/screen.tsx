@@ -110,6 +110,11 @@ export function Screen({
     '--rk-cell-height': `${cell.height}px`,
     '--rk-cols': size.width,
     '--rk-rows': size.height,
+    // A screen given a size in cells sizes itself in cells. One measured from
+    // its container takes whatever box the page gives it: the page decides
+    // that box, and the grid governs everything inside it.
+    ...(cols === undefined ? {} : { width: `calc(var(--rk-cell-width) * ${cols})` }),
+    ...(rows === undefined ? {} : { height: `calc(var(--rk-cell-height) * ${rows})` }),
   } as CSSProperties;
 
   return (
