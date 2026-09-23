@@ -16,7 +16,7 @@ async function css(): Promise<string> {
 async function utilities(classes: string[]): Promise<string> {
   const compiler = await compile(`@import 'tailwindcss';\n${await css()}`, {
     base: root,
-    loadStylesheet: async (id, base) => {
+    loadStylesheet: async (id) => {
       const file = id === 'tailwindcss' ? require.resolve('tailwindcss/index.css') : id;
       return { path: file, base: path.dirname(file), content: await readFile(file, 'utf8') };
     },
