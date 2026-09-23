@@ -17,6 +17,16 @@ export {
   union,
 } from './geometry.ts';
 export {
+  type BorderSet,
+  type BorderSetName,
+  borderSets,
+  edgeKey,
+  edgesFromKey,
+  glyphFor,
+  junctionTable,
+  mergeEdges,
+} from './junction.ts';
+export {
   Attr,
   type Attrs,
   EMPTY_STYLE,
