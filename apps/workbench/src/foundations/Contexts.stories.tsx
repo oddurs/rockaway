@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { expect } from 'storybook/test';
+import { text } from '../text.ts';
 
 /**
  * Mode and density are contexts (cairn 0058), and they work on any element,
@@ -22,7 +23,7 @@ function Panel({ label, children }: { label: string; children?: ReactNode }) {
         borderRadius: 'var(--rk-radius-surface)',
       }}
     >
-      <span style={{ font: 'var(--rk-text-label)' }}>{label}</span>
+      <span style={{ ...text('label') }}>{label}</span>
       {children}
     </section>
   );

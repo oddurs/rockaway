@@ -46,6 +46,9 @@ jobs:
       - name: Contrast report (every declared pair, both modes)
         run: pnpm --filter @rockaway/tokens contrast
 
+      - name: Production build of the workbench (a minifier sees the CSS)
+        run: pnpm --filter workbench build
+
   roadmap:
     name: Roadmap is valid and rendered
     runs-on: ubuntu-latest

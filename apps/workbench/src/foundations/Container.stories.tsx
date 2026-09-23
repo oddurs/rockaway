@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 import './container/container.demo.css';
+import { text } from '../text.ts';
 
 /**
  * Container queries (cairn 0029). The same card, at one window size, in two
@@ -11,7 +12,7 @@ function Card({ label }: { label: string }) {
     <article className="demo-card" aria-label={label}>
       <div className="demo-card__media" />
       <div>
-        <h3 style={{ font: 'var(--rk-text-heading-xs)' }}>{label}</h3>
+        <h3 style={{ ...text('heading-xs') }}>{label}</h3>
         <p style={{ color: 'var(--rk-fg-muted)' }}>Answers to its container, not the window.</p>
       </div>
     </article>

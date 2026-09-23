@@ -3,9 +3,10 @@
  * dtcg/ now. Builds into a temporary directory and compares.
  */
 import { execFileSync } from 'node:child_process';
-import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { repairRegistrations } from './fix-properties.ts';
 
 const root = path.join(import.meta.dirname, '..');
 const tmp = await mkdtemp(path.join(tmpdir(), 'rk-tokens-'));
@@ -16,6 +17,10 @@ try {
     env: { ...process.env, RK_TOKENS_OUT: tmp },
     stdio: ['ignore', 'ignore', 'inherit'],
   });
+  // The same repair the build applies (cairn 0066).
+  const built = path.join(tmp, 'css/tokens.css');
+  await writeFile(built, repairRegistrations(await readFile(built, 'utf8')));
+
   const stale: string[] = [];
   for (const file of ['css/tokens.css', 'css/tailwind.css', 'src/names.ts']) {
     const [built, committed] = await Promise.all([

@@ -187,3 +187,17 @@ describe('theme validation', () => {
     `);
   });
 });
+
+describe('the shipped CSS survives a minifier (0066)', () => {
+  test('no @property registration has a var() initial value', async () => {
+    const css = await readFile(path.join(root, 'css/tokens.css'), 'utf8');
+    expect(css).not.toMatch(/initial-value: [^\n]*var\(/);
+  });
+
+  test('no declaration uses the font shorthand, which minifiers will not parse', async () => {
+    for (const file of ['css/tokens.css', 'css/tailwind.css']) {
+      const css = await readFile(path.join(root, file), 'utf8');
+      expect(css, file).not.toMatch(/^\s*font: /m);
+    }
+  });
+});

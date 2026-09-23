@@ -12,8 +12,18 @@ export function names({ file, input }: { file: string; input: Record<string, str
     name: 'rockaway-names',
     build({ getTransforms }) {
       const entries = getTransforms({ format: 'css', input })
-        .map((t) => [t.token.id, t.localID ?? ''] as const)
-        .filter(([, v]) => v !== '')
+        .flatMap((t) => {
+          const cssVar = t.localID;
+          if (!cssVar) return [];
+          // A typography token has no shorthand of its own (cairn 0066), so
+          // list its parts: `text.body.font-size`, and so on.
+          if (t.type === 'MULTI_VALUE' && t.token.$type === 'typography') {
+            return Object.keys(t.value as Record<string, unknown>)
+              .filter((sub) => sub !== '.')
+              .map((sub) => [`${t.token.id}.${sub}`, `${cssVar}-${sub}`] as const);
+          }
+          return [[t.token.id, cssVar] as const];
+        })
         .sort(([a], [b]) => (a < b ? -1 : 1));
       const lines = entries.map(([id, v]) => `  '${id}': 'var(${v})',`);
       mkdirSync(path.dirname(file), { recursive: true });

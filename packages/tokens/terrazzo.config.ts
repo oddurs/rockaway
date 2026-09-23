@@ -25,6 +25,9 @@ const config: ConfigInit = defineConfig({
       // Typed custom properties: reference values get a real syntax, aliases
       // stay untyped, so an override like `none` in forced colors still lands.
       propertyDefinitions: true,
+      // No `font` shorthand: it is legal CSS that minifiers refuse to parse
+      // when the value is a var() (cairn 0066). The parts are emitted anyway.
+      omitTypographyShorthand: true,
       variableName: (token) => `--rk-${token.id.replace(/\./g, '-')}`,
       permutations: [
         // Everything, at the defaults.
