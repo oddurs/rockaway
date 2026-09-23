@@ -27,7 +27,7 @@ function ForcedColors() {
       }}
     >
       <section style={card} aria-label="Surface">
-        <h2 style={{ ...text('heading-sm') }}>A surface with an edge</h2>
+        <h2 style={{ ...text('heading') }}>A surface with an edge</h2>
         <p style={{ color: 'var(--rk-fg-muted)' }} data-testid="muted">
           Secondary text stays readable.
         </p>

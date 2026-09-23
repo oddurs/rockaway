@@ -20,7 +20,7 @@ function Surfaces() {
   };
   return (
     <section aria-labelledby="surfaces-title" style={card}>
-      <h1 id="surfaces-title" style={{ margin: 0, ...text('heading-sm') }}>
+      <h1 id="surfaces-title" style={{ margin: 0, ...text('heading') }}>
         Timeless bones, any skin.
       </h1>
       <p style={{ margin: 0, ...text('body'), color: 'var(--rk-fg-muted)' }}>
