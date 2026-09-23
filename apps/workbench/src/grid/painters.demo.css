@@ -1,0 +1,34 @@
+/* The cell, and the two layers a screen is made of (cairn 0085). */
+@layer rk.components {
+  .rk-screen {
+    --rk-cell-width: 1ch;
+    --rk-cell-height: 1.25em;
+    position: relative;
+    font-family: var(--rk-text-code-font-family);
+    font-size: var(--rk-text-code-font-size);
+    line-height: var(--rk-cell-height);
+    white-space: pre;
+    color: var(--rk-fg-default);
+  }
+
+  .rk-row {
+    height: var(--rk-cell-height);
+  }
+
+  .rk-cells[data-attrs~="bold"] {
+    font-weight: 700;
+  }
+
+  .rk-cells[data-attrs~="dim"] {
+    color: var(--rk-fg-muted);
+  }
+
+  .rk-cells[data-attrs~="reverse"] {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-page);
+  }
+
+  .rk-cells[data-attrs~="underline"] {
+    text-decoration: underline;
+  }
+}
