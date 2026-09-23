@@ -1,0 +1,49 @@
+/*
+ * Motion (cairn 0026).
+ *
+ * Reduced motion comes from two places: the reader's system setting, and an
+ * in-app setting, which an app expresses as `data-motion="reduced"` on the
+ * root. Both collapse the duration tokens, so anything reading them stops
+ * animating, and both stop animation already written in CSS.
+ *
+ * The blanket rule is deliberately `!important`, and Biome's rule against it
+ * is turned off for this file alone: this is the one place where the system
+ * overrules a consumer, because the reader asked it to.
+ */
+@layer rk.base {
+  @media (prefers-reduced-motion: reduce) {
+    :root:not([data-motion="full"]) {
+      --rk-motion-duration-fast: 1ms;
+      --rk-motion-duration-base: 1ms;
+      --rk-motion-duration-slow: 1ms;
+    }
+  }
+
+  :root[data-motion="reduced"] {
+    --rk-motion-duration-fast: 1ms;
+    --rk-motion-duration-base: 1ms;
+    --rk-motion-duration-slow: 1ms;
+  }
+}
+
+@layer rk.reset {
+  @media (prefers-reduced-motion: reduce) {
+    :root:not([data-motion="full"]) *,
+    :root:not([data-motion="full"]) *::before,
+    :root:not([data-motion="full"]) *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  [data-motion="reduced"] *,
+  [data-motion="reduced"] *::before,
+  [data-motion="reduced"] *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
