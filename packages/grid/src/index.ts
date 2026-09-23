@@ -50,6 +50,8 @@ export {
   solve,
   type Track,
 } from './layout.ts';
+export { fromText, type ToTextOptions, toText } from './paint/text.ts';
+export { bufferSerializer, frame, type SnapshotSerializer } from './snapshot.ts';
 export {
   Attr,
   type Attrs,

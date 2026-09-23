@@ -77,13 +77,12 @@ The CSS contract every consumer shares.
 
 ## grid — The frame engine
 
-`#######···` 63% · 10 of 16 done · due 2026-12-06
+`#######···` 69% · 11 of 16 done · due 2026-12-06
 
 The heart of a TUI system: a pure, integer model of a character grid, and
 
 ### backlog
 
-- [ ] [`0083`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0083-paint-to-text-and-make-it-the-snapshot-format.md) Paint to text, and make it the snapshot format <sup>feature · grid · p0</sup>
 - [ ] [`0084`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0084-paint-to-ansi.md) Paint to ANSI <sup>feature · grid · p1</sup>
 - [ ] [`0085`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0085-paint-to-the-dom-the-glyph-and-rule-painters.md) Paint to the DOM: the glyph and rule painters <sup>feature · grid · p0</sup>
 - [ ] [`0086`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0086-bind-the-engine-to-react-measure-in-cells-render-resize.md) Bind the engine to React: measure in cells, render, resize <sup>feature · grid · p0</sup>
@@ -102,6 +101,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 - [x] [`0080`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0080-measure-text-in-cells-wcwidth-truncation-wrapping.md) Measure text in cells: wcwidth, truncation, wrapping <sup>feature · grid · p0</sup>
 - [x] [`0081`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0081-write-the-integer-layout-solver.md) Write the integer layout solver <sup>feature · grid · p0</sup>
 - [x] [`0082`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0082-draw-boxes-dividers-titles-and-padding.md) Draw boxes, dividers, titles and padding <sup>feature · grid · p0</sup>
+- [x] [`0083`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0083-paint-to-text-and-make-it-the-snapshot-format.md) Paint to text, and make it the snapshot format <sup>feature · grid · p0</sup>
 
 ## primitives — First primitives
 
