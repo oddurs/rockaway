@@ -3,7 +3,6 @@ import { paintGlyph, paintRule } from '@rockaway/react/paint';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useRef } from 'react';
 import { expect } from 'storybook/test';
-import './painters.demo.css';
 
 /** One screen, drawn once, painted two ways (cairn 0085). */
 function screen(): Buffer {

@@ -3,7 +3,6 @@ import { renderScreenToText, Screen } from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { expect, waitFor } from 'storybook/test';
-import './painters.demo.css';
 
 /** Draws to whatever size it is given, which is the whole point. */
 function draw({ width, height }: Size): Buffer {

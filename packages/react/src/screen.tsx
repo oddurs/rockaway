@@ -8,6 +8,7 @@
 import type { Buffer, Size } from '@rockaway/grid';
 import {
   type CSSProperties,
+  type HTMLAttributes,
   type ReactNode,
   useCallback,
   useEffect,
@@ -22,7 +23,13 @@ import { paintRule } from './paint/rule.ts';
 
 export type PainterName = 'glyph' | 'rule';
 
-export interface ScreenProps {
+/** Padding inside a screen's content layer, in cells. */
+export interface Inset {
+  readonly x: number;
+  readonly y: number;
+}
+
+export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'color'> {
   /** Draw the screen at the size it has been given, in cells. */
   draw: (size: Size) => Buffer;
   /** How the chrome is drawn. Both read the same geometry. */
@@ -32,8 +39,13 @@ export interface ScreenProps {
   rows?: number;
   /** The size to draw before the first measurement, and on a server. */
   fallback?: Size;
-  className?: string;
-  style?: CSSProperties;
+  /**
+   * Inset the content layer by this many cells, so real elements start inside
+   * the chrome rather than on top of it. It goes on the content layer itself,
+   * which the grid check already excuses: the page sizes that box, and a
+   * measured screen is not a whole number of cells wide.
+   */
+  contentInset?: Inset;
   /** Real elements, laid over the chrome. */
   children?: ReactNode;
 }
@@ -49,9 +61,11 @@ export function Screen({
   cols,
   rows,
   fallback = FALLBACK,
+  contentInset,
   className,
   style,
   children,
+  ...rest
 }: ScreenProps): ReactNode {
   const host = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLDivElement>(null);
@@ -125,11 +139,24 @@ export function Screen({
       data-rk-cols={size.width}
       data-rk-rows={size.height}
       style={{ ...vars, ...style }}
+      {...rest}
     >
       <div ref={frame} className="rk-frame" />
-      {children === undefined ? null : <div className="rk-content">{children}</div>}
+      {children === undefined ? null : (
+        <div className="rk-content" style={insetStyle(contentInset)}>
+          {children}
+        </div>
+      )}
     </div>
   );
+}
+
+function insetStyle(inset: Inset | undefined): CSSProperties | undefined {
+  if (!inset) return undefined;
+  return {
+    paddingInline: `calc(var(--rk-cell-width) * ${inset.x})`,
+    paddingBlock: `calc(var(--rk-cell-height) * ${inset.y})`,
+  };
 }
 
 /**
