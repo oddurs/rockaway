@@ -3,11 +3,12 @@ id: 67
 key: grid
 title: The frame engine
 type: milestone
-status: backlog
+status: done
 depends_on:
 - 3
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-09-23
+closed_at: 2026-09-23
 priority: p2
 due: 2026-12-06
 ---
@@ -20,3 +21,7 @@ to come from one geometry. Done means a screen can be composed in cells,
 rendered to characters, to the DOM, to ANSI, and compared as text in a test.
 
 Concept: https://claude.ai/artifact/7nLZVoPtzJqMJuciyhfZjV
+
+## 2026-09-23
+
+Done 2026-09-23, ahead of the 2026-12-06 due date. The engine is pure integer geometry with no DOM: a cell buffer, weighted edges resolved from the Unicode block, text measured in cells, an integer layout solver, box drawing, and four painters — text, ANSI, glyph and rule. Two things exist now that a pixel system cannot have: screens compared as text, and a conformance check that fails on any box off the grid unless it declares a reason.
