@@ -82,9 +82,11 @@ export function checkConformance(
         }
         continue;
       }
-      // The painted chrome is cells by construction, and the two layers are
-      // the screen's own box, which the page sizes rather than the grid.
-      if (el.closest('.rk-frame')) continue;
+      // Painted chrome is cells by construction — and a rule painter's
+      // strokes are deliberately half a cell — so anything a painter drew is
+      // identified by its own marker and left alone. The content layer is the
+      // screen's own box, which the page sizes rather than the grid.
+      if (el.closest('[data-rk-painted]')) continue;
       if (el.classList.contains('rk-content')) continue;
       const box = el.getBoundingClientRect();
       if (box.width === 0 && box.height === 0) continue;

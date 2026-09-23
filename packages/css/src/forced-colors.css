@@ -4,10 +4,10 @@
  * semantic tokens to the CSS system colours, so components need no rules of
  * their own: whatever reads `--rk-fg-muted` keeps working.
  *
- * Two things go wrong if this is not done. Surfaces that separate by tone or
- * shadow become invisible, because backgrounds and shadows are dropped; and
- * colour that carries meaning (danger, success) disappears, so meaning has to
- * be carried by text and borders as well.
+ * Two things go wrong if this is not done. Surfaces separated by background
+ * alone become invisible, because backgrounds are dropped; and colour that
+ * carries meaning (danger, success) disappears, so meaning has to be carried
+ * by text and borders as well.
  */
 /*
  * The remapping sits in `rk.base`, not `rk.tokens`: both would otherwise be
@@ -73,11 +73,6 @@
       --rk-fg-success: CanvasText;
       --rk-fg-warning: CanvasText;
       --rk-fg-danger: CanvasText;
-
-      /* Shadows are not painted at all, so surfaces must not depend on them. */
-      --rk-shadow-control: none;
-      --rk-shadow-surface: none;
-      --rk-shadow-overlay: none;
     }
   }
 }

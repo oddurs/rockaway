@@ -3,7 +3,7 @@
  * The output is committed and reviewed, so a changed rule is a visible diff.
  *
  *   base.tokens.json               font primitives (reference tier)
- *   semantic.tokens.json           the semantic tier: colour, radius, shadow, text, motion, focus
+ *   semantic.tokens.json           the semantic tier: colour, motion, focus
  *   palette.{mode}.tokens.json     palettes, one file per `mode` context
  *   density.{density}.tokens.json  space and control sizes, one per `density` context
  *   rockaway.resolver.json         how they combine
@@ -11,13 +11,11 @@
 
 import { controlSizes, space } from './density.ts';
 import { color, type Group, px, type ResolverDocument } from './dtcg.ts';
-import { shadowPalette, shadows } from './elevation.ts';
 import { type Density, densities, type Mode, modes, type ThemeInputs } from './inputs.ts';
 import { motion } from './motion.ts';
 import { hues, type PaletteKey, palettes, steps } from './palette.ts';
-import { radii } from './radius.ts';
 import { semanticColors } from './semantic.ts';
-import { families, pairingWeights, sizeRem, sizeSteps, textStyles, weights } from './type.ts';
+import { families, weights } from './type.ts';
 
 export type GeneratedFiles = ReadonlyMap<string, unknown>;
 
@@ -38,49 +36,13 @@ function base(inputs: ThemeInputs): Group {
         $type: 'fontWeight',
         ...Object.fromEntries(Object.entries(weights).map(([k, w]) => [k, { $value: w }])),
       },
-      size: {
-        $type: 'dimension',
-        $description: 'The type scale: 14px, ratio 1.2, in rem.',
-        ...Object.fromEntries(
-          (Object.keys(sizeSteps) as (keyof typeof sizeSteps)[]).map((k) => [
-            k,
-            { $value: { value: sizeRem(k), unit: 'rem' } },
-          ]),
-        ),
-      },
     },
   };
 }
 
 function semantic(inputs: ThemeInputs): Group {
-  const w = pairingWeights[inputs.typePairing];
-  const weightOf = (v: string) => (v === 'heading' ? w.heading : v === 'display' ? w.display : v);
   return {
-    ...semanticColors(inputs.elevation),
-    radius: {
-      $type: 'dimension',
-      $description: `Corners, derived from a ${inputs.radius}px control radius.`,
-      ...Object.fromEntries(Object.entries(radii(inputs.radius)).map(([k, v]) => [k, px(v)])),
-    },
-    ...shadows(inputs.elevation),
-    text: {
-      $type: 'typography',
-      $description: 'Text styles by job.',
-      ...Object.fromEntries(
-        Object.entries(textStyles).map(([name, t]) => [
-          name,
-          {
-            $value: {
-              fontFamily: `{font.family.${t.family}}`,
-              fontSize: `{font.size.${t.size}}`,
-              fontWeight: `{font.weight.${weightOf(t.weight)}}`,
-              letterSpacing: { value: 0, unit: 'px' },
-              lineHeight: t.lineHeight,
-            },
-          },
-        ]),
-      ),
-    },
+    ...semanticColors(),
     ...motion(),
     focus: {
       $type: 'dimension',
@@ -105,7 +67,6 @@ function palette(inputs: ThemeInputs, mode: Mode): Group {
           Object.fromEntries(keys.map((k) => [String(k), color(all[hue][k])])),
         ]),
       ),
-      ...shadowPalette(inputs.neutralTemperature, inputs.accentHue, mode),
     },
   };
 }

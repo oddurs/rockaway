@@ -7,12 +7,10 @@
     padding: var(--rk-space-4);
     background: var(--rk-bg-surface);
     border: 1px solid var(--rk-border-surface);
-    border-radius: var(--rk-radius-surface);
   }
 
   .demo-card__media {
     block-size: 64px;
-    border-radius: var(--rk-radius-tag);
     background: var(--rk-bg-accent-subtle);
   }
 

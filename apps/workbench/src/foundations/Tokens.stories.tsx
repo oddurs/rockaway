@@ -1,13 +1,7 @@
 import { vars } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
-import {
-  Motion,
-  Palettes,
-  SemanticColours,
-  SpaceAndShape,
-  Typography,
-} from './tokens/Reference.tsx';
+import { Motion, Palettes, SemanticColours } from './tokens/Reference.tsx';
 import { docs, group } from './tokens/walk.ts';
 
 /**
@@ -33,10 +27,6 @@ export const Semantic: Story = {
     await expect(canvas.getAllByRole('row')).toHaveLength(count + 3);
   },
 };
-
-export const Type: Story = { name: 'Typography', render: () => <Typography /> };
-
-export const Shape: Story = { name: 'Space and shape', render: () => <SpaceAndShape /> };
 
 export const Timing: Story = {
   name: 'Motion',

@@ -11,7 +11,6 @@ function FocusAndMotion() {
   const control = {
     height: 'var(--rk-size-control-md)',
     padding: '0 var(--rk-space-4)',
-    borderRadius: 'var(--rk-radius-control)',
     border: '1px solid var(--rk-border-control)',
     background: 'var(--rk-bg-surface)',
     ...text('label'),
@@ -39,7 +38,6 @@ function FocusAndMotion() {
         style={{
           overflow: 'hidden',
           padding: 'var(--rk-space-2)',
-          borderRadius: 'var(--rk-radius-surface)',
           border: '1px dashed var(--rk-border-default)',
         }}
       >
@@ -53,7 +51,6 @@ function FocusAndMotion() {
         style={{
           width: 120,
           height: 24,
-          borderRadius: 'var(--rk-radius-tag)',
           background: 'var(--rk-bg-accent-solid)',
           transition: 'background var(--rk-motion-duration-base) var(--rk-motion-easing-standard)',
         }}

@@ -38,10 +38,10 @@ describe('Tailwind adapter (0030)', () => {
     expect(themeName('palette.neutral.1')).toBeUndefined();
   });
 
-  test('every semantic colour, radius and shadow token reaches the theme', async () => {
+  test('every semantic colour token reaches the theme', async () => {
     const file = await css();
     const semantic = generate(defaultTheme).get('semantic.tokens.json') as Record<string, unknown>;
-    const groups = ['bg', 'fg', 'border', 'radius', 'shadow'] as const;
+    const groups = ['bg', 'fg', 'border'] as const;
     const paths: string[] = [];
     const walk = (node: Record<string, unknown>, trail: string[]) => {
       if ('$value' in node) return paths.push(trail.join('.'));
@@ -63,10 +63,7 @@ describe('Tailwind adapter (0030)', () => {
       'bg-surface',
       'text-muted',
       'border-line-control',
-      'rounded-surface',
-      'shadow-overlay',
       'p-4',
-      'text-body',
       'font-mono',
       'ease-enter',
     ]);
@@ -74,9 +71,6 @@ describe('Tailwind adapter (0030)', () => {
     expect(out).toContain('var(--rk-bg-surface)');
     expect(out).toContain('var(--rk-fg-muted)');
     expect(out).toContain('var(--rk-border-control)');
-    expect(out).toContain('var(--rk-radius-surface)');
-    expect(out).toContain('var(--rk-shadow-overlay)');
-    expect(out).toContain('var(--rk-text-body-font-size)');
     expect(out).toContain('var(--rk-font-family-mono)');
     expect(out).toContain('var(--rk-motion-easing-enter)');
 

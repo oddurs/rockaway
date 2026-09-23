@@ -81,7 +81,6 @@ function Swatch({ cssVar, mode }: { cssVar: string; mode?: 'light' | 'dark' }) {
         display: 'inline-block',
         width: 40,
         height: 24,
-        borderRadius: 'var(--rk-radius-tag)',
         background: `var(${cssVar})`,
         boxShadow: 'inset 0 0 0 1px oklch(0.5 0 0 / 0.2)',
       }}
@@ -108,7 +107,6 @@ export function Palettes() {
             padding: 'var(--rk-space-4)',
             background: 'var(--rk-bg-page)',
             color: 'var(--rk-fg-default)',
-            borderRadius: 'var(--rk-radius-surface)',
           }}
         >
           <Table caption={`${mode === 'light' ? 'Light' : 'Dark'} mode`} head={['Hue', ...keys]}>
@@ -164,133 +162,6 @@ export function SemanticColours() {
           <SemanticRows tokens={group(docs.semantic, g)} />
         </Table>
       ))}
-    </Page>
-  );
-}
-
-export function Typography() {
-  const styles = group(docs.semantic, 'text');
-  const sizes = Object.fromEntries(
-    group(docs.base, 'font')
-      .filter((t) => t.path.startsWith('font.size'))
-      .map((t) => [t.path, t.value as { value: number }]),
-  );
-  return (
-    <Page
-      title="Typography"
-      lead="Text styles by job. Sizes come from 14px and a 1.2 ratio, in rem so they follow the reader's settings."
-    >
-      <Table caption="Text styles" head={['Token', 'Specimen', 'Size', 'Line height']}>
-        {styles.map((t) => {
-          const v = t.value as { fontSize: string; lineHeight: number };
-          const rem = sizes[aliasOf(v.fontSize) ?? '']?.value ?? 0;
-          return (
-            <tr key={t.path}>
-              <td style={cell}>
-                <code style={mono}>{t.path}</code>
-              </td>
-              <td
-                style={{
-                  ...cell,
-                  fontFamily: `var(${t.cssVar}-font-family)`,
-                  fontSize: `var(${t.cssVar}-font-size)`,
-                  fontWeight: `var(${t.cssVar}-font-weight)`,
-                  lineHeight: `var(${t.cssVar}-line-height)`,
-                  whiteSpace: 'nowrap',
-                  maxWidth: 520,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                Timeless bones, any skin
-              </td>
-              <td style={{ ...cell, ...mono, ...muted }}>{Math.round(rem * 16)}px</td>
-              <td style={{ ...cell, ...mono, ...muted }}>{v.lineHeight}</td>
-            </tr>
-          );
-        })}
-      </Table>
-    </Page>
-  );
-}
-
-export function SpaceAndShape() {
-  const space = group(docs.regular, 'space');
-  const sizes = group(docs.regular, 'size');
-  const radius = group(docs.semantic, 'radius');
-  const shadows = group(docs.semantic, 'shadow');
-  const px = (t: TokenEntry) => `${(t.value as { value: number }).value}px`;
-  return (
-    <Page
-      title="Space and shape"
-      lead="A 4px unit scaled by density, corners derived from one radius, and three levels of shadow."
-    >
-      <Table caption="Space (regular density)" head={['Token', 'Value', 'Sample']}>
-        {space.map((t) => (
-          <tr key={t.path}>
-            <td style={cell}>
-              <code style={mono}>{t.path}</code>
-            </td>
-            <td style={{ ...cell, ...mono, ...muted }}>{px(t)}</td>
-            <td style={{ ...cell, width: '60%' }}>
-              <span
-                style={{
-                  display: 'block',
-                  height: 12,
-                  width: `var(${t.cssVar})`,
-                  background: 'var(--rk-bg-accent-solid)',
-                  borderRadius: 2,
-                }}
-              />
-            </td>
-          </tr>
-        ))}
-        {sizes.map((t) => (
-          <tr key={t.path}>
-            <td style={cell}>
-              <code style={mono}>{t.path}</code>
-            </td>
-            <td style={{ ...cell, ...mono, ...muted }}>{px(t)}</td>
-            <td style={cell}>
-              <span
-                style={{
-                  display: 'block',
-                  height: `var(${t.cssVar})`,
-                  width: 120,
-                  border: '1px solid var(--rk-border-control)',
-                  borderRadius: 'var(--rk-radius-control)',
-                }}
-              />
-            </td>
-          </tr>
-        ))}
-      </Table>
-      <Table caption="Radius and shadow" head={['Token', 'Value', 'Sample']}>
-        {[...radius, ...shadows].map((t) => (
-          <tr key={t.path}>
-            <td style={cell}>
-              <code style={mono}>{t.path}</code>
-            </td>
-            <td style={{ ...cell, ...mono, ...muted }}>
-              {t.type === 'dimension' ? px(t) : 'layered'}
-            </td>
-            <td style={cell}>
-              <span
-                style={{
-                  display: 'block',
-                  width: 96,
-                  height: 48,
-                  background: 'var(--rk-bg-surface)',
-                  border: '1px solid var(--rk-border-default)',
-                  borderRadius:
-                    t.type === 'dimension' ? `var(${t.cssVar})` : 'var(--rk-radius-surface)',
-                  boxShadow: t.type === 'shadow' ? `var(${t.cssVar})` : undefined,
-                }}
-              />
-            </td>
-          </tr>
-        ))}
-      </Table>
     </Page>
   );
 }

@@ -17,8 +17,6 @@ function Surfaces() {
     width: 360,
     background: 'var(--rk-bg-surface)',
     border: '1px solid var(--rk-border-surface)',
-    borderRadius: 'var(--rk-radius-surface)',
-    boxShadow: 'var(--rk-shadow-surface)',
   };
   return (
     <section aria-labelledby="surfaces-title" style={card}>
@@ -35,7 +33,6 @@ function Surfaces() {
           height: 'var(--rk-size-control-md)',
           padding: '0 var(--rk-space-4)',
           border: 'none',
-          borderRadius: 'var(--rk-radius-control)',
           background: 'var(--rk-bg-accent-solid)',
           color: 'var(--rk-fg-on-accent)',
           ...text('label'),

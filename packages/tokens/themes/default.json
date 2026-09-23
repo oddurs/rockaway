@@ -1,7 +1,5 @@
 {
   "accentHue": 262,
   "neutralTemperature": "neutral",
-  "radius": 6,
-  "typePairing": "inter",
-  "elevation": "border"
+  "typePairing": "inter"
 }

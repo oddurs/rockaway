@@ -138,7 +138,7 @@ The component contract, proven on a first set of components.
 
 ## retheme — Tokens on the grid
 
-`##········` 13% · 1 of 8 done · due 2026-12-20
+`###·······` 25% · 2 of 8 done · due 2026-12-20
 
 The token pipeline survives the pivot; its contents do not.
 
@@ -147,7 +147,6 @@ The token pipeline survives the pivot; its contents do not.
 - [ ] [`0089`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0089-generate-the-ansi-16-palette-in-oklch.md) Generate the ANSI 16 palette in OKLCH <sup>feature · tokens · p0</sup>
 - [ ] [`0090`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0090-emit-cell-density-and-conformance-tokens.md) Emit cell, density and conformance tokens <sup>feature · tokens · p0</sup>
 - [ ] [`0091`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0091-emit-glyph-and-attribute-tokens.md) Emit glyph and attribute tokens <sup>feature · tokens · p0</sup>
-- [ ] [`0092`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0092-retire-radius-shadow-and-the-type-scale.md) Retire radius, shadow and the type scale <sup>chore · tokens · p0</sup>
 - [ ] [`0093`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0093-rewrite-the-css-layers-for-the-grid.md) Rewrite the CSS layers for the grid <sup>feature · css · p0</sup>
 - [ ] [`0094`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0094-export-a-terminal-theme-from-the-same-tokens.md) Export a terminal theme from the same tokens <sup>feature · tokens · p2</sup>
 - [ ] [`0095`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0095-update-the-workbench-token-reference-for-the-grid.md) Update the workbench token reference for the grid <sup>docs · docs · p1</sup>
@@ -155,6 +154,7 @@ The token pipeline survives the pivot; its contents do not.
 ### done
 
 - [x] [`0075`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0075-recast-the-tokens-for-the-grid.md) Recast the tokens for the grid <sup>decision · tokens · p0</sup>
+- [x] [`0092`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0092-retire-radius-shadow-and-the-type-scale.md) Retire radius, shadow and the type scale <sup>chore · tokens · p0</sup>
 
 ## site — The dog-food site
 

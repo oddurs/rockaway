@@ -20,7 +20,6 @@ function Panel({ label, children }: { label: string; children?: ReactNode }) {
         background: 'var(--rk-bg-surface)',
         color: 'var(--rk-fg-default)',
         border: '1px solid var(--rk-border-surface)',
-        borderRadius: 'var(--rk-radius-surface)',
       }}
     >
       <span style={{ ...text('label') }}>{label}</span>

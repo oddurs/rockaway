@@ -16,8 +16,6 @@ function ForcedColors() {
     background: 'var(--rk-bg-surface)',
     color: 'var(--rk-fg-default)',
     border: '1px solid var(--rk-border-surface)',
-    borderRadius: 'var(--rk-radius-surface)',
-    boxShadow: 'var(--rk-shadow-surface)',
   };
   return (
     <div
@@ -41,7 +39,6 @@ function ForcedColors() {
             height: 'var(--rk-size-control-md)',
             padding: '0 var(--rk-space-4)',
             border: '1px solid var(--rk-bg-accent-solid)',
-            borderRadius: 'var(--rk-radius-control)',
             background: 'var(--rk-bg-accent-solid)',
             color: 'var(--rk-fg-on-accent)',
             ...text('label'),
@@ -76,8 +73,7 @@ export const Active: Story = {
     await expect(token('--rk-bg-accent-solid')).toBe('Highlight');
     await expect(token('--rk-fg-on-accent')).toBe('HighlightText');
 
-    // Shadows are not painted here, so surfaces must not rely on them.
-    await expect(token('--rk-shadow-surface')).toBe('none');
+    // Nothing here separates by background alone, so the edge has to be real.
     await expect(getComputedStyle(canvas.getByLabelText('Surface')).boxShadow).toBe('none');
 
     // Muted text is not a lighter grey here: it is the reader's text colour.

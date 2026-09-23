@@ -73,14 +73,15 @@ export const Prose_: Story = {
     const h2 = canvas.getByRole('heading', { level: 2 });
     const body = document.body;
 
-    // Headings come from the type scale, not the browser: 35px and 29px.
-    await expect(style(h1).fontSize).toBe('35px');
-    await expect(style(h2).fontSize).toBe('29px');
-    await expect(Number.parseFloat(style(h1).lineHeight) / 35).toBeCloseTo(1.15, 2);
+    // One size on a character grid (0075): a heading is weight and case, not
+    // a bigger font.
+    await expect(style(h1).fontSize).toBe(style(body).fontSize);
+    await expect(style(h2).fontSize).toBe(style(body).fontSize);
+    await expect(style(h1).fontWeight).toBe('700');
+    await expect(style(h1).textTransform).toBe('uppercase');
 
-    // The body reads the tokens, and the fallback face is declared.
-    await expect(style(body).fontSize).toBe('14px');
-    await expect(style(body).fontFamily).toContain('Inter Fallback');
+    // The body is monospace, because every cell is one character wide.
+    await expect(style(body).fontFamily.toLowerCase()).toMatch(/mono|menlo|consolas|ui-monospace/);
 
     // Numbers line up where they must.
     await expect(style(canvas.getAllByRole('cell')[0] as Element).fontVariantNumeric).toBe(

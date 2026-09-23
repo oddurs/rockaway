@@ -46,7 +46,7 @@ export function paintGlyph(
 ): void {
   const doc = target.ownerDocument;
   target.setAttribute('aria-hidden', 'true');
-  target.dataset.rkPainter = 'glyph';
+  target.dataset.rkPainted = 'glyph';
   target.replaceChildren();
 
   for (let y = 0; y < buffer.height; y++) {
