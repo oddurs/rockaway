@@ -1,0 +1,16 @@
+/*
+ * The one layer statement (cairn 0009, 0024).
+ *
+ * Declared once, before anything else, so the order holds however a consumer
+ * imports the rest. Later layers win over earlier ones, and unlayered CSS —
+ * everything a consuming app writes — wins over all of them, without
+ * !important.
+ *
+ *   rk.reset       normalise the platform
+ *   rk.tokens      custom properties, including the mode and density contexts
+ *   rk.base        element defaults: type, links, focus, motion
+ *   rk.components  the components' own styles
+ *   rk.utilities   small single-purpose classes
+ *   rk.overrides   the escape hatch, for a consumer that wants to stay layered
+ */
+@layer rk.reset, rk.tokens, rk.base, rk.components, rk.utilities, rk.overrides;

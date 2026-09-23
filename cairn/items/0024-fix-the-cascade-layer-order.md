@@ -2,8 +2,9 @@
 id: 24
 title: Fix the cascade layer order
 type: feature
-status: backlog
+status: done
 milestone: runtime
+assignee: Oddur Sigurdsson
 depends_on:
 - 9
 created: 2026-09-22
@@ -20,8 +21,8 @@ first. Consumers' unlayered CSS beats everything, which is the point.
 
 ## Acceptance criteria
 
-- [ ] Order declared in one file that every entry point imports first
-- [ ] A consumer can override any component style without `!important`
+- [x] Order declared in one file that every entry point imports first
+- [x] A consumer can override any component style without `!important`
 
 ## 2026-09-22
 

@@ -1,8 +1,9 @@
 /*
- * @rockaway/css
+ * @rockaway/css — the CSS contract every consumer shares.
  *
- * The layer order is declared once, first, so it holds no matter which file a
- * consumer imports. Consumer CSS outside these layers always wins, without
- * !important (cairn 0009, 0024).
+ * Import this once, first:
+ *
+ *   @import '@rockaway/css';
+ *   @import '@rockaway/tokens/tokens.css';
  */
-@layer rk.reset, rk.tokens, rk.base, rk.components, rk.utilities, rk.overrides;
+@import "./layers.css";
