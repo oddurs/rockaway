@@ -1,0 +1,92 @@
+/*
+ * Forced colors (cairn 0027). Windows High Contrast and its kin replace author
+ * colours with the reader's own palette. The system meets it by remapping the
+ * semantic tokens to the CSS system colours, so components need no rules of
+ * their own: whatever reads `--rk-fg-muted` keeps working.
+ *
+ * Two things go wrong if this is not done. Surfaces that separate by tone or
+ * shadow become invisible, because backgrounds and shadows are dropped; and
+ * colour that carries meaning (danger, success) disappears, so meaning has to
+ * be carried by text and borders as well.
+ */
+/*
+ * The remapping sits in `rk.base`, not `rk.tokens`: both would otherwise be
+ * the same layer as the generated token file, where the winner would depend on
+ * import order.
+ */
+@layer rk.base {
+  @media (forced-colors: active) {
+    :root {
+      /* Surfaces collapse to the reader's canvas; borders do the separating. */
+      --rk-bg-page: Canvas;
+      --rk-bg-surface: Canvas;
+      --rk-bg-subtle: Canvas;
+      --rk-bg-hover: Canvas;
+      --rk-bg-active: Canvas;
+      --rk-bg-inverse: Canvas;
+
+      --rk-fg-default: CanvasText;
+      --rk-fg-muted: CanvasText;
+      --rk-fg-disabled: GrayText;
+      --rk-fg-on-inverse: CanvasText;
+      --rk-fg-accent: LinkText;
+
+      --rk-border-subtle: CanvasText;
+      --rk-border-default: CanvasText;
+      --rk-border-control: CanvasText;
+      --rk-border-surface: CanvasText;
+      --rk-border-focus: CanvasText;
+      --rk-border-accent: CanvasText;
+      --rk-border-info: CanvasText;
+      --rk-border-success: CanvasText;
+      --rk-border-warning: CanvasText;
+      --rk-border-danger: CanvasText;
+
+      /* Filled things become the selection colours, the one filled pair the palette has. */
+      --rk-bg-accent-solid: Highlight;
+      --rk-bg-accent-solid-hover: Highlight;
+      --rk-bg-info-solid: Highlight;
+      --rk-bg-info-solid-hover: Highlight;
+      --rk-bg-success-solid: Highlight;
+      --rk-bg-success-solid-hover: Highlight;
+      --rk-bg-warning-solid: Highlight;
+      --rk-bg-warning-solid-hover: Highlight;
+      --rk-bg-danger-solid: Highlight;
+      --rk-bg-danger-solid-hover: Highlight;
+
+      --rk-fg-on-accent: HighlightText;
+      --rk-fg-on-info: HighlightText;
+      --rk-fg-on-success: HighlightText;
+      --rk-fg-on-warning: HighlightText;
+      --rk-fg-on-danger: HighlightText;
+
+      --rk-fg-accent-solid-text: HighlightText;
+
+      /* Tinted backgrounds cannot be seen; fall back to the canvas. */
+      --rk-bg-accent-subtle: Canvas;
+      --rk-bg-info-subtle: Canvas;
+      --rk-bg-success-subtle: Canvas;
+      --rk-bg-warning-subtle: Canvas;
+      --rk-bg-danger-subtle: Canvas;
+
+      --rk-fg-info: CanvasText;
+      --rk-fg-success: CanvasText;
+      --rk-fg-warning: CanvasText;
+      --rk-fg-danger: CanvasText;
+
+      /* Shadows are not painted at all, so surfaces must not depend on them. */
+      --rk-shadow-control: none;
+      --rk-shadow-surface: none;
+      --rk-shadow-overlay: none;
+    }
+  }
+}
+
+@layer rk.base {
+  @media (forced-colors: active) {
+    /* Surfaces that separated by tone or shadow need a real edge here. */
+    hr {
+      border-block-start-color: CanvasText;
+    }
+  }
+}
