@@ -15,6 +15,16 @@
     height: var(--rk-cell-height);
   }
 
+  .rk-frame {
+    position: absolute;
+    inset: 0;
+  }
+
+  .rk-content {
+    position: absolute;
+    inset: 0;
+  }
+
   .rk-cells[data-attrs~="bold"] {
     font-weight: 700;
   }

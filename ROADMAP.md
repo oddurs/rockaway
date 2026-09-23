@@ -77,13 +77,12 @@ The CSS contract every consumer shares.
 
 ## grid — The frame engine
 
-`#########·` 81% · 13 of 16 done · due 2026-12-06
+`#########·` 88% · 14 of 16 done · due 2026-12-06
 
 The heart of a TUI system: a pure, integer model of a character grid, and
 
 ### backlog
 
-- [ ] [`0086`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0086-bind-the-engine-to-react-measure-in-cells-render-resize.md) Bind the engine to React: measure in cells, render, resize <sup>feature · grid · p0</sup>
 - [ ] [`0087`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0087-make-the-text-snapshot-the-house-test-for-components.md) Make the text snapshot the house test for components <sup>chore · tooling · p0</sup>
 - [ ] [`0088`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0088-enforce-grid-conformance-and-count-the-exceptions.md) Enforce grid conformance, and count the exceptions <sup>chore · tooling · p0</sup>
 
@@ -102,6 +101,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 - [x] [`0083`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0083-paint-to-text-and-make-it-the-snapshot-format.md) Paint to text, and make it the snapshot format <sup>feature · grid · p0</sup>
 - [x] [`0084`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0084-paint-to-ansi.md) Paint to ANSI <sup>feature · grid · p1</sup>
 - [x] [`0085`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0085-paint-to-the-dom-the-glyph-and-rule-painters.md) Paint to the DOM: the glyph and rule painters <sup>feature · grid · p0</sup>
+- [x] [`0086`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0086-bind-the-engine-to-react-measure-in-cells-render-resize.md) Bind the engine to React: measure in cells, render, resize <sup>feature · grid · p0</sup>
 
 ## primitives — First primitives
 
