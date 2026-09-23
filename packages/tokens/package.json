@@ -16,21 +16,24 @@
     "./dtcg/*": "./dtcg/*",
     "./themes/*": "./themes/*",
     "./package.json": "./package.json",
-    "./tailwind.css": "./css/tailwind.css"
+    "./tailwind.css": "./css/tailwind.css",
+    "./terminal/*": "./terminal/*"
   },
   "files": [
-    "dist",
     "css",
+    "dist",
     "dtcg",
+    "terminal",
     "themes"
   ],
   "scripts": {
     "build": "tsdown",
-    "generate": "node scripts/generate.ts && tz build && node scripts/fix-properties.ts",
+    "generate": "node scripts/generate.ts && tz build && node scripts/fix-properties.ts && node scripts/terminal.ts",
     "generate:check": "node scripts/generate.ts --check && node scripts/check-css.ts",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json",
-    "contrast": "node scripts/contrast.ts"
+    "contrast": "node scripts/contrast.ts",
+    "terminal": "node scripts/terminal.ts"
   },
   "repository": {
     "type": "git",
