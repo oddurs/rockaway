@@ -1,4 +1,17 @@
 export {
+  type AnsiSlot,
+  ansiSlots,
+  fromHex,
+  importPalette,
+  type Palette,
+  type PaletteSlot,
+  palette,
+  type RoleSlot,
+  roleSlots,
+  slotHue,
+  type TerminalTheme,
+} from './ansi.ts';
+export {
   apca,
   contrast,
   inSrgbGamut,
@@ -34,19 +47,6 @@ export {
 export { durations, easings, motion } from './motion.ts';
 export { type TokenName, vars } from './names.ts';
 export { type Pair, pairs } from './pairs.ts';
-export {
-  type Hue,
-  huePalette,
-  hues,
-  neutralPalette,
-  type Palette,
-  type PaletteKey,
-  type Palettes,
-  palettes,
-  type Step,
-  statusHue,
-  steps,
-} from './palette.ts';
 export { resolveTree, resolveValue } from './resolve.ts';
 export { type Intent, intents, semanticColors } from './semantic.ts';
 export { type FontFamilies, families, type Weight, weights } from './type.ts';

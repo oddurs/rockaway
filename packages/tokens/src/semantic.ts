@@ -1,103 +1,105 @@
 /**
- * The semantic colour tier (cairn 0019). Every token is an alias to a palette
- * step, written once: the `mode` context swaps the palettes underneath, and
- * the step roles (0016) keep each alias correct in both modes.
+ * The semantic colour tier (cairn 0019, 0089). Every token is an alias to a
+ * palette slot, written once: the `mode` context swaps the palette underneath,
+ * and the role slots (0089) keep each alias correct in both modes.
  *
- * Interaction states are palette steps too (element 3 → 4 → 5, solid 9 → 10),
- * so they are contrast-tested with everything else rather than computed in CSS.
+ * Interaction states are slots too — `subtle` → `hover` → `active`, and a
+ * colour's bright pair for a solid — so they are contrast-tested with
+ * everything else rather than computed in CSS.
  */
-import { alias, type Group, type Token } from './dtcg.ts';
-import type { Hue, PaletteKey } from './palette.ts';
 
-const p = (hue: Hue, key: PaletteKey): Token => alias(`palette.${hue}.${key}`);
+import type { PaletteSlot } from './ansi.ts';
+import { alias, type Group, type Token } from './dtcg.ts';
+
+const p = (slot: PaletteSlot): Token => alias(`ansi.${slot}`);
 
 export const intents = ['accent', 'info', 'success', 'warning', 'danger'] as const;
 export type Intent = (typeof intents)[number];
 
-/** A colour with nothing in it, for surfaces that separate by tone alone. */
-const transparent: Token = { $value: { colorSpace: 'oklch', components: [0, 0, 0], alpha: 0 } };
+/** Which colour each intent speaks with. The accent is the theme's blue. */
+const intentSlot: Readonly<
+  Record<Intent, { solid: PaletteSlot; bright: PaletteSlot; tint: PaletteSlot }>
+> = {
+  accent: { solid: 'blue', bright: 'bright-blue', tint: 'tint-blue' },
+  info: { solid: 'cyan', bright: 'bright-cyan', tint: 'tint-cyan' },
+  success: { solid: 'green', bright: 'bright-green', tint: 'tint-green' },
+  warning: { solid: 'yellow', bright: 'bright-yellow', tint: 'tint-yellow' },
+  danger: { solid: 'red', bright: 'bright-red', tint: 'tint-red' },
+};
 
-function perIntent(fn: (hue: Intent) => Group): Group {
+function perIntent(fn: (intent: Intent) => Group): Group {
   return Object.fromEntries(intents.map((i) => [i, fn(i)]));
 }
 
 export function semanticColors(): Group {
-  const surface = { page: p('neutral', 2), border: p('neutral', 6) };
   return {
     bg: {
       $type: 'color',
-      $description: 'Backgrounds. Components read these, never palette steps.',
-      page: { ...surface.page, $description: 'The page behind everything.' },
+      $description: 'Backgrounds. Components read these, never palette slots.',
+      page: {
+        ...p('background'),
+        $description: 'The page behind everything: the terminal background.',
+      },
       surface: {
-        ...p('neutral', 1),
-        $description: 'Raised surfaces: cards, panels, menus, dialogs.',
+        ...p('surface'),
+        $description: 'A raised surface. On a grid it is its border that raises it.',
       },
-      subtle: {
-        ...p('neutral', 3),
-        $description: 'Quiet element backgrounds: inputs in tone, wells, code.',
-      },
-      hover: { ...p('neutral', 4), $description: 'An element under the pointer.' },
-      active: { ...p('neutral', 5), $description: 'An element being pressed, or selected.' },
+      subtle: { ...p('subtle'), $description: 'Quiet element backgrounds: inputs, wells, code.' },
+      hover: { ...p('hover'), $description: 'An element under the pointer.' },
+      active: { ...p('active'), $description: 'An element being pressed, or selected.' },
       inverse: {
-        ...p('neutral', 12),
-        $description: 'Tooltips and toasts: the opposite of the page.',
+        ...p('foreground'),
+        $description: 'Reverse video: the foreground becomes the ground.',
       },
-      ...perIntent((hue) => ({
-        solid: {
-          ...p(hue, 9),
-          $description: `Filled ${hue} backgrounds: buttons, badges, selected states.`,
+      ...perIntent((intent) => ({
+        solid: { ...p(intentSlot[intent].solid), $description: `Filled ${intent} backgrounds.` },
+        'solid-hover': p(intentSlot[intent].bright),
+        subtle: {
+          ...p(intentSlot[intent].tint),
+          $description: `Tinted ${intent} backgrounds: callouts, rows.`,
         },
-        'solid-hover': p(hue, 10),
-        subtle: { ...p(hue, 3), $description: `Tinted ${hue} backgrounds: callouts, highlights.` },
       })),
     },
     fg: {
       $type: 'color',
-      $description: 'Text and icons.',
-      default: {
-        ...p('neutral', 12),
-        $description: 'Body text. At least 7:1 on every background.',
-      },
-      muted: {
-        ...p('neutral', 11),
-        $description: 'Secondary text. At least 4.5:1 on every background.',
-      },
+      $description: 'Text and glyphs.',
+      default: { ...p('foreground'), $description: 'Body text. At least 7:1 on every background.' },
+      muted: { ...p('muted'), $description: 'Secondary text. At least 4.5:1 on every background.' },
       disabled: {
-        ...p('neutral', 8),
-        $description:
-          'Disabled text. Exempt from contrast minimums, and so not for anything that must be read.',
+        ...p('faint'),
+        $description: 'Disabled text. Exempt from contrast minimums, so never load-bearing.',
       },
-      'on-inverse': p('neutral', 1),
-      accent: { ...p('accent', 11), $description: 'Links and accent text.' },
-      info: p('info', 11),
-      success: p('success', 11),
-      warning: p('warning', 11),
-      danger: p('danger', 11),
-      'on-accent': { ...p('accent', 'contrast'), $description: 'Text on bg.accent.solid.' },
-      'on-info': p('info', 'contrast'),
-      'on-success': p('success', 'contrast'),
-      'on-warning': p('warning', 'contrast'),
-      'on-danger': p('danger', 'contrast'),
+      'on-inverse': p('background'),
+      accent: { ...p('blue'), $description: 'Links and accent text.' },
+      info: p('cyan'),
+      success: p('green'),
+      warning: p('yellow'),
+      danger: p('red'),
+      'on-accent': { ...p('background'), $description: 'Text on bg.accent.solid.' },
+      'on-info': p('background'),
+      'on-success': p('background'),
+      'on-warning': p('background'),
+      'on-danger': p('background'),
     },
     border: {
       $type: 'color',
-      $description: 'Borders and outlines.',
-      subtle: { ...p('neutral', 6), $description: 'Separators inside a surface.' },
-      default: { ...p('neutral', 7), $description: 'Decorative edges: cards, dividers.' },
+      $description: 'Borders and rules, whether drawn as glyphs or as hairlines.',
+      subtle: { ...p('border-subtle'), $description: 'Separators inside a surface.' },
+      default: { ...p('border'), $description: 'The ordinary edge: frames, dividers, tables.' },
       control: {
-        ...p('neutral', 8),
+        ...p('border-strong'),
         $description: 'The boundary of an input or control. At least 3:1 (WCAG 1.4.11).',
       },
       surface: {
-        ...surface.border,
+        ...p('border'),
         $description: 'The edge of a resting surface. On a grid, a surface is its border.',
       },
-      focus: { ...p('accent', 9), $description: 'The focus ring (0061).' },
-      accent: p('accent', 8),
-      info: p('info', 8),
-      success: p('success', 8),
-      warning: p('warning', 8),
-      danger: p('danger', 8),
+      focus: { ...p('blue'), $description: 'The focus ring, and the cursor (0061).' },
+      accent: p('blue'),
+      info: p('cyan'),
+      success: p('green'),
+      warning: p('yellow'),
+      danger: p('red'),
     },
   };
 }
