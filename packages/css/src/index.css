@@ -1,9 +1,11 @@
 /*
  * @rockaway/css — the CSS contract every consumer shares.
  *
- * Import this once, first:
+ * Import this once, first, with the tokens:
  *
  *   @import '@rockaway/css';
  *   @import '@rockaway/tokens/tokens.css';
  */
 @import "./layers.css";
+@import "./reset.css";
+@import "./base.css";

@@ -1,0 +1,73 @@
+/*
+ * Reset (cairn 0025). Normalises the platform and nothing else: no opinions
+ * about type, colour or spacing, which belong to the base layer.
+ */
+@layer rk.reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    tab-size: 2;
+  }
+
+  body {
+    min-block-size: 100svb;
+  }
+
+  /* Headings take their size from the base layer, not from the browser. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-inline-size: 100%;
+    block-size: auto;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  textarea:not([rows]) {
+    min-block-size: 8lh;
+  }
+
+  /* Anchored targets clear their own heading. */
+  :target {
+    scroll-margin-block-start: 5ex;
+  }
+}
