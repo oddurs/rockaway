@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
+import { text } from '../text.ts';
 
 /**
  * Forced colors (cairn 0027). This file runs in its own browser project, with
@@ -28,7 +29,7 @@ function ForcedColors() {
       }}
     >
       <section style={card} aria-label="Surface">
-        <h2 style={{ font: 'var(--rk-text-heading-sm)' }}>A surface with an edge</h2>
+        <h2 style={{ ...text('heading-sm') }}>A surface with an edge</h2>
         <p style={{ color: 'var(--rk-fg-muted)' }} data-testid="muted">
           Secondary text stays readable.
         </p>
@@ -43,7 +44,7 @@ function ForcedColors() {
             borderRadius: 'var(--rk-radius-control)',
             background: 'var(--rk-bg-accent-solid)',
             color: 'var(--rk-fg-on-accent)',
-            font: 'var(--rk-text-label)',
+            ...text('label'),
           }}
         >
           Publish

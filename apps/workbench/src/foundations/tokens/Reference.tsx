@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { text } from '../../text.ts';
 import { aliasOf, docs, entries, group, type TokenEntry } from './walk.ts';
 
 const cell: CSSProperties = {
@@ -7,7 +8,7 @@ const cell: CSSProperties = {
   textAlign: 'left',
   verticalAlign: 'middle',
 };
-const mono: CSSProperties = { font: 'var(--rk-text-code)' };
+const mono: CSSProperties = { ...text('code') };
 const muted: CSSProperties = { color: 'var(--rk-fg-muted)' };
 
 export function Page({
@@ -30,8 +31,8 @@ export function Page({
       }}
     >
       <header style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-space-2)' }}>
-        <h1 style={{ margin: 0, font: 'var(--rk-text-heading-lg)' }}>{title}</h1>
-        <p style={{ margin: 0, font: 'var(--rk-text-lead)', ...muted }}>{lead}</p>
+        <h1 style={{ margin: 0, ...text('heading-lg') }}>{title}</h1>
+        <p style={{ margin: 0, ...text('lead'), ...muted }}>{lead}</p>
       </header>
       {children}
     </main>
@@ -48,11 +49,11 @@ function Table({
   children: ReactNode;
 }) {
   return (
-    <table style={{ borderCollapse: 'collapse', width: '100%', font: 'var(--rk-text-body)' }}>
+    <table style={{ borderCollapse: 'collapse', width: '100%', ...text('body') }}>
       <caption
         style={{
           textAlign: 'left',
-          font: 'var(--rk-text-heading-sm)',
+          ...text('heading-sm'),
           paddingBottom: 'var(--rk-space-3)',
         }}
       >
@@ -61,7 +62,7 @@ function Table({
       <thead>
         <tr>
           {head.map((h) => (
-            <th key={h} scope="col" style={{ ...cell, font: 'var(--rk-text-label)', ...muted }}>
+            <th key={h} scope="col" style={{ ...cell, ...text('label'), ...muted }}>
               {h}
             </th>
           ))}
@@ -113,7 +114,7 @@ export function Palettes() {
           <Table caption={`${mode === 'light' ? 'Light' : 'Dark'} mode`} head={['Hue', ...keys]}>
             {hues.map((hue) => (
               <tr key={hue}>
-                <th scope="row" style={{ ...cell, font: 'var(--rk-text-label)' }}>
+                <th scope="row" style={{ ...cell, ...text('label') }}>
                   {hue}
                 </th>
                 {keys.map((k) => (
@@ -191,7 +192,10 @@ export function Typography() {
               <td
                 style={{
                   ...cell,
-                  font: `var(${t.cssVar})`,
+                  fontFamily: `var(${t.cssVar}-font-family)`,
+                  fontSize: `var(${t.cssVar}-font-size)`,
+                  fontWeight: `var(${t.cssVar}-font-weight)`,
+                  lineHeight: `var(${t.cssVar}-line-height)`,
                   whiteSpace: 'nowrap',
                   maxWidth: 520,
                   overflow: 'hidden',

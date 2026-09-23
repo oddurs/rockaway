@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CSSProperties } from 'react';
 import { expect, within } from 'storybook/test';
+import { text } from '../text.ts';
 
 /**
  * A smoke test for the workbench: tokens load, contexts switch, and the
@@ -21,10 +22,10 @@ function Surfaces() {
   };
   return (
     <section aria-labelledby="surfaces-title" style={card}>
-      <h1 id="surfaces-title" style={{ margin: 0, font: 'var(--rk-text-heading-sm)' }}>
+      <h1 id="surfaces-title" style={{ margin: 0, ...text('heading-sm') }}>
         Timeless bones, any skin.
       </h1>
-      <p style={{ margin: 0, font: 'var(--rk-text-body)', color: 'var(--rk-fg-muted)' }}>
+      <p style={{ margin: 0, ...text('body'), color: 'var(--rk-fg-muted)' }}>
         Rendered from the generated tokens.
       </p>
       <button
@@ -37,7 +38,7 @@ function Surfaces() {
           borderRadius: 'var(--rk-radius-control)',
           background: 'var(--rk-bg-accent-solid)',
           color: 'var(--rk-fg-on-accent)',
-          font: 'var(--rk-text-label)',
+          ...text('label'),
         }}
       >
         Publish

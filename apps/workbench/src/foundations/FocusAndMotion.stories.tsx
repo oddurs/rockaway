@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent } from 'storybook/test';
+import { text } from '../text.ts';
 
 /**
  * Focus and motion (cairn 0026, 0061). One ring for everything, and motion
@@ -13,7 +14,7 @@ function FocusAndMotion() {
     borderRadius: 'var(--rk-radius-control)',
     border: '1px solid var(--rk-border-control)',
     background: 'var(--rk-bg-surface)',
-    font: 'var(--rk-text-label)',
+    ...text('label'),
   };
   return (
     <div

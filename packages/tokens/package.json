@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "generate": "node scripts/generate.ts && tz build",
+    "generate": "node scripts/generate.ts && tz build && node scripts/fix-properties.ts",
     "generate:check": "node scripts/generate.ts --check && node scripts/check-css.ts",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json",
