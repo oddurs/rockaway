@@ -1,0 +1,91 @@
+/*
+ * Base (cairn 0025). Element defaults, all of them reading semantic tokens.
+ *
+ * The fallback face is metric-matched to Inter (cairn 0059), so text does not
+ * shift when the web font finishes loading. Consuming apps load Inter itself.
+ */
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+  size-adjust: 107.12%;
+}
+
+@layer rk.base {
+  body {
+    background: var(--rk-bg-page);
+    color: var(--rk-fg-default);
+    font: var(--rk-text-body);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1 {
+    font: var(--rk-text-heading-xl);
+  }
+
+  h2 {
+    font: var(--rk-text-heading-lg);
+  }
+
+  h3 {
+    font: var(--rk-text-heading-md);
+  }
+
+  h4 {
+    font: var(--rk-text-heading-sm);
+  }
+
+  h5 {
+    font: var(--rk-text-heading-xs);
+  }
+
+  h6 {
+    font: var(--rk-text-label);
+  }
+
+  small {
+    font: var(--rk-text-small);
+  }
+
+  a {
+    color: var(--rk-fg-accent);
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.15em;
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    font: var(--rk-text-code);
+  }
+
+  hr {
+    border: none;
+    border-block-start: 1px solid var(--rk-border-subtle);
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  ::placeholder {
+    color: var(--rk-fg-muted);
+  }
+
+  ::selection {
+    background: var(--rk-bg-accent-subtle);
+    color: var(--rk-fg-default);
+  }
+
+  /* Numbers that line up: tables, inputs, meters. */
+  td,
+  th,
+  input[type="number"],
+  output {
+    font-variant-numeric: tabular-nums;
+  }
+}

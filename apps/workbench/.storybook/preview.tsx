@@ -2,7 +2,6 @@ import type { Decorator, Preview } from '@storybook/react-vite';
 import '@fontsource-variable/inter';
 import '@rockaway/css';
 import '@rockaway/tokens/tokens.css';
-import '../src/workbench.css';
 
 /**
  * Mode and density are runtime contexts (cairn 0058), so the workbench switches
