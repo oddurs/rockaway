@@ -29,7 +29,7 @@ function FocusAndMotion() {
           Focus me with Tab
         </button>
         <a href="#somewhere" style={{ ...control, display: 'grid', placeItems: 'center' }}>
-          A link
+          A focusable link
         </a>
       </div>
 
