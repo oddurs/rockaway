@@ -14,7 +14,7 @@ effort: m
 
 ## Context
 
-The concept (https://claude.ai/artifact/7nLZVoPtzJqMJuciyhfZjV) turns the system into a character-grid TUI. That is a
+The concept ([docs/concept.md](../../docs/concept.md)) turns the system into a character-grid TUI. That is a
 positioning decision as much as a technical one, and it decides who the system
 is for.
 

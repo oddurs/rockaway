@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#·········` 4% · 1 of 23 done · due 2027-01-31
+`##········` 12% · 3 of 25 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -135,6 +135,8 @@ The component contract, proven on a first set of components.
 ### done
 
 - [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
+- [x] [`0111`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0111-render-in-the-dom-and-treat-painting-as-a-strategy.md) Render in the DOM, and treat painting as a strategy <sup>decision · grid · p0</sup>
+- [x] [`0112`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0112-write-the-concept-doc-how-a-tui-becomes-a-web-page.md) Write the concept doc: how a TUI becomes a web page <sup>docs · docs · p0</sup>
 
 ## retheme — Tokens on the grid
 
@@ -189,7 +191,7 @@ Something another project can install and build on.
 
 ## later — Later
 
-`··········` 0% · 0 of 6 done
+`··········` 0% · 0 of 8 done
 
 Worth doing, not yet worth scheduling.
 
@@ -201,4 +203,6 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0055`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0055-combobox.md) Combobox <sup>component · components · p3</sup>
 - [ ] [`0056`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0056-date-picker.md) Date picker <sup>component · components · p3</sup>
 - [ ] [`0065`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0065-add-an-increased-contrast-context.md) Add an increased-contrast context <sup>feature · tokens · p3</sup>
+- [ ] [`0113`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p2</sup>
+- [ ] [`0114`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0114-coalesce-rule-painter-strokes-into-runs.md) Coalesce rule-painter strokes into runs <sup>chore · grid · p3</sup>
 

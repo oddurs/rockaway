@@ -9,6 +9,9 @@ palette your reader already has. rockaway takes that model seriously on the
 web, where the reader might be on a phone, at 400% zoom, or using a screen
 reader.
 
+[**The concept**](docs/concept.md) explains how a TUI becomes a web page: frames
+as data, two layers, four painters over one geometry, and the rules that follow.
+
 > [!NOTE]
 > Pre-release: nothing is published yet. The token pipeline and the CSS layers
 > are built; the frame engine is next. The [roadmap](ROADMAP.md) is the truth.
