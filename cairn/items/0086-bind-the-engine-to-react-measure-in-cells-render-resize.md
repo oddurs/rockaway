@@ -2,13 +2,15 @@
 id: 86
 title: 'Bind the engine to React: measure in cells, render, resize'
 type: feature
-status: backlog
+status: done
 milestone: grid
+assignee: Oddur Sigurdsson
 depends_on:
 - 74
 - 85
 created: 2026-09-22
 updated: 2026-09-22
+closed_at: 2026-09-22
 priority: p0
 layer: grid
 effort: l
@@ -16,8 +18,8 @@ effort: l
 
 ## Acceptance criteria
 
-- [ ] A `Screen` measures its container in cells from the font metrics, not from a guess
-- [ ] Server rendering produces a frame without a browser, and hydration does not move a cell
-- [ ] Resizing recomputes through one `ResizeObserver` per screen, batched, with no layout thrash
-- [ ] Zoom and a font-size change reflow by cell count
-- [ ] Nothing in the React layer knows how a border is drawn
+- [x] A `Screen` measures its container in cells from the font metrics, not from a guess
+- [x] Server rendering produces a frame without a browser, and hydration does not move a cell
+- [x] Resizing recomputes through one `ResizeObserver` per screen, batched, with no layout thrash
+- [x] Zoom and a font-size change reflow by cell count
+- [x] Nothing in the React layer knows how a border is drawn
