@@ -27,6 +27,10 @@ const screen = (): Buffer =>
 
 const show = (s: string): string => s.replaceAll('\u001b', '\\e');
 
+// Matching escape sequences means matching a control character, so the rule
+// against them is off for this file (biome.json) rather than worked around.
+const sgr = (): RegExp => /\u001b\[[\d;]*m/g;
+
 describe('toAnsi', () => {
   test('writes the characters, with the attributes as SGR codes', () => {
     const out = toAnsi(screen(), { palette, depth: 16 });
@@ -34,7 +38,7 @@ describe('toAnsi', () => {
   });
 
   test('colour depth changes the sequence, not the characters', () => {
-    const strip = (s: string): string => s.replaceAll(/\u001b\[[\d;]*m/g, '');
+    const strip = (s: string): string => s.replaceAll(sgr(), '');
     for (const depth of [16, 256, 'truecolor'] as const) {
       expect(strip(toAnsi(screen(), { palette, depth }))).toBe(
         toText(screen(), { trimEnd: false }).trimEnd(),
@@ -64,7 +68,7 @@ describe('toAnsi', () => {
 
   test('no line leaves a style open, so a screen cannot bleed into the prompt', () => {
     for (const line of toAnsi(screen(), { palette, depth: 16 }).split('\n')) {
-      const sequences = line.match(/\u001b\[[\d;]*m/g);
+      const sequences = line.match(sgr());
       if (sequences) expect(sequences.at(-1)).toBe('\u001b[0m');
     }
   });
