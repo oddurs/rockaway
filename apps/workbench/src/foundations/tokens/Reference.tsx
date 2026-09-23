@@ -51,27 +51,31 @@ function Table({
   children: ReactNode;
 }) {
   return (
-    <table style={{ borderCollapse: 'collapse', width: '100%', ...text('body') }}>
-      <caption
-        style={{
-          textAlign: 'left',
-          ...text('heading'),
-          paddingBottom: 'calc(var(--rk-space-3) * 1ch)',
-        }}
-      >
-        {caption}
-      </caption>
-      <thead>
-        <tr>
-          {head.map((h) => (
-            <th key={h} scope="col" style={{ ...cell, ...text('label'), ...muted }}>
-              {h}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>{children}</tbody>
-    </table>
+    // A scrollable region needs keyboard access: tab to it, then arrow sideways.
+    // biome-ignore lint/a11y/noNoninteractiveTabindex: axe requires it (scrollable-region-focusable)
+    <section aria-label={caption} tabIndex={0} style={{ overflowX: 'auto' }}>
+      <table style={{ borderCollapse: 'collapse', width: '100%', ...text('body') }}>
+        <caption
+          style={{
+            textAlign: 'left',
+            ...text('heading'),
+            paddingBottom: 'calc(var(--rk-space-3) * 1ch)',
+          }}
+        >
+          {caption}
+        </caption>
+        <thead>
+          <tr>
+            {head.map((h) => (
+              <th key={h} scope="col" style={{ ...cell, ...text('label'), ...muted }}>
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>{children}</tbody>
+      </table>
+    </section>
   );
 }
 
