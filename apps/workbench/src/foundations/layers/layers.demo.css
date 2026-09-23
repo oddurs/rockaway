@@ -1,0 +1,31 @@
+/* Stands in for a component stylesheet and for a consumer's own CSS. */
+@layer rk.components {
+  .demo-surface {
+    padding: var(--rk-space-4);
+    border-radius: var(--rk-radius-surface);
+    background: var(--rk-bg-accent-solid);
+    color: var(--rk-fg-on-accent);
+    font: var(--rk-text-body);
+  }
+}
+
+@layer rk.overrides {
+  .demo-surface.demo-layered-override {
+    background: var(--rk-bg-warning-solid);
+    color: var(--rk-fg-on-warning);
+  }
+}
+
+/* Unlayered: what a consuming app writes. Beats every layer above. */
+.demo-consumer-override {
+  background: var(--rk-bg-success-solid);
+  color: var(--rk-fg-on-success);
+}
+
+.demo-reference-success {
+  background: var(--rk-bg-success-solid);
+}
+
+.demo-reference-warning {
+  background: var(--rk-bg-warning-solid);
+}

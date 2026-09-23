@@ -59,13 +59,12 @@ Design decisions as data, compiled to CSS custom properties.
 
 ## runtime — Runtime CSS
 
-`##········` 13% · 1 of 8 done · due 2026-11-15
+`###·······` 25% · 2 of 8 done · due 2026-11-15
 
 The CSS contract every consumer shares.
 
 ### backlog
 
-- [ ] [`0024`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0024-fix-the-cascade-layer-order.md) Fix the cascade layer order <sup>feature · css · p0</sup>
 - [ ] [`0025`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0025-write-the-reset-and-base-typography.md) Write the reset and base typography <sup>feature · css · p1</sup>
 - [ ] [`0026`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0026-build-focus-ring-motion-and-reduced-motion-foundations.md) Build focus ring, motion and reduced-motion foundations <sup>feature · css · p1</sup>
 - [ ] [`0027`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0027-support-forced-colors-mode-from-the-start.md) Support forced-colors mode from the start <sup>feature · css · p1</sup>
@@ -75,6 +74,7 @@ The CSS contract every consumer shares.
 
 ### done
 
+- [x] [`0024`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0024-fix-the-cascade-layer-order.md) Fix the cascade layer order <sup>feature · css · p0</sup>
 - [x] [`0061`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0061-specify-the-focus-ring-2px-gap-2px-accent.md) Specify the focus ring: 2px gap, 2px accent <sup>decision · css · p1</sup>
 
 ## primitives — First primitives
