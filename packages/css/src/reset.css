@@ -54,10 +54,19 @@
     block-size: auto;
   }
 
+  /*
+   * Controls take their type and colour from the page — and, on a character
+   * grid, their padding too. A browser's default control padding is stated in
+   * pixels (Chrome gives a button 1px 6px), which puts every control a fraction
+   * of a cell wide and off the grid. The system counts cells, so the padding
+   * starts at nothing and each component adds whole ones (cairn 0033).
+   */
   input,
   button,
   textarea,
   select {
+    padding: 0;
+    border-width: 0;
     font: inherit;
     color: inherit;
   }
