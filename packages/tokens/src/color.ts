@@ -102,3 +102,13 @@ export function apca(text: Oklch, background: Oklch): number {
   const sapc = (bg ** 0.65 - t ** 0.62) * 1.14;
   return sapc > -0.1 ? 0 : (sapc + 0.027) * 100;
 }
+
+/** sRGB hex for a colour, gamut-mapped, which is what a terminal theme file holds. */
+export function toHex(color: Oklch): string {
+  const channels = toLinearSrgb(toSrgbGamut(color)).map((v) => {
+    const clamped = Math.min(1, Math.max(0, v));
+    const encoded = clamped <= 0.0031308 ? 12.92 * clamped : 1.055 * clamped ** (1 / 2.4) - 0.055;
+    return Math.round(encoded * 255);
+  });
+  return `#${channels.map((c) => c.toString(16).padStart(2, '0')).join('')}`;
+}

@@ -11,6 +11,7 @@
       "!**/dist",
       "!packages/tokens/dtcg",
       "!packages/tokens/css",
+      "!packages/tokens/terminal",
       "!packages/tokens/src/names.ts",
       "!cairn/items",
       "!ROADMAP.md",
