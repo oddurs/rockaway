@@ -8,13 +8,13 @@ import { tailwind } from './scripts/terrazzo-tailwind.ts';
 /** Where to write; the staleness check points this at a temporary directory. */
 const out = process.env.RK_TOKENS_OUT ?? import.meta.dirname;
 
-const defaults = { mode: 'light', density: 'regular' };
+const defaults = { mode: 'light', density: 'normal' };
 
 /** Tokens that change with mode: the palette and every alias into it (0016, 0089). */
 const modeTokens = ['ansi.**', 'bg.**', 'fg.**', 'border.**'];
 
 /** Tokens that change with density. */
-const densityTokens = ['space.**', 'size.**'];
+const densityTokens = ['cell.**', 'space.**', 'row.**', 'size.**'];
 
 const config: ConfigInit = defineConfig({
   tokens: ['./dtcg/rockaway.resolver.json'],
@@ -58,7 +58,7 @@ const config: ConfigInit = defineConfig({
             `@layer rk.tokens {\n  [data-theme='dark'] {\n    color-scheme: dark;\n    ${contents}\n  }\n}`,
         },
         // Density islands: raw values only, never aliases.
-        ...(['compact', 'regular', 'comfortable'] as const).map((density) => ({
+        ...(['dense', 'normal', 'airy', 'touch'] as const).map((density) => ({
           input: { ...defaults, density },
           include: densityTokens,
           prepare: (contents: string) =>

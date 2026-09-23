@@ -3,7 +3,7 @@ import { text } from '../../text.ts';
 import { aliasOf, docs, entries, group, type TokenEntry } from './walk.ts';
 
 const cell: CSSProperties = {
-  padding: 'var(--rk-space-2) var(--rk-space-3)',
+  padding: 'calc(var(--rk-space-2) * 1ch) calc(var(--rk-space-3) * 1ch)',
   borderBottom: '1px solid var(--rk-border-subtle)',
   textAlign: 'left',
   verticalAlign: 'middle',
@@ -25,12 +25,14 @@ export function Page({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 'var(--rk-space-6)',
+        gap: 'calc(var(--rk-space-6) * 1ch)',
         width: 'min(1080px, 100%)',
-        padding: 'var(--rk-space-8)',
+        padding: 'calc(var(--rk-space-8) * 1ch)',
       }}
     >
-      <header style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-space-2)' }}>
+      <header
+        style={{ display: 'flex', flexDirection: 'column', gap: 'calc(var(--rk-space-2) * 1ch)' }}
+      >
         <h1 style={{ margin: 0, ...text('heading-lg') }}>{title}</h1>
         <p style={{ margin: 0, ...text('lead'), ...muted }}>{lead}</p>
       </header>
@@ -54,7 +56,7 @@ function Table({
         style={{
           textAlign: 'left',
           ...text('heading-sm'),
-          paddingBottom: 'var(--rk-space-3)',
+          paddingBottom: 'calc(var(--rk-space-3) * 1ch)',
         }}
       >
         {caption}
@@ -118,10 +120,10 @@ export function Palettes() {
         <th scope="row" style={{ ...cell, ...text('label') }}>
           <code style={mono}>{slot}</code>
         </th>
-        <td style={{ ...cell, padding: 'var(--rk-space-1)' }}>
+        <td style={{ ...cell, padding: 'calc(var(--rk-space-1) * 1ch)' }}>
           <Swatch cssVar={`--rk-ansi-${slot}`} mode="light" />
         </td>
-        <td style={{ ...cell, padding: 'var(--rk-space-1)' }}>
+        <td style={{ ...cell, padding: 'calc(var(--rk-space-1) * 1ch)' }}>
           <Swatch cssVar={`--rk-ansi-${slot}`} mode="dark" />
         </td>
       </tr>

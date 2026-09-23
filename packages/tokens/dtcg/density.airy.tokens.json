@@ -1,0 +1,113 @@
+{
+  "cell": {
+    "$type": "number",
+    "$description": "The cell at airy density: one character across, 1.5 line boxes down. A cell has no length of its own — it is the font's — so the CSS layer turns these into `ch` and `lh` (cairn 0090).",
+    "line": {
+      "$value": 1.5
+    }
+  },
+  "space": {
+    "0": {
+      "$value": 0
+    },
+    "1": {
+      "$value": 1
+    },
+    "2": {
+      "$value": 2
+    },
+    "3": {
+      "$value": 3
+    },
+    "4": {
+      "$value": 4
+    },
+    "5": {
+      "$value": 5
+    },
+    "6": {
+      "$value": 6
+    },
+    "8": {
+      "$value": 8
+    },
+    "10": {
+      "$value": 10
+    },
+    "12": {
+      "$value": 12
+    },
+    "16": {
+      "$value": 16
+    },
+    "$type": "number",
+    "$description": "Space across, counted in cells. Multiply by the cell width."
+  },
+  "row": {
+    "0": {
+      "$value": 0
+    },
+    "1": {
+      "$value": 1
+    },
+    "2": {
+      "$value": 2
+    },
+    "3": {
+      "$value": 3
+    },
+    "4": {
+      "$value": 4
+    },
+    "5": {
+      "$value": 5
+    },
+    "6": {
+      "$value": 6
+    },
+    "8": {
+      "$value": 8
+    },
+    "10": {
+      "$value": 10
+    },
+    "12": {
+      "$value": 12
+    },
+    "16": {
+      "$value": 16
+    },
+    "$type": "number",
+    "$description": "Space down, counted in rows. Multiply by the cell height."
+  },
+  "size": {
+    "$type": "number",
+    "control": {
+      "$description": "Control heights, in rows. A bordered control is three: border, content, border.",
+      "sm": {
+        "$value": 1
+      },
+      "md": {
+        "$value": 1
+      },
+      "lg": {
+        "$value": 3
+      }
+    },
+    "screen": {
+      "$description": "The widths a screen answers to, in cells (cairn 0074).",
+      "narrow": {
+        "$value": 40
+      },
+      "medium": {
+        "$value": 60
+      },
+      "wide": {
+        "$value": 80
+      },
+      "full": {
+        "$value": 120
+      }
+    }
+  }
+}

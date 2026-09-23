@@ -11,9 +11,9 @@ function Prose() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 'var(--rk-space-4)',
+        gap: 'calc(var(--rk-space-4) * 1ch)',
         maxWidth: '68ch',
-        padding: 'var(--rk-space-6)',
+        padding: 'calc(var(--rk-space-6) * 1ch)',
       }}
     >
       <h1>Timeless bones, any skin</h1>

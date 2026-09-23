@@ -3,7 +3,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { describe, expect, test } from 'vitest';
-import { controlSizes, space } from '../src/density.ts';
+import { breakpoints, controlRows, lineBox, spaceSteps } from '../src/density.ts';
 import { generate, resolverFile, serialize } from '../src/generate.ts';
 import { defaultTheme } from '../src/inputs.ts';
 import { parseTheme } from '../src/validate.ts';
@@ -78,7 +78,8 @@ describe('generated files', () => {
     for (const [name, doc] of files) {
       const groups = Object.keys(doc as Node).filter((k) => !k.startsWith('$'));
       if (name.startsWith('palette.')) expect(groups, name).toEqual(['ansi']);
-      if (name.startsWith('density.')) expect(groups, name).toEqual(['space', 'size']);
+      if (name.startsWith('density.'))
+        expect(groups, name).toEqual(['cell', 'space', 'row', 'size']);
       if (name === 'semantic.tokens.json') {
         expect(groups, name).toEqual(['bg', 'fg', 'border', 'motion', 'focus']);
       }
@@ -118,21 +119,38 @@ test('css/tokens.css and src/names.ts match a fresh Terrazzo build (0020)', asyn
   expect(stdout).toContain('up to date');
 }, 60_000);
 
-describe('density rules', () => {
-  test('space is a 4px grid scaled by density', () => {
-    expect(space('regular')).toMatchObject({ '0': 0, '0-5': 2, '1': 4, '2': 8, '4': 16, '16': 64 });
-    expect(space('compact')['4']).toBe(12);
-    expect(space('comfortable')['4']).toBe(20);
+describe('the cell, and density', () => {
+  test('density is the line box, and touch is twice the dense one', () => {
+    expect(lineBox).toEqual({ dense: 1, normal: 1.25, airy: 1.5, touch: 2 });
+    expect(lineBox.touch).toBe(lineBox.dense * 2);
   });
 
-  test('control heights are 32, 38 and 44 at medium, 8px apart by size', () => {
-    expect(controlSizes('compact')).toEqual({ sm: 24, md: 32, lg: 40 });
-    expect(controlSizes('regular')).toEqual({ sm: 30, md: 38, lg: 46 });
-    expect(controlSizes('comfortable')).toEqual({ sm: 36, md: 44, lg: 52 });
+  test('space is a count of cells, not a length', () => {
+    const density = files.get('density.normal.tokens.json') as Node;
+    const space = density.space as Node;
+    expect((space['4'] as Node).$value).toBe(4);
+    expect(space.$type).toBe('number');
+    // Down the screen it is the same count, against a taller cell.
+    expect(((density.row as Node)['4'] as Node).$value).toBe(4);
+    expect(spaceSteps).toContain(16);
   });
 
-  test('the smallest control still meets the 24px target size (WCAG 2.5.8)', () => {
-    expect(controlSizes('compact').sm).toBeGreaterThanOrEqual(24);
+  test('every density carries the same counts, and only the line box changes', () => {
+    const counts = (name: string): unknown => {
+      const doc = files.get(`density.${name}.tokens.json`) as Node;
+      return JSON.stringify({ space: doc.space, row: doc.row, size: doc.size });
+    };
+    expect(counts('dense')).toBe(counts('touch'));
+    const dense = files.get('density.dense.tokens.json') as Node;
+    const touch = files.get('density.touch.tokens.json') as Node;
+    expect(((dense.cell as Node).line as Node).$value).not.toBe(
+      ((touch.cell as Node).line as Node).$value,
+    );
+  });
+
+  test('a bordered control is three rows, and a screen answers at 40, 60, 80 and 120 cells', () => {
+    expect(controlRows).toEqual({ sm: 1, md: 1, lg: 3 });
+    expect(Object.values(breakpoints)).toEqual([40, 60, 80, 120]);
   });
 });
 
@@ -154,7 +172,8 @@ describe('theme validation', () => {
         unknown input "extra"
         accentHue must be a number from 0 up to 360
         neutralTemperature must be one of cool, neutral, warm
-        typePairing must be one of inter, editorial, friendly, technical]
+        typePairing must be one of inter, editorial, friendly, technical
+        conformance must be one of strict, standard, loose]
     `);
   });
 });

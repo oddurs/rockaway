@@ -3,8 +3,8 @@
   .demo-card {
     display: flex;
     flex-direction: column;
-    gap: var(--rk-space-3);
-    padding: var(--rk-space-4);
+    gap: calc(var(--rk-space-3) * 1ch);
+    padding: calc(var(--rk-space-4) * 1ch);
     background: var(--rk-bg-surface);
     border: 1px solid var(--rk-border-surface);
   }

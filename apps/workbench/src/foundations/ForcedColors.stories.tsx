@@ -11,8 +11,8 @@ function ForcedColors() {
   const card = {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 'var(--rk-space-3)',
-    padding: 'var(--rk-space-4)',
+    gap: 'calc(var(--rk-space-3) * 1ch)',
+    padding: 'calc(var(--rk-space-4) * 1ch)',
     background: 'var(--rk-bg-surface)',
     color: 'var(--rk-fg-default)',
     border: '1px solid var(--rk-border-surface)',
@@ -22,8 +22,8 @@ function ForcedColors() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 'var(--rk-space-4)',
-        padding: 'var(--rk-space-6)',
+        gap: 'calc(var(--rk-space-4) * 1ch)',
+        padding: 'calc(var(--rk-space-6) * 1ch)',
       }}
     >
       <section style={card} aria-label="Surface">
@@ -37,7 +37,7 @@ function ForcedColors() {
           style={{
             alignSelf: 'flex-start',
             height: 'var(--rk-size-control-md)',
-            padding: '0 var(--rk-space-4)',
+            padding: '0 calc(var(--rk-space-4) * 1ch)',
             border: '1px solid var(--rk-bg-accent-solid)',
             background: 'var(--rk-bg-accent-solid)',
             color: 'var(--rk-fg-on-accent)',

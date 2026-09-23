@@ -24,8 +24,8 @@ function Containers() {
     <div
       style={{
         display: 'flex',
-        gap: 'var(--rk-space-6)',
-        padding: 'var(--rk-space-6)',
+        gap: 'calc(var(--rk-space-6) * 1ch)',
+        padding: 'calc(var(--rk-space-6) * 1ch)',
         alignItems: 'flex-start',
       }}
     >

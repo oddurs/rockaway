@@ -1,5 +1,6 @@
 {
   "accentHue": 75,
   "neutralTemperature": "warm",
-  "typePairing": "inter"
+  "typePairing": "inter",
+  "conformance": "standard"
 }

@@ -5,14 +5,21 @@
  *   base.tokens.json               font primitives (reference tier)
  *   semantic.tokens.json           the semantic tier: colour, motion, focus
  *   palette.{mode}.tokens.json     the palette, one file per `mode` context
- *   density.{density}.tokens.json  space and control sizes, one per `density` context
+ *   density.{density}.tokens.json  the cell, space and control sizes, one per `density` context
  *   rockaway.resolver.json         how they combine
  */
 
 import { palette as ansiPalette, ansiSlots, roleSlots } from './ansi.ts';
-import { controlSizes, space } from './density.ts';
-import { color, type Group, px, type ResolverDocument } from './dtcg.ts';
-import { type Density, densities, type Mode, modes, type ThemeInputs } from './inputs.ts';
+import { breakpoints, controlRows, lineBox, spaceSteps } from './density.ts';
+import { color, type Group, px, type ResolverDocument, type Token } from './dtcg.ts';
+import {
+  type Density,
+  defaultContexts,
+  densities,
+  type Mode,
+  modes,
+  type ThemeInputs,
+} from './inputs.ts';
 import { motion } from './motion.ts';
 import { semanticColors } from './semantic.ts';
 import { families, weights } from './type.ts';
@@ -67,20 +74,39 @@ function palette(inputs: ThemeInputs, mode: Mode): Group {
 }
 
 function density(d: Density): Group {
-  const sizes = controlSizes(d);
+  const count = (value: number): Token => ({ $value: value });
   return {
+    cell: {
+      $type: 'number',
+      $description:
+        `The cell at ${d} density: one character across, ${lineBox[d]} line boxes down. ` +
+        "A cell has no length of its own — it is the font's — so the CSS layer turns these into `ch` and `lh` (cairn 0090).",
+      line: count(lineBox[d]),
+    },
     space: {
-      $type: 'dimension',
-      $description: `Space scale for ${d} density: multiples of a ${space(d)['1']}px unit.`,
-      ...Object.fromEntries(Object.entries(space(d)).map(([k, v]) => [k, px(v)])),
+      $type: 'number',
+      $description: 'Space across, counted in cells. Multiply by the cell width.',
+      ...Object.fromEntries(spaceSteps.map((n) => [String(n), count(n)])),
+    },
+    row: {
+      $type: 'number',
+      $description: 'Space down, counted in rows. Multiply by the cell height.',
+      ...Object.fromEntries(spaceSteps.map((n) => [String(n), count(n)])),
     },
     size: {
-      $type: 'dimension',
+      $type: 'number',
       control: {
-        $description: 'Control heights: buttons, inputs, selects.',
-        sm: px(sizes.sm),
-        md: px(sizes.md),
-        lg: px(sizes.lg),
+        $description:
+          'Control heights, in rows. A bordered control is three: border, content, border.',
+        ...Object.fromEntries(
+          Object.entries(controlRows).map(([name, rows]) => [name, count(rows)]),
+        ),
+      },
+      screen: {
+        $description: 'The widths a screen answers to, in cells (cairn 0074).',
+        ...Object.fromEntries(
+          Object.entries(breakpoints).map(([name, cells]) => [name, count(cells)]),
+        ),
       },
     },
   };
@@ -99,12 +125,12 @@ function resolver(): ResolverDocument {
       mode: {
         description: 'Colour mode. Overrides ansi.* only.',
         contexts: Object.fromEntries(modes.map((m) => [m, [ref(`palette.${m}.tokens.json`)]])),
-        default: 'light',
+        default: defaultContexts.mode,
       },
       density: {
-        description: 'Density. Overrides space.* and size.* only.',
+        description: 'Density: the line box. Overrides cell.*, space.*, row.* and size.* only.',
         contexts: Object.fromEntries(densities.map((d) => [d, [ref(`density.${d}.tokens.json`)]])),
-        default: 'regular',
+        default: defaultContexts.density,
       },
     },
     resolutionOrder: [ref('#/sets/base'), ref('#/modifiers/mode'), ref('#/modifiers/density')],

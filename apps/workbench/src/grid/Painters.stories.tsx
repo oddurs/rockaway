@@ -42,7 +42,13 @@ function Painted({ painter }: { painter: 'glyph' | 'rule' }) {
 
 function Painters() {
   return (
-    <div style={{ display: 'flex', gap: 'var(--rk-space-8)', padding: 'var(--rk-space-6)' }}>
+    <div
+      style={{
+        display: 'flex',
+        gap: 'calc(var(--rk-space-8) * 1ch)',
+        padding: 'calc(var(--rk-space-6) * 1ch)',
+      }}
+    >
       <Painted painter="glyph" />
       <Painted painter="rule" />
     </div>
