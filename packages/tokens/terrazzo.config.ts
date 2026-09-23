@@ -21,6 +21,9 @@ const config: ConfigInit = defineConfig({
   plugins: [
     css({
       filename: 'tokens.css',
+      // Typed custom properties: reference values get a real syntax, aliases
+      // stay untyped, so an override like `none` in forced colors still lands.
+      propertyDefinitions: true,
       variableName: (token) => `--rk-${token.id.replace(/\./g, '-')}`,
       permutations: [
         // Everything, at the defaults.

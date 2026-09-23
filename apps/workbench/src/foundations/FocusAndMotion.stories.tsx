@@ -102,17 +102,36 @@ export const ReducedMotion: Story = {
     const duration = () =>
       getComputedStyle(root).getPropertyValue('--rk-motion-duration-base').trim();
 
-    await expect(duration()).toBe('200ms');
+    await expect(duration()).toBe('0.2s');
     await expect(getComputedStyle(box).transitionDuration).toBe('0.2s');
 
     root.dataset.motion = 'reduced';
     try {
-      await expect(duration()).toBe('1ms');
+      await expect(duration()).toBe('0.001s');
       await expect(getComputedStyle(box).transitionDuration).toBe('0.001s');
     } finally {
       delete root.dataset.motion;
     }
 
-    await expect(duration()).toBe('200ms');
+    await expect(duration()).toBe('0.2s');
+  },
+};
+
+export const TypedProperties: Story = {
+  name: 'Typed custom properties',
+  play: async ({ canvas }) => {
+    const box = canvas.getByTestId('animated');
+    const length = () => getComputedStyle(box).getPropertyValue('--rk-space-4').trim();
+
+    await expect(length()).toBe('16px');
+
+    // Registered as <length> (0028), so nonsense is rejected and the inherited
+    // value stands, instead of breaking every rule that reads it.
+    box.style.setProperty('--rk-space-4', 'not-a-length');
+    await expect(length()).toBe('16px');
+
+    box.style.setProperty('--rk-space-4', '2rem');
+    await expect(length()).toBe('32px');
+    box.style.removeProperty('--rk-space-4');
   },
 };
