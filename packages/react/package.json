@@ -10,7 +10,11 @@
       "@rockaway/source": "./src/index.ts",
       "default": "./dist/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./paint": {
+      "@rockaway/source": "./src/paint/index.ts",
+      "default": "./dist/paint.js"
+    }
   },
   "files": [
     "dist"
@@ -25,6 +29,7 @@
   },
   "dependencies": {
     "@rockaway/css": "workspace:^",
+    "@rockaway/grid": "workspace:^",
     "react-aria-components": "1.21.1"
   },
   "devDependencies": {
