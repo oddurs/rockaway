@@ -59,13 +59,9 @@ Design decisions as data, compiled to CSS custom properties.
 
 ## runtime — Runtime CSS
 
-`#########·` 88% · 7 of 8 done · due 2026-11-15
+`##########` 100% · 8 of 8 done · due 2026-11-15
 
 The CSS contract every consumer shares.
-
-### backlog
-
-- [ ] [`0030`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0030-generate-a-tailwind-v4-theme-adapter-from-the-tokens.md) Generate a Tailwind v4 @theme adapter from the tokens <sup>feature · distribution · p2</sup>
 
 ### done
 
@@ -75,6 +71,7 @@ The CSS contract every consumer shares.
 - [x] [`0027`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0027-support-forced-colors-mode-from-the-start.md) Support forced-colors mode from the start <sup>feature · css · p1</sup>
 - [x] [`0028`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0028-register-animatable-tokens-with-property.md) Register animatable tokens with @property <sup>feature · css · p2</sup>
 - [x] [`0029`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0029-set-container-query-conventions-for-component-sizing.md) Set container-query conventions for component sizing <sup>feature · css · p2</sup>
+- [x] [`0030`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0030-generate-a-tailwind-v4-theme-adapter-from-the-tokens.md) Generate a Tailwind v4 @theme adapter from the tokens <sup>feature · distribution · p2</sup>
 - [x] [`0061`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0061-specify-the-focus-ring-2px-gap-2px-accent.md) Specify the focus ring: 2px gap, 2px accent <sup>decision · css · p1</sup>
 
 ## primitives — First primitives

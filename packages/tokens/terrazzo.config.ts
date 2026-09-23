@@ -3,6 +3,7 @@ import { defineConfig } from '@terrazzo/cli';
 import type { ConfigInit } from '@terrazzo/parser';
 import css from '@terrazzo/plugin-css';
 import { names } from './scripts/terrazzo-names.ts';
+import { tailwind } from './scripts/terrazzo-tailwind.ts';
 
 /** Where to write; the staleness check points this at a temporary directory. */
 const out = process.env.RK_TOKENS_OUT ?? import.meta.dirname;
@@ -63,6 +64,7 @@ const config: ConfigInit = defineConfig({
       ],
     }),
     names({ file: path.join(out, 'src', 'names.ts'), input: defaults }),
+    tailwind({ file: path.join(out, 'css', 'tailwind.css'), input: defaults }),
   ],
 });
 

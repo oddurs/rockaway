@@ -9,7 +9,7 @@ import path from 'node:path';
 
 const root = path.join(import.meta.dirname, '..');
 const tmp = await mkdtemp(path.join(tmpdir(), 'rk-tokens-'));
-await mkdir(path.join(tmp, 'src'));
+await Promise.all([mkdir(path.join(tmp, 'src')), mkdir(path.join(tmp, 'css'))]);
 try {
   execFileSync('pnpm', ['exec', 'tz', 'build', '--quiet'], {
     cwd: root,
@@ -17,7 +17,7 @@ try {
     stdio: ['ignore', 'ignore', 'inherit'],
   });
   const stale: string[] = [];
-  for (const file of ['css/tokens.css', 'src/names.ts']) {
+  for (const file of ['css/tokens.css', 'css/tailwind.css', 'src/names.ts']) {
     const [built, committed] = await Promise.all([
       readFile(path.join(tmp, file), 'utf8'),
       readFile(path.join(root, file), 'utf8').catch(() => ''),
@@ -28,7 +28,7 @@ try {
     console.error(`stale: ${stale.join(', ')}. Run \`pnpm --filter @rockaway/tokens generate\`.`);
     process.exit(1);
   }
-  console.log('css/tokens.css and src/names.ts are up to date');
+  console.log('css/tokens.css, css/tailwind.css and src/names.ts are up to date');
 } finally {
   await rm(tmp, { recursive: true, force: true });
 }

@@ -15,7 +15,8 @@
     "./tokens.css": "./css/tokens.css",
     "./dtcg/*": "./dtcg/*",
     "./themes/*": "./themes/*",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./tailwind.css": "./css/tailwind.css"
   },
   "files": [
     "dist",
@@ -45,6 +46,7 @@
     "@terrazzo/parser": "2.7.1",
     "@terrazzo/plugin-css": "2.7.1",
     "@types/node": "26.6.2",
+    "tailwindcss": "4.3.3",
     "vite": "8.3.0",
     "vitest": "4.1.11"
   }

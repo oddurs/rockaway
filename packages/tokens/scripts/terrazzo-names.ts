@@ -3,7 +3,8 @@
  * property, keyed by its DTCG path, for autocompletion and for lint rules that
  * need to know which names exist (cairn 0020).
  */
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
 import type { Plugin } from '@terrazzo/parser';
 
 export function names({ file, input }: { file: string; input: Record<string, string> }): Plugin {
@@ -15,6 +16,7 @@ export function names({ file, input }: { file: string; input: Record<string, str
         .filter(([, v]) => v !== '')
         .sort(([a], [b]) => (a < b ? -1 : 1));
       const lines = entries.map(([id, v]) => `  '${id}': 'var(${v})',`);
+      mkdirSync(path.dirname(file), { recursive: true });
       writeFileSync(
         file,
         [
