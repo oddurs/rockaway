@@ -1,0 +1,11 @@
+/*
+ * Focus (cairn 0061). One treatment, defined once. An outline follows the
+ * border radius, cannot be clipped by an ancestor's overflow, and survives
+ * forced-colors mode without an override.
+ */
+@layer rk.base {
+  :focus-visible {
+    outline: var(--rk-focus-width) solid var(--rk-border-focus);
+    outline-offset: var(--rk-focus-offset);
+  }
+}

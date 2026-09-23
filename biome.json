@@ -40,13 +40,33 @@
     }
   },
   "css": {
-    "formatter": { "enabled": true },
-    "linter": { "enabled": true }
+    "formatter": {
+      "enabled": true
+    },
+    "linter": {
+      "enabled": true
+    }
   },
   "overrides": [
     {
       "includes": ["**/*.config.ts", "**/.storybook/**", "**/*.stories.tsx"],
-      "linter": { "rules": { "style": { "noDefaultExport": "off" } } }
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/css/src/motion.css"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noImportantStyles": "off"
+          }
+        }
+      }
     }
   ],
   "assist": {
