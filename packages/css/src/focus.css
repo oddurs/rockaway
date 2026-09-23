@@ -1,11 +1,23 @@
 /*
- * Focus (cairn 0061). One treatment, defined once. An outline follows the
- * border radius, cannot be clipped by an ancestor's overflow, and survives
- * forced-colors mode without an override.
+ * Focus (cairn 0061, 0093). One treatment, defined once.
+ *
+ * An outline follows the border radius there is none of, cannot be clipped by
+ * an ancestor's overflow, and survives forced-colors without an override —
+ * and, on a grid, it costs no cell, which is the deciding argument.
+ *
+ * A filled control takes reverse video instead: an outline around a solid
+ * block reads as a second border, where a swap reads as the terminal does it.
  */
 @layer rk.base {
   :focus-visible {
     outline: var(--rk-focus-width) solid var(--rk-border-focus);
     outline-offset: var(--rk-focus-offset);
+  }
+
+  [data-rk-fill]:focus-visible {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-page);
+    outline: var(--rk-focus-width) solid var(--rk-border-focus);
+    outline-offset: 0;
   }
 }

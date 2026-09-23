@@ -1,0 +1,61 @@
+/*
+ * The cell (cairn 0093, 0090).
+ *
+ * Tokens count cells; this is where a count becomes a length. Across, a cell
+ * is `1ch` — the advance of the monospace font. Down, it is `1lh` — the line
+ * box, which the density context sets. Nothing else in the system states a
+ * pixel.
+ *
+ * `--rk-x-*` and `--rk-y-*` are the counts already multiplied out, so a
+ * component writes `padding: var(--rk-y-1) var(--rk-x-2)` and stays on the
+ * grid without arithmetic.
+ */
+@layer rk.tokens {
+  :root {
+    --rk-cell-width: 1ch;
+    --rk-cell-height: 1lh;
+
+    --rk-x-0: calc(var(--rk-space-0) * var(--rk-cell-width));
+    --rk-x-1: calc(var(--rk-space-1) * var(--rk-cell-width));
+    --rk-x-2: calc(var(--rk-space-2) * var(--rk-cell-width));
+    --rk-x-3: calc(var(--rk-space-3) * var(--rk-cell-width));
+    --rk-x-4: calc(var(--rk-space-4) * var(--rk-cell-width));
+    --rk-x-5: calc(var(--rk-space-5) * var(--rk-cell-width));
+    --rk-x-6: calc(var(--rk-space-6) * var(--rk-cell-width));
+    --rk-x-8: calc(var(--rk-space-8) * var(--rk-cell-width));
+    --rk-x-10: calc(var(--rk-space-10) * var(--rk-cell-width));
+    --rk-x-12: calc(var(--rk-space-12) * var(--rk-cell-width));
+    --rk-x-16: calc(var(--rk-space-16) * var(--rk-cell-width));
+
+    --rk-y-0: calc(var(--rk-row-0) * var(--rk-cell-height));
+    --rk-y-1: calc(var(--rk-row-1) * var(--rk-cell-height));
+    --rk-y-2: calc(var(--rk-row-2) * var(--rk-cell-height));
+    --rk-y-3: calc(var(--rk-row-3) * var(--rk-cell-height));
+    --rk-y-4: calc(var(--rk-row-4) * var(--rk-cell-height));
+    --rk-y-5: calc(var(--rk-row-5) * var(--rk-cell-height));
+    --rk-y-6: calc(var(--rk-row-6) * var(--rk-cell-height));
+    --rk-y-8: calc(var(--rk-row-8) * var(--rk-cell-height));
+    --rk-y-10: calc(var(--rk-row-10) * var(--rk-cell-height));
+    --rk-y-12: calc(var(--rk-row-12) * var(--rk-cell-height));
+    --rk-y-16: calc(var(--rk-row-16) * var(--rk-cell-height));
+  }
+}
+
+@layer rk.utilities {
+  /* A box measured in cells: give it a width in cells and it stays on the grid. */
+  .rk-cells {
+    inline-size: calc(var(--rk-cols, 0) * var(--rk-cell-width));
+    block-size: calc(var(--rk-rows, 0) * var(--rk-cell-height));
+  }
+
+  .rk-rows {
+    block-size: calc(var(--rk-rows, 1) * var(--rk-cell-height));
+  }
+
+  /* Touch is the fourth density (0074): a coarse pointer gets taller cells. */
+  @media (pointer: coarse) {
+    :root:not([data-density]) {
+      --rk-cell-line: 2;
+    }
+  }
+}
