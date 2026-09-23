@@ -12,8 +12,8 @@ function Surfaces() {
   const card: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 'var(--rk-space-3)',
-    padding: 'var(--rk-space-6)',
+    gap: 'calc(var(--rk-space-3) * 1ch)',
+    padding: 'calc(var(--rk-space-6) * 1ch)',
     width: 360,
     background: 'var(--rk-bg-surface)',
     border: '1px solid var(--rk-border-surface)',
@@ -31,7 +31,7 @@ function Surfaces() {
         style={{
           alignSelf: 'flex-start',
           height: 'var(--rk-size-control-md)',
-          padding: '0 var(--rk-space-4)',
+          padding: '0 calc(var(--rk-space-4) * 1ch)',
           border: 'none',
           background: 'var(--rk-bg-accent-solid)',
           color: 'var(--rk-fg-on-accent)',
@@ -65,6 +65,6 @@ export const Dark: Story = {
   globals: { mode: 'dark' },
 };
 
-export const Comfortable: Story = {
-  globals: { density: 'comfortable' },
+export const Airy: Story = {
+  globals: { density: 'airy' },
 };

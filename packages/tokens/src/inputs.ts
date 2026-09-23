@@ -16,13 +16,19 @@ export interface ThemeInputs {
   readonly neutralTemperature: NeutralTemperature;
   /** The type pairing: which monospace family, and how heavy its weights are. */
   readonly typePairing: TypePairing;
+  /** How strictly this theme holds the grid (0072). */
+  readonly conformance: Conformance;
 }
+
+/** Strictness is a dial, not a law (cairn 0072). */
+export type Conformance = 'strict' | 'standard' | 'loose';
+export const conformanceLevels: readonly Conformance[] = ['strict', 'standard', 'loose'];
 
 export type NeutralTemperature = 'cool' | 'neutral' | 'warm';
 export type TypePairing = 'inter' | 'editorial' | 'friendly' | 'technical';
 
 export type Mode = 'light' | 'dark';
-export type Density = 'compact' | 'regular' | 'comfortable';
+export type Density = 'dense' | 'normal' | 'airy' | 'touch';
 
 /** Runtime contexts: resolver modifiers, not theme inputs. */
 export interface ThemeContexts {
@@ -31,16 +37,17 @@ export interface ThemeContexts {
 }
 
 export const modes: readonly Mode[] = ['light', 'dark'];
-export const densities: readonly Density[] = ['compact', 'regular', 'comfortable'];
+export const densities: readonly Density[] = ['dense', 'normal', 'airy', 'touch'];
 
 /** The opinionated default. */
 export const defaultTheme: ThemeInputs = {
   accentHue: 262,
   neutralTemperature: 'neutral',
   typePairing: 'inter',
+  conformance: 'standard',
 };
 
 export const defaultContexts: ThemeContexts = {
   mode: 'light',
-  density: 'regular',
+  density: 'normal',
 };

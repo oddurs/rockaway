@@ -12,8 +12,8 @@ function Layers() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 'var(--rk-space-4)',
-        padding: 'var(--rk-space-6)',
+        gap: 'calc(var(--rk-space-4) * 1ch)',
+        padding: 'calc(var(--rk-space-6) * 1ch)',
       }}
     >
       <div className="demo-surface" data-testid="component">

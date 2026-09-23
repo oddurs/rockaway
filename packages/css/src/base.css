@@ -14,12 +14,20 @@
 }
 
 @layer rk.base {
+  /*
+   * Density is the line box (cairn 0090): the cell gets taller, and nothing
+   * about a layout moves. The full grid rhythm is 0093.
+   */
+  body,
+  [data-density] {
+    line-height: var(--rk-cell-line);
+  }
+
   body {
     background: var(--rk-bg-page);
     color: var(--rk-fg-default);
     font-family: var(--rk-font-family-mono);
     font-size: 1rem;
-    line-height: 1.25;
     font-variant-ligatures: none;
     -webkit-font-smoothing: antialiased;
   }

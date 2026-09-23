@@ -3,7 +3,7 @@
  * tokens it documents (cairn 0023).
  */
 import base from '@rockaway/tokens/dtcg/base.tokens.json';
-import regular from '@rockaway/tokens/dtcg/density.regular.tokens.json';
+import normal from '@rockaway/tokens/dtcg/density.normal.tokens.json';
 import light from '@rockaway/tokens/dtcg/palette.light.tokens.json';
 import semantic from '@rockaway/tokens/dtcg/semantic.tokens.json';
 
@@ -48,4 +48,4 @@ export function aliasOf(value: unknown): string | undefined {
   return typeof value === 'string' && value.startsWith('{') ? value.slice(1, -1) : undefined;
 }
 
-export const docs = { base, regular, light, semantic };
+export const docs = { base, normal, light, semantic };

@@ -10,7 +10,7 @@ import { text } from '../text.ts';
 function FocusAndMotion() {
   const control = {
     height: 'var(--rk-size-control-md)',
-    padding: '0 var(--rk-space-4)',
+    padding: '0 calc(var(--rk-space-4) * 1ch)',
     border: '1px solid var(--rk-border-control)',
     background: 'var(--rk-bg-surface)',
     ...text('label'),
@@ -20,11 +20,11 @@ function FocusAndMotion() {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 'var(--rk-space-5)',
-        padding: 'var(--rk-space-6)',
+        gap: 'calc(var(--rk-space-5) * 1ch)',
+        padding: 'calc(var(--rk-space-6) * 1ch)',
       }}
     >
-      <div style={{ display: 'flex', gap: 'var(--rk-space-3)' }}>
+      <div style={{ display: 'flex', gap: 'calc(var(--rk-space-3) * 1ch)' }}>
         <button type="button" style={control}>
           Focus me with Tab
         </button>
@@ -37,7 +37,7 @@ function FocusAndMotion() {
       <div
         style={{
           overflow: 'hidden',
-          padding: 'var(--rk-space-2)',
+          padding: 'calc(var(--rk-space-2) * 1ch)',
           border: '1px dashed var(--rk-border-default)',
         }}
       >
@@ -119,17 +119,18 @@ export const TypedProperties: Story = {
   name: 'Typed custom properties',
   play: async ({ canvas }) => {
     const box = canvas.getByTestId('animated');
-    const length = () => getComputedStyle(box).getPropertyValue('--rk-space-4').trim();
+    const cells = () => getComputedStyle(box).getPropertyValue('--rk-space-4').trim();
 
-    await expect(length()).toBe('16px');
+    // Space is a count of cells now (0090), not a length.
+    await expect(cells()).toBe('4');
 
-    // Registered as <length> (0028), so nonsense is rejected and the inherited
+    // Registered as <number> (0028), so nonsense is rejected and the inherited
     // value stands, instead of breaking every rule that reads it.
-    box.style.setProperty('--rk-space-4', 'not-a-length');
-    await expect(length()).toBe('16px');
+    box.style.setProperty('--rk-space-4', 'not-a-number');
+    await expect(cells()).toBe('4');
 
-    box.style.setProperty('--rk-space-4', '2rem');
-    await expect(length()).toBe('32px');
+    box.style.setProperty('--rk-space-4', '6');
+    await expect(cells()).toBe('6');
     box.style.removeProperty('--rk-space-4');
   },
 };

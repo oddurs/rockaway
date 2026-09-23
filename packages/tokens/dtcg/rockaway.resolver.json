@@ -33,25 +33,30 @@
       "default": "light"
     },
     "density": {
-      "description": "Density. Overrides space.* and size.* only.",
+      "description": "Density: the line box. Overrides cell.*, space.*, row.* and size.* only.",
       "contexts": {
-        "compact": [
+        "dense": [
           {
-            "$ref": "density.compact.tokens.json"
+            "$ref": "density.dense.tokens.json"
           }
         ],
-        "regular": [
+        "normal": [
           {
-            "$ref": "density.regular.tokens.json"
+            "$ref": "density.normal.tokens.json"
           }
         ],
-        "comfortable": [
+        "airy": [
           {
-            "$ref": "density.comfortable.tokens.json"
+            "$ref": "density.airy.tokens.json"
+          }
+        ],
+        "touch": [
+          {
+            "$ref": "density.touch.tokens.json"
           }
         ]
       },
-      "default": "regular"
+      "default": "normal"
     }
   },
   "resolutionOrder": [

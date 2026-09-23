@@ -487,6 +487,12 @@
   inherits: true;
 }
 
+@property --rk-cell-line {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1.25;
+}
+
 @property --rk-fg-accent {
   syntax: '*';
   inherits: true;
@@ -641,112 +647,178 @@
   inherits: true;
 }
 
-@property --rk-size-control-lg {
-  syntax: '<length>';
+@property --rk-row-0 {
+  syntax: '<number>';
   inherits: true;
-  initial-value: 46px;
+  initial-value: 0;
+}
+
+@property --rk-row-1 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+@property --rk-row-2 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 2;
+}
+
+@property --rk-row-3 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 3;
+}
+
+@property --rk-row-4 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 4;
+}
+
+@property --rk-row-5 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 5;
+}
+
+@property --rk-row-6 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 6;
+}
+
+@property --rk-row-8 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 8;
+}
+
+@property --rk-row-10 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 10;
+}
+
+@property --rk-row-12 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 12;
+}
+
+@property --rk-row-16 {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 16;
+}
+
+@property --rk-size-control-lg {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 3;
 }
 
 @property --rk-size-control-md {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 38px;
+  initial-value: 1;
 }
 
 @property --rk-size-control-sm {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 30px;
+  initial-value: 1;
+}
+
+@property --rk-size-screen-full {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 120;
+}
+
+@property --rk-size-screen-medium {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 60;
+}
+
+@property --rk-size-screen-narrow {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 40;
+}
+
+@property --rk-size-screen-wide {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 80;
 }
 
 @property --rk-space-0 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 0px;
-}
-
-@property --rk-space-0-5 {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 2px;
+  initial-value: 0;
 }
 
 @property --rk-space-1 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 4px;
-}
-
-@property --rk-space-1-5 {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 6px;
+  initial-value: 1;
 }
 
 @property --rk-space-2 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 8px;
-}
-
-@property --rk-space-2-5 {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 10px;
+  initial-value: 2;
 }
 
 @property --rk-space-3 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 12px;
-}
-
-@property --rk-space-3-5 {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 14px;
+  initial-value: 3;
 }
 
 @property --rk-space-4 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 16px;
+  initial-value: 4;
 }
 
 @property --rk-space-5 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 20px;
+  initial-value: 5;
 }
 
 @property --rk-space-6 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 24px;
+  initial-value: 6;
 }
 
 @property --rk-space-8 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 32px;
+  initial-value: 8;
 }
 
 @property --rk-space-10 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 40px;
+  initial-value: 10;
 }
 
 @property --rk-space-12 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 48px;
+  initial-value: 12;
 }
 
 @property --rk-space-16 {
-  syntax: '<length>';
+  syntax: '<number>';
   inherits: true;
-  initial-value: 64px;
+  initial-value: 16;
 }
 
 @layer rk.tokens {
@@ -817,6 +889,7 @@
     --rk-border-success: var(--rk-ansi-green);
     --rk-border-surface: var(--rk-ansi-border);
     --rk-border-warning: var(--rk-ansi-yellow);
+    --rk-cell-line: 1.25;
     --rk-fg-accent: var(--rk-ansi-blue);
     --rk-fg-danger: var(--rk-ansi-red);
     --rk-fg-default: var(--rk-ansi-foreground);
@@ -846,24 +919,35 @@
     --rk-motion-easing-enter: cubic-bezier(0, 0, 0, 1);
     --rk-motion-easing-exit: cubic-bezier(0.3, 0, 1, 1);
     --rk-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
-    --rk-size-control-lg: 46px;
-    --rk-size-control-md: 38px;
-    --rk-size-control-sm: 30px;
-    --rk-space-0: 0px;
-    --rk-space-0-5: 2px;
-    --rk-space-1: 4px;
-    --rk-space-1-5: 6px;
-    --rk-space-2: 8px;
-    --rk-space-2-5: 10px;
-    --rk-space-3: 12px;
-    --rk-space-3-5: 14px;
-    --rk-space-4: 16px;
-    --rk-space-5: 20px;
-    --rk-space-6: 24px;
-    --rk-space-8: 32px;
-    --rk-space-10: 40px;
-    --rk-space-12: 48px;
-    --rk-space-16: 64px;
+    --rk-row-0: 0;
+    --rk-row-1: 1;
+    --rk-row-2: 2;
+    --rk-row-3: 3;
+    --rk-row-4: 4;
+    --rk-row-5: 5;
+    --rk-row-6: 6;
+    --rk-row-8: 8;
+    --rk-row-10: 10;
+    --rk-row-12: 12;
+    --rk-row-16: 16;
+    --rk-size-control-lg: 3;
+    --rk-size-control-md: 1;
+    --rk-size-control-sm: 1;
+    --rk-size-screen-full: 120;
+    --rk-size-screen-medium: 60;
+    --rk-size-screen-narrow: 40;
+    --rk-size-screen-wide: 80;
+    --rk-space-0: 0;
+    --rk-space-1: 1;
+    --rk-space-2: 2;
+    --rk-space-3: 3;
+    --rk-space-4: 4;
+    --rk-space-5: 5;
+    --rk-space-6: 6;
+    --rk-space-8: 8;
+    --rk-space-10: 10;
+    --rk-space-12: 12;
+    --rk-space-16: 16;
   }
 }
 
@@ -1381,70 +1465,141 @@
 }
 
 @layer rk.tokens {
-  [data-density='compact'] {
-    --rk-size-control-lg: 40px;
-    --rk-size-control-md: 32px;
-    --rk-size-control-sm: 24px;
-    --rk-space-0: 0px;
-    --rk-space-0-5: 2px;
-    --rk-space-1: 3px;
-    --rk-space-1-5: 5px;
-    --rk-space-2: 6px;
-    --rk-space-2-5: 8px;
-    --rk-space-3: 9px;
-    --rk-space-3-5: 11px;
-    --rk-space-4: 12px;
-    --rk-space-5: 15px;
-    --rk-space-6: 18px;
-    --rk-space-8: 24px;
-    --rk-space-10: 30px;
-    --rk-space-12: 36px;
-    --rk-space-16: 48px;
+  [data-density='dense'] {
+    --rk-cell-line: 1;
+    --rk-row-0: 0;
+    --rk-row-1: 1;
+    --rk-row-2: 2;
+    --rk-row-3: 3;
+    --rk-row-4: 4;
+    --rk-row-5: 5;
+    --rk-row-6: 6;
+    --rk-row-8: 8;
+    --rk-row-10: 10;
+    --rk-row-12: 12;
+    --rk-row-16: 16;
+    --rk-size-control-lg: 3;
+    --rk-size-control-md: 1;
+    --rk-size-control-sm: 1;
+    --rk-size-screen-full: 120;
+    --rk-size-screen-medium: 60;
+    --rk-size-screen-narrow: 40;
+    --rk-size-screen-wide: 80;
+    --rk-space-0: 0;
+    --rk-space-1: 1;
+    --rk-space-2: 2;
+    --rk-space-3: 3;
+    --rk-space-4: 4;
+    --rk-space-5: 5;
+    --rk-space-6: 6;
+    --rk-space-8: 8;
+    --rk-space-10: 10;
+    --rk-space-12: 12;
+    --rk-space-16: 16;
   }
 }
 
 @layer rk.tokens {
-  [data-density='regular'] {
-    --rk-size-control-lg: 46px;
-    --rk-size-control-md: 38px;
-    --rk-size-control-sm: 30px;
-    --rk-space-0: 0px;
-    --rk-space-0-5: 2px;
-    --rk-space-1: 4px;
-    --rk-space-1-5: 6px;
-    --rk-space-2: 8px;
-    --rk-space-2-5: 10px;
-    --rk-space-3: 12px;
-    --rk-space-3-5: 14px;
-    --rk-space-4: 16px;
-    --rk-space-5: 20px;
-    --rk-space-6: 24px;
-    --rk-space-8: 32px;
-    --rk-space-10: 40px;
-    --rk-space-12: 48px;
-    --rk-space-16: 64px;
+  [data-density='normal'] {
+    --rk-cell-line: 1.25;
+    --rk-row-0: 0;
+    --rk-row-1: 1;
+    --rk-row-2: 2;
+    --rk-row-3: 3;
+    --rk-row-4: 4;
+    --rk-row-5: 5;
+    --rk-row-6: 6;
+    --rk-row-8: 8;
+    --rk-row-10: 10;
+    --rk-row-12: 12;
+    --rk-row-16: 16;
+    --rk-size-control-lg: 3;
+    --rk-size-control-md: 1;
+    --rk-size-control-sm: 1;
+    --rk-size-screen-full: 120;
+    --rk-size-screen-medium: 60;
+    --rk-size-screen-narrow: 40;
+    --rk-size-screen-wide: 80;
+    --rk-space-0: 0;
+    --rk-space-1: 1;
+    --rk-space-2: 2;
+    --rk-space-3: 3;
+    --rk-space-4: 4;
+    --rk-space-5: 5;
+    --rk-space-6: 6;
+    --rk-space-8: 8;
+    --rk-space-10: 10;
+    --rk-space-12: 12;
+    --rk-space-16: 16;
   }
 }
 
 @layer rk.tokens {
-  [data-density='comfortable'] {
-    --rk-size-control-lg: 52px;
-    --rk-size-control-md: 44px;
-    --rk-size-control-sm: 36px;
-    --rk-space-0: 0px;
-    --rk-space-0-5: 3px;
-    --rk-space-1: 5px;
-    --rk-space-1-5: 8px;
-    --rk-space-2: 10px;
-    --rk-space-2-5: 13px;
-    --rk-space-3: 15px;
-    --rk-space-3-5: 18px;
-    --rk-space-4: 20px;
-    --rk-space-5: 25px;
-    --rk-space-6: 30px;
-    --rk-space-8: 40px;
-    --rk-space-10: 50px;
-    --rk-space-12: 60px;
-    --rk-space-16: 80px;
+  [data-density='airy'] {
+    --rk-cell-line: 1.5;
+    --rk-row-0: 0;
+    --rk-row-1: 1;
+    --rk-row-2: 2;
+    --rk-row-3: 3;
+    --rk-row-4: 4;
+    --rk-row-5: 5;
+    --rk-row-6: 6;
+    --rk-row-8: 8;
+    --rk-row-10: 10;
+    --rk-row-12: 12;
+    --rk-row-16: 16;
+    --rk-size-control-lg: 3;
+    --rk-size-control-md: 1;
+    --rk-size-control-sm: 1;
+    --rk-size-screen-full: 120;
+    --rk-size-screen-medium: 60;
+    --rk-size-screen-narrow: 40;
+    --rk-size-screen-wide: 80;
+    --rk-space-0: 0;
+    --rk-space-1: 1;
+    --rk-space-2: 2;
+    --rk-space-3: 3;
+    --rk-space-4: 4;
+    --rk-space-5: 5;
+    --rk-space-6: 6;
+    --rk-space-8: 8;
+    --rk-space-10: 10;
+    --rk-space-12: 12;
+    --rk-space-16: 16;
+  }
+}
+
+@layer rk.tokens {
+  [data-density='touch'] {
+    --rk-cell-line: 2;
+    --rk-row-0: 0;
+    --rk-row-1: 1;
+    --rk-row-2: 2;
+    --rk-row-3: 3;
+    --rk-row-4: 4;
+    --rk-row-5: 5;
+    --rk-row-6: 6;
+    --rk-row-8: 8;
+    --rk-row-10: 10;
+    --rk-row-12: 12;
+    --rk-row-16: 16;
+    --rk-size-control-lg: 3;
+    --rk-size-control-md: 1;
+    --rk-size-control-sm: 1;
+    --rk-size-screen-full: 120;
+    --rk-size-screen-medium: 60;
+    --rk-size-screen-narrow: 40;
+    --rk-size-screen-wide: 80;
+    --rk-space-0: 0;
+    --rk-space-1: 1;
+    --rk-space-2: 2;
+    --rk-space-3: 3;
+    --rk-space-4: 4;
+    --rk-space-5: 5;
+    --rk-space-6: 6;
+    --rk-space-8: 8;
+    --rk-space-10: 10;
+    --rk-space-12: 12;
+    --rk-space-16: 16;
   }
 }

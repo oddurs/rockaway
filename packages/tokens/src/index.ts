@@ -22,7 +22,7 @@ export {
   toSrgbGamut,
 } from './color.ts';
 export { type ContrastResult, checkContrast, describeFailure } from './contrast-check.ts';
-export { controlHeight, controlSizes, space, spaceSteps, unit } from './density.ts';
+export { breakpoints, controlRows, lineBox, spaceSteps } from './density.ts';
 export type {
   ColorValue,
   DimensionValue,
@@ -33,6 +33,8 @@ export type {
 } from './dtcg.ts';
 export { type GeneratedFiles, generate, resolverFile, serialize } from './generate.ts';
 export {
+  type Conformance,
+  conformanceLevels,
   type Density,
   defaultContexts,
   defaultTheme,
