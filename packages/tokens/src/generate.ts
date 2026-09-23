@@ -4,16 +4,16 @@
  *
  *   base.tokens.json               font primitives (reference tier)
  *   semantic.tokens.json           the semantic tier: colour, motion, focus
- *   palette.{mode}.tokens.json     palettes, one file per `mode` context
+ *   palette.{mode}.tokens.json     the palette, one file per `mode` context
  *   density.{density}.tokens.json  space and control sizes, one per `density` context
  *   rockaway.resolver.json         how they combine
  */
 
+import { palette as ansiPalette, ansiSlots, roleSlots } from './ansi.ts';
 import { controlSizes, space } from './density.ts';
 import { color, type Group, px, type ResolverDocument } from './dtcg.ts';
 import { type Density, densities, type Mode, modes, type ThemeInputs } from './inputs.ts';
 import { motion } from './motion.ts';
-import { hues, type PaletteKey, palettes, steps } from './palette.ts';
 import { semanticColors } from './semantic.ts';
 import { families, weights } from './type.ts';
 
@@ -55,18 +55,13 @@ function semantic(inputs: ThemeInputs): Group {
 }
 
 function palette(inputs: ThemeInputs, mode: Mode): Group {
-  const all = palettes(inputs, mode);
-  const keys: PaletteKey[] = [...steps, 'contrast'];
+  const colours = ansiPalette(inputs, mode);
+  const slots = [...ansiSlots, ...roleSlots];
   return {
-    palette: {
+    ansi: {
       $type: 'color',
-      $description: `Palettes for ${mode} mode (reference tier). Steps have fixed roles; see cairn 0016.`,
-      ...Object.fromEntries(
-        hues.map((hue) => [
-          hue,
-          Object.fromEntries(keys.map((k) => [String(k), color(all[hue][k])])),
-        ]),
-      ),
+      $description: `The palette for ${mode} mode: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).`,
+      ...Object.fromEntries(slots.map((slot) => [slot, color(colours[slot])])),
     },
   };
 }
@@ -102,7 +97,7 @@ function resolver(): ResolverDocument {
     sets: { base: { sources: [ref('base.tokens.json'), ref('semantic.tokens.json')] } },
     modifiers: {
       mode: {
-        description: 'Colour mode. Overrides palette.* only.',
+        description: 'Colour mode. Overrides ansi.* only.',
         contexts: Object.fromEntries(modes.map((m) => [m, [ref(`palette.${m}.tokens.json`)]])),
         default: 'light',
       },

@@ -77,7 +77,7 @@ describe('generated files', () => {
   test('each context file only touches its own groups (0016)', () => {
     for (const [name, doc] of files) {
       const groups = Object.keys(doc as Node).filter((k) => !k.startsWith('$'));
-      if (name.startsWith('palette.')) expect(groups, name).toEqual(['palette']);
+      if (name.startsWith('palette.')) expect(groups, name).toEqual(['ansi']);
       if (name.startsWith('density.')) expect(groups, name).toEqual(['space', 'size']);
       if (name === 'semantic.tokens.json') {
         expect(groups, name).toEqual(['bg', 'fg', 'border', 'motion', 'focus']);
@@ -85,7 +85,7 @@ describe('generated files', () => {
     }
   });
 
-  test('every semantic alias names a palette step that exists in both modes (0019)', () => {
+  test('every semantic alias names a palette slot that exists in both modes (0019, 0089)', () => {
     const semantic = files.get('semantic.tokens.json') as Node;
     const colours = { bg: semantic.bg, fg: semantic.fg, border: semantic.border } as Node;
     const aliases = [...tokens(colours)].filter(([, t]) => typeof t.$value === 'string');
@@ -94,7 +94,7 @@ describe('generated files', () => {
       const palette = files.get(`palette.${mode}.tokens.json`) as Node;
       for (const [id, t] of aliases) {
         const target = (t.$value as string).slice(1, -1).split('.');
-        expect(target[0], id).toBe('palette');
+        expect(target[0], id).toBe('ansi');
         const found = target.reduce<unknown>((n, k) => (n as Node | undefined)?.[k], palette);
         expect(found, `${id} → ${t.$value} in ${mode}`).toBeDefined();
       }

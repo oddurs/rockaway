@@ -17,7 +17,7 @@
   },
   "modifiers": {
     "mode": {
-      "description": "Colour mode. Overrides palette.* only.",
+      "description": "Colour mode. Overrides ansi.* only.",
       "contexts": {
         "light": [
           {

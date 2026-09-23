@@ -88,43 +88,56 @@ function Swatch({ cssVar, mode }: { cssVar: string; mode?: 'light' | 'dark' }) {
   );
 }
 
-/** Every palette, both modes. Steps have fixed roles (cairn 0016). */
+/** The palette: the terminal's sixteen, and the role slots (cairn 0089). */
 export function Palettes() {
-  const hues = Object.keys(docs.light.palette).filter(
-    (k) => !k.startsWith('$') && k !== 'shadow' && k !== 'scrim',
+  const slots = Object.keys(docs.light.ansi).filter((k) => !k.startsWith('$'));
+  const terminal = slots.filter(
+    (s) =>
+      !s.startsWith('tint-') &&
+      ![
+        'background',
+        'surface',
+        'subtle',
+        'hover',
+        'active',
+        'foreground',
+        'muted',
+        'faint',
+        'border-subtle',
+        'border',
+        'border-strong',
+        'cursor',
+        'selection',
+      ].includes(s),
   );
-  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'contrast'];
+  const roles = slots.filter((s) => !terminal.includes(s));
+
+  const rows = (names: string[]) =>
+    names.map((slot) => (
+      <tr key={slot}>
+        <th scope="row" style={{ ...cell, ...text('label') }}>
+          <code style={mono}>{slot}</code>
+        </th>
+        <td style={{ ...cell, padding: 'var(--rk-space-1)' }}>
+          <Swatch cssVar={`--rk-ansi-${slot}`} mode="light" />
+        </td>
+        <td style={{ ...cell, padding: 'var(--rk-space-1)' }}>
+          <Swatch cssVar={`--rk-ansi-${slot}`} mode="dark" />
+        </td>
+      </tr>
+    ));
+
   return (
     <Page
-      title="Palettes"
-      lead="Twelve steps per hue, each with a fixed job, in both modes. Components never read these directly."
+      title="Palette"
+      lead="The terminal's sixteen, which every reader has already themed, plus the role slots a design system needs and a terminal does not name."
     >
-      {(['light', 'dark'] as const).map((mode) => (
-        <section
-          key={mode}
-          data-theme={mode}
-          style={{
-            padding: 'var(--rk-space-4)',
-            background: 'var(--rk-bg-page)',
-            color: 'var(--rk-fg-default)',
-          }}
-        >
-          <Table caption={`${mode === 'light' ? 'Light' : 'Dark'} mode`} head={['Hue', ...keys]}>
-            {hues.map((hue) => (
-              <tr key={hue}>
-                <th scope="row" style={{ ...cell, ...text('label') }}>
-                  {hue}
-                </th>
-                {keys.map((k) => (
-                  <td key={k} style={{ ...cell, padding: 'var(--rk-space-1)' }}>
-                    <Swatch cssVar={`--rk-palette-${hue}-${k}`} />
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </Table>
-        </section>
-      ))}
+      <Table caption="The sixteen" head={['Slot', 'Light', 'Dark']}>
+        {rows(terminal)}
+      </Table>
+      <Table caption="Role slots" head={['Slot', 'Light', 'Dark']}>
+        {rows(roles)}
+      </Table>
     </Page>
   );
 }
