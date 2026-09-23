@@ -30,6 +30,18 @@ import { vars } from '@rockaway/tokens';
 vars['fg.muted']; // 'var(--rk-fg-muted)'
 ```
 
+## Tailwind
+
+```css
+@import 'tailwindcss';
+@import '@rockaway/tokens/tokens.css';
+@import '@rockaway/tokens/tailwind.css';
+```
+
+Utilities resolve to the same custom properties the components read, so
+`bg-surface`, `text-muted` and `p-4` follow the mode and density contexts
+without a rebuild. The adapter is generated; do not edit it.
+
 ## Generated DTCG
 
 ```sh

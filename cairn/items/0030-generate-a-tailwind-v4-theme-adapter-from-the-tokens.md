@@ -2,8 +2,9 @@
 id: 30
 title: Generate a Tailwind v4 @theme adapter from the tokens
 type: feature
-status: backlog
+status: done
 milestone: runtime
+assignee: Oddur Sigurdsson
 depends_on:
 - 20
 created: 2026-09-22
@@ -20,5 +21,7 @@ written in Tailwind.
 
 ## Acceptance criteria
 
-- [ ] `@theme` block generated from semantic tokens, never hand-edited
-- [ ] Utilities resolve to the same custom properties the components use
+- [x] The `@theme` block is generated from the semantic tokens, never hand-edited
+- [x] Utilities resolve to the same custom properties the components read
+- [x] Spacing follows the density context
+- [x] Proven by compiling real Tailwind utilities in a test
