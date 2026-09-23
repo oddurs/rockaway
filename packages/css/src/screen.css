@@ -1,0 +1,46 @@
+/*
+ * A screen, and the two layers it is made of (cairn 0085, 0096).
+ *
+ * Chrome underneath, content over it, both in the same cells. The chrome is
+ * painted and `aria-hidden`; the content is real elements. Neither layer
+ * knows what the other drew — they agree because they are measured in cells.
+ *
+ * The cell variables are not set here. `Screen` writes the measured values on
+ * the element itself, and `cell.css` holds the `1ch` x `1lh` default for
+ * anything drawn without it.
+ *
+ * A screen does not set `line-height` either, and must not: the line box comes
+ * from the density context, `Screen` measures it, and `--rk-cell-height` is
+ * that measurement. Feeding the measurement back into `line-height` closes the
+ * loop — the first paint's fallback becomes the line box for every density,
+ * and density stops arriving. It inherits instead.
+ */
+@layer rk.components {
+  .rk-screen {
+    position: relative;
+    font-family: var(--rk-font-family-mono);
+    /* Chrome is drawn in the cells it was drawn in: never collapse, never wrap. */
+    white-space: pre;
+    color: var(--rk-fg-default);
+  }
+
+  .rk-row {
+    height: var(--rk-cell-height);
+  }
+
+  .rk-frame,
+  .rk-content {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* The content layer sits over the chrome, but only where it has something
+   * to put there: a gap in the content must show the frame through it. */
+  .rk-content {
+    pointer-events: none;
+  }
+
+  .rk-content > * {
+    pointer-events: auto;
+  }
+}

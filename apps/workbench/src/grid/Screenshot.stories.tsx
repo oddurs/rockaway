@@ -2,7 +2,6 @@ import { Buffer, contentArea, drawBox, drawText, rect, type Size } from '@rockaw
 import { Screen, screenshot } from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
-import './painters.demo.css';
 
 function draw({ width, height }: Size): Buffer {
   const area = rect(0, 0, width, height);

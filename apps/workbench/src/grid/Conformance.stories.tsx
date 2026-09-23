@@ -2,7 +2,6 @@ import { Buffer, drawBox, rect, type Size } from '@rockaway/grid';
 import { checkConformance, expectConformance, formatReport, Screen } from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
-import './painters.demo.css';
 
 const draw = ({ width, height }: Size): Buffer =>
   Buffer.create({ width, height }).draw((d) => {
