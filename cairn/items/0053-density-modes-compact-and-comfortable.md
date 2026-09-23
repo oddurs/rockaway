@@ -2,7 +2,7 @@
 id: 53
 title: 'Density modes: compact and comfortable'
 type: feature
-status: backlog
+status: dropped
 milestone: later
 depends_on:
 - 21
@@ -20,3 +20,7 @@ effort: m
 ## Acceptance criteria
 
 - [ ]
+
+## 2026-09-22
+
+Superseded by 0090: density is the row height, and touch is the fourth step.

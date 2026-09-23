@@ -37,12 +37,12 @@ cairn render                      # regenerate ROADMAP.md
 
 - **Types**: `component`, `feature`, `decision`, `spike`, `bug`, `chore`, `docs`, `milestone`
 - **Statuses**: `backlog` (open), `ready` (open), `doing` (active), `review` (active), `blocked` (active), `done` (done), `dropped` (dropped)
-- **`layer`**: one of tokens, css, behaviour, components, docs, tooling, distribution — Which contract this touches, in dependency order
+- **`layer`**: one of grid, tokens, css, behaviour, components, site, docs, tooling, distribution — Which contract this touches, in dependency order: the grid engine underneath everything
 - **`priority`**: one of p0, p1, p2, p3 — p0 blocks the milestone
 - **`effort`**: one of s, m, l, xl — Rough size, not an estimate
 - **`due`**: date, YYYY-MM-DD — When a milestone is meant to land
 - **`part_of`**: names any items, by id, several allowed — A larger piece of work this belongs to
-- **Milestones**: `foundations` (due 2026-10-04), `tokens` (due 2026-10-25), `runtime` (due 2026-11-15), `primitives` (due 2027-01-10), `v0.1` (due 2027-02-07), `later`
+- **Milestones**: `foundations` (due 2026-10-04), `tokens` (due 2026-10-25), `runtime` (due 2026-11-15), `grid` (due 2026-12-06), `primitives` (due 2027-01-31), `retheme` (due 2026-12-20), `site` (due 2027-02-21), `v0.1` (due 2027-03-21), `later`
 - **Saved views** (`cairn list --view NAME`): `now`, `next`, `decisions`, `components`, `tokens`, `triage`
 
 ### Rules

@@ -1,7 +1,8 @@
 # cairn.toml — the schema for rockaway's roadmap and issues.
 #
-# The architecture has three contracts, and this schema is shaped around them:
+# The architecture has four contracts, and this schema is shaped around them:
 #
+#   grid       the engine: integer cell geometry, frames, painters
 #   tokens     decisions as data (DTCG 2025.10, reference → semantic → component)
 #   behaviour  accessibility, focus, state — headless, unstyled
 #   style      CSS that reads tokens and behaviour state, nothing else
@@ -19,7 +20,7 @@ format = 3
 
 [project]
 name = "rockaway"
-description = "A design system built on three contracts: tokens, behaviour, style."
+description = "A TUI design system for the web: everything on a character grid."
 dir = "cairn/items"
 id_width = 4
 default_type = "feature"
@@ -194,9 +195,9 @@ board = false
 [[field]]
 name = "layer"
 kind = "enum"
-values = ["tokens", "css", "behaviour", "components", "docs", "tooling", "distribution"]
+values = ["grid", "tokens", "css", "behaviour", "components", "site", "docs", "tooling", "distribution"]
 column = true
-description = "Which contract this touches, in dependency order"
+description = "Which contract this touches, in dependency order: the grid engine underneath everything"
 
 [[field]]
 name = "priority"

@@ -2,7 +2,7 @@
 id: 63
 title: Ship Editorial, Instrument and Soft as theme presets
 type: feature
-status: backlog
+status: dropped
 milestone: v0.1
 depends_on:
 - 62
@@ -23,3 +23,7 @@ regression as the default.
 
 - [ ] `themes/editorial.json`, `themes/instrument.json`, `themes/soft.json`
 - [ ] Every component story is screenshot under all four themes, both modes
+
+## 2026-09-22
+
+Superseded by 0089: the palettes are Ink, Phosphor and Ice now, and they ship with the ANSI palette work rather than as a separate item.
