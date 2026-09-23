@@ -1,8 +1,8 @@
 import path from 'node:path';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
-import type { BrowserInstanceOption } from 'vitest/node';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
+import type { BrowserInstanceOption } from 'vitest/node';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
