@@ -1,17 +1,11 @@
 /*
- * Base (cairn 0025). Element defaults, all of them reading semantic tokens.
+ * Base (cairn 0025, 0091). Element defaults, all of them reading semantic
+ * tokens.
  *
- * The fallback face is metric-matched to Inter (cairn 0059), so text does not
- * shift when the web font finishes loading. Consuming apps load Inter itself.
+ * There is no metric-matched fallback face any more: every family in the
+ * system is monospace, and the system stack is already there, so text has a
+ * cell from the first paint whether a web font arrives or not.
  */
-@font-face {
-  font-family: "Inter Fallback";
-  src: local("Arial");
-  ascent-override: 90.44%;
-  descent-override: 22.52%;
-  line-gap-override: 0%;
-  size-adjust: 107.12%;
-}
 
 @layer rk.base {
   /*

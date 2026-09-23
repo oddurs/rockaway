@@ -1,9 +1,10 @@
 import type { ThemeInputs } from './inputs.ts';
 
 const temperatures = ['cool', 'neutral', 'warm'];
-const pairings = ['inter', 'editorial', 'friendly', 'technical'];
+const pairings = ['system', 'jetbrains', 'ibm-plex', 'berkeley'];
+const sets = ['single', 'double', 'heavy', 'rounded', 'ascii'];
 const levels = ['strict', 'standard', 'loose'];
-const keys = ['accentHue', 'neutralTemperature', 'typePairing', 'conformance'];
+const keys = ['accentHue', 'neutralTemperature', 'typePairing', 'borderSet', 'conformance'];
 
 /** Parse a theme file, with errors that say what to change. */
 export function parseTheme(value: unknown, source = 'theme'): ThemeInputs {
@@ -21,6 +22,8 @@ export function parseTheme(value: unknown, source = 'theme'): ThemeInputs {
   }
   if (!pairings.includes(v.typePairing as string))
     errors.push(`typePairing must be one of ${pairings.join(', ')}`);
+  if (!sets.includes(v.borderSet as string))
+    errors.push(`borderSet must be one of ${sets.join(', ')}`);
   if (!levels.includes(v.conformance as string))
     errors.push(`conformance must be one of ${levels.join(', ')}`);
   if (errors.length > 0) throw new Error(`${source}:\n  ${errors.join('\n  ')}`);

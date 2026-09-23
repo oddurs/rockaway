@@ -1,6 +1,7 @@
 {
   "accentHue": 262,
   "neutralTemperature": "neutral",
-  "typePairing": "inter",
-  "conformance": "standard"
+  "typePairing": "system",
+  "conformance": "standard",
+  "borderSet": "single"
 }

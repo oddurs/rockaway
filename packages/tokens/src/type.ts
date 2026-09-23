@@ -7,35 +7,34 @@
  */
 import type { TypePairing } from './inputs.ts';
 
-const sans = [
-  'Inter Variable',
-  'Inter',
-  'Inter Fallback',
-  'ui-sans-serif',
-  'system-ui',
-  'sans-serif',
+const system = [
+  'ui-monospace',
+  'SFMono-Regular',
+  'SF Mono',
+  'Menlo',
+  'Consolas',
+  'Liberation Mono',
+  'monospace',
 ];
-const systemMono = ['ui-monospace', 'SF Mono', 'Cascadia Code', 'Menlo', 'Consolas', 'monospace'];
 
 export interface FontFamilies {
-  readonly sans: readonly string[];
-  readonly display: readonly string[];
   readonly mono: readonly string[];
+  /** The face used where a heading wants a different voice. Usually the same one. */
+  readonly display: readonly string[];
 }
 
+/**
+ * Every pairing is monospace: a proportional face cannot hold a character
+ * grid, and `ch` in one means nothing (cairn 0091).
+ */
 export const families: Readonly<Record<TypePairing, FontFamilies>> = {
-  inter: { sans, display: sans, mono: systemMono },
-  editorial: {
-    sans,
-    display: ['Newsreader', 'Iowan Old Style', 'Georgia', 'serif'],
-    mono: systemMono,
+  system: { mono: system, display: system },
+  jetbrains: {
+    mono: ['JetBrains Mono Variable', 'JetBrains Mono', ...system],
+    display: ['JetBrains Mono Variable', 'JetBrains Mono', ...system],
   },
-  friendly: {
-    sans: ['Figtree', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-    display: ['Figtree', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-    mono: systemMono,
-  },
-  technical: { sans, display: sans, mono: ['JetBrains Mono', ...systemMono] },
+  'ibm-plex': { mono: ['IBM Plex Mono', ...system], display: ['IBM Plex Mono', ...system] },
+  berkeley: { mono: ['Berkeley Mono', ...system], display: ['Berkeley Mono', ...system] },
 };
 
 export const weights = { regular: 400, medium: 500, semibold: 600, bold: 700 } as const;

@@ -3,33 +3,25 @@
     "$description": "Font primitives (reference tier). Read through the text styles, not directly.",
     "family": {
       "$type": "fontFamily",
-      "sans": {
+      "mono": {
         "$value": [
-          "Inter Variable",
-          "Inter",
-          "Inter Fallback",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif"
+          "ui-monospace",
+          "SFMono-Regular",
+          "SF Mono",
+          "Menlo",
+          "Consolas",
+          "Liberation Mono",
+          "monospace"
         ]
       },
       "display": {
         "$value": [
-          "Inter Variable",
-          "Inter",
-          "Inter Fallback",
-          "ui-sans-serif",
-          "system-ui",
-          "sans-serif"
-        ]
-      },
-      "mono": {
-        "$value": [
           "ui-monospace",
+          "SFMono-Regular",
           "SF Mono",
-          "Cascadia Code",
           "Menlo",
           "Consolas",
+          "Liberation Mono",
           "monospace"
         ]
       }
@@ -47,6 +39,358 @@
       },
       "bold": {
         "$value": 700
+      }
+    }
+  },
+  "glyph": {
+    "$type": "fontFamily",
+    "$description": "The characters chrome is drawn with (cairn 0091). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.",
+    "border": {
+      "$description": "The theme draws with the single set; the others are here to be switched to.",
+      "single": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "┌"
+        },
+        "top-right": {
+          "$value": "┐"
+        },
+        "bottom-left": {
+          "$value": "└"
+        },
+        "bottom-right": {
+          "$value": "┘"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      },
+      "double": {
+        "horizontal": {
+          "$value": "═"
+        },
+        "vertical": {
+          "$value": "║"
+        },
+        "top-left": {
+          "$value": "╔"
+        },
+        "top-right": {
+          "$value": "╗"
+        },
+        "bottom-left": {
+          "$value": "╚"
+        },
+        "bottom-right": {
+          "$value": "╝"
+        },
+        "tee-left": {
+          "$value": "╣"
+        },
+        "tee-right": {
+          "$value": "╠"
+        },
+        "tee-up": {
+          "$value": "╩"
+        },
+        "tee-down": {
+          "$value": "╦"
+        },
+        "cross": {
+          "$value": "╬"
+        }
+      },
+      "heavy": {
+        "horizontal": {
+          "$value": "━"
+        },
+        "vertical": {
+          "$value": "┃"
+        },
+        "top-left": {
+          "$value": "┏"
+        },
+        "top-right": {
+          "$value": "┓"
+        },
+        "bottom-left": {
+          "$value": "┗"
+        },
+        "bottom-right": {
+          "$value": "┛"
+        },
+        "tee-left": {
+          "$value": "┫"
+        },
+        "tee-right": {
+          "$value": "┣"
+        },
+        "tee-up": {
+          "$value": "┻"
+        },
+        "tee-down": {
+          "$value": "┳"
+        },
+        "cross": {
+          "$value": "╋"
+        }
+      },
+      "rounded": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "╭"
+        },
+        "top-right": {
+          "$value": "╮"
+        },
+        "bottom-left": {
+          "$value": "╰"
+        },
+        "bottom-right": {
+          "$value": "╯"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      },
+      "ascii": {
+        "horizontal": {
+          "$value": "-"
+        },
+        "vertical": {
+          "$value": "|"
+        },
+        "top-left": {
+          "$value": "+"
+        },
+        "top-right": {
+          "$value": "+"
+        },
+        "bottom-left": {
+          "$value": "+"
+        },
+        "bottom-right": {
+          "$value": "+"
+        },
+        "tee-left": {
+          "$value": "+"
+        },
+        "tee-right": {
+          "$value": "+"
+        },
+        "tee-up": {
+          "$value": "+"
+        },
+        "tee-down": {
+          "$value": "+"
+        },
+        "cross": {
+          "$value": "+"
+        }
+      },
+      "current": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "┌"
+        },
+        "top-right": {
+          "$value": "┐"
+        },
+        "bottom-left": {
+          "$value": "└"
+        },
+        "bottom-right": {
+          "$value": "┘"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      }
+    },
+    "mark": {
+      "check": {
+        "$value": "✓"
+      },
+      "cross": {
+        "$value": "✗"
+      },
+      "bullet": {
+        "$value": "·"
+      },
+      "cursor": {
+        "$value": "▸"
+      },
+      "expanded": {
+        "$value": "▾"
+      },
+      "collapsed": {
+        "$value": "▸"
+      },
+      "ellipsis": {
+        "$value": "…"
+      },
+      "dash": {
+        "$value": "–"
+      },
+      "radio": {
+        "$value": "●"
+      },
+      "radio-empty": {
+        "$value": "○"
+      }
+    },
+    "block": {
+      "full": {
+        "$value": "█"
+      },
+      "dark": {
+        "$value": "▓"
+      },
+      "medium": {
+        "$value": "▒"
+      },
+      "light": {
+        "$value": "░"
+      },
+      "caret": {
+        "$value": "▏"
+      }
+    },
+    "bar": {
+      "1": {
+        "$value": "▁"
+      },
+      "2": {
+        "$value": "▂"
+      },
+      "3": {
+        "$value": "▃"
+      },
+      "4": {
+        "$value": "▄"
+      },
+      "5": {
+        "$value": "▅"
+      },
+      "6": {
+        "$value": "▆"
+      },
+      "7": {
+        "$value": "▇"
+      },
+      "8": {
+        "$value": "█"
+      }
+    },
+    "spinner": {
+      "1": {
+        "$value": "⠋"
+      },
+      "2": {
+        "$value": "⠙"
+      },
+      "3": {
+        "$value": "⠹"
+      },
+      "4": {
+        "$value": "⠸"
+      },
+      "5": {
+        "$value": "⠼"
+      },
+      "6": {
+        "$value": "⠴"
+      },
+      "7": {
+        "$value": "⠦"
+      },
+      "8": {
+        "$value": "⠧"
+      },
+      "9": {
+        "$value": "⠇"
+      },
+      "10": {
+        "$value": "⠏"
+      }
+    }
+  },
+  "attribute": {
+    "$description": "How emphasis is drawn. Reverse is a swap, so it has no value of its own.",
+    "bold": {
+      "$type": "fontWeight",
+      "$value": 700,
+      "$description": "Bold: the weight a heading or a label takes."
+    },
+    "dim": {
+      "$type": "color",
+      "$value": "{ansi.muted}",
+      "$description": "Dim: quieter text, not lower opacity."
+    },
+    "underline": {
+      "$type": "dimension",
+      "thickness": {
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        }
+      },
+      "offset": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
       }
     }
   }
