@@ -24,3 +24,7 @@ primitives exist.
 
 - [ ] One story renders every primitive, like the canvas's Default board
 - [ ] Theme inputs are controls; mode and density switch contexts without a rebuild
+
+## 2026-09-22
+
+Becomes the screen playground: the six theme inputs plus the conformance level, over a screen built from the real components.

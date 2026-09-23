@@ -20,3 +20,7 @@ effort: s
 ## Acceptance criteria
 
 - [ ]
+
+## 2026-09-22
+
+Variants become attributes on the grid: a variant changes the border set, the attribute and the palette role, never a radius or a shadow.

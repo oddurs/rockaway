@@ -22,3 +22,7 @@ exists only as prose serves one audience.
 
 - [ ] One schema per component, generated from source where possible
 - [ ] The docs site and the agent surfaces both read from it
+
+## 2026-09-22
+
+Component metadata gains the text snapshot and the cell size, which is what an agent needs to lay a screen out without rendering it.

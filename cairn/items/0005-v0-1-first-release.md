@@ -6,10 +6,11 @@ type: milestone
 status: backlog
 depends_on:
 - 4
+- 69
 created: 2026-09-22
 updated: 2026-09-22
 priority: p2
-due: 2027-02-07
+due: 2027-03-21
 ---
 
 Something another project can install and build on.

@@ -3,12 +3,12 @@ id: 57
 title: Table
 type: component
 status: backlog
-milestone: later
+milestone: primitives
 depends_on:
 - 34
 created: 2026-09-22
 updated: 2026-09-22
-priority: p3
+priority: p1
 layer: components
 effort: l
 ---
@@ -41,3 +41,7 @@ Role, keyboard map, focus behaviour, announcements.
 - [ ] axe passes; keyboard walkthrough recorded in the story
 - [ ] Light, dark and forced-colors verified
 - [ ] Metadata written: props, anatomy, when to use, when not to
+
+## 2026-09-22
+
+Moved into primitives by the pivot: a grid-drawn table is the thing this system should be best at, and it exercises junctions, alignment and truncation at once.

@@ -6,6 +6,7 @@ status: backlog
 milestone: primitives
 depends_on:
 - 33
+- 86
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1
@@ -41,3 +42,14 @@ Role, keyboard map, focus behaviour, announcements.
 - [ ] axe passes; keyboard walkthrough recorded in the story
 - [ ] Light, dark and forced-colors verified
 - [ ] Metadata written: props, anatomy, when to use, when not to
+
+## 2026-09-22
+
+## TUI criteria (added by the pivot, cairn 0076)
+
+- [ ] Sized in cells, and drawn by the frame engine: no box characters written by hand
+- [ ] Frame glyphs are `aria-hidden`; the accessible name never contains one
+- [ ] Ships a text snapshot, which is its documentation as much as its test
+- [ ] Operable by keyboard alone, and usable with a finger at touch density
+- [ ] State reads without colour: an attribute or a mark carries it too
+- [ ] Conforms at `strict`, or declares its exception with a reason

@@ -20,3 +20,7 @@ effort: l
 ## Acceptance criteria
 
 - [ ]
+
+## 2026-09-22
+
+Multi-brand becomes multi-palette: any terminal theme, validated by the same gate.
