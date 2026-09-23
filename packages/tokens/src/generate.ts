@@ -47,7 +47,7 @@ function base(inputs: ThemeInputs): Group {
   };
 }
 
-function semantic(inputs: ThemeInputs): Group {
+function semantic(): Group {
   return {
     ...semanticColors(),
     ...motion(),
@@ -140,7 +140,7 @@ function resolver(): ResolverDocument {
 export function generate(inputs: ThemeInputs): GeneratedFiles {
   const files = new Map<string, unknown>();
   files.set('base.tokens.json', { ...base(inputs), ...glyphs(inputs.borderSet), ...attributes() });
-  files.set('semantic.tokens.json', semantic(inputs));
+  files.set('semantic.tokens.json', semantic());
   for (const m of modes) files.set(`palette.${m}.tokens.json`, palette(inputs, m));
   for (const d of densities) files.set(`density.${d}.tokens.json`, density(d));
   files.set(resolverFile, resolver());
