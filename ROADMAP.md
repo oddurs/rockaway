@@ -138,13 +138,9 @@ The component contract, proven on a first set of components.
 
 ## retheme — Tokens on the grid
 
-`#########·` 88% · 7 of 8 done · due 2026-12-20
+`##########` 100% · 8 of 8 done · due 2026-12-20
 
 The token pipeline survives the pivot; its contents do not.
-
-### backlog
-
-- [ ] [`0095`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0095-update-the-workbench-token-reference-for-the-grid.md) Update the workbench token reference for the grid <sup>docs · docs · p1</sup>
 
 ### done
 
@@ -155,6 +151,7 @@ The token pipeline survives the pivot; its contents do not.
 - [x] [`0092`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0092-retire-radius-shadow-and-the-type-scale.md) Retire radius, shadow and the type scale <sup>chore · tokens · p0</sup>
 - [x] [`0093`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0093-rewrite-the-css-layers-for-the-grid.md) Rewrite the CSS layers for the grid <sup>feature · css · p0</sup>
 - [x] [`0094`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0094-export-a-terminal-theme-from-the-same-tokens.md) Export a terminal theme from the same tokens <sup>feature · tokens · p2</sup>
+- [x] [`0095`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0095-update-the-workbench-token-reference-for-the-grid.md) Update the workbench token reference for the grid <sup>docs · docs · p1</sup>
 
 ## site — The dog-food site
 

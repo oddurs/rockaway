@@ -1,15 +1,22 @@
 import type { CSSProperties } from 'react';
 
 /**
- * A text style as separate properties (cairn 0066). The `font` shorthand with
- * a `var()` value is legal CSS that browsers accept, but minifiers refuse to
- * parse it, so the system never writes it.
+ * There is one type size on a character grid (cairn 0075), so a "text style"
+ * is weight, case and colour. This keeps the stories honest about that.
  */
-export function text(name: string): CSSProperties {
-  return {
-    fontFamily: `var(--rk-text-${name}-font-family)`,
-    fontSize: `var(--rk-text-${name}-font-size)`,
-    fontWeight: `var(--rk-text-${name}-font-weight)` as CSSProperties['fontWeight'],
-    lineHeight: `var(--rk-text-${name}-line-height)`,
-  };
+export function text(style: 'body' | 'label' | 'code' | 'heading' | 'lead'): CSSProperties {
+  switch (style) {
+    case 'label':
+      return { fontWeight: 'var(--rk-attribute-bold)' as CSSProperties['fontWeight'] };
+    case 'heading':
+      return {
+        fontWeight: 'var(--rk-attribute-bold)' as CSSProperties['fontWeight'],
+        textTransform: 'uppercase',
+        letterSpacing: '0.08em',
+      };
+    case 'lead':
+      return { color: 'var(--rk-fg-muted)' };
+    default:
+      return {};
+  }
 }
