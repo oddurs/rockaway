@@ -77,7 +77,7 @@ The CSS contract every consumer shares.
 
 ## grid — The frame engine
 
-`##########` 100% · 16 of 16 done · due 2026-12-06
+`##########` 100% · 17 of 17 done · due 2026-12-06
 
 The heart of a TUI system: a pure, integer model of a character grid, and
 
@@ -99,6 +99,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 - [x] [`0086`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0086-bind-the-engine-to-react-measure-in-cells-render-resize.md) Bind the engine to React: measure in cells, render, resize <sup>feature · grid · p0</sup>
 - [x] [`0087`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0087-make-the-text-snapshot-the-house-test-for-components.md) Make the text snapshot the house test for components <sup>chore · tooling · p0</sup>
 - [x] [`0088`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0088-enforce-grid-conformance-and-count-the-exceptions.md) Enforce grid conformance, and count the exceptions <sup>chore · tooling · p0</sup>
+- [x] [`0110`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0110-the-rule-painter-draws-cell-boxes-not-lines.md) The rule painter draws cell boxes, not lines <sup>bug · grid · p0</sup>
 
 ## primitives — First primitives
 

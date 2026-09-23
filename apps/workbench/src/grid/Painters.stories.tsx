@@ -80,6 +80,14 @@ export const GlyphAndRule: Story = {
     const marks = rule.querySelectorAll('.rk-rule');
     expect(marks.length).toBeGreaterThan(0);
 
+    // A line is strokes from the centre of each cell, not borders on its box
+    // (cairn 0110): that is what makes neighbours join into one line.
+    const ruleCell = rule.querySelector('.rk-rule') as HTMLElement;
+    expect(ruleCell.querySelectorAll('.rk-stroke').length).toBeGreaterThan(0);
+    expect(getComputedStyle(ruleCell).borderTopWidth).toBe('0px');
+    const sides = [...rule.querySelectorAll<HTMLElement>('.rk-stroke')].map((s) => s.dataset.side);
+    expect(new Set(sides)).toEqual(new Set(['north', 'east', 'south', 'west']));
+
     // Both measure the same, in whole cells.
     const a = glyph.getBoundingClientRect();
     const b = rule.getBoundingClientRect();
