@@ -103,14 +103,13 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`##········` 20% · 5 of 25 done · due 2027-01-31
+`###·······` 24% · 6 of 25 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
 ### backlog
 
 - [ ] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p1</sup>
-- [ ] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
 - [ ] [`0034`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0034-popover.md) Popover <sup>component · components · p1</sup>
 - [ ] [`0035`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0035-text-field.md) Text field <sup>component · components · p1</sup>
 - [ ] [`0036`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0036-checkbox.md) Checkbox <sup>component · components · p1</sup>
@@ -132,6 +131,7 @@ The component contract, proven on a first set of components.
 
 ### done
 
+- [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
 - [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
 - [x] [`0096`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0096-frame.md) Frame <sup>component · components · p0</sup>
 - [x] [`0097`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0097-divider.md) Divider <sup>component · components · p1</sup>

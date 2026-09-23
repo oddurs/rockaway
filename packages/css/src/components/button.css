@@ -1,0 +1,102 @@
+/*
+ * Button (cairn 0033).
+ *
+ * One row tall by default, three when it carries a border. Every dimension is
+ * a count of cells, so a button is the same shape at every density and reaches
+ * a 44px touch target without a coordinate moving.
+ *
+ * State is never only a colour: pressed reverses the video, hover underlines,
+ * disabled dims. That is what keeps the control legible in forced colors, in
+ * greyscale, and to a reader who cannot tell the accent from the ground.
+ *
+ * The delimiters take their colour from one custom property, set on the button
+ * itself. Every state is then a rule on the button and nothing reaches down
+ * into a child, which is also why the cascade cannot get the order wrong.
+ */
+@layer rk.components {
+  .rk-button {
+    --rk-button-end: var(--rk-border-control);
+
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-block-size: calc(var(--rk-cell-height) * var(--rk-size-control-md));
+    border: none;
+    background: none;
+    color: var(--rk-fg-default);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  /* The label carries one cell of air either side, inside the delimiters. */
+  .rk-button-label {
+    padding-inline: var(--rk-x-1);
+  }
+
+  .rk-button-end {
+    color: var(--rk-button-end);
+  }
+
+  /* Hover is an attribute, not a colour. */
+  .rk-button[data-hovered] .rk-button-label {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* Pressed inverts, the way a terminal shows a key going down. The
+   * delimiters come along with it, so the whole control is one block. */
+  .rk-button[data-pressed] {
+    --rk-button-end: currentcolor;
+
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
+  }
+
+  .rk-button[data-disabled] {
+    --rk-button-end: currentcolor;
+
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+
+  /* fill: the primary. Reverse video is the whole treatment — no hue at all,
+   * so it survives forced colors and greyscale. */
+  .rk-button[data-variant="fill"] {
+    --rk-button-end: currentcolor;
+
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
+  }
+
+  /* Pressing a reversed button reverses it back: the press always shows. */
+  .rk-button[data-variant="fill"][data-pressed] {
+    --rk-button-end: var(--rk-border-control);
+
+    background: var(--rk-bg-page);
+    color: var(--rk-fg-default);
+  }
+
+  .rk-button[data-variant="danger"] {
+    --rk-button-end: var(--rk-border-danger);
+
+    color: var(--rk-fg-danger);
+  }
+
+  .rk-button[data-variant="danger"][data-pressed] {
+    --rk-button-end: currentcolor;
+
+    background: var(--rk-bg-danger-solid);
+    color: var(--rk-fg-on-danger);
+  }
+
+  /* quiet: a bare label, for a toolbar where the delimiters would be noise. */
+  .rk-button[data-variant="quiet"] .rk-button-label {
+    padding-inline: 0;
+  }
+
+  /* lg: three rows, tall enough for a frame to be drawn around the label. */
+  .rk-button[data-size="lg"] {
+    min-block-size: calc(var(--rk-cell-height) * var(--rk-size-control-lg));
+    padding-inline: var(--rk-x-1);
+  }
+}

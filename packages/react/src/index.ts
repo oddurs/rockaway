@@ -1,5 +1,11 @@
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
 export {
+  Button,
+  type ButtonProps,
+  type ButtonSize,
+  type ButtonVariant,
+} from './components/button.tsx';
+export {
   Divider,
   type DividerOptions,
   type DividerProps,
