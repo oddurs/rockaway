@@ -1,5 +1,19 @@
 export { BLANK, Buffer, type Cell, Draft, type Edges, NO_EDGES, type Weight } from './buffer.ts';
 export {
+  addEdges,
+  type BoxOptions,
+  contentArea,
+  type DrawOptions,
+  drawBox,
+  drawColumnRules,
+  drawDivider,
+  drawHLine,
+  drawText,
+  drawVLine,
+  fillArea,
+  type TextOptions,
+} from './draw.ts';
+export {
   area,
   bottom,
   cells,
