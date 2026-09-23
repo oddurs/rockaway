@@ -77,13 +77,12 @@ The CSS contract every consumer shares.
 
 ## grid — The frame engine
 
-`####······` 38% · 6 of 16 done · due 2026-12-06
+`#####·····` 44% · 7 of 16 done · due 2026-12-06
 
 The heart of a TUI system: a pure, integer model of a character grid, and
 
 ### backlog
 
-- [ ] [`0079`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0079-model-borders-as-weighted-edges-and-resolve-junctions-from-a-table.md) Model borders as weighted edges, and resolve junctions from a table <sup>feature · grid · p0</sup>
 - [ ] [`0080`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0080-measure-text-in-cells-wcwidth-truncation-wrapping.md) Measure text in cells: wcwidth, truncation, wrapping <sup>feature · grid · p0</sup>
 - [ ] [`0081`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0081-write-the-integer-layout-solver.md) Write the integer layout solver <sup>feature · grid · p0</sup>
 - [ ] [`0082`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0082-draw-boxes-dividers-titles-and-padding.md) Draw boxes, dividers, titles and padding <sup>feature · grid · p0</sup>
@@ -102,6 +101,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 - [x] [`0073`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0073-fix-the-glyph-sets-the-unicode-floor-and-how-text-is-measured.md) Fix the glyph sets, the Unicode floor and how text is measured <sup>decision · grid · p0</sup>
 - [x] [`0074`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0074-derive-the-cell-from-the-font-and-let-touch-grow-the-cell.md) Derive the cell from the font, and let touch grow the cell <sup>decision · css · p0</sup>
 - [x] [`0078`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0078-scaffold-rockaway-grid-the-pure-geometry-core.md) Scaffold @rockaway/grid: the pure geometry core <sup>feature · grid · p0</sup>
+- [x] [`0079`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0079-model-borders-as-weighted-edges-and-resolve-junctions-from-a-table.md) Model borders as weighted edges, and resolve junctions from a table <sup>feature · grid · p0</sup>
 
 ## primitives — First primitives
 
