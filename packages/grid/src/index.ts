@@ -35,3 +35,14 @@ export {
   styleEquals,
   withAttrs,
 } from './style.ts';
+export {
+  charWidth,
+  clusterWidth,
+  expandTabs,
+  graphemes,
+  pad,
+  sliceWidth,
+  stringWidth,
+  truncate,
+  wrap,
+} from './text.ts';
