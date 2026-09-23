@@ -1,4 +1,12 @@
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
+export {
+  Divider,
+  type DividerOptions,
+  type DividerProps,
+  dividerBuffer,
+  drawRule,
+  type Orientation,
+} from './components/divider.tsx';
 export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './components/frame.tsx';
 export { cx } from './cx.ts';
 export { type PaintOptions, paintGlyph, paintRule, ruledSides } from './paint/index.ts';
