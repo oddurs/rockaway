@@ -50,6 +50,16 @@ export {
   solve,
   type Track,
 } from './layout.ts';
+export {
+  type AnsiColor,
+  type AnsiEnvironment,
+  type AnsiPalette,
+  ansiSlots,
+  type ColorDepth,
+  colorDepth,
+  type ToAnsiOptions,
+  toAnsi,
+} from './paint/ansi.ts';
 export { fromText, type ToTextOptions, toText } from './paint/text.ts';
 export { bufferSerializer, frame, type SnapshotSerializer } from './snapshot.ts';
 export {

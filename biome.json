@@ -67,6 +67,16 @@
           }
         }
       }
+    },
+    {
+      "includes": ["packages/grid/test/paint-ansi.test.ts", "packages/grid/src/paint/ansi.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noControlCharactersInRegex": "off"
+          }
+        }
+      }
     }
   ],
   "assist": {
