@@ -1,0 +1,30 @@
+/*
+ * KeyHint (cairn 0099).
+ *
+ * A chord and the action it performs, one cell apart. The chord carries the
+ * accent and the label is muted, so a status bar full of hints reads as one
+ * texture with the chords picked out of it.
+ */
+@layer rk.components {
+  .rk-keyhint {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--rk-x-1);
+    white-space: pre;
+  }
+
+  .rk-keyhint-keys {
+    color: var(--rk-fg-accent);
+    font: inherit;
+  }
+
+  .rk-keyhint-label {
+    color: var(--rk-fg-muted);
+  }
+
+  /* Inside a control the hint is not a second colour: the control decides. */
+  .rk-button .rk-keyhint-keys,
+  .rk-button .rk-keyhint-label {
+    color: inherit;
+  }
+}

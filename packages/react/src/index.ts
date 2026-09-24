@@ -14,6 +14,17 @@ export {
   type Orientation,
 } from './components/divider.tsx';
 export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './components/frame.tsx';
+export {
+  formatKeys,
+  KeyHint,
+  type KeyHintProps,
+  type KeyNotation,
+  type KeySpec,
+  keyShortcut,
+  type Platform,
+  parseKeys,
+  spokenKeys,
+} from './components/key-hint.tsx';
 export { cx } from './cx.ts';
 export { type PaintOptions, paintGlyph, paintRule, ruledSides } from './paint/index.ts';
 export {
