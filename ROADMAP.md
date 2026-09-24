@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 24% · 6 of 25 done · due 2027-01-31
+`###·······` 28% · 7 of 25 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -124,7 +124,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0057`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0057-table.md) Table <sup>component · components · p1</sup>
 - [ ] [`0064`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0064-turn-the-concept-sheet-into-a-storybook-theme-playground.md) Turn the concept sheet into a Storybook theme playground <sup>feature · docs · p2</sup>
 - [ ] [`0098`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0098-statusbar.md) StatusBar <sup>component · components · p1</sup>
-- [ ] [`0099`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0099-keyhint.md) KeyHint <sup>component · components · p1</sup>
 - [ ] [`0100`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0100-list.md) List <sup>component · components · p0</sup>
 - [ ] [`0101`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0101-progress.md) Progress <sup>component · components · p1</sup>
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p1</sup>
@@ -135,6 +134,7 @@ The component contract, proven on a first set of components.
 - [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
 - [x] [`0096`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0096-frame.md) Frame <sup>component · components · p0</sup>
 - [x] [`0097`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0097-divider.md) Divider <sup>component · components · p1</sup>
+- [x] [`0099`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0099-keyhint.md) KeyHint <sup>component · components · p1</sup>
 - [x] [`0111`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0111-render-in-the-dom-and-treat-painting-as-a-strategy.md) Render in the DOM, and treat painting as a strategy <sup>decision · grid · p0</sup>
 - [x] [`0112`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0112-write-the-concept-doc-how-a-tui-becomes-a-web-page.md) Write the concept doc: how a TUI becomes a web page <sup>docs · docs · p0</sup>
 

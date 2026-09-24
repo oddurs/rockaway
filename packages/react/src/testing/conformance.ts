@@ -10,6 +10,12 @@
  *
  * That is the deal the strictness dial rests on: breaking the grid is allowed,
  * quietly breaking it is not.
+ *
+ * Inline boxes are measured across but not down (cairn 0099). An inline box's
+ * height is the font's ascent and descent; no stylesheet can make it equal the
+ * line box, because that is what an inline box is. Its width is still a sum of
+ * character advances, so that half is checked. The line box it sits in belongs
+ * to the block that holds it, and that block is checked like any other.
  */
 export interface Violation {
   readonly element: string;
@@ -46,6 +52,15 @@ function describe(el: Element): string {
       : '';
   const testId = (el as HTMLElement).dataset?.testid;
   return `${el.tagName.toLowerCase()}${id}${cls}${testId ? `[${testId}]` : ''}`;
+}
+
+/**
+ * The sr-only technique, in either of its two forms: a clip rectangle of
+ * nothing, or `clip-path: inset(50%)`. Both leave a 1px box at a fractional
+ * offset, which is off the grid and has to be, because nobody can see it.
+ */
+function isVisuallyHidden(style: CSSStyleDeclaration): boolean {
+  return style.clipPath.startsWith('inset(50%') || style.clip === 'rect(0px, 0px, 0px, 0px)';
 }
 
 /** Check every screen under `root`, or `root` itself if it is one. */
@@ -88,19 +103,26 @@ export function checkConformance(
       // screen's own box, which the page sizes rather than the grid.
       if (el.closest('[data-rk-painted]')) continue;
       if (el.classList.contains('rk-content')) continue;
+      // Visually hidden text — a spoken form beside a glyph, a live region —
+      // is clipped to nothing and never seen. It has no visual geometry, so
+      // there is nothing for the grid to govern (cairn 0099).
+      const computed = view?.getComputedStyle(el);
+      if (computed && isVisuallyHidden(computed)) continue;
       const box = el.getBoundingClientRect();
       if (box.width === 0 && box.height === 0) continue;
 
       checked += 1;
-      const measurements: [Violation['what'], number, number][] = [
-        ['width', box.width, cellWidth],
-        ['height', box.height, cellHeight],
-      ];
+      // An inline box is measured across but not down. Its width is a sum of
+      // character advances, which is cells; its height is the font's ascent and
+      // descent, which no stylesheet can make equal the line box — that is what
+      // an inline box is. The grid governs the line box it sits in, and the line
+      // box belongs to the block that holds it, which is checked on its own.
+      const inline = computed?.display === 'inline';
+      const measurements: [Violation['what'], number, number][] = [['width', box.width, cellWidth]];
+      if (!inline) measurements.push(['height', box.height, cellHeight]);
       if (checkOffsets) {
-        measurements.push(
-          ['x', box.left - origin.left, cellWidth],
-          ['y', box.top - origin.top, cellHeight],
-        );
+        measurements.push(['x', box.left - origin.left, cellWidth]);
+        if (!inline) measurements.push(['y', box.top - origin.top, cellHeight]);
       }
 
       for (const [what, pixels, cell] of measurements) {

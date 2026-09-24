@@ -27,3 +27,7 @@ effort: m
 ## 2026-09-23
 
 Two things the harness found on its first run. A screen's own box is sized by the page — 480.5px cannot be whole cells — so the check governs what is drawn inside a screen, not the screen itself. And a screen given a size in cells now sizes itself in cells, instead of making the caller compute `ch` in whatever font the page happens to use, which is what the failing measurement was really telling us.
+
+## 2026-09-23
+
+Refined by 0099: inline boxes are measured across but not down, and visually hidden boxes are skipped. Neither is a loophole — an inline box's height is a font metric, and clipped text has no visual geometry. Without this every component with a spoken form or a <code> span would need a declared exception, which is the noise the dial exists to avoid.
