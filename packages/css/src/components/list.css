@@ -1,0 +1,73 @@
+/*
+ * List (cairn 0100).
+ *
+ * The viewport is exactly as many cells tall as it says, so a list never ends
+ * mid-row: scrolling moves whole rows, which is the whole reason a terminal list
+ * feels solid. The scrollbar is a one-cell column painted by the engine.
+ *
+ * Selection is a cursor glyph and reverse video together. Either alone is a
+ * single point of failure — the glyph is lost to a reader who cannot see it, the
+ * reverse is lost to forced colors that reverse everything.
+ */
+@layer rk.components {
+  .rk-list {
+    display: grid;
+    grid-template-columns: 1fr var(--rk-cell-width);
+    /* One row, and it may not grow past the viewport: an `auto` row would take
+     * its height from a thousand list rows, the box would never scroll, and the
+     * virtualiser would see every row as visible. */
+    grid-template-rows: minmax(0, 1fr);
+    block-size: calc(var(--rk-cell-height) * var(--rk-list-rows, 8));
+    background: var(--rk-bg-surface);
+    color: var(--rk-fg-default);
+  }
+
+  .rk-list-box {
+    /* A scrollable grid item needs this: without it the item's automatic
+     * minimum size is its content, and content cannot overflow itself. */
+    min-block-size: 0;
+    overflow: hidden auto;
+    outline: none;
+  }
+
+  .rk-list-scrollbar {
+    color: var(--rk-fg-muted);
+    /* The track is decoration; the rows carry the position for a reader. */
+    user-select: none;
+  }
+
+  .rk-list-item {
+    display: flex;
+    align-items: center;
+    block-size: var(--rk-cell-height);
+    cursor: pointer;
+  }
+
+  .rk-list-cursor {
+    inline-size: var(--rk-cell-width);
+    flex: none;
+  }
+
+  .rk-list-label {
+    overflow: hidden;
+    white-space: pre;
+    text-overflow: clip;
+  }
+
+  .rk-list-item[data-hovered] .rk-list-label {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* Reverse video, the way a terminal shows the row the cursor is on. */
+  .rk-list-item[data-selected],
+  .rk-list-item[data-focused] {
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
+  }
+
+  .rk-list-item[data-disabled] {
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+}

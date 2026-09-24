@@ -25,6 +25,14 @@ export {
   parseKeys,
   spokenKeys,
 } from './components/key-hint.tsx';
+export {
+  List,
+  ListItem,
+  type ListItemProps,
+  type ListProps,
+  type ScrollbarState,
+  scrollbarBuffer,
+} from './components/list.tsx';
 export { cx } from './cx.ts';
 export { type PaintOptions, paintGlyph, paintRule, ruledSides } from './paint/index.ts';
 export {
