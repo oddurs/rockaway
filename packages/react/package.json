@@ -38,9 +38,11 @@
     "react-aria-components": "1.21.1"
   },
   "devDependencies": {
+    "@types/node": "26.6.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "react": "19.3.0",
+    "postcss": "8.5.28",
     "react-dom": "19.3.0",
     "vitest": "4.1.11"
   },

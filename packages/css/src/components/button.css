@@ -91,6 +91,9 @@
 
   /* quiet: a bare label, for a toolbar where the delimiters would be noise. */
   .rk-button[data-variant="quiet"] .rk-button-label {
+    /* geometry exception: quiet has no delimiters, so the cell of air that
+     * holds the label off them goes too. A variant that drops its chrome, not
+     * one that resizes it; 0131 decides whether it stays a variant. */
     padding-inline: 0;
   }
 
