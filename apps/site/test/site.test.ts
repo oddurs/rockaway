@@ -211,7 +211,8 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       expect(report.breaks, `${url}\n${report.continuity}`).toBe(0);
     }
     await reader.close();
-  });
+    // Nine pages, each hydrated, screenshotted and checked: well past the default five seconds.
+  }, 120_000);
 
   test('shows every component as its snapshots with JavaScript off (0147)', async () => {
     const context = await browser.newContext({ javaScriptEnabled: false });
