@@ -312,6 +312,18 @@ export const vars = {
   'stroke.rule.gap': 'var(--rk-stroke-rule-gap)',
   'stroke.rule.heavy': 'var(--rk-stroke-rule-heavy)',
   'stroke.rule.light': 'var(--rk-stroke-rule-light)',
+  'syntax.attribute': 'var(--rk-syntax-attribute)',
+  'syntax.comment': 'var(--rk-syntax-comment)',
+  'syntax.constant': 'var(--rk-syntax-constant)',
+  'syntax.deleted': 'var(--rk-syntax-deleted)',
+  'syntax.error': 'var(--rk-syntax-error)',
+  'syntax.function': 'var(--rk-syntax-function)',
+  'syntax.inserted': 'var(--rk-syntax-inserted)',
+  'syntax.keyword': 'var(--rk-syntax-keyword)',
+  'syntax.plain': 'var(--rk-syntax-plain)',
+  'syntax.regexp': 'var(--rk-syntax-regexp)',
+  'syntax.string': 'var(--rk-syntax-string)',
+  'syntax.type': 'var(--rk-syntax-type)',
 } as const;
 
 export type TokenName = keyof typeof vars;

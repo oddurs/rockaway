@@ -20,7 +20,7 @@ const themeTokens = ['palette.**', 'font.**', 'glyph.**', 'conformance'];
  * theme island re-declares every alias into the palette, and they then resolve
  * against the island's own colours (0015).
  */
-const paletteAliases = ['ansi.**', 'bg.**', 'fg.**', 'border.**', 'attribute.dim'];
+const paletteAliases = ['ansi.**', 'bg.**', 'fg.**', 'border.**', 'syntax.**', 'attribute.dim'];
 
 /** Tokens that change with density. */
 const densityTokens = ['cell.**', 'space.**', 'row.**', 'size.**'];

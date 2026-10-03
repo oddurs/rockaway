@@ -146,7 +146,7 @@
     --rk-palette-dark-hover: oklch(37.8% 0.0203 277.5);
     --rk-palette-dark-magenta: oklch(75.48% 0.183 346.8);
     --rk-palette-dark-muted: oklch(78% 0.0122 106.5);
-    --rk-palette-dark-red: oklch(76.21% 0.1414 24.41);
+    --rk-palette-dark-red: oklch(77.74% 0.1302 24.5);
     --rk-palette-dark-selection: oklch(40.3% 0.0322 277.8);
     --rk-palette-dark-subtle: oklch(35% 0.0208 277.5);
     --rk-palette-dark-surface: oklch(32.2% 0.0214 277.5);
@@ -180,7 +180,7 @@
     --rk-palette-light-hover: oklch(37.8% 0.0203 277.5);
     --rk-palette-light-magenta: oklch(75.48% 0.183 346.8);
     --rk-palette-light-muted: oklch(78% 0.0122 106.5);
-    --rk-palette-light-red: oklch(76.21% 0.1414 24.41);
+    --rk-palette-light-red: oklch(77.74% 0.1302 24.5);
     --rk-palette-light-selection: oklch(40.3% 0.0322 277.8);
     --rk-palette-light-subtle: oklch(35% 0.0208 277.5);
     --rk-palette-light-surface: oklch(32.2% 0.0214 277.5);
@@ -200,11 +200,11 @@
       --rk-palette-dark-bright-green: oklch(89.4% 0.1948 150);
       --rk-palette-dark-bright-magenta: oklch(79.9% 0.1595 339);
       --rk-palette-dark-magenta: oklch(75.5% 0.1831 346.8);
-      --rk-palette-dark-red: oklch(76.25% 0.181 24.4);
+      --rk-palette-dark-red: oklch(77.78% 0.1669 24.48);
       --rk-palette-light-bright-green: oklch(89.4% 0.1948 150);
       --rk-palette-light-bright-magenta: oklch(79.9% 0.1595 339);
       --rk-palette-light-magenta: oklch(75.5% 0.1831 346.8);
-      --rk-palette-light-red: oklch(76.25% 0.181 24.4);
+      --rk-palette-light-red: oklch(77.78% 0.1669 24.48);
     }
   }
 }
@@ -215,11 +215,11 @@
       --rk-palette-dark-bright-green: oklch(89.4% 0.1948 150);
       --rk-palette-dark-bright-magenta: oklch(79.9% 0.1595 339);
       --rk-palette-dark-magenta: oklch(75.5% 0.1831 346.8);
-      --rk-palette-dark-red: oklch(77.7% 0.2063 24.4);
+      --rk-palette-dark-red: oklch(79.2% 0.2063 24.4);
       --rk-palette-light-bright-green: oklch(89.4% 0.1948 150);
       --rk-palette-light-bright-magenta: oklch(79.9% 0.1595 339);
       --rk-palette-light-magenta: oklch(75.5% 0.1831 346.8);
-      --rk-palette-light-red: oklch(77.7% 0.2063 24.4);
+      --rk-palette-light-red: oklch(79.2% 0.2063 24.4);
     }
   }
 }

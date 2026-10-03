@@ -182,6 +182,58 @@
       "$value": "{ansi.red}"
     }
   },
+  "syntax": {
+    "$type": "color",
+    "$description": "Code, highlighted in the ANSI 16 the way terminal editors do it (0144). Each role is a palette slot, so code follows the theme and the mode, and a terminal theme a reader imports recolours it.",
+    "plain": {
+      "$value": "{ansi.foreground}",
+      "$description": "Identifiers, punctuation, anything unnamed."
+    },
+    "comment": {
+      "$value": "{ansi.muted}",
+      "$description": "Comments. Also italic, so they read as comments in greyscale."
+    },
+    "keyword": {
+      "$value": "{ansi.magenta}",
+      "$description": "Keywords and storage: `import`, `const`."
+    },
+    "string": {
+      "$value": "{ansi.green}",
+      "$description": "Strings and template literals."
+    },
+    "constant": {
+      "$value": "{ansi.yellow}",
+      "$description": "Numbers, booleans, constants."
+    },
+    "function": {
+      "$value": "{ansi.blue}",
+      "$description": "Function and method names."
+    },
+    "type": {
+      "$value": "{ansi.cyan}",
+      "$description": "Types, classes, components, tag names."
+    },
+    "attribute": {
+      "$value": "{ansi.yellow}",
+      "$description": "Attribute and property keys in markup."
+    },
+    "regexp": {
+      "$value": "{ansi.red}",
+      "$description": "Regular expressions and escapes."
+    },
+    "inserted": {
+      "$value": "{ansi.green}",
+      "$description": "Added lines in a diff."
+    },
+    "deleted": {
+      "$value": "{ansi.red}",
+      "$description": "Removed lines in a diff."
+    },
+    "error": {
+      "$value": "{ansi.red}",
+      "$description": "Invalid code. Also underlined, so it reads as an error in greyscale."
+    }
+  },
   "motion": {
     "tick": {
       "$type": "duration",
