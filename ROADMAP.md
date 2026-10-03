@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 25% · 17 of 68 done · due 2027-01-31
+`###·······` 26% · 18 of 68 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -130,7 +130,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
 - [ ] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p2</sup>
 - [ ] [`0118`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0118-fix-the-state-vocabulary-how-every-state-is-drawn-on-the-grid.md) Fix the state vocabulary: how every state is drawn on the grid <sup>decision · css · p0</sup>
-- [ ] [`0123`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0123-make-conformance-level-aware-and-refuse-an-exception-without-a-reason.md) Make conformance level-aware, and refuse an exception without a reason <sup>feature · tooling · p1</sup>
 - [ ] [`0124`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0124-run-the-story-tests-in-firefox-and-webkit-as-well-as-chromium.md) Run the story tests in Firefox and WebKit as well as Chromium <sup>chore · tooling · p1</sup>
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 - [ ] [`0126`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0126-paint-a-screen-s-chrome-on-the-server-so-the-first-paint-needs-no-javascript.md) Paint a screen's chrome on the server, so the first paint needs no JavaScript <sup>feature · grid · p0</sup>
@@ -181,6 +180,7 @@ The component contract, proven on a first set of components.
 - [x] [`0120`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0120-recast-motion-as-frames-on-a-tick-and-retire-the-easing-curves.md) Recast motion as frames on a tick, and retire the easing curves <sup>feature · tokens · p1</sup>
 - [x] [`0121`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0121-make-every-package-s-exports-correct-and-prove-it-with-publint-and-attw.md) Make every package's exports correct, and prove it with publint and attw <sup>chore · distribution · p0</sup>
 - [x] [`0122`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0122-give-each-component-one-line-in-the-barrels-so-parallel-work-merges-cleanly.md) Give each component one line in the barrels, so parallel work merges cleanly <sup>chore · tooling · p1</sup>
+- [x] [`0123`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0123-make-conformance-level-aware-and-refuse-an-exception-without-a-reason.md) Make conformance level-aware, and refuse an exception without a reason <sup>feature · tooling · p1</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 - [x] [`0178`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0178-make-border-default-a-boundary-you-can-see-3-1-against-every-ground.md) Make border.default a boundary you can see: 3:1 against every ground <sup>bug · tokens · p0</sup>
 

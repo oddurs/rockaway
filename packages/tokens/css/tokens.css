@@ -516,6 +516,11 @@
   initial-value: 1.25;
 }
 
+@property --rk-conformance {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-fg-accent {
   syntax: '*';
   inherits: true;
@@ -1489,6 +1494,8 @@
     --rk-border-surface: var(--rk-ansi-border);
     --rk-border-warning: var(--rk-ansi-yellow);
     --rk-cell-line: 1.25;
+    /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
+    --rk-conformance: standard;
     --rk-fg-accent: var(--rk-ansi-blue);
     --rk-fg-danger: var(--rk-ansi-red);
     --rk-fg-default: var(--rk-ansi-foreground);
