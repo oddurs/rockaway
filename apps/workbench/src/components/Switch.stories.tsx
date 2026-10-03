@@ -179,11 +179,16 @@ export const Painters: Story = {
  */
 export const Densities: Story = {
   tags: ['zoom'],
+  // Off and on only: every painted track is a screenshot the continuity check
+  // reads in every cell of the matrix, and the other states draw the same line.
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}>
       {(['dense', 'normal', 'airy', 'touch'] as const).map((density) => (
         <div key={density} data-density={density}>
-          <Rest title={density} />
+          <Frame title={density} cols={COLS} rows={4}>
+            <Switch>Wrap lines</Switch>
+            <Switch defaultSelected>Show hidden files</Switch>
+          </Frame>
         </div>
       ))}
     </div>
@@ -192,7 +197,9 @@ export const Densities: Story = {
     await measured(document.body);
     for (const density of ['dense', 'normal', 'airy', 'touch']) {
       const frame = canvas.getByRole('group', { name: density });
-      expect(screenshot(frame, { legend: false })).toBe(REST_TEXT(density));
+      expect(screenshot(frame, { legend: false })).toBe(
+        framed(density, [cells('Wrap lines'), cells('Show hidden files', { selected: true })]),
+      );
       const cell = Number.parseFloat(getComputedStyle(frame).getPropertyValue('--rk-cell-height'));
       for (const input of frame.querySelectorAll<HTMLElement>('[role="switch"]')) {
         // One row tall, the track included, whatever a row is.
