@@ -1,8 +1,8 @@
-import { fromText } from '@rockaway/grid';
-import { Frame, Screen } from '@rockaway/react';
+import { Attr, Buffer, drawText, fromText } from '@rockaway/grid';
+import { Button, Frame, Link, List, ListItem, Screen } from '@rockaway/react';
 import { expectContinuity } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { text } from '../text.ts';
 
@@ -160,5 +160,155 @@ export const Strokes: Story = {
     const report = await expectContinuity(canvasElement, { capture: run.capture });
     await expect(report.shapes).toBeGreaterThanOrEqual(cells.length);
     await expect(report.joins).toBeGreaterThan(40);
+  },
+};
+
+/** A word drawn in reverse video by the engine, the way a painted screen shows a selection. */
+function reversed(): Buffer {
+  return Buffer.create({ width: 8, height: 1 }).draw((draft) => {
+    drawText(draft, { x: 1, y: 0 }, 'chosen', { style: { attrs: Attr.reverse } });
+  });
+}
+
+/** The colour and ground an element is drawn in, as computed colours. */
+function inkAndGround(el: Element): [string, string] {
+  const style = getComputedStyle(el);
+  return [style.color, style.backgroundColor];
+}
+
+/** A computed `rgb(…)` colour as its three channels. */
+function channels(colour: string): number[] {
+  return (colour.match(/\d+/g) ?? []).slice(0, 3).map(Number);
+}
+
+/**
+ * How much of an element's screenshot is the reader's text colour, and how
+ * much their canvas. Computed styles cannot see the backplate the browser
+ * paints behind text under forced colors, which is the half of this bug they
+ * missed; only the pixels can.
+ */
+async function share(
+  el: HTMLElement,
+  figure: string,
+): Promise<{ text: number; canvas: number } | undefined> {
+  const run = runner();
+  if (!run) return undefined;
+  const png = await run.capture(el);
+  const blob =
+    typeof png === 'string'
+      ? new Blob([Uint8Array.from(atob(png), (c) => c.charCodeAt(0))], { type: 'image/png' })
+      : png;
+  const bitmap = await createImageBitmap(blob);
+  const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+  const ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+  ctx.drawImage(bitmap, 0, 0);
+  const { data } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+  const near = (target: number[], i: number): boolean =>
+    target.every((v, k) => Math.abs((data[i + k] ?? 0) - v) < 64);
+  const text = channels(computed(figure));
+  const ground = channels(computed('Canvas'));
+  let inText = 0;
+  let inCanvas = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    if (near(text, i)) inText++;
+    else if (near(ground, i)) inCanvas++;
+  }
+  const all = data.length / 4;
+  return { text: inText / all, canvas: inCanvas / all };
+}
+
+/**
+ * Reversed words, as a reader sees them: mostly the colour that was their
+ * figure (the reader's text colour, or their link colour for a link), with the
+ * words in the canvas colour. A backplate behind the words, or a pair that
+ * collapsed to the canvas, leaves almost none of the figure at all.
+ */
+async function expectReversed(words: HTMLElement, figure = 'CanvasText'): Promise<void> {
+  const seen = await share(words, figure);
+  if (!seen) return;
+  await expect(seen.text).toBeGreaterThan(0.5);
+  await expect(seen.canvas).toBeGreaterThan(0.02);
+}
+
+/**
+ * Reverse video is the figure and the ground swapped, and in forced colors
+ * that is the reader's own text and canvas swapped (cairn 0181). It used to
+ * vanish twice over. The inverse pair was mapped to the canvas on both
+ * halves, and even swapped colours lost their words to the canvas-coloured
+ * backplate the browser paints behind text. A filled button, a pressed one, a
+ * pressed link, a selected row and a painted reverse run are each checked
+ * here, in computed styles and in pixels.
+ */
+export const ReverseVideo: Story = {
+  name: 'Reverse video',
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1lh', padding: '1ch' }}>
+      <div style={{ display: 'flex', gap: '2ch' }}>
+        <Button variant="fill">Publish</Button>
+        <Button>Press me</Button>
+        <Button variant="fill">Press me too</Button>
+        <Link href="#reverse">a link</Link>
+      </div>
+      <Screen data-testid="painted" draw={reversed} cols={8} rows={1} />
+      <div style={{ inlineSize: '20ch' }}>
+        <List aria-label="Files" rows={2} selectionMode="single" defaultSelectedKeys={['b']}>
+          <ListItem id="a">a.ts</ListItem>
+          <ListItem id="b">b.ts</ListItem>
+        </List>
+      </div>
+    </div>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    await expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    const swapped: [string, string] = [computed('Canvas'), computed('CanvasText')];
+    const plain: [string, string] = [computed('CanvasText'), computed('Canvas')];
+    const part = (el: Element, selector: string): HTMLElement =>
+      el.querySelector<HTMLElement>(selector) as HTMLElement;
+
+    // The pair itself.
+    const root = getComputedStyle(document.documentElement);
+    await expect(root.getPropertyValue('--rk-bg-inverse').trim()).toBe('CanvasText');
+    await expect(root.getPropertyValue('--rk-fg-on-inverse').trim()).toBe('Canvas');
+
+    // Button's fill is reversed at rest.
+    const fill = canvas.getByRole('button', { name: 'Publish' });
+    await expect(inkAndGround(fill)).toEqual(swapped);
+    await expectReversed(part(fill, '.rk-button-label'));
+
+    // A pressed button is reversed, and a pressed fill reverses back. So is a
+    // pressed link, whose own colour becomes the ground.
+    const pressing: readonly (readonly [HTMLElement, 'swapped' | 'plain', string])[] = [
+      [canvas.getByRole('button', { name: 'Press me' }), 'swapped', 'CanvasText'],
+      [canvas.getByRole('button', { name: 'Press me too' }), 'plain', 'CanvasText'],
+      [canvas.getByRole('link', { name: 'a link' }), 'swapped', 'LinkText'],
+    ];
+    for (const [control, how, figure] of pressing) {
+      await userEvent.pointer({ keys: '[MouseLeft>]', target: control });
+      await expect(control.dataset.pressed).toBe('true');
+      const words = control.querySelector<HTMLElement>('.rk-button-label') ?? control;
+      if (how === 'plain') await expect(inkAndGround(control)).toEqual(plain);
+      else await expectReversed(words, figure);
+      if (control.tagName === 'BUTTON' && how === 'swapped') {
+        await expect(inkAndGround(control)).toEqual(swapped);
+      }
+      fireEvent.pointerUp(document.body, { pointerId: 1, pointerType: 'mouse', button: 0 });
+      await waitFor(() => expect(control.dataset.pressed).toBeUndefined());
+    }
+
+    // A painted run in reverse video, as the engine draws a selection.
+    const painted = canvas.getByTestId('painted');
+    const run = await waitFor(() => {
+      const found = painted.querySelector<HTMLElement>('[data-attrs~="reverse"]');
+      if (!found) throw new Error('no reverse run painted yet');
+      return found;
+    });
+    await expect(run.textContent).toBe('chosen');
+    await expect(inkAndGround(run)).toEqual(swapped);
+    await expectReversed(run);
+
+    // And a selected row in a list, which swaps its own figure and ground.
+    const row = canvasElement.querySelector('[role="option"][data-selected]') as HTMLElement;
+    await expect(inkAndGround(row)).toEqual(swapped);
+    await expectReversed(part(row, '.rk-list-label'));
   },
 };
