@@ -71,19 +71,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "variant",
         "type": "ButtonVariant",
         "required": false,
-        "description": "`fill` is the primary: reverse video, which survives forced colors and greyscale because it is not a hue. `danger` is the destructive one, and carries a mark as well as a colour."
-      },
-      {
-        "name": "size",
-        "type": "ButtonSize",
-        "required": false,
-        "description": "`md` is one row; `lg` is three, with a border drawn around the label."
+        "description": "`fill` is the primary: reverse video, which survives forced colors and greyscale because it is not a hue. `danger` is the destructive one, and carries the theme's `!` in its mark cell as well as its colour."
       },
       {
         "name": "delimiters",
         "type": "readonly [string, string] | 'none'",
         "required": false,
-        "description": "The delimiters around the label: the theme's control delimiters unless given. Chrome, so they are hidden from the accessible name. `none` for a bare label in a toolbar."
+        "description": "The delimiters around the label: the theme's control delimiters unless given. Chrome, so they are hidden from the accessible name. `none` for a bare label in a toolbar, which drops the cell of air either side with them. A `danger` button keeps its delimiters whatever this says, because its mark has to have a cell to sit in."
       },
       {
         "name": "keys",
@@ -125,9 +119,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled",
       "--rk-fg-on-danger",
       "--rk-fg-on-inverse",
-      "--rk-size-control-lg",
-      "--rk-size-control-md",
-      "--rk-x-1"
+      "--rk-size-control-md"
     ]
   },
   "Divider": {

@@ -45,7 +45,19 @@ const meta = {
   component: ProseOnTheGrid,
   // The zoom browser runs every story here again, at 200%.
   tags: ['zoom', 'classic-scrollbars'],
-  parameters: { layout: 'padded' },
+  parameters: {
+    layout: 'padded',
+    // The screen here is built by hand, and each play function measures its
+    // cell at every density itself, as Screen would. The matrix after the
+    // story only switches the root, so it would find the cell the play left
+    // behind (cairn 0125).
+    matrix: {
+      skip: (['dense', 'airy', 'touch'] as const).map((density) => ({
+        density,
+        reason: 'the play function walks the densities itself, measuring the hand-built screen',
+      })),
+    },
+  },
 } satisfies Meta<typeof ProseOnTheGrid>;
 
 export default meta;

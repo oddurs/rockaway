@@ -29,3 +29,11 @@ export {
   expectNoNativeScrollbars,
   type NativeScrollbar,
 } from './scrollbars.ts';
+export {
+  checkTargets,
+  expectTargets,
+  formatTargets,
+  type TargetFailure,
+  type TargetOptions,
+  type TargetReport,
+} from './targets.ts';
