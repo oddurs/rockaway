@@ -6,6 +6,7 @@ import type { ViteUserConfig } from 'astro';
 import { defineConfig } from 'astro/config';
 import { ansiTheme, roleClasses } from './src/lib/highlight.ts';
 import {
+  rehypeCallouts,
   rehypeCellGlyphs,
   rehypeRepositoryLinks,
   rehypeScrollable,
@@ -59,11 +60,14 @@ export default defineConfig({
     shikiConfig: { theme: ansiTheme, transformers: [roleClasses] },
     processor: unified({
       rehypePlugins: [
-        rehypeRepositoryLinks,
+        [rehypeRepositoryLinks, { base: normaliseBase(process.env.SITE_BASE) }],
         rehypeScrollable,
         // Columns are sized from the text before its box characters become cells.
         rehypeTableColumns,
         rehypeCellGlyphs,
+        // After the cell has taken its glyphs out of the text, so a callout's
+        // own edges are not taken out a second time.
+        rehypeCallouts,
       ],
     }),
   },

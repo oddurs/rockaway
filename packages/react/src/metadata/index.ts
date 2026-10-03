@@ -13,6 +13,7 @@
  */
 import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
+import { calloutMeta } from '../components/callout.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
 import { formMeta } from '../components/field.meta.ts';
 import { fieldsetMeta } from '../components/fieldset.meta.ts';
@@ -51,6 +52,7 @@ export { type StateName, type StateRow, stateVocabulary } from './states.ts';
 const sources: readonly ComponentMetaInput[] = [
   badgeMeta,
   buttonMeta,
+  calloutMeta,
   dividerMeta,
   fieldsetMeta,
   formMeta,
