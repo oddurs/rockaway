@@ -3,8 +3,10 @@ id: 164
 uid: 1371d77c-ab10-489b-9913-16a3faa8cbe5
 title: Make hover and pointer stories reliable in CI
 type: chore
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 created: 2026-10-03
 updated: 2026-10-03
 priority: p1
