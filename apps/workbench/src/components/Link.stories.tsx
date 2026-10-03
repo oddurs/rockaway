@@ -1,4 +1,5 @@
 import { Frame, Link, linkBuffer } from '@rockaway/react';
+import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
@@ -208,7 +209,10 @@ export const Keyboard: Story = {
   },
 };
 
-/** Hover doubles the underline: the one attribute a link does not already have. */
+/**
+ * Hover is bold (0209): the underline is already taken, a terminal has no
+ * double underline, and a bold cell is as wide as a plain one.
+ */
 export const Hovered: Story = {
   render: () => (
     <Frame title="hover" cols={24} rows={3}>
@@ -223,7 +227,8 @@ export const Hovered: Story = {
 
     await userEvent.hover(link);
     await waitFor(() => expect(link.dataset.hovered).toBe('true'));
-    expect(getComputedStyle(link).textDecorationStyle).toBe('double');
+    expect(Number(getComputedStyle(link).fontWeight)).toBeGreaterThanOrEqual(700);
+    expect(getComputedStyle(link).textDecorationStyle).toBe('solid');
     expect(getComputedStyle(link).textDecorationLine).toBe('underline');
     expect(link.getBoundingClientRect().width).toBe(before.width);
 
@@ -442,7 +447,9 @@ export const Dark: Story = {
 
 /**
  * Greyscale: with the hue gone, the underline still tells a link from the
- * sentence around it, and bold plus the mark still tell the current page.
+ * sentence around it, and bold plus the mark still tell the current page. A
+ * hovered link is bold as well, so the mark is what keeps hover and current
+ * apart: read back as text, only the current page has it (0209).
  */
 export const Greyscale: Story = {
   render: () => (
@@ -465,6 +472,20 @@ export const Greyscale: Story = {
     const guide = canvas.getByRole('link', { name: 'guide' });
     expect(Number(getComputedStyle(guide).fontWeight)).toBeGreaterThanOrEqual(700);
     expect(markIn(guide, 'cursor')).not.toBe('');
+
+    await settled();
+    const api = canvas.getByRole('link', { name: 'api' });
+    await userEvent.hover(api);
+    await waitFor(() => expect(api.dataset.hovered).toBe('true'));
+    expect(Number(getComputedStyle(api).fontWeight)).toBeGreaterThanOrEqual(700);
+    const frame = canvas.getByRole('group', { name: 'greyscale' });
+    const rows = screenshot(frame, { legend: false }).split('\n');
+    const pages = rows.find((row) => row.includes('about')) ?? '';
+    // The mark is before guide, the current page, and nowhere near api.
+    expect(pages.replace(/[│|]/g, '').trim()).toBe(
+      `home ${markIn(guide, 'cursor')}guide  api  about`,
+    );
+    await userEvent.unhover(api);
   },
 };
 

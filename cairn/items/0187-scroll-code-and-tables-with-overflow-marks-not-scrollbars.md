@@ -3,7 +3,7 @@ id: 187
 uid: bc5b9fce-f2aa-4cfe-b254-3735a1239b60
 title: Scroll code and tables with overflow marks, not scrollbars
 type: feature
-status: backlog
+status: dropped
 milestone: site
 depends_on:
 - 143
@@ -24,3 +24,7 @@ lead (0143).
 
 - [ ] Scrolling prose blocks hide the scrollbar and draw `mark.overflow-start`/`-end` at the edge with more, the way `less -S` does
 - [ ] They stay keyboard-scrollable and announce that they scroll
+
+## 2026-10-03
+
+Absorbed by the native-scrollbar ticket filed with decision 0207: overflow marks for horizontally scrolling prose are one of its criteria.

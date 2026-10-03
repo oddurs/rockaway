@@ -48,12 +48,12 @@ describe('glyphs from the theme', () => {
   test('with no provider a component draws with the default theme’s glyphs, on the server too', () => {
     expect(defaultGlyphs).toBe(themeGlyphs.default);
     expect(renderToStaticMarkup(createElement(Probe))).toBe('single ▸ █');
-    expect(serverText(controls())).toBe(' ✓a.ts  b.ts[Publish]');
+    expect(serverText(controls())).toBe(' ✓a.ts  b.ts[ Publish ]');
   });
 
   test('a provider swaps every glyph a component reads', () => {
     const tree = createElement(GlyphProvider, { glyphs: ascii }, createElement(Probe), controls());
-    expect(serverText(tree)).toBe('ascii > # xa.ts  b.ts[Publish]');
+    expect(serverText(tree)).toBe('ascii > # xa.ts  b.ts[ Publish ]');
   });
 
   test('the theme’s border set is the frame’s default, and its dividers’ too', () => {
@@ -91,7 +91,7 @@ describe('glyphs from the theme', () => {
       |                  |
       +------------------+
       +------------------+
-      - files ------------
+      -- files -----------
       scrollbar ..#."
     `);
     expect(drawn).toMatch(/^[\x20-\x7e\n]*$/);
