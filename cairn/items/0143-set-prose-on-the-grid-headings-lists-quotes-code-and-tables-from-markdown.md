@@ -46,3 +46,4 @@ component wrapping it), in its own cascade layer slot:
 - [ ] The heading outline is correct, and nothing in the rules or gutters is in the accessibility tree
 - [ ] The measure is 80 cells, and prose reflows to 40 cells without horizontal scroll (only tables and code may scroll)
 - [ ] The site's Markdown pipeline applies it with no per-page styles
+- [ ] `h1` carries no `letter-spacing` in `base.css`, so a heading stays on the grid

@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 24% · 14 of 59 done · due 2027-01-31
+`###·······` 21% · 14 of 66 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -152,6 +152,13 @@ The component contract, proven on a first set of components.
 - [ ] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
+- [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
+- [ ] [`0164`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0164-make-hover-and-pointer-stories-reliable-in-ci.md) Make hover and pointer stories reliable in CI <sup>chore · tooling · p1</sup>
+- [ ] [`0165`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0165-ship-one-entry-point-per-component-so-an-islands-site-does-not-hydrate-the-whole-package.md) Ship one entry point per component, so an islands site does not hydrate the whole package <sup>feature · distribution · p1</sup>
+- [ ] [`0166`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0166-draw-braille-from-the-cell-like-blocks.md) Draw braille from the cell, like blocks <sup>feature · grid · p2</sup>
+- [ ] [`0167`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0167-add-size-in-cells-and-conformance-level-to-component-metadata.md) Add size in cells and conformance level to component metadata <sup>feature · docs · p1</sup>
+- [ ] [`0168`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0168-re-export-or-document-the-router-hook-up-for-link.md) Re-export or document the router hook-up for Link <sup>feature · components · p2</sup>
+- [ ] [`0169`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0169-give-inline-controls-a-full-cell-hit-area-and-ground.md) Give inline controls a full-cell hit area and ground <sup>feature · css · p3</sup>
 
 ### in review
 
@@ -194,7 +201,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`##········` 11% · 2 of 19 done · due 2027-02-21
+`#·········` 10% · 2 of 21 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -217,6 +224,8 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0150`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0150-give-every-page-a-title-a-description-and-a-social-card-drawn-by-the-engine.md) Give every page a title, a description and a social card drawn by the engine <sup>feature · site · p1</sup>
 - [ ] [`0151`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0151-compose-three-example-apps-from-the-system-a-git-client-a-monitor-a-settings-form.md) Compose three example apps from the system: a git client, a monitor, a settings form <sup>feature · site · p1</sup>
 - [ ] [`0152`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0152-review-the-site-end-to-end-phone-zoom-keyboard-screen-reader-slow-network.md) Review the site end to end: phone, zoom, keyboard, screen reader, slow network <sup>chore · site · p0</sup>
+- [ ] [`0170`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0170-typecheck-astro-files.md) Typecheck .astro files <sup>chore · tooling · p2</sup>
+- [ ] [`0171`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0171-draw-each-component-s-snapshot-in-every-theme-on-the-site.md) Draw each component's snapshot in every theme on the site <sup>feature · site · p3</sup>
 
 ### done
 
@@ -225,7 +234,7 @@ A website built out of the system it documents, which is the only honest way
 
 ## v0.1 — v0.1 — first release
 
-`#·········` 10% · 1 of 10 done · due 2027-03-21
+`#·········` 8% · 1 of 12 done · due 2027-03-21
 
 Something another project can install and build on.
 
@@ -240,6 +249,8 @@ Something another project can install and build on.
 - [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
 - [ ] [`0157`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0157-walk-every-component-with-voiceover-and-nvda-and-record-what-is-heard.md) Walk every component with VoiceOver and NVDA, and record what is heard <sup>chore · components · p1 · needs-owner</sup>
 - [ ] [`0158`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0158-launch-tag-0-1-0-publish-and-post-show-hn.md) Launch: tag 0.1.0, publish, and post Show HN <sup>chore · distribution · p1 · needs-owner</sup>
+- [ ] [`0172`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0172-decide-whether-the-first-release-is-0-1-0-or-1-0-0.md) Decide whether the first release is 0.1.0 or 1.0.0 <sup>decision · distribution · p2</sup>
+- [ ] [`0173`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0173-check-package-json-changes-for-a-changeset-when-they-reach-users.md) Check package.json changes for a changeset when they reach users <sup>chore · distribution · p3</sup>
 
 ### done
 
@@ -247,7 +258,7 @@ Something another project can install and build on.
 
 ## later — Later
 
-`··········` 0% · 0 of 4 done
+`··········` 0% · 0 of 5 done
 
 Worth doing, not yet worth scheduling.
 
@@ -257,4 +268,5 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0056`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0056-date-picker.md) Date picker <sup>component · components · p3</sup>
 - [ ] [`0114`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0114-coalesce-rule-painter-strokes-into-runs.md) Coalesce rule-painter strokes into runs <sup>chore · grid · p3</sup>
 - [ ] [`0161`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0161-check-for-literal-glyphs-with-a-parser-not-a-scanner.md) Check for literal glyphs with a parser, not a scanner <sup>chore · tooling · p3</sup>
+- [ ] [`0174`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0174-give-labels-their-own-delimiter-set.md) Give labels their own delimiter set <sup>chore · tokens · p3</sup>
 

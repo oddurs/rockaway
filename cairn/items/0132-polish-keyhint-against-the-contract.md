@@ -45,3 +45,4 @@ first thing a reviewer opens is not the weakest.
 - [ ] The body of 0099 is brought up to date: Purpose, Anatomy, States, Tokens and Accessibility describe what shipped, and no template placeholder is left
 - [ ] One `usePlatform()` hook, used by KeyHint and Button, with no hydration mismatch
 - [ ] Under an ascii theme the key legends are ASCII too (`Cmd`, `Shift`, `Up`, `Enter`), drawn from the glyph set like every other mark
+- [ ] Enter is drawn with a glyph the site's font has (`⏎` U+23CE rather than `↵`), so it does not fall back to another face
