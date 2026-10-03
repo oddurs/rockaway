@@ -268,7 +268,7 @@ A website built out of the system it documents, which is the only honest way
 
 ## v0.1 — v0.1 — first release
 
-`#·········` 8% · 1 of 12 done · due 2027-03-21
+`##········` 17% · 2 of 12 done · due 2027-03-21
 
 Something another project can install and build on.
 
@@ -284,11 +284,11 @@ Something another project can install and build on.
 - [ ] [`0157`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0157-walk-every-component-with-voiceover-and-nvda-and-record-what-is-heard.md) Walk every component with VoiceOver and NVDA, and record what is heard <sup>chore · components · p1 · needs-owner</sup>
 - [ ] [`0158`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0158-launch-tag-0-1-0-publish-and-post-show-hn.md) Launch: tag 0.1.0, publish, and post Show HN <sup>chore · distribution · p1 · needs-owner</sup>
 - [ ] [`0172`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0172-decide-whether-the-first-release-is-0-1-0-or-1-0-0.md) Decide whether the first release is 0.1.0 or 1.0.0 <sup>decision · distribution · p2</sup>
-- [ ] [`0173`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0173-check-package-json-changes-for-a-changeset-when-they-reach-users.md) Check package.json changes for a changeset when they reach users <sup>chore · distribution · p3</sup>
 
 ### done
 
 - [x] [`0162`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0162-require-a-changeset-for-every-package-change-and-back-fill-the-missing-ones.md) Require a changeset for every package change, and back-fill the missing ones <sup>chore · distribution · p1</sup>
+- [x] [`0173`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0173-check-package-json-changes-for-a-changeset-when-they-reach-users.md) Check package.json changes for a changeset when they reach users <sup>chore · distribution · p3</sup>
 
 ## later — Later
 
