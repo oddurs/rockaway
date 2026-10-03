@@ -26,6 +26,17 @@
     display: inline-flex;
   }
 
+  /* Each of the box's three cells is a cell wide, whatever the glyph in it.
+   * A mark the font lacks comes from a fallback whose advance is not quite
+   * the cell's, and without this the box was a hair wider checked than
+   * unchecked. */
+  .rk-checkbox-end,
+  .rk-checkbox-mark {
+    display: inline-block;
+    inline-size: var(--rk-cell-width);
+    overflow: hidden;
+  }
+
   .rk-checkbox-end {
     color: var(--rk-checkbox-end);
   }

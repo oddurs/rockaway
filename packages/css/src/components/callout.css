@@ -1,0 +1,100 @@
+/*
+ * Callout (cairn 0140).
+ *
+ * A screen whose frame is drawn by the engine, and whose content decides its
+ * height. The content layer is in the page's flow here, rather than laid
+ * over a screen of a given size, so the callout is exactly as tall as what it
+ * holds, and the screen measures that and draws the frame to fit.
+ *
+ * Across, the screen takes the whole cells of the width it is given. The
+ * content layer is exactly that many cells, the frame's own width, so the
+ * prose inside wraps to whole cells and the ground ends where the frame does,
+ * not in the fraction of a cell left over beside it.
+ *
+ * The tone reaches the stylesheet as nothing at all: the frame's colours and
+ * weight are in the buffer, where the painter puts them.
+ */
+@layer rk.components {
+  .rk-callout {
+    display: block;
+  }
+
+  /* In flow, so the content is the height; prose, so it wraps; and the
+   * frame's width in cells, so nothing inside is a fraction of one. */
+  .rk-callout > .rk-content {
+    position: relative;
+    box-sizing: border-box;
+    /* The screen's own count, `floor(width / cell)`, said in CSS. */
+    inline-size: round(down, 100%, var(--rk-cell-width));
+    white-space: normal;
+    background: var(--rk-bg-surface);
+  }
+
+  /*
+   * The static callout: the same chrome for a page that runs no script, as
+   * the site's Markdown sets `> [!NOTE]`. The cell draws the lines, as it does
+   * every box character in prose (0116): a corner is one cell, and an edge is
+   * one shape stretched along the side it runs down or across, so the frame
+   * fits whatever the prose wraps to without anything measuring it. A grid of
+   * a cell, the content, and a cell; as wide as the whole cells it is given.
+   */
+  .rk-callout-static {
+    --rk-callout-line: var(--rk-border-accent);
+    --rk-callout-ink: var(--rk-fg-accent);
+
+    display: grid;
+    grid-template-columns: var(--rk-cell-width) minmax(0, 1fr) var(--rk-cell-width);
+    inline-size: round(down, 100%, var(--rk-cell-width));
+    background: var(--rk-bg-surface);
+  }
+
+  .rk-callout-static[data-tone="tip"] {
+    --rk-callout-line: var(--rk-border-success);
+    --rk-callout-ink: var(--rk-fg-success);
+  }
+
+  .rk-callout-static[data-tone="warning"] {
+    --rk-callout-line: var(--rk-border-warning);
+    --rk-callout-ink: var(--rk-fg-warning);
+  }
+
+  .rk-callout-static[data-tone="danger"] {
+    --rk-callout-line: var(--rk-border-danger);
+    --rk-callout-ink: var(--rk-fg-danger);
+  }
+
+  .rk-callout-static .rk-callout-edge {
+    grid-column: 1 / -1;
+    display: flex;
+    block-size: var(--rk-cell-height);
+    color: var(--rk-callout-line);
+    white-space: pre;
+  }
+
+  .rk-callout-static .rk-callout-heading {
+    color: var(--rk-callout-ink);
+    font-weight: var(--rk-attribute-bold);
+  }
+
+  /* The edge across: whatever the corners and the heading leave. */
+  .rk-callout-static .rk-callout-run {
+    flex: 1 1 0;
+    inline-size: auto;
+  }
+
+  /* The sides: one cell wide, and as tall as the content. */
+  .rk-callout-static .rk-callout-side {
+    inline-size: var(--rk-cell-width);
+    block-size: auto;
+    color: var(--rk-callout-line);
+  }
+
+  .rk-callout-static .rk-callout-body {
+    padding-inline: var(--rk-x-1);
+  }
+
+  /* In prose, a block a blank row from the one before, as every block is. */
+  .rk-prose :where(*) + .rk-callout-static {
+    margin-block-start: var(--rk-y-1);
+  }
+}

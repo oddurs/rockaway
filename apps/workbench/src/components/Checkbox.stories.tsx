@@ -356,7 +356,7 @@ export const Touch: Story = {
     await measured(document.body);
     const row = rowOf(canvas.getByRole('checkbox', { name: 'Sign commits' }));
     expect(cells(row.getBoundingClientRect().height, cellOf(row).height)).toBe(1);
-    expect(row.getBoundingClientRect().height).toBeGreaterThanOrEqual(32);
+    expect(row.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
   },
 };
 

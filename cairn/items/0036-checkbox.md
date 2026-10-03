@@ -57,7 +57,7 @@ announced as "mixed".
 - [x] Both painters render it identically, measured in cells
 - [x] Frame glyphs are `aria-hidden`; the accessible name never contains one
 - [x] Ships a text snapshot, which is its documentation as much as its test
-- [ ] Operable by keyboard alone, and usable with a finger at touch density
+- [x] Operable by keyboard alone, and usable with a finger at touch density
 - [x] State reads without colour: an attribute or a mark carries it too
 - [x] Conforms at `strict`, or declares its exception with a reason
 - [x] Draws every state from the state vocabulary (0118), and no state changes its size in cells
@@ -65,7 +65,7 @@ announced as "mixed".
 - [x] Rendered by the cell renderer (0117): continuity passes at all four densities
 - [x] One export line in `packages/react/src/index.ts` and one import line in `packages/css/src/index.css`, as 0122 sets out
 - [x] Checked, unchecked and indeterminate differ in a glyph, and the three snapshot differently
-- [ ] The whole row toggles on press, and the row is at least 44px tall at touch density
+- [x] The whole row toggles on press, and the row is at least 44px tall at touch density
 
 ## 2026-10-03
 
@@ -78,3 +78,7 @@ Built on React Aria 1.21's CheckboxField and CheckboxButton (Checkbox is depreca
 ## 2026-10-03
 
 Criteria 11 and 19 left open on the same ground as Text field: keyboard alone and the whole row toggling are proven (Keyboard, The whole row toggles), and the row is one cell tall at every density, but touch is 32px until 0197 makes the touch line box 2.75. The target check also measures the hidden native input (13x13) rather than the row; forms2 is fixing checkTargets to measure a hidden input through its label (feat/switch).
+
+## 2026-10-03
+
+Criteria 11 and 19 ticked after merging 0198 (#112): touch's line box is 2.75, so a row is 44px at touch, and the Touch story asserts it. Also fixed what CI caught: the box's three cells were text, and a mark the font lacks comes from a fallback whose advance is a hair off the cell, so the box was 0.03px wider checked than unchecked. Each of the three is now an inline-block exactly a cell wide.
