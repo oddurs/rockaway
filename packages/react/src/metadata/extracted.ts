@@ -93,7 +93,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       },
       {
         "name": "platform",
-        "type": "'apple' | 'other' | 'auto'",
+        "type": "Platform | 'auto'",
         "required": false,
         "default": "'auto'"
       },
@@ -247,9 +247,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       },
       {
         "name": "platform",
-        "type": "'apple' | 'other' | 'auto'",
+        "type": "Platform | 'auto'",
         "required": false,
-        "description": "Which keyboard to render for. Detected after mount by default.",
+        "description": "Which keyboard to render for. The reader's by default, through `usePlatform()`.",
         "default": "'auto'"
       },
       {

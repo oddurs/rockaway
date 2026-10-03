@@ -1,5 +1,5 @@
 {
-  "$description": "Solarized (cairn 0052). Imported from https://github.com/altercation/solarized under MIT (Copyright (c) 2011 Ethan Schoonover). Fitted to the contrast gate: light foreground: #657b83 → #354a51 (for fg.default on bg.page); light muted: #89a0a8 → #51666d (for fg.muted on bg.page); light blue: #268bd2 → #006baf (for fg.accent on bg.page); light bright-blue: #839496 → #637375 (for fg.on-accent on bg.accent.solid-hover); light cyan: #2aa198 → #00756d (for fg.info on bg.page); light bright-cyan: #93a1a1 → #677474 (for fg.on-info on bg.info.solid-hover); light green: #859900 → #5d6e00 (for fg.success on bg.page); light yellow: #b58900 → #896100 (for fg.warning on bg.page); light bright-yellow: #657b83 → #5e747c (for fg.on-warning on bg.warning.solid-hover); light red: #dc322f → #ca1a1e (for fg.danger on bg.page); light bright-red: #cb4b16 → #c6460e (for fg.on-danger on bg.danger.solid-hover); light border: #c1baa8 → #8d8674 (for border.default on bg.page); light border-strong: #aea795 → #8c8674 (for border.control on bg.page); dark foreground: #839496 → #b9cbcd (for fg.default on bg.page); dark muted: #5b7376 → #8ca5a8 (for fg.muted on bg.page); dark blue: #268bd2 → #41a1ea (for fg.accent on bg.page); dark cyan: #2aa198 → #39aca3 (for fg.info on bg.surface); dark green: #859900 → #92a722 (for fg.success on bg.surface); dark bright-green: #586e75 → #7b9299 (for fg.on-success on bg.success.solid-hover); dark yellow: #b58900 → #c39722 (for fg.warning on bg.surface); dark bright-yellow: #657b83 → #7b919a (for fg.on-warning on bg.warning.solid-hover); dark red: #dc322f → #ff796c (for fg.danger on bg.page); dark bright-red: #cb4b16 → #e76536 (for fg.on-danger on bg.danger.solid-hover); dark border: #3c5860 → #617d86 (for border.default on bg.page); dark border-strong: #4f676f → #647d85 (for border.control on bg.page).",
+  "$description": "Solarized (cairn 0052). Imported from https://github.com/altercation/solarized under MIT (Copyright (c) 2011 Ethan Schoonover). Fitted to the contrast gate: light foreground: #657b83 → #354a51 (for fg.default on bg.page); light muted: #89a0a8 → #51666d (for fg.muted on bg.page); light blue: #268bd2 → #006baf (for fg.accent on bg.page); light bright-blue: #839496 → #637375 (for fg.on-accent on bg.accent.solid-hover); light cyan: #2aa198 → #00756d (for fg.info on bg.page); light bright-cyan: #93a1a1 → #677474 (for fg.on-info on bg.info.solid-hover); light green: #859900 → #5d6e00 (for fg.success on bg.page); light yellow: #b58900 → #896100 (for fg.warning on bg.page); light bright-yellow: #657b83 → #5e747c (for fg.on-warning on bg.warning.solid-hover); light red: #dc322f → #ca1a1e (for fg.danger on bg.page); light bright-red: #cb4b16 → #c6460e (for fg.on-danger on bg.danger.solid-hover); light border: #c1baa8 → #8d8674 (for border.default on bg.page); light border-strong: #aea795 → #8c8674 (for border.control on bg.page); light magenta: #d33682 → #c32375 (for syntax.keyword on bg.surface); dark foreground: #839496 → #b9cbcd (for fg.default on bg.page); dark muted: #5b7376 → #8ca5a8 (for fg.muted on bg.page); dark blue: #268bd2 → #41a1ea (for fg.accent on bg.page); dark cyan: #2aa198 → #39aca3 (for fg.info on bg.surface); dark green: #859900 → #92a722 (for fg.success on bg.surface); dark bright-green: #586e75 → #7b9299 (for fg.on-success on bg.success.solid-hover); dark yellow: #b58900 → #c39722 (for fg.warning on bg.surface); dark bright-yellow: #657b83 → #7b919a (for fg.on-warning on bg.warning.solid-hover); dark red: #dc322f → #ff796c (for fg.danger on bg.page); dark bright-red: #cb4b16 → #e76536 (for fg.on-danger on bg.danger.solid-hover); dark border: #3c5860 → #617d86 (for border.default on bg.page); dark border-strong: #4f676f → #647d85 (for border.control on bg.page); dark magenta: #d33682 → #fa5da3 (for syntax.keyword on bg.surface).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "imported",
@@ -68,7 +68,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.592,
+            0.547,
             0.2025,
             355.9
           ]
@@ -411,7 +411,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.592,
+            0.702,
             0.2025,
             355.9
           ]
@@ -1103,6 +1103,60 @@
         "close": {
           "$value": "]"
         }
+      }
+    },
+    "key": {
+      "$description": "Key legends, for KeyHint (cairn 0132). Symbols in Unicode; words in ASCII, the only glyphs wider than a cell.",
+      "ctrl": {
+        "$value": "⌃"
+      },
+      "alt": {
+        "$value": "⌥"
+      },
+      "shift": {
+        "$value": "⇧"
+      },
+      "meta": {
+        "$value": "⌘"
+      },
+      "enter": {
+        "$value": "⏎"
+      },
+      "tab": {
+        "$value": "⇥"
+      },
+      "space": {
+        "$value": "␣"
+      },
+      "backspace": {
+        "$value": "⌫"
+      },
+      "delete": {
+        "$value": "⌦"
+      },
+      "up": {
+        "$value": "↑"
+      },
+      "down": {
+        "$value": "↓"
+      },
+      "left": {
+        "$value": "←"
+      },
+      "right": {
+        "$value": "→"
+      },
+      "pageup": {
+        "$value": "⇞"
+      },
+      "pagedown": {
+        "$value": "⇟"
+      },
+      "home": {
+        "$value": "↖"
+      },
+      "end": {
+        "$value": "↘"
       }
     }
   },
