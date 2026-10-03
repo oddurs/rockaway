@@ -87,6 +87,29 @@ function isHidden(el: HTMLElement, style: CSSStyleDeclaration): boolean {
   );
 }
 
+/** The sr-only technique, in either of its forms, as `conformance.ts` reads it. */
+function isClipped(style: CSSStyleDeclaration): boolean {
+  return style.clipPath.startsWith('inset(50%') || style.clip === 'rect(0px, 0px, 0px, 0px)';
+}
+
+/**
+ * What a pointer actually hits for this element. A checkbox, radio or switch
+ * drawn by its label keeps the native input inside a visually hidden span:
+ * its own box is a 13px square nobody can see or press, and the target is the
+ * label around it, which is what a reader sees and what toggles the control.
+ * An input hidden that way with no label is no target at all.
+ */
+function pointerTarget(el: HTMLElement, view: Window | null): HTMLElement | undefined {
+  if (el.tagName !== 'INPUT') return el;
+  for (let up = el.parentElement; up; up = up.parentElement) {
+    const style = view?.getComputedStyle(up);
+    if (style && isClipped(style)) {
+      return el.closest('label') ?? (el as HTMLInputElement).labels?.[0] ?? undefined;
+    }
+  }
+  return el;
+}
+
 function isDisabled(el: HTMLElement): boolean {
   return (el as HTMLButtonElement).disabled === true || el.ariaDisabled === 'true';
 }
@@ -125,9 +148,14 @@ export function checkTargets(root: HTMLElement, options: TargetOptions = {}): Ta
   const view = root.ownerDocument.defaultView;
   const targets: Target[] = [];
 
-  for (const el of root.querySelectorAll<HTMLElement>(TARGETS)) {
+  const seen = new Set<HTMLElement>();
+  for (const control of root.querySelectorAll<HTMLElement>(TARGETS)) {
+    if (isDisabled(control)) continue;
+    const el = pointerTarget(control, view);
+    if (el === undefined || seen.has(el)) continue;
+    seen.add(el);
     const style = view?.getComputedStyle(el);
-    if (!style || isHidden(el, style) || isDisabled(el)) continue;
+    if (!style || isHidden(el, style)) continue;
     const box = el.getBoundingClientRect();
     if (box.width === 0 || box.height === 0) continue;
     if (isInSentence(el, style)) continue;

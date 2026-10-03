@@ -73,6 +73,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       createElement(rockaway.ListItem, { id: 'a' }, 'a.ts'),
       createElement(rockaway.ListItem, { id: 'b' }, 'b.ts'),
     ),
+  Switch: (props) => createElement(rockaway.Switch, props, 'Wrap lines'),
 };
 
 /** A role a part may have without writing it, because its element implies it. */
@@ -597,6 +598,17 @@ describe('the snapshots, as the site draws them', () => {
        Nothing here.   █
                        █
                        █"
+    `);
+  });
+
+  test('Switch', () => {
+    expect(snapshots(byName('Switch'))).toMatchInlineSnapshot(`
+      "── Off and on
+      [●──] Wrap lines
+      [──●] Wrap lines
+      ── Read-only
+      [●  ] Wrap lines
+      [  ●] Wrap lines"
     `);
   });
 });

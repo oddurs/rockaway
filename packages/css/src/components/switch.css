@@ -1,0 +1,122 @@
+/*
+ * Switch (cairn 0037).
+ *
+ * One row: the delimiters around a three-cell track, a cell of air, the
+ * label. Every cell is one the component writes, in every state, so nothing
+ * here sets a size or a padding and no state can move a neighbour (0118).
+ * A label too long for its column wraps under its own first word, never
+ * under the track.
+ *
+ * On is the thumb at the end and the track in reverse video: the track's own
+ * figure and ground swapped, so forced colors keeps it. Pressing reverses the
+ * track, and reverses an on track back. Read-only removes the track's ground
+ * along with its line. Hover underlines the label; disabled dims the lot.
+ *
+ * The delimiters take their colour from one custom property set on the
+ * switch, as Button's do, so each state is one rule on the switch.
+ */
+@layer rk.components {
+  .rk-switch-button {
+    --rk-switch-end: var(--rk-border-control);
+    /* The track's ground and its ink: the page's, until a state reverses them. */
+    --rk-switch-ground: transparent;
+    --rk-switch-ink: currentcolor;
+
+    display: inline-grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: start;
+    color: var(--rk-fg-default);
+    cursor: pointer;
+  }
+
+  /* The delimiters, the track and the air are cells: never collapsed. */
+  .rk-switch-indicator {
+    white-space: pre;
+  }
+
+  .rk-switch-end {
+    color: var(--rk-switch-end);
+  }
+
+  /* The painter's row, inline: as wide as its runs and one cell tall. */
+  .rk-switch-track {
+    display: inline-block;
+    vertical-align: top;
+    background: var(--rk-switch-ground);
+    color: var(--rk-switch-ink);
+  }
+
+  .rk-switch-track > .rk-row {
+    display: block;
+  }
+
+  .rk-switch-label {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .rk-switch-button[data-hovered] .rk-switch-label {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* The input is visually hidden, so its focus ring would be too: the ring
+   * goes round what a reader sees, the track and the words. An outline, so
+   * it costs no cell. */
+  .rk-switch-button[data-focus-visible] {
+    outline: var(--rk-focus-width) solid var(--rk-border-focus);
+    outline-offset: var(--rk-focus-offset);
+  }
+
+  /* On, or pressed: reverse video on the track. */
+  .rk-switch-button[data-selected],
+  .rk-switch-button[data-pressed] {
+    --rk-switch-ground: var(--rk-bg-inverse);
+    --rk-switch-ink: var(--rk-fg-on-inverse);
+  }
+
+  /* A form's server error: the delimiters in danger, and the message under it. */
+  .rk-switch-button[data-invalid] {
+    --rk-switch-end: var(--rk-border-danger);
+  }
+
+  .rk-switch-button[data-disabled] {
+    --rk-switch-end: currentcolor;
+
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+
+  .rk-switch-button[data-readonly] {
+    cursor: default;
+  }
+
+  .rk-switch-button[data-disabled][data-selected] {
+    --rk-switch-ground: var(--rk-fg-disabled);
+  }
+
+  /* Pressing a filled control reverses it back, so the press always shows;
+   * and read-only is the value without the track's ground. */
+  .rk-switch-button[data-selected][data-pressed],
+  .rk-switch-button[data-readonly][data-selected],
+  .rk-switch-button[data-readonly][data-pressed] {
+    --rk-switch-ground: transparent;
+    --rk-switch-ink: currentcolor;
+  }
+
+  /*
+   * Forced colors. The reversed track is the reader's text and canvas
+   * swapped, opted out of the backplate that would hide its thumb (0181). The
+   * line in it is stroked in the track's own colour, not in CanvasText, which
+   * is its ground there.
+   */
+  @media (forced-colors: active) {
+    .rk-switch-track {
+      forced-color-adjust: none;
+    }
+
+    .rk-switch-track [data-rk-shape] {
+      --rk-ink-colour: currentColor;
+    }
+  }
+}
