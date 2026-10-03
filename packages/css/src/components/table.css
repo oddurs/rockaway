@@ -1,0 +1,154 @@
+/*
+ * Table (cairn 0057).
+ *
+ * The chrome is a screen: the frame, the header rule and the column rules,
+ * painted by the engine. The table is real markup laid over it, a grid whose
+ * columns are the solved tracks in whole cells. Every cell but the last in a
+ * row ends in a cell's width of padding that its ground does not cover, so
+ * the column rule under it shows through, and every header cell has a row of
+ * it underneath, where the header rule is. Padding rather than a transparent
+ * border, because a border's width is snapped to whole pixels and a cell's is
+ * not. Nothing here draws a line.
+ *
+ * Each cell writes its own cells: its lead (air, or the row's marks), its
+ * value cut and aligned to its width, and a last cell that holds the sort
+ * mark in the header. So no state sets a size: selected reverses, hovered
+ * underlines, disabled dims, and none moves a cell (0118).
+ */
+@layer rk.components {
+  .rk-table {
+    max-inline-size: 100%;
+  }
+
+  .rk-table-grid {
+    display: grid;
+    grid-template-columns: var(--rk-table-columns);
+    inline-size: max-content;
+    border-collapse: separate;
+    border-spacing: 0;
+    white-space: pre;
+  }
+
+  /* Rows and row groups share the table's columns. */
+  .rk-table-grid > thead,
+  .rk-table-grid > tbody,
+  .rk-table-grid > thead > tr,
+  .rk-table-grid > tbody > tr {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+  }
+
+  .rk-table-cell-inner {
+    display: flex;
+  }
+
+  .rk-table-lead,
+  .rk-table-sort,
+  .rk-table-trail {
+    flex: none;
+  }
+
+  .rk-table-content {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+  }
+
+  /* The value as drawn fills its column, whatever the font makes of a wide
+   * character: the column is whole cells, and so is the box in it. */
+  .rk-table-value {
+    display: block;
+    overflow: hidden;
+  }
+
+  .rk-table-sort {
+    color: var(--rk-fg-default);
+  }
+
+  /* A header that sorts is pressed to sort. */
+  .rk-table-sortable {
+    cursor: pointer;
+  }
+
+  .rk-table-column,
+  .rk-table-cell {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: none;
+    font: inherit;
+    text-align: start;
+    background-clip: content-box;
+  }
+
+  /* The cell where the column rule is, between this column and the next. */
+  .rk-table-column:not(:last-child),
+  .rk-table-cell:not(:last-child) {
+    padding-inline-end: var(--rk-cell-width);
+  }
+
+  .rk-table-column {
+    /* The row under the header, where the header rule is. */
+    padding-block-end: var(--rk-cell-height);
+    background-color: var(--rk-bg-subtle);
+    color: var(--rk-fg-muted);
+    font-weight: inherit;
+  }
+
+  .rk-table-row {
+    color: var(--rk-fg-default);
+  }
+
+  .rk-table-column[data-hovered] .rk-table-content,
+  .rk-table-row[data-hovered] .rk-table-content {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* Selected: reverse video, the figure and the ground swapped, cell by cell,
+   * so the column rules stay lines between them. */
+  .rk-table-row[data-selected] > .rk-table-cell {
+    background-color: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
+  }
+
+  .rk-table-row[data-disabled] {
+    color: var(--rk-fg-disabled);
+  }
+
+  .rk-table-row[data-disabled][data-selected] > .rk-table-cell {
+    background-color: var(--rk-fg-disabled);
+  }
+
+  /* An empty body is one row across every column. */
+  .rk-table-body td[colspan] {
+    grid-column: 1 / -1;
+    padding: 0;
+    color: var(--rk-fg-muted);
+  }
+
+  /*
+   * Too wide for its room: the table keeps its columns and the region
+   * scrolls across, snapping to a column's start. It is an `rk-scroll-marks`
+   * region (0207, 0208): no native scrollbar, and the theme's overflow marks
+   * at each edge that has more past it.
+   */
+  .rk-table-scrolls {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+  }
+
+  .rk-table-scrolls .rk-table-screen,
+  .rk-table-scrolls .rk-table-column {
+    scroll-snap-align: start;
+  }
+
+  /* A reversed cell is the reader's text and canvas swapped (0181). */
+  @media (forced-colors: active) {
+    .rk-table-row[data-selected] > .rk-table-cell {
+      forced-color-adjust: none;
+    }
+  }
+}
