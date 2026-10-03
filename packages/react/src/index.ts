@@ -5,6 +5,8 @@
 // tests or metadata does not become public API by accident.
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
 export { Button, type ButtonProps, type ButtonSize, type ButtonTextOptions, type ButtonVariant, buttonBuffer } from './components/button.tsx';
+export { Badge, type BadgeOptions, type BadgeProps, type BadgeTone, badgeBuffer } from './components/badge.tsx';
+export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from './components/button.tsx';
 export { Divider, type DividerOptions, type DividerProps, dividerBuffer, drawRule, type Orientation } from './components/divider.tsx';
 export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './components/frame.tsx';
 export { formatKeys, KeyHint, type KeyHintProps, type KeyNotation, type KeySpec, keyShortcut, type Platform, parseKeys, spokenKeys } from './components/key-hint.tsx';
