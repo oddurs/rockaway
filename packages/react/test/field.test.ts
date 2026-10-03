@@ -3,17 +3,18 @@ import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import { buttonBuffer } from '../src/components/button.tsx';
+import { buttonBuffer } from '../src/components/button.pure.ts';
+import { formBuffer } from '../src/components/field.pure.ts';
 import {
   Description,
   FieldError,
   type FieldText,
   Form,
   fieldClass,
-  formBuffer,
   Label,
 } from '../src/components/field.tsx';
-import { FieldFrame, Fieldset, fieldFrameBuffer } from '../src/components/fieldset.tsx';
+import { fieldFrameBuffer } from '../src/components/fieldset.pure.ts';
+import { FieldFrame, Fieldset } from '../src/components/fieldset.tsx';
 
 const glyphs = themeGlyphs.default;
 const [open, close] = glyphs.delimiter.control;
