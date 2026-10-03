@@ -6,3 +6,6 @@ coverage/
 __screenshots__/
 *.tsbuildinfo
 .DS_Store
+
+# Agent worktrees: whole checkouts of this repo, never part of it.
+.claude/worktrees/
