@@ -19,7 +19,41 @@ effort: m
 ## Purpose
 
 The box every other component is drawn inside: a border set, a title in the
-top edge, padding in cells, and dividers that join their sides.
+top edge, padding in cells, and dividers that join their sides. A pane, a
+panel, a dialog body; sections that share one border.
+
+## Anatomy
+
+`<Frame title titleAlign border dividers dividerBorder pad label>`, a `Screen`
+underneath. Its chrome is `frameBuffer(size, options, glyphs)`, a pure buffer
+function: the border by `drawBox`, the title set into the top edge, and each
+divider by `Divider`'s own `drawRule`, so a rule meets the sides as a tee from
+the junction table. Content is real elements in `.rk-content`, inset by the
+border's cell plus `pad` (default one cell across, none down). `border` is the
+theme's set unless given; `dividerBorder` is the frame's own unless given, so a
+heavy box may hold light dividers (`┠──┨`). A title too long for its edge
+truncates with the theme's ellipsis, or `~` in a frame drawn in ASCII. A
+divider on the border, outside the frame or between rows is dropped.
+
+## States
+
+None of its own: a frame has nothing to operate. A framed control draws 0118's
+`focus-framed` and `invalid` rows on its frame (the heavy set, recoloured) in
+the same cells.
+
+## Tokens consumed
+
+`border.default` for every line, carried by each cell of the buffer so it is
+the same colour on a page and in ANSI; `fg.default` for the title. Strokes are
+`stroke.glyph.*` or `stroke.rule.*` by painter (0117). Forced colors draws
+every stroke in `CanvasText`. `border.default` is held to 3:1 by 0178.
+
+## Accessibility
+
+A titled frame is `role="group"` named by its title, or by `label`; with
+neither it has no role. Every glyph, the title as drawn included, is
+`aria-hidden`. Never a tab stop: Tab goes straight to its content in DOM order,
+and the focus ring is not clipped by the border.
 
 ## Acceptance criteria
 
