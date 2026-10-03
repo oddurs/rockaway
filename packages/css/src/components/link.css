@@ -41,9 +41,12 @@
     inline-size: var(--rk-cell-width);
   }
 
-  /* Hover: the underline is already taken, so it doubles. */
+  /* Hover: the underline is already taken, so the words go bold (0209). A
+   * terminal has bold and no double underline, and a bold cell is as wide as
+   * a plain one in a monospace face. Current is bold too, but in the body
+   * colour and with the cursor mark, which hover never draws. */
   .rk-link[data-hovered] {
-    text-decoration-style: double;
+    font-weight: var(--rk-attribute-bold);
   }
 
   /* Current: bold, the body colour, and the cursor mark in the cell before. */

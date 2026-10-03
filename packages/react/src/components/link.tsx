@@ -8,7 +8,7 @@
  * tell the accent from the body text. Every state is drawn on top of that
  * underline from the state vocabulary (0118), and none of them adds a cell:
  *
- *   - hover doubles the underline, because the underline is already taken
+ *   - hover is bold, because the underline is already taken (0209)
  *   - focus is the ring in `focus.css`, an outline that costs no cell
  *   - pressed is reverse video: the link's own colour becomes the ground
  *   - current (`aria-current`) is bold, in `fg.default`, with the cursor mark
@@ -97,7 +97,7 @@ export interface LinkState {
 /** The label's style in a state: what the stylesheet draws, as cell attributes. */
 export function linkStyle(state: LinkState): Style {
   let attrs = Attr.underline;
-  if (state.current) attrs |= Attr.bold;
+  if (state.current || state.hovered) attrs |= Attr.bold;
   if (state.pressed) attrs |= Attr.reverse;
   if (state.disabled) attrs |= Attr.dim;
   const fg = state.disabled ? 'fg.disabled' : state.current ? 'fg.default' : 'fg.accent';
