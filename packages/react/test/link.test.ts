@@ -46,9 +46,9 @@ function runs(buffer: Buffer): string {
 }
 
 describe('linkBuffer', () => {
-  // Hover doubles the underline and focus is an outline drawn around the
-  // cells. Neither is a cell attribute, so both print as rest here, which is
-  // the point: neither costs a cell or changes one.
+  // Hover is bold, which the snapshot shows; focus is an outline drawn
+  // around the cells, which is no cell attribute, so it prints as rest. Neither
+  // costs a cell or changes one.
   test('every state, cell by cell: the first cell is the one before the link', () => {
     const rows = STATES.map(([name, state]) => {
       const cells = toText(linkBuffer('docs', state), { trimEnd: false }).padEnd(6);
@@ -56,7 +56,7 @@ describe('linkBuffer', () => {
     });
     expect(rows.join('\n')).toMatchInlineSnapshot(`
       "rest             │ docs │  1-4 underline fg.accent
-      hovered          │ docs │  1-4 underline fg.accent
+      hovered          │ docs │  1-4 bold underline fg.accent
       focus-visible    │ docs │  1-4 underline fg.accent
       pressed          │ docs │  1-4 reverse underline fg.accent
       current          │▸docs │  0 bold fg.default, 1-4 bold underline fg.default

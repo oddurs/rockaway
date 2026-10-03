@@ -11,7 +11,7 @@ import type { LinkState } from './link.tsx';
 /** The label's style in a state: what the stylesheet draws, as cell attributes. */
 export function linkStyle(state: LinkState): Style {
   let attrs = Attr.underline;
-  if (state.current) attrs |= Attr.bold;
+  if (state.current || state.hovered) attrs |= Attr.bold;
   if (state.pressed) attrs |= Attr.reverse;
   if (state.disabled) attrs |= Attr.dim;
   const fg = state.disabled ? 'fg.disabled' : state.current ? 'fg.default' : 'fg.accent';

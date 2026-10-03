@@ -209,10 +209,11 @@
   }
 
   /* ── Links ───────────────────────────────────────────────────────────────
-   * Underlined always (base); hovering doubles the underline, as Link does,
-   * so the state is an attribute and not only a colour. */
+   * Underlined always (base); hovering makes the words bold, as Link does,
+   * so the state is an attribute and not only a colour, and one a terminal
+   * can draw (0209). */
   .rk-prose :where(a:hover) {
-    text-decoration-style: double;
+    font-weight: var(--rk-attribute-bold);
   }
 
   /* ── Tables ──────────────────────────────────────────────────────────────
