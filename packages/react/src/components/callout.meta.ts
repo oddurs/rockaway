@@ -1,7 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
-import { calloutBuffer, calloutVariants } from './callout.tsx';
+import { calloutBuffer, calloutVariants } from './callout.pure.ts';
 
 const SIZE = { width: 30, height: 3 };
 
