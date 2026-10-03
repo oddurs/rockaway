@@ -45,3 +45,7 @@ Engine differences, each a known failure in .storybook/known.ts (printed every r
 ## 2026-10-03
 
 A fourth Firefox difference, found after merging main: Frame's 'Forty cells wide' measures 39 cells. Measured: the 40 x 1ch container is 385.33331px and the measured cell 9.63333374px, so cellsIn floors 39.999996 to 39. Firefox reports lengths as floats of sixtieths; Chromium and WebKit report exact sixty-fourths. Known entry firefox-cells-in; proposed ticket: cellsIn tolerates float error in a measured length.
+
+## 2026-10-03
+
+When this branch next merges main, drop the firefox-forced-highlight known entry: #129 (0215) draws solid controls in CanvasText/Canvas under forced colours, which settles it. Not before #129 is in the branch, or the forced-colors-firefox project goes red; the stale-entry check fails the full run if it is left behind.
