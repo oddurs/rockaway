@@ -60,6 +60,12 @@
       }
     },
     {
+      "includes": ["packages/react/src/index.ts"],
+      "formatter": {
+        "lineWidth": 320
+      }
+    },
+    {
       "includes": ["packages/css/src/motion.css"],
       "linter": {
         "rules": {

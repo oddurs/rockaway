@@ -15,6 +15,14 @@
 @import "./motion.css";
 @import "./forced-colors.css";
 @import "./container.css";
+
+/*
+ * Components: one line each, sorted by path (cairn 0122). Their order does not
+ * matter: each styles its own rk-* classes, and where one reaches into another
+ * (a KeyHint inside a Button) specificity decides, never source order.
+ * Parallel branches each add a line and `merge=union` in .gitattributes joins
+ * them; packages/react/test/barrels.test.ts fails on a missing or doubled line.
+ */
 @import "./components/button.css";
 @import "./components/key-hint.css";
 @import "./components/list.css";
