@@ -3,15 +3,15 @@ id: 103
 uid: e1a6b9f8-1076-4387-81b4-1ecaf9350082
 title: 'Scaffold the site: Astro, islands, static, Pages'
 type: chore
-status: doing
+status: done
 milestone: site
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 77
 - 121
 created: 2026-09-22
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p0
 layer: tooling
 effort: m
@@ -21,7 +21,7 @@ effort: m
 
 - [x] `apps/site`, Astro with React islands, output static
 - [x] The site imports the published packages the way a consumer would: no `@rockaway/source` condition, no path into `src`
-- [ ] `pnpm check` builds the site, and pull requests upload the built site as a workflow artifact (deploying is 0146)
+- [x] `pnpm check` builds the site, and pull requests upload the built site as a workflow artifact (deploying is 0146)
 - [x] One monospace font, self-hosted, subset, preloaded, with a metric-matched fallback so `1ch` does not change when it loads; box drawing does not need the font (0116)
 - [x] The base path is configurable, so the site works at `/rockaway/` or at a domain root
 - [x] A first page renders a Frame, to prove the pipeline end to end
@@ -52,3 +52,7 @@ Consuming as a stranger: the site's tsconfig sets customConditions to [] so it c
 ## 2026-10-03
 
 Proof: test/site.test.ts builds the site at /rockaway/ and at /, serves each under its base from a plain static server, and in Chromium asserts no request leaves the base and nothing fails, the Frame's painted rows equal frameBuffer at the measured size, the preloaded font is the face's src and is fetched once, the cell is 9.6px (the font's advance at 16px), and 100 zeros measure the same in the fallback stack as in the web font (to 0.5px), with at least one adjusted system font present.
+
+## 2026-10-03
+
+CI found that Chromium on Linux has no subpixel positioning and rounds the 9.6px advance to 10px, so the cell there is 10px. The cell was right (it is what the text takes); the test now holds the cell to the laid-out advance rather than to 9.6px. Worth knowing for anything that reasons about pixel widths: 1ch is not always 0.6em exactly.
