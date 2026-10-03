@@ -18,8 +18,9 @@
     "test": "pnpm -r test",
     "storybook": "pnpm --filter workbench dev",
     "roadmap:check": "cairn check && cairn render --check",
-    "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm packages:check && pnpm test && pnpm roadmap:check",
+    "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm packages:check && pnpm test && pnpm roadmap:check && pnpm changeset:check",
     "changeset": "changeset",
+    "changeset:check": "node scripts/check-changeset.ts",
     "release": "pnpm build && pnpm packages:check && changeset publish"
   },
   "devDependencies": {

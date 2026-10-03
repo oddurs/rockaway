@@ -225,7 +225,7 @@ A website built out of the system it documents, which is the only honest way
 
 ## v0.1 — v0.1 — first release
 
-`··········` 0% · 0 of 10 done · due 2027-03-21
+`#·········` 10% · 1 of 10 done · due 2027-03-21
 
 Something another project can install and build on.
 
@@ -240,7 +240,10 @@ Something another project can install and build on.
 - [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
 - [ ] [`0157`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0157-walk-every-component-with-voiceover-and-nvda-and-record-what-is-heard.md) Walk every component with VoiceOver and NVDA, and record what is heard <sup>chore · components · p1 · needs-owner</sup>
 - [ ] [`0158`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0158-launch-tag-0-1-0-publish-and-post-show-hn.md) Launch: tag 0.1.0, publish, and post Show HN <sup>chore · distribution · p1 · needs-owner</sup>
-- [ ] [`0162`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0162-require-a-changeset-for-every-package-change-and-back-fill-the-missing-ones.md) Require a changeset for every package change, and back-fill the missing ones <sup>chore · distribution · p1</sup>
+
+### done
+
+- [x] [`0162`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0162-require-a-changeset-for-every-package-change-and-back-fill-the-missing-ones.md) Require a changeset for every package change, and back-fill the missing ones <sup>chore · distribution · p1</sup>
 
 ## later — Later
 
