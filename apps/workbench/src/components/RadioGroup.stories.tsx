@@ -473,11 +473,30 @@ export const InANarrowForm: Story = {
 };
 
 /**
+ * At 200%: the zoom browser walks every density itself and reads every
+ * stroke, so one frame is the whole of what it needs to see. Densities does
+ * the same with four frames in the ordinary browser.
+ */
+export const Zoom: Story = {
+  tags: ['zoom'],
+  render: () => (
+    <Frame title="zoom" cols={COLS} rows={5}>
+      <Branches orientation="horizontal" defaultValue="main" />
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    expect(inside(canvas.getByRole('group', { name: 'zoom' }))).toBe(
+      model({ label: 'Branch', orientation: 'horizontal', options: options('main') }),
+    );
+  },
+};
+
+/**
  * Every density: the same cells across, one row a radio, whatever a row is.
  * The continuity check runs on every frame after the story.
  */
 export const Densities: Story = {
-  tags: ['zoom'],
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}>
       {(['dense', 'normal', 'airy', 'touch'] as const).map((density) => (
