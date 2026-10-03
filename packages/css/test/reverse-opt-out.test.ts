@@ -13,7 +13,7 @@
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import postcss, { type AtRule, type Container, type Node, type Rule } from 'postcss';
+import postcss, { type AtRule, type Node, type Rule } from 'postcss';
 import { describe, expect, test } from 'vitest';
 
 const src = path.join(import.meta.dirname, '..', 'src');
@@ -38,7 +38,7 @@ function selectorsOf(rule: Rule): string[] {
 }
 
 function inForcedColors(node: Node): boolean {
-  for (let parent: Container | undefined = node.parent; parent; parent = parent.parent) {
+  for (let parent: Node | undefined = node.parent; parent; parent = parent.parent) {
     if (parent.type === 'atrule' && /forced-colors\s*:\s*active/.test((parent as AtRule).params)) {
       return true;
     }
