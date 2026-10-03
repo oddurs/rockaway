@@ -46,7 +46,7 @@ is said in words when it matters (the text is "failing", not only `✗`).
 - [x] Stories cover every state, and run as Vitest browser tests
 - [ ] axe passes; keyboard walkthrough recorded in the story
 - [ ] Light, dark and forced-colors verified
-- [ ] Metadata written: props, anatomy, when to use, when not to
+- [x] Metadata written: props, anatomy, when to use, when not to
 - [x] Sized in cells, and drawn by the frame engine: no box characters written by hand
 - [x] Both painters render it identically, measured in cells
 - [x] Frame glyphs are `aria-hidden`; the accessible name never contains one
@@ -75,3 +75,7 @@ Geometry: both forms are exactly two cells beyond the words (the mark and a cell
 ## 2026-10-03
 
 Not interactive, so criteria 1 and 11 hold by having nothing to operate: no role, no tabindex, and the keyboard walkthrough shows Tab passing from the button before a badge to the button after it. Criteria 4 and 5 are left open because axe fails fg.success on bg.success.subtle in light mode (4.41:1) wherever Chromium matches color-gamut: p3. The tokens' p3 override for ansi-green escapes the contrast gate, which checks only the sRGB value (4.53:1). The CTO is filing that as a p0 tokens bug, so Badge keeps its design and is not changed to suit it. Criterion 6 waits on 0047, criterion 16 on 0117.
+
+## 2026-10-03
+
+Rebased onto main after 0047 and 0117 landed: badge.meta.ts written to the schema (tone values described, no states, snapshot drawn by badgeBuffer), a Badge fixture added to the metadata test, and a changeset added, which main now requires. The rebase's merge=union on index.ts doubled Button's line against main's new one; resolved by hand from main plus Badge's line.
