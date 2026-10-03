@@ -293,6 +293,44 @@ constraint on component design — state cannot be carried by hue alone, which i
 why attributes (bold, dim, reverse, underline) and marks carry it too, and why
 the system passes forced-colors mode without special-casing.
 
+## 9. States are one vocabulary
+
+Every state is drawn one way, in every component (decision `0118`), and a
+component's metadata names the row rather than describing it again. The table
+is also data: `stateVocabulary` in `@rockaway/react/metadata`.
+
+**States never change geometry.** A state may change attributes, colour, border
+weight, or a glyph in a cell that is reserved in every state. It never adds or
+removes a cell, because a control that moves its neighbours when it is hovered
+is not on a grid. A test fails any rule keyed on a state that sets a size.
+
+| State | Source | Drawn as | Without colour |
+| --- | --- | --- | --- |
+| hover | `data-hovered` | underline on the label | underline |
+| focus, unframed control | `data-focus-visible` | the focus ring: an outline that costs no cell | outline |
+| focus, framed control | `data-focus-visible` | the frame goes `heavy` in `border.focus` | weight |
+| pressed | `data-pressed` | reverse video; a filled control reverses back | reverse |
+| cursor (focused row in a collection) | `data-focused` | the cursor mark in the row's reserved mark cell | mark |
+| selected | `data-selected` | reverse video; in multi-select also the check mark in a second reserved cell | reverse, mark |
+| checked / indeterminate | `data-selected`, `data-indeterminate` | check or dash between the control's delimiters | mark |
+| expanded / collapsed | `data-expanded` | the expanded or collapsed mark | mark |
+| disabled | `data-disabled` | dim (`fg.disabled`), default cursor; `GrayText` in forced colors | dim is an attribute |
+| invalid | `data-invalid` | the cross mark before the message, `fg.danger`; framed controls go `heavy` in `border.danger` | mark, weight |
+| required | `data-required` | `*` after the label, `aria-hidden` (the semantics are `aria-required`) | mark |
+| read-only | `data-readonly` | the value without the control's track or ground | ground removed |
+| current (navigation) | `aria-current`, reflected as `data-current` | bold plus the cursor mark | bold, mark |
+| pending | `data-pending` | the spinner in a reserved cell | glyph |
+| placeholder | `:placeholder-shown` | dim | dim |
+
+`danger` is a variant, not a state: `fg.danger` plus `!` in the reserved mark
+cell. Messages, such as an error under a field, are content and may add rows.
+
+The cursor and the selection are two signals, and List is where they meet: in
+a multi-select list the keyboard's row and the chosen rows are told apart in
+text, in greyscale and in forced colors. Reverse video swaps an element's own
+figure and ground. In forced colors that means the reader's text and canvas
+swapped, so it is never drawn as two halves that both collapse to the canvas.
+
 ---
 
 ## What we borrowed, and from whom

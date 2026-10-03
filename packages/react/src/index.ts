@@ -10,7 +10,7 @@ export { Divider, type DividerOptions, type DividerProps, dividerBuffer, drawRul
 export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './components/frame.tsx';
 export { formatKeys, KeyHint, type KeyHintProps, type KeyNotation, type KeySpec, keyShortcut, type Platform, parseKeys, spokenKeys } from './components/key-hint.tsx';
 export { Link, type LinkProps, type LinkState, linkBuffer } from './components/link.tsx';
-export { List, ListItem, type ListItemProps, type ListProps, type ScrollbarState, scrollbarBuffer } from './components/list.tsx';
+export { List, type ListBufferOptions, ListItem, type ListItemProps, type ListProps, type ListRow, type ListRowState, listBuffer, listMarks, listRowStyle, type ScrollbarState, scrollbarBuffer } from './components/list.tsx';
 export { cx } from './cx.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle } from './paint/index.ts';
