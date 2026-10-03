@@ -44,7 +44,7 @@ const meta = {
   title: 'Foundations/Prose',
   component: ProseOnTheGrid,
   // The zoom browser runs every story here again, at 200%.
-  tags: ['zoom', 'classic-scrollbars'],
+  tags: ['zoom'],
   parameters: {
     layout: 'padded',
     // The screen here is built by hand, and each play function measures its
@@ -110,7 +110,12 @@ async function conformsAtEveryDensity(screen: HTMLElement): Promise<void> {
   }
 }
 
+// The classic-scrollbars browser runs this again with scrollbars that take
+// room (0208), as it does the stories that scroll across. The line checks
+// below are left to the others: they read every line's pixels, and once more
+// in a fifth browser is time CI does not have.
 export const Fixture: Story = {
+  tags: ['classic-scrollbars'],
   play: async ({ canvas }) => {
     const screen = canvas.getByTestId('prose');
     await conformsAtEveryDensity(screen);
@@ -148,6 +153,7 @@ export const Fixture: Story = {
 
 export const FortyCells: Story = {
   name: 'At forty cells',
+  tags: ['classic-scrollbars'],
   args: { cols: 40 },
   play: async ({ canvas }) => {
     const screen = canvas.getByTestId('prose');
@@ -183,6 +189,7 @@ async function scrollTo(scroller: HTMLElement, left: number): Promise<void> {
  */
 export const OverflowMarks: Story = {
   name: 'Overflow marks',
+  tags: ['classic-scrollbars'],
   args: { cols: 40 },
   play: async ({ canvas }) => {
     const screen = canvas.getByTestId('prose');
