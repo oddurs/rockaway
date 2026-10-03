@@ -198,7 +198,6 @@ A website built out of the system it documents, which is the only honest way
 
 ### backlog
 
-- [ ] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
 - [ ] [`0104`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0104-build-the-site-shell-as-a-tui.md) Build the site shell as a TUI <sup>feature · site · p0</sup>
 - [ ] [`0105`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0105-make-every-screen-copyable-as-text-and-as-ansi.md) Make every screen copyable as text and as ANSI <sup>feature · site · p1</sup>
 - [ ] [`0106`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0106-write-the-foundations-pages.md) Write the foundations pages <sup>docs · docs · p0</sup>
@@ -216,6 +215,10 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0150`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0150-give-every-page-a-title-a-description-and-a-social-card-drawn-by-the-engine.md) Give every page a title, a description and a social card drawn by the engine <sup>feature · site · p1</sup>
 - [ ] [`0151`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0151-compose-three-example-apps-from-the-system-a-git-client-a-monitor-a-settings-form.md) Compose three example apps from the system: a git client, a monitor, a settings form <sup>feature · site · p1</sup>
 - [ ] [`0152`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0152-review-the-site-end-to-end-phone-zoom-keyboard-screen-reader-slow-network.md) Review the site end to end: phone, zoom, keyboard, screen reader, slow network <sup>chore · site · p0</sup>
+
+### in progress
+
+- [ ] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
 
 ### done
 

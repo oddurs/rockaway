@@ -14,7 +14,7 @@
 import { createHash } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { marks } from '@rockaway/tokens';
+import { marks, spinnerFrames } from '@rockaway/tokens';
 import subsetFont from 'subset-font';
 
 const VERSION = 'v2.304';
@@ -24,8 +24,9 @@ const SHA256 = '662a196d58f1183bf2d77428b6d5283fe3f45161ab021bea4036bc98e5cac016
 /**
  * What the font draws. Letters, digits and punctuation for prose and code in
  * the Latin languages, the arrows and keyboard symbols KeyHint prints, and
- * every mark the tokens define, because a state mark that falls back to
- * another font is the one place a reader would see the seam.
+ * every mark and spinner frame the tokens define, in every repertoire,
+ * because a state mark that falls back to another font is the one place a
+ * reader would see the seam.
  *
  * Not box drawing (U+2500–257F) and not blocks (U+2580–259F): the cell draws
  * those from its edge weights (0116), so the font never has to. Until the cell
@@ -55,7 +56,15 @@ function charset(): string {
   for (const [from, to] of ranges) {
     for (let code = from; code <= to; code++) chars.add(String.fromCodePoint(code));
   }
-  for (const char of [...Object.values(marks), ...keys]) chars.add(char);
+  const fromTokens = [
+    ...Object.values(marks).flatMap((set) => Object.values(set)),
+    ...Object.values(spinnerFrames).flat(),
+  ];
+  for (const char of [...fromTokens.join(''), ...keys]) {
+    // What the cell draws stays out, even when a token names it.
+    const code = char.codePointAt(0) ?? 0;
+    if (code < 0x2500 || code > 0x259f) chars.add(char);
+  }
   return [...chars].sort().join('');
 }
 
@@ -143,7 +152,8 @@ writeFileSync(
       family: 'JetBrains Mono',
       license: 'OFL-1.1',
       source: { url: SOURCE, sha256: SHA256 },
-      weight: [400, 700],
+      // As the face's `font-weight` writes it (and as the formatter leaves it).
+      weight: '400 700',
       metrics: metrics(source),
       unicodeRange: unicodeRange(text),
       bytes: woff2.length,
