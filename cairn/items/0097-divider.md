@@ -18,7 +18,43 @@ effort: s
 
 ## Purpose
 
-A rule across a frame or between panes, joining the sides it meets.
+A rule across a frame or between panes, joining the sides it meets. A
+separator, not a decoration, and not a splitter: there is nothing to operate.
+
+## Anatomy
+
+`<Divider orientation border label labelAlign ends>`: a one-cell `Screen`, as
+tall as a row for a horizontal rule and as wide as a column for a vertical
+one, measured along its length unless `cols` or `rows` fixes it. Its chrome is
+`dividerBuffer(size, options, glyphs)`, which calls `drawRule`, the same
+function a frame's `dividers` use. A rule adds edge weights and nothing else.
+An open end is a half stroke (`╶──╴`). `ends="joined"` adds the crossing edges
+so the table draws tees (`├──┤`, `┬ │ ┴`). Inside a frame that changes nothing,
+because the sides already carry those edges. `border` is the theme's set unless
+given. A label (horizontal only) sits at the start, centre or end. On an open
+rule it keeps a whole cell of line between it and the end, so the half stroke
+is never stranded: `╶─ files ───╴`. It truncates with the theme's ellipsis, or
+with `~` in a rule drawn in ASCII.
+
+## States
+
+None: a divider has nothing to operate.
+
+## Tokens consumed
+
+`border.default` for the line, carried by each cell so it is the same on a
+page and in ANSI; `fg.default` for the label. Strokes, the half strokes at an
+open end included, are drawn by the cell (0117) in `stroke.glyph.*` or
+`stroke.rule.*`. Forced colors draws every stroke in `CanvasText`.
+
+## Accessibility
+
+`role="separator"` with `aria-orientation`, named by `label` when it has one;
+the rule's glyphs are `aria-hidden` and never in the name. Not React Aria's
+`Separator`, whose `<hr>` would draw a second line beside the painted one.
+Never a tab stop: Tab goes from the control before it to the control after it.
+A frame's own dividers are chrome, not separators, so a reader does not step
+through them.
 
 ## Acceptance criteria
 
