@@ -9,6 +9,7 @@ export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-met
 export { cx } from './cx.ts';
 export * from './entries/badge.ts';
 export * from './entries/button.ts';
+export * from './entries/checkbox.ts';
 export * from './entries/divider.ts';
 export * from './entries/field.ts';
 export * from './entries/fieldset.ts';

@@ -122,6 +122,112 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-size-control-md"
     ]
   },
+  "Checkbox": {
+    "file": "checkbox.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The words after the box: the checkbox's name."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help, dim, under the row."
+      },
+      {
+        "name": "errorMessage",
+        "type": "ReactNode | ((validation: ValidationResult) => ReactNode)",
+        "required": false,
+        "description": "Words for the error; the field's own validation messages when not given."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<CheckboxFieldProps, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-focus-offset",
+      "--rk-focus-width"
+    ]
+  },
+  "CheckboxGroup": {
+    "file": "checkbox.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Set into the frame's top edge, and the group's name."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The checkboxes, one row each."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "errorMessage",
+        "type": "ReactNode | ((validation: ValidationResult) => ReactNode)",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaCheckboxGroupProps, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-focus-offset",
+      "--rk-focus-width"
+    ]
+  },
   "Description": {
     "file": "field.tsx",
     "props": [
