@@ -5,7 +5,8 @@
  * real `<pre><code>` laid over the cells inside them, `CodeBlock` writing
  * where in cells as custom properties. A line wider than the block scrolls
  * sideways inside it, and a scroll comes to rest on whole cells: the ruler
- * under the code is one snap point a cell.
+ * under the code is one snap point a cell. Its native bar is hidden, and an
+ * edge with more past it shows the theme's overflow mark (0207).
  *
  * Box drawing in code is a cell box the renderer strokes (0116), weighted
  * like the type beside it, or as hairlines with the rule painter.
@@ -19,11 +20,9 @@
     inline-size: calc(var(--rk-code-cols) * var(--rk-cell-width));
     block-size: calc(var(--rk-code-rows) * var(--rk-cell-height));
     margin: 0;
-    padding-inline: var(--rk-cell-width);
     overflow-x: auto;
     overflow-y: clip;
     scroll-snap-type: x mandatory;
-    scrollbar-width: none;
     font: inherit;
     white-space: pre;
     color: var(--rk-fg-default);
@@ -38,10 +37,16 @@
     --rk-stroke-gap: var(--rk-stroke-rule-gap);
   }
 
+  /*
+   * The cell of air either side is the code's padding, not the region's, so
+   * the overflow marks (`rk-scroll-marks`, 0207) land on the outermost
+   * cells, over it.
+   */
   .rk-code-text > code {
     position: relative;
     display: block;
     inline-size: max-content;
+    padding-inline: var(--rk-cell-width);
     font: inherit;
   }
 

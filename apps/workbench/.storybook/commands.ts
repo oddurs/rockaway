@@ -34,3 +34,53 @@ export const printToPdf: BrowserCommand<[html: string]> = async (context, html) 
     await page.close();
   }
 };
+
+/**
+ * Load a document in a page with JavaScript switched off and read back what it
+ * shows (cairn 0126): the text of each painted row, how many cells draw their
+ * own shape, and whether the page's own script ran — which it must not have,
+ * or the test proves nothing.
+ */
+export const readWithoutScripts: BrowserCommand<[html: string]> = async (context, html) => {
+  const browser = context.context.browser();
+  if (!browser) throw new Error('readWithoutScripts needs a browser to open a context in');
+  const isolated = await browser.newContext({ javaScriptEnabled: false });
+  try {
+    const page = await isolated.newPage();
+    await page.setContent(html);
+    return {
+      rows: await page.locator('.rk-frame .rk-row').allTextContents(),
+      shapes: await page.locator('[data-rk-shape]').count(),
+      ran: (await page.locator('body').getAttribute('data-ran')) === 'yes',
+    };
+  } finally {
+    await isolated.close();
+  }
+};
+
+/**
+ * Known failures in use across the whole run (cairn 0125). Every story's walk
+ * reports which entries it put in play and which it used; the reporter in
+ * `vitest.config.ts` fails the run on any that was in play and never used.
+ * Kept on `globalThis` because commands and reporters run in the same Node
+ * process but are not guaranteed the same module instance.
+ */
+interface KnownLedger {
+  readonly inPlay: Set<string>;
+  readonly used: Set<string>;
+}
+
+export function knownLedger(): KnownLedger {
+  const holder = globalThis as { __rkKnown?: KnownLedger };
+  holder.__rkKnown ??= { inPlay: new Set(), used: new Set() };
+  return holder.__rkKnown;
+}
+
+export const recordKnown: BrowserCommand<[use: { inPlay: string[]; used: string[] }]> = (
+  _context,
+  use,
+) => {
+  const ledger = knownLedger();
+  for (const id of use.inPlay) ledger.inPlay.add(id);
+  for (const id of use.used) ledger.used.add(id);
+};

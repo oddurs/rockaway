@@ -1,7 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { codeBlockText, snapshotBuffer } from './code-block.tsx';
-import { frameBuffer } from './frame.tsx';
+import { codeBlockText, snapshotBuffer } from './code-block.pure.ts';
+import { frameBuffer } from './frame.pure.ts';
 
 const CODE = [
   "import { Frame } from '@rockaway/react';",

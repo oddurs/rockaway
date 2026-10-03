@@ -1,5 +1,5 @@
 import { Buffer, contentArea, drawBox, drawText, rect, type Size } from '@rockaway/grid';
-import { Frame, List, ListItem, Screen } from '@rockaway/react';
+import { Fieldset, Frame, List, ListItem, Screen } from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
@@ -142,6 +142,35 @@ export const ClipsToTheScrollContainer: Story = {
         '│  jun           ░ │',
         '└──────────────────┘',
       ].join('\n'),
+    );
+  },
+};
+
+/**
+ * A screen inside a screen — a fieldset in a frame — paints chrome of its own,
+ * and it is read back where it sits, over the outer chrome, not stacked under
+ * it from the first column.
+ */
+export const NestedScreens: Story = {
+  name: 'Reads a screen inside a screen',
+  render: () => (
+    <Frame title="outer" cols={24} rows={6}>
+      <Fieldset legend="inner">
+        <span>body</span>
+      </Fieldset>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    const outer = canvas.getByRole('group', { name: 'outer' });
+    // The inner screen measures itself after the outer one has, so wait for it.
+    await waitFor(() =>
+      expect(`\n${screenshot(outer, { legend: false })}`).toBe(`
+┌ outer ───────────────┐
+│ ┌ inner ───────────┐ │
+│ │ body             │ │
+│ └──────────────────┘ │
+│                      │
+└──────────────────────┘`),
     );
   },
 };

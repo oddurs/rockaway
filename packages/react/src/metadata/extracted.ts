@@ -71,19 +71,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "variant",
         "type": "ButtonVariant",
         "required": false,
-        "description": "`fill` is the primary: reverse video, which survives forced colors and greyscale because it is not a hue. `danger` is the destructive one, and carries a mark as well as a colour."
-      },
-      {
-        "name": "size",
-        "type": "ButtonSize",
-        "required": false,
-        "description": "`md` is one row; `lg` is three, with a border drawn around the label."
+        "description": "`fill` is the primary: reverse video, which survives forced colors and greyscale because it is not a hue. `danger` is the destructive one, and carries the theme's `!` in its mark cell as well as its colour."
       },
       {
         "name": "delimiters",
         "type": "readonly [string, string] | 'none'",
         "required": false,
-        "description": "The delimiters around the label: the theme's control delimiters unless given. Chrome, so they are hidden from the accessible name. `none` for a bare label in a toolbar."
+        "description": "The delimiters around the label: the theme's control delimiters unless given. Chrome, so they are hidden from the accessible name. `none` for a bare label in a toolbar, which drops the cell of air either side with them. A `danger` button keeps its delimiters whatever this says, because its mark has to have a cell to sit in."
       },
       {
         "name": "keys",
@@ -125,9 +119,55 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled",
       "--rk-fg-on-danger",
       "--rk-fg-on-inverse",
-      "--rk-size-control-lg",
-      "--rk-size-control-md",
-      "--rk-x-1"
+      "--rk-size-control-md"
+    ]
+  },
+  "Callout": {
+    "file": "callout.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "CalloutTone",
+        "required": false,
+        "description": "Which kind of aside it is. The border, the mark and the colour all follow it."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "The words in the top edge, and what a reader hears it called. The tone's name by default."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "How the frame's lines are stroked. The same cells either way."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof calloutVariants>"
+    ],
+    "tokens": [
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono"
     ]
   },
   "CodeBlock": {
@@ -170,18 +210,22 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<CodeBlockOptions, 'copyable'>"
     ],
     "tokens": [
-      "--rk-border-default",
+      "--rk-bg-page",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-muted",
       "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
+      "--rk-stroke-rule-light",
+      "--rk-y-1"
     ]
   },
   "CodeSnapshot": {
@@ -217,18 +261,46 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows' | 'title'>"
     ],
     "tokens": [
-      "--rk-border-default",
+      "--rk-bg-page",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-muted",
       "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
+      "--rk-stroke-rule-light",
+      "--rk-y-1"
+    ]
+  },
+  "Description": {
+    "file": "field.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<TextProps, 'slot' | 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-y-1"
     ]
   },
   "Divider": {
@@ -250,12 +322,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "label",
         "type": "string",
         "required": false,
-        "description": "A label sunk into the rule: `── files ───`. Horizontal rules only."
+        "description": "A label sunk into the rule, `╶─ files ───╴`, which is also the separator's accessible name. Drawn on horizontal rules only; a vertical one is still named by it. Too long for the rule, it truncates with the ellipsis."
       },
       {
         "name": "labelAlign",
         "type": "'start' | 'center' | 'end'",
-        "required": false
+        "required": false,
+        "description": "Where the label sits along the rule: near the start, by default."
       },
       {
         "name": "ends",
@@ -268,11 +341,200 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'role' | 'children'>"
     ],
     "tokens": [
-      "--rk-border-default",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-font-family-mono"
+    ]
+  },
+  "FieldError": {
+    "file": "field.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaFieldErrorProps, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-y-1"
+    ]
+  },
+  "FieldFrame": {
+    "file": "fieldset.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Set into the top edge, and the label a reader hears."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "isInvalid",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "kind",
+        "type": "FieldFrameKind",
+        "required": false,
+        "description": "`control` is a control's own frame (an `lg` text field): focus inside it makes it heavy (0118's focus-framed). `group` frames several controls, each of which shows its own focus, so focus leaves the frame alone."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the border, in cells, as `Frame` takes it."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof fieldFrameVariants>"
+    ],
+    "tokens": [
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-default",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono"
+    ]
+  },
+  "Fieldset": {
+    "file": "fieldset.tsx",
+    "props": [
+      {
+        "name": "legend",
+        "type": "string",
+        "required": true,
+        "description": "Set into the top edge, and the group's accessible name."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "required": false,
+        "description": "Draws the required mark after the legend. Pass the group's own `isRequired`, which its render props carry, as a field passes its own to `Label`: the group's state cannot say, because a checkbox group stops being required once something in it is checked."
+      },
+      {
+        "name": "isInvalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Inside a checkbox or radio group, the group's own when not given."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "required": false,
+        "description": "Dims the frame. It does not disable what is inside: inside a checkbox or radio group, the group's `isDisabled` does both, and is the frame's when this is not given."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-default",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono"
+    ]
+  },
+  "Form": {
+    "file": "field.tsx",
+    "props": [
+      {
+        "name": "labelWidth",
+        "type": "number",
+        "required": false,
+        "description": "The label column, in cells, the gap after the labels included. As wide as the longest label in the form when not given; a label longer than the column wraps inside it."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaFormProps, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-y-1"
     ]
   },
   "Frame": {
@@ -330,7 +592,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
-      "--rk-border-default",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -383,6 +645,42 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-muted",
       "--rk-x-1"
+    ]
+  },
+  "Label": {
+    "file": "field.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "required": false,
+        "description": "Draws the required mark in the cell after the label. Pass the field's own `isRequired`, which its render props carry. The mark is `aria-hidden`: the control says it is required with `aria-required`.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaLabelProps, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-y-1"
     ]
   },
   "Link": {
@@ -446,7 +744,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "ReactNode",
         "required": false,
         "description": "What an empty list says, in its first row. `renderEmptyState` replaces it.",
-        "default": "'Nothing here.'"
+        "default": "EMPTY"
       },
       {
         "name": "className",
@@ -478,6 +776,80 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [
       "Omit<ListBoxItemProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "Tree": {
+    "file": "tree.tsx",
+    "props": [
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTreeProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "TreeItem": {
+    "file": "tree.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "The row's label, and the text type-ahead matches."
+      },
+      {
+        "name": "textValue",
+        "type": "string",
+        "required": false,
+        "description": "What type-ahead matches, when it is not the title."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The rows under this one. A row with children carries the expand mark."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTreeItemProps<T>, 'className' | 'children' | 'textValue'>"
     ],
     "tokens": [
       "--rk-attribute-underline-offset",

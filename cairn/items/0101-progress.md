@@ -67,6 +67,7 @@ last, minimum, maximum).
 - [ ] Determinate and indeterminate both announce correctly
 - [ ] Partial blocks are drawn by the cell renderer (0117), so a bar is one solid run at every density
 - [ ] Button's `isPending` shows the spinner in its reserved cell (with Button's polish, 0131)
+- [ ] The spinner is a component drawn through `shapeAttributes` (0166), not only a story
 
 ## 2026-10-03
 

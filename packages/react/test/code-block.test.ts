@@ -3,7 +3,11 @@ import path from 'node:path';
 import { fromText, shapeRuns, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { codeBlockText, layoutCodeBlock, snapshotBuffer } from '../src/components/code-block.tsx';
+import {
+  codeBlockText,
+  layoutCodeBlock,
+  snapshotBuffer,
+} from '../src/components/code-block.pure.ts';
 import { components } from '../src/metadata/index.ts';
 
 const CODE = [

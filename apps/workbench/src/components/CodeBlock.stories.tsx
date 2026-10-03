@@ -164,6 +164,9 @@ export const Copy: Story = {
  */
 export const LongLines: Story = {
   name: 'Long lines',
+  // Again in the browser that draws classic scrollbars, which take their
+  // width from the box: hidden here, the code keeps every cell (0207).
+  tags: ['classic-scrollbars'],
   args: { code: CODE },
   render: () => (
     <CodeBlock
@@ -188,6 +191,16 @@ export const LongLines: Story = {
       const cells = pre.scrollLeft / cell;
       expect(Math.abs(cells - Math.round(cells)) * cell).toBeLessThan(0.5);
     });
+    // No native bar, in any browser; the edges with more show the theme's
+    // marks instead, where the browser can tell (a scroll-state query).
+    expect(getComputedStyle(pre).scrollbarWidth).toBe('none');
+    expect(pre.clientWidth).toBe(pre.offsetWidth);
+    if (CSS.supports('container-type', 'scroll-state')) {
+      await waitFor(() => {
+        expect(getComputedStyle(pre, '::before').visibility).toBe('visible');
+        expect(getComputedStyle(pre, '::after').visibility).toBe('visible');
+      });
+    }
     // The page itself never scrolls sideways.
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth,

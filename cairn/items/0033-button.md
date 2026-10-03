@@ -21,23 +21,57 @@ effort: m
 
 ## Purpose
 
-What it is for, and what it is deliberately not for.
+An action: save, submit, publish, open a dialog. Delimited text, `[ Publish ]`,
+one row tall, that inverts when you press it, the way a terminal has always
+shown a key going down. Not for going somewhere (that is Link), not for a
+status that cannot be pressed (Badge), and not for a chord with no action
+(KeyHint).
 
 ## Anatomy
 
-Parts and slots, e.g. `<Select.Trigger>`, `<Select.Popover>`.
+`<Button variant delimiters keys platform>label</Button>` on React Aria's
+Button. Every cell is text the component writes; the stylesheet adds none:
+
+- **delimiters** (`.rk-button-end`, aria-hidden): the theme's control
+  delimiters, the closing one with the cell of air before it. `delimiters`
+  replaces them, or `"none"` removes them and the air with them, for a toolbar.
+- **mark** (`.rk-button-mark`, aria-hidden): the cell after the opening
+  delimiter, blank, or the theme's `mark.danger` (`!`) for danger. Every
+  delimited button has it, so the mark costs no cell. Danger keeps its
+  delimiters whatever `delimiters` says, so its mark always has a cell.
+- **label** (`.rk-button-label`): the text, then the decorative KeyHint when
+  `keys` is set.
+
+Variants, from the variant helper (0032): `variant` is `default`, `fill`
+(reverse video, the primary) or `danger`. `quiet` and `size` (with `lg`) were
+removed in 0131: `quiet` was `delimiters="none"` under another name and the
+one declared geometry exception, and `lg` claimed a frame it never drew.
+`buttonBuffer` draws any button as text.
 
 ## States
 
-The `data-*` attributes it exposes. These are public API.
+From 0118, none of which changes a cell: `data-hovered` underlines the label;
+`data-focus-visible` is the focus ring (an outline, no cell); `data-pressed`
+reverses the video, and a `fill` button reverses back so a press always shows,
+while danger presses to `bg.danger-solid`; `data-disabled` dims.
 
 ## Tokens consumed
 
-Semantic tokens only. A component that needs a reference token is a missing semantic.
+`fg.default`, `bg.inverse` and `fg.on-inverse` for fill and pressed;
+`bg.page` for a pressed fill; `fg.danger`, `border.danger`, `bg.danger-solid`
+and `fg.on-danger` for danger; `border.control` for the delimiters;
+`fg.disabled`; `size.control.md` for its one row; the focus ring's tokens.
+Glyphs: `glyph.delimiter.control`, `glyph.mark.danger`, `glyph.mark.blank`,
+and `glyph.key.*` through the hint.
 
 ## Accessibility
 
-Role, keyboard map, focus behaviour, announcements.
+Role `button`; the name is the label's text, never a glyph: the delimiters,
+the mark and the hint are aria-hidden. Enter and Space press it (React
+Aria's onPress); disabled leaves the tab order. With `keys` it sets
+`aria-keyshortcuts` for the same keyboard the hint is drawn for, through
+`usePlatform()` (0132). Danger's `!` is not announced, so the label has to
+say what is destructive.
 
 ## Acceptance criteria
 
