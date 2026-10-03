@@ -221,6 +221,11 @@ pnpm changeset --empty   # then write the reason in its body
 
 An empty changeset with no reason in it does not pass.
 
+What counts as public is decided in [docs/public-api.md](docs/public-api.md)
+(cairn 0153), and each package's tests write its `API.md` from the code. If
+your change moves an `API.md`, it changes the public API. Read that diff, and
+say so in the changeset.
+
 Semver is strict:
 
 - **Major**: something a user relies on is removed or renamed, or behaves
