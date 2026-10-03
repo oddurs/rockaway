@@ -1,11 +1,18 @@
 export {
+  type ConformanceLevel,
   type ConformanceOptions,
   type ConformanceReport,
   checkConformance,
+  conformanceLevels,
   type Exception,
+  type ExceptionGroup,
   expectConformance,
   formatReport,
+  type OffGrid,
+  type Unexplained,
+  type UnknownLevel,
   type Violation,
+  type WrongPainter,
 } from './conformance.ts';
 export {
   type Break,

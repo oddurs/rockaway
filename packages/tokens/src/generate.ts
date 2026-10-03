@@ -47,6 +47,22 @@ function base(inputs: ThemeInputs): Group {
   };
 }
 
+/**
+ * How strictly the theme holds the grid (cairn 0072), as a token a page can
+ * read and the conformance check falls back to when no element declares a
+ * level. A keyword, carried as a string the way the glyphs are.
+ */
+function conformance(inputs: ThemeInputs): Group {
+  return {
+    conformance: {
+      $type: 'fontFamily',
+      $description:
+        'How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it.',
+      $value: inputs.conformance,
+    } as unknown as Group,
+  };
+}
+
 function semantic(): Group {
   return {
     ...semanticColors(),
@@ -141,6 +157,7 @@ export function generate(inputs: ThemeInputs): GeneratedFiles {
   const files = new Map<string, unknown>();
   files.set('base.tokens.json', {
     ...base(inputs),
+    ...conformance(inputs),
     ...glyphs(inputs.borderSet),
     ...strokes(),
     ...attributes(),
