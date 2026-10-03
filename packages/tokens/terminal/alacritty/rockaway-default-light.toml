@@ -8,25 +8,25 @@ cursor = "#3263c3"
 text = "#f9fafb"
 
 [colors.selection]
-background = "#e6efff"
+background = "#deefff"
 text = "#17181b"
 
 [colors.normal]
 black = "#17181b"
 red = "#b33832"
-green = "#007f38"
-yellow = "#856300"
+green = "#007f2f"
+yellow = "#8a6100"
 blue = "#3263c3"
 magenta = "#9043a1"
-cyan = "#00787d"
+cyan = "#007279"
 white = "#e7e8ea"
 
 [colors.bright]
 black = "#4b4d50"
 red = "#94221f"
-green = "#00642b"
-yellow = "#694e00"
+green = "#00671d"
+yellow = "#6e4c00"
 blue = "#204ca4"
 magenta = "#752f85"
-cyan = "#005f63"
+cyan = "#006167"
 white = "#fbfcfd"

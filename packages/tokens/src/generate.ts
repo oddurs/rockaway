@@ -9,9 +9,10 @@
  *   rockaway.resolver.json         how they combine
  */
 
-import { palette as ansiPalette, ansiSlots, roleSlots } from './ansi.ts';
+import { ansiSlots, roleSlots } from './ansi.ts';
 import { breakpoints, controlRows, lineBox, spaceSteps } from './density.ts';
 import { color, type Group, px, type ResolverDocument, type Token } from './dtcg.ts';
+import { describeAdjustment, fittedPalette } from './fit.ts';
 import { attributes, glyphs, strokes } from './glyph.ts';
 import {
   type Density,
@@ -62,12 +63,16 @@ function semantic(): Group {
 }
 
 function palette(inputs: ThemeInputs, mode: Mode): Group {
-  const colours = ansiPalette(inputs, mode);
+  const { palette: colours, adjustments } = fittedPalette(inputs, mode);
   const slots = [...ansiSlots, ...roleSlots];
+  const fitted =
+    adjustments.length === 0
+      ? ''
+      : ` Fitted to the contrast gate in every view a browser shows it (0163): ${adjustments.map(describeAdjustment).join('; ')}.`;
   return {
     ansi: {
       $type: 'color',
-      $description: `The palette for ${mode} mode: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).`,
+      $description: `The palette for ${mode} mode: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).${fitted}`,
       ...Object.fromEntries(slots.map((slot) => [slot, color(colours[slot])])),
     },
   };

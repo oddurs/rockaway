@@ -3,6 +3,7 @@ import path from 'node:path';
 import { describe, expect, test } from 'vitest';
 import { ansiSlots, importPalette, palette } from '../src/ansi.ts';
 import { toHex } from '../src/color.ts';
+import { fittedPalette } from '../src/fit.ts';
 import { defaultTheme, modes } from '../src/inputs.ts';
 import { parseGhostty, terminalThemes } from '../src/terminal.ts';
 
@@ -49,12 +50,21 @@ describe('the round trip', () => {
     const read = parseGhostty(file('ghostty'));
     expect(read.colors).toHaveLength(16);
 
+    // Within one step of eight bits per channel: an imported colour is held in
+    // OKLCH at the tokens' precision, and a channel that sat on the edge of the
+    // gamut can come back a step away from it — #00a9b2 as #01a9b2.
     const returned = importPalette(read);
-    for (const slot of ansiSlots) {
-      expect(toHex(returned[slot]), slot).toBe(toHex(dark[slot]));
+    const near = (a: string, b: string): boolean =>
+      [1, 3, 5].every(
+        (at) =>
+          Math.abs(
+            Number.parseInt(a.slice(at, at + 2), 16) - Number.parseInt(b.slice(at, at + 2), 16),
+          ) <= 1,
+      );
+    for (const slot of [...ansiSlots, 'background', 'foreground'] as const) {
+      const [back, out] = [toHex(returned[slot]), toHex(dark[slot])];
+      expect(near(back, out), `${slot}: ${back} came back for ${out}`).toBe(true);
     }
-    expect(toHex(returned.background)).toBe(toHex(dark.background));
-    expect(toHex(returned.foreground)).toBe(toHex(dark.foreground));
   });
 
   test('the palettes on disk are the ones the generator makes', async () => {
@@ -63,7 +73,8 @@ describe('the round trip', () => {
         path.join(root, 'terminal', 'ghostty', `rockaway-default-${mode}`),
         'utf8',
       );
-      const expected = terminalThemes(palette(defaultTheme, mode), `rockaway-default-${mode}`).find(
+      const fitted = fittedPalette(defaultTheme, mode).palette;
+      const expected = terminalThemes(fitted, `rockaway-default-${mode}`).find(
         (f) => f.format === 'ghostty',
       );
       expect(onDisk, mode).toBe(expected?.contents);

@@ -4,29 +4,29 @@ background = "#fcfaf7"
 foreground = "#1c1812"
 
 [colors.cursor]
-cursor = "#8d5e00"
+cursor = "#935b00"
 text = "#fcfaf7"
 
 [colors.selection]
-background = "#ffebd1"
+background = "#ffebce"
 text = "#1c1812"
 
 [colors.normal]
 black = "#1c1812"
 red = "#b33832"
-green = "#007f38"
-yellow = "#856300"
-blue = "#8d5e00"
+green = "#007f2f"
+yellow = "#8a6100"
+blue = "#935b00"
 magenta = "#9043a1"
-cyan = "#00787d"
+cyan = "#007279"
 white = "#ebe7e3"
 
 [colors.bright]
 black = "#524c45"
 red = "#94221f"
-green = "#00642b"
-yellow = "#694e00"
-blue = "#704a00"
+green = "#00671d"
+yellow = "#6e4c00"
+blue = "#764700"
 magenta = "#752f85"
-cyan = "#005f63"
+cyan = "#006167"
 white = "#fdfbf9"
