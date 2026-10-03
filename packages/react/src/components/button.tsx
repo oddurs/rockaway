@@ -21,7 +21,7 @@
  * `data-focus-visible` and `data-disabled`, and the CSS reads nothing else:
  * there is no state in here that is not in the DOM.
  */
-import { type ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, type Ref, type RefCallback, useCallback, useEffect, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
@@ -59,6 +59,37 @@ export interface ButtonProps
   readonly platform?: Platform | 'auto';
   readonly className?: string;
   readonly style?: React.CSSProperties;
+  /**
+   * The button element, for an app that focuses it or a Keymap binding that
+   * presses it (cairn 0224). An object or a callback; Button keeps its own
+   * beside it.
+   */
+  readonly ref?: Ref<HTMLButtonElement>;
+}
+
+/**
+ * One ref callback that sets every ref given: Button's own and the caller's.
+ * A callback ref's cleanup, React 19's, is passed back so it still runs.
+ */
+function useBothRefs<T>(own: { current: T | null }, given: Ref<T> | undefined): RefCallback<T> {
+  return useCallback(
+    (el: T | null) => {
+      own.current = el;
+      if (typeof given === 'function') {
+        const cleanup = given(el);
+        if (typeof cleanup === 'function') {
+          return () => {
+            own.current = null;
+            cleanup();
+          };
+        }
+      } else if (given) {
+        given.current = el;
+      }
+      return undefined;
+    },
+    [own, given],
+  );
 }
 
 export interface ButtonTextOptions extends Pick<ButtonProps, 'variant' | 'delimiters' | 'keys'> {
@@ -72,12 +103,16 @@ export function Button({
   keys,
   platform = 'auto',
   className,
+  ref,
   ...aria
 }: ButtonProps): ReactNode {
   // React Aria filters the DOM props it forwards down to the labelling set, so
   // `aria-keyshortcuts` never reaches the element through props. It is the right
   // attribute for a chord, so it goes on afterwards, by hand.
   const host = useRef<HTMLButtonElement>(null);
+  // The caller's ref as well as Button's own: spreading props first and then
+  // setting `ref={host}` used to drop the caller's on the floor.
+  const refs = useBothRefs(host, ref);
   // One keyboard for what is drawn and what is announced, so a Mac shows ⌘S and
   // is told Meta+s, never Control+s (cairn 0132).
   const keyboard = usePlatform(platform);
@@ -95,7 +130,7 @@ export function Button({
   return (
     <AriaButton
       {...aria}
-      ref={host}
+      ref={refs}
       className={cx('rk-button', className)}
       {...buttonVariants.dataAttributes(chosen)}
     >
