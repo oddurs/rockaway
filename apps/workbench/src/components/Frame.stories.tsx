@@ -227,7 +227,6 @@ function cellsOf(screen: HTMLElement): string[] {
  */
 const continuity = (density: (typeof DENSITIES)[number]): Story => ({
   name: `Continuity, ${density}`,
-  tags: ['zoom'],
   // The play function runs the check itself and asserts what it covered.
   parameters: { continuity: false },
   render: () => (
@@ -252,10 +251,12 @@ const continuity = (density: (typeof DENSITIES)[number]): Story => ({
   },
 });
 
-export const ContinuityDense: Story = continuity('dense');
-export const ContinuityNormal: Story = continuity('normal');
-export const ContinuityAiry: Story = continuity('airy');
-export const ContinuityTouch: Story = continuity('touch');
+// The tag is written on each story, not inside the factory: Storybook reads
+// tags from the source without running it, and the zoom browser selects by tag.
+export const ContinuityDense: Story = { ...continuity('dense'), tags: ['zoom'] };
+export const ContinuityNormal: Story = { ...continuity('normal'), tags: ['zoom'] };
+export const ContinuityAiry: Story = { ...continuity('airy'), tags: ['zoom'] };
+export const ContinuityTouch: Story = { ...continuity('touch'), tags: ['zoom'] };
 
 export const Titles: Story = {
   name: 'Titles and border sets',

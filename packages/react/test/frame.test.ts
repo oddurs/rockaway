@@ -107,7 +107,7 @@ describe('frameBuffer', () => {
       │              │
       └──────────────┘
       truncated
-      ┌ a title f… ──┐
+      ┌ a title fa… ─┐
       │              │
       └──────────────┘
       untitled
@@ -115,7 +115,7 @@ describe('frameBuffer', () => {
       │              │
       └──────────────┘
       ascii theme
-      + a title f~ --+
+      + a title fa~ -+
       |              |
       +--------------+
       |              |
@@ -138,7 +138,7 @@ describe('frameBuffer', () => {
       ┏ heavy ━━━┓
       ┃          ┃
       ┗━━━━━━━━━━┛
-      ╭ round… ──╮
+      ╭ rounded ─╮
       │          │
       ╰──────────╯
       + ascii ---+
@@ -243,7 +243,7 @@ describe('frameBuffer', () => {
       { width: 14, height: 3 },
       { border: 'ascii', title: 'a long title' },
     ).row(0);
-    expect(top).toMatchInlineSnapshot(`"+ a long ~ --+"`);
+    expect(top).toMatchInlineSnapshot(`"+ a long t~ -+"`);
     expect([...top].every((ch) => ch.charCodeAt(0) < 0x7f)).toBe(true);
   });
 

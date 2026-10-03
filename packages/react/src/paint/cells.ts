@@ -108,10 +108,15 @@ export function paintCells(
   for (let y = 0; y < buffer.height; y++) {
     const row = doc.createElement('div');
     row.className = `${prefix}-row`;
+    let col = 0;
     for (const run of rowRuns(buffer, y)) {
       const el = doc.createElement('span');
       el.className = `${prefix}-run`;
+      // Where the run starts as well as how long it is: the stylesheet sizes
+      // it from both, so every column lands on the same pixel in every row.
+      if (col !== 0) el.style.setProperty('--rk-col', String(col));
       if (run.cells !== 1) el.style.setProperty('--rk-run', String(run.cells));
+      col += run.cells;
       if (run.shape) el.dataset.rkShape = run.shape;
       applyStyle(el, run.style);
       el.textContent = run.text;
