@@ -194,13 +194,12 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`#·········` 5% · 1 of 19 done · due 2027-02-21
+`##········` 11% · 2 of 19 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
 ### backlog
 
-- [ ] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
 - [ ] [`0104`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0104-build-the-site-shell-as-a-tui.md) Build the site shell as a TUI <sup>feature · site · p0</sup>
 - [ ] [`0105`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0105-make-every-screen-copyable-as-text-and-as-ansi.md) Make every screen copyable as text and as ANSI <sup>feature · site · p1</sup>
 - [ ] [`0106`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0106-write-the-foundations-pages.md) Write the foundations pages <sup>docs · docs · p0</sup>
@@ -222,6 +221,7 @@ A website built out of the system it documents, which is the only honest way
 ### done
 
 - [x] [`0077`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0077-build-the-site-as-the-system-statically-on-pages.md) Build the site as the system, statically, on Pages <sup>decision · site · p0</sup>
+- [x] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
 
 ## v0.1 — v0.1 — first release
 

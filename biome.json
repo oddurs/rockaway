@@ -50,7 +50,12 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.config.ts", "**/.storybook/**", "**/*.stories.tsx"],
+      "includes": [
+        "**/*.config.ts",
+        "**/.storybook/**",
+        "**/*.stories.tsx",
+        "apps/site/scripts/subset-font.d.ts"
+      ],
       "linter": {
         "rules": {
           "style": {
@@ -63,6 +68,17 @@
       "includes": ["packages/react/src/index.ts"],
       "formatter": {
         "lineWidth": 320
+      }
+    },
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          }
+        }
       }
     },
     {
