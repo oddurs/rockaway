@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 26% · 18 of 68 done · due 2027-01-31
+`###·······` 22% · 18 of 81 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -155,6 +155,19 @@ The component contract, proven on a first set of components.
 - [ ] [`0168`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0168-re-export-or-document-the-router-hook-up-for-link.md) Re-export or document the router hook-up for Link <sup>feature · components · p2</sup>
 - [ ] [`0169`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0169-give-inline-controls-a-full-cell-hit-area-and-ground.md) Give inline controls a full-cell hit area and ground <sup>feature · css · p3</sup>
 - [ ] [`0175`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0175-never-let-a-junction-overwrite-a-title.md) Never let a junction overwrite a title <sup>bug · grid · p1</sup>
+- [ ] [`0179`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0179-namespace-every-context-attribute-as-data-rk.md) Namespace every context attribute as data-rk-* <sup>decision · css · p1</sup>
+- [ ] [`0180`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0180-rename-the-context-attributes-to-data-rk-and-fail-on-the-old-ones.md) Rename the context attributes to data-rk-*, and fail on the old ones <sup>chore · css · p1</sup>
+- [ ] [`0181`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0181-make-reverse-video-survive-forced-colors-everywhere.md) Make reverse video survive forced colors everywhere <sup>bug · css · p1</sup>
+- [ ] [`0182`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0182-mark-controls-and-panes-so-the-conformance-levels-can-see-them.md) Mark controls and panes so the conformance levels can see them <sup>feature · components · p1</sup>
+- [ ] [`0183`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0183-decide-what-goes-heavy-means-under-an-ascii-theme.md) Decide what goes heavy means under an ASCII theme <sup>decision · grid · p2</sup>
+- [ ] [`0184`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0184-selected-and-disabled-rows-trap-the-first-arrow-key.md) Selected-and-disabled rows trap the first arrow key <sup>bug · components · p2</sup>
+- [ ] [`0185`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0185-check-0072-s-type-rule-in-conformance.md) Check 0072's type rule in conformance <sup>feature · tooling · p2</sup>
+- [ ] [`0186`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0186-make-the-full-workbench-run-hold-up-under-load.md) Make the full workbench run hold up under load <sup>chore · tooling · p2</sup>
+- [ ] [`0189`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0189-speak-meta-not-command-off-apple-keyboards.md) Speak Meta, not Command, off Apple keyboards <sup>bug · components · p3</sup>
+- [ ] [`0190`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0190-show-attributes-of-real-elements-in-screenshot-s-legend.md) Show attributes of real elements in screenshot()'s legend <sup>feature · tooling · p3</sup>
+- [ ] [`0191`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0191-report-an-off-grid-box-inside-nested-screens-once.md) Report an off-grid box inside nested screens once <sup>bug · tooling · p3</sup>
+- [ ] [`0192`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0192-tighten-what-the-metadata-extractor-credits-to-a-component.md) Tighten what the metadata extractor credits to a component <sup>bug · tooling · p3</sup>
+- [ ] [`0193`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0193-rename-screen-s-chrome-layer-from-rk-frame-to-rk-chrome.md) Rename Screen's chrome layer from rk-frame to rk-chrome <sup>chore · components · p3</sup>
 
 ### in review
 
@@ -203,7 +216,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`##········` 14% · 3 of 22 done · due 2027-02-21
+`##········` 13% · 3 of 24 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -228,6 +241,8 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0170`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0170-typecheck-astro-files.md) Typecheck .astro files <sup>chore · tooling · p2</sup>
 - [ ] [`0171`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0171-draw-each-component-s-snapshot-in-every-theme-on-the-site.md) Draw each component's snapshot in every theme on the site <sup>feature · site · p3</sup>
 - [ ] [`0177`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0177-let-checkcontinuity-check-shapes-drawn-outside-a-painted-layer.md) Let checkContinuity check shapes drawn outside a painted layer <sup>feature · tooling · p2</sup>
+- [ ] [`0187`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0187-scroll-code-and-tables-with-overflow-marks-not-scrollbars.md) Scroll code and tables with overflow marks, not scrollbars <sup>feature · css · p2</sup>
+- [ ] [`0188`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0188-export-the-fitted-imported-themes-back-to-terminal-files.md) Export the fitted imported themes back to terminal files <sup>feature · tokens · p2</sup>
 
 ### done
 
@@ -261,7 +276,7 @@ Something another project can install and build on.
 
 ## later — Later
 
-`··········` 0% · 0 of 5 done
+`··········` 0% · 0 of 8 done
 
 Worth doing, not yet worth scheduling.
 
@@ -272,4 +287,7 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0161`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0161-check-for-literal-glyphs-with-a-parser-not-a-scanner.md) Check for literal glyphs with a parser, not a scanner <sup>chore · tooling · p3</sup>
 - [ ] [`0174`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0174-give-labels-their-own-delimiter-set.md) Give labels their own delimiter set <sup>chore · tokens · p3</sup>
 - [ ] [`0176`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0176-stroke-the-junctions-unicode-lacks-from-the-raw-edges.md) Stroke the junctions Unicode lacks from the raw edges <sup>bug · grid · p3</sup>
+- [ ] [`0194`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0194-label-a-frame-s-dividers.md) Label a frame's dividers <sup>feature · components · p3</sup>
+- [ ] [`0195`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0195-lint-data-rk-offgrid-reasons-in-source.md) Lint data-rk-offgrid reasons in source <sup>chore · tooling · p2</sup>
+- [ ] [`0196`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0196-publish-the-markdown-pipeline-as-rockaway-markdown.md) Publish the Markdown pipeline as @rockaway/markdown <sup>feature · distribution · p3</sup>
 
