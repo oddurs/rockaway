@@ -21,6 +21,7 @@
  * row count, not the DOM.
  */
 import { Buffer, drawText } from '@rockaway/grid';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 import {
   ListBox,
@@ -30,11 +31,8 @@ import {
 } from 'react-aria-components';
 import { measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
+import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
 import { paintGlyph } from '../paint/glyph.ts';
-
-/** The glyphs a scrollbar is made of. A track, a thumb, and nothing else. */
-const TRACK = '░';
-const THUMB = '█';
 
 export interface ScrollbarState {
   /** Rows in the list. */
@@ -49,15 +47,22 @@ export interface ScrollbarState {
  * The scrollbar as a buffer: one cell wide, as tall as the viewport. The thumb
  * is at least one cell, so a very long list still has something to grab, and it
  * lands on whole cells because there is nowhere else for it to land.
+ *
+ * A track and a thumb, and nothing else: the theme's light and full blocks.
  */
-export function scrollbarBuffer({ total, visible, offset }: ScrollbarState): Buffer {
+export function scrollbarBuffer(
+  { total, visible, offset }: ScrollbarState,
+  glyphs: Glyphs = defaultGlyphs,
+): Buffer {
+  const track = glyphs.block.light;
+  const thumb = glyphs.block.full;
   const rows = Math.max(0, visible);
   const buffer = Buffer.create({ width: 1, height: rows });
   if (rows === 0) return buffer;
   if (total <= visible) {
     // Nothing to scroll: a full-height thumb says so without a second glyph.
     return buffer.draw((draft) => {
-      for (let y = 0; y < rows; y++) drawText(draft, { x: 0, y }, THUMB);
+      for (let y = 0; y < rows; y++) drawText(draft, { x: 0, y }, thumb);
     });
   }
 
@@ -68,17 +73,18 @@ export function scrollbarBuffer({ total, visible, offset }: ScrollbarState): Buf
 
   return buffer.draw((draft) => {
     for (let y = 0; y < rows; y++) {
-      drawText(draft, { x: 0, y }, y >= start && y < start + size ? THUMB : TRACK);
+      drawText(draft, { x: 0, y }, y >= start && y < start + size ? thumb : track);
     }
   });
 }
 
 function Scrollbar({ state }: { state: ScrollbarState }): ReactNode {
   const host = useRef<HTMLDivElement>(null);
+  const glyphs = useGlyphs();
   useEffect(() => {
     const el = host.current;
-    if (el) paintGlyph(scrollbarBuffer(state), el);
-  }, [state]);
+    if (el) paintGlyph(scrollbarBuffer(state, glyphs), el);
+  }, [state, glyphs]);
   // Painted chrome: a reader is told the list's position by the rows, not by a
   // column of blocks.
   return <div ref={host} className="rk-list-scrollbar" aria-hidden="true" />;
@@ -165,12 +171,13 @@ export function ListItem<T extends object>({
   children,
   ...item
 }: ListItemProps<T>): ReactNode {
+  const { mark } = useGlyphs();
   return (
     <ListBoxItem {...item} className={cx('rk-list-item', className)}>
       {(render) => (
         <>
           <span aria-hidden="true" className="rk-list-cursor">
-            {render.isSelected || render.isFocused ? '▸' : ' '}
+            {render.isSelected || render.isFocused ? mark.cursor : mark.blank}
           </span>
           <span className="rk-list-label">
             {typeof children === 'function' ? children(render) : children}

@@ -11,9 +11,11 @@ mode and density are runtime contexts, resolved through the DTCG Resolver.
 | --- | --- |
 | `accentHue` | OKLCH hue, 0–360 |
 | `neutralTemperature` | `cool`, `neutral`, `warm` |
-| `radius` | whole px, 0–24 |
-| `typePairing` | `inter`, `editorial`, `friendly`, `technical` |
-| `elevation` | `border`, `shadow`, `tone` |
+| `typePairing` | `system`, `jetbrains`, `ibm-plex`, `berkeley` |
+| `borderSet` | `single`, `double`, `heavy`, `rounded`, `ascii` |
+| `conformance` | `strict`, `standard`, `loose` |
+
+The others under `themes/` are presets: `themes` exports all of them by name.
 
 ## Use
 
@@ -29,6 +31,18 @@ import { vars } from '@rockaway/tokens';
 
 vars['fg.muted']; // 'var(--rk-fg-muted)'
 ```
+
+## Glyphs
+
+A theme owns its characters (cairn 0119): the border set, the marks, the
+blocks, the spinner and the control delimiters. `glyphsFor(inputs)` resolves
+them, and `themeGlyphs` holds every preset's. A theme whose border set is
+`ascii` draws everything in ASCII — `>` for the cursor, `#` and `.` for a
+scrollbar — not just its boxes.
+
+The `--rk-glyph-*` properties are written from the same object, but components
+do not read them: chrome is drawn into a buffer in JavaScript, possibly on a
+server, so `@rockaway/react` passes the object down through `GlyphProvider`.
 
 ## Tailwind
 

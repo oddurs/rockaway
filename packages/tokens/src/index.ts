@@ -35,13 +35,25 @@ export type {
 export { type GeneratedFiles, generate, resolverFile, serialize } from './generate.ts';
 export {
   attributes,
+  type BlockName,
   type BorderGlyphs,
   bars,
+  blockNames,
   blocks,
   borderSetNames,
   borderSets,
+  type DelimiterName,
+  type Delimiters,
+  delimiterNames,
+  delimiters,
+  type Glyphs,
   glyphs,
+  glyphsFor,
+  type MarkName,
+  markNames,
   marks,
+  type Repertoire,
+  repertoireOf,
   spinnerFrames,
 } from './glyph.ts';
 export {
@@ -65,5 +77,6 @@ export { type Pair, pairs } from './pairs.ts';
 export { resolveTree, resolveValue } from './resolve.ts';
 export { type Intent, intents, semanticColors } from './semantic.ts';
 export { parseGhostty, type TerminalFormat, type ThemeFile, terminalThemes } from './terminal.ts';
+export { type ThemeName, themeGlyphs, themeNames, themes } from './themes.ts';
 export { type FontFamilies, families, type Weight, weights } from './type.ts';
 export { parseTheme } from './validate.ts';
