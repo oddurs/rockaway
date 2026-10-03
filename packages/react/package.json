@@ -21,13 +21,21 @@
       "types": "./dist/testing/index.d.ts",
       "default": "./dist/testing/index.js"
     },
+    "./metadata": {
+      "@rockaway/source": "./src/metadata/index.ts",
+      "types": "./dist/metadata/index.d.ts",
+      "default": "./dist/metadata/index.js"
+    },
+    "./meta.json": "./dist/meta.json",
+    "./meta.schema.json": "./dist/meta.schema.json",
     "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && node scripts/meta-json.ts",
+    "metadata": "node scripts/metadata.ts",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
     "test:server": "node --conditions=react-server test/server-component/render.ts"
@@ -46,8 +54,10 @@
     "@types/node": "26.6.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "react": "19.3.0",
+    "ajv": "8.20.0",
+    "oxc-parser": "0.127.0",
     "postcss": "8.5.28",
+    "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-server-dom-webpack": "19.3.0",
     "vitest": "4.1.11"
@@ -73,6 +83,12 @@
         "types": "./dist/testing/index.d.ts",
         "default": "./dist/testing/index.js"
       },
+      "./metadata": {
+        "types": "./dist/metadata/index.d.ts",
+        "default": "./dist/metadata/index.js"
+      },
+      "./meta.json": "./dist/meta.json",
+      "./meta.schema.json": "./dist/meta.schema.json",
       "./package.json": "./package.json"
     }
   }

@@ -34,8 +34,23 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      - name: Build packages
+      # The site builds from the packages' dist, as a consumer's app would, so
+      # it builds here, after them, and is typechecked against their
+      # published declarations as part of its own build.
+      - name: Build packages and the site
         run: pnpm build
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
+
+      # The built site, for a reviewer to open. Deploying it is a separate
+      # workflow (cairn 0146).
+      - name: Upload the built site
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: apps/site/dist
+          retention-days: 14
 
       # The workspace resolves to source, so this is the only step that sees
       # what a consumer installs: each tarball's contents, publint, Are the
@@ -46,8 +61,10 @@ jobs:
       - name: Install Chromium
         run: pnpm --filter workbench exec playwright install --with-deps chromium
 
-      - name: Tests (tokens, and stories in Vitest browser mode with axe)
+      - name: Tests (tokens, stories in Vitest browser mode with axe, the built site)
         run: pnpm test
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
 
       - name: Contrast report (every declared pair, both modes)
         run: pnpm --filter @rockaway/tokens contrast

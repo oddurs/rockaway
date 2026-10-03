@@ -7,6 +7,7 @@ const config: UserConfig = {
     index: 'src/index.ts',
     'paint/index': 'src/paint/index.ts',
     'testing/index': 'src/testing/index.ts',
+    'metadata/index': 'src/metadata/index.ts',
   },
   format: 'esm',
   platform: 'neutral',

@@ -10,13 +10,14 @@
     "baseline 2024"
   ],
   "scripts": {
-    "build": "pnpm -r --filter './packages/*' build",
+    "build": "pnpm -r --filter './packages/*' --filter site build",
     "packages:check": "node scripts/check-packages.ts && pnpm --filter @rockaway/react test:server",
     "typecheck": "pnpm -r typecheck",
     "lint": "biome check .",
     "format": "biome check --write .",
     "test": "pnpm -r test",
     "storybook": "pnpm --filter workbench dev",
+    "site": "pnpm -r --filter './packages/*' build && pnpm --filter site dev",
     "roadmap:check": "cairn check && cairn render --check",
     "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm packages:check && pnpm test && pnpm roadmap:check && pnpm changeset:check",
     "changeset": "changeset",
