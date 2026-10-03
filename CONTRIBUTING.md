@@ -117,6 +117,7 @@ them.
    mark in a cell it keeps either way, so required moves nothing; the control
    carries `aria-required`, so the mark is `aria-hidden`. Nothing else can tell
    the label: React Aria does not put required in any context a label reads.
+   If you forget, `checkField` (below) says so.
 
 4. **Always render `<FieldError>`.** It renders nothing until the field is
    invalid, and then the cross and the message, from the field's own
@@ -178,6 +179,14 @@ them.
    same form in a story and assert that `screenshot()` of it equals the model.
    `Components/Form` in the workbench does exactly this, with sketches of the
    field family built from these parts, and is the place to copy from.
+
+10. **The contract is checked for you.** After every story with a field on
+    the page, the workbench runs `checkField` from `@rockaway/react/testing`
+    (cairn 0203): the required mark is drawn exactly when the field is
+    required, and is `aria-hidden`; the description and the error are in the
+    control's `aria-describedby`; no name holds a glyph; nothing is a live
+    region. `Grid/Field check` shows each failure. A story that breaks the
+    contract on purpose sets `parameters: { fields: false }`.
 
 ## Changesets
 
