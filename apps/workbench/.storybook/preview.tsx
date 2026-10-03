@@ -1,7 +1,7 @@
 import { GlyphProvider } from '@rockaway/react';
-import { expectConformance, expectContinuity, formatReport } from '@rockaway/react/testing';
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
-import type { Decorator, Preview } from '@storybook/react-vite';
+import { afterEach as axe } from '@storybook/addon-a11y/preview';
+import type { Decorator, Preview, StoryContext } from '@storybook/react-vite';
 import '@fontsource-variable/jetbrains-mono';
 import '@rockaway/css';
 import '@rockaway/tokens/tokens.css';
@@ -15,6 +15,8 @@ import '@rockaway/tokens/themes/dracula.css';
 import '@rockaway/tokens/themes/nord.css';
 import '@rockaway/tokens/themes/solarized.css';
 import '@rockaway/tokens/themes/tokyo-night.css';
+import { setContexts } from './contexts.ts';
+import { type Parameters, walk } from './matrix.ts';
 import { runner } from './runner.ts';
 
 /**
@@ -28,10 +30,12 @@ import { runner } from './runner.ts';
 const withContexts: Decorator = (Story, { globals }) => {
   const root = document.documentElement;
   const theme = (globals.theme ?? 'default') as ThemeName;
-  root.dataset.rkTheme = theme;
-  root.dataset.theme = globals.mode;
-  root.dataset.density = globals.density;
-  root.dataset.rkConformance = globals.conformance;
+  setContexts(root, {
+    theme,
+    mode: globals.mode,
+    density: globals.density,
+    conformance: globals.conformance,
+  });
   return (
     <GlyphProvider glyphs={themeGlyphs[theme]}>
       <Story />
@@ -108,28 +112,26 @@ const preview: Preview = {
  * to remember to assert — and every reason is printed in the run, so the
  * exceptions are counted rather than forgotten.
  *
- * And every painted line is checked for continuity (cairn 0117): a screenshot
- * of each painted layer, read pixel by pixel, to prove that every stroke
- * reaches the edges of its cell and meets its neighbour there. Only the test
- * runner can take the screenshot, so the Storybook UI skips this half.
+ * Every painted line is checked for continuity (cairn 0117): a screenshot of
+ * each painted layer, read pixel by pixel, to prove that every stroke reaches
+ * the edges of its cell and meets its neighbour there. And every target is
+ * checked for size (WCAG 2.5.8, rule 8).
+ *
+ * Then all of it again at every density and in both modes (cairn 0125): the
+ * play function ran once, and the geometry is checked in every cell of the
+ * matrix this project walks (`matrix.ts`). Every failing cell is collected
+ * before the story fails, each named by its density and mode. Only the test
+ * runner walks, and only it can read pixels: in the Storybook UI the checks
+ * run once, in the context the toolbar shows.
  */
-export const afterEach = async ({
-  canvasElement,
-  parameters,
-}: {
-  canvasElement: HTMLElement;
-  parameters: { conformance?: boolean; continuity?: boolean };
-}): Promise<void> => {
-  if (parameters.conformance !== false) {
-    // Every screen in one pass, so an exception inside nested screens is
-    // counted once.
-    const report = expectConformance(canvasElement);
-    if (report.exceptions.length > 0) console.info(formatReport(report));
-  }
+export const afterEach = async (context: StoryContext): Promise<void> => {
   const run = runner();
-  if (run && parameters.continuity !== false) {
-    await expectContinuity(canvasElement, { capture: run.capture });
-  }
+  await walk(context.id, context.canvasElement, context.parameters as Parameters, {
+    capture: run?.capture,
+    plan: run?.plan,
+    record: run?.record,
+    axe: () => axe(context),
+  });
 };
 
 export default preview;

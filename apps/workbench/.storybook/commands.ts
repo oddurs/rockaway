@@ -57,3 +57,30 @@ export const readWithoutScripts: BrowserCommand<[html: string]> = async (context
     await isolated.close();
   }
 };
+
+/**
+ * Known failures in use across the whole run (cairn 0125). Every story's walk
+ * reports which entries it put in play and which it used; the reporter in
+ * `vitest.config.ts` fails the run on any that was in play and never used.
+ * Kept on `globalThis` because commands and reporters run in the same Node
+ * process but are not guaranteed the same module instance.
+ */
+interface KnownLedger {
+  readonly inPlay: Set<string>;
+  readonly used: Set<string>;
+}
+
+export function knownLedger(): KnownLedger {
+  const holder = globalThis as { __rkKnown?: KnownLedger };
+  holder.__rkKnown ??= { inPlay: new Set(), used: new Set() };
+  return holder.__rkKnown;
+}
+
+export const recordKnown: BrowserCommand<[use: { inPlay: string[]; used: string[] }]> = (
+  _context,
+  use,
+) => {
+  const ledger = knownLedger();
+  for (const id of use.inPlay) ledger.inPlay.add(id);
+  for (const id of use.used) ledger.used.add(id);
+};

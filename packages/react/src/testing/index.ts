@@ -24,3 +24,11 @@ export {
   formatContinuity,
 } from './continuity.ts';
 export { type ScreenshotOptions, screenshot } from './screenshot.ts';
+export {
+  checkTargets,
+  expectTargets,
+  formatTargets,
+  type TargetFailure,
+  type TargetOptions,
+  type TargetReport,
+} from './targets.ts';
