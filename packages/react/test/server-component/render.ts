@@ -112,6 +112,24 @@ const checks: [string, unknown, unknown][] = [
     pure.formBuffer([{ label: 'Name', control: pure.buttonBuffer('Go') }], { width: 64 }).row(0),
     `Name   [ Go ]${' '.repeat(51)}`,
   ],
+  [
+    'calloutBuffer',
+    pure.calloutBuffer({ width: 14, height: 3 }, { tone: 'tip' }).row(0),
+    '╭ ✓ Tip ─────╮',
+  ],
+  [
+    'treeBuffer',
+    pure
+      .treeBuffer({
+        rows: [
+          { label: 'src', level: 1, last: [], branch: true, expanded: true },
+          { label: 'a.ts', level: 2, last: [true] },
+        ],
+        width: 10,
+      })
+      .row(1),
+    ' └── a.ts ',
+  ],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)
