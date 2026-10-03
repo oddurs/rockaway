@@ -1,0 +1,1118 @@
+{
+  "$description": "Tokyo Night (cairn 0052). Imported from https://github.com/folke/tokyonight.nvim under Apache-2.0 (Copyright Folke Lemaitre). Fitted to the contrast gate: light foreground: #3760bf → #0f318c (for fg.default on bg.page); light muted: #6788cd → #375495 (for fg.muted on bg.page); light blue: #2e7de9 → #0056be (for fg.accent on bg.page); light bright-blue: #358aff → #005fd0 (for fg.on-accent on bg.accent.solid-hover); light cyan: #007197 → #005f84 (for fg.info on bg.page); light bright-cyan: #007ea8 → #006c95 (for fg.on-info on bg.info.solid-hover); light green: #587539 → #456125 (for fg.success on bg.page); light bright-green: #5c8524 → #476f00 (for fg.on-success on bg.success.solid-hover); light yellow: #8c6c3e → #735425 (for fg.warning on bg.page); light bright-yellow: #a27629 → #865c00 (for fg.on-warning on bg.warning.solid-hover); light red: #f52a65 → #b2003d (for fg.danger on bg.page); light bright-red: #ff4774 → #c8004a (for fg.on-danger on bg.danger.solid-hover); light border: #9da5d8 → #6f76a6 (for border.default on bg.page); light border-strong: #8790d1 → #6b74b2 (for border.control on bg.page); light magenta: #9854f1 → #7b30ce (for syntax.keyword on bg.surface); dark muted: #8990b1 → #959dbe (for fg.muted on bg.hover); dark border: #60627b → #6e718a (for border.default on bg.page).",
+  "$extensions": {
+    "dev.rockaway": {
+      "kind": "imported",
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "variants": {
+        "light": "Day",
+        "dark": "Night"
+      }
+    }
+  },
+  "palette": {
+    "$type": "color",
+    "$description": "Raw colours, both modes. Read through `ansi.*`, which the mode points here.",
+    "light": {
+      "$description": "Tokyo Night, light: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
+      "black": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.774,
+            0.0057,
+            274.9
+          ]
+        }
+      },
+      "red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.474,
+            0.2326,
+            11.6
+          ]
+        }
+      },
+      "green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.455,
+            0.0929,
+            130.3
+          ]
+        }
+      },
+      "yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.468,
+            0.0749,
+            75.2
+          ]
+        }
+      },
+      "blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.475,
+            0.1804,
+            257.5
+          ]
+        }
+      },
+      "magenta": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.504,
+            0.2245,
+            299.5
+          ]
+        }
+      },
+      "cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.454,
+            0.1031,
+            230.5
+          ]
+        }
+      },
+      "white": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.565,
+            0.0983,
+            271.3
+          ]
+        }
+      },
+      "bright-black": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.732,
+            0.0451,
+            278
+          ]
+        }
+      },
+      "bright-red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.525,
+            0.2194,
+            11.2
+          ]
+        }
+      },
+      "bright-green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.492,
+            0.1327,
+            129.8
+          ]
+        }
+      },
+      "bright-yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.506,
+            0.1068,
+            77.6
+          ]
+        }
+      },
+      "bright-blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.509,
+            0.192,
+            257.6
+          ]
+        }
+      },
+      "bright-magenta": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.646,
+            0.2224,
+            299.3
+          ]
+        }
+      },
+      "bright-cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.496,
+            0.1115,
+            230.6
+          ]
+        }
+      },
+      "bright-white": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.512,
+            0.1563,
+            264.1
+          ]
+        }
+      },
+      "background": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.913,
+            0.0068,
+            277.2
+          ]
+        }
+      },
+      "surface": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.893,
+            0.0143,
+            277.2
+          ]
+        }
+      },
+      "subtle": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.877,
+            0.0203,
+            277.2
+          ]
+        }
+      },
+      "hover": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.861,
+            0.0262,
+            277.2
+          ]
+        }
+      },
+      "active": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.845,
+            0.0322,
+            277.2
+          ]
+        }
+      },
+      "foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.357,
+            0.1563,
+            264.1
+          ]
+        }
+      },
+      "muted": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.457,
+            0.1115,
+            264.1
+          ]
+        }
+      },
+      "faint": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.733,
+            0.0741,
+            264.1
+          ]
+        }
+      },
+      "border-subtle": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.873,
+            0.0217,
+            277.2
+          ]
+        }
+      },
+      "border": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.578,
+            0.0741,
+            277.2
+          ]
+        }
+      },
+      "border-strong": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.577,
+            0.0965,
+            277.2
+          ]
+        }
+      },
+      "cursor": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.512,
+            0.1563,
+            264.1
+          ]
+        }
+      },
+      "selection": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.814,
+            0.0492,
+            272.4
+          ]
+        }
+      },
+      "tint-blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.869,
+            0.0311,
+            277.2
+          ]
+        }
+      },
+      "tint-cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.857,
+            0.0203,
+            277.2
+          ]
+        }
+      },
+      "tint-green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.859,
+            0.0189,
+            277.2
+          ]
+        }
+      },
+      "tint-yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.863,
+            0.0163,
+            277.2
+          ]
+        }
+      },
+      "tint-red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.874,
+            0.0384,
+            277.2
+          ]
+        }
+      }
+    },
+    "dark": {
+      "$description": "Tokyo Night, dark: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
+      "black": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.203,
+            0.016,
+            279.3
+          ]
+        }
+      },
+      "red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.723,
+            0.1589,
+            10.3
+          ]
+        }
+      },
+      "green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.795,
+            0.1395,
+            130.1
+          ]
+        }
+      },
+      "yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.784,
+            0.1057,
+            75.4
+          ]
+        }
+      },
+      "blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.719,
+            0.1322,
+            264.2
+          ]
+        }
+      },
+      "magenta": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.751,
+            0.1344,
+            299.5
+          ]
+        }
+      },
+      "cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.82,
+            0.1051,
+            235.7
+          ]
+        }
+      },
+      "white": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.767,
+            0.0537,
+            275.5
+          ]
+        }
+      },
+      "bright-black": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.409,
+            0.0546,
+            274.3
+          ]
+        }
+      },
+      "bright-red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.764,
+            0.1437,
+            10.3
+          ]
+        }
+      },
+      "bright-green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.834,
+            0.1938,
+            129.6
+          ]
+        }
+      },
+      "bright-yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.829,
+            0.1448,
+            78
+          ]
+        }
+      },
+      "bright-blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.763,
+            0.1205,
+            265.4
+          ]
+        }
+      },
+      "bright-magenta": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.792,
+            0.1231,
+            299.6
+          ]
+        }
+      },
+      "bright-cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.864,
+            0.0759,
+            238.7
+          ]
+        }
+      },
+      "bright-white": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.846,
+            0.0611,
+            274.8
+          ]
+        }
+      },
+      "background": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.226,
+            0.0214,
+            280.5
+          ]
+        }
+      },
+      "surface": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.257,
+            0.0234,
+            280.5
+          ]
+        }
+      },
+      "subtle": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.282,
+            0.025,
+            280.5
+          ]
+        }
+      },
+      "hover": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.307,
+            0.0266,
+            280.5
+          ]
+        }
+      },
+      "active": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.331,
+            0.0281,
+            280.5
+          ]
+        }
+      },
+      "foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.846,
+            0.0611,
+            274.8
+          ]
+        }
+      },
+      "muted": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.7,
+            0.0492,
+            274.8
+          ]
+        }
+      },
+      "faint": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.505,
+            0.0393,
+            274.8
+          ]
+        }
+      },
+      "border-subtle": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.288,
+            0.0254,
+            280.5
+          ]
+        }
+      },
+      "border": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.555,
+            0.0393,
+            280.5
+          ]
+        }
+      },
+      "border-strong": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.598,
+            0.0452,
+            280.5
+          ]
+        }
+      },
+      "cursor": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.846,
+            0.0611,
+            274.8
+          ]
+        }
+      },
+      "selection": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.332,
+            0.0642,
+            268.4
+          ]
+        }
+      },
+      "tint-blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.295,
+            0.0369,
+            280.5
+          ]
+        }
+      },
+      "tint-cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.309,
+            0.0331,
+            280.5
+          ]
+        }
+      },
+      "tint-green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.306,
+            0.0379,
+            280.5
+          ]
+        }
+      },
+      "tint-yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.304,
+            0.0332,
+            280.5
+          ]
+        }
+      },
+      "tint-red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.296,
+            0.0407,
+            280.5
+          ]
+        }
+      }
+    }
+  },
+  "font": {
+    "$description": "Font primitives (reference tier). Read through the text styles, not directly.",
+    "family": {
+      "$type": "fontFamily",
+      "mono": {
+        "$value": [
+          "ui-monospace",
+          "SFMono-Regular",
+          "SF Mono",
+          "Menlo",
+          "Consolas",
+          "Liberation Mono",
+          "monospace"
+        ]
+      },
+      "display": {
+        "$value": [
+          "ui-monospace",
+          "SFMono-Regular",
+          "SF Mono",
+          "Menlo",
+          "Consolas",
+          "Liberation Mono",
+          "monospace"
+        ]
+      }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": {
+        "$value": 400
+      },
+      "medium": {
+        "$value": 500
+      },
+      "semibold": {
+        "$value": 600
+      },
+      "bold": {
+        "$value": 700
+      }
+    }
+  },
+  "glyph": {
+    "$type": "fontFamily",
+    "$description": "The characters chrome is drawn with (cairn 0091, 0119). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.",
+    "border": {
+      "$description": "The theme draws with the single set; the others are here to be switched to.",
+      "single": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "┌"
+        },
+        "top-right": {
+          "$value": "┐"
+        },
+        "bottom-left": {
+          "$value": "└"
+        },
+        "bottom-right": {
+          "$value": "┘"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      },
+      "double": {
+        "horizontal": {
+          "$value": "═"
+        },
+        "vertical": {
+          "$value": "║"
+        },
+        "top-left": {
+          "$value": "╔"
+        },
+        "top-right": {
+          "$value": "╗"
+        },
+        "bottom-left": {
+          "$value": "╚"
+        },
+        "bottom-right": {
+          "$value": "╝"
+        },
+        "tee-left": {
+          "$value": "╣"
+        },
+        "tee-right": {
+          "$value": "╠"
+        },
+        "tee-up": {
+          "$value": "╩"
+        },
+        "tee-down": {
+          "$value": "╦"
+        },
+        "cross": {
+          "$value": "╬"
+        }
+      },
+      "heavy": {
+        "horizontal": {
+          "$value": "━"
+        },
+        "vertical": {
+          "$value": "┃"
+        },
+        "top-left": {
+          "$value": "┏"
+        },
+        "top-right": {
+          "$value": "┓"
+        },
+        "bottom-left": {
+          "$value": "┗"
+        },
+        "bottom-right": {
+          "$value": "┛"
+        },
+        "tee-left": {
+          "$value": "┫"
+        },
+        "tee-right": {
+          "$value": "┣"
+        },
+        "tee-up": {
+          "$value": "┻"
+        },
+        "tee-down": {
+          "$value": "┳"
+        },
+        "cross": {
+          "$value": "╋"
+        }
+      },
+      "rounded": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "╭"
+        },
+        "top-right": {
+          "$value": "╮"
+        },
+        "bottom-left": {
+          "$value": "╰"
+        },
+        "bottom-right": {
+          "$value": "╯"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      },
+      "ascii": {
+        "horizontal": {
+          "$value": "-"
+        },
+        "vertical": {
+          "$value": "|"
+        },
+        "top-left": {
+          "$value": "+"
+        },
+        "top-right": {
+          "$value": "+"
+        },
+        "bottom-left": {
+          "$value": "+"
+        },
+        "bottom-right": {
+          "$value": "+"
+        },
+        "tee-left": {
+          "$value": "+"
+        },
+        "tee-right": {
+          "$value": "+"
+        },
+        "tee-up": {
+          "$value": "+"
+        },
+        "tee-down": {
+          "$value": "+"
+        },
+        "cross": {
+          "$value": "+"
+        }
+      },
+      "current": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "┌"
+        },
+        "top-right": {
+          "$value": "┐"
+        },
+        "bottom-left": {
+          "$value": "└"
+        },
+        "bottom-right": {
+          "$value": "┘"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      }
+    },
+    "mark": {
+      "check": {
+        "$value": "✓"
+      },
+      "cross": {
+        "$value": "✗"
+      },
+      "bullet": {
+        "$value": "·"
+      },
+      "cursor": {
+        "$value": "▸"
+      },
+      "expanded": {
+        "$value": "▾"
+      },
+      "collapsed": {
+        "$value": "▸"
+      },
+      "ellipsis": {
+        "$value": "…"
+      },
+      "dash": {
+        "$value": "–"
+      },
+      "radio": {
+        "$value": "●"
+      },
+      "radio-empty": {
+        "$value": "○"
+      },
+      "blank": {
+        "$value": " "
+      },
+      "switch-thumb": {
+        "$value": "●"
+      },
+      "switch-track": {
+        "$value": "─"
+      },
+      "sort-ascending": {
+        "$value": "▴"
+      },
+      "sort-descending": {
+        "$value": "▾"
+      },
+      "overflow-start": {
+        "$value": "‹"
+      },
+      "overflow-end": {
+        "$value": "›"
+      },
+      "required": {
+        "$value": "*"
+      },
+      "danger": {
+        "$value": "!"
+      },
+      "external": {
+        "$value": "↗"
+      }
+    },
+    "block": {
+      "full": {
+        "$value": "█"
+      },
+      "dark": {
+        "$value": "▓"
+      },
+      "medium": {
+        "$value": "▒"
+      },
+      "light": {
+        "$value": "░"
+      },
+      "caret": {
+        "$value": "▏"
+      }
+    },
+    "bar": {
+      "1": {
+        "$value": "▁"
+      },
+      "2": {
+        "$value": "▂"
+      },
+      "3": {
+        "$value": "▃"
+      },
+      "4": {
+        "$value": "▄"
+      },
+      "5": {
+        "$value": "▅"
+      },
+      "6": {
+        "$value": "▆"
+      },
+      "7": {
+        "$value": "▇"
+      },
+      "8": {
+        "$value": "█"
+      }
+    },
+    "spinner": {
+      "1": {
+        "$value": "⠋"
+      },
+      "2": {
+        "$value": "⠙"
+      },
+      "3": {
+        "$value": "⠹"
+      },
+      "4": {
+        "$value": "⠸"
+      },
+      "5": {
+        "$value": "⠼"
+      },
+      "6": {
+        "$value": "⠴"
+      },
+      "7": {
+        "$value": "⠦"
+      },
+      "8": {
+        "$value": "⠧"
+      },
+      "9": {
+        "$value": "⠇"
+      },
+      "10": {
+        "$value": "⠏"
+      }
+    },
+    "delimiter": {
+      "control": {
+        "open": {
+          "$value": "["
+        },
+        "close": {
+          "$value": "]"
+        }
+      }
+    }
+  },
+  "conformance": {
+    "$type": "fontFamily",
+    "$description": "How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it.",
+    "$value": "standard"
+  }
+}

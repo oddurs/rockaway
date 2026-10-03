@@ -1,0 +1,63 @@
+{
+  "title": "Catppuccin",
+  "source": "https://github.com/catppuccin/ghostty",
+  "licence": {
+    "spdx": "MIT",
+    "copyright": "Copyright (c) 2021 Catppuccin",
+    "file": "catppuccin.LICENSE"
+  },
+  "variants": {
+    "light": "Latte",
+    "dark": "Mocha"
+  },
+  "modes": {
+    "light": {
+      "colors": [
+        "#5c5f77",
+        "#d20f39",
+        "#40a02b",
+        "#df8e1d",
+        "#1e66f5",
+        "#ea76cb",
+        "#179299",
+        "#acb0be",
+        "#6c6f85",
+        "#d20f39",
+        "#40a02b",
+        "#df8e1d",
+        "#1e66f5",
+        "#ea76cb",
+        "#179299",
+        "#bcc0cc"
+      ],
+      "background": "#eff1f5",
+      "foreground": "#4c4f69",
+      "cursor": "#dc8a78",
+      "selection": "#d8dae1"
+    },
+    "dark": {
+      "colors": [
+        "#45475a",
+        "#f38ba8",
+        "#a6e3a1",
+        "#f9e2af",
+        "#89b4fa",
+        "#f5c2e7",
+        "#94e2d5",
+        "#a6adc8",
+        "#585b70",
+        "#f38ba8",
+        "#a6e3a1",
+        "#f9e2af",
+        "#89b4fa",
+        "#f5c2e7",
+        "#94e2d5",
+        "#bac2de"
+      ],
+      "background": "#1e1e2e",
+      "foreground": "#cdd6f4",
+      "cursor": "#f5e0dc",
+      "selection": "#353749"
+    }
+  }
+}

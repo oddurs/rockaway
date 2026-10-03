@@ -67,7 +67,9 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
 
   beforeAll(async () => {
     out = mkdtempSync(path.join(tmpdir(), 'rockaway-site-'));
-    execFileSync('pnpm', ['exec', 'astro', 'build', '--outDir', out], {
+    // `--force`: the content layer caches rendered Markdown, and does not know
+    // when the pipeline that rendered it has changed.
+    execFileSync('pnpm', ['exec', 'astro', 'build', '--force', '--outDir', out], {
       cwd: site,
       env: { ...process.env, SITE_BASE: base, ASTRO_TELEMETRY_DISABLED: '1' },
       stdio: 'pipe',
@@ -172,6 +174,43 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.styled).toBe(0);
   });
 
+  test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
+    const reader = await browser.newPage();
+    const scripts: string[] = [];
+    reader.on('request', (request) => {
+      if (request.resourceType() === 'script') scripts.push(request.url());
+    });
+    await reader.goto(`${origin}${base}concept/`);
+    const found = await reader.evaluate(() => {
+      const colour = (el: Element | null) => (el ? getComputedStyle(el).color : '');
+      const keyword = document.querySelector('pre .rk-syntax-type, pre .rk-syntax-keyword');
+      const root = document.documentElement;
+      root.dataset.theme = 'light';
+      const light = colour(keyword);
+      root.dataset.theme = 'dark';
+      const dark = colour(keyword);
+      const comment = document.querySelector('pre .rk-syntax-comment');
+      return {
+        light,
+        dark,
+        comment: comment ? getComputedStyle(comment).fontStyle : '',
+        styled: document.querySelectorAll('pre [style]:not([data-rk-shape])').length,
+        blocks: document.querySelectorAll('pre[style], pre[class]').length,
+      };
+    });
+    await reader.close();
+    // A page of prose runs no script at all.
+    expect(scripts).toEqual([]);
+    // The colour is the theme's, so changing the mode recolours code in place.
+    expect(found.light).not.toBe('');
+    expect(found.dark).not.toBe(found.light);
+    // A comment reads as one in greyscale.
+    expect(found.comment).toBe('italic');
+    // No colour is written into the page: roles are classes.
+    expect(found.styled).toBe(0);
+    expect(found.blocks).toBe(0);
+  });
+
   test('the cell is the font, and the fallback has the same cell', async () => {
     const { cell, web, fallback, available } = await page.evaluate(async () => {
       const faces = [...document.fonts].filter((f) => f.family.startsWith('JetBrains Mono ('));
@@ -198,10 +237,8 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     });
     // The cell is the font's advance as the browser lays it out: 0.6em is
     // 9.6px at 16px, which Chromium on Linux, without subpixel positioning,
-    // rounds to 10px. Either way the screen measured what the text uses, to
-    // the layout unit: the measurement is rounded to 1/64px, so a run of cells
-    // and the same cells one by one land on the same pixels (cairn 0117).
-    expect(Math.abs(Number.parseFloat(cell) - web / 100)).toBeLessThanOrEqual(1 / 128);
+    // rounds to 10px. Either way the screen measured what the text uses.
+    expect(Number.parseFloat(cell)).toBeCloseTo(web / 100, 2);
     expect(Math.abs(web / 100 - 9.6)).toBeLessThanOrEqual(0.5);
     // At least one adjusted system font must be here for this to mean anything.
     expect(available.length).toBeGreaterThan(0);

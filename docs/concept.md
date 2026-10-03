@@ -35,6 +35,13 @@ Fallback is by weight, not by name: a `double` junction that has no glyph falls
 back to `heavy`, then to `light`. A border set that cannot express a seam
 degrades instead of printing a hole.
 
+Titles commute too (`0175`). A title, or a label sunk into a rule, is text over
+border cells, and a rule crossing that edge would otherwise take a letter or
+lose its tee depending on which was drawn last. So a label is recorded rather
+than written, and set into its edge when the draw pass closes, once every edge
+is known: it owns its cells, stops short of the first junction in its edge,
+and truncates with the theme's ellipsis — `┌ si… ─┬─────┐`, whichever order.
+
 ## 2. The cell is `1ch` × `1lh`
 
 Across, a cell is the font's advance width. Down, it is the line box, which the
@@ -213,9 +220,11 @@ whole CSS pixels on its own, whatever box it is in:
 - An arc is a gradient, which is not snapped, so it is placed on whole pixels
   itself and aimed at where the straight strokes were *drawn*, not where they
   were asked to be. At a hairline's width the difference is a visible step.
-- The measured cell is rounded to the browser's layout unit (1/64 px). A run of
-  eight cells and eight runs of one would otherwise round differently, and the
-  same column would land in different places on different rows.
+- A run is sized from where it ends to where it starts, each rounded to the
+  browser's layout unit (1/64 px), not as `cells × cell`. A run of eight cells
+  and eight runs of one would otherwise round differently, and the same column
+  would land in different places on different rows. The cell itself stays the
+  font's true advance, which is where text puts its letters.
 
 Worth remembering when adding a painter: **the geometry is right when
 neighbours join without being told they are neighbours**, and only a picture of
@@ -233,7 +242,22 @@ A grid nobody can break is a grid people quietly abandon (`0072`). Three levels
 `checkConformance` asserts that every box inside a screen measures a whole
 number of cells, in both directions, at every density and in every theme. It
 runs on every story via an `afterEach`. Anything off-grid without a reason
-fails; anything with one is printed in the report.
+fails; anything with one is printed in the report, grouped by reason and
+counted, so a page can say "3 exceptions, 2 reasons". An empty reason is not a
+reason: `data-rk-offgrid=""` fails on its own (`0123`).
+
+The level is declared with `data-rk-conformance` on the screen or any
+ancestor, and otherwise comes from the theme's `--rk-conformance` token:
+
+| Level | What the check holds to the grid |
+| --- | --- |
+| `strict` | every box, in whole cells; and the glyph painter only |
+| `standard` | every box, in whole cells, except half a cell inside a control (`data-rk-control`); either painter |
+| `loose` | screens and panes (`data-rk-pane`) in whole cells; anything inside a pane is free |
+
+The level belongs to the screen, not to a box in it, so a component cannot
+loosen the app it sits in. The workbench runs at `standard`, with a story
+pinned at each level.
 
 The deal is not "never break the grid". The deal is **breaking it quietly is
 what's forbidden** — exceptions become countable instead of accumulating.
@@ -296,6 +320,44 @@ constraint on component design — state cannot be carried by hue alone, which i
 why attributes (bold, dim, reverse, underline) and marks carry it too, and why
 the system passes forced-colors mode without special-casing.
 
+## 9. States are one vocabulary
+
+Every state is drawn one way, in every component (decision `0118`), and a
+component's metadata names the row rather than describing it again. The table
+is also data: `stateVocabulary` in `@rockaway/react/metadata`.
+
+**States never change geometry.** A state may change attributes, colour, border
+weight, or a glyph in a cell that is reserved in every state. It never adds or
+removes a cell, because a control that moves its neighbours when it is hovered
+is not on a grid. A test fails any rule keyed on a state that sets a size.
+
+| State | Source | Drawn as | Without colour |
+| --- | --- | --- | --- |
+| hover | `data-hovered` | underline on the label | underline |
+| focus, unframed control | `data-focus-visible` | the focus ring: an outline that costs no cell | outline |
+| focus, framed control | `data-focus-visible` | the frame goes `heavy` in `border.focus` | weight |
+| pressed | `data-pressed` | reverse video; a filled control reverses back | reverse |
+| cursor (focused row in a collection) | `data-focused` | the cursor mark in the row's reserved mark cell | mark |
+| selected | `data-selected` | reverse video; in multi-select also the check mark in a second reserved cell | reverse, mark |
+| checked / indeterminate | `data-selected`, `data-indeterminate` | check or dash between the control's delimiters | mark |
+| expanded / collapsed | `data-expanded` | the expanded or collapsed mark | mark |
+| disabled | `data-disabled` | dim (`fg.disabled`), default cursor; `GrayText` in forced colors | dim is an attribute |
+| invalid | `data-invalid` | the cross mark before the message, `fg.danger`; framed controls go `heavy` in `border.danger` | mark, weight |
+| required | `data-required` | `*` after the label, `aria-hidden` (the semantics are `aria-required`) | mark |
+| read-only | `data-readonly` | the value without the control's track or ground | ground removed |
+| current (navigation) | `aria-current`, reflected as `data-current` | bold plus the cursor mark | bold, mark |
+| pending | `data-pending` | the spinner in a reserved cell | glyph |
+| placeholder | `:placeholder-shown` | dim | dim |
+
+`danger` is a variant, not a state: `fg.danger` plus `!` in the reserved mark
+cell. Messages, such as an error under a field, are content and may add rows.
+
+The cursor and the selection are two signals, and List is where they meet: in
+a multi-select list the keyboard's row and the chosen rows are told apart in
+text, in greyscale and in forced colors. Reverse video swaps an element's own
+figure and ground. In forced colors that means the reader's text and canvas
+swapped, so it is never drawn as two halves that both collapse to the canvas.
+
 ---
 
 ## What we borrowed, and from whom
@@ -338,11 +400,6 @@ Written down so it is a known limit rather than a later surprise.
   double line meeting a heavy one has no glyph, so the engine draws it one
   weight down (`0079`), and the cell strokes what the character says. Where
   that meets an undemoted neighbour the line steps, just as it does in a font.
-- **The cell is rounded to the layout unit.** So that a run of cells and the
-  same cells one by one land on the same pixels, the measured cell is rounded
-  to 1/64px. A font's advance is not, so a long run of text can sit up to half
-  a pixel off the cell grid by its far end. Nothing joins to text, so nothing
-  breaks; a canvas painter would not have the problem.
 - **Lines need the stylesheet.** Without `@rockaway/css` a shaped cell is an
   ordinary cell with its character in it, drawn by the font: legible, but back
   to meeting by coincidence.

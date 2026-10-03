@@ -1,6 +1,6 @@
 import { Button, Frame, GlyphProvider, List, ListItem } from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
-import { glyphsFor, themeGlyphs, themeNames } from '@rockaway/tokens';
+import { glyphsFor, presetNames, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 
@@ -16,20 +16,14 @@ const files = [
 
 /**
  * A theme owns its characters (cairn 0119). Components ask `useGlyphs()` for
- * every glyph they draw, so one provider changes the border set, the cursor,
- * the scrollbar and the delimiters together.
+ * every glyph they draw, so one provider changes the border set, the check
+ * mark, the scrollbar and the delimiters together.
  */
 function Screen({ title }: { title: string }) {
   return (
     <Frame title={title} cols={30} rows={7}>
       <div style={{ inlineSize: 'calc(var(--rk-cell-width) * 26)' }}>
-        <List
-          aria-label="Files"
-          rows={3}
-          total={files.length}
-          selectionMode="single"
-          defaultSelectedKeys={['a']}
-        >
+        <List aria-label="Files" rows={3} selectionMode="multiple" defaultSelectedKeys={['a']}>
           {files.map((file, i) => (
             <ListItem key={file} id={i === 0 ? 'a' : file} textValue={file}>
               {file}
@@ -60,9 +54,9 @@ export const Default: Story = {
     expect(screenshot(frame, { legend: false })).toBe(
       [
         '┌ default ───────────────────┐',
-        '│ ▸src/index.ts            █ │',
-        '│  src/glyph.ts            █ │',
-        '│  src/theme.ts            ░ │',
+        '│  ✓src/index.ts           █ │',
+        '│   src/glyph.ts           █ │',
+        '│   src/theme.ts           ░ │',
         '│ [ Publish ]                │',
         '│                            │',
         '└────────────────────────────┘',
@@ -72,7 +66,7 @@ export const Default: Story = {
 };
 
 /**
- * The same screen under `ascii`: the border set, the cursor, the scrollbar and
+ * The same screen under `ascii`: the border set, the check mark, the scrollbar and
  * a truncated title all change, and nothing outside ASCII is left on it.
  */
 export const Ascii: Story = {
@@ -88,10 +82,10 @@ export const Ascii: Story = {
     const text = screenshot(frame, { legend: false });
     expect(text).toBe(
       [
-        '+ a title too long for it~ --+',
-        '| >src/index.ts            # |',
-        '|  src/glyph.ts            # |',
-        '|  src/theme.ts            . |',
+        '+ a title too long for its~ -+',
+        '|  xsrc/index.ts           # |',
+        '|   src/glyph.ts           # |',
+        '|   src/theme.ts           . |',
         '| [ Publish ]                |',
         '|                            |',
         '+----------------------------+',
@@ -101,12 +95,15 @@ export const Ascii: Story = {
   },
 };
 
-/** Every theme that ships, each drawing with its own border set. */
+/**
+ * Every preset, each drawing with its own border set. An imported terminal
+ * palette brings colours only, so it draws with the default's glyphs (0052).
+ */
 export const Themes: Story = {
   args: { title: 'themes' },
   render: () => (
     <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
-      {themeNames.map((name) => (
+      {presetNames.map((name) => (
         <GlyphProvider key={name} glyphs={themeGlyphs[name]}>
           <Frame title={name} cols={30} rows={3} />
         </GlyphProvider>
@@ -114,7 +111,7 @@ export const Themes: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    for (const name of themeNames) {
+    for (const name of presetNames) {
       const top = canvas.getByRole('group', { name }).querySelector('.rk-row')?.textContent ?? '';
       expect(top.startsWith(themeGlyphs[name].border['top-left']), name).toBe(true);
     }

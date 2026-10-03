@@ -6,10 +6,11 @@ import { describe, expect, test } from 'vitest';
 import { breakpoints, controlRows, lineBox, spaceSteps } from '../src/density.ts';
 import { generate, resolverFile, serialize } from '../src/generate.ts';
 import { defaultTheme } from '../src/inputs.ts';
+import { themeContexts } from '../src/themes.ts';
 import { parseTheme } from '../src/validate.ts';
 
 const root = path.join(import.meta.dirname, '..');
-const files = generate(defaultTheme);
+const files = generate();
 
 type Node = Record<string, unknown>;
 
@@ -31,7 +32,7 @@ function* tokens(
 }
 
 describe('generated files', () => {
-  test('dtcg/ matches the generator for themes/default.json (run `pnpm generate` if not)', async () => {
+  test('dtcg/ matches the generator for every theme (run `pnpm generate` if not)', async () => {
     const theme = parseTheme(
       JSON.parse(await readFile(path.join(root, 'themes/default.json'), 'utf8')),
     );
@@ -77,11 +78,13 @@ describe('generated files', () => {
   test('each context file only touches its own groups (0016)', () => {
     for (const [name, doc] of files) {
       const groups = Object.keys(doc as Node).filter((k) => !k.startsWith('$'));
-      if (name.startsWith('palette.')) expect(groups, name).toEqual(['ansi']);
+      if (name.startsWith('mode.')) expect(groups, name).toEqual(['ansi']);
+      if (name.startsWith('theme.'))
+        expect(groups, name).toEqual(['palette', 'font', 'glyph', 'conformance']);
       if (name.startsWith('density.'))
         expect(groups, name).toEqual(['cell', 'space', 'row', 'size']);
       if (name === 'semantic.tokens.json') {
-        expect(groups, name).toEqual(['bg', 'fg', 'border', 'motion', 'focus']);
+        expect(groups, name).toEqual(['bg', 'fg', 'border', 'syntax', 'motion', 'focus']);
       }
     }
   });
@@ -113,14 +116,42 @@ describe('generated files', () => {
     const aliases = [...tokens(colours)].filter(([, t]) => typeof t.$value === 'string');
     expect(aliases.length).toBeGreaterThan(30);
     for (const mode of ['light', 'dark']) {
-      const palette = files.get(`palette.${mode}.tokens.json`) as Node;
+      const ansi = files.get(`mode.${mode}.tokens.json`) as Node;
       for (const [id, t] of aliases) {
         const target = (t.$value as string).slice(1, -1).split('.');
         expect(target[0], id).toBe('ansi');
-        const found = target.reduce<unknown>((n, k) => (n as Node | undefined)?.[k], palette);
+        const found = target.reduce<unknown>((n, k) => (n as Node | undefined)?.[k], ansi);
         expect(found, `${id} → ${t.$value} in ${mode}`).toBeDefined();
       }
     }
+  });
+
+  test('a mode only points ansi.* at one half of the theme palette (0052)', () => {
+    // Raw colours live in the theme, both halves; the mode chooses a half.
+    // That is what lets the CSS make theme and mode independent contexts.
+    for (const mode of ['light', 'dark']) {
+      const ansi = (files.get(`mode.${mode}.tokens.json`) as Node).ansi as Node;
+      for (const [id, t] of tokens(ansi)) {
+        expect(t.$value, id).toBe(`{palette.${mode}.${id}}`);
+      }
+    }
+    for (const theme of themeContexts) {
+      const palette = (files.get(`theme.${theme.name}.tokens.json`) as Node).palette as Node;
+      expect(
+        Object.keys(palette).filter((k) => !k.startsWith('$')),
+        theme.name,
+      ).toEqual(['light', 'dark']);
+    }
+  });
+
+  test('every theme is a context of the resolver, the default first', () => {
+    const resolver = files.get(resolverFile) as {
+      modifiers: { theme: { contexts: Node; default: string } };
+    };
+    expect(Object.keys(resolver.modifiers.theme.contexts)).toEqual(
+      themeContexts.map((t) => t.name),
+    );
+    expect(resolver.modifiers.theme.default).toBe('default');
   });
 });
 

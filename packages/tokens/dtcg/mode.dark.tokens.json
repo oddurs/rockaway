@@ -1,0 +1,108 @@
+{
+  "ansi": {
+    "$type": "color",
+    "$description": "The palette in dark mode: the terminal's sixteen, plus the role slots (cairn 0089). Each is the current theme's palette.dark slot.",
+    "black": {
+      "$value": "{palette.dark.black}"
+    },
+    "red": {
+      "$value": "{palette.dark.red}"
+    },
+    "green": {
+      "$value": "{palette.dark.green}"
+    },
+    "yellow": {
+      "$value": "{palette.dark.yellow}"
+    },
+    "blue": {
+      "$value": "{palette.dark.blue}"
+    },
+    "magenta": {
+      "$value": "{palette.dark.magenta}"
+    },
+    "cyan": {
+      "$value": "{palette.dark.cyan}"
+    },
+    "white": {
+      "$value": "{palette.dark.white}"
+    },
+    "bright-black": {
+      "$value": "{palette.dark.bright-black}"
+    },
+    "bright-red": {
+      "$value": "{palette.dark.bright-red}"
+    },
+    "bright-green": {
+      "$value": "{palette.dark.bright-green}"
+    },
+    "bright-yellow": {
+      "$value": "{palette.dark.bright-yellow}"
+    },
+    "bright-blue": {
+      "$value": "{palette.dark.bright-blue}"
+    },
+    "bright-magenta": {
+      "$value": "{palette.dark.bright-magenta}"
+    },
+    "bright-cyan": {
+      "$value": "{palette.dark.bright-cyan}"
+    },
+    "bright-white": {
+      "$value": "{palette.dark.bright-white}"
+    },
+    "background": {
+      "$value": "{palette.dark.background}"
+    },
+    "surface": {
+      "$value": "{palette.dark.surface}"
+    },
+    "subtle": {
+      "$value": "{palette.dark.subtle}"
+    },
+    "hover": {
+      "$value": "{palette.dark.hover}"
+    },
+    "active": {
+      "$value": "{palette.dark.active}"
+    },
+    "foreground": {
+      "$value": "{palette.dark.foreground}"
+    },
+    "muted": {
+      "$value": "{palette.dark.muted}"
+    },
+    "faint": {
+      "$value": "{palette.dark.faint}"
+    },
+    "border-subtle": {
+      "$value": "{palette.dark.border-subtle}"
+    },
+    "border": {
+      "$value": "{palette.dark.border}"
+    },
+    "border-strong": {
+      "$value": "{palette.dark.border-strong}"
+    },
+    "cursor": {
+      "$value": "{palette.dark.cursor}"
+    },
+    "selection": {
+      "$value": "{palette.dark.selection}"
+    },
+    "tint-blue": {
+      "$value": "{palette.dark.tint-blue}"
+    },
+    "tint-cyan": {
+      "$value": "{palette.dark.tint-cyan}"
+    },
+    "tint-green": {
+      "$value": "{palette.dark.tint-green}"
+    },
+    "tint-yellow": {
+      "$value": "{palette.dark.tint-yellow}"
+    },
+    "tint-red": {
+      "$value": "{palette.dark.tint-red}"
+    }
+  }
+}

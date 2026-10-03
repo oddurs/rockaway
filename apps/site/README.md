@@ -25,7 +25,7 @@ a packaging bug, and it is fixed in the package.
 | --- | --- |
 | `src/pages/` | One file per route. Pages compose; they bring no CSS of their own. |
 | `src/layouts/Document.astro` | The one `<html>`: head order, the font, the stylesheet. |
-| `src/islands/` | One module per hydrated thing, never a component hydrated straight from the package (see `frame.ts` for why). |
+| `src/islands/` | Compositions of the system's components that the site hydrates. A single component is hydrated from its own entry, `@rockaway/react/<component>`, never from the package's index: an island keeps every export of the module it comes from, and the index would ship the whole package for one box. |
 | `src/lib/` | Logic, in TypeScript. Astro frontmatter is not typechecked, so keep it thin. |
 | `src/styles/site.css` | The system's CSS as a consumer imports it, and page layout. |
 | `src/fonts/` | The one font, its metrics and its licence. |
@@ -49,8 +49,14 @@ The pipeline (`src/lib/markdown.ts`) only says what Markdown cannot:
 - box drawing and blocks become cells the cell draws (0116), so a diagram in
   a code block joins up at every density and still copies as text.
 
-Code is not highlighted yet: that is 0144, in the ANSI 16, with no borrowed
-palette in the meantime.
+Code is highlighted at build time by Shiki (0144), in the ANSI 16: the theme
+in `src/lib/highlight.ts` maps TextMate scopes to the `syntax.*` roles, and
+the page gets a class per role, `rk-syntax-keyword`, which `@rockaway/css`
+colours from the tokens. No colour is written into the page and no
+highlighter ships, so a change of theme or mode recolours code in place.
+
+The content layer caches rendered Markdown and cannot tell when the pipeline
+has changed, so `build` runs `astro build --force`.
 
 ## The base path
 
