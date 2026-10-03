@@ -386,6 +386,31 @@ canvas-coloured backplate behind every line of text, and the reversed words
 vanish into it. Computed styles cannot see that backplate; the forced-colors
 stories check the pixels (`0181`).
 
+## 10. A scroll position is drawn in cells
+
+**No native scrollbar is ever drawn** (decision `0207`). A browser's scrollbar
+is drawn in pixels by the platform. Where it is a classic one, with a mouse
+attached or "always show scroll bars" on, it takes about fifteen pixels from
+its box. That leaves everything inside a fraction of a cell off the grid, and
+puts a second scrollbar beside the one a component draws in cells.
+
+So every element that scrolls hides it, with the `rk-scroll` class (or
+`rk-scroll-marks`, below), and shows where it is in cells:
+
+- a viewport that scrolls by rows draws a scrollbar column, as List does
+- a region that scrolls across shows the theme's overflow marks, `‹` and `›`,
+  at each edge that has more past it, as `less -S` does. That is
+  `rk-scroll-marks`, which prose code blocks and tables use, with the content
+  as its one child.
+
+Scrolling itself is untouched: wheel, trackpad, touch and keyboard all still
+work, and a scrolling region keeps its tab stop. After every story, a check
+fails any element whose computed overflow scrolls without
+`scrollbar-width: none`. It reads computed style, not pixels, because a
+headless browser hides scrollbars and a native bar measures nothing there. A
+fifth test browser turns classic scrollbars on, so the stories that scroll are
+also seen the way a reader with a mouse sees them.
+
 ---
 
 ## What we borrowed, and from whom

@@ -78,7 +78,7 @@ the platform's own; nothing is intercepted.
 - [x] Text longer than the box scrolls inside it by whole cells, and the box never grows
 - [x] `multiline` scrolls whole rows and never shows half a line
 - [x] Placeholder, read-only and disabled are distinguishable in greyscale
-- [ ] The textarea takes `rk-scroll` (0207/0208) and shows its position in cells if it scrolls by rows; a story tagged `classic-scrollbars` proves one scrollbar only
+- [x] The textarea takes `rk-scroll` (0207/0208) and shows its position in cells if it scrolls by rows; a story tagged `classic-scrollbars` proves one scrollbar only
 
 ## 2026-10-03
 
@@ -103,3 +103,7 @@ Batch 6 added criterion 22 while this branch ticked the rest. The textarea and t
 ## 2026-10-03
 
 Criterion 11 ticked after merging 0198 (#112): touch's line box is now 2.75, so the one-row box is 44px at touch; the Touch story asserts at least 44.
+
+## 2026-10-03
+
+Criterion 22 ticked after #107: the classic-scrollbars browser now runs Overflow and Multiline with real, space-taking scrollbars, and both pass, Multiline asserting that no bar takes room from the text area.

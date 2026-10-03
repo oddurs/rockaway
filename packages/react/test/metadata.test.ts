@@ -69,6 +69,16 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
   TextField: (props) => createElement(rockaway.TextField, { label: 'Name', ...props }),
+  Tree: (props) =>
+    createElement(
+      rockaway.Tree,
+      { 'aria-label': 'files', defaultExpandedKeys: ['src'], ...props },
+      createElement(
+        rockaway.TreeItem,
+        { id: 'src', title: 'src' },
+        createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
+      ),
+    ),
   List: (props) =>
     createElement(
       rockaway.List,
