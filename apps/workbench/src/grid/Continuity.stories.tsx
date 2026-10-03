@@ -66,12 +66,10 @@ function junctions(border: BorderSetName, rule: BorderSetName = border, title: s
  * of it.
  *
  * Every mark that reaches an edge of its cell meets one that reaches the same
- * edge from the other side, or nothing: at 200% Chrome snaps a background to
- * whole CSS pixels, so ink that reaches an edge on a half-pixel boundary lands
- * a device pixel inside the next cell, and against a mark with no line on that
- * edge the check reads it as a leak. Hence the order: the eighth bars first,
- * the halves so that `▌` stands on `▕`, and the quadrants so that each one
- * that reaches its right edge is followed by one that reaches its left.
+ * edge from the other side, or nothing. That order once kept a device pixel
+ * of spilt ink at 200% from reading as a leak; the check now allows it within
+ * its slack (see "Edge ink beside an edge with none"), and the order stays
+ * because it reads well.
  */
 const BLOCKS: readonly (readonly [label: string, cells: string])[] = [
   ['eighth bars', '▁▂▃▄▅▆▇█'],
@@ -335,6 +333,64 @@ export const ScrolledRegion: Story = {
     expect(font.shapes).toBe(report.shapes);
     // And only in view: no break is reported for a cell it could not see.
     expect(font.unseen).toBe(report.unseen);
+  },
+};
+
+/**
+ * Ink that reaches an edge, beside a cell with no line on that edge: `▂` over
+ * `▄`, `▙` before `▗`, row after row, so some of the boundaries between them
+ * fall on half a pixel. At 200% Chrome snaps a background to whole CSS pixels,
+ * and the ink that reaches the edge there lands a device pixel into the next
+ * cell; the check reads that cell's leak past the slack, as it reads a reach
+ * within it. A real leak is still one: the same `▄` filled to its top is
+ * caught beside the same neighbours.
+ */
+const SPILLS = ['▂▙▗▙▗▙▗', '▄▄▂▂▂▂▂', '▂▙▗▙▗▙▗', '▄▄▄▄▄▄▄', '▂▙▗▙▗▙▗', '▄▄▄▄▄▄▄'].join('\n');
+
+export const Spills: Story = {
+  name: 'Edge ink beside an edge with none',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)' }}>
+      <style>
+        {
+          '.leaky [data-rk-shape="block-2584"] { background-size: 100% 100% !important; background-position: 0 0 !important; }'
+        }
+      </style>
+      {[15.3, 16.4, 17].flatMap((size) =>
+        [0.13, 0.41, 0.69].map((shift) => (
+          <div
+            key={`${size} ${shift}`}
+            data-testid={`spills ${size} ${shift}`}
+            style={{
+              fontSize: `${size}px`,
+              paddingInlineStart: `${shift}px`,
+              paddingBlockStart: `${shift}px`,
+            }}
+          >
+            <Screen draw={() => fromText(SPILLS)} cols={7} rows={6} />
+          </div>
+        )),
+      )}
+      <div data-testid="leaky" className="leaky" style={{ fontSize: '17px' }}>
+        <Screen draw={() => fromText(SPILLS)} cols={7} rows={6} />
+      </div>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    for (const size of [15.3, 16.4, 17]) {
+      for (const shift of [0.13, 0.41, 0.69]) {
+        const report = await expectContinuity(canvas.getByTestId(`spills ${size} ${shift}`), {
+          capture: run.capture,
+        });
+        expect(report.shapes).toBe(42);
+      }
+    }
+    const leaky = await checkContinuity(canvas.getByTestId('leaky'), { capture: run.capture });
+    const leaks = leaky.breaks.filter((b) => b.what === 'leak' && b.ch === '▄');
+    expect(leaks.length, formatContinuity(leaky)).toBeGreaterThan(5);
   },
 };
 

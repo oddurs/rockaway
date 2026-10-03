@@ -13,7 +13,9 @@
  *
  * - **gap**: does the ink reach every edge the shape reaches — the cell's own
  *   outermost row or column of pixels, or the one its edge runs through?
- * - **leak**: is there no line on an edge the shape does not reach?
+ * - **leak**: is there no line on an edge the shape does not reach? A
+ *   neighbour whose ink reaches that edge may spill as far as the snapping
+ *   slack into this cell, so beside one the leak is read past the slack.
  * - **step**: where two neighbours both reach the edge they share, does the
  *   ink sit in the same pixels on both sides of it, so the line runs on?
  * - **broken**: does every stroke that reaches an edge join, inside the cell,
@@ -78,6 +80,21 @@ interface Image {
 }
 
 const SIDES: readonly Side[] = ['north', 'east', 'south', 'west'];
+
+/** The neighbour across each side, as a column and row step. */
+const STEP: Readonly<Record<Side, readonly [number, number]>> = {
+  north: [0, -1],
+  east: [1, 0],
+  south: [0, 1],
+  west: [-1, 0],
+};
+
+const OPPOSITE: Readonly<Record<Side, Side>> = {
+  north: 'south',
+  east: 'west',
+  south: 'north',
+  west: 'east',
+};
 
 function describe(el: Element): string {
   const cls =
@@ -217,6 +234,17 @@ export async function checkContinuity(
     };
     const name = describe(layer);
     const cells = new Map<string, Checked>();
+    /**
+     * Edges a shape does not reach, read for ink at each depth in from the
+     * edge, and decided once the neighbour across each one is known.
+     */
+    const unreached: {
+      readonly col: number;
+      readonly row: number;
+      readonly ch: string;
+      readonly side: Side;
+      readonly inked: readonly boolean[];
+    }[] = [];
     // Chrome snaps a box's background to whole CSS pixels, so on a dense
     // screen the device pixel just inside a fractional edge may be bare by
     // design: an edge counts as reached within half a CSS pixel of it. This is
@@ -350,16 +378,17 @@ export async function checkContinuity(
             } else {
               // Only the cell's own pixels, and only the middle of the edge,
               // where a line on that side would cross it: a neighbour's ink
-              // is next door, and its letter may lean into a corner.
-              const positions = edgeLine(box, side)
-                .filter(([x, y]) => covered(x, y))
-                .map(across);
+              // is next door, and its letter may lean into a corner. Each
+              // line within the slack is read, the outermost first.
               const length = side === 'north' || side === 'south' ? x1 - x0 : y1 - y0;
               const start = side === 'north' || side === 'south' ? x0 : y0;
-              const middle = positions.filter(
-                (p) => p >= start + length / 4 && p < start + (length * 3) / 4,
+              const inked = lines(0, slack).map((depth) =>
+                edgeLine(box, side, depth)
+                  .filter(([x, y]) => covered(x, y))
+                  .map(across)
+                  .some((p) => p >= start + length / 4 && p < start + (length * 3) / 4),
               );
-              if (middle.length > 0) at('leak', `ink on the ${side} edge, which has no line`, side);
+              unreached.push({ col: col + i, row, ch, side, inked });
             }
           }
           if (shape.kind !== 'block') {
@@ -375,6 +404,62 @@ export async function checkContinuity(
         col += span;
       }
     });
+
+    // A shape's own ink on an edge it does not reach is a leak. Beside a
+    // neighbour whose ink reaches that edge, the outer lines within the slack
+    // are the neighbour's to spill into: Chrome snaps a background to whole
+    // CSS pixels, so ink that reaches an edge on a half-pixel boundary lands a
+    // device pixel past it, as it may fall a device pixel short of reaching
+    // it. There the leak is read on the innermost line of the slack instead.
+    // The same spill reaches into the ends of the lines across that edge: a
+    // `▄` under a `▙` has the `▙`'s spilt pixel at the top of its east and
+    // west edges, and its line along them would seem to start there. So where
+    // a neighbour reaches an edge this cell does not, the lines that cross
+    // the other edges lose their ends within the slack of it.
+    const spill = slack - 1;
+    if (spill > 0) {
+      for (const [key, cell] of cells) {
+        const [c, r] = key.split(',').map(Number) as [number, number];
+        for (const side of SIDES) {
+          if (cell.shape.reach[side]) continue;
+          const [dc, dr] = STEP[side];
+          if (cells.get(`${c + dc},${r + dr}`)?.shape.reach[OPPOSITE[side]] !== true) continue;
+          const { box } = cell;
+          const keep = (p: number): boolean =>
+            side === 'north'
+              ? p >= box.y0 + spill
+              : side === 'south'
+                ? p < box.y1 - spill
+                : side === 'west'
+                  ? p >= box.x0 + spill
+                  : p < box.x1 - spill;
+          const across: readonly Side[] =
+            side === 'north' || side === 'south' ? ['east', 'west'] : ['north', 'south'];
+          const spans = cell.spans as Partial<Record<Side, number[]>>;
+          for (const other of across) {
+            const kept = spans[other]?.filter(keep);
+            if (kept && kept.length > 0) spans[other] = kept;
+          }
+        }
+      }
+    }
+
+    for (const { col, row, ch, side, inked } of unreached) {
+      const [dc, dr] = STEP[side];
+      const next = cells.get(`${col + dc},${row + dr}`);
+      const spilt = next?.shape.reach[OPPOSITE[side]] === true;
+      if (spilt ? inked.at(-1) : inked[0]) {
+        breaks.push({
+          element: name,
+          col,
+          row,
+          ch,
+          what: 'leak',
+          side,
+          detail: `ink on the ${side} edge, which has no line`,
+        });
+      }
+    }
 
     // Where two neighbours both reach the edge between them, their ink must
     // cross it in the same place — or the line steps there — and every pixel
