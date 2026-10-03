@@ -78,3 +78,7 @@ if a screen reader pass (0157) shows a mark being announced.
 
 When closed, `docs/concept.md` gains a short "States" section with this table,
 and 0076 gets a note that its `~` marker is withdrawn.
+
+## 2026-10-03
+
+Adopted by the CTO as the working answer for every wave from here, so the parallel component engineers have one vocabulary now rather than after the first polish ticket. The List polish engineer (0133) still confirms it against a real multi-select — cursor and selection as two signals is the row most likely to meet reality — and closes it.
