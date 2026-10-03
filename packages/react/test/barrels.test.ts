@@ -46,9 +46,12 @@ describe('src/entries', () => {
   test('re-exports each component from its own module only', () => {
     const strays = entries.flatMap((entry) => {
       const source = readFileSync(path.join(react, 'entries', entry), 'utf8');
-      const own = `'../components/${entry.replace(/\.ts$/, '.tsx')}'`;
+      // Its own module, and that module's pure half (cairn 0126), which holds
+      // the buffer functions outside the client boundary.
+      const name = entry.replace(/\.ts$/, '');
+      const own = [`'../components/${name}.tsx'`, `'../components/${name}.pure.ts'`];
       return [...source.matchAll(/from (['"][^'"]+['"])/g)]
-        .filter((m) => m[1] !== own)
+        .filter((m) => !own.includes(m[1] ?? ''))
         .map((m) => `${entry}: ${m[1]}`);
     });
     expect(strays).toEqual([]);

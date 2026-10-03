@@ -1,7 +1,8 @@
 import { Attr, type Buffer, hasAttr, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { type LinkState, linkBuffer } from '../src/components/link.tsx';
+import { linkBuffer } from '../src/components/link.pure.ts';
+import type { LinkState } from '../src/components/link.tsx';
 
 const STATES: ReadonlyArray<readonly [string, LinkState]> = [
   ['rest', {}],
