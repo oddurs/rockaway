@@ -13,6 +13,7 @@
       "!packages/tokens/css",
       "!packages/tokens/terminal",
       "!packages/tokens/src/names.ts",
+      "!packages/react/src/metadata/extracted.ts",
       "!cairn/items",
       "!ROADMAP.md",
       "!CLAUDE.md"
@@ -50,7 +51,12 @@
   },
   "overrides": [
     {
-      "includes": ["**/*.config.ts", "**/.storybook/**", "**/*.stories.tsx"],
+      "includes": [
+        "**/*.config.ts",
+        "**/.storybook/**",
+        "**/*.stories.tsx",
+        "apps/site/scripts/subset-font.d.ts"
+      ],
       "linter": {
         "rules": {
           "style": {
@@ -63,6 +69,17 @@
       "includes": ["packages/react/src/index.ts"],
       "formatter": {
         "lineWidth": 320
+      }
+    },
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedImports": "off",
+            "noUnusedVariables": "off"
+          }
+        }
       }
     },
     {
