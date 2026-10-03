@@ -21,10 +21,12 @@ import type {
 } from '@rockaway/react/metadata';
 import { REPOSITORY } from './markdown.ts';
 
-/** A document from `docs/`, as the content collection reads it. */
+/** A document from `docs/`: its entry in `docs.ts`, and its Markdown. */
 export interface DocSource {
   /** The file's name without `.md`: `concept`. */
   readonly id: string;
+  readonly title: string;
+  readonly description: string;
   /** The raw Markdown, as written for GitHub. */
   readonly body: string;
 }
@@ -60,22 +62,6 @@ const ABOUT = [
     'text. The snapshots are the component’s own output, so they are what it draws.',
 ];
 
-/** A document's title and first paragraph, read from its Markdown. */
-export function docSummary(doc: DocSource): { title: string; summary: string } {
-  const lines = doc.body.split('\n');
-  const heading = lines.findIndex((line) => line.startsWith('# '));
-  const title = heading === -1 ? doc.id : (lines[heading]?.slice(2).trim() ?? doc.id);
-  const paragraph: string[] = [];
-  for (const line of lines.slice(heading + 1)) {
-    if (line.trim() === '') {
-      if (paragraph.length > 0) break;
-      continue;
-    }
-    paragraph.push(line.trim());
-  }
-  return { title, summary: paragraph.join(' ') };
-}
-
 /**
  * A document from `docs/` links to its neighbours by relative path, which is
  * right on GitHub and nowhere else. Those links go to the file on GitHub, as
@@ -95,7 +81,7 @@ export function absoluteLinks(markdown: string, fromDir = 'docs'): string {
 }
 
 /** A document's twin: the Markdown as written, with its links made absolute. */
-export function docMarkdown(doc: DocSource): string {
+export function docMarkdown(doc: Pick<DocSource, 'body'>): string {
   return `${absoluteLinks(doc.body).trimEnd()}\n`;
 }
 
@@ -258,7 +244,7 @@ export function componentMarkdown(component: ComponentMeta, locate: Locate): str
 /** What the agent files are made from. */
 export interface Site {
   readonly metadata: MetadataDocument;
-  /** In the order they are listed. */
+  /** In the order they are listed: the order of `docs.ts`. */
   readonly docs: readonly DocSource[];
   readonly locate: Locate;
 }
@@ -271,8 +257,7 @@ function preamble(): string[] {
 export function llmsIndex({ metadata, docs, locate }: Site): string {
   const lines = [...preamble(), '## Docs', ''];
   for (const doc of docs) {
-    const { title, summary } = docSummary(doc);
-    lines.push(`- [${title}](${locate(docTwin(doc.id))}): ${summary}`);
+    lines.push(`- [${doc.title}](${locate(docTwin(doc.id))}): ${doc.description}`);
   }
   lines.push('', '## Components', '');
   for (const c of metadata.components) {
@@ -293,7 +278,7 @@ export function llmsIndex({ metadata, docs, locate }: Site): string {
 export function llmsFull({ metadata, docs, locate }: Site): string {
   const sections = [
     preamble().join('\n'),
-    ...docs.map(docMarkdown),
+    ...docs.map((doc) => docMarkdown(doc)),
     ...metadata.components.map((c) => componentMarkdown(c, locate)),
   ];
   return `${sections.map((s) => s.trimEnd()).join('\n\n---\n\n')}\n`;

@@ -9,6 +9,7 @@ import { base, site as origin } from 'astro:config/server';
 import { getCollection } from 'astro:content';
 import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import type { MetadataDocument } from '@rockaway/react/metadata';
+import { docFor, docs as entries } from './docs.ts';
 import type { Site } from './llms.ts';
 import { href } from './paths.ts';
 
@@ -25,11 +26,16 @@ export function locate(pathWithinSite: string): string {
   return new URL(href(pathWithinSite, base), origin).href;
 }
 
+/**
+ * Every document in the collection, in the order `docs.ts` lists them, with
+ * the title and description its page has. `docFor` fails the build for a
+ * document `docs.ts` does not list, as the page does.
+ */
 export async function site(): Promise<Site> {
-  const entries = await getCollection('docs');
-  const docs = entries
-    .map((entry) => ({ id: entry.id, body: entry.body ?? '' }))
-    .sort((a, b) => a.id.localeCompare(b.id));
+  const order = Object.keys(entries);
+  const docs = (await getCollection('docs'))
+    .map((entry) => ({ id: entry.id, ...docFor(entry.id), body: entry.body ?? '' }))
+    .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   return { metadata, docs, locate };
 }
 

@@ -15,5 +15,5 @@ export const getStaticPaths = (async () =>
     props: { body: entry.body ?? '' },
   }))) satisfies GetStaticPaths;
 
-export const GET: APIRoute<{ body: string }, { doc: string }> = ({ params, props }) =>
-  text(docMarkdown({ id: params.doc, body: props.body }), 'text/markdown');
+export const GET: APIRoute<{ body: string }> = ({ props }) =>
+  text(docMarkdown(props), 'text/markdown');

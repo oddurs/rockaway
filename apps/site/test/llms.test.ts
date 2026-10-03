@@ -8,12 +8,12 @@ import path from 'node:path';
 import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import type { MetadataDocument } from '@rockaway/react/metadata';
 import { describe, expect, test } from 'vitest';
+import { docFor } from '../src/lib/docs.ts';
 import {
   absoluteLinks,
   componentMarkdown,
   type DocSource,
   docMarkdown,
-  docSummary,
   llmsFull,
   llmsIndex,
   slugOf,
@@ -24,7 +24,10 @@ const docsDir = path.join(import.meta.dirname, '../../../docs');
 const docs: DocSource[] = readdirSync(docsDir)
   .filter((file) => file.endsWith('.md'))
   .sort()
-  .map((file) => ({ id: file.slice(0, -3), body: readFileSync(path.join(docsDir, file), 'utf8') }));
+  .map((file) => {
+    const id = file.slice(0, -3);
+    return { id, ...docFor(id), body: readFileSync(path.join(docsDir, file), 'utf8') };
+  });
 const locate = (p: string) => `https://example.test/rockaway/${p}`;
 const site = { metadata, docs, locate };
 
@@ -117,9 +120,9 @@ describe('llms.txt', () => {
         `- [${c.name}](${locate(`components/${slugOf(c.name)}.md`)}): ${c.summary}`,
       );
     }
+    expect(docs.length).toBeGreaterThan(0);
     for (const doc of docs) {
-      const { title } = docSummary(doc);
-      expect(index).toContain(`- [${title}](${locate(`${doc.id}.md`)}): `);
+      expect(index).toContain(`- [${doc.title}](${locate(`${doc.id}.md`)}): ${doc.description}\n`);
     }
   });
 
@@ -130,12 +133,7 @@ describe('llms.txt', () => {
   });
 });
 
-describe('docs', () => {
-  test('a document’s title and first paragraph are its entry', () => {
-    const doc = { id: 'x', body: '# Title\n\nFirst line\nwraps here.\n\nSecond.\n' };
-    expect(docSummary(doc)).toEqual({ title: 'Title', summary: 'First line wraps here.' });
-  });
-
+describe('a document’s twin', () => {
   test('relative links go to the file on GitHub, and nothing else moves', () => {
     expect(
       absoluteLinks('[R](../README.md) [C](concept.md#rules) [A](#here) [W](https://x.test/)'),
