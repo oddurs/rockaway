@@ -40,3 +40,7 @@ screen reader, on a slow connection, in Firefox and Safari.
 - [ ] First load on a throttled "Slow 4G" profile: the landing page's first paint and its live screen time recorded here
 - [ ] Chromium, Firefox and Safari checked; any difference fixed or recorded
 - [ ] Every finding fixed or filed as a `bug` linked here
+
+## 2026-10-03
+
+From 0143: confirm in Safari VoiceOver that display:block tables keep their table semantics (they do in Chromium).

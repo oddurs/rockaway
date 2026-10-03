@@ -444,7 +444,7 @@ describe('the snapshots, as the site draws them', () => {
       ┏ heavy ━━━┓
       ┃          ┃
       ┗━━━━━━━━━━┛
-      ╭ round… ──╮
+      ╭ rounded ─╮
       │          │
       ╰──────────╯
       + ascii ---+
