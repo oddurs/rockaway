@@ -62,6 +62,21 @@ a second set of hard-coded lengths — which is also why DTCG's refusal to accep
 `ch` and `lh` as dimension units turned out to improve the design rather than
 constrain it.
 
+### What each density is for
+
+A one-row control is one cell tall, so the line box *is* its target size
+(`0197`). At the browser's default 16px:
+
+| density | line box | one row | for |
+| --- | --- | --- | --- |
+| `dense` | 1 | 16px | an opt-in for those who want a terminal's tightness; adjacent one-row targets fail WCAG 2.5.8, and the run says so every time |
+| `normal` | 1.5 | 24px | the default: one row is the 24px target WCAG 2.2 AA asks for |
+| `airy` | 2 | 32px | reading at length, with room between the lines |
+| `touch` | 2.75 | 44px | a coarse pointer: one row is a finger-sized target, and nothing moves to make it so (`0074`) |
+
+The default meets AA. A system that sells accessibility as a feature does not
+fail it by default, so the tight terminal look is the one you choose.
+
 ## 3. Four routes to a TUI on the web. We take the fourth
 
 | Route | Examples | What it costs |
@@ -96,7 +111,16 @@ the content is ordinary HTML that happens to land on whole cells.
 
 Measurement is a 50-character probe (`cell-metrics.ts`), one `ResizeObserver`
 batched into a rAF, and `--rk-cell-width` / `--rk-cell-height` set on the host.
-Fonts load late and zoom changes; the cell is measured, never assumed.
+Fonts load late and zoom changes; the cell is measured, never assumed. Until it
+is — on a server, or before hydration — the cell is `1ch` by `1lh`, which is the
+same cell the measurement will find, so nothing moves when it does.
+
+The chrome is rendered, not painted in an effect (`0126`): `Screen` turns the
+buffer into rows of runs as elements, so a server sends the frame in its first
+response and hydration keeps those nodes. The buffer functions a component
+draws with (`frameBuffer`, `dividerBuffer`, `formatKeys`) live in each
+component's `.pure.ts`, outside the client boundary, so a server can call them
+too.
 
 ## 5. The font supplies letters; the cell supplies geometry
 
@@ -123,9 +147,9 @@ font says, not as tall as the cell. Measured in the workbench (system mono,
 | density | cell | font `│` | |
 | --- | --- | --- | --- |
 | dense | 16px | 21px | bleeds 3px into the row above and 2px into the row below |
-| normal | 20px | 21px | meets, by coincidence of this font |
-| airy | 24px | 21px | a 3px gap between rows |
-| touch | 32px | 21px | an 11px gap |
+| normal | 24px | 21px | a 3px gap between rows |
+| airy | 32px | 21px | an 11px gap |
+| touch | 44px | 21px | a 23px gap |
 
 Density *is* the line box (`0074`), so the line box will never match the font.
 The same is true of block elements — a scrollbar thumb of `█` falls apart into
@@ -238,7 +262,10 @@ A grid nobody can break is a grid people quietly abandon (`0072`). Three levels
 
 `checkConformance` asserts that every box inside a screen measures a whole
 number of cells, in both directions, at every density and in every theme. It
-runs on every story via an `afterEach`. Anything off-grid without a reason
+runs on every story via an `afterEach`, which then switches the root through
+all four densities and both modes and runs it again in each, with continuity
+and a target-size check beside it, so a failure names the density and mode it
+failed at (`0125`). Anything off-grid without a reason
 fails; anything with one is printed in the report, grouped by reason and
 counted, so a page can say "3 exceptions, 2 reasons". An empty reason is not a
 reason: `data-rk-offgrid=""` fails on its own (`0123`).
@@ -256,8 +283,9 @@ The level belongs to the screen, not to a box in it, so a component cannot
 loosen the app it sits in. The workbench runs at `standard`, with a story
 pinned at each level.
 
-The deal is not "never break the grid". The deal is **breaking it quietly is
-what's forbidden** — exceptions become countable instead of accumulating.
+> [!NOTE]
+> The deal is not "never break the grid". The deal is **breaking it quietly is
+> what's forbidden** — exceptions become countable instead of accumulating.
 
 The screen's own box is exempt: the page decides how much room a screen gets,
 and the grid governs what is drawn inside it.
@@ -351,9 +379,41 @@ cell. Messages, such as an error under a field, are content and may add rows.
 
 The cursor and the selection are two signals, and List is where they meet: in
 a multi-select list the keyboard's row and the chosen rows are told apart in
-text, in greyscale and in forced colors. Reverse video swaps an element's own
-figure and ground. In forced colors that means the reader's text and canvas
-swapped, so it is never drawn as two halves that both collapse to the canvas.
+text, in greyscale and in forced colors.
+
+**Reverse means an element's own figure and ground, swapped.** That holds in
+every mode. In forced colors it is the reader's text and canvas swapped: the
+inverse pair becomes `CanvasText` behind `Canvas`, never two halves that both
+collapse to the canvas. Anything reversed also opts out of the adjustment
+(`forced-color-adjust: none`), because the browser otherwise paints a
+canvas-coloured backplate behind every line of text, and the reversed words
+vanish into it. Computed styles cannot see that backplate; the forced-colors
+stories check the pixels (`0181`).
+
+## 10. A scroll position is drawn in cells
+
+**No native scrollbar is ever drawn** (decision `0207`). A browser's scrollbar
+is drawn in pixels by the platform. Where it is a classic one, with a mouse
+attached or "always show scroll bars" on, it takes about fifteen pixels from
+its box. That leaves everything inside a fraction of a cell off the grid, and
+puts a second scrollbar beside the one a component draws in cells.
+
+So every element that scrolls hides it, with the `rk-scroll` class (or
+`rk-scroll-marks`, below), and shows where it is in cells:
+
+- a viewport that scrolls by rows draws a scrollbar column, as List does
+- a region that scrolls across shows the theme's overflow marks, `‹` and `›`,
+  at each edge that has more past it, as `less -S` does. That is
+  `rk-scroll-marks`, which prose code blocks and tables use, with the content
+  as its one child.
+
+Scrolling itself is untouched: wheel, trackpad, touch and keyboard all still
+work, and a scrolling region keeps its tab stop. After every story, a check
+fails any element whose computed overflow scrolls without
+`scrollbar-width: none`. It reads computed style, not pixels, because a
+headless browser hides scrollbars and a native bar measures nothing there. A
+fifth test browser turns classic scrollbars on, so the stories that scroll are
+also seen the way a reader with a mouse sees them.
 
 ---
 
@@ -406,9 +466,12 @@ Written down so it is a known limit rather than a later surprise.
   the line gets its own line: a documented exception, not a fix.
 - **`1ch` assumes the font is monospace.** A fallback that is not will measure
   wrong. We ship the metric rather than trusting a stack.
-- **Three painters is not four.** Server rendering uses `toText`; a static page
-  with no JavaScript gets chrome, but `Screen`'s measurement, and therefore an
-  exact fit, needs the client.
+- **A server cannot measure.** `Screen` renders its chrome as elements, so a
+  server sends it and a page with JavaScript off still shows its frame, drawn
+  by the cell renderer (`0126`). A screen with a fixed size in cells is exact
+  from the first paint, its cell `1ch` by `1lh` until measured. A screen that
+  measures its container has no size until the client runs: it renders at its
+  `fallback`, and corrects inside its own box when it hydrates.
 
 ## The contract a component is held to
 

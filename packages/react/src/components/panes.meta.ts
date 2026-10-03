@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
-import { layoutPanes, panesBuffer, panesVariants, type SplitSpec } from './panes.tsx';
+import { layoutPanes, panesBuffer, panesVariants, type SplitSpec } from './panes.pure.ts';
 
 /** Three panes, one split again: a list of files, and a diff over a log. */
 const THREE: SplitSpec = {

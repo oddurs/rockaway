@@ -69,8 +69,10 @@ reaches the edges of its cell and meets its neighbour there.
 
 The cell comes from the font, in `rem`, so browser zoom and the reader's font
 size work untouched. Touch does not get a second layout: it gets a bigger
-cell — `touch` density puts a one-row control at about 44px without moving a
-single coordinate. Layout responds to how many cells it has, at 40, 60, 80 and
+cell — `touch` density puts a one-row control at 44px without moving a single
+coordinate. The default density, `normal`, makes a row 24px, the target size
+WCAG 2.2 AA asks for; `airy` gives room to read, and `dense` is the opt-in for
+a terminal's tightness, at the cost of that target size. Layout responds to how many cells it has, at 40, 60, 80 and
 120 columns, the widths terminals have always used.
 
 ## Packages

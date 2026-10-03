@@ -1,7 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { layoutPanes, panesBuffer, type SplitSpec } from '../src/components/panes.tsx';
+import { layoutPanes, panesBuffer, type SplitSpec } from '../src/components/panes.pure.ts';
 
 /**
  * Three panes, one of them split again: a fixed list of files, and a diff

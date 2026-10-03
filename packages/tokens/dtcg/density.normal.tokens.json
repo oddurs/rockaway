@@ -1,9 +1,9 @@
 {
   "cell": {
     "$type": "number",
-    "$description": "The cell at normal density: one character across, 1.25 line boxes down. A cell has no length of its own — it is the font's — so the CSS layer turns these into `ch` and `lh` (cairn 0090).",
+    "$description": "The cell at normal density: one character across, 1.5 line boxes down. A cell has no length of its own — it is the font's — so the CSS layer turns these into `ch` and `lh` (cairn 0090).",
     "line": {
-      "$value": 1.25
+      "$value": 1.5
     }
   },
   "space": {
