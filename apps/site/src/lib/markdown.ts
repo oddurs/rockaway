@@ -62,15 +62,29 @@ export function rehypeRepositoryLinks(
 /**
  * Code blocks and tables scroll when they are wider than the measure, and a
  * box that scrolls has to be reachable by keyboard to be scrolled by one.
+ *
+ * A table is wrapped, and the wrapper scrolls instead (cairn 0208). The
+ * overflow marks that show a reader there is more to either side need one box
+ * to hold, and a table is several: its header and its body.
  */
 export function rehypeScrollable(): (tree: Root) => void {
-  return (tree) => {
-    walk(tree, (element) => {
-      if (element.tagName === 'pre' || element.tagName === 'table') {
-        element.properties.tabIndex = 0;
+  const visit = (node: Root | Element): void => {
+    node.children = node.children.map((child) => {
+      if (child.type !== 'element') return child;
+      if (child.tagName === 'pre') child.properties.tabIndex = 0;
+      if (child.tagName === 'table') {
+        return {
+          type: 'element',
+          tagName: 'div',
+          properties: { className: ['rk-scroll-marks'], tabIndex: 0 },
+          children: [child],
+        } satisfies Element;
       }
-    });
+      visit(child);
+      return child;
+    }) as typeof node.children;
   };
+  return visit;
 }
 
 /** The prose measure, in cells, and the blank cells between table columns. */

@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type ListRow, listBuffer } from './list.tsx';
+import { listBuffer } from './list.pure.ts';
+import type { ListRow } from './list.tsx';
 
 const FILES = ['src/index.ts', 'src/buffer.ts', 'src/junction.ts', 'src/layout.ts', 'README.md'];
 

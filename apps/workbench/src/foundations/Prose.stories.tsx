@@ -17,13 +17,15 @@ import { checkLine, proseLines } from './prose-lines.ts';
  */
 function ProseOnTheGrid({ cols }: { cols?: number }) {
   // A box that scrolls has to be reachable by keyboard, so code and tables
-  // take a tab stop, as the site's pipeline gives them.
+  // take a tab stop, as the site's pipeline gives them. A table is wrapped,
+  // and the wrapper scrolls, so it can show its overflow marks (0208).
   const html = useMemo(
     () =>
       marked
         .parse(fixture, { async: false })
         .replaceAll('<pre>', '<pre tabindex="0">')
-        .replaceAll('<table>', '<table tabindex="0">'),
+        .replaceAll('<table>', '<div class="rk-scroll-marks" tabindex="0"><table>')
+        .replaceAll('</table>', '</table></div>'),
     [],
   );
   return (
@@ -108,7 +110,12 @@ async function conformsAtEveryDensity(screen: HTMLElement): Promise<void> {
   }
 }
 
+// The classic-scrollbars browser runs this again with scrollbars that take
+// room (0208), as it does the stories that scroll across. The line checks
+// below are left to the others: they read every line's pixels, and once more
+// in a fifth browser is time CI does not have.
 export const Fixture: Story = {
+  tags: ['classic-scrollbars'],
   play: async ({ canvas }) => {
     const screen = canvas.getByTestId('prose');
     await conformsAtEveryDensity(screen);
@@ -146,18 +153,80 @@ export const Fixture: Story = {
 
 export const FortyCells: Story = {
   name: 'At forty cells',
+  tags: ['classic-scrollbars'],
   args: { cols: 40 },
   play: async ({ canvas }) => {
     const screen = canvas.getByTestId('prose');
     await conformsAtEveryDensity(screen);
 
-    // Prose reflows; only code and tables scroll, inside their own boxes.
+    // Prose reflows; only code and tables scroll, inside their own boxes. A
+    // table scrolls in its wrapper, which can mark its edges.
     const article = screen.querySelector<HTMLElement>('.rk-prose');
     await expect(article?.scrollWidth).toBe(article?.clientWidth);
     const scrolls = [...screen.querySelectorAll<HTMLElement>('*')]
       .filter((el) => el.scrollWidth > el.clientWidth + 1)
-      .map((el) => el.tagName.toLowerCase());
+      .map((el) => (el.matches('.rk-scroll-marks') ? 'table' : el.tagName.toLowerCase()));
     await expect(new Set(scrolls)).toEqual(new Set(['pre', 'table']));
+  },
+};
+
+/** Whether a scroller's overflow mark at one edge is showing. */
+function markShows(scroller: Element, edge: '::before' | '::after'): boolean {
+  return getComputedStyle(scroller, edge).visibility === 'visible';
+}
+
+/** Scroll, then wait for the scroll-state query to catch up. */
+async function scrollTo(scroller: HTMLElement, left: number): Promise<void> {
+  scroller.scrollLeft = left;
+  for (let i = 0; i < 2; i++) await new Promise((done) => requestAnimationFrame(done));
+}
+
+/**
+ * Code and tables that scroll across hide the browser's scrollbar (0207) and
+ * mark each edge that has more past it, `‹` at the start and `›` at the end,
+ * the way `less -S` does (0208). The marks are the theme's, cover one cell at
+ * the edge, and are read as nothing.
+ */
+export const OverflowMarks: Story = {
+  name: 'Overflow marks',
+  tags: ['classic-scrollbars'],
+  args: { cols: 40 },
+  play: async ({ canvas }) => {
+    const screen = canvas.getByTestId('prose');
+    const pre = screen.querySelector<HTMLElement>('pre') as HTMLElement;
+    const table = screen.querySelector<HTMLElement>('.rk-scroll-marks') as HTMLElement;
+    await expect(table.querySelector('table')).not.toBeNull();
+
+    for (const scroller of [pre, table]) {
+      await expect(getComputedStyle(scroller).getPropertyValue('scrollbar-width')).toBe('none');
+      // The theme's marks, with no text for a reader.
+      await expect(getComputedStyle(scroller, '::before').content).toContain(
+        getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-start').trim(),
+      );
+      await expect(getComputedStyle(scroller, '::after').content).toContain(
+        getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-end').trim(),
+      );
+
+      // At the start: more to the end only.
+      await scrollTo(scroller, 0);
+      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+        false,
+        true,
+      ]);
+      // Part way: more both ways.
+      await scrollTo(scroller, Math.round((scroller.scrollWidth - scroller.clientWidth) / 2));
+      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+        true,
+        true,
+      ]);
+      // At the end: more to the start only.
+      await scrollTo(scroller, scroller.scrollWidth);
+      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+        true,
+        false,
+      ]);
+      await scrollTo(scroller, 0);
+    }
   },
 };
 
