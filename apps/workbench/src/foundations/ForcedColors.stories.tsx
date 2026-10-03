@@ -51,6 +51,10 @@ function ForcedColors() {
           Publish
         </button>
       </section>
+      {/* A theme island re-declares its palette (0052); forced colors still wins. */}
+      <p data-rk-theme="dracula" data-testid="themed" style={{ color: 'var(--rk-fg-muted)' }}>
+        Inside a theme, still the reader's colours.
+      </p>
     </div>
   );
 }
@@ -86,6 +90,13 @@ export const Active: Story = {
     const muted = getComputedStyle(canvas.getByTestId('muted')).color;
     const body = getComputedStyle(document.body).color;
     await expect(muted).toBe(body);
+
+    // A theme island cannot bring its own colours back in.
+    const themed = canvas.getByTestId('themed');
+    await expect(getComputedStyle(themed).getPropertyValue('--rk-fg-muted').trim()).toBe(
+      'CanvasText',
+    );
+    await expect(getComputedStyle(themed).color).toBe(body);
 
     // The surface still has a visible edge.
     const edge = getComputedStyle(canvas.getByLabelText('Surface'));

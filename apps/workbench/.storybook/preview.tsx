@@ -1,26 +1,55 @@
+import { GlyphProvider } from '@rockaway/react';
 import { expectConformance, expectContinuity, formatReport } from '@rockaway/react/testing';
+import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import type { Decorator, Preview } from '@storybook/react-vite';
 import '@fontsource-variable/jetbrains-mono';
 import '@rockaway/css';
 import '@rockaway/tokens/tokens.css';
+// Every theme but the default is a stylesheet of its own, loaded after the
+// tokens so a theme on the root wins over the root's defaults (cairn 0052).
+import '@rockaway/tokens/themes/ice.css';
+import '@rockaway/tokens/themes/ink.css';
+import '@rockaway/tokens/themes/phosphor.css';
+import '@rockaway/tokens/themes/catppuccin.css';
+import '@rockaway/tokens/themes/dracula.css';
+import '@rockaway/tokens/themes/nord.css';
+import '@rockaway/tokens/themes/solarized.css';
+import '@rockaway/tokens/themes/tokyo-night.css';
 import { runner } from './runner.ts';
 
 /**
- * Mode and density are runtime contexts (cairn 0058), so the workbench switches
- * them on the root element the same way an app will. So is the conformance
- * level (cairn 0072, 0123): an app declares it once, at its root, and every
- * screen in it is held to it. A story about a level pins it with `globals`.
+ * Theme, mode and density are runtime contexts (cairn 0058, 0052), so the
+ * workbench switches them on the root element the same way an app will. So is
+ * the conformance level (cairn 0072, 0123): an app declares it once, at its
+ * root, and every screen in it is held to it. A story about a level pins it
+ * with `globals`. The theme's glyphs go through the provider, because chrome
+ * is drawn in JavaScript and cannot read them from CSS (0119).
  */
 const withContexts: Decorator = (Story, { globals }) => {
   const root = document.documentElement;
+  const theme = (globals.theme ?? 'default') as ThemeName;
+  root.dataset.rkTheme = theme;
   root.dataset.theme = globals.mode;
   root.dataset.density = globals.density;
   root.dataset.rkConformance = globals.conformance;
-  return <Story />;
+  return (
+    <GlyphProvider glyphs={themeGlyphs[theme]}>
+      <Story />
+    </GlyphProvider>
+  );
 };
 
 const preview: Preview = {
   globalTypes: {
+    theme: {
+      description: 'Theme',
+      toolbar: {
+        title: 'Theme',
+        icon: 'paintbrush',
+        items: themeContexts.map((theme) => ({ value: theme.name, title: theme.title })),
+        dynamicTitle: true,
+      },
+    },
     mode: {
       description: 'Colour mode',
       toolbar: {
@@ -63,7 +92,7 @@ const preview: Preview = {
   },
   // `standard` is the default level, and the one every story is held to
   // unless it is about another.
-  initialGlobals: { mode: 'light', density: 'normal', conformance: 'standard' },
+  initialGlobals: { theme: 'default', mode: 'light', density: 'normal', conformance: 'standard' },
   decorators: [withContexts],
   parameters: {
     layout: 'centered',
