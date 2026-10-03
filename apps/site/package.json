@@ -1,0 +1,31 @@
+{
+  "name": "site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "tsc -p tsconfig.json && astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "font": "node scripts/font.ts"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "7.3.1",
+    "@astrojs/react": "7.0.0",
+    "@rockaway/css": "workspace:*",
+    "@rockaway/grid": "workspace:*",
+    "@rockaway/react": "workspace:*",
+    "@rockaway/tokens": "workspace:*",
+    "astro": "7.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "playwright": "1.63.0",
+    "subset-font": "2.9.0",
+    "vitest": "4.1.11"
+  }
+}

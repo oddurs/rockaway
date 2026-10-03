@@ -1,0 +1,41 @@
+---
+/**
+ * The document every page is rendered into (cairn 0103). It owns `<html>` and
+ * the order of the head, which matters on a grid:
+ *
+ *   1. charset and viewport
+ *   2. the pre-paint script that applies theme, mode and density (0148), so
+ *      the first frame is already the reader's choice
+ *   3. the font, preloaded, and its faces, so the cell is the right width from
+ *      the first frame whether or not the font has arrived
+ *   4. the system's stylesheet, which the build appends
+ *
+ * Keep logic out of here: frontmatter in an `.astro` file is not typechecked
+ * (see the site's README), so it lives in `src/lib`.
+ */
+import fontUrl from '../fonts/jetbrains-mono.woff2?url';
+import { fontFaces } from '../lib/font.ts';
+import '../styles/site.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+    <style is:inline set:html={fontFaces(fontUrl)}></style>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

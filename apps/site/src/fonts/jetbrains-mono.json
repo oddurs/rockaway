@@ -1,0 +1,18 @@
+{
+  "family": "JetBrains Mono",
+  "license": "OFL-1.1",
+  "source": {
+    "url": "https://raw.githubusercontent.com/JetBrains/JetBrainsMono/v2.304/fonts/variable/JetBrainsMono%5Bwght%5D.ttf",
+    "sha256": "662a196d58f1183bf2d77428b6d5283fe3f45161ab021bea4036bc98e5cac016"
+  },
+  "weight": [400, 700],
+  "metrics": {
+    "unitsPerEm": 1000,
+    "advance": 600,
+    "ascent": 1020,
+    "descent": -300,
+    "lineGap": 0
+  },
+  "unicodeRange": "U+20-7E,U+A0-17F,U+2010-2027,U+2030-203A,U+20AC,U+2122,U+2190-2195,U+21B5,U+21E5,U+21E7,U+2212,U+2248,U+2260,U+2264-2265,U+2303,U+2318,U+2325-2326,U+232B,U+238B,U+23CE,U+25B8,U+25BE,U+25CB,U+25CF,U+2713,U+2717",
+  "bytes": 18420
+}
