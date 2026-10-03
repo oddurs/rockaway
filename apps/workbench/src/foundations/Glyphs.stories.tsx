@@ -4,6 +4,16 @@ import { glyphsFor, themeGlyphs, themeNames } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 
+/** Six files in a three-row list: the other three are scrolled out of view. */
+const files = [
+  'src/index.ts',
+  'src/glyph.ts',
+  'src/theme.ts',
+  'src/list.ts',
+  'src/frame.ts',
+  'src/button.ts',
+];
+
 /**
  * A theme owns its characters (cairn 0119). Components ask `useGlyphs()` for
  * every glyph they draw, so one provider changes the border set, the cursor,
@@ -16,13 +26,11 @@ function Screen({ title }: { title: string }) {
         <List
           aria-label="Files"
           rows={3}
-          total={6}
+          total={files.length}
           selectionMode="single"
           defaultSelectedKeys={['a']}
         >
-          {/* Three rows of six: the rest are left out rather than scrolled out of
-              view, because a text screenshot reads every row in the DOM. */}
-          {['src/index.ts', 'src/glyph.ts', 'src/theme.ts'].map((file, i) => (
+          {files.map((file, i) => (
             <ListItem key={file} id={i === 0 ? 'a' : file} textValue={file}>
               {file}
             </ListItem>

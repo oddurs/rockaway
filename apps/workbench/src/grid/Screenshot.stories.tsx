@@ -1,5 +1,5 @@
 import { Buffer, contentArea, drawBox, drawText, rect, type Size } from '@rockaway/grid';
-import { Screen } from '@rockaway/react';
+import { Frame, List, ListItem, Screen } from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
@@ -88,5 +88,60 @@ export const WorksOnABufferToo: Story = {
     const shot = screenshot(draw({ width: 20, height: 4 }));
     expect(shot.split('\n')[0]).toBe('┌ publish ─────────┐');
     expect(shot.split('\n')).toHaveLength(4);
+  },
+};
+
+const months = ['jan', 'february, the short one', 'mar', 'apr', 'may', 'jun', 'jul', 'aug'];
+
+/**
+ * Eight rows in a three-row list. The other five are in the DOM, above or below
+ * the list's box, and a reader cannot see them, so neither does the screenshot
+ * (cairn 0160). A label too long for its row is cut where the row cuts it.
+ */
+export const ClipsToTheScrollContainer: Story = {
+  name: 'Shows only what a scroll container shows',
+  render: () => (
+    <Frame title="months" cols={20} rows={5}>
+      <div style={{ inlineSize: 'calc(var(--rk-cell-width) * 16)' }}>
+        <List aria-label="Months" rows={3} total={months.length}>
+          {months.map((month) => (
+            <ListItem key={month} id={month}>
+              {month}
+            </ListItem>
+          ))}
+        </List>
+      </div>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    const frame = canvas.getByRole('group', { name: 'months' });
+    const scrollbar = (): string => frame.querySelector('.rk-list-scrollbar')?.textContent ?? '';
+    await waitFor(() => expect(scrollbar()).toBe('█░░'));
+
+    expect(screenshot(frame, { legend: false })).toBe(
+      [
+        '┌ months ──────────┐',
+        '│  jan           █ │',
+        '│  february, the ░ │',
+        '│  mar           ░ │',
+        '└──────────────────┘',
+      ].join('\n'),
+    );
+
+    // Scroll by whole rows, the way the list itself does.
+    const box = frame.querySelector('.rk-list-box') as HTMLElement;
+    const row = (frame.querySelector('.rk-list-item') as HTMLElement).offsetHeight;
+    box.scrollTop = row * 3;
+    await waitFor(() => expect(scrollbar()).toBe('░█░'));
+
+    expect(screenshot(frame, { legend: false })).toBe(
+      [
+        '┌ months ──────────┐',
+        '│  apr           ░ │',
+        '│  may           █ │',
+        '│  jun           ░ │',
+        '└──────────────────┘',
+      ].join('\n'),
+    );
   },
 };

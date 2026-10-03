@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 20% · 12 of 59 done · due 2027-01-31
+`###·······` 22% · 13 of 59 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -153,7 +153,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
-- [ ] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 
 ### in review
 
@@ -174,6 +173,7 @@ The component contract, proven on a first set of components.
 - [x] [`0120`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0120-recast-motion-as-frames-on-a-tick-and-retire-the-easing-curves.md) Recast motion as frames on a tick, and retire the easing curves <sup>feature · tokens · p1</sup>
 - [x] [`0121`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0121-make-every-package-s-exports-correct-and-prove-it-with-publint-and-attw.md) Make every package's exports correct, and prove it with publint and attw <sup>chore · distribution · p0</sup>
 - [x] [`0122`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0122-give-each-component-one-line-in-the-barrels-so-parallel-work-merges-cleanly.md) Give each component one line in the barrels, so parallel work merges cleanly <sup>chore · tooling · p1</sup>
+- [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 
 ## retheme — Tokens on the grid
 
