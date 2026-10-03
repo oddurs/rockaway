@@ -134,6 +134,44 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(loaded).toBe(true);
   });
 
+  test('sets Markdown as prose, which reflows on a phone without the page scrolling', async () => {
+    const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const errors: string[] = [];
+    phone.on('pageerror', (error) => errors.push(error.message));
+    phone.on('response', (response) => {
+      if (!response.ok()) errors.push(`${response.url()}: ${response.status()}`);
+    });
+    await phone.goto(`${origin}${base}concept/`);
+    await phone.evaluate(() => document.fonts.ready);
+    const found = await phone.evaluate(() => {
+      const article = document.querySelector('article.rk-prose');
+      return {
+        prose: article !== null,
+        h1: article?.querySelector('h1')?.textContent,
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        readme: [...document.querySelectorAll('a')].find((a) => a.textContent === 'README')?.href,
+        unreachable: [...document.querySelectorAll<HTMLElement>('pre, table')].filter(
+          (el) => el.tabIndex !== 0,
+        ).length,
+        shaped: [...document.querySelectorAll('pre [data-rk-shape]')].map((el) => el.textContent),
+        styled: document.querySelectorAll('article [style]:not([data-rk-shape], col)').length,
+      };
+    });
+    await phone.close();
+    expect(errors).toEqual([]);
+    expect(found.prose).toBe(true);
+    expect(found.h1).toBe('The concept');
+    // Only code and tables scroll, inside their own boxes.
+    expect(found.overflow).toBe(0);
+    expect(found.readme).toBe('https://github.com/oddurs/rockaway/blob/main/README.md');
+    expect(found.unreachable).toBe(0);
+    // The diagram in section 4 is drawn by the cell, and still copies as text.
+    expect(found.shaped).toContain('┌');
+    // No page brings styles of its own: the only inline style is the pipeline's
+    // run lengths and column widths.
+    expect(found.styled).toBe(0);
+  });
+
   test('the cell is the font, and the fallback has the same cell', async () => {
     const { cell, web, fallback, available } = await page.evaluate(async () => {
       const faces = [...document.fonts].filter((f) => f.family.startsWith('JetBrains Mono ('));
@@ -160,10 +198,8 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     });
     // The cell is the font's advance as the browser lays it out: 0.6em is
     // 9.6px at 16px, which Chromium on Linux, without subpixel positioning,
-    // rounds to 10px. Either way the screen measured what the text uses, to
-    // the layout unit: the measurement is rounded to 1/64px, so a run of cells
-    // and the same cells one by one land on the same pixels (cairn 0117).
-    expect(Math.abs(Number.parseFloat(cell) - web / 100)).toBeLessThanOrEqual(1 / 128);
+    // rounds to 10px. Either way the screen measured what the text uses.
+    expect(Number.parseFloat(cell)).toBeCloseTo(web / 100, 2);
     expect(Math.abs(web / 100 - 9.6)).toBeLessThanOrEqual(0.5);
     // At least one adjusted system font must be here for this to mean anything.
     expect(available.length).toBeGreaterThan(0);

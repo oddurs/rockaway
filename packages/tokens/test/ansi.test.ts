@@ -73,6 +73,18 @@ describe('the palette', () => {
           contrast(p['border-strong'], p.background),
           `border ${where}`,
         ).toBeGreaterThanOrEqual(3);
+        // The ordinary edge is a boundary too (0178): 3:1 on every ground.
+        for (const ground of ['background', 'surface', 'subtle'] as const) {
+          expect(
+            contrast(p.border, p[ground]),
+            `border on ${ground} ${where}`,
+          ).toBeGreaterThanOrEqual(3);
+        }
+        // And it is generated that way, not fitted afterwards.
+        expect(
+          fittedPalette(inputs, mode).adjustments.filter((a) => a.slot.startsWith('border')),
+          where,
+        ).toEqual([]);
         for (const slot of ['red', 'green', 'yellow', 'blue', 'magenta', 'cyan'] as const) {
           expect(contrast(p[slot], p.background), `${slot} ${where}`).toBeGreaterThanOrEqual(4.5);
           expect(

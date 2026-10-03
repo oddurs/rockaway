@@ -1,33 +1,55 @@
 'use client';
 
 /**
- * `List` (cairn 0100): the selection primitive a TUI leans on.
+ * `List` (cairn 0100, 0133): the selection primitive a TUI leans on.
  *
- * A cursor, reverse-video selection, type-ahead, and a viewport that scrolls in
- * whole rows. The keyboard is React Aria's `ListBox` — arrows, home and end, the
- * page keys and type-ahead all come from the library, because a TUI is a
- * keyboard-first thing and that is what React Aria is best at.
+ * A viewport that scrolls in whole rows, a cursor, selection, type-ahead, and a
+ * scrollbar drawn in cells. The keyboard is React Aria's `ListBox` — arrows,
+ * Home and End, the page keys and type-ahead all come from the library,
+ * because a TUI is a keyboard-first thing and that is what React Aria is best
+ * at.
  *
- * Two things are ours. Selection is a cursor glyph *and* reverse video, so it
- * survives forced colors, greyscale and a reader who cannot tell the accent from
- * the ground. And the scrollbar is drawn by the engine into a one-cell column,
- * which is why it can be snapshotted as text.
+ * The cursor and the selection are two signals, drawn the way the state
+ * vocabulary (0118) says, so a multi-select list can show which row the
+ * keyboard is on and which rows are chosen at the same time:
+ *
+ *   - the cursor is the theme's cursor mark in a cell every row reserves
+ *   - a selected row is reverse video, and under multi-select also carries the
+ *     check mark in a second reserved cell
+ *
+ * Reserving the cells is what keeps both from moving anything: a row is the
+ * same width whether it is under the cursor, chosen, both or neither.
+ *
+ * `listBuffer` draws the whole list as cells — rows, marks and scrollbar — and
+ * `ListItem` draws its marks with the same function, so the list's text
+ * snapshot is the component and not a picture of it.
  *
  * Not virtualised yet (cairn 0115). React Aria's `Virtualizer` renders only the
- * rows near the viewport, which is what we want, but a keyboard jump to a row it
- * has not rendered — `End`, or type-ahead across a long list — leaves focus
- * nowhere, and a list you cannot reach the end of is worse than a list that
- * renders too many rows. The scrollbar is built for it either way: it takes the
- * row count, not the DOM.
+ * rows near the viewport, but a keyboard jump to a row it has not rendered —
+ * `End`, or type-ahead across a long list — leaves focus nowhere, and a list
+ * you cannot reach the end of is worse than one that renders too many rows.
+ * The scrollbar is built for it either way: it takes the row count from the
+ * collection, not from the DOM.
  */
-import { Buffer, drawText } from '@rockaway/grid';
+import { Attr, Buffer, drawText, type Style } from '@rockaway/grid';
 import type { Glyphs } from '@rockaway/tokens';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   ListBox,
   ListBoxItem,
   type ListBoxItemProps,
   type ListBoxProps,
+  type ListBoxRenderProps,
+  ListStateContext,
 } from 'react-aria-components';
 import { measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
@@ -78,6 +100,116 @@ export function scrollbarBuffer(
   });
 }
 
+/** What a row is showing, as React Aria reports it, in the vocabulary's words (0118). */
+export interface ListRowState {
+  /** The keyboard's row: `data-focused`, drawn as the cursor mark. */
+  readonly cursor?: boolean;
+  /** `data-selected`: reverse video, and the check mark under multi-select. */
+  readonly selected?: boolean;
+  /** `data-disabled`: dim. */
+  readonly disabled?: boolean;
+  /** `data-hovered`: the label underlined. */
+  readonly hovered?: boolean;
+}
+
+/** A row to draw: its label, and its state. */
+export interface ListRow extends ListRowState {
+  readonly label: string;
+}
+
+/**
+ * The reserved cells at the start of a row: the cursor's, and under
+ * multi-select the check's. Every row has them in every state, blank when they
+ * hold nothing, so no state adds a cell. `ListItem` draws its marks with this.
+ */
+export function listMarks(
+  state: ListRowState,
+  multiple: boolean,
+  glyphs: Glyphs = defaultGlyphs,
+): readonly string[] {
+  const cursor = state.cursor ? glyphs.mark.cursor : glyphs.mark.blank;
+  if (!multiple) return [cursor];
+  return [cursor, state.selected ? glyphs.mark.check : glyphs.mark.blank];
+}
+
+/** A row's style: what `list.css` draws for its state, as cell attributes. */
+export function listRowStyle(state: ListRowState): Style {
+  let attrs = Attr.none;
+  if (state.selected) attrs |= Attr.reverse;
+  if (state.disabled) attrs |= Attr.dim;
+  return { fg: state.disabled ? 'fg.disabled' : 'fg.default', attrs };
+}
+
+export interface ListBufferOptions {
+  readonly rows: readonly ListRow[];
+  /** Cells across, the scrollbar's column included. */
+  readonly width: number;
+  /** Rows the viewport shows. */
+  readonly visible: number;
+  /** The first visible row. */
+  readonly offset?: number;
+  /** `selectionMode="multiple"`: every row reserves a second cell, for the check. */
+  readonly multiple?: boolean;
+  /** What an empty list says. */
+  readonly empty?: string;
+}
+
+/** What an empty list says unless it is told otherwise. */
+const EMPTY = 'Nothing here.';
+
+/**
+ * The whole list as cells: each visible row's reserved mark cells and its
+ * label, in the row's style, and the scrollbar down the last column. A label
+ * too long for its row is cut where the row ends, as the stylesheet cuts it.
+ *
+ * This is the list's text snapshot. The component draws its marks with
+ * `listMarks` and its scrollbar with `scrollbarBuffer`, the same functions
+ * this calls; its attributes come from `list.css`, which `listRowStyle`
+ * restates and the stories hold to it.
+ */
+export function listBuffer(
+  { rows, width, visible, offset = 0, multiple = false, empty = EMPTY }: ListBufferOptions,
+  glyphs: Glyphs = defaultGlyphs,
+): Buffer {
+  const height = Math.max(0, visible);
+  const across = Math.max(0, width);
+  const reserved = multiple ? 2 : 1;
+  const room = Math.max(0, across - 1 - reserved);
+  const first = Math.max(0, Math.min(offset, rows.length - height));
+  const bar = scrollbarBuffer({ total: rows.length, visible: height, offset: first }, glyphs);
+
+  return Buffer.create({ width: across, height }).draw((draft) => {
+    if (rows.length === 0 && height > 0) {
+      drawText(draft, { x: reserved, y: 0 }, empty, {
+        maxWidth: room,
+        ellipsis: '',
+        style: { fg: 'fg.muted', attrs: Attr.none },
+      });
+    }
+    for (let y = 0; y < height; y++) {
+      const row = rows[first + y];
+      if (row === undefined) break;
+      const style = listRowStyle(row);
+      // The row's ground runs the whole width before the scrollbar, so
+      // reverse video is a bar across the list and not a box around the words.
+      for (let x = 0; x < across - 1; x++) drawText(draft, { x, y }, ' ', { style });
+      listMarks(row, multiple, glyphs).forEach((mark, x) => {
+        drawText(draft, { x, y }, mark, { style });
+      });
+      const label: Style = row.hovered ? { ...style, attrs: style.attrs | Attr.underline } : style;
+      drawText(draft, { x: reserved, y }, row.label, {
+        maxWidth: room,
+        ellipsis: '',
+        style: label,
+      });
+    }
+    const scrollbar: Style = { fg: 'fg.muted', attrs: Attr.none };
+    for (let y = 0; y < height && across > 0; y++) {
+      drawText(draft, { x: across - 1, y }, bar.at({ x: 0, y })?.ch ?? ' ', { style: scrollbar });
+    }
+  });
+}
+
 function Scrollbar({ state }: { state: ScrollbarState }): ReactNode {
   const host = useRef<HTMLDivElement>(null);
   const glyphs = useGlyphs();
@@ -90,11 +222,35 @@ function Scrollbar({ state }: { state: ScrollbarState }): ReactNode {
   return <div ref={host} className="rk-list-scrollbar" aria-hidden="true" />;
 }
 
+/**
+ * How a row tells the list how many rows the collection holds. Rows are drawn
+ * inside React Aria's collection, which is the only place its size can be
+ * read; the list itself is outside it.
+ */
+const RowCount = createContext<((count: number) => void) | null>(null);
+
+/** Reports the collection's size from inside it. Draws nothing. */
+function CountRows(): null {
+  const state = useContext(ListStateContext);
+  const report = useContext(RowCount);
+  const size = state?.collection.size;
+  useEffect(() => {
+    if (size !== undefined) report?.(size);
+  }, [size, report]);
+  return null;
+}
+
 export interface ListProps<T extends object> extends Omit<ListBoxProps<T>, 'className' | 'style'> {
   /** How many rows the viewport shows. The list is exactly this tall. */
   readonly rows?: number;
-  /** Rows in the collection, for the scrollbar. Counted from the items if omitted. */
+  /**
+   * Rows in the collection, for the scrollbar, when the collection does not
+   * hold them all: a list that loads as it scrolls. Counted from the
+   * collection otherwise.
+   */
   readonly total?: number;
+  /** What an empty list says, in its first row. `renderEmptyState` replaces it. */
+  readonly empty?: ReactNode;
   readonly className?: string;
 }
 
@@ -103,59 +259,64 @@ const DEFAULT_ROWS = 8;
 export function List<T extends object>({
   rows = DEFAULT_ROWS,
   total,
+  empty = EMPTY,
+  renderEmptyState,
   className,
   children,
   ...list
 }: ListProps<T>): ReactNode {
-  const host = useRef<HTMLDivElement>(null);
-  const [cell, setCell] = useState(20);
   const [offset, setOffset] = useState(0);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState<number | undefined>(undefined);
+  const report = useCallback((size: number) => setCount(size), []);
 
-  // The row height is the cell, measured rather than assumed, because the
-  // scrollbar counts rows and density decides how tall a row is.
-  useEffect(() => {
-    const el = host.current;
-    if (!el) return;
-    const measure = (): void => setCell(measureCell(el).height);
-    measure();
-    if (typeof ResizeObserver === 'undefined') return;
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  // The scroll position is read with a native listener rather than an onScroll
-  // prop: the virtualiser passes its own onScroll to this element, and a prop
-  // here would replace it — then it never learns the scroll position, never
-  // renders the row the keyboard moved to, and focus lands nowhere.
+  // The scroll position, in rows. Read with a native listener rather than an
+  // onScroll prop, which would replace the one React Aria passes this element.
+  // The row height is measured when it is needed rather than assumed, because
+  // density decides how tall a row is.
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = box.current;
     if (!el) return;
-    const read = (): void => {
-      setOffset(Math.round(el.scrollTop / cell));
-      setCount(Math.round(el.scrollHeight / cell));
-    };
+    const read = (): void => setOffset(Math.round(el.scrollTop / measureCell(el).height));
     read();
     el.addEventListener('scroll', read, { passive: true });
     return () => el.removeEventListener('scroll', read);
-  }, [cell]);
+  }, []);
 
-  const measured = total ?? (count === 0 ? rows : count);
-
-  return (
-    <div
-      ref={host}
-      className={cx('rk-list', className)}
-      style={{ '--rk-list-rows': rows } as React.CSSProperties}
-    >
-      <ListBox {...list} ref={box} className="rk-list-box">
-        {children}
-      </ListBox>
-      <Scrollbar state={{ total: measured, visible: rows, offset }} />
+  const glyphs = useGlyphs();
+  const multiple = list.selectionMode === 'multiple';
+  // The empty state keeps the rows' reserved cells, blank, so its words start
+  // where every row's label does.
+  const emptyState = (state: ListBoxRenderProps): ReactNode => (
+    <div className="rk-list-empty">
+      <EmptyCount />
+      {listMarks({}, multiple, glyphs).map((mark, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: the cells are positions, not items
+        <span key={i} aria-hidden="true" className="rk-list-mark">
+          {mark}
+        </span>
+      ))}
+      <span className="rk-list-label">{renderEmptyState ? renderEmptyState(state) : empty}</span>
     </div>
   );
+
+  return (
+    <RowCount.Provider value={report}>
+      <div className={cx('rk-list', className)} style={{ '--rk-list-rows': rows } as CSSProperties}>
+        <ListBox {...list} ref={box} className="rk-list-box" renderEmptyState={emptyState}>
+          {children}
+        </ListBox>
+        <Scrollbar state={{ total: total ?? count ?? 0, visible: rows, offset }} />
+      </div>
+    </RowCount.Provider>
+  );
+}
+
+/** An empty collection has no rows to count itself, so its empty state says so. */
+function EmptyCount(): null {
+  const report = useContext(RowCount);
+  useEffect(() => report?.(0), [report]);
+  return null;
 }
 
 export interface ListItemProps<T extends object> extends Omit<ListBoxItemProps<T>, 'className'> {
@@ -163,27 +324,47 @@ export interface ListItemProps<T extends object> extends Omit<ListBoxItemProps<T
 }
 
 /**
- * A row. The cursor is a glyph in its own cell, hidden from the reader, because
- * "▸ src/index.ts" is not the name of anything.
+ * A row: its reserved mark cells, then its label. The marks are hidden from
+ * the reader, because "▸ src/index.ts" is not the name of anything.
  */
 export function ListItem<T extends object>({
   className,
   children,
   ...item
 }: ListItemProps<T>): ReactNode {
-  const { mark } = useGlyphs();
+  const glyphs = useGlyphs();
+  // The marks make the row's children a function, which React Aria cannot read
+  // type-ahead from. A plain label is still the text to type, so say so.
+  const text = item.textValue ?? (typeof children === 'string' ? children : undefined);
   return (
-    <ListBoxItem {...item} className={cx('rk-list-item', className)}>
-      {(render) => (
-        <>
-          <span aria-hidden="true" className="rk-list-cursor">
-            {render.isSelected || render.isFocused ? mark.cursor : mark.blank}
-          </span>
-          <span className="rk-list-label">
-            {typeof children === 'function' ? children(render) : children}
-          </span>
-        </>
-      )}
+    <ListBoxItem
+      {...item}
+      {...(text === undefined ? {} : { textValue: text })}
+      className={cx('rk-list-item', className)}
+    >
+      {(render) => {
+        const [cursor, check] = listMarks(
+          { cursor: render.isFocused, selected: render.isSelected },
+          render.selectionMode === 'multiple',
+          glyphs,
+        );
+        return (
+          <>
+            <CountRows />
+            <span aria-hidden="true" className="rk-list-mark rk-list-cursor">
+              {cursor}
+            </span>
+            {check === undefined ? null : (
+              <span aria-hidden="true" className="rk-list-mark rk-list-check">
+                {check}
+              </span>
+            )}
+            <span className="rk-list-label">
+              {typeof children === 'function' ? children(render) : children}
+            </span>
+          </>
+        );
+      }}
     </ListBoxItem>
   );
 }

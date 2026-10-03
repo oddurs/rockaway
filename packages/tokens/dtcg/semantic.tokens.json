@@ -148,11 +148,11 @@
     "$description": "Borders and rules, whether drawn as glyphs or as hairlines.",
     "subtle": {
       "$value": "{ansi.border-subtle}",
-      "$description": "Separators inside a surface."
+      "$description": "Decorative separation only, below 3:1: a rule inside a surface that something else already bounds. Never the only edge of anything (cairn 0178)."
     },
     "default": {
       "$value": "{ansi.border}",
-      "$description": "The ordinary edge: frames, dividers, tables."
+      "$description": "The ordinary edge: frames, dividers, tables. A boundary a reader can see, at least 3:1 against every ground it is drawn on (WCAG 1.4.11, cairn 0178)."
     },
     "control": {
       "$value": "{ansi.border-strong}",
@@ -160,7 +160,7 @@
     },
     "surface": {
       "$value": "{ansi.border}",
-      "$description": "The edge of a resting surface. On a grid, a surface is its border."
+      "$description": "The edge of a resting surface. On a grid, a surface is its border, so it is border.default."
     },
     "focus": {
       "$value": "{ansi.blue}",

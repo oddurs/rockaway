@@ -84,15 +84,24 @@ export function semanticColors(): Group {
     border: {
       $type: 'color',
       $description: 'Borders and rules, whether drawn as glyphs or as hairlines.',
-      subtle: { ...p('border-subtle'), $description: 'Separators inside a surface.' },
-      default: { ...p('border'), $description: 'The ordinary edge: frames, dividers, tables.' },
+      subtle: {
+        ...p('border-subtle'),
+        $description:
+          'Decorative separation only, below 3:1: a rule inside a surface that something else already bounds. Never the only edge of anything (cairn 0178).',
+      },
+      default: {
+        ...p('border'),
+        $description:
+          'The ordinary edge: frames, dividers, tables. A boundary a reader can see, at least 3:1 against every ground it is drawn on (WCAG 1.4.11, cairn 0178).',
+      },
       control: {
         ...p('border-strong'),
         $description: 'The boundary of an input or control. At least 3:1 (WCAG 1.4.11).',
       },
       surface: {
         ...p('border'),
-        $description: 'The edge of a resting surface. On a grid, a surface is its border.',
+        $description:
+          'The edge of a resting surface. On a grid, a surface is its border, so it is border.default.',
       },
       focus: { ...p('blue'), $description: 'The focus ring, and the cursor (0061).' },
       accent: p('blue'),

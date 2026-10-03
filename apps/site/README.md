@@ -25,16 +25,32 @@ a packaging bug, and it is fixed in the package.
 | --- | --- |
 | `src/pages/` | One file per route. Pages compose; they bring no CSS of their own. |
 | `src/layouts/Document.astro` | The one `<html>`: head order, the font, the stylesheet. |
-| `src/islands/` | One module per hydrated thing, never a component hydrated straight from the package (see `frame.ts` for why). |
+| `src/islands/` | Compositions of the system's components that the site hydrates. A single component is hydrated from its own entry, `@rockaway/react/<component>`, never from the package's index: an island keeps every export of the module it comes from, and the index would ship the whole package for one box. |
 | `src/lib/` | Logic, in TypeScript. Astro frontmatter is not typechecked, so keep it thin. |
 | `src/styles/site.css` | The system's CSS as a consumer imports it, and page layout. |
 | `src/fonts/` | The one font, its metrics and its licence. |
-| `src/content/` | Markdown, when the prose arrives (0143), as Astro content collections. |
+| `src/content.config.ts` | Content collections. `docs` is the repository's own `docs/`, so a document is written once for GitHub and the site. |
+| `src/layouts/Prose.astro` | A page of Markdown: `<article class="rk-prose">`, and nothing else. |
 
 Component pages (0147) will read the components' metadata from
 `@rockaway/react` (0047); theme, mode and density (0148) are applied by an
 inline script at the top of the head, before the stylesheet, so the first
 frame is already the reader's choice.
+
+## Markdown
+
+Prose is set by `.rk-prose` from `@rockaway/css` (0143); a page brings no CSS.
+The pipeline (`src/lib/markdown.ts`) only says what Markdown cannot:
+
+- relative links in a repository document go to the file on GitHub;
+- code blocks and tables get a tab stop, because they scroll;
+- a table wider than the measure gets column widths in whole cells, so its
+  cells wrap instead of the browser squeezing it off the grid;
+- box drawing and blocks become cells the cell draws (0116), so a diagram in
+  a code block joins up at every density and still copies as text.
+
+Code is not highlighted yet: that is 0144, in the ANSI 16, with no borrowed
+palette in the meantime.
 
 ## The base path
 

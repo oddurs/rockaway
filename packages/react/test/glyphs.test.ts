@@ -33,7 +33,8 @@ function controls(): ReactNode {
         key: 'list',
         'aria-label': 'Files',
         rows: 2,
-        selectionMode: 'single',
+        // Multi-select, so the selected row draws the theme's check mark.
+        selectionMode: 'multiple',
         defaultSelectedKeys: ['a'],
       },
       createElement(ListItem, { id: 'a', textValue: 'a.ts' }, 'a.ts'),
@@ -47,12 +48,12 @@ describe('glyphs from the theme', () => {
   test('with no provider a component draws with the default theme’s glyphs, on the server too', () => {
     expect(defaultGlyphs).toBe(themeGlyphs.default);
     expect(renderToStaticMarkup(createElement(Probe))).toBe('single ▸ █');
-    expect(serverText(controls())).toBe('▸a.ts b.ts[Publish]');
+    expect(serverText(controls())).toBe(' ✓a.ts  b.ts[Publish]');
   });
 
   test('a provider swaps every glyph a component reads', () => {
     const tree = createElement(GlyphProvider, { glyphs: ascii }, createElement(Probe), controls());
-    expect(serverText(tree)).toBe('ascii > #>a.ts b.ts[Publish]');
+    expect(serverText(tree)).toBe('ascii > # xa.ts  b.ts[Publish]');
   });
 
   test('the theme’s border set is the frame’s default, and its dividers’ too', () => {
@@ -86,7 +87,7 @@ describe('glyphs from the theme', () => {
       .join('');
     const drawn = [frame, divider, `scrollbar ${scrollbar}`].join('\n');
     expect(drawn).toMatchInlineSnapshot(`
-      "+ a title far t~ --+
+      "+ a title far to~ -+
       |                  |
       +------------------+
       +------------------+

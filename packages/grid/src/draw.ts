@@ -9,8 +9,9 @@
 import type { Cell, Draft, Edges, Weight } from './buffer.ts';
 import { bottom, type Point, type Rect, rect, right } from './geometry.ts';
 import { type BorderSet, borderSets, glyphFor, mergeEdges } from './junction.ts';
+import { drawLabel } from './label.ts';
 import { EMPTY_STYLE, type Style } from './style.ts';
-import { clusterWidth, graphemes, stringWidth, truncate } from './text.ts';
+import { clusterWidth, graphemes, truncate } from './text.ts';
 
 export interface DrawOptions {
   readonly set?: BorderSet;
@@ -102,24 +103,17 @@ export function drawBox(draft: Draft, area: Rect, options: BoxOptions = {}): voi
   }
 }
 
+/**
+ * The title is a label in the top edge: it owns its cells, and it stops short
+ * of any rule that crosses the edge, whichever was drawn first (0175).
+ */
 function drawTitle(draft: Draft, area: Rect, options: BoxOptions): void {
-  // The corners and one cell of border either side stay, so the title never
-  // runs into them: `┌─ title ──┐`.
-  const room = area.width - 4;
-  if (room <= 0) return;
-  const text = ` ${truncate(options.title ?? '', room - 2, options.ellipsis)} `;
-  const width = stringWidth(text);
-  const spare = area.width - 2 - width;
-  const align = options.titleAlign ?? 'start';
-  const offset =
-    align === 'start'
-      ? 1
-      : align === 'end'
-        ? Math.max(1, area.width - 1 - width)
-        : Math.max(1, Math.floor(spare / 2) + 1);
-  drawText(draft, { x: area.x + offset, y: area.y }, text, {
+  drawLabel(draft, rect(area.x, area.y, area.width, 1), options.title ?? '', {
+    set: options.set ?? borderSets.single,
     style: options.titleStyle ?? options.style ?? EMPTY_STYLE,
-    maxWidth: area.width - 2,
+    lineStyle: options.style ?? EMPTY_STYLE,
+    ...(options.titleAlign === undefined ? {} : { align: options.titleAlign }),
+    ...(options.ellipsis === undefined ? {} : { ellipsis: options.ellipsis }),
   });
 }
 
