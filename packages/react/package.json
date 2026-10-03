@@ -8,17 +8,20 @@
   "exports": {
     ".": {
       "@rockaway/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./package.json": "./package.json",
     "./paint": {
       "@rockaway/source": "./src/paint/index.ts",
-      "default": "./dist/paint.js"
+      "types": "./dist/paint/index.d.ts",
+      "default": "./dist/paint/index.js"
     },
     "./testing": {
       "@rockaway/source": "./src/testing/index.ts",
-      "default": "./dist/index.js"
-    }
+      "types": "./dist/testing/index.d.ts",
+      "default": "./dist/testing/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
@@ -26,7 +29,8 @@
   "scripts": {
     "build": "tsdown",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:server": "node --conditions=react-server test/server-component/render.ts"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -44,6 +48,7 @@
     "react": "19.3.0",
     "postcss": "8.5.28",
     "react-dom": "19.3.0",
+    "react-server-dom-webpack": "19.3.0",
     "vitest": "4.1.11"
   },
   "repository": {
@@ -53,6 +58,21 @@
   },
   "homepage": "https://github.com/oddurs/rockaway",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./paint": {
+        "types": "./dist/paint/index.d.ts",
+        "default": "./dist/paint/index.js"
+      },
+      "./testing": {
+        "types": "./dist/testing/index.d.ts",
+        "default": "./dist/testing/index.js"
+      },
+      "./package.json": "./package.json"
+    }
   }
 }

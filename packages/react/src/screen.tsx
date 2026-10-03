@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * `Screen` (cairn 0086): the join between the engine and the page.
  *

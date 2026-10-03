@@ -43,17 +43,6 @@ export {
   type ScreenProps,
 } from './screen.tsx';
 export {
-  type ConformanceOptions,
-  type ConformanceReport,
-  checkConformance,
-  type Exception,
-  expectConformance,
-  formatReport,
-  type ScreenshotOptions,
-  screenshot,
-  type Violation,
-} from './testing/index.ts';
-export {
   defineVariants,
   type VariantAttributes,
   type VariantDefinition,

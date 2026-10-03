@@ -1,4 +1,4 @@
-import { expectConformance } from '@rockaway/react';
+import { expectConformance } from '@rockaway/react/testing';
 import type { Decorator, Preview } from '@storybook/react-vite';
 import '@fontsource-variable/jetbrains-mono';
 import '@rockaway/css';

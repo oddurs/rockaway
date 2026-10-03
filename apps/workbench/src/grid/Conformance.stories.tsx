@@ -1,5 +1,6 @@
 import { Buffer, drawBox, rect, type Size } from '@rockaway/grid';
-import { checkConformance, expectConformance, formatReport, Screen } from '@rockaway/react';
+import { Screen } from '@rockaway/react';
+import { checkConformance, expectConformance, formatReport } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 

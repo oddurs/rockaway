@@ -11,19 +11,22 @@
   ],
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
+    "packages:check": "node scripts/check-packages.ts && pnpm --filter @rockaway/react test:server",
     "typecheck": "pnpm -r typecheck",
     "lint": "biome check .",
     "format": "biome check --write .",
     "test": "pnpm -r test",
     "storybook": "pnpm --filter workbench dev",
     "roadmap:check": "cairn check && cairn render --check",
-    "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm test && pnpm roadmap:check",
+    "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm packages:check && pnpm test && pnpm roadmap:check",
     "changeset": "changeset",
-    "release": "pnpm build && changeset publish"
+    "release": "pnpm build && pnpm packages:check && changeset publish"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
     "@biomejs/biome": "2.5.14",
     "@changesets/cli": "3.0.3",
+    "publint": "0.3.25",
     "tsdown": "0.23.0",
     "typescript": "7.0.2"
   }

@@ -37,6 +37,12 @@ jobs:
       - name: Build packages
         run: pnpm build
 
+      # The workspace resolves to source, so this is the only step that sees
+      # what a consumer installs: each tarball's contents, publint, Are the
+      # Types Wrong, and a server component that renders Frame from dist.
+      - name: Packed packages (contents, publint, attw, server components)
+        run: pnpm packages:check
+
       - name: Install Chromium
         run: pnpm --filter workbench exec playwright install --with-deps chromium
 
