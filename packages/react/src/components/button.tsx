@@ -20,6 +20,7 @@ import { type ReactNode, useEffect, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
+import { usePlatform } from '../platform.ts';
 import {
   defineVariants,
   type VariantProps,
@@ -104,18 +105,15 @@ export function buttonBuffer(
   const ends = endsOf(chosen.variant, options.delimiters, glyphs);
   const air = chosen.variant === 'quiet' ? '' : ' ';
   const hint =
-    options.keys === undefined ? '' : ` ${formatKeys(options.keys, options.platform ?? 'other')}`;
+    options.keys === undefined
+      ? ''
+      : ` ${formatKeys(options.keys, options.platform ?? 'other', 'platform', glyphs)}`;
   const pad = chosen.size === 'lg' ? ' ' : '';
   const line = `${pad}${ends?.[0] ?? ''}${air}${label}${hint}${air}${ends?.[1] ?? ''}${pad}`;
   const rows = chosen.size === 'lg' ? 3 : 1;
   return Buffer.create({ width: stringWidth(line), height: rows }).draw((draft) => {
     drawText(draft, { x: 0, y: Math.floor(rows / 2) }, line);
   });
-}
-
-/** The shortcut has to be resolved for the server too, so `auto` is `other`. */
-function resolve(platform: Platform | 'auto'): Platform {
-  return platform === 'auto' ? 'other' : platform;
 }
 
 export function Button({
@@ -132,7 +130,10 @@ export function Button({
   // `aria-keyshortcuts` never reaches the element through props. It is the right
   // attribute for a chord, so it goes on afterwards, by hand.
   const host = useRef<HTMLButtonElement>(null);
-  const shortcut = keys === undefined ? undefined : keyShortcut(keys, resolve(platform));
+  // One keyboard for what is drawn and what is announced, so a Mac shows ⌘S and
+  // is told Meta+s, never Control+s (cairn 0132).
+  const keyboard = usePlatform(platform);
+  const shortcut = keys === undefined ? undefined : keyShortcut(keys, keyboard);
   useEffect(() => {
     const el = host.current;
     if (!el) return;
@@ -160,7 +161,7 @@ export function Button({
         {keys === undefined ? null : (
           <>
             {' '}
-            <KeyHint keys={keys} platform={platform} decorative />
+            <KeyHint keys={keys} platform={keyboard} decorative />
           </>
         )}
       </span>
