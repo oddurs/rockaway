@@ -3,8 +3,10 @@ id: 127
 uid: 42e4d9a8-b404-45ca-b14e-2ce12dfb25c0
 title: 'Build the field contract: label, description, error, required, disabled'
 type: feature
-status: backlog
+status: review
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 32
 - 117
@@ -50,8 +52,40 @@ with `aria` available; server errors go through `Form`'s `validationErrors`.
 ## Acceptance criteria
 
 - [ ] Label, Description, FieldError, Form and Fieldset exist, are exported, and are used by every field component that follows
-- [ ] A Form of mixed fields lines its controls up in one column of cells, asserted by a text snapshot, and stacks under 60 cells
-- [ ] Description and error are linked by `aria-describedby`; the error is announced on submit, once
-- [ ] Required, disabled and invalid are drawn per 0118, and none changes the control's size in cells
-- [ ] A Fieldset's legend is its group's accessible name, and the frame glyphs are not
-- [ ] The recipe (0134) has a section on building a new field from these parts
+- [x] A Form of mixed fields lines its controls up in one column of cells, asserted by a text snapshot, and stacks under 60 cells
+- [x] Description and error are linked by `aria-describedby`; the error is announced on submit, once
+- [x] Required, disabled and invalid are drawn per 0118, and none changes the control's size in cells
+- [x] A Fieldset's legend is its group's accessible name, and the frame glyphs are not
+- [x] The recipe (0134) has a section on building a new field from these parts
+
+## 2026-10-03
+
+Claimed with --force past 0118: the CTO adopted 0118's table as the working answer for every wave (its 2026-10-03 note), and the brief calls it binding. Drawn here per that table.
+
+## 2026-10-03
+
+Built in packages/react/src/components/field.tsx (Label, Description, FieldError, Form, fieldClass, formBuffer) and fieldset.tsx (FieldFrame, Fieldset, fieldFrameBuffer), not src/field/ as proposed: the barrels (0122), the metadata extractor (0047) and the literal-glyph test all read src/components, and a part outside it would be invisible to all three. One stylesheet each, field.css and fieldset.css.
+
+## 2026-10-03
+
+Layout is CSS grid with named lines: a field is [label][control]; in a Form every .rk-field is a subgrid of the form's two columns, so the label column is max-content of every label in the form (or labelWidth cells) and every control starts in the same cell. Parts are placed by column only and auto-flow down in source order, so the order label, control, description, error is the layout. Stacking is a container query on the form's own width (container rk-form, width < 60ch). The grid is round(down, 100%, cell) wide so its columns are whole cells wherever the page puts it.
+
+## 2026-10-03
+
+Required: the label keeps one cell after it in every state and draws the theme's required mark there when isRequired is passed (React Aria puts required in no context a label can read, and a checkbox group's state stops being required once something is checked, so Label and Fieldset take isRequired explicitly from the render props). The mark is aria-hidden and coloured fg.danger from [data-required]. Disabled dims the label and mark but not the description: dimmed help text fails axe contrast and nothing marks it inactive.
+
+## 2026-10-03
+
+Framed labels: the engine draws the label into the top edge (fieldFrameBuffer, on frameBuffer's title), so truncation and future junction rules (0175) stay the engine's; a reader hears a visually hidden React Aria Label with the same words, taking the field's or group's ids from LabelContext. FieldFrame sits on React Aria's Group (role presentation), so data-invalid/data-disabled/data-focus-visible are React Aria's, not hand-set; the stylesheet colours the frame from them and the buffer draws the weight. Fieldset detects a surrounding React Aria group through LabelContext and then is not a group itself. 0175 not hit: nothing draws a junction into a field frame's top edge.
+
+## 2026-10-03
+
+Errors announced once: FieldError is never a live region. Native validation on submit focuses the first invalid control, whose aria-describedby then lists description and error, once each; the Errors on submit story asserts focus, the describedby ids and that the form holds no role=alert, aria-live or role=status. Structural proof only; a real screen-reader pass is 0157.
+
+## 2026-10-03
+
+Also in this PR: screenshot() now reads nested screens (a fieldset's chrome inside a frame) where they sit, and checkConformance() skips descendants of visually hidden boxes (RAC hides the native input of a checkbox or radio inside a clipped span, which the field family will all hit). The workbench gains react-aria-components as a dependency for the sketch fields in the Form and Fieldset stories.
+
+## 2026-10-03
+
+Criterion 6: the recipe (0134) does not exist yet, so the field section is in CONTRIBUTING.md under 'Building a field', marked as an interim home to move into docs/component-recipe.md; noted on 0134. Criterion 1 is left unticked: the parts exist and are exported, but 'used by every field component that follows' becomes true only as 0035-0038 and 0042 land.

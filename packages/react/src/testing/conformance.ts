@@ -258,6 +258,16 @@ export function checkConformance(
     if (!(cellWidth > 0) || !(cellHeight > 0)) continue;
 
     const origin = screen.getBoundingClientRect();
+    const clipped = new Map<Element, boolean>();
+    const hidden = (el: Element | null): boolean => {
+      if (el === null || el === screen || !screen.contains(el)) return false;
+      const known = clipped.get(el);
+      if (known !== undefined) return known;
+      const style = view?.getComputedStyle(el);
+      const result = (style !== undefined && isVisuallyHidden(style)) || hidden(el.parentElement);
+      clipped.set(el, result);
+      return result;
+    };
 
     for (const el of screen.querySelectorAll<HTMLElement>('*')) {
       const excused = excusedBy(el, level);
@@ -281,6 +291,9 @@ export function checkConformance(
       // there is nothing for the grid to govern (cairn 0099).
       const computed = view?.getComputedStyle(el);
       if (computed && isVisuallyHidden(computed)) continue;
+      // So is anything inside it: the native input a checkbox or a radio hides
+      // in a clipped span, which is a box of its own size in a box of none.
+      if (hidden(el.parentElement)) continue;
       const box = el.getBoundingClientRect();
       if (box.width === 0 && box.height === 0) continue;
 
