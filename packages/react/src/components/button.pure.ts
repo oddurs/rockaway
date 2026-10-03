@@ -1,11 +1,13 @@
 /**
  * `Button`: the pure half (cairn 0126).
  *
- * Its variants as data, and the button as cells. No React and no client boundary, so a server component, a static
- * renderer or a test can call it; `button.tsx` imports it from here.
+ * Its variants as data, and the button as cells. No React and no client
+ * boundary, so a server component, a static renderer or a test can call it;
+ * `button.tsx` imports it from here.
  */
 import { Buffer, drawText, stringWidth } from '@rockaway/grid';
-import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
+import type { Glyphs } from '@rockaway/tokens';
+import { themeGlyphs } from '@rockaway/tokens';
 import { defineVariants, type Variants } from '../variants.ts';
 import type { ButtonProps, ButtonTextOptions, ButtonVariant } from './button.tsx';
 import { formatKeys } from './key-hint.pure.ts';
@@ -50,7 +52,9 @@ export function buttonBuffer(
   const ends = endsOf(chosen.variant, options.delimiters, glyphs);
   const air = chosen.variant === 'quiet' ? '' : ' ';
   const hint =
-    options.keys === undefined ? '' : ` ${formatKeys(options.keys, options.platform ?? 'other')}`;
+    options.keys === undefined
+      ? ''
+      : ` ${formatKeys(options.keys, options.platform ?? 'other', 'platform', glyphs)}`;
   const pad = chosen.size === 'lg' ? ' ' : '';
   const line = `${pad}${ends?.[0] ?? ''}${air}${label}${hint}${air}${ends?.[1] ?? ''}${pad}`;
   const rows = chosen.size === 'lg' ? 3 : 1;

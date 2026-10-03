@@ -1,12 +1,17 @@
 import { toText } from '@rockaway/grid';
+import { type Glyphs, glyphsFor } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
 import { frameBuffer } from './frame.pure.ts';
+import type { FrameOptions } from './frame.tsx';
+
+const cells = (width: number, height: number, options: FrameOptions, glyphs?: Glyphs): string =>
+  toText(frameBuffer({ width, height }, options, glyphs), { trimEnd: false });
 
 export const frameMeta: ComponentMetaInput = defineMeta({
   name: 'Frame',
   summary: 'The box every other component is drawn inside.',
   description:
-    'A border set, a title set into the top edge, dividers that join the sides they meet, and padding counted in cells. A frame draws nothing itself: it describes a buffer and hands it to Screen, which is why the same frame renders as characters, as CSS rules, or as text in a test.',
+    'A border set, a title set into the top edge, dividers that join the sides they meet, and padding counted in cells. A frame draws nothing itself: it describes a buffer and hands it to Screen, which is why the same frame paints with either stroke style and reads back as the same text in a test. Its lines are `border.default`, structure that recedes behind what it holds; its title is text, in `fg.default`.',
   whenToUse: [
     'To give a region of the screen a border and a title: a pane, a panel, a dialog body.',
     'To stack sections that share one border, with `dividers`.',
@@ -36,7 +41,8 @@ export const frameMeta: ComponentMetaInput = defineMeta({
       name: 'chrome',
       className: 'rk-frame',
       chrome: true,
-      description: 'The painted border, title and dividers.',
+      description:
+        'The painted border, title and dividers. The lines take their colour from `frame.css`, so a framed control can recolour them for a state without redrawing.',
     },
     {
       kind: 'element',
@@ -53,26 +59,53 @@ export const frameMeta: ComponentMetaInput = defineMeta({
     typeAhead: false,
     announces: '"tokens, group", as a reader enters it.',
     notes: [
-      'The border and the corners around the title are aria-hidden: a reader hears the title, never the glyphs.',
+      'The border, the title as drawn, and the dividers are aria-hidden: a reader hears the name, never the glyphs.',
+      'Never a tab stop. Tab goes to the first control inside it and on through its content in DOM order, and the focus ring is not clipped by the border.',
+      'No state of its own: a frame has nothing to operate. A framed control draws the focus-framed and invalid rows of the state vocabulary on its frame, heavy and recoloured, in the same cells.',
     ],
   },
   snapshots: [
     {
       title: 'A titled frame with a divider',
-      text: toText(frameBuffer({ width: 28, height: 7 }, { title: 'tokens', dividers: [4] }), {
-        trimEnd: false,
-      }),
+      text: cells(28, 7, { title: 'tokens', dividers: [4] }),
     },
     {
       title: 'Every border set',
       description: 'The same geometry in each. A title too long for its edge truncates.',
       text: (['single', 'double', 'heavy', 'rounded', 'ascii'] as const)
+        .map((border) => cells(12, 3, { border, title: border }))
+        .join('\n'),
+    },
+    {
+      title: 'Titles',
+      description:
+        'At the start, the centre and the end of the top edge, and truncated with the ellipsis when the edge is too short.',
+      text: [
+        ...(['start', 'center', 'end'] as const).map(
+          (titleAlign) => cells(20, 2, { title: titleAlign, titleAlign }).split('\n')[0],
+        ),
+        cells(20, 2, { title: 'a title far too long for it' }).split('\n')[0],
+      ].join('\n'),
+    },
+    {
+      title: 'Dividers in a lighter set',
+      description:
+        'A heavy or double frame may hold light dividers. The sides stay unbroken, and the junction table draws the tee.',
+      text: (['heavy', 'double'] as const)
         .map((border) =>
-          toText(frameBuffer({ width: 12, height: 3 }, { border, title: border }), {
-            trimEnd: false,
-          }),
+          cells(14, 5, { border, title: border, dividers: [2], dividerBorder: 'single' }),
         )
         .join('\n'),
+    },
+    {
+      title: 'Under an ASCII theme',
+      description: 'Every character is ASCII, the ellipsis included.',
+      text: cells(
+        16,
+        5,
+        { title: 'a title far too long', dividers: [2] },
+        glyphsFor({ borderSet: 'ascii' }),
+      ),
     },
   ],
 });

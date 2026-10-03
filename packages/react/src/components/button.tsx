@@ -1,23 +1,9 @@
 'use client';
-
-/**
- * `Button` (cairn 0033): the first control, and the conventions the rest follow.
- *
- * A TUI button is delimited text — `[ Publish ]` — and it inverts when you
- * press it, the way a terminal has always shown a key going down. So:
- *
- *   - the delimiters are chrome: `aria-hidden`, never part of the name
- *   - pressing reverses the video, which needs no colour at all
- *   - hover underlines, disabled dims, focus is the ring in `focus.css`
- *
- * Behaviour is React Aria's. It supplies `data-hovered`, `data-pressed`,
- * `data-focus-visible` and `data-disabled`, and the CSS reads nothing else:
- * there is no state in here that is not in the DOM.
- */
 import { type ReactNode, useEffect, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
+import { usePlatform } from '../platform.ts';
 import type { VariantProps, VariantValue } from '../variants.ts';
 import { buttonVariants, endsOf } from './button.pure.ts';
 import { keyShortcut } from './key-hint.pure.ts';
@@ -59,11 +45,6 @@ export interface ButtonTextOptions
   readonly platform?: Platform;
 }
 
-/** The shortcut has to be resolved for the server too, so `auto` is `other`. */
-function resolve(platform: Platform | 'auto'): Platform {
-  return platform === 'auto' ? 'other' : platform;
-}
-
 export function Button({
   children,
   variant,
@@ -78,7 +59,10 @@ export function Button({
   // `aria-keyshortcuts` never reaches the element through props. It is the right
   // attribute for a chord, so it goes on afterwards, by hand.
   const host = useRef<HTMLButtonElement>(null);
-  const shortcut = keys === undefined ? undefined : keyShortcut(keys, resolve(platform));
+  // One keyboard for what is drawn and what is announced, so a Mac shows ⌘S and
+  // is told Meta+s, never Control+s (cairn 0132).
+  const keyboard = usePlatform(platform);
+  const shortcut = keys === undefined ? undefined : keyShortcut(keys, keyboard);
   useEffect(() => {
     const el = host.current;
     if (!el) return;
@@ -106,7 +90,7 @@ export function Button({
         {keys === undefined ? null : (
           <>
             {' '}
-            <KeyHint keys={keys} platform={platform} decorative />
+            <KeyHint keys={keys} platform={keyboard} decorative />
           </>
         )}
       </span>

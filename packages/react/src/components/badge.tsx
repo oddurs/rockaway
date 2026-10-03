@@ -1,41 +1,9 @@
 'use client';
 
-/**
- * `Badge` (cairn 0139): a short status label. `✓ passing`, `✗ failing`, `[beta]`.
- *
- * A tone is a colour, and a colour alone is lost to greyscale, to forced colors
- * and to a reader who cannot tell green from red. So every tone but neutral
- * carries the theme's mark as well, one the state vocabulary (0118) already
- * gives a meaning to:
- *
- *   neutral  [beta]       the delimiters, and no tone to state
- *   accent   ● 3 new      the filled dot: something to look at
- *   success  ✓ passing    the check
- *   warning  ! degraded   the caution mark
- *   danger   ✗ failing    the cross, which 0118 gives invalid: a failure
- *
- * Danger takes `✗` rather than the `!` 0118 gives a danger variant, because a
- * badge reports an outcome, not a destructive action: a failing check is
- * 0118's invalid row. That leaves `!` for warning, which has no row of its own.
- *
- * The mark is `aria-hidden`, so the words carry the tone to a reader: the text
- * is "failing", not only `✗`. A badge with `mark={false}` draws the delimiters
- * instead, and its words have to say the tone on their own.
- *
- * Not interactive: no role, no focus, nothing for React Aria to do. It is text
- * on a tinted ground, one row tall, every cell of it a cell of text.
- */
-import { Buffer, drawText, type Style, stringWidth } from '@rockaway/grid';
-import type { Glyphs, MarkName } from '@rockaway/tokens';
 import type { CSSProperties, ReactNode } from 'react';
 import { cx } from '../cx.ts';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
-import {
-  defineVariants,
-  type VariantProps,
-  type Variants,
-  type VariantValue,
-} from '../variants.ts';
+import { useGlyphs } from '../glyphs.tsx';
+import type { VariantProps, VariantValue } from '../variants.ts';
 import { badgeVariants, markOf } from './badge.pure.ts';
 
 export type BadgeTone = VariantValue<typeof badgeVariants, 'tone'>;

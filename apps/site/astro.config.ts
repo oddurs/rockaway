@@ -1,7 +1,9 @@
 import { fileURLToPath } from 'node:url';
+import { unified } from '@astrojs/markdown-remark';
 import react from '@astrojs/react';
 import type { ViteUserConfig } from 'astro';
 import { defineConfig } from 'astro/config';
+import { ansiTheme, roleClasses } from './src/lib/highlight.ts';
 import {
   rehypeCellGlyphs,
   rehypeRepositoryLinks,
@@ -50,16 +52,19 @@ export default defineConfig({
   integrations: [react()],
   devToolbar: { enabled: false },
   markdown: {
-    // No borrowed palette: code is highlighted in the ANSI 16 by 0144, and
-    // until then it is plain text on the grid.
-    syntaxHighlight: false,
-    rehypePlugins: [
-      rehypeRepositoryLinks,
-      rehypeScrollable,
-      // Columns are sized from the text before its box characters become cells.
-      rehypeTableColumns,
-      rehypeCellGlyphs,
-    ],
+    // Highlighted at build time, in the ANSI 16 through the `syntax.*`
+    // tokens: no borrowed palette, and no highlighter shipped (0144).
+    syntaxHighlight: 'shiki',
+    shikiConfig: { theme: ansiTheme, transformers: [roleClasses] },
+    processor: unified({
+      rehypePlugins: [
+        rehypeRepositoryLinks,
+        rehypeScrollable,
+        // Columns are sized from the text before its box characters become cells.
+        rehypeTableColumns,
+        rehypeCellGlyphs,
+      ],
+    }),
   },
   vite: {
     plugins: [publishedPackagesOnly()],

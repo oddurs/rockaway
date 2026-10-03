@@ -1,10 +1,16 @@
 /**
  * `KeyHint`: the pure half (cairn 0126).
  *
- * A chord, parsed, and the three strings it becomes: what you see, what a reader hears, and what the platform is told. No React and no client boundary, so a server component, a static
- * renderer or a test can call it; `key-hint.tsx` imports it from here.
+ * A chord, parsed, and the three strings it becomes: what you see, what a
+ * reader hears, and what the platform is told. No React and no client boundary,
+ * so a server component, a static renderer or a test can call it; `key-
+ * hint.tsx` imports it from here.
  */
-import type { KeyNotation, KeySpec, Platform } from './key-hint.tsx';
+import { stringWidth } from '@rockaway/grid';
+import type { Glyphs, KeyName } from '@rockaway/tokens';
+import { themeGlyphs } from '@rockaway/tokens';
+import type { Platform } from '../platform.ts';
+import type { KeyNotation, KeySpec } from './key-hint.tsx';
 
 type Modifier = 'ctrl' | 'alt' | 'shift' | 'meta';
 
@@ -21,25 +27,30 @@ const MODIFIERS: Readonly<Record<string, Modifier>> = {
   super: 'meta',
 };
 
-/** Named keys, and what each keyboard calls them. */
-const NAMED: Readonly<Record<string, { apple: string; other: string; spoken: string }>> = {
-  enter: { apple: '↵', other: 'Enter', spoken: 'Enter' },
-  esc: { apple: 'Esc', other: 'Esc', spoken: 'Escape' },
-  tab: { apple: '⇥', other: 'Tab', spoken: 'Tab' },
-  space: { apple: '␣', other: 'Space', spoken: 'Space' },
-  backspace: { apple: '⌫', other: 'Bksp', spoken: 'Backspace' },
-  delete: { apple: '⌦', other: 'Del', spoken: 'Delete' },
-  up: { apple: '↑', other: '↑', spoken: 'Up arrow' },
-  down: { apple: '↓', other: '↓', spoken: 'Down arrow' },
-  left: { apple: '←', other: '←', spoken: 'Left arrow' },
-  right: { apple: '→', other: '→', spoken: 'Right arrow' },
-  pageup: { apple: '⇞', other: 'PgUp', spoken: 'Page up' },
-  pagedown: { apple: '⇟', other: 'PgDn', spoken: 'Page down' },
-  home: { apple: '↖', other: 'Home', spoken: 'Home' },
-  end: { apple: '↘', other: 'End', spoken: 'End' },
+/**
+ * Named keys: the legend a keycap prints, from the theme (cairn 0132); the
+ * word for a keyboard that prints words; and what a reader hears. Arrows are
+ * symbols on every keyboard, so they take their legend on both.
+ */
+const NAMED: Readonly<
+  Record<string, { legend?: KeyName; word: string; spoken: string; everywhere?: boolean }>
+> = {
+  enter: { legend: 'enter', word: 'Enter', spoken: 'Enter' },
+  esc: { word: 'Esc', spoken: 'Escape' },
+  tab: { legend: 'tab', word: 'Tab', spoken: 'Tab' },
+  space: { legend: 'space', word: 'Space', spoken: 'Space' },
+  backspace: { legend: 'backspace', word: 'Bksp', spoken: 'Backspace' },
+  delete: { legend: 'delete', word: 'Del', spoken: 'Delete' },
+  up: { legend: 'up', word: 'Up', spoken: 'Up arrow', everywhere: true },
+  down: { legend: 'down', word: 'Down', spoken: 'Down arrow', everywhere: true },
+  left: { legend: 'left', word: 'Left', spoken: 'Left arrow', everywhere: true },
+  right: { legend: 'right', word: 'Right', spoken: 'Right arrow', everywhere: true },
+  pageup: { legend: 'pageup', word: 'PgUp', spoken: 'Page up' },
+  pagedown: { legend: 'pagedown', word: 'PgDn', spoken: 'Page down' },
+  home: { legend: 'home', word: 'Home', spoken: 'Home' },
+  end: { legend: 'end', word: 'End', spoken: 'End' },
 };
 
-const APPLE_GLYPHS = { ctrl: '⌃', alt: '⌥', shift: '⇧', meta: '⌘' } as const;
 const WORDS = { ctrl: 'Ctrl', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
 const SPOKEN = { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Command' } as const;
 
@@ -68,20 +79,25 @@ function held<T extends string>(keys: KeySpec, table: Readonly<Record<Modifier, 
   return order.filter((modifier) => keys[modifier]).map((modifier) => table[modifier]);
 }
 
-function keyFace(key: string, platform: Platform): string {
+function keyFace(key: string, platform: Platform, glyphs: Glyphs): string {
   const named = NAMED[key];
-  if (named) return platform === 'apple' ? named.apple : named.other;
-  return key.length === 1 ? key.toUpperCase() : key;
+  if (named === undefined) return key.length === 1 ? key.toUpperCase() : key;
+  const legend = named.legend === undefined ? undefined : glyphs.key[named.legend];
+  return legend !== undefined && (platform === 'apple' || named.everywhere) ? legend : named.word;
 }
 
-/** What you see. */
+/**
+ * What you see. The legends are the theme's: symbols in Unicode, words in an
+ * ASCII theme, where `⌘⇧K` becomes `Cmd+Shift+K`.
+ */
 export function formatKeys(
   spec: string,
   platform: Platform = 'other',
   notation: KeyNotation = 'platform',
+  glyphs: Glyphs = themeGlyphs.default,
 ): string {
   const keys = parseKeys(spec, platform);
-  const face = keyFace(keys.key, platform);
+  const face = keyFace(keys.key, platform, glyphs);
 
   if (notation === 'terminal') {
     // The notation a terminal has always used: ^ for control, M- for meta.
@@ -90,16 +106,22 @@ export function formatKeys(
     // so or it reads as plain `up`.
     // A single letter has a capital to carry it; `up` and `enter` do not.
     const carried = keys.key.length === 1 && keys.key >= 'a' && keys.key <= 'z';
-    const shift = keys.shift && !carried ? '⇧' : '';
+    // Shift is the theme's symbol where it is one cell, and emacs's `S-` where
+    // the theme spells it out.
+    const symbol = glyphs.key.shift;
+    const shiftMark = stringWidth(symbol) === 1 ? symbol : 'S-';
+    const shift = keys.shift && !carried ? shiftMark : '';
     const prefix = `${keys.ctrl ? '^' : ''}${keys.alt || keys.meta ? 'M-' : ''}${shift}`;
     return `${prefix}${face}`;
   }
 
-  // An Apple keyboard stacks its glyphs; everywhere else the chord is spelled
-  // out with separators, because `CtrlShiftK` is not a word either.
-  return platform === 'apple'
-    ? `${held(keys, APPLE_GLYPHS).join('')}${face}`
-    : [...held(keys, WORDS), face].join('+');
+  // An Apple keyboard stacks its symbols; everywhere else the chord is spelled
+  // out with separators, because `CtrlShiftK` is not a word either. So is an
+  // Apple chord in a theme whose legends are words: `CmdShiftK` is no better.
+  if (platform !== 'apple') return [...held(keys, WORDS), face].join('+');
+  const legends = held(keys, glyphs.key);
+  const stacked = legends.every((legend) => stringWidth(legend) === 1);
+  return stacked ? `${legends.join('')}${face}` : [...legends, face].join('+');
 }
 
 /** What a reader hears. `⌘` is not a word. */

@@ -32,7 +32,7 @@ describe('a screen rendered on a server (0126)', () => {
     expect(html).toContain('aria-hidden="true"');
     expect(html).toContain('data-rk-shape="box-0110"');
     // A line across the cell is one run, sized by where it starts and how long it is.
-    expect(html).toMatch(/style="--rk-col:1;--rk-run:10"[^>]*data-rk-shape="box-0101">─{10}</);
+    expect(html).toMatch(/style="--rk-col:1;--rk-run:10[^"]*"[^>]*data-rk-shape="box-0101">─{10}</);
   });
 
   test('sizes a fixed screen from the font’s own cell, so hydration does not change it', () => {

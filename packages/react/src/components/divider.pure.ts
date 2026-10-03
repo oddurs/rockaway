@@ -1,10 +1,12 @@
 /**
  * `Divider`: the pure half (cairn 0126).
  *
- * The rule, drawn into any draft, and the rule on its own as a buffer. No React and no client boundary, so a server component, a static
- * renderer or a test can call it; `divider.tsx` imports it from here.
+ * The rule, drawn into any draft, and the rule on its own as a buffer. No React
+ * and no client boundary, so a server component, a static renderer or a test
+ * can call it; `divider.tsx` imports it from here.
  */
 import {
+  Attr,
   addEdges,
   Buffer,
   borderSets,
@@ -16,9 +18,19 @@ import {
   type Rect,
   rect,
   type Size,
+  type Style,
 } from '@rockaway/grid';
-import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
+import type { Glyphs } from '@rockaway/tokens';
+import { themeGlyphs } from '@rockaway/tokens';
 import type { DividerOptions } from './divider.tsx';
+
+/**
+ * The colour of a line: the ordinary edge, `border.default`. Each cell carries
+ * it, rather than the layer, so a line is a run of its own and the text set
+ * into it keeps the text colour; and so the line is the same colour on a page,
+ * in ANSI, and wherever else the buffer goes.
+ */
+const LINE: Style = { fg: 'border.default', attrs: Attr.none };
 
 /**
  * Draw a rule along `line` — one cell tall for a horizontal rule, one cell
@@ -35,7 +47,7 @@ export function drawRule(
   const length = horizontal ? line.width : line.height;
   if (length < 1) return;
 
-  const draw = { set };
+  const draw = { set, style: LINE };
   if (horizontal) drawHLine(draft, { x: line.x, y: line.y }, length, draw);
   else drawVLine(draft, { x: line.x, y: line.y }, length, draw);
 
@@ -57,6 +69,7 @@ export function drawRule(
     // whichever was drawn first (0175).
     drawLabel(draft, rect(line.x, line.y, line.width, 1), options.label, {
       set,
+      lineStyle: LINE,
       ellipsis: glyphs.mark.ellipsis,
       ...(options.labelAlign === undefined ? {} : { align: options.labelAlign }),
     });

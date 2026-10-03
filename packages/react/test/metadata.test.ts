@@ -451,7 +451,29 @@ describe('the snapshots, as the site draws them', () => {
       ╰──────────╯
       + ascii ---+
       |          |
-      +----------+"
+      +----------+
+      ── Titles
+      ┌ start ───────────┐
+      ┌───── center ─────┐
+      ┌───────────── end ┐
+      ┌ a title far to… ─┐
+      ── Dividers in a lighter set
+      ┏ heavy ━━━━━┓
+      ┃            ┃
+      ┠────────────┨
+      ┃            ┃
+      ┗━━━━━━━━━━━━┛
+      ╔ double ════╗
+      ║            ║
+      ╟────────────╢
+      ║            ║
+      ╚════════════╝
+      ── Under an ASCII theme
+      + a title fa~ -+
+      |              |
+      +--------------+
+      |              |
+      +--------------+"
     `);
   });
 
@@ -462,7 +484,11 @@ describe('the snapshots, as the site draws them', () => {
       Ctrl+S save
       ^S save
       ── A status bar
-      ↑ move  Enter open  Esc close  Ctrl+Shift+K delete"
+      ↑ move  Enter open  Esc close  Ctrl+Shift+K delete
+      ── Under an ASCII theme
+      Cmd+S save
+      Shift+Up select
+      S-Up select"
     `);
   });
 
