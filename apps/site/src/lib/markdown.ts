@@ -4,6 +4,8 @@
  */
 import path from 'node:path';
 import { shapeOf, stringWidth } from '@rockaway/grid';
+import { type CalloutTone, calloutChrome } from '@rockaway/react/callout';
+import { borderSets as glyphSets } from '@rockaway/tokens';
 import type { Element, ElementContent, Root, RootContent } from 'hast';
 
 /** Where links that leave the site go: the repository, at main. */
@@ -218,4 +220,126 @@ export function rehypeCellGlyphs(): (tree: Root) => void {
     node.children = next as typeof node.children;
   };
   return (tree) => visit(tree);
+}
+
+/** GitHub's alert blocks, and the callout each becomes. `IMPORTANT` is a note under its own name. */
+const ALERTS: Readonly<Record<string, { tone: CalloutTone; title?: string }>> = {
+  NOTE: { tone: 'note' },
+  TIP: { tone: 'tip' },
+  IMPORTANT: { tone: 'note', title: 'Important' },
+  WARNING: { tone: 'warning' },
+  CAUTION: { tone: 'danger' },
+};
+
+const ALERT = /^\s*\[!([A-Z]+)\]\s*/;
+
+/** One character the cell draws, as prose sets one: a box with the character in it. */
+function shaped(ch: string, className?: string): Element {
+  const shape = shapeOf(ch);
+  return {
+    type: 'element',
+    tagName: 'span',
+    properties: {
+      ...(shape ? { dataRkShape: shape.key } : {}),
+      ...(className === undefined ? {} : { className: [className] }),
+    },
+    children: [{ type: 'text', value: ch }],
+  };
+}
+
+function span(className: string, children: ElementContent[]): Element {
+  return {
+    type: 'element',
+    tagName: 'span',
+    properties: { className: [className], ariaHidden: 'true' },
+    children,
+  };
+}
+
+/** The alert a blockquote opens with, and the blockquote with the marker taken out. */
+function alertOf(quote: Element): { tone: CalloutTone; title?: string } | undefined {
+  const first = quote.children.find((c): c is Element => c.type === 'element');
+  if (first?.tagName !== 'p') return undefined;
+  const lead = first.children[0];
+  if (lead?.type !== 'text') return undefined;
+  const match = ALERT.exec(lead.value);
+  const alert = match ? ALERTS[match[1] ?? ''] : undefined;
+  if (!match || !alert) return undefined;
+  lead.value = lead.value.slice(match[0].length);
+  if (lead.value === '') first.children.shift();
+  if (first.children[0]?.type === 'element' && first.children[0].tagName === 'br') {
+    first.children.shift();
+  }
+  if (first.children.length === 0) quote.children.splice(quote.children.indexOf(first), 1);
+  return alert;
+}
+
+/**
+ * GitHub's alert blocks (`> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`,
+ * `[!CAUTION]`) become callouts (cairn 0140), set as the static callout: the
+ * chrome Callout draws, with its lines drawn by the cell, so a page of prose
+ * still runs no script. The tone's weight, mark and title are Callout's own,
+ * from `calloutChrome`; the content is the quote's, unchanged.
+ */
+export function rehypeCallouts(): (tree: Root) => void {
+  const visit = (node: Root | Element): void => {
+    node.children.forEach((child, index) => {
+      if (child.type !== 'element') return;
+      const alert = child.tagName === 'blockquote' ? alertOf(child) : undefined;
+      if (!alert) {
+        visit(child);
+        return;
+      }
+      (node.children as RootContent[])[index] = callout(alert, child.children);
+    });
+  };
+  return (tree) => visit(tree);
+}
+
+/** The static callout's elements: the edges and sides drawn by the cell, the content between. */
+function callout(alert: { tone: CalloutTone; title?: string }, content: ElementContent[]): Element {
+  const chrome = calloutChrome(alert);
+  const box = glyphSets[chrome.border];
+  const side = (): Element => {
+    const el = shaped(box.vertical, 'rk-callout-side');
+    el.properties.ariaHidden = 'true';
+    return el;
+  };
+  const heading: Element = {
+    type: 'element',
+    tagName: 'span',
+    properties: { className: ['rk-callout-heading'] },
+    children: [{ type: 'text', value: ` ${chrome.heading} ` }],
+  };
+  return {
+    type: 'element',
+    tagName: 'aside',
+    properties: {
+      className: ['rk-callout-static'],
+      dataTone: chrome.tone,
+      role: 'note',
+      ariaLabel: chrome.label,
+    },
+    children: [
+      span('rk-callout-edge', [
+        shaped(box['top-left']),
+        heading,
+        shaped(box.horizontal, 'rk-callout-run'),
+        shaped(box['top-right']),
+      ]),
+      side(),
+      {
+        type: 'element',
+        tagName: 'div',
+        properties: { className: ['rk-callout-body'] },
+        children: content.filter((c) => c.type !== 'text' || c.value.trim() !== ''),
+      },
+      side(),
+      span('rk-callout-edge', [
+        shaped(box['bottom-left']),
+        shaped(box.horizontal, 'rk-callout-run'),
+        shaped(box['bottom-right']),
+      ]),
+    ],
+  };
 }

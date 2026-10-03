@@ -3,8 +3,8 @@
  *
  * Rule 8 of the contract: operable by keyboard alone, and usable with a
  * finger at touch density. Density is the line box, so a one-row control is
- * exactly as tall as a cell: 16px at `dense` with a 16px font, 32px at
- * `touch`. Whether that is big enough is a measurement, not a claim, and this
+ * exactly as tall as a cell: with a 16px font, 16px at `dense`, 24px at
+ * `normal` and 44px at `touch` (0197). Whether that is big enough is a measurement, not a claim, and this
  * makes it.
  *
  * Every visible target has to pass WCAG 2.5.8 (AA): at least 24 by 24 CSS
@@ -13,7 +13,7 @@
  * sentence is exempt, as WCAG exempts it, because its height is the line's.
  *
  * Optionally, every target has to be at least `minHeight` tall as well: the
- * README's claim that touch density puts a one-row control at about 44px is
+ * README's claim that touch density puts a one-row control at 44px is
  * checked by asking for 44 at `touch`.
  */
 
@@ -77,14 +77,21 @@ function describe(el: Element): string {
   return `${el.tagName.toLowerCase()}${id}${cls}${testId ? `[${testId}]` : ''}${name ? ` "${name}"` : ''}`;
 }
 
+const clipped = (style: CSSStyleDeclaration): boolean =>
+  style.clipPath.startsWith('inset(50%') || style.clip === 'rect(0px, 0px, 0px, 0px)';
+
 function isHidden(el: HTMLElement, style: CSSStyleDeclaration): boolean {
-  return (
-    style.visibility === 'hidden' ||
-    style.display === 'none' ||
-    style.clipPath.startsWith('inset(50%') ||
-    style.clip === 'rect(0px, 0px, 0px, 0px)' ||
-    el.closest('[aria-hidden="true"], [inert]') !== null
-  );
+  if (style.visibility === 'hidden' || style.display === 'none') return true;
+  if (el.closest('[aria-hidden="true"], [inert]') !== null) return true;
+  // Visually hidden, on the element or by a wrapper: React Aria's checkbox and
+  // radio put the native input inside a clipped span, and the label around it
+  // is the target a pointer meets.
+  const view = el.ownerDocument.defaultView;
+  for (let node: HTMLElement | null = el; node; node = node.parentElement) {
+    const own = node === el ? style : view?.getComputedStyle(node);
+    if (own && clipped(own)) return true;
+  }
+  return false;
 }
 
 function isDisabled(el: HTMLElement): boolean {

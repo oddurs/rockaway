@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import {
   fitColumns,
   MEASURE,
+  rehypeCallouts,
   rehypeCellGlyphs,
   rehypeRepositoryLinks,
   rehypeTableColumns,
@@ -116,5 +117,75 @@ describe('rehypeRepositoryLinks', () => {
     expect(link('#two-layers')).toBe('#two-layers');
     expect(link('/rockaway/')).toBe('/rockaway/');
     expect(link('https://example.com/')).toBe('https://example.com/');
+  });
+});
+
+describe('rehypeCallouts', () => {
+  /** A blockquote as Markdown parses `> [!X]\n> words`: the marker, a break, the words. */
+  const alert = (marker: string, words: string) =>
+    root(
+      el('blockquote', [
+        text('\n'),
+        el('p', [text(`[!${marker}]`), el('br'), text(words)]),
+        text('\n'),
+      ]),
+    );
+
+  /** What a callout reads as: each edge's characters, a side, and the content's text. */
+  const read = (node: Element): string =>
+    node.children
+      .map((c) =>
+        c.type === 'element'
+          ? c.children
+              .map((g) =>
+                g.type === 'element'
+                  ? (g.children[0] as { value: string }).value
+                  : (g as { value: string }).value,
+              )
+              .join('')
+          : '',
+      )
+      .join('|');
+
+  test("turns each of GitHub's alerts into a callout of its tone, the marker gone", () => {
+    const rows = ['NOTE', 'TIP', 'IMPORTANT', 'WARNING', 'CAUTION'].map((marker) => {
+      const tree = alert(marker, 'Mind the gap.');
+      rehypeCallouts()(tree);
+      const aside = tree.children[0] as Element;
+      return `${aside.tagName} ${String(aside.properties.dataTone).padEnd(8)}${String(aside.properties.ariaLabel).padEnd(10)}${read(aside)}`;
+    });
+    expect(rows.join('\n')).toMatchInlineSnapshot(`
+      "aside note    Note      ┌ ● Note ─┐|│|Mind the gap.|│|└─┘
+      aside tip     Tip       ╭ ✓ Tip ─╮|│|Mind the gap.|│|╰─╯
+      aside note    Important ┌ ● Important ─┐|│|Mind the gap.|│|└─┘
+      aside warning Warning   ┏ ! Warning ━┓|┃|Mind the gap.|┃|┗━┛
+      aside danger  Caution   ╔ ✗ Caution ═╗|║|Mind the gap.|║|╚═╝"
+    `);
+  });
+
+  test('is a note named in words, its lines drawn by the cell and hidden from readers', () => {
+    const tree = alert('WARNING', 'Mind the gap.');
+    rehypeCallouts()(tree);
+    const aside = tree.children[0] as Element;
+    expect(aside.properties).toMatchObject({ role: 'note', ariaLabel: 'Warning' });
+    const chrome = aside.children.filter(
+      (c): c is Element => c.type === 'element' && c.tagName === 'span',
+    );
+    expect(chrome).toHaveLength(4);
+    for (const part of chrome) expect(part.properties.ariaHidden).toBe('true');
+    // Every line is a shape the cell strokes; the heading is text.
+    const side = chrome[1] as Element;
+    expect(side.properties.dataRkShape).toBeDefined();
+    const body = aside.children[2] as Element;
+    expect(body.children).toEqual([el('p', [text('Mind the gap.')])]);
+  });
+
+  test('leaves a quote that is not an alert as a quote', () => {
+    const tree = root(el('blockquote', [el('p', [text('Just a quote, [!NOTE] in the middle.')])]));
+    rehypeCallouts()(tree);
+    expect((tree.children[0] as Element).tagName).toBe('blockquote');
+    const unknown = alert('MAYBE', 'Not one of them.');
+    rehypeCallouts()(unknown);
+    expect((unknown.children[0] as Element).tagName).toBe('blockquote');
   });
 });

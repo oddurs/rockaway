@@ -52,10 +52,12 @@
     block-size: calc(var(--rk-rows, 1) * var(--rk-cell-height));
   }
 
-  /* Touch is the fourth density (0074): a coarse pointer gets taller cells. */
+  /* Touch is the fourth density (0074, 0197): a coarse pointer gets taller
+   * cells, 44px at 16px, unless the page has chosen a density. Keep in step
+   * with lineBox.touch in @rockaway/tokens. */
   @media (pointer: coarse) {
     :root:not([data-density]) {
-      --rk-cell-line: 2;
+      --rk-cell-line: 2.75;
     }
   }
 }

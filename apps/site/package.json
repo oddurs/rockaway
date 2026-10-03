@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro sync && tsc -p tsconfig.json && astro build --force",
+    "build": "astro sync && tsc -p tsconfig.json && node scripts/check-astro.ts && astro build --force",
+    "check:astro": "astro sync && node scripts/check-astro.ts",
     "preview": "astro preview",
     "test": "vitest run",
     "font": "node scripts/font.ts",
@@ -22,6 +23,7 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@astrojs/language-server": "2.17.1",
     "@types/hast": "3.0.5",
     "@types/node": "26.6.2",
     "@types/react": "19.3.0",

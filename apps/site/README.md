@@ -87,7 +87,12 @@ are not in the subset: the cell draws them (0116).
 To change the character set or the version, edit `scripts/font.ts`, run
 `pnpm --filter site font` after `pnpm build`, and commit what it writes.
 
-## Not yet checked
+## Checking .astro files
 
-`astro check` needs TypeScript 5 or 6 and the repository is on 7, so `.astro`
-files are not typechecked. `tsc` checks everything else.
+`tsc` checks the TypeScript. The .astro files are checked by Astro's
+language server, the checker `astro check` runs, in `scripts/check-astro.ts`
+(cairn 0170). It runs in the site's build, after `tsc`, and on its own as
+`pnpm --filter site check:astro` once the packages are built. `astro check`
+supports TypeScript 5 and 6 and the repository is on 7, so the language server
+has a TypeScript 6 of its own, installed under another name in
+`pnpm-workspace.yaml`. Everything else stays on 7.
