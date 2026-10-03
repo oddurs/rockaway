@@ -393,15 +393,13 @@ describe('the snapshots, as the site draws them', () => {
       "── Variants
       default [ Publish ]
       fill    [ Publish ]
-      quiet   Publish
-      danger  [ Publish ]
+      danger  [!Publish ]
+      ── Without delimiters
+      default Publish
+      danger  [!Discard ]
       ── With a shortcut
       [ Save Ctrl+S ]
-      [ Save ⌘S ]
-      ── Large
-                   
-       [ Publish ] 
-                   "
+      [ Save ⌘S ]"
     `);
   });
 

@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 28% · 23 of 81 done · due 2027-01-31
+`####······` 31% · 25 of 81 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -135,7 +135,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
 - [ ] [`0129`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0129-polish-frame-against-the-contract-and-the-cell-renderer.md) Polish Frame against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0130`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0130-polish-divider-against-the-contract-and-the-cell-renderer.md) Polish Divider against the contract and the cell renderer <sup>chore · components · p1</sup>
-- [ ] [`0131`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0131-polish-button-against-the-contract-and-the-cell-renderer.md) Polish Button against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0134`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0134-write-the-component-recipe-the-files-the-export-lines-the-checklist.md) Write the component recipe: the files, the export lines, the checklist <sup>docs · docs · p1</sup>
 - [ ] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
 - [ ] [`0137`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0137-tree.md) Tree <sup>component · components · p1</sup>
@@ -168,7 +167,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
 - [ ] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
 - [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
-- [ ] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
 - [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
 
 ### done
@@ -190,8 +188,10 @@ The component contract, proven on a first set of components.
 - [x] [`0121`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0121-make-every-package-s-exports-correct-and-prove-it-with-publint-and-attw.md) Make every package's exports correct, and prove it with publint and attw <sup>chore · distribution · p0</sup>
 - [x] [`0122`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0122-give-each-component-one-line-in-the-barrels-so-parallel-work-merges-cleanly.md) Give each component one line in the barrels, so parallel work merges cleanly <sup>chore · tooling · p1</sup>
 - [x] [`0123`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0123-make-conformance-level-aware-and-refuse-an-exception-without-a-reason.md) Make conformance level-aware, and refuse an exception without a reason <sup>feature · tooling · p1</sup>
+- [x] [`0131`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0131-polish-button-against-the-contract-and-the-cell-renderer.md) Polish Button against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0132`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0132-polish-keyhint-against-the-contract.md) Polish KeyHint against the contract <sup>chore · components · p1</sup>
 - [x] [`0133`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0133-polish-list-against-the-contract-and-the-cell-renderer.md) Polish List against the contract and the cell renderer <sup>chore · components · p1</sup>
+- [x] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 - [x] [`0165`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0165-ship-one-entry-point-per-component-so-an-islands-site-does-not-hydrate-the-whole-package.md) Ship one entry point per component, so an islands site does not hydrate the whole package <sup>feature · distribution · p1</sup>
 - [x] [`0175`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0175-never-let-a-junction-overwrite-a-title.md) Never let a junction overwrite a title <sup>bug · grid · p1</sup>
