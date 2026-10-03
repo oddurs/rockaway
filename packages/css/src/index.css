@@ -17,6 +17,7 @@
 @import "./forced-colors.css";
 @import "./container.css";
 @import "./prose.css";
+@import "./syntax.css";
 
 /*
  * Components: one line each, sorted by path (cairn 0122). Their order does not
