@@ -1,12 +1,13 @@
 ---
-id: 75d45402-c09b-44eb-a1a1-e363af1afe27
+id: 81
+uid: 75d45402-c09b-44eb-a1a1-e363af1afe27
 title: Write the integer layout solver
 type: feature
 status: done
 milestone: grid
 assignee: Oddur Sigurdsson
 depends_on:
-- 83c474e9-31d5-4b38-b45d-945b02ffd3ba
+- 78
 created: 2026-09-22
 updated: 2026-09-22
 closed_at: 2026-09-22

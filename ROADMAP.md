@@ -26,14 +26,14 @@ The decisions everything else inherits, and the repo that holds them.
 
 ### done
 
-- [x] [`20cb52cf`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0008-choose-the-behaviour-layer-react-aria-components-or-base-ui.md) Choose the behaviour layer: React Aria Components or Base UI <sup>decision · behaviour · p0</sup>
-- [x] [`2759ae01`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0010-set-the-browser-baseline-and-which-modern-css-is-allowed.md) Set the browser baseline and which modern CSS is allowed <sup>decision · css · p1</sup>
-- [x] [`41eadd6e`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0007-choose-the-framework-target-react-only-or-several.md) Choose the framework target: React only, or several <sup>decision · behaviour · p0</sup>
-- [x] [`49f84d7f`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0009-choose-the-styling-approach-plain-css-layer-and-data-attributes.md) Choose the styling approach: plain CSS, @layer and data attributes <sup>decision · css · p0</sup>
-- [x] [`5a26a342`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0011-choose-the-distribution-model-versioned-package-plus-copy-in-registry.md) Choose the distribution model: versioned package plus copy-in registry <sup>decision · distribution · p1</sup>
-- [x] [`75eedfec`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0012-scaffold-the-monorepo-pnpm-workspaces-tsdown-changesets-biome.md) Scaffold the monorepo: pnpm workspaces, tsdown, Changesets, Biome <sup>chore · tooling · p0</sup>
-- [x] [`7e86d360`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0014-ci-typecheck-lint-tests-and-cairn-check-on-every-push.md) CI: typecheck, lint, tests and cairn check on every push <sup>chore · tooling · p1</sup>
-- [x] [`d6fc9ff8`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0013-set-up-storybook-10-with-stories-running-as-vitest-browser-tests.md) Set up Storybook 10 with stories running as Vitest browser tests <sup>chore · tooling · p0</sup>
+- [x] [`0007`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0007-choose-the-framework-target-react-only-or-several.md) Choose the framework target: React only, or several <sup>decision · behaviour · p0</sup>
+- [x] [`0008`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0008-choose-the-behaviour-layer-react-aria-components-or-base-ui.md) Choose the behaviour layer: React Aria Components or Base UI <sup>decision · behaviour · p0</sup>
+- [x] [`0009`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0009-choose-the-styling-approach-plain-css-layer-and-data-attributes.md) Choose the styling approach: plain CSS, @layer and data attributes <sup>decision · css · p0</sup>
+- [x] [`0010`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0010-set-the-browser-baseline-and-which-modern-css-is-allowed.md) Set the browser baseline and which modern CSS is allowed <sup>decision · css · p1</sup>
+- [x] [`0011`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0011-choose-the-distribution-model-versioned-package-plus-copy-in-registry.md) Choose the distribution model: versioned package plus copy-in registry <sup>decision · distribution · p1</sup>
+- [x] [`0012`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0012-scaffold-the-monorepo-pnpm-workspaces-tsdown-changesets-biome.md) Scaffold the monorepo: pnpm workspaces, tsdown, Changesets, Biome <sup>chore · tooling · p0</sup>
+- [x] [`0013`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0013-set-up-storybook-10-with-stories-running-as-vitest-browser-tests.md) Set up Storybook 10 with stories running as Vitest browser tests <sup>chore · tooling · p0</sup>
+- [x] [`0014`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0014-ci-typecheck-lint-tests-and-cairn-check-on-every-push.md) CI: typecheck, lint, tests and cairn check on every push <sup>chore · tooling · p1</sup>
 
 ## tokens — Token pipeline
 
@@ -43,19 +43,19 @@ Design decisions as data, compiled to CSS custom properties.
 
 ### done
 
-- [x] [`0c39a331`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0019-build-the-semantic-colour-tier-surface-fg-border-accent-and-status-roles.md) Build the semantic colour tier: surface, fg, border, accent and status roles <sup>feature · tokens · p0</sup>
-- [x] [`25aed42b`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0021-express-light-and-dark-through-the-dtcg-resolver-module.md) Express light and dark through the DTCG Resolver module <sup>feature · tokens · p0</sup>
-- [x] [`2ae97df0`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0022-check-contrast-for-every-semantic-fg-bg-pair-in-ci.md) Check contrast for every semantic fg/bg pair in CI <sup>feature · tokens · p1</sup>
-- [x] [`464aab4c`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0018-generate-the-colour-scales-in-oklch.md) Generate the colour scales in OKLCH <sup>feature · tokens · p0</sup>
-- [x] [`5e36e640`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0017-write-dtcg-sources-for-colour-space-size-radius-type-motion-and-elevation.md) Write DTCG sources for colour, space, size, radius, type, motion and elevation <sup>feature · tokens · p0</sup>
-- [x] [`950b997c`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0020-compile-tokens-to-css-custom-properties-with-terrazzo.md) Compile tokens to CSS custom properties with Terrazzo <sup>feature · tokens · p0</sup>
-- [x] [`9c5997f0`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0062-build-the-theme-generator-inputs-in-dtcg-sources-out.md) Build the theme generator: inputs in, DTCG sources out <sup>feature · tokens · p0</sup>
-- [x] [`aba0c1f9`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0059-choose-the-typeface-inter.md) Choose the typeface: Inter <sup>decision · tokens · p0</sup>
-- [x] [`b1fb72a7`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0058-adopt-the-theme-model-seven-inputs-every-token-derived.md) Adopt the theme model: seven inputs, every token derived <sup>decision · tokens · p0</sup>
-- [x] [`ddb55a9f`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0023-generate-a-token-reference-page-from-the-sources.md) Generate a token reference page from the sources <sup>docs · docs · p2</sup>
-- [x] [`e5ea6d21`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0060-set-the-elevation-rules-surfaces-follow-the-input-overlays-always-lift.md) Set the elevation rules: surfaces follow the input, overlays always lift <sup>decision · tokens · p1</sup>
-- [x] [`f8b51014`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0016-define-the-token-taxonomy-and-naming-reference-semantic-component.md) Define the token taxonomy and naming: reference, semantic, component <sup>decision · tokens · p0</sup>
-- [x] [`fed4a869`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0015-check-terrazzo-s-resolver-support-use-it-today-or-shim-it.md) Check Terrazzo's Resolver support: use it today, or shim it? <sup>spike · tokens · p0</sup>
+- [x] [`0015`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0015-check-terrazzo-s-resolver-support-use-it-today-or-shim-it.md) Check Terrazzo's Resolver support: use it today, or shim it? <sup>spike · tokens · p0</sup>
+- [x] [`0016`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0016-define-the-token-taxonomy-and-naming-reference-semantic-component.md) Define the token taxonomy and naming: reference, semantic, component <sup>decision · tokens · p0</sup>
+- [x] [`0017`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0017-write-dtcg-sources-for-colour-space-size-radius-type-motion-and-elevation.md) Write DTCG sources for colour, space, size, radius, type, motion and elevation <sup>feature · tokens · p0</sup>
+- [x] [`0018`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0018-generate-the-colour-scales-in-oklch.md) Generate the colour scales in OKLCH <sup>feature · tokens · p0</sup>
+- [x] [`0019`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0019-build-the-semantic-colour-tier-surface-fg-border-accent-and-status-roles.md) Build the semantic colour tier: surface, fg, border, accent and status roles <sup>feature · tokens · p0</sup>
+- [x] [`0020`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0020-compile-tokens-to-css-custom-properties-with-terrazzo.md) Compile tokens to CSS custom properties with Terrazzo <sup>feature · tokens · p0</sup>
+- [x] [`0021`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0021-express-light-and-dark-through-the-dtcg-resolver-module.md) Express light and dark through the DTCG Resolver module <sup>feature · tokens · p0</sup>
+- [x] [`0022`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0022-check-contrast-for-every-semantic-fg-bg-pair-in-ci.md) Check contrast for every semantic fg/bg pair in CI <sup>feature · tokens · p1</sup>
+- [x] [`0023`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0023-generate-a-token-reference-page-from-the-sources.md) Generate a token reference page from the sources <sup>docs · docs · p2</sup>
+- [x] [`0058`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0058-adopt-the-theme-model-seven-inputs-every-token-derived.md) Adopt the theme model: seven inputs, every token derived <sup>decision · tokens · p0</sup>
+- [x] [`0059`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0059-choose-the-typeface-inter.md) Choose the typeface: Inter <sup>decision · tokens · p0</sup>
+- [x] [`0060`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0060-set-the-elevation-rules-surfaces-follow-the-input-overlays-always-lift.md) Set the elevation rules: surfaces follow the input, overlays always lift <sup>decision · tokens · p1</sup>
+- [x] [`0062`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0062-build-the-theme-generator-inputs-in-dtcg-sources-out.md) Build the theme generator: inputs in, DTCG sources out <sup>feature · tokens · p0</sup>
 
 ## runtime — Runtime CSS
 
@@ -65,15 +65,15 @@ The CSS contract every consumer shares.
 
 ### done
 
-- [x] [`11a80c31`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0061-specify-the-focus-ring-2px-gap-2px-accent.md) Specify the focus ring: 2px gap, 2px accent <sup>decision · css · p1</sup>
-- [x] [`2fad46a9`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0025-write-the-reset-and-base-typography.md) Write the reset and base typography <sup>feature · css · p1</sup>
-- [x] [`43abfc46`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0027-support-forced-colors-mode-from-the-start.md) Support forced-colors mode from the start <sup>feature · css · p1</sup>
-- [x] [`6be9a6a6`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0029-set-container-query-conventions-for-component-sizing.md) Set container-query conventions for component sizing <sup>feature · css · p2</sup>
-- [x] [`906e54b8`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0028-register-animatable-tokens-with-property.md) Register animatable tokens with @property <sup>feature · css · p2</sup>
-- [x] [`a3c0f8f6`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0030-generate-a-tailwind-v4-theme-adapter-from-the-tokens.md) Generate a Tailwind v4 @theme adapter from the tokens <sup>feature · distribution · p2</sup>
-- [x] [`abef3daf`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0026-build-focus-ring-motion-and-reduced-motion-foundations.md) Build focus ring, motion and reduced-motion foundations <sup>feature · css · p1</sup>
-- [x] [`ccbfdd3f`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0066-the-font-shorthand-with-a-var-breaks-minifiers.md) The font shorthand with a var() breaks minifiers <sup>bug · css · p0</sup>
-- [x] [`e6ee56dd`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0024-fix-the-cascade-layer-order.md) Fix the cascade layer order <sup>feature · css · p0</sup>
+- [x] [`0024`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0024-fix-the-cascade-layer-order.md) Fix the cascade layer order <sup>feature · css · p0</sup>
+- [x] [`0025`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0025-write-the-reset-and-base-typography.md) Write the reset and base typography <sup>feature · css · p1</sup>
+- [x] [`0026`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0026-build-focus-ring-motion-and-reduced-motion-foundations.md) Build focus ring, motion and reduced-motion foundations <sup>feature · css · p1</sup>
+- [x] [`0027`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0027-support-forced-colors-mode-from-the-start.md) Support forced-colors mode from the start <sup>feature · css · p1</sup>
+- [x] [`0028`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0028-register-animatable-tokens-with-property.md) Register animatable tokens with @property <sup>feature · css · p2</sup>
+- [x] [`0029`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0029-set-container-query-conventions-for-component-sizing.md) Set container-query conventions for component sizing <sup>feature · css · p2</sup>
+- [x] [`0030`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0030-generate-a-tailwind-v4-theme-adapter-from-the-tokens.md) Generate a Tailwind v4 @theme adapter from the tokens <sup>feature · distribution · p2</sup>
+- [x] [`0061`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0061-specify-the-focus-ring-2px-gap-2px-accent.md) Specify the focus ring: 2px gap, 2px accent <sup>decision · css · p1</sup>
+- [x] [`0066`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0066-the-font-shorthand-with-a-var-breaks-minifiers.md) The font shorthand with a var() breaks minifiers <sup>bug · css · p0</sup>
 
 ## grid — The frame engine
 
@@ -83,23 +83,23 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ### done
 
-- [x] [`138fc8f5`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0110-the-rule-painter-draws-cell-boxes-not-lines.md) The rule painter draws cell boxes, not lines <sup>bug · grid · p0</sup>
-- [x] [`1929b9a2`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0070-position-rockaway-as-a-tui-design-system-for-the-web.md) Position rockaway as a TUI design system for the web <sup>decision · grid · p0</sup>
-- [x] [`2636c4b5`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0074-derive-the-cell-from-the-font-and-let-touch-grow-the-cell.md) Derive the cell from the font, and let touch grow the cell <sup>decision · css · p0</sup>
-- [x] [`2d0d18d8`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0079-model-borders-as-weighted-edges-and-resolve-junctions-from-a-table.md) Model borders as weighted edges, and resolve junctions from a table <sup>feature · grid · p0</sup>
-- [x] [`328a8cbc`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0082-draw-boxes-dividers-titles-and-padding.md) Draw boxes, dividers, titles and padding <sup>feature · grid · p0</sup>
-- [x] [`441a34ff`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0071-build-the-engine-as-pure-geometry-with-pluggable-painters.md) Build the engine as pure geometry with pluggable painters <sup>decision · grid · p0</sup>
-- [x] [`45efd065`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0085-paint-to-the-dom-the-glyph-and-rule-painters.md) Paint to the DOM: the glyph and rule painters <sup>feature · grid · p0</sup>
-- [x] [`5cd85b50`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0087-make-the-text-snapshot-the-house-test-for-components.md) Make the text snapshot the house test for components <sup>chore · tooling · p0</sup>
-- [x] [`75d45402`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0081-write-the-integer-layout-solver.md) Write the integer layout solver <sup>feature · grid · p0</sup>
-- [x] [`75e3579e`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0086-bind-the-engine-to-react-measure-in-cells-render-resize.md) Bind the engine to React: measure in cells, render, resize <sup>feature · grid · p0</sup>
-- [x] [`7a0423ec`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0072-make-strictness-a-dial-with-exceptions-you-have-to-declare.md) Make strictness a dial, with exceptions you have to declare <sup>decision · grid · p0</sup>
-- [x] [`837fceaa`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0083-paint-to-text-and-make-it-the-snapshot-format.md) Paint to text, and make it the snapshot format <sup>feature · grid · p0</sup>
-- [x] [`83c474e9`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0078-scaffold-rockaway-grid-the-pure-geometry-core.md) Scaffold @rockaway/grid: the pure geometry core <sup>feature · grid · p0</sup>
-- [x] [`90f33af7`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0088-enforce-grid-conformance-and-count-the-exceptions.md) Enforce grid conformance, and count the exceptions <sup>chore · tooling · p0</sup>
-- [x] [`cf6c0dcd`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0080-measure-text-in-cells-wcwidth-truncation-wrapping.md) Measure text in cells: wcwidth, truncation, wrapping <sup>feature · grid · p0</sup>
-- [x] [`ec6d24c4`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0084-paint-to-ansi.md) Paint to ANSI <sup>feature · grid · p1</sup>
-- [x] [`fa8b4c06`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0073-fix-the-glyph-sets-the-unicode-floor-and-how-text-is-measured.md) Fix the glyph sets, the Unicode floor and how text is measured <sup>decision · grid · p0</sup>
+- [x] [`0070`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0070-position-rockaway-as-a-tui-design-system-for-the-web.md) Position rockaway as a TUI design system for the web <sup>decision · grid · p0</sup>
+- [x] [`0071`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0071-build-the-engine-as-pure-geometry-with-pluggable-painters.md) Build the engine as pure geometry with pluggable painters <sup>decision · grid · p0</sup>
+- [x] [`0072`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0072-make-strictness-a-dial-with-exceptions-you-have-to-declare.md) Make strictness a dial, with exceptions you have to declare <sup>decision · grid · p0</sup>
+- [x] [`0073`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0073-fix-the-glyph-sets-the-unicode-floor-and-how-text-is-measured.md) Fix the glyph sets, the Unicode floor and how text is measured <sup>decision · grid · p0</sup>
+- [x] [`0074`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0074-derive-the-cell-from-the-font-and-let-touch-grow-the-cell.md) Derive the cell from the font, and let touch grow the cell <sup>decision · css · p0</sup>
+- [x] [`0078`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0078-scaffold-rockaway-grid-the-pure-geometry-core.md) Scaffold @rockaway/grid: the pure geometry core <sup>feature · grid · p0</sup>
+- [x] [`0079`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0079-model-borders-as-weighted-edges-and-resolve-junctions-from-a-table.md) Model borders as weighted edges, and resolve junctions from a table <sup>feature · grid · p0</sup>
+- [x] [`0080`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0080-measure-text-in-cells-wcwidth-truncation-wrapping.md) Measure text in cells: wcwidth, truncation, wrapping <sup>feature · grid · p0</sup>
+- [x] [`0081`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0081-write-the-integer-layout-solver.md) Write the integer layout solver <sup>feature · grid · p0</sup>
+- [x] [`0082`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0082-draw-boxes-dividers-titles-and-padding.md) Draw boxes, dividers, titles and padding <sup>feature · grid · p0</sup>
+- [x] [`0083`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0083-paint-to-text-and-make-it-the-snapshot-format.md) Paint to text, and make it the snapshot format <sup>feature · grid · p0</sup>
+- [x] [`0084`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0084-paint-to-ansi.md) Paint to ANSI <sup>feature · grid · p1</sup>
+- [x] [`0085`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0085-paint-to-the-dom-the-glyph-and-rule-painters.md) Paint to the DOM: the glyph and rule painters <sup>feature · grid · p0</sup>
+- [x] [`0086`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0086-bind-the-engine-to-react-measure-in-cells-render-resize.md) Bind the engine to React: measure in cells, render, resize <sup>feature · grid · p0</sup>
+- [x] [`0087`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0087-make-the-text-snapshot-the-house-test-for-components.md) Make the text snapshot the house test for components <sup>chore · tooling · p0</sup>
+- [x] [`0088`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0088-enforce-grid-conformance-and-count-the-exceptions.md) Enforce grid conformance, and count the exceptions <sup>chore · tooling · p0</sup>
+- [x] [`0110`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0110-the-rule-painter-draws-cell-boxes-not-lines.md) The rule painter draws cell boxes, not lines <sup>bug · grid · p0</sup>
 
 ## primitives — First primitives
 
@@ -109,35 +109,35 @@ The component contract, proven on a first set of components.
 
 ### backlog
 
-- [ ] [`1218df97`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p2</sup>
-- [ ] [`2ee63611`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
-- [ ] [`570abc45`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
-- [ ] [`6d078271`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0036-checkbox.md) Checkbox <sup>component · components · p1</sup>
-- [ ] [`710ebab1`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p1</sup>
-- [ ] [`7b8c9403`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0034-popover.md) Popover <sup>component · components · p1</sup>
-- [ ] [`96e76a96`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0064-turn-the-concept-sheet-into-a-storybook-theme-playground.md) Turn the concept sheet into a Storybook theme playground <sup>feature · docs · p2</sup>
-- [ ] [`975cba25`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
-- [ ] [`97c2c8e2`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0043-tooltip.md) Tooltip <sup>component · components · p1</sup>
-- [ ] [`9e39811b`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
-- [ ] [`d0b12e4c`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0098-statusbar.md) StatusBar <sup>component · components · p1</sup>
-- [ ] [`d279648b`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p1</sup>
-- [ ] [`d98b4d5a`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0101-progress.md) Progress <sup>component · components · p1</sup>
-- [ ] [`ee14fbc6`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0057-table.md) Table <sup>component · components · p1</sup>
-- [ ] [`f3445f26`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
-- [ ] [`f8a9f69d`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0035-text-field.md) Text field <sup>component · components · p1</sup>
-- [ ] [`fca743a4`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p1</sup>
-- [ ] [`fd36d3a4`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0041-menu.md) Menu <sup>component · components · p1</sup>
+- [ ] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p1</sup>
+- [ ] [`0034`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0034-popover.md) Popover <sup>component · components · p1</sup>
+- [ ] [`0035`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0035-text-field.md) Text field <sup>component · components · p1</sup>
+- [ ] [`0036`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0036-checkbox.md) Checkbox <sup>component · components · p1</sup>
+- [ ] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
+- [ ] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
+- [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
+- [ ] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
+- [ ] [`0041`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0041-menu.md) Menu <sup>component · components · p1</sup>
+- [ ] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
+- [ ] [`0043`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0043-tooltip.md) Tooltip <sup>component · components · p1</sup>
+- [ ] [`0044`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p2</sup>
+- [ ] [`0057`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0057-table.md) Table <sup>component · components · p1</sup>
+- [ ] [`0064`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0064-turn-the-concept-sheet-into-a-storybook-theme-playground.md) Turn the concept sheet into a Storybook theme playground <sup>feature · docs · p2</sup>
+- [ ] [`0098`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0098-statusbar.md) StatusBar <sup>component · components · p1</sup>
+- [ ] [`0101`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0101-progress.md) Progress <sup>component · components · p1</sup>
+- [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p1</sup>
+- [ ] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p1</sup>
 
 ### done
 
-- [x] [`3ffe299c`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
-- [x] [`6b06032d`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0097-divider.md) Divider <sup>component · components · p1</sup>
-- [x] [`7da0d85c`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0099-keyhint.md) KeyHint <sup>component · components · p1</sup>
-- [x] [`a513bd43`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0112-write-the-concept-doc-how-a-tui-becomes-a-web-page.md) Write the concept doc: how a TUI becomes a web page <sup>docs · docs · p0</sup>
-- [x] [`a920e7ad`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0111-render-in-the-dom-and-treat-painting-as-a-strategy.md) Render in the DOM, and treat painting as a strategy <sup>decision · grid · p0</sup>
-- [x] [`abd0c2c1`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0100-list.md) List <sup>component · components · p0</sup>
-- [x] [`b8a52e51`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0096-frame.md) Frame <sup>component · components · p0</sup>
-- [x] [`bbee8670`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
+- [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
+- [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
+- [x] [`0096`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0096-frame.md) Frame <sup>component · components · p0</sup>
+- [x] [`0097`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0097-divider.md) Divider <sup>component · components · p1</sup>
+- [x] [`0099`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0099-keyhint.md) KeyHint <sup>component · components · p1</sup>
+- [x] [`0100`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0100-list.md) List <sup>component · components · p0</sup>
+- [x] [`0111`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0111-render-in-the-dom-and-treat-painting-as-a-strategy.md) Render in the DOM, and treat painting as a strategy <sup>decision · grid · p0</sup>
+- [x] [`0112`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0112-write-the-concept-doc-how-a-tui-becomes-a-web-page.md) Write the concept doc: how a TUI becomes a web page <sup>docs · docs · p0</sup>
 
 ## retheme — Tokens on the grid
 
@@ -147,14 +147,14 @@ The token pipeline survives the pivot; its contents do not.
 
 ### done
 
-- [x] [`1ed756f5`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0093-rewrite-the-css-layers-for-the-grid.md) Rewrite the CSS layers for the grid <sup>feature · css · p0</sup>
-- [x] [`38428dc7`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0095-update-the-workbench-token-reference-for-the-grid.md) Update the workbench token reference for the grid <sup>docs · docs · p1</sup>
-- [x] [`3cedcc59`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0091-emit-glyph-and-attribute-tokens.md) Emit glyph and attribute tokens <sup>feature · tokens · p0</sup>
-- [x] [`3f05d3b9`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0094-export-a-terminal-theme-from-the-same-tokens.md) Export a terminal theme from the same tokens <sup>feature · tokens · p2</sup>
-- [x] [`64e82068`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0089-generate-the-ansi-16-palette-in-oklch.md) Generate the ANSI 16 palette in OKLCH <sup>feature · tokens · p0</sup>
-- [x] [`66943c91`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0090-emit-cell-density-and-conformance-tokens.md) Emit cell, density and conformance tokens <sup>feature · tokens · p0</sup>
-- [x] [`6c289a60`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0075-recast-the-tokens-for-the-grid.md) Recast the tokens for the grid <sup>decision · tokens · p0</sup>
-- [x] [`a017bac6`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0092-retire-radius-shadow-and-the-type-scale.md) Retire radius, shadow and the type scale <sup>chore · tokens · p0</sup>
+- [x] [`0075`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0075-recast-the-tokens-for-the-grid.md) Recast the tokens for the grid <sup>decision · tokens · p0</sup>
+- [x] [`0089`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0089-generate-the-ansi-16-palette-in-oklch.md) Generate the ANSI 16 palette in OKLCH <sup>feature · tokens · p0</sup>
+- [x] [`0090`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0090-emit-cell-density-and-conformance-tokens.md) Emit cell, density and conformance tokens <sup>feature · tokens · p0</sup>
+- [x] [`0091`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0091-emit-glyph-and-attribute-tokens.md) Emit glyph and attribute tokens <sup>feature · tokens · p0</sup>
+- [x] [`0092`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0092-retire-radius-shadow-and-the-type-scale.md) Retire radius, shadow and the type scale <sup>chore · tokens · p0</sup>
+- [x] [`0093`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0093-rewrite-the-css-layers-for-the-grid.md) Rewrite the CSS layers for the grid <sup>feature · css · p0</sup>
+- [x] [`0094`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0094-export-a-terminal-theme-from-the-same-tokens.md) Export a terminal theme from the same tokens <sup>feature · tokens · p2</sup>
+- [x] [`0095`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0095-update-the-workbench-token-reference-for-the-grid.md) Update the workbench token reference for the grid <sup>docs · docs · p1</sup>
 
 ## site — The dog-food site
 
@@ -164,18 +164,18 @@ A website built out of the system it documents, which is the only honest way
 
 ### backlog
 
-- [ ] [`04d9e239`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
-- [ ] [`1ff38058`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0108-build-the-landing-page.md) Build the landing page <sup>feature · site · p0</sup>
-- [ ] [`51487277`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0105-make-every-screen-copyable-as-text-and-as-ansi.md) Make every screen copyable as text and as ANSI <sup>feature · site · p1</sup>
-- [ ] [`562ba731`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0104-build-the-site-shell-as-a-tui.md) Build the site shell as a TUI <sup>feature · site · p0</sup>
-- [ ] [`77b2e14f`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0051-write-a-getting-started-guide-for-consuming-apps.md) Write a getting-started guide for consuming apps <sup>docs · docs · p1</sup>
-- [ ] [`7cfb14bd`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0106-write-the-foundations-pages.md) Write the foundations pages <sup>docs · docs · p0</sup>
-- [ ] [`e1a6b9f8`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
-- [ ] [`f5d795c4`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0107-write-the-getting-started-guide.md) Write the getting-started guide <sup>docs · docs · p0</sup>
+- [ ] [`0051`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0051-write-a-getting-started-guide-for-consuming-apps.md) Write a getting-started guide for consuming apps <sup>docs · docs · p1</sup>
+- [ ] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
+- [ ] [`0104`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0104-build-the-site-shell-as-a-tui.md) Build the site shell as a TUI <sup>feature · site · p0</sup>
+- [ ] [`0105`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0105-make-every-screen-copyable-as-text-and-as-ansi.md) Make every screen copyable as text and as ANSI <sup>feature · site · p1</sup>
+- [ ] [`0106`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0106-write-the-foundations-pages.md) Write the foundations pages <sup>docs · docs · p0</sup>
+- [ ] [`0107`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0107-write-the-getting-started-guide.md) Write the getting-started guide <sup>docs · docs · p0</sup>
+- [ ] [`0108`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0108-build-the-landing-page.md) Build the landing page <sup>feature · site · p0</sup>
+- [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 
 ### done
 
-- [x] [`8a07961a`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0077-build-the-site-as-the-system-statically-on-pages.md) Build the site as the system, statically, on Pages <sup>decision · site · p0</sup>
+- [x] [`0077`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0077-build-the-site-as-the-system-statically-on-pages.md) Build the site as the system, statically, on Pages <sup>decision · site · p0</sup>
 
 ## v0.1 — v0.1 — first release
 
@@ -185,10 +185,10 @@ Something another project can install and build on.
 
 ### backlog
 
-- [ ] [`48568da8`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0045-publish-tokens-css-and-react-packages-to-npm-with-changesets.md) Publish tokens, CSS and React packages to npm with Changesets <sup>feature · distribution · p0</sup>
-- [ ] [`6456c8a0`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0046-serve-compositions-from-a-copy-in-registry.md) Serve compositions from a copy-in registry <sup>feature · distribution · p1</sup>
-- [ ] [`7f329bd1`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p1</sup>
-- [ ] [`87656858`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
+- [ ] [`0045`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0045-publish-tokens-css-and-react-packages-to-npm-with-changesets.md) Publish tokens, CSS and React packages to npm with Changesets <sup>feature · distribution · p0</sup>
+- [ ] [`0046`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0046-serve-compositions-from-a-copy-in-registry.md) Serve compositions from a copy-in registry <sup>feature · distribution · p1</sup>
+- [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p1</sup>
+- [ ] [`0048`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
 
 ## later — Later
 
@@ -198,12 +198,12 @@ Worth doing, not yet worth scheduling.
 
 ### backlog
 
-- [ ] [`0795fc10`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0055-combobox.md) Combobox <sup>component · components · p3</sup>
-- [ ] [`4b7efeb2`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-multi-brand-theming-through-additional-resolver-contexts.md) Multi-brand theming through additional resolver contexts <sup>feature · tokens · p3</sup>
-- [ ] [`64deca41`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0056-date-picker.md) Date picker <sup>component · components · p3</sup>
-- [ ] [`96ba686d`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0054-native-token-outputs-swift-and-jetpack-compose.md) Native token outputs: Swift and Jetpack Compose <sup>feature · tokens · p3</sup>
-- [ ] [`b3d91ec7`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p2</sup>
-- [ ] [`cdc15a8d`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0114-coalesce-rule-painter-strokes-into-runs.md) Coalesce rule-painter strokes into runs <sup>chore · grid · p3</sup>
-- [ ] [`d736b125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0049-sync-figma-variables-from-the-dtcg-sources.md) Sync Figma Variables from the DTCG sources <sup>feature · tokens · p3</sup>
-- [ ] [`e652b4eb`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0065-add-an-increased-contrast-context.md) Add an increased-contrast context <sup>feature · tokens · p3</sup>
+- [ ] [`0049`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0049-sync-figma-variables-from-the-dtcg-sources.md) Sync Figma Variables from the DTCG sources <sup>feature · tokens · p3</sup>
+- [ ] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-multi-brand-theming-through-additional-resolver-contexts.md) Multi-brand theming through additional resolver contexts <sup>feature · tokens · p3</sup>
+- [ ] [`0054`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0054-native-token-outputs-swift-and-jetpack-compose.md) Native token outputs: Swift and Jetpack Compose <sup>feature · tokens · p3</sup>
+- [ ] [`0055`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0055-combobox.md) Combobox <sup>component · components · p3</sup>
+- [ ] [`0056`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0056-date-picker.md) Date picker <sup>component · components · p3</sup>
+- [ ] [`0065`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0065-add-an-increased-contrast-context.md) Add an increased-contrast context <sup>feature · tokens · p3</sup>
+- [ ] [`0113`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p2</sup>
+- [ ] [`0114`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0114-coalesce-rule-painter-strokes-into-runs.md) Coalesce rule-painter strokes into runs <sup>chore · grid · p3</sup>
 

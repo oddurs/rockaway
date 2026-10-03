@@ -1,13 +1,14 @@
 ---
-id: 45efd065-7a56-418f-9412-efb6ac7d456a
+id: 85
+uid: 45efd065-7a56-418f-9412-efb6ac7d456a
 title: 'Paint to the DOM: the glyph and rule painters'
 type: feature
 status: done
 milestone: grid
 assignee: Oddur Sigurdsson
 depends_on:
-- 7a0423ec-42f9-468f-9fe8-5b76c0b38dbf
-- 328a8cbc-6e07-4121-a5eb-b9c4fc336a84
+- 72
+- 82
 created: 2026-09-22
 updated: 2026-09-22
 closed_at: 2026-09-22

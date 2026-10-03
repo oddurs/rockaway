@@ -1,11 +1,12 @@
 ---
-id: 710ebab1-aeaa-4c49-a2cf-3e679dad42fd
+id: 32
+uid: 710ebab1-aeaa-4c49-a2cf-3e679dad42fd
 title: Write the typed variant helper
 type: feature
 status: backlog
 milestone: primitives
 depends_on:
-- e4909c64-062c-4052-aa67-428f1da596e2
+- 31
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

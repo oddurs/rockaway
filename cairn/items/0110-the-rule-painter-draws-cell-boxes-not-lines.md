@@ -1,5 +1,6 @@
 ---
-id: 138fc8f5-f181-4d02-b681-97735cb5d99a
+id: 110
+uid: 138fc8f5-f181-4d02-b681-97735cb5d99a
 title: The rule painter draws cell boxes, not lines
 type: bug
 status: done

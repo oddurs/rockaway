@@ -1,5 +1,6 @@
 ---
-id: e5ea6d21-7581-4fa2-8699-51518670b9ee
+id: 60
+uid: e5ea6d21-7581-4fa2-8699-51518670b9ee
 title: 'Set the elevation rules: surfaces follow the input, overlays always lift'
 type: decision
 status: done

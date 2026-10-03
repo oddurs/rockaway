@@ -1,5 +1,6 @@
 ---
-id: ccbfdd3f-3cc6-46f8-a494-ed89ee86bb90
+id: 66
+uid: ccbfdd3f-3cc6-46f8-a494-ed89ee86bb90
 title: The font shorthand with a var() breaks minifiers
 type: bug
 status: done

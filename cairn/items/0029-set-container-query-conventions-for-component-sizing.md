@@ -1,12 +1,13 @@
 ---
-id: 6be9a6a6-0e91-4548-b377-0bc3c57db120
+id: 29
+uid: 6be9a6a6-0e91-4548-b377-0bc3c57db120
 title: Set container-query conventions for component sizing
 type: feature
 status: done
 milestone: runtime
 assignee: Oddur Sigurdsson
 depends_on:
-- e6ee56dd-75d9-4e6c-8a3b-2c1b3654a64e
+- 24
 created: 2026-09-22
 updated: 2026-09-22
 priority: p2

@@ -1,11 +1,12 @@
 ---
-id: 48568da8-ac11-44e4-9b4b-7009e1d25a7f
+id: 45
+uid: 48568da8-ac11-44e4-9b4b-7009e1d25a7f
 title: Publish tokens, CSS and React packages to npm with Changesets
 type: feature
 status: backlog
 milestone: v0.1
 depends_on:
-- 75eedfec-f1c9-4072-b220-53f77877c322
+- 12
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

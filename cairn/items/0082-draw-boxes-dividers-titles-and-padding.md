@@ -1,14 +1,15 @@
 ---
-id: 328a8cbc-6e07-4121-a5eb-b9c4fc336a84
+id: 82
+uid: 328a8cbc-6e07-4121-a5eb-b9c4fc336a84
 title: Draw boxes, dividers, titles and padding
 type: feature
 status: done
 milestone: grid
 assignee: Oddur Sigurdsson
 depends_on:
-- 2d0d18d8-eb05-41a4-b84a-ef62220742a4
-- cf6c0dcd-9b9d-4a74-be7b-cefe99ff86d0
-- 75d45402-c09b-44eb-a1a1-e363af1afe27
+- 79
+- 80
+- 81
 created: 2026-09-22
 updated: 2026-09-22
 closed_at: 2026-09-22

@@ -1,13 +1,14 @@
 ---
-id: 2d0d18d8-eb05-41a4-b84a-ef62220742a4
+id: 79
+uid: 2d0d18d8-eb05-41a4-b84a-ef62220742a4
 title: Model borders as weighted edges, and resolve junctions from a table
 type: feature
 status: done
 milestone: grid
 assignee: Oddur Sigurdsson
 depends_on:
-- fa8b4c06-b6a8-491d-b3e8-7b2b5e47150d
-- 83c474e9-31d5-4b38-b45d-945b02ffd3ba
+- 73
+- 78
 created: 2026-09-22
 updated: 2026-09-22
 closed_at: 2026-09-22

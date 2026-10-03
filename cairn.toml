@@ -16,7 +16,7 @@
 # Order is behaviour: the order of [[status]] blocks is the board's column order,
 # and the order of an enum's `values` is its sort order. Do not tidy it.
 
-format = 4
+format = 5
 
 [project]
 name = "rockaway"

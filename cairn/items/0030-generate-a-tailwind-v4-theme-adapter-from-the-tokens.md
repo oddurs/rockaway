@@ -1,12 +1,13 @@
 ---
-id: a3c0f8f6-fa00-4d57-b5fa-dc12c3d0dceb
+id: 30
+uid: a3c0f8f6-fa00-4d57-b5fa-dc12c3d0dceb
 title: Generate a Tailwind v4 @theme adapter from the tokens
 type: feature
 status: done
 milestone: runtime
 assignee: Oddur Sigurdsson
 depends_on:
-- 950b997c-4cc3-4b18-a2ff-fdcbc5d349a6
+- 20
 created: 2026-09-22
 updated: 2026-09-22
 priority: p2

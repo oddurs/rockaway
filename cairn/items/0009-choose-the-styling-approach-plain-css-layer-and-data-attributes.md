@@ -1,5 +1,6 @@
 ---
-id: 49f84d7f-dcce-4638-b4c6-03786870da1c
+id: 9
+uid: 49f84d7f-dcce-4638-b4c6-03786870da1c
 title: 'Choose the styling approach: plain CSS, @layer and data attributes'
 type: decision
 status: done

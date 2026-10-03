@@ -1,12 +1,13 @@
 ---
-id: 7da0d85c-a43b-4949-b721-e92822c6d9cb
+id: 99
+uid: 7da0d85c-a43b-4949-b721-e92822c6d9cb
 title: KeyHint
 type: component
 status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
 depends_on:
-- 75e3579e-32a8-476a-8839-3602936b98b3
+- 86
 created: 2026-09-22
 updated: 2026-09-23
 closed_at: 2026-09-23

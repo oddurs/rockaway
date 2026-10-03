@@ -1,12 +1,13 @@
 ---
-id: 837fceaa-9b85-476a-ae75-d8871dcedc3e
+id: 83
+uid: 837fceaa-9b85-476a-ae75-d8871dcedc3e
 title: Paint to text, and make it the snapshot format
 type: feature
 status: done
 milestone: grid
 assignee: Oddur Sigurdsson
 depends_on:
-- 328a8cbc-6e07-4121-a5eb-b9c4fc336a84
+- 82
 created: 2026-09-22
 updated: 2026-09-22
 closed_at: 2026-09-22

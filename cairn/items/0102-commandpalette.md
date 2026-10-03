@@ -1,11 +1,12 @@
 ---
-id: fca743a4-6962-4a12-83da-78de22777efc
+id: 102
+uid: fca743a4-6962-4a12-83da-78de22777efc
 title: CommandPalette
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 75e3579e-32a8-476a-8839-3602936b98b3
+- 86
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

@@ -1,5 +1,6 @@
 ---
-id: 2759ae01-1cd1-4354-9173-21797e4ad8ee
+id: 10
+uid: 2759ae01-1cd1-4354-9173-21797e4ad8ee
 title: Set the browser baseline and which modern CSS is allowed
 type: decision
 status: done

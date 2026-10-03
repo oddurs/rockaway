@@ -1,11 +1,12 @@
 ---
-id: 51487277-f66a-4dd7-8e09-836ddb4602b0
+id: 105
+uid: 51487277-f66a-4dd7-8e09-836ddb4602b0
 title: Make every screen copyable as text and as ANSI
 type: feature
 status: backlog
 milestone: site
 depends_on:
-- 562ba731-e93f-474e-a13e-938b31be29ad
+- 104
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

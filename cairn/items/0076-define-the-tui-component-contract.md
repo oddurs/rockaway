@@ -1,5 +1,6 @@
 ---
-id: bbee8670-b4c4-452b-8111-624273a620df
+id: 76
+uid: bbee8670-b4c4-452b-8111-624273a620df
 title: Define the TUI component contract
 type: decision
 status: done

@@ -1,11 +1,12 @@
 ---
-id: 7f329bd1-d9fc-44c9-ae6e-678cd7131d61
+id: 47
+uid: 7f329bd1-d9fc-44c9-ae6e-678cd7131d61
 title: 'Publish component metadata as data: props, anatomy, when to use, when not to'
 type: feature
 status: backlog
 milestone: v0.1
 depends_on:
-- e4909c64-062c-4052-aa67-428f1da596e2
+- 31
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

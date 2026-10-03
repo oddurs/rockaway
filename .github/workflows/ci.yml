@@ -52,16 +52,25 @@ jobs:
   roadmap:
     name: Roadmap is valid and rendered
     runs-on: ubuntu-latest
+    env:
+      CAIRN_REV: e82f996a8a06e07d58f5c37c46cf17b12a06367a
     steps:
       - uses: actions/checkout@v7
 
+      # The roadmap is at cairn format 5, which no release reads yet, so cairn is
+      # built from a pinned commit of main. The binary is cached by that commit:
+      # the first run compiles, every later one restores it in a second. Move the
+      # pin and the cache key together, or back to a release tag once one ships.
+      - name: Cache cairn
+        id: cairn-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/cairn
+          key: cairn-${{ runner.os }}-${{ env.CAIRN_REV }}
+
       - name: Install cairn
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/oddurs/cairn/main/install.sh | sh
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-        env:
-          CAIRN_VERSION: v1.0.0-alpha.1
-          CAIRN_BINDIR: /home/runner/.local/bin
+        if: steps.cairn-cache.outputs.cache-hit != 'true'
+        run: cargo install --locked --git https://github.com/oddurs/cairn --rev "$CAIRN_REV" cairn-md
 
       - name: Items match the schema
         run: cairn check
