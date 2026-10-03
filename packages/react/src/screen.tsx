@@ -53,6 +53,15 @@ export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
 
 const FALLBACK: Size = { width: 80, height: 24 };
 
+/**
+ * The measured cell is rounded to the layout unit (1/64px), so it can be up to
+ * half a unit larger than the font's own advance. Counted with it as it is, a
+ * box exactly forty characters wide comes out as thirty-nine cells. So count
+ * with the smallest cell the rounded one can stand for: the box then holds
+ * every cell the font put in it, and at most a fraction of a pixel more.
+ */
+const ROUNDING = 1 / 128;
+
 /** Runs before paint in a browser, and not at all on a server. */
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
@@ -87,8 +96,8 @@ export function Screen({
     if (cols === undefined || rows === undefined) {
       const box = el.getBoundingClientRect();
       setMeasured({
-        width: cellsIn(box.width, metrics.width),
-        height: cellsIn(box.height, metrics.height),
+        width: cellsIn(box.width, metrics.width - ROUNDING),
+        height: cellsIn(box.height, metrics.height - ROUNDING),
       });
     }
   }, [cols, rows]);

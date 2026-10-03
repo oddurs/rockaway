@@ -426,7 +426,29 @@ describe('the snapshots, as the site draws them', () => {
       ╰──────────╯
       + ascii ---+
       |          |
-      +----------+"
+      +----------+
+      ── Titles
+      ┌ start ───────────┐
+      ┌───── center ─────┐
+      ┌───────────── end ┐
+      ┌ a title far t… ──┐
+      ── Dividers in a lighter set
+      ┏ heavy ━━━━━┓
+      ┃            ┃
+      ┠────────────┨
+      ┃            ┃
+      ┗━━━━━━━━━━━━┛
+      ╔ double ════╗
+      ║            ║
+      ╟────────────╢
+      ║            ║
+      ╚════════════╝
+      ── Under an ASCII theme
+      + a title f~ --+
+      |              |
+      +--------------+
+      |              |
+      +--------------+"
     `);
   });
 

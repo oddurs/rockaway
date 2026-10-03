@@ -10,8 +10,11 @@ const configDir = path.join(import.meta.dirname, '.storybook');
 /** Gives every story what only the runner can do: a real screenshot, and a real print. */
 const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
 
-/** The plugin owns `include`, and merges whatever `exclude` it is given. */
-const allButContinuity = ['**/!(Continuity|Prose).stories.tsx'];
+/**
+ * Stories tagged `zoom` run again at 200%: the continuity matrix, prose, and
+ * each component's own continuity stories beside its others.
+ */
+const ZOOM = 'zoom';
 
 interface Context {
   readonly forcedColors?: 'active';
@@ -76,10 +79,11 @@ const config: ViteUserConfig = defineConfig({
         test: { name: FORCED_COLORS, setupFiles, browser: browser({ forcedColors: 'active' }) },
       },
       {
-        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
+        plugins: [
+          storybookTest({ configDir, tags: { include: [ZOOM], exclude: [FORCED_COLORS, P3] } }),
+        ],
         test: {
-          name: 'zoom',
-          exclude: allButContinuity,
+          name: ZOOM,
           setupFiles,
           browser: browser({ deviceScaleFactor: 2 }),
         },

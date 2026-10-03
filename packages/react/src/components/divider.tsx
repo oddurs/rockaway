@@ -15,6 +15,7 @@
  * it met something.
  */
 import {
+  Attr,
   addEdges,
   type BorderSetName,
   Buffer,
@@ -27,6 +28,7 @@ import {
   type Rect,
   rect,
   type Size,
+  type Style,
   stringWidth,
   truncate,
 } from '@rockaway/grid';
@@ -57,6 +59,14 @@ export interface DividerOptions {
 }
 
 /**
+ * The colour of a line: the ordinary edge, `border.default`. Each cell carries
+ * it, rather than the layer, so a line is a run of its own and the text set
+ * into it keeps the text colour; and so the line is the same colour on a page,
+ * in ANSI, and wherever else the buffer goes.
+ */
+const LINE: Style = { fg: 'border.default', attrs: Attr.none };
+
+/**
  * Draw a rule along `line` — one cell tall for a horizontal rule, one cell
  * wide for a vertical one — into a draft that may already hold a frame.
  */
@@ -71,7 +81,7 @@ export function drawRule(
   const length = horizontal ? line.width : line.height;
   if (length < 1) return;
 
-  const draw = { set };
+  const draw = { set, style: LINE };
   if (horizontal) drawHLine(draft, { x: line.x, y: line.y }, length, draw);
   else drawVLine(draft, { x: line.x, y: line.y }, length, draw);
 

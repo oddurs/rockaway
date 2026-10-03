@@ -20,8 +20,8 @@ import { runner } from '../../.storybook/runner.ts';
 
 /**
  * Continuity (cairn 0116, 0117): the lines meet, at every density, with both
- * painters, in every border set, and at 200% zoom — the zoom browser runs this
- * file again with two device pixels to every CSS pixel.
+ * painters, in every border set, and at 200% zoom — the zoom browser runs
+ * every story tagged `zoom` again with two device pixels to every CSS pixel.
  *
  * The font's `│` is as tall as the font, not the cell, so before this a box
  * closed at one line height for one font. Now the cell draws its own lines, and
@@ -130,6 +130,8 @@ function Matrix({ density }: { density: Density }) {
 const meta = {
   title: 'Grid/Continuity',
   component: Matrix,
+  // The zoom browser runs every story here again, at 200%.
+  tags: ['zoom'],
   // The play function runs the check itself and asserts on what it covered,
   // so the one after every story would only do the same work twice.
   parameters: { continuity: false },

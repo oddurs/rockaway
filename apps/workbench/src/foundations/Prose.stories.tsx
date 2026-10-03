@@ -41,6 +41,8 @@ function ProseOnTheGrid({ cols }: { cols?: number }) {
 const meta = {
   title: 'Foundations/Prose',
   component: ProseOnTheGrid,
+  // The zoom browser runs every story here again, at 200%.
+  tags: ['zoom'],
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof ProseOnTheGrid>;
 
