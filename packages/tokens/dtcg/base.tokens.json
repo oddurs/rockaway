@@ -42,6 +42,11 @@
       }
     }
   },
+  "conformance": {
+    "$type": "fontFamily",
+    "$description": "How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it.",
+    "$value": "standard"
+  },
   "glyph": {
     "$type": "fontFamily",
     "$description": "The characters chrome is drawn with (cairn 0091, 0119). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.",

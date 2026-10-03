@@ -6,7 +6,7 @@ type: decision
 status: done
 milestone: primitives
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-03
 closed_at: 2026-09-22
 priority: p0
 layer: components
@@ -35,3 +35,7 @@ Decided 2026-09-23.
 
 - The component inventory changes: `Frame`, `Divider`, `StatusBar`, `KeyHint` and `CommandPalette` join; radius and elevation props never existed
 - A component that cannot be drawn on the grid is a component we do not ship
+
+## 2026-10-03
+
+The ~ marker for disabled is withdrawn by 0118, which closed in 0133: it would cost a cell only when disabled, and states never change geometry. Disabled is dim (fg.disabled), GrayText in forced colors.

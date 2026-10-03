@@ -6,6 +6,13 @@
 // .gitattributes joins lines that parallel branches add, and test/barrels.test.ts fails if a
 // component is missing, has no entry, or is listed twice.
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
+export { Badge, type BadgeOptions, type BadgeProps, type BadgeTone, badgeBuffer } from './components/badge.tsx';
+export { Button, type ButtonProps, type ButtonSize, type ButtonTextOptions, type ButtonVariant, buttonBuffer } from './components/button.tsx';
+export { Divider, type DividerOptions, type DividerProps, dividerBuffer, drawRule, type Orientation } from './components/divider.tsx';
+export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './components/frame.tsx';
+export { formatKeys, KeyHint, type KeyHintProps, type KeyNotation, type KeySpec, keyShortcut, type Platform, parseKeys, spokenKeys } from './components/key-hint.tsx';
+export { Link, type LinkProps, type LinkState, linkBuffer } from './components/link.tsx';
+export { List, type ListBufferOptions, ListItem, type ListItemProps, type ListProps, type ListRow, type ListRowState, listBuffer, listMarks, listRowStyle, type ScrollbarState, scrollbarBuffer } from './components/list.tsx';
 export { cx } from './cx.ts';
 export * from './entries/badge.ts';
 export * from './entries/button.ts';
