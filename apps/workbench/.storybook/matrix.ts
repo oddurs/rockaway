@@ -7,7 +7,7 @@ import {
   formatTargets,
 } from '@rockaway/react/testing';
 import type { Density, Mode } from '@rockaway/tokens';
-import { type Contexts, readContexts, setContexts } from './contexts.ts';
+import { type Contexts, densityOf, readContexts, setContexts } from './contexts.ts';
 import { type Check, type Known, known } from './known.ts';
 import { runner } from './runner.ts';
 
@@ -67,6 +67,11 @@ export interface Parameters {
 /** One thing that failed in one cell. */
 export interface Failure {
   readonly check: Check;
+  /**
+   * The density the failing element is drawn at, when it is not the cell's:
+   * a story can pin a context on part of itself.
+   */
+  readonly density?: Density;
   readonly rule?: string;
   /** The failing element, as the check describes it; for axe, the whole message. */
   readonly element: string;
@@ -207,7 +212,7 @@ export function ownCell(root: HTMLElement): Cell {
 }
 
 /** Rule 8: a finger can use it at touch, where a one-row control has to reach 44px. */
-const targetsAt = (density: Density) => (density === 'touch' ? { minHeight: 44 } : {});
+const TOUCH_HEIGHT = 44;
 
 /** The last line of a one-item report: the item itself. */
 const itemLine = (report: string): string => report.split('\n').at(-1)?.trim() ?? report;
@@ -251,10 +256,20 @@ async function checkCell(
 
   if (settled && parameters.targets !== false) {
     ran.add('targets');
-    const options = targetsAt(cell.density);
+    // Every target at its own density: a story can pin one on part of itself,
+    // and the touch height is owed only where a target is drawn at touch.
+    const options = { minHeight: TOUCH_HEIGHT };
     for (const f of checkTargets(canvas, options).failures) {
+      const density = densityOf(f.target) ?? cell.density;
+      if (f.rule === 'height' && density !== 'touch') continue;
       const text = itemLine(formatTargets({ targets: 1, failures: [f] }, options));
-      failures.push({ check: 'targets', rule: f.rule, element: f.element, text });
+      failures.push({
+        check: 'targets',
+        rule: f.rule,
+        element: f.element,
+        text,
+        ...(density === cell.density ? {} : { density }),
+      });
     }
   }
 
@@ -279,13 +294,14 @@ function covers(
   cell: Cell,
   check: Check,
   project: string | undefined,
+  density: Density = cell.density,
 ): boolean {
   const checks: readonly Check[] = typeof entry.check === 'string' ? [entry.check] : entry.check;
   return (
     checks.includes(check) &&
     (entry.projects === undefined || (project !== undefined && entry.projects.includes(project))) &&
     (entry.stories === undefined || entry.stories.some((id) => storyId.startsWith(id))) &&
-    (entry.densities === undefined || entry.densities.includes(cell.density)) &&
+    (entry.densities === undefined || entry.densities.includes(density)) &&
     (entry.modes === undefined || entry.modes.includes(cell.mode))
   );
 }
@@ -325,7 +341,8 @@ export async function walk(
     const fresh: string[] = [];
     for (const failure of failures) {
       const entry = known.find(
-        (k) => covers(k, storyId, cell, failure.check, project) && excuses(k, failure),
+        (k) =>
+          covers(k, storyId, cell, failure.check, project, failure.density) && excuses(k, failure),
       );
       if (!entry) {
         fresh.push(failure.text);
