@@ -64,6 +64,23 @@ GitHub Pages serves the site at `oddurs.github.io/rockaway/`, so that is the
 default. `SITE_BASE=/` builds it for a domain root, and `SITE_URL` sets the
 origin. Link inside the site with `href()` from `src/lib/paths.ts`.
 
+## For agents
+
+The site serves itself as text for coding agents (0048), all of it generated
+at build from `@rockaway/react/meta.json` and `docs/` by `src/lib/llms.ts`,
+none of it written by hand:
+
+| Path | What |
+| --- | --- |
+| `/llms.txt` | What rockaway is, and a link to every twin below, in [llmstxt.org](https://llmstxt.org)'s shape. |
+| `/llms-full.txt` | Every twin, in one file. |
+| `/components/<name>.md` | A component's twin: everything its metadata says, snapshots as text. |
+| `/<doc>.md` | A document from `docs/`, its relative links sent to GitHub. |
+| `/meta.json` | The metadata itself. |
+
+A component added to the metadata is listed and twinned on the next build;
+`test/llms.test.ts` checks every twin against the metadata it came from.
+
 ## The font
 
 JetBrains Mono (OFL 1.1, `src/fonts/OFL.txt`): the one face, subset to 18 kB
