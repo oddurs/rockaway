@@ -338,7 +338,14 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "total",
         "type": "number",
         "required": false,
-        "description": "Rows in the collection, for the scrollbar. Counted from the items if omitted."
+        "description": "Rows in the collection, for the scrollbar, when the collection does not hold them all: a list that loads as it scrolls. Counted from the collection otherwise."
+      },
+      {
+        "name": "empty",
+        "type": "ReactNode",
+        "required": false,
+        "description": "What an empty list says, in its first row. `renderEmptyState` replaces it.",
+        "default": "'Nothing here.'"
       },
       {
         "name": "className",
@@ -351,14 +358,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
-      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted",
-      "--rk-fg-on-inverse"
+      "--rk-fg-muted"
     ]
   },
   "ListItem": {
@@ -375,14 +380,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
-      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted",
-      "--rk-fg-on-inverse"
+      "--rk-fg-muted"
     ]
   }
 };
