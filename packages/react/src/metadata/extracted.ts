@@ -387,6 +387,124 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled",
       "--rk-fg-muted"
     ]
+  },
+  "StatusBar": {
+    "file": "status-bar.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "What the bar is called, for a reader. `Status` by default.",
+        "default": "'Status'"
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "`StatusSegment`s and at most one `StatusMessage`, in order."
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows'>"
+    ],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono"
+    ]
+  },
+  "StatusMessage": {
+    "file": "status-bar.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The message. A new one replaces the one before."
+      },
+      {
+        "name": "id",
+        "type": "string | number",
+        "required": false,
+        "description": "Changes to show the same message again: a second \"Copied\" is a new message, though its text has not changed."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "required": false,
+        "description": "How long it shows, in milliseconds. Four seconds by default."
+      },
+      {
+        "name": "priority",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end'",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono"
+    ]
+  },
+  "StatusSegment": {
+    "file": "status-bar.tsx",
+    "props": [
+      {
+        "name": "priority",
+        "type": "number",
+        "required": false,
+        "description": "When the bar is too narrow, the lowest priority is cut first. 0 by default."
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'center' | 'end'",
+        "required": false,
+        "description": "Which end of the bar it packs against, or the middle. `start` by default."
+      },
+      {
+        "name": "variant",
+        "type": "StatusSegmentVariant",
+        "required": false,
+        "description": "`mode` is what the bar is about now, `NORMAL` or `INSERT`: drawn in reverse video."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "What the segment is, for a reader, when its text alone does not say."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof statusSegmentVariants>"
+    ],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono"
+    ]
   }
 };
 

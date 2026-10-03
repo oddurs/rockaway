@@ -1,0 +1,62 @@
+/*
+ * StatusBar (cairn 0098).
+ *
+ * One row. The screen paints its ground in cells; each segment is a real
+ * element laid over it, `StatusBar` writing where in cells as custom
+ * properties. A segment never wraps: what does not fit is clipped at a whole
+ * cell, and a segment that has been cut ends in the theme's ellipsis.
+ *
+ * The mode segment is reverse video: the bar's own figure and ground
+ * swapped, rather than the inverse pair, so forced colors, which maps that
+ * pair to the canvas, still shows it (cairn 0181). Swapping a pair keeps its
+ * contrast, so the gate on fg.default over bg.subtle holds both ways.
+ */
+@layer rk.components {
+  .rk-status-segment {
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    inset-block-start: 0;
+    inset-inline-start: calc(var(--rk-status-x, 0) * var(--rk-cell-width));
+    inline-size: calc(var(--rk-status-cols, 0) * var(--rk-cell-width));
+    block-size: var(--rk-cell-height);
+    padding-inline: var(--rk-cell-width);
+    overflow: clip;
+    white-space: pre;
+  }
+
+  .rk-status-room {
+    flex: none;
+    inline-size: calc(var(--rk-status-room, 0) * var(--rk-cell-width));
+    overflow: clip;
+  }
+
+  /* Measured at its own width, whatever room it has been given. */
+  .rk-status-content {
+    display: inline-block;
+    white-space: pre;
+  }
+
+  .rk-status-ellipsis {
+    flex: none;
+    inline-size: var(--rk-cell-width);
+  }
+
+  .rk-status-segment[data-variant="mode"] {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-subtle);
+  }
+
+  /*
+   * Forced colors would lay a canvas backplate behind the mode's text, which
+   * is the colour of the text: the word vanished into its own ground. The
+   * segment opts out and swaps the reader's pair itself.
+   */
+  @media (forced-colors: active) {
+    .rk-status-segment[data-variant="mode"] {
+      forced-color-adjust: none;
+      background: CanvasText;
+      color: Canvas;
+    }
+  }
+}
