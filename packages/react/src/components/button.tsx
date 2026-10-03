@@ -15,12 +15,31 @@
 import { type ReactNode, useEffect, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
+import {
+  defineVariants,
+  type VariantProps,
+  type Variants,
+  type VariantValue,
+} from '../variants.ts';
 import { KeyHint, keyShortcut, type Platform } from './key-hint.tsx';
 
-export type ButtonVariant = 'default' | 'fill' | 'quiet' | 'danger';
-export type ButtonSize = 'md' | 'lg';
+const VARIANTS = {
+  variant: ['default', 'fill', 'quiet', 'danger'],
+  size: ['md', 'lg'],
+} as const;
 
-export interface ButtonProps extends Omit<AriaButtonProps, 'children' | 'className' | 'style'> {
+/** Button's variants, as data: the props, the attributes and the metadata all read this. */
+export const buttonVariants: Variants<typeof VARIANTS> = defineVariants(VARIANTS, {
+  variant: 'default',
+  size: 'md',
+});
+
+export type ButtonVariant = VariantValue<typeof buttonVariants, 'variant'>;
+export type ButtonSize = VariantValue<typeof buttonVariants, 'size'>;
+
+export interface ButtonProps
+  extends VariantProps<typeof buttonVariants>,
+    Omit<AriaButtonProps, 'children' | 'className' | 'style'> {
   readonly children?: ReactNode;
   /**
    * `fill` is the primary: reverse video, which survives forced colors and
@@ -54,8 +73,8 @@ function resolve(platform: Platform | 'auto'): Platform {
 
 export function Button({
   children,
-  variant = 'default',
-  size = 'md',
+  variant,
+  size,
   delimiters,
   keys,
   platform = 'auto',
@@ -73,18 +92,18 @@ export function Button({
     if (shortcut === undefined) el.removeAttribute('aria-keyshortcuts');
     else el.setAttribute('aria-keyshortcuts', shortcut);
   }, [shortcut]);
+  const chosen = buttonVariants.select({ variant, size });
   const ends =
     delimiters === 'none'
       ? undefined
-      : (delimiters ?? (variant === 'quiet' ? undefined : DEFAULT_DELIMITERS));
+      : (delimiters ?? (chosen.variant === 'quiet' ? undefined : DEFAULT_DELIMITERS));
 
   return (
     <AriaButton
       {...aria}
       ref={host}
       className={cx('rk-button', className)}
-      data-variant={variant}
-      data-size={size}
+      {...buttonVariants.dataAttributes(chosen)}
     >
       {ends === undefined ? null : (
         <span aria-hidden="true" className="rk-button-end">

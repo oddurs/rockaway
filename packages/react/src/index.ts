@@ -53,3 +53,14 @@ export {
   screenshot,
   type Violation,
 } from './testing/index.ts';
+export {
+  defineVariants,
+  type VariantAttributes,
+  type VariantDefinition,
+  type VariantInput,
+  type VariantProps,
+  type VariantSelection,
+  type Variants,
+  type VariantValue,
+  type VariantValues,
+} from './variants.ts';
