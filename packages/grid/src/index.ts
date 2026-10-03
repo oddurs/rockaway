@@ -63,6 +63,7 @@ export {
   toAnsi,
 } from './paint/ansi.ts';
 export { fromText, type ToTextOptions, toText } from './paint/text.ts';
+export { type ShapeRun, shapeRuns } from './runs.ts';
 export {
   type ArcMark,
   arcMarks,

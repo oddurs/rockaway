@@ -33,7 +33,7 @@ import {
   rect,
   type Size,
   type Style,
-  shapeOf,
+  shapeRuns,
   stringWidth,
 } from '@rockaway/grid';
 import { type Glyphs, marks, type SyntaxRole } from '@rockaway/tokens';
@@ -239,47 +239,9 @@ export function snapshotBuffer(
 const titleRoom = (title: string | undefined): number =>
   title === undefined ? 0 : stringWidth(title) + 3;
 
-/** A piece of a line of code: plain text, or one shaped character in a run of them. */
-export interface CodeRun {
-  readonly text: string;
-  /** The shape the cell draws, when the characters are box drawing or blocks. */
-  readonly shape?: string;
-  /** How many cells the run covers. */
-  readonly cells: number;
-}
-
-/**
- * Split text into plain runs and runs of characters the cell draws (0116): a
- * line across the cell joins its neighbour, so a run of `─` is one box; any
- * other shape is a cell of its own. The one way code and prose put box
- * drawing on the grid.
- */
-export function codeRuns(text: string): CodeRun[] {
-  const out: CodeRun[] = [];
-  let plain = '';
-  const chars = [...text];
-  for (let i = 0; i < chars.length; ) {
-    const ch = chars[i] as string;
-    const shape = shapeOf(ch);
-    if (shape === undefined) {
-      plain += ch;
-      i += 1;
-      continue;
-    }
-    if (plain !== '') out.push({ text: plain, cells: stringWidth(plain) });
-    plain = '';
-    let count = 1;
-    while (shape.spans && chars[i + count] === ch) count += 1;
-    out.push({ text: ch.repeat(count), shape: shape.key, cells: count });
-    i += count;
-  }
-  if (plain !== '') out.push({ text: plain, cells: stringWidth(plain) });
-  return out;
-}
-
 /** Text, with box drawing set in cells the renderer strokes. */
 function Shaped({ text }: { readonly text: string }): ReactNode {
-  return codeRuns(text).map((run, i) =>
+  return shapeRuns(text).map((run, i) =>
     run.shape === undefined ? (
       // biome-ignore lint/suspicious/noArrayIndexKey: runs are positional.
       <span key={i}>{run.text}</span>

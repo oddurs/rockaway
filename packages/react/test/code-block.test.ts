@@ -1,14 +1,9 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { fromText, toText } from '@rockaway/grid';
+import { fromText, shapeRuns, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import {
-  codeBlockText,
-  codeRuns,
-  layoutCodeBlock,
-  snapshotBuffer,
-} from '../src/components/code-block.tsx';
+import { codeBlockText, layoutCodeBlock, snapshotBuffer } from '../src/components/code-block.tsx';
 import { components } from '../src/metadata/index.ts';
 
 const CODE = [
@@ -94,9 +89,9 @@ describe('snapshotBuffer', () => {
   });
 });
 
-describe('codeRuns', () => {
+describe('shapeRuns, as code uses it', () => {
   test('box drawing in code is cells the renderer draws; a line across is one run', () => {
-    expect(codeRuns('a ┌──┐ b')).toEqual([
+    expect(shapeRuns('a ┌──┐ b')).toEqual([
       { text: 'a ', cells: 2 },
       { text: '┌', shape: 'box-0110', cells: 1 },
       { text: '──', shape: 'box-0101', cells: 2 },
@@ -108,7 +103,7 @@ describe('codeRuns', () => {
   test('joined, the runs are the text, so a copy is exact', () => {
     const text = '│ ├─ files ─┤ █▓░ │';
     expect(
-      codeRuns(text)
+      shapeRuns(text)
         .map((r) => r.text)
         .join(''),
     ).toBe(text);

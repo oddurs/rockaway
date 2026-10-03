@@ -5,13 +5,11 @@ export {
   type CodeBlockOptions,
   type CodeBlockProps,
   type CodeLine,
-  type CodeRun,
   CodeSnapshot,
   type CodeSnapshotProps,
   type CodeToken,
   codeBlockBuffer,
   codeBlockText,
-  codeRuns,
   layoutCodeBlock,
   snapshotBuffer,
 } from '../components/code-block.tsx';

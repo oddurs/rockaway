@@ -40,7 +40,7 @@ export, as `ListItem` is, because `isolatedDeclarations` refuses
   `tokens` (one line of `{ text, role }` per line, from a highlighter) give
   each token its `rk-syntax-<role>` class from 0144. They are ignored if they
   do not join to `code`.
-- Box drawing in code is split out by `codeRuns` into cell boxes the renderer
+- Box drawing in code is split out by `shapeRuns` (in `@rockaway/grid`) into cell boxes the renderer
   strokes. The character stays, transparent, so a copy is exact. This is the
   function the site's Markdown pipeline should use too.
 - A long line scrolls sideways inside the block. A ruler of one snap point per
@@ -115,3 +115,7 @@ codeRuns is CodeBlock's split of text into plain runs and cell-drawn shaped runs
 ## Result
 
 CodeBlock and CodeSnapshot. Code is real text in a painted frame with a title, a gutter rule joined by tees, and a keyboard copy that is announced once. Syntax roles come through rk-syntax-*, box drawing in code is cell-drawn via codeRuns, and long lines snap to whole cells as a declared exception. Snapshots are painted through the cell renderer and pass continuity at four densities; fromText round-trips every snapshot.
+
+## 2026-10-03
+
+At the site lead's request, codeRuns moved out of the 'use client' component into @rockaway/grid as shapeRuns, so the site's Node build can import it without a component module. CodeBlock calls it, and the code-block entry no longer exports a copy of its own.
