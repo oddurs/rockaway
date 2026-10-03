@@ -89,7 +89,7 @@ describe('titles', () => {
     const top = screen(12, 3, (d) =>
       drawBox(d, rect(0, 0, 12, 3), { title: 'a very long title', ellipsis: '~' }),
     )[0] as string;
-    expect(top).toBe('┌ a ver~ ──┐');
+    expect(top).toBe('┌ a very~ ─┐');
   });
 });
 
