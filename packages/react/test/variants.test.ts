@@ -1,12 +1,8 @@
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, expectTypeOf, test } from 'vitest';
-import {
-  Button,
-  type ButtonProps,
-  type ButtonVariant,
-  buttonVariants,
-} from '../src/components/button.tsx';
+import { buttonVariants } from '../src/components/button.pure.ts';
+import { Button, type ButtonProps, type ButtonVariant } from '../src/components/button.tsx';
 import { defineVariants, type VariantProps, type VariantValue } from '../src/variants.ts';
 
 const TONES = { tone: ['plain', 'loud'], weight: ['light', 'heavy', 'double'] } as const;

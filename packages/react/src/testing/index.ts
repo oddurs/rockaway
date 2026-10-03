@@ -33,6 +33,11 @@ export {
 } from './field.ts';
 export { type ScreenshotOptions, screenshot } from './screenshot.ts';
 export {
+  checkScrollbars,
+  expectNoNativeScrollbars,
+  type NativeScrollbar,
+} from './scrollbars.ts';
+export {
   checkTargets,
   expectTargets,
   formatTargets,
