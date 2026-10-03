@@ -59,6 +59,20 @@ export const readWithoutScripts: BrowserCommand<[html: string]> = async (context
 };
 
 /**
+ * Turn the mouse wheel over an element, as a reader's wheel or trackpad does
+ * (cairn 0115): the browser's own scroll, with its own snapping at the end,
+ * which setting `scrollTop` from script does not go through.
+ */
+export const wheel: BrowserCommand<[selector: string, deltaY: number]> = async (
+  context,
+  selector,
+  deltaY,
+) => {
+  await context.iframe.locator(selector).hover();
+  await context.page.mouse.wheel(0, deltaY);
+};
+
+/**
  * Known failures in use across the whole run (cairn 0125). Every story's walk
  * reports which entries it put in play and which it used; the reporter in
  * `vitest.config.ts` fails the run on any that was in play and never used.

@@ -11,7 +11,9 @@ import {
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
+import type { Selection } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { runner } from '../../.storybook/runner.ts';
 import { settled } from '../settled.ts';
 
 const FILES = [
@@ -51,6 +53,8 @@ interface FilesProps {
   readonly multiple?: boolean;
   readonly selected?: readonly string[];
   readonly disabled?: readonly string[];
+  /** Told the whole selection when it changes: keys, or `'all'`. */
+  readonly onSelectionChange?: (keys: Selection) => void;
 }
 
 /** A list of files, which is what a TUI list is most often of. No `total`: it counts its rows. */
@@ -61,6 +65,7 @@ function Files({
   multiple = false,
   selected = [],
   disabled = [],
+  onSelectionChange,
 }: FilesProps): ReactNode {
   return (
     <List
@@ -69,6 +74,7 @@ function Files({
       selectionMode={multiple ? 'multiple' : 'single'}
       defaultSelectedKeys={selected}
       disabledKeys={disabled}
+      {...(onSelectionChange === undefined ? {} : { onSelectionChange })}
     >
       {files.map((file) => (
         <ListItem key={file} id={file} textValue={file}>
@@ -333,10 +339,20 @@ export const CursorAndSelection: Story = {
  * every row; Escape clears; Home, End and the page keys reach the ends; and
  * type-ahead jumps by name.
  */
+/** The keyboard story's selection, as the list reports it. */
+const picked: { keys?: Selection } = {};
+
 export const Keyboard: Story = {
   render: () => (
     <Framed name="keyboard" width={24} rows={6}>
-      <Files label="Files" rows={6} multiple />
+      <Files
+        label="Files"
+        rows={6}
+        multiple
+        onSelectionChange={(keys) => {
+          picked.keys = keys;
+        }}
+      />
     </Framed>
   ),
   play: async ({ canvas }) => {
@@ -366,10 +382,13 @@ export const Keyboard: Story = {
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(chosen()).toEqual([]));
 
-    // Every row is chosen, the ones out of view too: the list is virtualised,
-    // so only the rows in the page can be read, and each of them is.
+    // Every row is chosen, the ones out of view too. The list is virtualised,
+    // so the page holds only the rows near the viewport: the selection itself
+    // says it holds them all, and every row in the page draws it.
     await userEvent.keyboard(`{${MOD}>}a{/${MOD}}`);
     await waitFor(() => {
+      const keys = picked.keys;
+      expect(keys === 'all' || (keys instanceof Set && keys.size === FILES.length)).toBe(true);
       const options = [...box.querySelectorAll('[role="option"]')];
       expect(options.length).toBeGreaterThan(0);
       expect(chosen()).toHaveLength(options.length);
@@ -629,6 +648,60 @@ export const Touch: Story = {
           .join(''),
       ),
     );
+  },
+};
+
+/** Where a scroll comes to rest: after its scrollend, once two frames agree. */
+async function rest(box: HTMLElement): Promise<number> {
+  const frame = (): Promise<number> =>
+    new Promise((resolve) => requestAnimationFrame(() => resolve(box.scrollTop)));
+  let last = -1;
+  let now = await frame();
+  while (now !== last) {
+    last = now;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    now = await frame();
+  }
+  return now;
+}
+
+/**
+ * A short list turned by the wheel, at every density (0115): a wheel notch and
+ * a trackpad's small step each come to rest on a whole row. Snapping is
+ * "proximity" so that a virtualised jump is not pulled back to the rendered
+ * rows; with rows one cell apart, every position is near one, so a short list
+ * snaps as it did under "mandatory". Only the test runner has a real wheel.
+ */
+export const Wheel: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: 'var(--rk-x-2)' }}>
+      {DENSITIES.map((density) => (
+        <div key={density} data-density={density}>
+          <Framed name={`wheel, ${density}`} width={18} rows={4}>
+            <Files label={`Files, ${density}`} rows={4} />
+          </Framed>
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const run = runner();
+    if (!run) return;
+    for (const density of DENSITIES) {
+      const frame = canvas.getByRole('group', { name: `wheel, ${density}` });
+      const cell = cellOf(frame);
+      const box = canvas.getByRole('listbox', { name: `Files, ${density}` });
+      const selector = `[role="listbox"][aria-label="Files, ${density}"]`;
+      for (const delta of [100, Math.round(cell.height * 1.4), Math.round(cell.height * 0.6)]) {
+        box.scrollTop = 0;
+        await rest(box);
+        await run.wheel(selector, delta);
+        const top = await rest(box);
+        expect(top, `${density}, a wheel of ${delta}px`).toBeGreaterThan(0);
+        wholeCells(top, cell.height);
+      }
+    }
   },
 };
 

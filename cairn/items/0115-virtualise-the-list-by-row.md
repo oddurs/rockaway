@@ -55,7 +55,7 @@ rather than the DOM, so it needs no change.
 - [x] A thousand rows, and only the visible ones plus overscan in the DOM
 - [x] Home, End and the page keys reach the ends of the collection, not the viewport
 - [x] Type-ahead reaches a row that was never rendered
-- [ ] The keyboard story passes unchanged, with virtualisation on
+- [x] The keyboard story passes unchanged, with virtualisation on
 - [x] If the defect is React Aria`s, the issue is linked here
 
 ## 2026-10-03
@@ -73,3 +73,15 @@ Environment: react-stately reads process.env.VIRT_ON at run time when NODE_ENV i
 ## 2026-10-03
 
 Criterion 4 (the keyboard story passes unchanged) is left unticked. The story passes, but one assertion had to change: after select-all it counted selected rows in the DOM, and a virtualised list only has the rendered ones there. It now checks that every rendered row is selected. Everything else in the story is unchanged. Criterion 5 is ticked as not applicable: there is no React Aria defect to link, since it doesn't reproduce on 1.21.1.
+
+## 2026-10-03
+
+Criterion 4, ruled on by the CTO: the intent is that keyboard behaviour is unchanged, not the assertion's text. Select-all used to count selected options in the DOM; virtualised, the DOM holds only the rows near the viewport, so that count proves less than it did. The Keyboard story now reads the selection itself through onSelectionChange: after mod+a it must be 'all', or a Set holding every one of the FILES keys, and every rendered row must draw it. That proves the same behaviour as before, through the selection rather than the page, so the criterion is ticked. Everything else in the story is untouched.
+
+## 2026-10-03
+
+Snapping, checked for short lists: the switch to proximity applies to every List. A new Wheel story turns the real mouse wheel (a Playwright command, run.wheel) over a 12-row list at all four densities, by a 100px notch, 1.4 rows and 0.6 rows, and asserts it comes to rest on a whole row above the top. It passes, and fails with snapping off, so it discriminates: with snap points one cell apart every position is near one, so proximity snaps a short list as mandatory did. Mandatory stays off.
+
+## 2026-10-03
+
+The process catch is recorded in List's metadata under a new optional knownIssues field (schema.ts, meta.schema.json, assembly). The line: react-stately 3.50.0 dist/private/virtualizer/Virtualizer.mjs:144, and Rect.mjs:61, both 'let isTestEnv = process.env.NODE_ENV === "test" && !process.env.VIRT_ON;'. Proposed a follow-up to the CTO: report it upstream, asking for typeof process guards.

@@ -8,6 +8,7 @@ declare module 'vitest/browser' {
     printToPdf: (html: string) => Promise<{ fills: number }>;
     readWithoutScripts: (html: string) => Promise<{ rows: string[]; shapes: number; ran: boolean }>;
     recordKnown: (use: KnownUse) => Promise<void>;
+    wheel: (selector: string, deltaY: number) => Promise<void>;
   }
 }
 
@@ -38,4 +39,5 @@ setRunner({
   // Each project says what it walks; see `vitest.config.ts`.
   plan: inject('plan'),
   record: (use) => commands.recordKnown(use),
+  wheel: (selector, deltaY) => commands.wheel(selector, deltaY),
 });

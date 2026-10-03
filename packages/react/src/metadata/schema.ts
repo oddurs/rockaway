@@ -147,6 +147,11 @@ export interface ComponentMeta {
   /** The tokens its stylesheets and painters read, as custom properties. */
   readonly tokens: readonly string[];
   readonly snapshots: readonly Snapshot[];
+  /**
+   * What is wrong and not yet fixed, outside the component's control: a
+   * dependency's quirk a consumer may meet, and what to do about it.
+   */
+  readonly knownIssues?: readonly string[];
 }
 
 /** The whole of `meta.json`. */
@@ -181,6 +186,7 @@ export interface ComponentMetaInput<Part extends string = string> {
   }[];
   readonly accessibility: Accessibility;
   readonly snapshots: readonly Snapshot[];
+  readonly knownIssues?: ComponentMeta['knownIssues'];
 }
 
 /**

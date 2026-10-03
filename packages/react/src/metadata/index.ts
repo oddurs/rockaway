@@ -131,6 +131,7 @@ function assemble(input: ComponentMetaInput): ComponentMeta {
     accessibility: input.accessibility,
     tokens: [...tokens].sort(),
     snapshots: input.snapshots,
+    ...(input.knownIssues === undefined ? {} : { knownIssues: input.knownIssues }),
   };
 }
 

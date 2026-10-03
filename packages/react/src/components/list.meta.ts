@@ -160,4 +160,7 @@ export const listMeta: ComponentMetaInput = defineMeta({
       text: toText(listBuffer({ rows: [], width: 18, visible: 3 }), { trimEnd: false }),
     },
   ],
+  knownIssues: [
+    "Under NODE_ENV=test, React Aria's virtualiser reads process.env.VIRT_ON (react-stately 3.50.0, Virtualizer.mjs line 144), and a browser has no process, so List throws in a real-browser test run. Before the tests, give the page one: globalThis.process ??= { env: { VIRT_ON: '1' } }. Under jsdom, set VIRT_ON=1 instead, or the virtualiser renders every row.",
+  ],
 });
