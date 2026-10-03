@@ -312,3 +312,28 @@ export const ReverseVideo: Story = {
     await expectReversed(part(row, '.rk-list-label'));
   },
 };
+
+/**
+ * A filled control takes reverse video for focus (`data-rk-fill`, focus.css),
+ * and reversed words opt out of the backplate like every other reversal. The
+ * check in @rockaway/css found this one missing from the list (0201).
+ */
+export const FilledFocus: Story = {
+  name: 'Filled focus',
+  render: () => (
+    <div style={{ padding: '1ch' }}>
+      <button type="button" data-rk-fill="">
+        Publish
+      </button>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    const button = canvas.getByRole('button', { name: 'Publish' });
+    await userEvent.tab();
+    await expect(button).toHaveFocus();
+    await expect(button.matches(':focus-visible')).toBe(true);
+    await expect(inkAndGround(button)).toEqual([computed('Canvas'), computed('CanvasText')]);
+    await expectReversed(button);
+  },
+};

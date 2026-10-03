@@ -3,12 +3,14 @@ id: 201
 uid: ea1fb999-916b-4d99-9b6d-c52d50ddcce2
 title: Check that every reversing rule opts out of the forced-colors backplate
 type: chore
-status: backlog
+status: done
 milestone: primitives
+assignee: Oddur Sigurdsson
 depends_on:
 - 181
 created: 2026-10-03
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p2
 layer: tooling
 effort: s
@@ -23,4 +25,12 @@ something will silently disappear.
 
 ## Acceptance criteria
 
-- [ ] A Node test finds every component rule that swaps figure and ground or reads the inverse pair, and fails if the opt-out does not cover it
+- [x] A Node test finds every component rule that swaps figure and ground or reads the inverse pair, and fails if the opt-out does not cover it
+
+## 2026-10-03
+
+packages/css/test/reverse-opt-out.test.ts parses every stylesheet in @rockaway/css with postcss. A rule reverses when it draws words in a ground colour: its color reads --rk-bg-* or --rk-fg-on-*, directly or through a custom property of the sheet that a color reads. That covers Badge-style tone properties. Opt-outs are rules with forced-color-adjust: none inside a forced-colors media query, in any file. An opt-out covers a rule when every simple selector of its last compound is in the rule's, so .rk-button[data-pressed] covers danger's pressed state. Fixture tests prove it fails a direct reversal, one through a custom property, and one only an attribute selector containing ~ could seem to cover; the first version split on that ~ as a combinator and let everything through. On its first real run it found [data-rk-fill]:focus-visible (focus.css) uncovered: a focused filled control's words vanished in forced colors. That is now in the opt-out list, with a Forced colors > Filled focus story that fails in pixels without it.
+
+## Result
+
+packages/css/test/reverse-opt-out.test.ts fails any rule that draws words in a ground colour without a forced-colors opt-out covering it; it found and fixed [data-rk-fill]:focus-visible.
