@@ -6,7 +6,9 @@
  */
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { describeAdjustment, fittedPalette } from '../src/fit.ts';
 import { generate, serialize } from '../src/generate.ts';
+import { modes } from '../src/inputs.ts';
 import { parseTheme } from '../src/validate.ts';
 
 const root = path.join(import.meta.dirname, '..');
@@ -16,6 +18,13 @@ const check = process.argv.includes('--check');
 
 const inputs = parseTheme(JSON.parse(await readFile(themeFile, 'utf8')), 'themes/default.json');
 const files = generate(inputs);
+if (!check) {
+  for (const mode of modes) {
+    for (const a of fittedPalette(inputs, mode).adjustments) {
+      console.log(`fitted to the contrast gate: ${describeAdjustment(a)}`);
+    }
+  }
+}
 
 const existing = new Set(await readdir(outDir).catch(() => [] as string[]));
 const stale: string[] = [];
