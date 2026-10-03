@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 27% · 22 of 81 done · due 2027-01-31
+`###·······` 28% · 23 of 81 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -152,7 +152,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0169`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0169-give-inline-controls-a-full-cell-hit-area-and-ground.md) Give inline controls a full-cell hit area and ground <sup>feature · css · p3</sup>
 - [ ] [`0179`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0179-namespace-every-context-attribute-as-data-rk.md) Namespace every context attribute as data-rk-* <sup>decision · css · p1</sup>
 - [ ] [`0180`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0180-rename-the-context-attributes-to-data-rk-and-fail-on-the-old-ones.md) Rename the context attributes to data-rk-*, and fail on the old ones <sup>chore · css · p1</sup>
-- [ ] [`0181`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0181-make-reverse-video-survive-forced-colors-everywhere.md) Make reverse video survive forced colors everywhere <sup>bug · css · p1</sup>
 - [ ] [`0182`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0182-mark-controls-and-panes-so-the-conformance-levels-can-see-them.md) Mark controls and panes so the conformance levels can see them <sup>feature · components · p1</sup>
 - [ ] [`0183`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0183-decide-what-goes-heavy-means-under-an-ascii-theme.md) Decide what goes heavy means under an ASCII theme <sup>decision · grid · p2</sup>
 - [ ] [`0184`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0184-selected-and-disabled-rows-trap-the-first-arrow-key.md) Selected-and-disabled rows trap the first arrow key <sup>bug · components · p2</sup>
@@ -196,6 +195,7 @@ The component contract, proven on a first set of components.
 - [x] [`0165`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0165-ship-one-entry-point-per-component-so-an-islands-site-does-not-hydrate-the-whole-package.md) Ship one entry point per component, so an islands site does not hydrate the whole package <sup>feature · distribution · p1</sup>
 - [x] [`0175`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0175-never-let-a-junction-overwrite-a-title.md) Never let a junction overwrite a title <sup>bug · grid · p1</sup>
 - [x] [`0178`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0178-make-border-default-a-boundary-you-can-see-3-1-against-every-ground.md) Make border.default a boundary you can see: 3:1 against every ground <sup>bug · tokens · p0</sup>
+- [x] [`0181`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0181-make-reverse-video-survive-forced-colors-everywhere.md) Make reverse video survive forced colors everywhere <sup>bug · css · p1</sup>
 
 ## retheme — Tokens on the grid
 
