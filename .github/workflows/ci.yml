@@ -72,6 +72,23 @@ jobs:
       - name: Production build of the workbench (a minifier sees the CSS)
         run: pnpm --filter workbench build
 
+  changeset:
+    name: Changeset for every package change
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      # The whole history, so the branch can be compared with where it left main.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Every package that ships a change is named by a changeset
+        run: node scripts/check-changeset.ts "origin/$GITHUB_BASE_REF"
+
   roadmap:
     name: Roadmap is valid and rendered
     runs-on: ubuntu-latest

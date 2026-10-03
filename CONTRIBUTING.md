@@ -74,14 +74,38 @@ name, and run `pnpm format`.
 
 ## Changesets
 
-Any change to a published package needs a changeset:
+A change to what a published package ships (its `src`, or anything else in its
+`files`) needs a changeset. Tests, stories, scripts and the workbench do not. CI
+fails a pull request that changes a package without naming it in a changeset,
+and `pnpm changeset:check` runs the same check locally.
 
 ```sh
 pnpm changeset
 ```
 
-Semver is strict. A changed semantic token is a minor release; a removed or
-renamed one is major.
+Write it for the person upgrading: what they can now do, or what they have to
+change, in a paragraph, starting with a verb. The changesets already in
+`.changeset/` are the voice to match.
+
+If a change ships but no user could notice it (a comment, a rename inside a
+module, a refactor with identical output), say so instead of skipping the step:
+
+```sh
+pnpm changeset --empty   # then write the reason in its body
+```
+
+An empty changeset with no reason in it does not pass.
+
+Semver is strict:
+
+- **Major**: something a user relies on is removed or renamed, or behaves
+  differently with the same input. That covers an export, a prop, a token, a
+  CSS class or `data-*` attribute a stylesheet can select, an export path, or a
+  default. A removed or renamed semantic token is major.
+- **Minor**: something is added and nothing existing changes, such as a
+  component, a prop, an export, a token or a theme. A changed semantic token
+  value is minor.
+- **Patch**: a fix that makes the package do what it already said it did.
 
 ## Commits and pull requests
 
