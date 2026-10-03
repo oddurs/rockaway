@@ -38,6 +38,17 @@ const TARGETS = '.rk-button, .rk-link, .rk-list-item, button, a[href], [role="op
 
 export const known: readonly Known[] = [
   {
+    id: 'standalone-link-touch',
+    check: 'targets',
+    rule: 'height',
+    densities: ['touch'],
+    element: /rk-link/,
+    present: '.rk-link',
+    reason:
+      'a link that stands alone, not in a sentence, is an inline box as tall as the font (18px), not the 44px line box it sits in, so a finger gets an 18px target at touch; in a flex row the same link is a block and passes',
+    ticket: 'a link standing alone takes the line box as its target (proposed in the 0199 report)',
+  },
+  {
     id: 'list-dense-offset',
     check: 'conformance',
     rule: 'y',

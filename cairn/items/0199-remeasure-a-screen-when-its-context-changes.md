@@ -45,3 +45,7 @@ With screen-remeasure gone, the matrix reads cell-sized screens at every density
 ## Result
 
 Screen observes a 1ch x 1lh probe and remeasures on any context change; screen-remeasure is gone and list-dense-offset (0211) is the one defect it uncovered
+
+## 2026-10-03
+
+CI's first full run with the probe found what stale screens had hidden: (1) at touch, a 22-row frame is 968px and the Storybook plugin sets every story's frame to 1200 x 900, so its screenshot was cut off and the bottom rows read as gaps; the capture now grows the frame to hold the element, inside a page made 1600 x 2400 so Vitest does not scale it. (2) A link standing alone in a frame is an 18px inline box at touch, not the 44px line box: known entry standalone-link-touch, ticket proposed. (3) Frame's variant stories passed 30s on CI with every screen read at every density: testTimeout is 60s. Locally on macOS only, Fieldset's Painters story leaks ink above its top-left corner at dense; Linux CI does not see it, so it is reported rather than declared (an entry would be stale on CI).
