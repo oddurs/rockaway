@@ -151,8 +151,15 @@ export const FortyCells: Story = {
 
 export const Dark: Story = { globals: { mode: 'dark' } };
 
-/** Every line, in pixels, at every density; the zoom project runs it again at 2x. */
-async function linesRunEndToEnd(screen: HTMLElement): Promise<void> {
+/**
+ * Every line, in pixels, at every density; the zoom project runs it again at
+ * 2x. A screenshot a line, because a screenshot of the whole fixture is blank
+ * below the fold.
+ */
+async function linesRunEndToEnd(
+  screen: HTMLElement,
+  densities: readonly (typeof DENSITIES)[number][] = DENSITIES,
+): Promise<void> {
   const run = runner();
   if (!run) return;
   const root = document.documentElement;
@@ -160,7 +167,7 @@ async function linesRunEndToEnd(screen: HTMLElement): Promise<void> {
   const problems: string[] = [];
   let checked = 0;
   try {
-    for (const density of DENSITIES) {
+    for (const density of densities) {
       root.dataset.density = density;
       await frame();
       measure(screen);
@@ -179,7 +186,7 @@ async function linesRunEndToEnd(screen: HTMLElement): Promise<void> {
     measure(screen);
   }
   // h1, four h2s, the table's header, the hr and the quote, at four densities.
-  await expect(checked).toBe(8 * DENSITIES.length);
+  await expect(checked).toBe(8 * densities.length);
   await expect(problems).toEqual([]);
 }
 
@@ -189,11 +196,12 @@ export const Lines: Story = {
   },
 };
 
+/** The geometry is the same in the dark; this is the ink against its ground. */
 export const LinesDark: Story = {
   name: 'Lines (dark)',
   globals: { mode: 'dark' },
   play: async ({ canvas }) => {
-    await linesRunEndToEnd(canvas.getByTestId('prose'));
+    await linesRunEndToEnd(canvas.getByTestId('prose'), ['normal']);
   },
 };
 
@@ -213,6 +221,6 @@ export const ForcedColors: Story = {
       await expect(style.getPropertyValue('forced-color-adjust')).toBe('none');
       await expect(style.backgroundImage).not.toBe('none');
     }
-    await linesRunEndToEnd(screen);
+    await linesRunEndToEnd(screen, ['normal']);
   },
 };

@@ -2,6 +2,7 @@ import { Frame, Link, linkBuffer } from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
+import { settled } from '../settled.ts';
 
 const meta = {
   title: 'Components/Link',
@@ -36,17 +37,6 @@ function resolved(colour: string, within: Element): string {
   const value = getComputedStyle(probe).color;
   probe.remove();
   return value;
-}
-
-/**
- * Wait for the fonts and two frames, so the screen has measured its last cell
- * before a test points at anything. A layout that shifts under the browser's
- * real pointer makes Chromium fire boundary events of its own, and a hover
- * started by a synthetic pointer would end the moment it began.
- */
-async function settled(): Promise<void> {
-  await document.fonts.ready;
-  for (let i = 0; i < 2; i++) await new Promise((done) => requestAnimationFrame(done));
 }
 
 /** The mark drawn in one of a link's mark cells, or nothing. */
@@ -502,6 +492,7 @@ export const ForcedColors: Story = {
   ),
   play: async ({ canvas }) => {
     expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    await settled();
     const rest = canvas.getByRole('link', { name: 'rest' });
     const current = canvas.getByRole('link', { name: 'current' });
     const disabled = canvas.getByRole('link', { name: 'disabled' });
