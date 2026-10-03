@@ -180,7 +180,9 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     await reader.evaluate(() => document.fonts.ready);
     const found = await reader.evaluate(() => {
       const note = document.querySelector<HTMLElement>('article aside.rk-callout-static');
-      const cell = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.6;
+      // One cell, as the callout's own corner measures it: whatever face the
+      // page is set in, a corner is one cell wide.
+      const cell = note?.querySelector('[data-rk-shape]')?.getBoundingClientRect().width ?? 1;
       const box = (el: Element | null | undefined) => el?.getBoundingClientRect();
       const [top, , body, , bottom] = note ? [...note.children] : [];
       const sides = note ? [...note.querySelectorAll('.rk-callout-side')] : [];
