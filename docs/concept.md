@@ -363,9 +363,16 @@ cell. Messages, such as an error under a field, are content and may add rows.
 
 The cursor and the selection are two signals, and List is where they meet: in
 a multi-select list the keyboard's row and the chosen rows are told apart in
-text, in greyscale and in forced colors. Reverse video swaps an element's own
-figure and ground. In forced colors that means the reader's text and canvas
-swapped, so it is never drawn as two halves that both collapse to the canvas.
+text, in greyscale and in forced colors.
+
+**Reverse means an element's own figure and ground, swapped.** That holds in
+every mode. In forced colors it is the reader's text and canvas swapped: the
+inverse pair becomes `CanvasText` behind `Canvas`, never two halves that both
+collapse to the canvas. Anything reversed also opts out of the adjustment
+(`forced-color-adjust: none`), because the browser otherwise paints a
+canvas-coloured backplate behind every line of text, and the reversed words
+vanish into it. Computed styles cannot see that backplate; the forced-colors
+stories check the pixels (`0181`).
 
 ---
 

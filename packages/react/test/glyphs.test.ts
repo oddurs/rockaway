@@ -93,7 +93,7 @@ describe('glyphs from the theme', () => {
       |                  |
       +------------------+
       +------------------+
-      - files ------------
+      -- files -----------
       scrollbar ..#."
     `);
     expect(drawn).toMatch(/^[\x20-\x7e\n]*$/);
