@@ -79,6 +79,8 @@ export const Prose_: Story = {
     await expect(style(h2).fontSize).toBe(style(body).fontSize);
     await expect(style(h1).fontWeight).toBe('700');
     await expect(style(h1).textTransform).toBe('uppercase');
+    // Never tracked: a letter-spaced heading is wider than its cells (0143).
+    await expect(style(h1).letterSpacing).toBe('normal');
 
     // The body is monospace, because every cell is one character wide.
     await expect(style(body).fontFamily.toLowerCase()).toMatch(/mono|menlo|consolas|ui-monospace/);

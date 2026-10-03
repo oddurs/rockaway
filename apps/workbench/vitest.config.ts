@@ -11,7 +11,7 @@ const configDir = path.join(import.meta.dirname, '.storybook');
 const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
 
 /** The plugin owns `include`, and merges whatever `exclude` it is given. */
-const allButContinuity = ['**/!(Continuity).stories.tsx'];
+const allButContinuity = ['**/!(Continuity|Prose).stories.tsx'];
 
 interface Context {
   readonly forcedColors?: 'active';

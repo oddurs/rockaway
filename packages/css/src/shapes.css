@@ -13,7 +13,10 @@
  */
 @layer rk.components {
   /* ─ */
-  [data-rk-shape="box-0101"] {
+  [data-rk-shape="box-0101"],
+  .rk-prose :where(h2)::after,
+  .rk-prose :where(thead th)::after,
+  .rk-prose :where(hr) {
     background-image: var(--rk-ink);
     background-size: calc(100% + 2px) var(--rk-stroke-light);
     background-position: -1px calc(var(--rk-cell-height) / 2 - var(--rk-stroke-light) / 2);
@@ -27,7 +30,8 @@
   }
 
   /* │ */
-  [data-rk-shape="box-1010"] {
+  [data-rk-shape="box-1010"],
+  .rk-prose :where(blockquote)::before {
     background-image: var(--rk-ink);
     background-size: var(--rk-stroke-light) calc(100% + 2px);
     background-position: calc(var(--rk-cell-width) / 2 - var(--rk-stroke-light) / 2) -1px;
@@ -1173,7 +1177,8 @@
   }
 
   /* ═ */
-  [data-rk-shape="box-0303"] {
+  [data-rk-shape="box-0303"],
+  .rk-prose :where(h1)::after {
     background-image:
       var(--rk-ink),
       var(--rk-ink);

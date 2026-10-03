@@ -186,6 +186,45 @@ function ink(mark: Mark): string {
   ].join(', ');
 }
 
+/**
+ * Boxes that are not cells but draw a cell's straight line along their whole
+ * length (cairn 0143): the rule under a prose heading, the gutter beside a
+ * quote. Prose is not a painted screen, so these are pseudo-elements that
+ * cannot carry `data-rk-shape`; they share the shape's rule instead, so the
+ * geometry stays the engine's. Only a shape whose every layer runs the length
+ * of the box along `along` stretches to fit it, and the generator refuses any
+ * other: the box is one row tall (`inline`) or one cell wide (`block`).
+ */
+export const aliases: ReadonlyArray<{
+  readonly selector: string;
+  readonly shape: string;
+  readonly along: 'inline' | 'block';
+}> = [
+  { selector: '.rk-prose :where(h1)::after', shape: 'box-0303', along: 'inline' },
+  { selector: '.rk-prose :where(h2)::after', shape: 'box-0101', along: 'inline' },
+  { selector: '.rk-prose :where(thead th)::after', shape: 'box-0101', along: 'inline' },
+  { selector: '.rk-prose :where(hr)', shape: 'box-0101', along: 'inline' },
+  { selector: '.rk-prose :where(blockquote)::before', shape: 'box-1010', along: 'block' },
+];
+
+/** Does every layer of the shape run edge to edge along this axis? */
+function stretches(shape: Shape, along: 'inline' | 'block'): boolean {
+  if (along === 'inline') return shape.spans;
+  return shape.marks.every((m) => m.kind === 'rect' && onEdge(m.y0, 0) && onEdge(m.y1, 1));
+}
+
+function selectors(shape: Shape): string[] {
+  const extra = aliases.filter((a) => a.shape === shape.key);
+  for (const alias of extra) {
+    if (!stretches(shape, alias.along)) {
+      throw new Error(
+        `${alias.selector}: ${shape.key} (${shape.ch}) does not run the length of the box along ${alias.along}`,
+      );
+    }
+  }
+  return [`[data-rk-shape="${shape.key}"]`, ...extra.map((a) => a.selector)];
+}
+
 function rule(shape: Shape): string {
   const layers = shape.marks.map((mark) => {
     if (mark.kind === 'arc') {
@@ -206,7 +245,7 @@ function rule(shape: Shape): string {
   const lead = layers.length > 1 ? '\n      ' : ' ';
   return [
     `  /* ${shape.ch} */`,
-    `  [data-rk-shape="${shape.key}"] {`,
+    `  ${selectors(shape).join(',\n  ')} {`,
     `    background-image:${lead}${list('image')};`,
     `    background-size:${lead}${list('size')};`,
     `    background-position:${lead}${list('position')};`,
@@ -231,6 +270,10 @@ const HEADER = `/*
 
 /** The stylesheet, as it should be on disk. */
 export function stylesheet(): string {
+  const keys = new Set([...shapes.values()].map((shape) => shape.key));
+  for (const alias of aliases) {
+    if (!keys.has(alias.shape)) throw new Error(`${alias.selector}: no shape ${alias.shape}`);
+  }
   const rules = [...shapes.values()].map(rule).join('\n\n');
   return `${HEADER}@layer rk.components {\n${rules}\n}\n`;
 }
