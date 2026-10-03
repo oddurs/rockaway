@@ -21,8 +21,11 @@
     block-size: 0;
   }
 
+  /* As wide as what it holds: React Aria measures it whole and moves it to fit,
+   * rather than the edge of the page squeezing it into wrapping. */
   .rk-overlay {
     display: inline-block;
+    inline-size: max-content;
     color: var(--rk-fg-default);
   }
 
@@ -35,8 +38,12 @@
     position: relative;
   }
 
+  /* The rows asked for, or the rows there is room for, whichever is fewer. */
   .rk-overlay-body {
-    max-block-size: calc(var(--rk-cell-height) * var(--rk-overlay-max-rows, 1000));
+    max-block-size: calc(
+      var(--rk-cell-height) *
+      min(var(--rk-overlay-max-rows, 1000), var(--rk-overlay-fit-rows, 1000))
+    );
     overflow: hidden auto;
     white-space: normal;
   }
@@ -57,6 +64,7 @@
     display: grid;
     place-items: center;
     overflow: hidden;
+    background: var(--rk-bg-page);
   }
 
   .rk-overlay-backdrop-sheet {
@@ -64,13 +72,13 @@
   }
 
   /*
-   * The shade runs a cell past the viewport on the right and at the bottom, so
-   * the measured screen, which counts whole cells, still covers every pixel.
+   * The shade fills the viewport's whole cells. What is left at the right and
+   * the bottom, less than a cell, is the underlay's ground: a cell is never
+   * drawn where the viewport would cut it.
    */
   .rk-overlay-scrim {
     position: absolute;
-    inset-block: 0 calc(-1 * var(--rk-cell-height));
-    inset-inline: 0 calc(-1 * var(--rk-cell-width));
+    inset: 0;
   }
 
   .rk-overlay-modal {

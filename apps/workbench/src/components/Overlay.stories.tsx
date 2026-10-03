@@ -2,7 +2,7 @@ import { Button, Frame, GlyphProvider, OverlayModal, OverlayPopover } from '@roc
 import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type ReactNode, useRef } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Dialog, DialogTrigger, Heading, Menu, MenuItem, MenuTrigger } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { measured } from '../settled.ts';
@@ -164,18 +164,19 @@ export const DialogOpen: Story = {
 
     await waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull());
     // The page as text: the backdrop over everything, the dialog on top.
+    const shade = (n: number): string => block.light.repeat(n);
     expect(`\n${screenshot(frame, { legend: false })}`).toBe(`
-${block.light.repeat(40)}
-${block.light.repeat(40)}
-${block.light.repeat(40)}
-${block.light.repeat(5)}╔═════════════════════════════╗${block.light.repeat(4)}
-${block.light.repeat(5)}║ Discard changes?            ║${block.light.repeat(4)}
-${block.light.repeat(5)}║ Three files will be lost.   ║${block.light.repeat(4)}
-${block.light.repeat(5)}╚═════════════════════════════╝${block.light.repeat(4)}
-${block.light.repeat(40)}
-${block.light.repeat(40)}
-${block.light.repeat(40)}
-${block.light.repeat(40)}`);
+${shade(40)}
+${shade(40)}
+${shade(40)}
+${shade(40)}
+${shade(5)}╔═══════════════════════════╗${shade(6)}
+${shade(5)}║ Discard changes?          ║${shade(6)}
+${shade(5)}║ Three files will be lost. ║${shade(6)}
+${shade(5)}╚═══════════════════════════╝${shade(6)}
+${shade(40)}
+${shade(40)}
+${shade(40)}`);
   },
 };
 
@@ -219,17 +220,16 @@ export const TouchPane: Story = {
  * popover goes above it and shifts left.
  */
 function Corner(): ReactNode {
-  const boundary = useRef<HTMLDivElement>(null);
+  // The boundary is set once it is on the page, and the popover opens then.
+  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null);
   return (
-    <div ref={boundary} style={{ display: 'inline-block' }}>
+    <div ref={setBoundary} style={{ display: 'inline-block' }}>
       <Frame title="boundary" cols={40} rows={10}>
         <div style={{ display: 'grid', blockSize: 'calc(8 * var(--rk-cell-height))' }}>
           <div style={{ alignSelf: 'end', justifySelf: 'end' }}>
-            <DialogTrigger defaultOpen>
+            <DialogTrigger isOpen={boundary !== null}>
               <Button>Flip</Button>
-              <OverlayPopover
-                {...(boundary.current === null ? {} : { boundaryElement: boundary.current })}
-              >
+              <OverlayPopover {...(boundary === null ? {} : { boundaryElement: boundary })}>
                 <Dialog aria-label="Flip">
                   <p style={{ margin: 0 }}>a line wider than the room</p>
                   <p style={{ margin: 0 }}>to its right</p>

@@ -736,6 +736,89 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted"
     ]
   },
+  "OverlayLayer": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono"
+    ]
+  },
+  "OverlayModal": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the surface may take before its content scrolls."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ModalOverlayProps, 'children' | 'className' | 'style' | 'UNSTABLE_portalContainer'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono"
+    ]
+  },
+  "OverlayPopover": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the surface may take before its content scrolls."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'UNSTABLE_portalContainer' >"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono"
+    ]
+  },
   "Tree": {
     "file": "tree.tsx",
     "props": [

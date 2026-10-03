@@ -32,18 +32,7 @@
  * text snapshot of a page with a dialog open shows the backdrop and the
  * dialog.
  */
-import {
-  Attr,
-  type BorderSetName,
-  Buffer,
-  borderSets,
-  drawBox,
-  drawText,
-  fillArea,
-  rect,
-  type Size,
-} from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
+import type { Size } from '@rockaway/grid';
 import {
   type CSSProperties,
   createContext,
@@ -68,8 +57,14 @@ import {
 } from 'react-aria-components';
 import { measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
+import { useGlyphs } from '../glyphs.tsx';
 import { Screen } from '../screen.tsx';
+import {
+  backdropBuffer,
+  type OverlayKind,
+  type OverlayScroll,
+  overlayBuffer,
+} from './overlay.pure.ts';
 
 /** Runs before paint in a browser, and not at all on a server. */
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
@@ -159,6 +154,7 @@ function gridOf(el: Element | null | undefined): Grid {
 function useCellSnap(
   surface: RefObject<HTMLElement | null>,
   anchor: () => Element | null | undefined,
+  sheet: boolean,
 ): void {
   useIsomorphicLayoutEffect(() => {
     const el = surface.current;
@@ -169,8 +165,14 @@ function useCellSnap(
       const box = el.getBoundingClientRect();
       const rawX = box.left - shift.x;
       const rawY = box.top - shift.y;
-      const x = grid.left + Math.round((rawX - grid.left) / grid.width) * grid.width;
-      const y = grid.top + Math.round((rawY - grid.top) / grid.height) * grid.height;
+      // A sheet spans the viewport, so it is on the viewport's columns from its
+      // left edge, and may not be pushed off either edge: its column and its
+      // row round towards the corner.
+      const left = sheet ? 0 : grid.left;
+      const cols = (rawX - left) / grid.width;
+      const x = left + (sheet ? Math.floor(cols) : Math.round(cols)) * grid.width;
+      const rows = (rawY - grid.top) / grid.height;
+      const y = grid.top + (sheet ? Math.floor(rows) : Math.round(rows)) * grid.height;
       const next = { x: x - rawX, y: y - rawY };
       if (Math.abs(next.x - shift.x) < 0.01 && Math.abs(next.y - shift.y) < 0.01) return;
       shift = next;
@@ -192,7 +194,7 @@ function useCellSnap(
       window.removeEventListener('resize', snap);
       window.removeEventListener('scroll', snap, true);
     };
-  }, [surface, anchor]);
+  }, [surface, anchor, sheet]);
 }
 
 /**
@@ -215,78 +217,6 @@ function useSheet(el: () => Element | null | undefined): boolean {
   return sheet;
 }
 
-// ---------------------------------------------------------------------------
-// What an overlay draws
-
-export type OverlayKind = 'popover' | 'modal';
-
-/** Where the content of a scrolled overlay is, in rows: what its right edge shows. */
-export interface OverlayScroll {
-  readonly total: number;
-  readonly visible: number;
-  readonly offset: number;
-}
-
-export interface OverlayFrameOptions {
-  readonly kind?: OverlayKind;
-  readonly scroll?: OverlayScroll;
-}
-
-/** The border set an overlay is framed in: heavier than the page, and heavier still for a modal. */
-function setOf(kind: OverlayKind, glyphs: Glyphs): BorderSetName {
-  if (glyphs.borderSet === 'ascii') return 'ascii';
-  return kind === 'modal' ? 'double' : 'heavy';
-}
-
-/**
- * An overlay's frame as a buffer: heavy for a popover, double for a modal,
- * ASCII under an ASCII theme. When its content scrolls, the right edge
- * carries the thumb, in the theme's full block, so the position is shown in
- * the frame's own cells and no column is added.
- */
-export function overlayBuffer(
-  size: Size,
-  options: OverlayFrameOptions = {},
-  glyphs: Glyphs = defaultGlyphs,
-): Buffer {
-  const kind = options.kind ?? 'popover';
-  const set = setOf(kind, glyphs);
-  return Buffer.create(size).draw((draft) => {
-    if (size.width < 2 || size.height < 2) return;
-    drawBox(draft, rect(0, 0, size.width, size.height), {
-      set: borderSets[set],
-      ...(set === 'ascii' ? { style: { attrs: Attr.bold } } : {}),
-    });
-    const scroll = options.scroll;
-    const track = size.height - 2;
-    if (!scroll || scroll.total <= scroll.visible || track < 1) return;
-    const length = Math.max(1, Math.round((scroll.visible / scroll.total) * track));
-    const room = track - length;
-    const max = scroll.total - scroll.visible;
-    const start = max <= 0 ? 0 : Math.round((Math.min(scroll.offset, max) / max) * room);
-    for (let y = 0; y < length; y++) {
-      drawText(draft, { x: size.width - 1, y: 1 + start + y }, glyphs.block.full, {
-        style: { fg: 'fg.muted', attrs: Attr.none },
-      });
-    }
-  });
-}
-
-/**
- * The backdrop behind a modal as a buffer: every cell the theme's light
- * shade in `fg.muted`, on the page's ground, so what is under it is hidden
- * rather than tinted.
- */
-export function backdropBuffer(size: Size, glyphs: Glyphs = defaultGlyphs): Buffer {
-  return Buffer.create(size).draw((draft) => {
-    fillArea(draft, rect(0, 0, size.width, size.height), glyphs.block.light, {
-      fg: 'fg.muted',
-      bg: 'bg.page',
-      attrs: Attr.none,
-    });
-  });
-}
-
 /** The framed screen an overlay's content sits in, on the grid. */
 function Surface({
   kind,
@@ -305,7 +235,25 @@ function Surface({
   const host = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const [scroll, setScroll] = useState<OverlayScroll | undefined>(undefined);
-  useCellSnap(host, anchor);
+  const [fit, setFit] = useState<number | undefined>(undefined);
+  useCellSnap(host, anchor, sheet);
+
+  // React Aria gives a popover the most height it has room for, in pixels;
+  // the surface takes the whole rows of it, its border's two included, and
+  // its content scrolls past them.
+  useIsomorphicLayoutEffect(() => {
+    const placed = host.current?.parentElement;
+    if (!placed) return;
+    const read = (): void => {
+      const max = Number.parseFloat(placed.style.maxHeight);
+      const row = measureCell(placed).height;
+      setFit(Number.isFinite(max) && row > 0 ? Math.max(1, Math.floor(max / row) - 2) : undefined);
+    };
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(placed, { attributes: true, attributeFilter: ['style'] });
+    return () => observer.disconnect();
+  }, []);
 
   // The content's scroll, in rows, for the thumb in the frame's edge.
   useIsomorphicLayoutEffect(() => {
@@ -337,10 +285,10 @@ function Surface({
       overlayBuffer(size, { kind, ...(scroll === undefined ? {} : { scroll }) }, glyphs),
     [kind, scroll, glyphs],
   );
-  const style =
-    maxRows === undefined
-      ? undefined
-      : ({ '--rk-overlay-max-rows': Math.max(1, Math.floor(maxRows)) } as CSSProperties);
+  const style = {
+    ...(maxRows === undefined ? {} : { '--rk-overlay-max-rows': Math.max(1, Math.floor(maxRows)) }),
+    ...(fit === undefined ? {} : { '--rk-overlay-fit-rows': fit }),
+  } as CSSProperties;
   return (
     <div ref={host} className={cx('rk-overlay', sheet && 'rk-overlay-sheet')} style={style}>
       <Screen draw={draw} contentInset={{ x: 2, y: 1 }} fallback={{ width: 2, height: 2 }}>
@@ -413,7 +361,7 @@ export interface OverlayModalProps
   readonly className?: string;
 }
 
-/** The backdrop, a screen of shade filling the viewport and a cell past it. */
+/** The backdrop: a screen of shade over the viewport's whole cells. */
 function Backdrop(): ReactNode {
   const glyphs = useGlyphs();
   const draw = useCallback((size: Size) => backdropBuffer(size, glyphs), [glyphs]);
@@ -435,15 +383,17 @@ export function OverlayModal({
   ...aria
 }: OverlayModalProps): ReactNode {
   const container = useContext(LayerContext);
-  // A modal has no anchor of its own; the element that had focus when it
-  // opened is where it was opened from. Read once, when it opens.
+  // A modal has no anchor of its own, but it was opened from somewhere: the
+  // trigger a DialogTrigger names, or else the element that had focus when it
+  // opened, read once.
+  const trigger = useSlottedContext(PopoverContext)?.triggerRef;
   const opener = useRef<Element | null>(null);
   if (opener.current === null && typeof document !== 'undefined') {
     opener.current = document.activeElement;
   }
-  const anchor = useCallback(() => opener.current, []);
+  const anchor = useCallback(() => trigger?.current ?? opener.current, [trigger]);
   const sheet = useSheet(anchor);
-  const contexts = contextsOf(opener.current);
+  const contexts = contextsOf(anchor());
   return (
     <ModalOverlay
       {...aria}
