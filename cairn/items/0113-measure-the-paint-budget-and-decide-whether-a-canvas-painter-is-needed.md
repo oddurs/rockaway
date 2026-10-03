@@ -38,3 +38,7 @@ a full-page frame at 120x40 is thousands of nodes. Nobody has measured it.
 ## 2026-10-03
 
 Moved to the site milestone by the program plan: the time box says it waits for a real page, and the dog-food site is that page. Depends on 0117, which changes what the rule painter costs.
+
+## 2026-10-03
+
+From 0117: vertical lines and junctions are one element each with up to eight background layers, and nobody has measured that on a full-page frame. Measure the shaped cells here, not only the node count.

@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 24% · 16 of 66 done · due 2027-01-31
+`###·······` 24% · 16 of 67 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -157,6 +157,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0167`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0167-add-size-in-cells-and-conformance-level-to-component-metadata.md) Add size in cells and conformance level to component metadata <sup>feature · docs · p1</sup>
 - [ ] [`0168`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0168-re-export-or-document-the-router-hook-up-for-link.md) Re-export or document the router hook-up for Link <sup>feature · components · p2</sup>
 - [ ] [`0169`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0169-give-inline-controls-a-full-cell-hit-area-and-ground.md) Give inline controls a full-cell hit area and ground <sup>feature · css · p3</sup>
+- [ ] [`0175`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0175-never-let-a-junction-overwrite-a-title.md) Never let a junction overwrite a title <sup>bug · grid · p1</sup>
 
 ### in review
 
@@ -201,7 +202,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`#·········` 10% · 2 of 21 done · due 2027-02-21
+`#·········` 9% · 2 of 22 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -226,6 +227,7 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0152`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0152-review-the-site-end-to-end-phone-zoom-keyboard-screen-reader-slow-network.md) Review the site end to end: phone, zoom, keyboard, screen reader, slow network <sup>chore · site · p0</sup>
 - [ ] [`0170`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0170-typecheck-astro-files.md) Typecheck .astro files <sup>chore · tooling · p2</sup>
 - [ ] [`0171`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0171-draw-each-component-s-snapshot-in-every-theme-on-the-site.md) Draw each component's snapshot in every theme on the site <sup>feature · site · p3</sup>
+- [ ] [`0177`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0177-let-checkcontinuity-check-shapes-drawn-outside-a-painted-layer.md) Let checkContinuity check shapes drawn outside a painted layer <sup>feature · tooling · p2</sup>
 
 ### done
 
@@ -258,7 +260,7 @@ Something another project can install and build on.
 
 ## later — Later
 
-`··········` 0% · 0 of 4 done
+`··········` 0% · 0 of 5 done
 
 Worth doing, not yet worth scheduling.
 
@@ -268,4 +270,5 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0056`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0056-date-picker.md) Date picker <sup>component · components · p3</sup>
 - [ ] [`0161`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0161-check-for-literal-glyphs-with-a-parser-not-a-scanner.md) Check for literal glyphs with a parser, not a scanner <sup>chore · tooling · p3</sup>
 - [ ] [`0174`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0174-give-labels-their-own-delimiter-set.md) Give labels their own delimiter set <sup>chore · tokens · p3</sup>
+- [ ] [`0176`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0176-stroke-the-junctions-unicode-lacks-from-the-raw-edges.md) Stroke the junctions Unicode lacks from the raw edges <sup>bug · grid · p3</sup>
 

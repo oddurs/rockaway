@@ -40,3 +40,4 @@ the measured size differs.
 - [ ] The concept's "Where it is thin" entry about static pages is rewritten to say what is now true
 - [ ] The pure buffer functions (`frameBuffer`, `dividerBuffer`, `drawRule`, `scrollbarBuffer`, `formatKeys` and the rest) live in modules without `'use client'`, so a server component or text renderer can call them; the component files import them
 - [ ] Before it is measured, `Screen` sizes its cell from `1ch` and `1lh`, not a fixed 8.4×20px, so a server-rendered screen with fixed `cols` does not change width when it hydrates
+- [ ] Painted chrome is server-rendered from `rowRuns`, which is pure, so the first paint already carries the cell renderer's shapes and the client hydrates the same runs
