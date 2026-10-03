@@ -1,7 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.tsx';
+import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.pure.ts';
 import {
   type Binding,
   chordMatches,

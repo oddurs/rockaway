@@ -45,7 +45,8 @@ import {
 import { cx } from '../cx.ts';
 import { defaultGlyphs } from '../glyphs.tsx';
 import { type Platform, usePlatform } from '../platform.ts';
-import { formatKeys, KeyHint, type KeySpec, keyShortcut, parseKeys, stepsOf } from './key-hint.tsx';
+import { formatKeys, keyShortcut, parseKeys, stepsOf } from './key-hint.pure.ts';
+import { KeyHint, type KeySpec } from './key-hint.tsx';
 
 /** One shortcut: its keys, what it does, and what it says it does. */
 export interface Binding {
