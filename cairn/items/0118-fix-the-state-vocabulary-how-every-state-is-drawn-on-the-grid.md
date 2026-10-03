@@ -82,3 +82,7 @@ and 0076 gets a note that its `~` marker is withdrawn.
 ## 2026-10-03
 
 Adopted by the CTO as the working answer for every wave from here, so the parallel component engineers have one vocabulary now rather than after the first polish ticket. The List polish engineer (0133) still confirms it against a real multi-select — cursor and selection as two signals is the row most likely to meet reality — and closes it.
+
+## 2026-10-03
+
+From Link (0135): two rows of the table needed reading for an inline control. Hover cannot be 'underline' when the control is underlined at rest, so Link doubles it. Current's cursor mark needs a reserved cell; a link in a sentence has none of its own, so the mark hangs in the cell before the link, which the layout keeps blank in every state (the word space, the gap). Worth a sentence in the table when this closes.

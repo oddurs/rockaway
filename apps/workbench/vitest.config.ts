@@ -6,10 +6,6 @@ import type { BrowserInstanceOption } from 'vitest/node';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
-/** The plugin owns `include`, and merges whatever `exclude` it is given. */
-const forcedColorsStories = ['**/ForcedColors.stories.tsx'];
-const everythingElse = ['**/!(ForcedColors).stories.tsx'];
-
 const browser = (contextOptions?: { forcedColors: 'active' }) => ({
   enabled: true as const,
   headless: true as const,
@@ -20,22 +16,21 @@ const browser = (contextOptions?: { forcedColors: 'active' }) => ({
 /**
  * Two browsers. Forced colors is a mode of the browser itself (cairn 0027), so
  * stories tagged `forced-colors` run in one launched with it active, and
- * nowhere else.
+ * nowhere else. A tag rather than a file name, so a component keeps its
+ * forced-colors story beside its others.
  */
+const FORCED_COLORS = 'forced-colors';
+
 const config: ViteUserConfig = defineConfig({
   test: {
     projects: [
       {
-        plugins: [storybookTest({ configDir })],
-        test: { name: 'storybook', exclude: forcedColorsStories, browser: browser() },
+        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS] } })],
+        test: { name: 'storybook', browser: browser() },
       },
       {
-        plugins: [storybookTest({ configDir })],
-        test: {
-          name: 'forced-colors',
-          exclude: everythingElse,
-          browser: browser({ forcedColors: 'active' }),
-        },
+        plugins: [storybookTest({ configDir, tags: { include: [FORCED_COLORS] } })],
+        test: { name: FORCED_COLORS, browser: browser({ forcedColors: 'active' }) },
       },
     ],
   },
