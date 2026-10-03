@@ -32,8 +32,10 @@ function count(paths: string[]): Map<string, number> {
 describe('src/index.ts', () => {
   const source = readFileSync(path.join(react, 'index.ts'), 'utf8');
   const statements = source.split('\n').filter((line) => line.startsWith('export'));
+  // A component's pure half (`frame.pure.ts`, cairn 0126) has a line of its own,
+  // so a server can import its buffer functions without the client boundary.
   const listed = statements.flatMap((line) => {
-    const match = /from '\.\/components\/([^']+)';$/.exec(line);
+    const match = /from '\.\/components\/([^']+\.tsx)';$/.exec(line);
     return match?.[1] === undefined ? [] : [match[1]];
   });
 

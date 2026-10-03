@@ -1,6 +1,6 @@
 import { Attr, Buffer, drawText, fromText } from '@rockaway/grid';
 import { describe, expect, test } from 'vitest';
-import { frameBuffer } from '../src/components/frame.tsx';
+import { frameBuffer } from '../src/components/frame.pure.ts';
 import { rowRuns } from '../src/paint/cells.ts';
 
 const runs = (buffer: Buffer, y: number) =>

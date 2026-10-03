@@ -92,4 +92,22 @@ if (
   throw new Error('GlyphProvider was not sent as a client reference with the theme as its props.');
 }
 
-console.log('server component rendered GlyphProvider and Frame as client references');
+// The pure halves are real functions on the server, not client references
+// (0126): a server component can draw a frame, or format a chord, itself.
+const pure = await import('@rockaway/react');
+const drawn = pure.frameBuffer({ width: 12, height: 3 }, { title: 'server' }).row(0);
+const checks: [string, unknown, unknown][] = [
+  ['frameBuffer', drawn, '┌ server ──┐'],
+  ['dividerBuffer', pure.dividerBuffer({ width: 6, height: 1 }).row(0), '╶────╴'],
+  ['scrollbarBuffer', pure.scrollbarBuffer({ total: 4, visible: 2, offset: 0 }).row(0), '█'],
+  ['formatKeys', pure.formatKeys('mod+s', 'apple'), '⌘S'],
+  ['buttonBuffer', pure.buttonBuffer('Go').row(0), '[ Go ]'],
+];
+for (const [name, got, want] of checks) {
+  if (got !== want)
+    throw new Error(`${name} on the server gave ${String(got)}, not ${String(want)}`);
+}
+
+console.log(
+  'server component rendered GlyphProvider and Frame as client references, and called the buffer functions',
+);

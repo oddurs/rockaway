@@ -4,9 +4,10 @@ import { createElement, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { Button } from '../src/components/button.tsx';
-import { dividerBuffer } from '../src/components/divider.tsx';
-import { frameBuffer } from '../src/components/frame.tsx';
-import { List, ListItem, scrollbarBuffer } from '../src/components/list.tsx';
+import { dividerBuffer } from '../src/components/divider.pure.ts';
+import { frameBuffer } from '../src/components/frame.pure.ts';
+import { scrollbarBuffer } from '../src/components/list.pure.ts';
+import { List, ListItem } from '../src/components/list.tsx';
 import { defaultGlyphs, GlyphProvider, useGlyphs } from '../src/glyphs.tsx';
 
 const ascii = glyphsFor({ borderSet: 'ascii' });
@@ -48,12 +49,13 @@ describe('glyphs from the theme', () => {
   test('with no provider a component draws with the default theme’s glyphs, on the server too', () => {
     expect(defaultGlyphs).toBe(themeGlyphs.default);
     expect(renderToStaticMarkup(createElement(Probe))).toBe('single ▸ █');
-    expect(serverText(controls())).toBe(' ✓a.ts  b.ts[Publish]');
+    // The scrollbar is rendered on the server too (0126): two rows, all thumb.
+    expect(serverText(controls())).toBe(' ✓a.ts  b.ts██[Publish]');
   });
 
   test('a provider swaps every glyph a component reads', () => {
     const tree = createElement(GlyphProvider, { glyphs: ascii }, createElement(Probe), controls());
-    expect(serverText(tree)).toBe('ascii > # xa.ts  b.ts[Publish]');
+    expect(serverText(tree)).toBe('ascii > # xa.ts  b.ts##[Publish]');
   });
 
   test('the theme’s border set is the frame’s default, and its dividers’ too', () => {

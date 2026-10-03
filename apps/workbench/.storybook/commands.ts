@@ -34,3 +34,26 @@ export const printToPdf: BrowserCommand<[html: string]> = async (context, html) 
     await page.close();
   }
 };
+
+/**
+ * Load a document in a page with JavaScript switched off and read back what it
+ * shows (cairn 0126): the text of each painted row, how many cells draw their
+ * own shape, and whether the page's own script ran — which it must not have,
+ * or the test proves nothing.
+ */
+export const readWithoutScripts: BrowserCommand<[html: string]> = async (context, html) => {
+  const browser = context.context.browser();
+  if (!browser) throw new Error('readWithoutScripts needs a browser to open a context in');
+  const isolated = await browser.newContext({ javaScriptEnabled: false });
+  try {
+    const page = await isolated.newPage();
+    await page.setContent(html);
+    return {
+      rows: await page.locator('.rk-frame .rk-row').allTextContents(),
+      shapes: await page.locator('[data-rk-shape]').count(),
+      ran: (await page.locator('body').getAttribute('data-ran')) === 'yes',
+    };
+  } finally {
+    await isolated.close();
+  }
+};

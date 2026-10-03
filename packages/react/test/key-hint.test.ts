@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.tsx';
+import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.pure.ts';
 
 const SPECS = [
   'mod+s',

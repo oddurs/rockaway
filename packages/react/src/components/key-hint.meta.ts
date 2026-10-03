@@ -1,5 +1,6 @@
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { formatKeys, type KeyNotation, type Platform } from './key-hint.tsx';
+import { formatKeys } from './key-hint.pure.ts';
+import type { KeyNotation, Platform } from './key-hint.tsx';
 
 /** A hint as it occupies the grid: the chord, a cell, then the action. */
 const hint = (

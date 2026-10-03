@@ -96,7 +96,16 @@ the content is ordinary HTML that happens to land on whole cells.
 
 Measurement is a 50-character probe (`cell-metrics.ts`), one `ResizeObserver`
 batched into a rAF, and `--rk-cell-width` / `--rk-cell-height` set on the host.
-Fonts load late and zoom changes; the cell is measured, never assumed.
+Fonts load late and zoom changes; the cell is measured, never assumed. Until it
+is — on a server, or before hydration — the cell is `1ch` by `1lh`, which is the
+same cell the measurement will find, so nothing moves when it does.
+
+The chrome is rendered, not painted in an effect (`0126`): `Screen` turns the
+buffer into rows of runs as elements, so a server sends the frame in its first
+response and hydration keeps those nodes. The buffer functions a component
+draws with (`frameBuffer`, `dividerBuffer`, `formatKeys`) live in each
+component's `.pure.ts`, outside the client boundary, so a server can call them
+too.
 
 ## 5. The font supplies letters; the cell supplies geometry
 
@@ -406,9 +415,12 @@ Written down so it is a known limit rather than a later surprise.
   the line gets its own line: a documented exception, not a fix.
 - **`1ch` assumes the font is monospace.** A fallback that is not will measure
   wrong. We ship the metric rather than trusting a stack.
-- **Three painters is not four.** Server rendering uses `toText`; a static page
-  with no JavaScript gets chrome, but `Screen`'s measurement, and therefore an
-  exact fit, needs the client.
+- **A server cannot measure.** `Screen` renders its chrome as elements, so a
+  server sends it and a page with JavaScript off still shows its frame, drawn
+  by the cell renderer (`0126`). A screen with a fixed size in cells is exact
+  from the first paint, its cell `1ch` by `1lh` until measured. A screen that
+  measures its container has no size until the client runs: it renders at its
+  `fallback`, and corrects inside its own box when it hydrates.
 
 ## The contract a component is held to
 

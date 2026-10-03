@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { describe, expect, test } from 'vitest';
-import { frameBuffer } from '../src/components/frame.tsx';
+import { frameBuffer } from '../src/components/frame.pure.ts';
 
 describe('frameBuffer', () => {
   test('draws a titled box with a divider that joins its sides', () => {

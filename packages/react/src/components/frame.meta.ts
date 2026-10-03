@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { frameBuffer } from './frame.tsx';
+import { frameBuffer } from './frame.pure.ts';
 
 export const frameMeta: ComponentMetaInput = defineMeta({
   name: 'Frame',

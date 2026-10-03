@@ -3,7 +3,7 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption } from 'vitest/node';
-import { printToPdf } from './.storybook/commands.ts';
+import { printToPdf, readWithoutScripts } from './.storybook/commands.ts';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
@@ -39,7 +39,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb') => ({
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { printToPdf },
+  commands: { printToPdf, readWithoutScripts },
 });
 
 /**
