@@ -136,10 +136,14 @@ function Discard(): ReactNode {
  */
 export const DialogOpen: Story = {
   name: 'Dialog',
+  // The page is centred in the viewport, as the dialog is, so the dialog's
+  // place on the page is the same wherever the canvas puts the story.
   render: () => (
-    <Frame title="page" cols={40} rows={11}>
-      <Discard />
-    </Frame>
+    <div style={{ position: 'fixed', inset: 0, display: 'grid', placeItems: 'center' }}>
+      <Frame title="page" cols={40} rows={11}>
+        <Discard />
+      </Frame>
+    </div>
   ),
   play: async ({ canvas, canvasElement }) => {
     await measured(document.body);
@@ -158,13 +162,7 @@ export const DialogOpen: Story = {
       true,
     );
 
-    const dialog = await waitFor(() =>
-      expect(document.querySelector('[role="dialog"]')).not.toBeNull(),
-    );
-    void dialog;
-    const outline = (el: Element, depth = 0): string =>
-      `${' '.repeat(depth)}${el.tagName.toLowerCase()}.${typeof el.className === 'string' ? el.className.split(' ').join('.') : ''}\n${[...el.children].slice(0, 6).map((c) => (c.classList.contains('rk-row') ? '' : outline(c, depth + 1))).join('')}`;
-    console.log('DBG', outline(document.querySelector('.rk-overlay-layer') as Element));
+    await waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull());
     // The page as text: the backdrop over everything, the dialog on top.
     expect(`\n${screenshot(frame, { legend: false })}`).toBe(`
 ${block.light.repeat(40)}
