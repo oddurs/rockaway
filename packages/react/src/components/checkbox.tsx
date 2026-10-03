@@ -24,8 +24,6 @@
  * A group is a `Fieldset` inside React Aria's `CheckboxGroup`: its label set
  * into the frame's top edge, one row per checkbox inside it.
  */
-import { Buffer, drawText, stringWidth } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
 import { type CSSProperties, type ReactNode, useContext } from 'react';
 import {
   CheckboxGroup as AriaCheckboxGroup,
@@ -36,12 +34,11 @@ import {
   CheckboxGroupStateContext,
   type ValidationResult,
 } from 'react-aria-components';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
+import { useGlyphs } from '../glyphs.tsx';
+import { markOf } from './checkbox.pure.ts';
+
 import { Description, FieldError, fieldClass } from './field.tsx';
 import { Fieldset } from './fieldset.tsx';
-
-/** What the mark cell shows. */
-export type CheckboxMark = 'checked' | 'unchecked' | 'indeterminate';
 
 export interface CheckboxProps
   extends Omit<CheckboxFieldProps, 'children' | 'className' | 'style'> {
@@ -53,15 +50,6 @@ export interface CheckboxProps
   readonly errorMessage?: ReactNode | ((validation: ValidationResult) => ReactNode);
   readonly className?: string;
   readonly style?: CSSProperties;
-}
-
-/** The glyph in the mark cell for a state. */
-function markOf(mark: CheckboxMark, glyphs: Glyphs): string {
-  return mark === 'checked'
-    ? glyphs.mark.check
-    : mark === 'indeterminate'
-      ? glyphs.mark.dash
-      : glyphs.mark.blank;
 }
 
 export function Checkbox({
@@ -158,28 +146,4 @@ export function CheckboxGroup({
       )}
     </AriaCheckboxGroup>
   );
-}
-
-export interface CheckboxTextOptions {
-  readonly mark?: CheckboxMark;
-  readonly required?: boolean;
-  readonly readOnly?: boolean;
-}
-
-/**
- * A checkbox row as cells: its text snapshot, and the control `formBuffer`
- * lays out. The delimiters, the mark cell, a cell of air, the words, and the
- * required mark's cell, which is there, blank, when the box is not required.
- */
-export function checkboxBuffer(
-  label: string,
-  options: CheckboxTextOptions = {},
-  glyphs: Glyphs = defaultGlyphs,
-): Buffer {
-  const [open, close] = options.readOnly ? [' ', ' '] : glyphs.delimiter.control;
-  const mark = markOf(options.mark ?? 'unchecked', glyphs);
-  const line = `${open}${mark}${close} ${label}${options.required ? glyphs.mark.required : ' '}`;
-  return Buffer.create({ width: stringWidth(line), height: 1 }).draw((draft) => {
-    drawText(draft, { x: 0, y: 0 }, line);
-  });
 }

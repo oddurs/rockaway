@@ -3,9 +3,10 @@ import { glyphsFor } from '@rockaway/tokens';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import { Checkbox, CheckboxGroup, checkboxBuffer } from '../src/components/checkbox.tsx';
-import { formBuffer } from '../src/components/field.tsx';
-import { fieldFrameBuffer } from '../src/components/fieldset.tsx';
+import { checkboxBuffer } from '../src/components/checkbox.pure.ts';
+import { Checkbox, CheckboxGroup } from '../src/components/checkbox.tsx';
+import { formBuffer } from '../src/components/field.pure.ts';
+import { fieldFrameBuffer } from '../src/components/fieldset.pure.ts';
 
 const row = (label: string, options = {}): string =>
   toText(checkboxBuffer(label, options), { trimEnd: false });

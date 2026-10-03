@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type CheckboxTextOptions, checkboxBuffer } from './checkbox.tsx';
+import { type CheckboxTextOptions, checkboxBuffer } from './checkbox.pure.ts';
 
 const row = (label: string, options: CheckboxTextOptions): string =>
   toText(checkboxBuffer(label, options), { trimEnd: false });
