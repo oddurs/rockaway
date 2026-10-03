@@ -10,8 +10,11 @@
  *   rk.tokens      custom properties, including the mode and density contexts
  *   rk.base        element defaults: type, links, focus, motion, and the
  *                  token remapping for forced colors
+ *   rk.prose       long-form text set on the grid, inside `.rk-prose`: under
+ *                  the components, so a component in a page of prose keeps
+ *                  its own spacing
  *   rk.components  the components' own styles
  *   rk.utilities   small single-purpose classes
  *   rk.overrides   the escape hatch, for a consumer that wants to stay layered
  */
-@layer rk.reset, rk.tokens, rk.base, rk.components, rk.utilities, rk.overrides;
+@layer rk.reset, rk.tokens, rk.base, rk.prose, rk.components, rk.utilities, rk.overrides;

@@ -37,9 +37,10 @@
     font-weight: var(--rk-attribute-bold);
   }
 
+  /* Case, not tracking: letter spacing would make every character wider than
+   * its cell, and a heading would run off the grid a fraction at a time. */
   h1 {
     text-transform: uppercase;
-    letter-spacing: 0.08em;
   }
 
   a {

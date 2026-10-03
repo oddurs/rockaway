@@ -1,0 +1,51 @@
+/*
+ * Badge (cairn 0139).
+ *
+ * Text on a tinted ground, one row tall and exactly as wide as its cells: the
+ * mark and its cell of air, or the two delimiters, and the words. An
+ * inline-block, so the ground fills the whole cell rather than the font's
+ * height, and `pre`, so the cell of air after the mark is a cell.
+ *
+ * A tone sets three custom properties on the badge and nothing else, so no
+ * rule reaches into a child per tone, and no tone can change a size.
+ */
+@layer rk.components {
+  .rk-badge {
+    --rk-badge-fg: var(--rk-fg-muted);
+    --rk-badge-ground: var(--rk-bg-subtle);
+    --rk-badge-edge: var(--rk-border-control);
+
+    display: inline-block;
+    white-space: pre;
+    background: var(--rk-badge-ground);
+    color: var(--rk-badge-fg);
+  }
+
+  .rk-badge-end {
+    color: var(--rk-badge-edge);
+  }
+
+  .rk-badge[data-tone="accent"] {
+    --rk-badge-fg: var(--rk-fg-accent);
+    --rk-badge-ground: var(--rk-bg-accent-subtle);
+    --rk-badge-edge: var(--rk-border-accent);
+  }
+
+  .rk-badge[data-tone="success"] {
+    --rk-badge-fg: var(--rk-fg-success);
+    --rk-badge-ground: var(--rk-bg-success-subtle);
+    --rk-badge-edge: var(--rk-border-success);
+  }
+
+  .rk-badge[data-tone="warning"] {
+    --rk-badge-fg: var(--rk-fg-warning);
+    --rk-badge-ground: var(--rk-bg-warning-subtle);
+    --rk-badge-edge: var(--rk-border-warning);
+  }
+
+  .rk-badge[data-tone="danger"] {
+    --rk-badge-fg: var(--rk-fg-danger);
+    --rk-badge-ground: var(--rk-bg-danger-subtle);
+    --rk-badge-edge: var(--rk-border-danger);
+  }
+}

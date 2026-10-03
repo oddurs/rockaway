@@ -142,6 +142,16 @@ type Story = StoryObj<typeof meta>;
 const matrix = (density: Density): Story => ({
   args: { density },
   play: async ({ canvasElement }) => {
+    // A title gives way to the rule under it: it reads whole, or ends in the
+    // ellipsis, and is never cut by the tee (0175).
+    for (const painter of PAINTERS) {
+      for (const set of SETS) {
+        const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${set}"]`);
+        const top = screen?.querySelector('.rk-row')?.textContent ?? '';
+        const title = top.split(' ')[1] ?? '';
+        expect(title === set || title.endsWith('…'), `${set}: ${top}`).toBe(true);
+      }
+    }
     const run = runner();
     if (!run) return;
     const report = await expectContinuity(canvasElement, { capture: run.capture });
