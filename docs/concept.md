@@ -62,6 +62,21 @@ a second set of hard-coded lengths — which is also why DTCG's refusal to accep
 `ch` and `lh` as dimension units turned out to improve the design rather than
 constrain it.
 
+### What each density is for
+
+A one-row control is one cell tall, so the line box *is* its target size
+(`0197`). At the browser's default 16px:
+
+| density | line box | one row | for |
+| --- | --- | --- | --- |
+| `dense` | 1 | 16px | an opt-in for those who want a terminal's tightness; adjacent one-row targets fail WCAG 2.5.8, and the run says so every time |
+| `normal` | 1.5 | 24px | the default: one row is the 24px target WCAG 2.2 AA asks for |
+| `airy` | 2 | 32px | reading at length, with room between the lines |
+| `touch` | 2.75 | 44px | a coarse pointer: one row is a finger-sized target, and nothing moves to make it so (`0074`) |
+
+The default meets AA. A system that sells accessibility as a feature does not
+fail it by default, so the tight terminal look is the one you choose.
+
 ## 3. Four routes to a TUI on the web. We take the fourth
 
 | Route | Examples | What it costs |
@@ -132,9 +147,9 @@ font says, not as tall as the cell. Measured in the workbench (system mono,
 | density | cell | font `│` | |
 | --- | --- | --- | --- |
 | dense | 16px | 21px | bleeds 3px into the row above and 2px into the row below |
-| normal | 20px | 21px | meets, by coincidence of this font |
-| airy | 24px | 21px | a 3px gap between rows |
-| touch | 32px | 21px | an 11px gap |
+| normal | 24px | 21px | a 3px gap between rows |
+| airy | 32px | 21px | an 11px gap |
+| touch | 44px | 21px | a 23px gap |
 
 Density *is* the line box (`0074`), so the line box will never match the font.
 The same is true of block elements — a scrollbar thumb of `█` falls apart into
@@ -268,8 +283,9 @@ The level belongs to the screen, not to a box in it, so a component cannot
 loosen the app it sits in. The workbench runs at `standard`, with a story
 pinned at each level.
 
-The deal is not "never break the grid". The deal is **breaking it quietly is
-what's forbidden** — exceptions become countable instead of accumulating.
+> [!NOTE]
+> The deal is not "never break the grid". The deal is **breaking it quietly is
+> what's forbidden** — exceptions become countable instead of accumulating.
 
 The screen's own box is exempt: the page decides how much room a screen gets,
 and the grid governs what is drawn inside it.

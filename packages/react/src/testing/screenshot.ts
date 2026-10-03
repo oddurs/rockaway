@@ -119,10 +119,20 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
 
     const range = screen.ownerDocument.createRange();
     range.selectNodeContents(node);
-    const { col, row } = at(range.getBoundingClientRect());
     const clip = clipOf(parent);
-    if (row < clip.top || row >= clip.bottom) continue;
-    write(grid, col, row, text, clip);
+    const start = at(range.getBoundingClientRect());
+    if (range.getClientRects().length > 1) {
+      // Text that wraps is on several rows: each line of it is written where
+      // that line is, which only the line's own characters can say.
+      for (const line of linesOf(node, screen.ownerDocument)) {
+        const { col, row } = at(line.rect);
+        if (row >= clip.top && row < clip.bottom) write(grid, col, row, line.text, clip);
+      }
+    } else {
+      if (start.row < clip.top || start.row >= clip.bottom) continue;
+      write(grid, start.col, start.row, text, clip);
+    }
+    const { col, row } = start;
 
     const attrs = parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs;
     if (attrs) attributes.push({ text: text.trim(), attrs, col, row });
@@ -140,6 +150,31 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     }
   }
   return lines.join('\n');
+}
+
+/**
+ * A wrapped text node, line by line: each line's text and where it starts.
+ * The spaces a line wraps at are dropped with it, as the browser drops them.
+ */
+function linesOf(node: Node, document: Document): { text: string; rect: DOMRect }[] {
+  const text = node.textContent ?? '';
+  const lines: { text: string; rect: DOMRect; top: number }[] = [];
+  const range = document.createRange();
+  let offset = 0;
+  for (const cluster of graphemes(text)) {
+    range.setStart(node, offset);
+    range.setEnd(node, offset + cluster.length);
+    offset += cluster.length;
+    const rect = range.getClientRects()[0];
+    if (rect === undefined || rect.width === 0) continue;
+    const line = lines.at(-1);
+    if (line !== undefined && Math.abs(line.top - rect.top) < rect.height / 2) {
+      lines[lines.length - 1] = { ...line, text: line.text + cluster };
+    } else {
+      lines.push({ text: cluster, rect, top: rect.top });
+    }
+  }
+  return lines.map(({ text: t, rect }) => ({ text: t.replace(/\s+$/, ''), rect }));
 }
 
 function write(
