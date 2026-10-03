@@ -25,6 +25,7 @@
  * Parallel branches each add a line and `merge=union` in .gitattributes joins
  * them; packages/react/test/barrels.test.ts fails on a missing or doubled line.
  */
+@import "./components/badge.css";
 @import "./components/button.css";
 @import "./components/key-hint.css";
 @import "./components/link.css";

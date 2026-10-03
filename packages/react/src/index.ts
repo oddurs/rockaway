@@ -4,6 +4,7 @@
 // or listed twice. Names are listed rather than `export *`, so a value a file exports for its
 // tests or metadata does not become public API by accident.
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
+export { Badge, type BadgeOptions, type BadgeProps, type BadgeTone, badgeBuffer } from './components/badge.tsx';
 export { Button, type ButtonProps, type ButtonSize, type ButtonTextOptions, type ButtonVariant, buttonBuffer } from './components/button.tsx';
 export { Divider, type DividerOptions, type DividerProps, dividerBuffer, drawRule, type Orientation } from './components/divider.tsx';
 export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './components/frame.tsx';
