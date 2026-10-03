@@ -172,9 +172,17 @@ test('css/tokens.css and src/names.ts match a fresh Terrazzo build (0020)', asyn
 }, 60_000);
 
 describe('the cell, and density', () => {
-  test('density is the line box, and touch is twice the dense one', () => {
-    expect(lineBox).toEqual({ dense: 1, normal: 1.25, airy: 1.5, touch: 2 });
-    expect(lineBox.touch).toBe(lineBox.dense * 2);
+  test('density is the line box: AA at the default, 44px at touch (0197)', () => {
+    expect(lineBox).toEqual({ dense: 1, normal: 1.5, airy: 2, touch: 2.75 });
+    // At the browser's default 16px: WCAG 2.2's 24px target at the default
+    // density, and the 44px a finger needs at touch (0074). Dense is the
+    // opt-in that gives the 24px up.
+    const px = (d: keyof typeof lineBox) => lineBox[d] * 16;
+    expect(px('normal')).toBe(24);
+    expect(px('touch')).toBe(44);
+    expect(px('airy')).toBeGreaterThan(px('normal'));
+    expect(px('airy')).toBeLessThan(px('touch'));
+    expect(px('dense')).toBeLessThan(24);
   });
 
   test('space is a count of cells, not a length', () => {
