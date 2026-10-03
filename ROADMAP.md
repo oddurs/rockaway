@@ -158,7 +158,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0202`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0202-move-button-s-forced-colors-opt-out-into-its-own-stylesheet.md) Move Button's forced-colors opt-out into its own stylesheet <sup>chore · css · p3</sup>
 - [ ] [`0204`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0204-verify-fieldframe-inside-numberfield-and-datefield.md) Verify FieldFrame inside NumberField and DateField <sup>chore · components · p2</sup>
 - [ ] [`0207`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0207-no-native-scrollbars-a-scroll-position-is-drawn-in-cells.md) No native scrollbars: a scroll position is drawn in cells <sup>decision · css · p0</sup>
-- [ ] [`0208`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0208-hide-every-native-scrollbar-show-position-in-cells-and-check-it-after-every-story.md) Hide every native scrollbar, show position in cells, and check it after every story <sup>bug · css · p0</sup>
 - [ ] [`0210`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0210-make-the-continuity-stories-readable.md) Make the continuity stories readable <sup>chore · tooling · p1</sup>
 - [ ] [`0211`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0211-list-rows-stay-on-the-grid-at-dense-after-keyboard-navigation.md) List rows stay on the grid at dense after keyboard navigation <sup>bug · components · p2</sup>
 - [ ] [`0212`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0212-round-the-cell-to-the-engine-s-layout-unit.md) Round the cell to the engine's layout unit <sup>bug · grid · p1</sup>
@@ -181,6 +180,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
 - [ ] [`0164`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0164-make-hover-and-pointer-stories-reliable-in-ci.md) Make hover and pointer stories reliable in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0203`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0203-check-the-field-contract-from-the-testing-package.md) Check the field contract from the testing package <sup>feature · tooling · p1</sup>
+- [ ] [`0208`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0208-hide-every-native-scrollbar-show-position-in-cells-and-check-it-after-every-story.md) Hide every native scrollbar, show position in cells, and check it after every story <sup>bug · css · p0</sup>
 
 ### done
 

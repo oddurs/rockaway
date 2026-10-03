@@ -13,6 +13,7 @@
 @import "./screen.css";
 @import "./shapes.css";
 @import "./focus.css";
+@import "./scroll.css";
 @import "./motion.css";
 @import "./forced-colors.css";
 @import "./container.css";

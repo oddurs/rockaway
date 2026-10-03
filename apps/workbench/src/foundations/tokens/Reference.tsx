@@ -53,8 +53,9 @@ function Table({
 }) {
   return (
     // A scrollable region needs keyboard access: tab to it, then arrow sideways.
+    // It hides the browser's scrollbar, as every scrolling region does (0207).
     // biome-ignore lint/a11y/noNoninteractiveTabindex: axe requires it (scrollable-region-focusable)
-    <section aria-label={caption} tabIndex={0} style={{ overflowX: 'auto' }}>
+    <section aria-label={caption} tabIndex={0} className="rk-scroll" style={{ overflowX: 'auto' }}>
       <table style={{ borderCollapse: 'collapse', width: '100%', ...text('body') }}>
         <caption
           style={{
