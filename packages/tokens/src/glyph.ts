@@ -208,6 +208,80 @@ export const spinnerFrames: Readonly<Record<Repertoire, readonly string[]>> = {
   ascii: ['|', '/', '-', '\\'],
 };
 
+export const keyNames = [
+  'ctrl',
+  'alt',
+  'shift',
+  'meta',
+  'enter',
+  'tab',
+  'space',
+  'backspace',
+  'delete',
+  'up',
+  'down',
+  'left',
+  'right',
+  'pageup',
+  'pagedown',
+  'home',
+  'end',
+] as const;
+export type KeyName = (typeof keyNames)[number];
+
+/**
+ * Key legends: what a keycap says (cairn 0132). An Apple keyboard prints
+ * symbols, and KeyHint stacks them, `⌘⇧K`; the arrows are symbols on every
+ * keyboard. A theme that cannot be trusted with `▸` cannot be trusted with `⌘`
+ * either, so an ASCII theme spells them out, and KeyHint separates legends
+ * that are words, `Cmd+Shift+K`.
+ *
+ * The one exception to "every glyph is one cell": a legend is a word in ASCII,
+ * because no single ASCII character means Command. Enter is `⏎` (U+23CE), the
+ * return symbol the system's fonts carry, not `↵`, which falls back to another
+ * face in most of them.
+ */
+export const keyLegends: Readonly<Record<Repertoire, Readonly<Record<KeyName, string>>>> = {
+  unicode: {
+    ctrl: '⌃',
+    alt: '⌥',
+    shift: '⇧',
+    meta: '⌘',
+    enter: '⏎',
+    tab: '⇥',
+    space: '␣',
+    backspace: '⌫',
+    delete: '⌦',
+    up: '↑',
+    down: '↓',
+    left: '←',
+    right: '→',
+    pageup: '⇞',
+    pagedown: '⇟',
+    home: '↖',
+    end: '↘',
+  },
+  ascii: {
+    ctrl: 'Ctrl',
+    alt: 'Opt',
+    shift: 'Shift',
+    meta: 'Cmd',
+    enter: 'Enter',
+    tab: 'Tab',
+    space: 'Space',
+    backspace: 'Bksp',
+    delete: 'Del',
+    up: 'Up',
+    down: 'Down',
+    left: 'Left',
+    right: 'Right',
+    pageup: 'PgUp',
+    pagedown: 'PgDn',
+    home: 'Home',
+    end: 'End',
+  },
+};
+
 export const delimiterNames = ['control'] as const;
 export type DelimiterName = (typeof delimiterNames)[number];
 export type Delimiters = readonly [open: string, close: string];
@@ -233,6 +307,8 @@ export interface Glyphs {
   readonly bar: readonly string[];
   readonly spinner: readonly string[];
   readonly delimiter: Readonly<Record<DelimiterName, Delimiters>>;
+  /** Key legends. A word in ASCII, so the one group whose entries may be wider than a cell. */
+  readonly key: Readonly<Record<KeyName, string>>;
 }
 
 /** The glyphs a theme draws with. Its CSS tokens are written from this too. */
@@ -246,6 +322,7 @@ export function glyphsFor(theme: { readonly borderSet: BorderSetName }): Glyphs 
     bar: bars[r],
     spinner: spinnerFrames[r],
     delimiter: delimiters,
+    key: keyLegends[r],
   };
 }
 
@@ -344,6 +421,11 @@ export function glyphs(set: BorderSetName): Group {
           { open: text(open), close: text(close) },
         ]),
       ),
+      key: {
+        $description:
+          'Key legends, for KeyHint (cairn 0132). Symbols in Unicode; words in ASCII, the only glyphs wider than a cell.',
+        ...table(resolved.key),
+      },
     },
   };
 }

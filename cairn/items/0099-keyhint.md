@@ -19,7 +19,49 @@ effort: s
 ## Purpose
 
 `^S save` — the footer hint and the inline shortcut, which is how a TUI teaches
-itself.
+itself. It describes a chord; it never binds one. The application listens for
+the keys, and a control that has a shortcut takes `keys` itself (Button).
+
+## Anatomy
+
+`<KeyHint keys platform notation decorative>action</KeyHint>`: an inline-flex
+span, the chord and the action one cell apart, on one row.
+
+- **keys** (`.rk-keyhint-keys`): the chord in a `<kbd>`. What you see is
+  `aria-hidden`; the spoken form ("Command S") sits beside it, visually hidden.
+- **label** (`.rk-keyhint-label`): the action, when there is one.
+
+One spec gives three strings, from pure functions: `formatKeys` (what you see:
+`⌘S` on an Apple keyboard, `Ctrl+S` elsewhere, `^S` in terminal notation),
+`spokenKeys` (what a reader hears) and `keyShortcut` (the value for
+`aria-keyshortcuts`). The key legends are the theme's `glyph.key.*` (0132):
+symbols in Unicode, with `⏎` for Enter because the site's font has no `↵`;
+words in an ASCII theme, where an Apple chord is spelled out (`Cmd+Shift+K`)
+rather than stacked, and terminal shift is `S-`.
+
+The keyboard comes from `usePlatform()`, shared with Button, so a chord is
+drawn and announced for the same keyboard. It prefers
+`navigator.userAgentData.platform`, falls back to the user agent, and is an
+external store whose server snapshot is `other`: the server and the hydrating
+render agree, and the reader's keyboard follows on the next render.
+
+## States
+
+None of its own. A hint is text, not a control: no `data-*` state, nothing to
+focus, and nothing that changes a cell. Inside a Button it takes the button's
+colours, so the button's states (pressed reverse, disabled dim) carry it.
+
+## Tokens
+
+`fg.accent` for the chord and `fg.muted` for the action; `glyph.key.*` for the
+legends; the cell of air between them is `--rk-x-1`. Inside a control both
+inherit the control's colour.
+
+## Accessibility
+
+Plain text in the reading order: a reader hears "Command S save", never the
+glyphs. `decorative` hides the whole hint for use inside a control, which
+carries `aria-keyshortcuts` instead. Not focusable, so Tab passes it by.
 
 ## Acceptance criteria
 

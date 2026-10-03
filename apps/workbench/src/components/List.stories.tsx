@@ -12,6 +12,7 @@ import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { settled } from '../settled.ts';
 
 const FILES = [
   'src/index.ts',
@@ -121,12 +122,6 @@ function rowsOf(
     disabled: state.disabled?.includes(label) ?? false,
     cursor: state.cursor === label,
   }));
-}
-
-/** Wait for fonts and two frames, so every screen has measured its last cell. */
-async function settled(): Promise<void> {
-  await document.fonts.ready;
-  for (let i = 0; i < 2; i++) await new Promise((done) => requestAnimationFrame(done));
 }
 
 /** The cell a screen measured, read off it. */

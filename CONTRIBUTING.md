@@ -51,6 +51,7 @@ the decision first, in its own pull request, with the reasoning.
 - **Style from state.** Component CSS keys off class names and the `data-*` attributes React Aria emits. It never depends on a React API.
 - **Stay in the layers.** All CSS lives inside `@layer rk.*`.
 - **Every state has a story, and every component has a text snapshot.** Stories are the tests; the snapshot is documentation that cannot drift.
+- **Let the page settle before you point at it.** A play function that hovers, presses with the pointer or compares geometry starts with `await settled()` from `apps/workbench/src/settled.ts`. Without it, the font and the screen's re-measure move the layout under the test in CI, and Chromium's own pointer events end a hover the moment it starts (cairn 0164).
 - **Keyboard first, touch second, mouse third.** All three work, in that order of certainty.
 - **The browser floor is Baseline 2024.** Newer CSS goes behind `@supports` with a working fallback.
 

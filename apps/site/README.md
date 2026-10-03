@@ -49,8 +49,14 @@ The pipeline (`src/lib/markdown.ts`) only says what Markdown cannot:
 - box drawing and blocks become cells the cell draws (0116), so a diagram in
   a code block joins up at every density and still copies as text.
 
-Code is not highlighted yet: that is 0144, in the ANSI 16, with no borrowed
-palette in the meantime.
+Code is highlighted at build time by Shiki (0144), in the ANSI 16: the theme
+in `src/lib/highlight.ts` maps TextMate scopes to the `syntax.*` roles, and
+the page gets a class per role, `rk-syntax-keyword`, which `@rockaway/css`
+colours from the tokens. No colour is written into the page and no
+highlighter ships, so a change of theme or mode recolours code in place.
+
+The content layer caches rendered Markdown and cannot tell when the pipeline
+has changed, so `build` runs `astro build --force`.
 
 ## The base path
 
