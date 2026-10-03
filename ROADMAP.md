@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`####······` 36% · 36 of 101 done · due 2027-01-31
+`####······` 33% · 36 of 110 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -166,6 +166,15 @@ The component contract, proven on a first set of components.
 - [ ] [`0216`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0216-keep-a-focused-tab-in-view-under-manual-activation.md) Keep a focused tab in view under manual activation <sup>bug · components · p2</sup>
 - [ ] [`0217`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0217-scroll-codeblock-vertically-with-a-drawn-scrollbar.md) Scroll CodeBlock vertically with a drawn scrollbar <sup>feature · components · p2</sup>
 - [ ] [`0220`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0220-check-the-page-chrome-for-native-scrollbars-too.md) Check the page chrome for native scrollbars too <sup>chore · tooling · p3</sup>
+- [ ] [`0224`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0224-button-forwards-a-ref.md) Button forwards a ref <sup>bug · components · p2</sup>
+- [ ] [`0225`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0225-bind-button-s-keys-through-the-keymap-when-one-is-present.md) Bind Button's keys through the Keymap when one is present <sup>feature · components · p2</sup>
+- [ ] [`0226`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0226-draw-the-focus-ring-for-controls-whose-focus-is-on-a-hidden-input.md) Draw the focus ring for controls whose focus is on a hidden input <sup>feature · css · p2</sup>
+- [ ] [`0227`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0227-render-painted-cells-through-one-shared-component.md) Render painted cells through one shared component <sup>chore · components · p3</sup>
+- [ ] [`0228`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0228-re-check-cellsin-s-snap-at-the-new-line-boxes.md) Re-check cellsIn's snap at the new line boxes <sup>chore · grid · p2</sup>
+- [ ] [`0229`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0229-loosen-the-continuity-leak-rule-by-the-reach-rule-s-slack.md) Loosen the continuity leak rule by the reach rule's slack <sup>bug · tooling · p2</sup>
+- [ ] [`0230`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0230-clip-checkcontinuity-to-what-a-scroll-region-shows.md) Clip checkContinuity to what a scroll region shows <sup>feature · tooling · p2</sup>
+- [ ] [`0231`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0231-use-the-theme-s-ellipsis-in-the-dom.md) Use the theme's ellipsis in the DOM <sup>feature · components · p3</sup>
+- [ ] [`0232`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0232-render-a-table-header-in-one-pass.md) Render a table header in one pass <sup>chore · components · p3</sup>
 
 ### in progress
 
@@ -300,7 +309,7 @@ Something another project can install and build on.
 
 ## later — Later
 
-`··········` 0% · 0 of 13 done
+`··········` 0% · 0 of 16 done
 
 Worth doing, not yet worth scheduling.
 
@@ -319,4 +328,7 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0221`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0221-wrap-codeblock-lines-in-whole-cells.md) Wrap CodeBlock lines in whole cells <sup>feature · p3</sup>
 - [ ] [`0222`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0222-draw-vertical-tabs-in-the-frame-s-side-edge.md) Draw vertical tabs in the frame's side edge <sup>feature · p3</sup>
 - [ ] [`0223`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0223-zoom-continuity-in-firefox-and-webkit.md) Zoom continuity in Firefox and WebKit <sup>chore · p3</sup>
+- [ ] [`0233`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0233-resize-table-columns-in-whole-cells-and-edit-cells.md) Resize table columns in whole cells, and edit cells <sup>feature · p3</sup>
+- [ ] [`0234`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0234-import-a-terminal-theme-without-forking.md) Import a terminal theme without forking <sup>feature · p3</sup>
+- [ ] [`0235`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0235-file-the-react-aria-entry-focus-issue-upstream.md) File the React Aria entry-focus issue upstream <sup>feature · p3</sup>
 
