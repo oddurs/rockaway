@@ -53,6 +53,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
 const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => ReactElement>> = {
   Badge: (props) => createElement(rockaway.Badge, props, 'passing'),
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
+  CodeBlock: (props) =>
+    createElement(rockaway.CodeBlock, { code: 'let a = 1;', title: 'a.ts', cols: 40, ...props }),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
@@ -402,6 +404,30 @@ describe('the snapshots, as the site draws them', () => {
                    
        [ Publish ] 
                    "
+    `);
+  });
+
+  test('CodeBlock', () => {
+    expect(snapshots(byName('CodeBlock'))).toMatchInlineSnapshot(`
+      "── A titled block
+      ┌ panel.tsx ───────────────────────────── [ Copy ] ┐
+      │ import { Frame } from '@rockaway/react';         │
+      │                                                  │
+      │ export const panel = <Frame title="tokens" />;   │
+      └──────────────────────────────────────────────────┘
+      ── Line numbers
+      ┌───┬ panel.tsx ───────────────────────────── [ Copy ] ┐
+      │ 1 │ import { Frame } from '@rockaway/react';         │
+      │ 2 │                                                  │
+      │ 3 │ export const panel = <Frame title="tokens" />;   │
+      └───┴──────────────────────────────────────────────────┘
+      ── A snapshot
+      ┌ Frame ───────┐
+      │ ┌ a ───────┐ │
+      │ │          │ │
+      │ ├──────────┤ │
+      │ └──────────┘ │
+      └──────────────┘"
     `);
   });
 

@@ -1,0 +1,95 @@
+/*
+ * CodeBlock (cairn 0138).
+ *
+ * The frame, the gutter, the numbers and the title are painted; the code is a
+ * real `<pre><code>` laid over the cells inside them, `CodeBlock` writing
+ * where in cells as custom properties. A line wider than the block scrolls
+ * sideways inside it, and a scroll comes to rest on whole cells: the ruler
+ * under the code is one snap point a cell.
+ *
+ * Box drawing in code is a cell box the renderer strokes (0116), weighted
+ * like the type beside it, or as hairlines with the rule painter.
+ */
+@layer rk.components {
+  .rk-code-text {
+    position: absolute;
+    box-sizing: border-box;
+    inset-block-start: var(--rk-cell-height);
+    inset-inline-start: calc(var(--rk-code-x) * var(--rk-cell-width));
+    inline-size: calc(var(--rk-code-cols) * var(--rk-cell-width));
+    block-size: calc(var(--rk-code-rows) * var(--rk-cell-height));
+    margin: 0;
+    padding-inline: var(--rk-cell-width);
+    overflow-x: auto;
+    overflow-y: clip;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    font: inherit;
+    white-space: pre;
+    color: var(--rk-fg-default);
+    --rk-stroke-light: calc(var(--rk-stroke-glyph-light) * 1em);
+    --rk-stroke-heavy: calc(var(--rk-stroke-glyph-heavy) * 1em);
+    --rk-stroke-gap: calc(var(--rk-stroke-glyph-gap) * 1em);
+  }
+
+  .rk-code[data-rk-painter="rule"] .rk-code-text {
+    --rk-stroke-light: var(--rk-stroke-rule-light);
+    --rk-stroke-heavy: var(--rk-stroke-rule-heavy);
+    --rk-stroke-gap: var(--rk-stroke-rule-gap);
+  }
+
+  .rk-code-text > code {
+    position: relative;
+    display: block;
+    inline-size: max-content;
+    font: inherit;
+  }
+
+  .rk-code-line {
+    display: block;
+    block-size: var(--rk-cell-height);
+  }
+
+  .rk-code-shape {
+    display: inline-block;
+    inline-size: calc(var(--rk-run, 1) * var(--rk-cell-width));
+    block-size: var(--rk-cell-height);
+    vertical-align: top;
+    print-color-adjust: exact;
+  }
+
+  /* One snap point a cell, laid along the top of the code, taking no room. */
+  .rk-code-ruler {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    display: flex;
+    inline-size: max-content;
+    block-size: 0;
+  }
+
+  .rk-code-ruler > span {
+    flex: none;
+    inline-size: var(--rk-cell-width);
+    scroll-snap-align: start;
+  }
+
+  .rk-code-copy {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: calc(var(--rk-code-copy-x) * var(--rk-cell-width));
+  }
+
+  .rk-code-figure {
+    margin: 0;
+  }
+
+  /* Where a snapshot is, for a reader: an image laid over its cells. */
+  .rk-code-image {
+    position: absolute;
+    inset-block-start: var(--rk-cell-height);
+    inset-inline-start: calc(2 * var(--rk-cell-width));
+    inline-size: calc(var(--rk-code-cols) * var(--rk-cell-width));
+    block-size: calc(var(--rk-code-rows) * var(--rk-cell-height));
+  }
+}
