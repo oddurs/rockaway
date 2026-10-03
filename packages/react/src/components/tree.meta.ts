@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type TreeRow, treeBuffer } from './tree.tsx';
+import { type TreeRow, treeBuffer } from './tree.pure.ts';
 
 const FILES: readonly TreeRow[] = [
   { label: 'src', level: 1, last: [], branch: true, expanded: true },
