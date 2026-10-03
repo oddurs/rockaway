@@ -38,7 +38,7 @@ geometry is checked eight times.
 - [x] A failure names the density and mode it failed at
 - [ ] Every interactive element is at least 24px square at every density, and at least 44px tall at touch (WCAG 2.5.8, and the README's claim)
 - [x] A story can opt out of one cell of the matrix only with a reason, printed in the run
-- [ ] CI time before and after is recorded here
+- [x] CI time before and after is recorded here
 
 ## 2026-10-03
 
@@ -59,3 +59,7 @@ Known failures are declared in .storybook/known.ts (approved by the CTO): each n
 ## 2026-10-03
 
 CI on the PR found one-row targets crowding each other beyond List: nav links at normal (Link Current) and a Button beside a List row (Glyphs, Themes) at normal and dense. Both are what the CTO's density decisions settle, so the normal and dense entries now cover every one-row target (normal-one-row, dense-one-row). A broad entry can go unused in a run of a few files, so the stale reporter fails only a run of the whole workbench and warns in a filtered one.
+
+## 2026-10-03
+
+CI time, same runner type. Before (main, run 37155846386): check job 2m12s, test step 1m24s. After (PR 99, run 37155899316): check job 2m40s, test step 1m53s. The matrix costs about 29s on the test step (+35%) and 28s on the job; the full run used all five known entries and found none stale. Expect the step to grow once the Screen probe lands, since cell-sized screens are then read in every cell instead of reported as stale.
