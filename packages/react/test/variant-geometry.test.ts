@@ -84,10 +84,7 @@ describe('variants and states do not change geometry', () => {
   test('the declared exceptions, each with its reason', () => {
     expect(
       findings.map((finding) => `${finding.where}\n  ${finding.reason}`).join('\n'),
-    ).toMatchInlineSnapshot(`
-        "button.css: .rk-button[data-variant="quiet"] .rk-button-label { padding-inline }
-          quiet has no delimiters, so the cell of air that holds the label off them goes too. A variant that drops its chrome, not one that resizes it; 0131 decides whether it stays a variant."
-      `);
+    ).toMatchInlineSnapshot(`""`);
   });
 });
 

@@ -1,9 +1,12 @@
 /*
  * Button (cairn 0033).
  *
- * One row tall by default, three when it carries a border. Every dimension is
- * a count of cells, so a button is the same shape at every density and reaches
- * a 44px touch target without a coordinate moving.
+ * One row tall, and exactly as wide as its cells: the delimiters, the mark
+ * cell, the label, a cell of air, the delimiter. Every one of them is text the
+ * component writes, so nothing here sets a padding, and no variant or state
+ * can change a button's size (cairn 0131). A row is a cell tall at every
+ * density, which is how touch density reaches a 44px target without a
+ * coordinate moving.
  *
  * State is never only a colour: pressed reverses the video, hover underlines,
  * disabled dims. That is what keeps the control legible in forced colors, in
@@ -19,6 +22,8 @@
 
     display: inline-flex;
     align-items: center;
+    /* The mark cell and the air are spaces, and they are cells. */
+    white-space: pre;
     box-sizing: border-box;
     min-block-size: calc(var(--rk-cell-height) * var(--rk-size-control-md));
     border: none;
@@ -26,11 +31,6 @@
     color: var(--rk-fg-default);
     font: inherit;
     cursor: pointer;
-  }
-
-  /* The label carries one cell of air either side, inside the delimiters. */
-  .rk-button-label {
-    padding-inline: var(--rk-x-1);
   }
 
   .rk-button-end {
@@ -87,19 +87,5 @@
 
     background: var(--rk-bg-danger-solid);
     color: var(--rk-fg-on-danger);
-  }
-
-  /* quiet: a bare label, for a toolbar where the delimiters would be noise. */
-  .rk-button[data-variant="quiet"] .rk-button-label {
-    /* geometry exception: quiet has no delimiters, so the cell of air that
-     * holds the label off them goes too. A variant that drops its chrome, not
-     * one that resizes it; 0131 decides whether it stays a variant. */
-    padding-inline: 0;
-  }
-
-  /* lg: three rows, tall enough for a frame to be drawn around the label. */
-  .rk-button[data-size="lg"] {
-    min-block-size: calc(var(--rk-cell-height) * var(--rk-size-control-lg));
-    padding-inline: var(--rk-x-1);
   }
 }

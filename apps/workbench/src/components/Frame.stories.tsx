@@ -299,7 +299,7 @@ export const Keyboard: Story = {
       <Frame title="publish" cols={36} rows={4}>
         <div style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
           <Button>Publish</Button>
-          <Button variant="quiet">Cancel</Button>
+          <Button delimiters="none">Cancel</Button>
         </div>
         <p style={{ margin: 0 }}>
           see <Link href="#frame-guide">the guide</Link>
