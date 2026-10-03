@@ -22,15 +22,13 @@ import {
   borderSets,
   type Draft,
   drawHLine,
-  drawText,
+  drawLabel,
   drawVLine,
   type Edges,
   type Rect,
   rect,
   type Size,
   type Style,
-  stringWidth,
-  truncate,
 } from '@rockaway/grid';
 import { type Glyphs, marks } from '@rockaway/tokens';
 import { type ReactNode, useMemo } from 'react';
@@ -109,31 +107,20 @@ export function drawRule(
   if (horizontal && options.label !== undefined && options.label !== '') {
     // An open end is a half stroke. A label set straight after it would leave
     // that half cell stranded, `╶ files`, so on an open rule the label keeps a
-    // whole cell of line between it and either end: `╶─ files ──╴`.
-    const room =
-      options.ends === 'joined' ? line : rect(line.x + 1, line.y, Math.max(0, line.width - 2), 1);
-    // A rule drawn in ASCII truncates in ASCII, whatever the theme.
-    const ellipsis = set.ascii ? marks.ascii.ellipsis : glyphs.mark.ellipsis;
-    drawLabel(draft, room, options, ellipsis);
+    // whole cell of line between it and either end: `╶─ files ──╴`. Within that,
+    // it owns its cells and stops short of any rule crossing this one,
+    // whichever was drawn first (0175).
+    const inset = options.ends === 'joined' ? 0 : 1;
+    const room = rect(line.x + inset, line.y, Math.max(0, line.width - 2 * inset), 1);
+    drawLabel(draft, room, options.label, {
+      set,
+      style: TEXT,
+      lineStyle: LINE,
+      // A rule drawn in ASCII truncates in ASCII, whatever the theme.
+      ellipsis: set.ascii ? marks.ascii.ellipsis : glyphs.mark.ellipsis,
+      ...(options.labelAlign === undefined ? {} : { align: options.labelAlign }),
+    });
   }
-}
-
-function drawLabel(draft: Draft, line: Rect, options: DividerOptions, ellipsis: string): void {
-  const room = line.width - 4;
-  if (room <= 0) return;
-  const text = ` ${truncate(options.label ?? '', room - 2, ellipsis)} `;
-  const width = stringWidth(text);
-  const align = options.labelAlign ?? 'start';
-  const offset =
-    align === 'start'
-      ? 1
-      : align === 'end'
-        ? Math.max(1, line.width - 1 - width)
-        : Math.max(1, Math.floor((line.width - width) / 2));
-  drawText(draft, { x: line.x + offset, y: line.y }, text, {
-    style: TEXT,
-    maxWidth: line.width - 2,
-  });
 }
 
 /** The rule on its own, as a buffer: what the component draws and the tests read. */

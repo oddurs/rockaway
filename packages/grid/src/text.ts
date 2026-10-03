@@ -154,7 +154,8 @@ export function truncate(text: string, width: number, ellipsis = '…'): string 
   if (width <= 0) return '';
   if (stringWidth(text) <= width) return text;
   const mark = stringWidth(ellipsis) <= width ? ellipsis : '';
-  return sliceWidth(text, width - stringWidth(mark)) + mark;
+  // A space before the ellipsis reads as a gap, not as text that goes on.
+  return sliceWidth(text, width - stringWidth(mark)).trimEnd() + mark;
 }
 
 /**

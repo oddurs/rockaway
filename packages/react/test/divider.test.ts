@@ -73,7 +73,7 @@ describe('dividerBuffer', () => {
       "╶─ files ──────────╴
       ╶───── files ──────╴
       ╶────────── files ─╴
-      ╶─ far t… ───╴"
+      ╶─ far to… ──╴"
     `);
   });
 

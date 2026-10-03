@@ -454,7 +454,7 @@ describe('the snapshots, as the site draws them', () => {
       ┏ heavy ━━━┓
       ┃          ┃
       ┗━━━━━━━━━━┛
-      ╭ round… ──╮
+      ╭ rounded ─╮
       │          │
       ╰──────────╯
       + ascii ---+
@@ -464,7 +464,7 @@ describe('the snapshots, as the site draws them', () => {
       ┌ start ───────────┐
       ┌───── center ─────┐
       ┌───────────── end ┐
-      ┌ a title far t… ──┐
+      ┌ a title far to… ─┐
       ── Dividers in a lighter set
       ┏ heavy ━━━━━┓
       ┃            ┃
@@ -477,7 +477,7 @@ describe('the snapshots, as the site draws them', () => {
       ║            ║
       ╚════════════╝
       ── Under an ASCII theme
-      + a title f~ --+
+      + a title fa~ -+
       |              |
       +--------------+
       |              |

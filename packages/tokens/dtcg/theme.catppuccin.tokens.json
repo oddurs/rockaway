@@ -1,0 +1,1118 @@
+{
+  "$description": "Catppuccin (cairn 0052). Imported from https://github.com/catppuccin/ghostty under MIT (Copyright (c) 2021 Catppuccin). Fitted to the contrast gate: light foreground: #4c4f69 → #3b3d56 (for fg.default on bg.surface); light muted: #797c91 → #575a6d (for fg.muted on bg.page); light blue: #1e66f5 → #0b55e4 (for fg.accent on bg.page); light bright-blue: #1e66f5 → #1b63f2 (for fg.on-accent on bg.accent.solid-hover); light cyan: #179299 → #006f76 (for fg.info on bg.page); light bright-cyan: #179299 → #007a81 (for fg.on-info on bg.info.solid-hover); light green: #40a02b → #017500 (for fg.success on bg.page); light bright-green: #40a02b → #187f00 (for fg.on-success on bg.success.solid-hover); light yellow: #df8e1d → #9a5600 (for fg.warning on bg.page); light bright-yellow: #df8e1d → #a35c00 (for fg.on-warning on bg.warning.solid-hover); light red: #d20f39 → #c70030 (for fg.danger on bg.surface); light border: #9ea6b4 → #79808e (for border.default on bg.page); light border-strong: #858e9f → #767f90 (for border.control on bg.page); dark muted: #929ab4 → #9ba3bd (for fg.muted on bg.hover); dark border: #686980 → #74758c (for border.default on bg.surface).",
+  "$extensions": {
+    "dev.rockaway": {
+      "kind": "imported",
+      "modes": [
+        "light",
+        "dark"
+      ],
+      "variants": {
+        "light": "Latte",
+        "dark": "Mocha"
+      }
+    }
+  },
+  "palette": {
+    "$type": "color",
+    "$description": "Raw colours, both modes. Read through `ansi.*`, which the mode points here.",
+    "light": {
+      "$description": "Catppuccin, light: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
+      "black": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.492,
+            0.0385,
+            279.3
+          ]
+        }
+      },
+      "red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.52,
+            0.2155,
+            19.8
+          ]
+        }
+      },
+      "green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.485,
+            0.1772,
+            140.4
+          ]
+        }
+      },
+      "yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.519,
+            0.1494,
+            67.8
+          ]
+        }
+      },
+      "blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.509,
+            0.2255,
+            262.1
+          ]
+        }
+      },
+      "magenta": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.726,
+            0.1739,
+            338.4
+          ]
+        }
+      },
+      "cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.487,
+            0.0981,
+            201.1
+          ]
+        }
+      },
+      "white": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.758,
+            0.0205,
+            273.2
+          ]
+        }
+      },
+      "bright-black": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.547,
+            0.0343,
+            279.1
+          ]
+        }
+      },
+      "bright-red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.55,
+            0.2155,
+            19.8
+          ]
+        }
+      },
+      "bright-green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.52,
+            0.1772,
+            140.4
+          ]
+        }
+      },
+      "bright-yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.544,
+            0.1494,
+            67.8
+          ]
+        }
+      },
+      "bright-blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.549,
+            0.2255,
+            262.1
+          ]
+        }
+      },
+      "bright-magenta": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.726,
+            0.1739,
+            338.4
+          ]
+        }
+      },
+      "bright-cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.522,
+            0.0981,
+            201.1
+          ]
+        }
+      },
+      "bright-white": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.808,
+            0.0174,
+            271.2
+          ]
+        }
+      },
+      "background": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.958,
+            0.0058,
+            264.5
+          ]
+        }
+      },
+      "surface": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.932,
+            0.0077,
+            264.5
+          ]
+        }
+      },
+      "subtle": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.911,
+            0.0091,
+            264.5
+          ]
+        }
+      },
+      "hover": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.89,
+            0.0106,
+            264.5
+          ]
+        }
+      },
+      "active": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.869,
+            0.0121,
+            264.5
+          ]
+        }
+      },
+      "foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.37,
+            0.043,
+            279.3
+          ]
+        }
+      },
+      "muted": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.472,
+            0.0318,
+            279.3
+          ]
+        }
+      },
+      "faint": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.723,
+            0.0225,
+            279.3
+          ]
+        }
+      },
+      "border-subtle": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.906,
+            0.0095,
+            264.5
+          ]
+        }
+      },
+      "border": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.598,
+            0.0225,
+            264.5
+          ]
+        }
+      },
+      "border-strong": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.594,
+            0.0281,
+            264.5
+          ]
+        }
+      },
+      "cursor": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.714,
+            0.1045,
+            33.1
+          ]
+        }
+      },
+      "selection": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.889,
+            0.0098,
+            273.3
+          ]
+        }
+      },
+      "tint-blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.902,
+            0.0366,
+            264.5
+          ]
+        }
+      },
+      "tint-cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.908,
+            0.0187,
+            264.5
+          ]
+        }
+      },
+      "tint-green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.911,
+            0.0298,
+            264.5
+          ]
+        }
+      },
+      "tint-yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.924,
+            0.0259,
+            264.5
+          ]
+        }
+      },
+      "tint-red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.901,
+            0.0352,
+            264.5
+          ]
+        }
+      }
+    },
+    "dark": {
+      "$description": "Catppuccin, dark: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
+      "black": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.404,
+            0.032,
+            280.2
+          ]
+        }
+      },
+      "red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.756,
+            0.1297,
+            2.8
+          ]
+        }
+      },
+      "green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.858,
+            0.1092,
+            142.7
+          ]
+        }
+      },
+      "yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.919,
+            0.0704,
+            86.5
+          ]
+        }
+      },
+      "blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.766,
+            0.1113,
+            259.9
+          ]
+        }
+      },
+      "magenta": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.87,
+            0.0752,
+            336.3
+          ]
+        }
+      },
+      "cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.858,
+            0.0792,
+            182.7
+          ]
+        }
+      },
+      "white": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.751,
+            0.0396,
+            273.9
+          ]
+        }
+      },
+      "bright-black": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.477,
+            0.034,
+            278.6
+          ]
+        }
+      },
+      "bright-red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.756,
+            0.1297,
+            2.8
+          ]
+        }
+      },
+      "bright-green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.858,
+            0.1092,
+            142.7
+          ]
+        }
+      },
+      "bright-yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.919,
+            0.0704,
+            86.5
+          ]
+        }
+      },
+      "bright-blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.766,
+            0.1113,
+            259.9
+          ]
+        }
+      },
+      "bright-magenta": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.87,
+            0.0752,
+            336.3
+          ]
+        }
+      },
+      "bright-cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.858,
+            0.0792,
+            182.7
+          ]
+        }
+      },
+      "bright-white": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.817,
+            0.0403,
+            272.9
+          ]
+        }
+      },
+      "background": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.243,
+            0.0304,
+            283.9
+          ]
+        }
+      },
+      "surface": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.275,
+            0.031,
+            283.9
+          ]
+        }
+      },
+      "subtle": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.3,
+            0.0315,
+            283.9
+          ]
+        }
+      },
+      "hover": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.326,
+            0.032,
+            283.9
+          ]
+        }
+      },
+      "active": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.351,
+            0.0325,
+            283.9
+          ]
+        }
+      },
+      "foreground": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.879,
+            0.0426,
+            272.3
+          ]
+        }
+      },
+      "muted": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.718,
+            0.0389,
+            272.3
+          ]
+        }
+      },
+      "faint": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.529,
+            0.0359,
+            272.3
+          ]
+        }
+      },
+      "border-subtle": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.307,
+            0.0316,
+            283.9
+          ]
+        }
+      },
+      "border": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.569,
+            0.0359,
+            283.9
+          ]
+        }
+      },
+      "border-strong": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.625,
+            0.0377,
+            283.9
+          ]
+        }
+      },
+      "cursor": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.923,
+            0.0238,
+            30.5
+          ]
+        }
+      },
+      "selection": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.343,
+            0.0316,
+            279.6
+          ]
+        }
+      },
+      "tint-blue": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.316,
+            0.0417,
+            283.9
+          ]
+        }
+      },
+      "tint-cyan": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.329,
+            0.0372,
+            283.9
+          ]
+        }
+      },
+      "tint-green": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.329,
+            0.0414,
+            283.9
+          ]
+        }
+      },
+      "tint-yellow": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.338,
+            0.036,
+            283.9
+          ]
+        }
+      },
+      "tint-red": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.315,
+            0.0443,
+            283.9
+          ]
+        }
+      }
+    }
+  },
+  "font": {
+    "$description": "Font primitives (reference tier). Read through the text styles, not directly.",
+    "family": {
+      "$type": "fontFamily",
+      "mono": {
+        "$value": [
+          "ui-monospace",
+          "SFMono-Regular",
+          "SF Mono",
+          "Menlo",
+          "Consolas",
+          "Liberation Mono",
+          "monospace"
+        ]
+      },
+      "display": {
+        "$value": [
+          "ui-monospace",
+          "SFMono-Regular",
+          "SF Mono",
+          "Menlo",
+          "Consolas",
+          "Liberation Mono",
+          "monospace"
+        ]
+      }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": {
+        "$value": 400
+      },
+      "medium": {
+        "$value": 500
+      },
+      "semibold": {
+        "$value": 600
+      },
+      "bold": {
+        "$value": 700
+      }
+    }
+  },
+  "glyph": {
+    "$type": "fontFamily",
+    "$description": "The characters chrome is drawn with (cairn 0091, 0119). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.",
+    "border": {
+      "$description": "The theme draws with the single set; the others are here to be switched to.",
+      "single": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "┌"
+        },
+        "top-right": {
+          "$value": "┐"
+        },
+        "bottom-left": {
+          "$value": "└"
+        },
+        "bottom-right": {
+          "$value": "┘"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      },
+      "double": {
+        "horizontal": {
+          "$value": "═"
+        },
+        "vertical": {
+          "$value": "║"
+        },
+        "top-left": {
+          "$value": "╔"
+        },
+        "top-right": {
+          "$value": "╗"
+        },
+        "bottom-left": {
+          "$value": "╚"
+        },
+        "bottom-right": {
+          "$value": "╝"
+        },
+        "tee-left": {
+          "$value": "╣"
+        },
+        "tee-right": {
+          "$value": "╠"
+        },
+        "tee-up": {
+          "$value": "╩"
+        },
+        "tee-down": {
+          "$value": "╦"
+        },
+        "cross": {
+          "$value": "╬"
+        }
+      },
+      "heavy": {
+        "horizontal": {
+          "$value": "━"
+        },
+        "vertical": {
+          "$value": "┃"
+        },
+        "top-left": {
+          "$value": "┏"
+        },
+        "top-right": {
+          "$value": "┓"
+        },
+        "bottom-left": {
+          "$value": "┗"
+        },
+        "bottom-right": {
+          "$value": "┛"
+        },
+        "tee-left": {
+          "$value": "┫"
+        },
+        "tee-right": {
+          "$value": "┣"
+        },
+        "tee-up": {
+          "$value": "┻"
+        },
+        "tee-down": {
+          "$value": "┳"
+        },
+        "cross": {
+          "$value": "╋"
+        }
+      },
+      "rounded": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "╭"
+        },
+        "top-right": {
+          "$value": "╮"
+        },
+        "bottom-left": {
+          "$value": "╰"
+        },
+        "bottom-right": {
+          "$value": "╯"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      },
+      "ascii": {
+        "horizontal": {
+          "$value": "-"
+        },
+        "vertical": {
+          "$value": "|"
+        },
+        "top-left": {
+          "$value": "+"
+        },
+        "top-right": {
+          "$value": "+"
+        },
+        "bottom-left": {
+          "$value": "+"
+        },
+        "bottom-right": {
+          "$value": "+"
+        },
+        "tee-left": {
+          "$value": "+"
+        },
+        "tee-right": {
+          "$value": "+"
+        },
+        "tee-up": {
+          "$value": "+"
+        },
+        "tee-down": {
+          "$value": "+"
+        },
+        "cross": {
+          "$value": "+"
+        }
+      },
+      "current": {
+        "horizontal": {
+          "$value": "─"
+        },
+        "vertical": {
+          "$value": "│"
+        },
+        "top-left": {
+          "$value": "┌"
+        },
+        "top-right": {
+          "$value": "┐"
+        },
+        "bottom-left": {
+          "$value": "└"
+        },
+        "bottom-right": {
+          "$value": "┘"
+        },
+        "tee-left": {
+          "$value": "┤"
+        },
+        "tee-right": {
+          "$value": "├"
+        },
+        "tee-up": {
+          "$value": "┴"
+        },
+        "tee-down": {
+          "$value": "┬"
+        },
+        "cross": {
+          "$value": "┼"
+        }
+      }
+    },
+    "mark": {
+      "check": {
+        "$value": "✓"
+      },
+      "cross": {
+        "$value": "✗"
+      },
+      "bullet": {
+        "$value": "·"
+      },
+      "cursor": {
+        "$value": "▸"
+      },
+      "expanded": {
+        "$value": "▾"
+      },
+      "collapsed": {
+        "$value": "▸"
+      },
+      "ellipsis": {
+        "$value": "…"
+      },
+      "dash": {
+        "$value": "–"
+      },
+      "radio": {
+        "$value": "●"
+      },
+      "radio-empty": {
+        "$value": "○"
+      },
+      "blank": {
+        "$value": " "
+      },
+      "switch-thumb": {
+        "$value": "●"
+      },
+      "switch-track": {
+        "$value": "─"
+      },
+      "sort-ascending": {
+        "$value": "▴"
+      },
+      "sort-descending": {
+        "$value": "▾"
+      },
+      "overflow-start": {
+        "$value": "‹"
+      },
+      "overflow-end": {
+        "$value": "›"
+      },
+      "required": {
+        "$value": "*"
+      },
+      "danger": {
+        "$value": "!"
+      },
+      "external": {
+        "$value": "↗"
+      }
+    },
+    "block": {
+      "full": {
+        "$value": "█"
+      },
+      "dark": {
+        "$value": "▓"
+      },
+      "medium": {
+        "$value": "▒"
+      },
+      "light": {
+        "$value": "░"
+      },
+      "caret": {
+        "$value": "▏"
+      }
+    },
+    "bar": {
+      "1": {
+        "$value": "▁"
+      },
+      "2": {
+        "$value": "▂"
+      },
+      "3": {
+        "$value": "▃"
+      },
+      "4": {
+        "$value": "▄"
+      },
+      "5": {
+        "$value": "▅"
+      },
+      "6": {
+        "$value": "▆"
+      },
+      "7": {
+        "$value": "▇"
+      },
+      "8": {
+        "$value": "█"
+      }
+    },
+    "spinner": {
+      "1": {
+        "$value": "⠋"
+      },
+      "2": {
+        "$value": "⠙"
+      },
+      "3": {
+        "$value": "⠹"
+      },
+      "4": {
+        "$value": "⠸"
+      },
+      "5": {
+        "$value": "⠼"
+      },
+      "6": {
+        "$value": "⠴"
+      },
+      "7": {
+        "$value": "⠦"
+      },
+      "8": {
+        "$value": "⠧"
+      },
+      "9": {
+        "$value": "⠇"
+      },
+      "10": {
+        "$value": "⠏"
+      }
+    },
+    "delimiter": {
+      "control": {
+        "open": {
+          "$value": "["
+        },
+        "close": {
+          "$value": "]"
+        }
+      }
+    }
+  },
+  "conformance": {
+    "$type": "fontFamily",
+    "$description": "How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it.",
+    "$value": "standard"
+  }
+}

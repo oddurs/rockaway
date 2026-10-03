@@ -67,6 +67,7 @@ function slot(path: string): PaletteSlot {
 }
 
 const STEP = 0.005;
+const clampL = (l: number): number => Math.min(1, Math.max(0, l));
 
 /**
  * Fit a palette for one mode. Returns the palette unchanged, with no
@@ -104,6 +105,17 @@ export function fitContrast(
     }
     if (failing === 0) break;
     if (pass === 399) throw new Error(`the ${mode} palette could not be fitted to the gate`);
+  }
+
+  // Fitting can bring two edges to the same 3:1 from different starts, and a
+  // control's edge must never end up quieter than the ordinary one (0178).
+  for (let pass = 0; pass < 200; pass++) {
+    const edge = contrast(fitted.border, fitted.background);
+    if (contrast(fitted['border-strong'], fitted.background) > edge) break;
+    const before = fitted['border-strong'];
+    fitted['border-strong'] = round({ ...before, l: clampL(before.l + direction * STEP) });
+    if (!moved.has('border-strong'))
+      moved.set('border-strong', 'border.control past border.default');
   }
 
   const adjustments = [...moved].map(([s, because]) => ({

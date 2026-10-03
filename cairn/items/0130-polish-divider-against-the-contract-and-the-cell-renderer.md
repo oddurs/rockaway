@@ -61,3 +61,7 @@ Colour: the line is border.default (done on polish/frame, since a frame's divide
 ## Result
 
 Divider's line is border.default and its label fg.default. A label on an open rule keeps a cell of line from the half-stroke end (╶─ files ──╴). ASCII rules truncate in ASCII. Every variant is snapshotted and painter-identical, and open ends, joins and labels pass continuity at four densities and 200%.
+
+## 2026-10-03
+
+Brought up to date with main through polish/frame. The label now goes through #82's drawLabel in grid's label.ts. The open-end inset becomes the rect it is given, with style TEXT, lineStyle LINE and the ASCII ellipsis, so a label also gives way to a rule crossing it. Under #82's room rule a short rule's label keeps one more letter: '╶─ far to… ──╴'. The continuity stories' zoom tag moved onto each story, because Storybook cannot read a tag set inside a factory.

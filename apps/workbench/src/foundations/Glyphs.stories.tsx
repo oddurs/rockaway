@@ -1,6 +1,6 @@
 import { Button, Frame, GlyphProvider, List, ListItem } from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
-import { glyphsFor, themeGlyphs, themeNames } from '@rockaway/tokens';
+import { glyphsFor, presetNames, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 
@@ -82,7 +82,7 @@ export const Ascii: Story = {
     const text = screenshot(frame, { legend: false });
     expect(text).toBe(
       [
-        '+ a title too long for it~ --+',
+        '+ a title too long for its~ -+',
         '|  xsrc/index.ts           # |',
         '|   src/glyph.ts           # |',
         '|   src/theme.ts           . |',
@@ -95,12 +95,15 @@ export const Ascii: Story = {
   },
 };
 
-/** Every theme that ships, each drawing with its own border set. */
+/**
+ * Every preset, each drawing with its own border set. An imported terminal
+ * palette brings colours only, so it draws with the default's glyphs (0052).
+ */
 export const Themes: Story = {
   args: { title: 'themes' },
   render: () => (
     <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
-      {themeNames.map((name) => (
+      {presetNames.map((name) => (
         <GlyphProvider key={name} glyphs={themeGlyphs[name]}>
           <Frame title={name} cols={30} rows={3} />
         </GlyphProvider>
@@ -108,7 +111,7 @@ export const Themes: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    for (const name of themeNames) {
+    for (const name of presetNames) {
       const top = canvas.getByRole('group', { name }).querySelector('.rk-row')?.textContent ?? '';
       expect(top.startsWith(themeGlyphs[name].border['top-left']), name).toBe(true);
     }

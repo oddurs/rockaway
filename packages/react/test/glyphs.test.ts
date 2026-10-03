@@ -87,7 +87,7 @@ describe('glyphs from the theme', () => {
       .join('');
     const drawn = [frame, divider, `scrollbar ${scrollbar}`].join('\n');
     expect(drawn).toMatchInlineSnapshot(`
-      "+ a title far t~ --+
+      "+ a title far to~ -+
       |                  |
       +------------------+
       +------------------+

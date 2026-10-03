@@ -1,0 +1,35 @@
+{
+  "title": "Nord",
+  "source": "https://github.com/nordtheme/alacritty",
+  "licence": {
+    "spdx": "MIT",
+    "copyright": "Copyright (c) 2016-present Sven Greb",
+    "file": "nord.LICENSE"
+  },
+  "modes": {
+    "dark": {
+      "colors": [
+        "#3b4252",
+        "#bf616a",
+        "#a3be8c",
+        "#ebcb8b",
+        "#81a1c1",
+        "#b48ead",
+        "#88c0d0",
+        "#e5e9f0",
+        "#4c566a",
+        "#bf616a",
+        "#a3be8c",
+        "#ebcb8b",
+        "#81a1c1",
+        "#b48ead",
+        "#8fbcbb",
+        "#eceff4"
+      ],
+      "background": "#2e3440",
+      "foreground": "#d8dee9",
+      "cursor": "#d8dee9",
+      "selection": "#4c566a"
+    }
+  }
+}

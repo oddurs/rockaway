@@ -73,3 +73,7 @@ States: none of its own. A frame has nothing to operate, so 0118's rows do not a
 ## Result
 
 Frame draws its lines in border.default and its title in fg.default, carried per cell. dividerBorder lets a heavy frame hold light dividers (┠──┨). A frame in ASCII truncates in ASCII. Every variant is snapshotted, painter-identical, and continuous at four densities and 200%. A framed control draws 0118's focus-framed and invalid on the frame by redrawing it heavy in its own colour.
+
+## 2026-10-03
+
+Brought up to date with main after #82, #83 and #77 merged. #82's title rule shows in the snapshots: 'a title fa… ─┐'. The Screen adjustment of minus 1/128 is gone, since #83 keeps the cell the font's true advance. The 40/60/80/120ch story passes without it. The continuity stories' zoom tag had been set inside a factory function, and Storybook reads tags from the source without running it, so the zoom browser was silently skipping them. The tag is now written on each story.
