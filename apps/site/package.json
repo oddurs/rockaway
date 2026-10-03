@@ -7,7 +7,8 @@
     "build": "astro sync && tsc -p tsconfig.json && astro build",
     "preview": "astro preview",
     "test": "vitest run",
-    "font": "node scripts/font.ts"
+    "font": "node scripts/font.ts",
+    "check:links": "node scripts/check-links.ts"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "7.3.1",

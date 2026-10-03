@@ -16,6 +16,7 @@ import path from 'node:path';
 import { frameBuffer } from '@rockaway/react';
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { checkLinks } from '../scripts/check-links.ts';
 
 const site = path.join(import.meta.dirname, '..');
 
@@ -94,6 +95,12 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     await page?.close();
     await new Promise((resolve) => server?.close(resolve));
     if (out) rmSync(out, { recursive: true, force: true });
+  });
+
+  test('every internal link and asset resolves under the base (0146)', () => {
+    const { checked, broken } = checkLinks(out, base);
+    expect(broken).toEqual([]);
+    expect(checked).toBeGreaterThan(4);
   });
 
   test('loads everything from the site itself, under its base, without an error', () => {
