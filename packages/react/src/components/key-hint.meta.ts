@@ -1,7 +1,8 @@
 import { type Glyphs, glyphsFor } from '@rockaway/tokens';
 import { defaultGlyphs } from '../glyphs.tsx';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { formatKeys, type KeyNotation, type Platform } from './key-hint.tsx';
+import { formatKeys } from './key-hint.pure.ts';
+import type { KeyNotation, Platform } from './key-hint.tsx';
 
 const ascii = glyphsFor({ borderSet: 'ascii' });
 

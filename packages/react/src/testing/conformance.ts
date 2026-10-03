@@ -31,6 +31,7 @@
  * character advances, so that half is checked. The line box it sits in belongs
  * to the block that holds it, and that block is checked like any other.
  */
+import { cellOf } from './cell.ts';
 
 /** Strictness is a dial (cairn 0072). */
 export type ConformanceLevel = 'strict' | 'standard' | 'loose';
@@ -253,9 +254,8 @@ export function checkConformance(
       }
     }
 
-    const cellWidth = Number.parseFloat(style?.getPropertyValue('--rk-cell-width') ?? '');
-    const cellHeight = Number.parseFloat(style?.getPropertyValue('--rk-cell-height') ?? '');
-    if (!Number.isFinite(cellWidth) || !Number.isFinite(cellHeight)) continue;
+    const { width: cellWidth, height: cellHeight } = cellOf(screen);
+    if (!(cellWidth > 0) || !(cellHeight > 0)) continue;
 
     const origin = screen.getBoundingClientRect();
     const clipped = new Map<Element, boolean>();

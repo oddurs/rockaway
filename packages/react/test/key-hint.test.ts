@@ -2,13 +2,8 @@ import { glyphsFor } from '@rockaway/tokens';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import {
-  formatKeys,
-  KeyHint,
-  keyShortcut,
-  parseKeys,
-  spokenKeys,
-} from '../src/components/key-hint.tsx';
+import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.pure.ts';
+import { KeyHint } from '../src/components/key-hint.tsx';
 import { detectPlatform } from '../src/platform.ts';
 
 const SPECS = [

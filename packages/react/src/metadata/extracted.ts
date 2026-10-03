@@ -233,7 +233,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-bg-surface",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -485,7 +484,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-bg-surface",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -637,7 +635,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "ReactNode",
         "required": false,
         "description": "What an empty list says, in its first row. `renderEmptyState` replaces it.",
-        "default": "'Nothing here.'"
+        "default": "EMPTY"
       },
       {
         "name": "className",
