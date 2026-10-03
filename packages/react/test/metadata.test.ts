@@ -53,6 +53,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
 const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => ReactElement>> = {
   Badge: (props) => createElement(rockaway.Badge, props, 'passing'),
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
+  Callout: (props) =>
+    createElement(rockaway.Callout, props, createElement('p', null, 'Mind the gap.')),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
   // Both parts of the module: the variant is FieldFrame's, and Fieldset is always a group.
   Fieldset: (props) =>
