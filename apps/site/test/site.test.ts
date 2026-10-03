@@ -174,6 +174,50 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.styled).toBe(0);
   });
 
+  test('sets a Markdown alert as a callout, framed by the cell, with no script', async () => {
+    const reader = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    await reader.goto(`${origin}${base}concept/`);
+    await reader.evaluate(() => document.fonts.ready);
+    const found = await reader.evaluate(() => {
+      const note = document.querySelector<HTMLElement>('article aside.rk-callout-static');
+      const cell = Number.parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.6;
+      const box = (el: Element | null | undefined) => el?.getBoundingClientRect();
+      const [top, , body, , bottom] = note ? [...note.children] : [];
+      const sides = note ? [...note.querySelectorAll('.rk-callout-side')] : [];
+      return {
+        role: note?.getAttribute('role'),
+        label: note?.getAttribute('aria-label'),
+        top: top?.textContent,
+        bottom: bottom?.textContent,
+        hidden: [top, bottom, ...sides].every((el) => el?.getAttribute('aria-hidden') === 'true'),
+        shaped: note?.querySelectorAll('[data-rk-shape]').length,
+        body: body?.textContent?.replace(/\s+/g, ' ').trim(),
+        width: (box(note)?.width ?? 0) / cell,
+        // The sides run the whole height of the content, whatever it wrapped to.
+        sides: sides.map((el) => Math.round(box(el)?.height ?? 0)),
+        content: Math.round(box(body)?.height ?? 0),
+        edges: [Math.round(box(top)?.height ?? 0), Math.round(box(bottom)?.height ?? 0)],
+      };
+    });
+    await reader.close();
+    expect(found.role).toBe('note');
+    expect(found.label).toBe('Note');
+    expect(found.top).toMatch(/^┌ ● Note ─┐$/);
+    expect(found.bottom).toBe('└─┘');
+    expect(found.hidden).toBe(true);
+    // Four corners, two edges across and two down.
+    expect(found.shaped).toBe(8);
+    expect(found.body).toMatch(/^The deal is not .never break the grid.\./);
+    expect(Math.abs(found.width - Math.round(found.width))).toBeLessThan(0.05);
+    expect(found.sides).toEqual([found.content, found.content]);
+    // Each edge is one row, and the content between is whole rows: on a phone
+    // the sentence wraps, and the sides are as tall as it wrapped to.
+    const [row = 0, bottom] = found.edges;
+    expect(bottom).toBe(row);
+    expect(found.content % row).toBe(0);
+    expect(found.content).toBeGreaterThan(row);
+  });
+
   test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
     const reader = await browser.newPage();
     const scripts: string[] = [];

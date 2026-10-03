@@ -259,8 +259,9 @@ The level belongs to the screen, not to a box in it, so a component cannot
 loosen the app it sits in. The workbench runs at `standard`, with a story
 pinned at each level.
 
-The deal is not "never break the grid". The deal is **breaking it quietly is
-what's forbidden** — exceptions become countable instead of accumulating.
+> [!NOTE]
+> The deal is not "never break the grid". The deal is **breaking it quietly is
+> what's forbidden** — exceptions become countable instead of accumulating.
 
 The screen's own box is exempt: the page decides how much room a screen gets,
 and the grid governs what is drawn inside it.
