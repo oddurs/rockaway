@@ -36,6 +36,18 @@ export const printToPdf: BrowserCommand<[html: string]> = async (context, html) 
 };
 
 /**
+ * Ask the page for `prefers-contrast: more`, or give it back (cairn 0065). It
+ * is a media feature of the browser, so a story cannot set it; the page it
+ * runs in can.
+ */
+export const emulateContrast: BrowserCommand<[contrast: 'more' | 'no-preference']> = async (
+  context,
+  contrast,
+) => {
+  await context.page.emulateMedia({ contrast });
+};
+
+/**
  * Known failures in use across the whole run (cairn 0125). Every story's walk
  * reports which entries it put in play and which it used; the reporter in
  * `vitest.config.ts` fails the run on any that was in play and never used.

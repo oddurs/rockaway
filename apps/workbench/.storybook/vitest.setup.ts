@@ -7,6 +7,7 @@ declare module 'vitest/browser' {
   interface BrowserCommands {
     printToPdf: (html: string) => Promise<{ fills: number }>;
     recordKnown: (use: KnownUse) => Promise<void>;
+    emulateContrast: (contrast: 'more' | 'no-preference') => Promise<void>;
   }
 }
 
@@ -24,4 +25,5 @@ setRunner({
   // Each project says what it walks; see `vitest.config.ts`.
   plan: inject('plan'),
   record: (use) => commands.recordKnown(use),
+  contrast: (preference) => commands.emulateContrast(preference),
 });
