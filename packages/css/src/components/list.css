@@ -28,7 +28,10 @@
      * minimum size is its content, and content cannot overflow itself. */
     min-block-size: 0;
     overflow: hidden auto;
-    outline: none;
+    /* No outline of its own: while a row has focus the cursor shows it, and
+     * the list itself takes the focus ring (focus.css) only when it holds
+     * focus with no row under the cursor. React Aria leaves it there when the
+     * row it would have entered on is disabled, or when there are no rows. */
     /* A scrolled list stops on a whole row at every density, however it was
      * scrolled: the wheel, a finger, or the keyboard bringing a row in. */
     scroll-snap-type: block mandatory;

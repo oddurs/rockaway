@@ -35,6 +35,9 @@ const PAINTERS = ['glyph', 'rule'] as const;
 const meta = {
   title: 'Components/List',
   component: List,
+  // The classic-scrollbars browser runs every story here again, with native
+  // scrollbars that take room from their box (0207).
+  tags: ['classic-scrollbars'],
   parameters: { layout: 'centered' },
 } satisfies Meta<typeof List>;
 
@@ -341,7 +344,7 @@ export const Keyboard: Story = {
     const frame = canvas.getByRole('group', { name: 'keyboard' });
     const box = canvas.getByRole('listbox', { name: 'Files' });
     const cursorOn = (): string =>
-      box.querySelector('[data-focused="true"] .rk-list-label')?.textContent ?? '(none)';
+      box.querySelector('[role="option"][data-focused] .rk-list-label')?.textContent ?? '(none)';
     const chosen = (): string[] =>
       [...box.querySelectorAll('[data-selected="true"] .rk-list-label')].map(
         (l) => l.textContent ?? '',
@@ -437,9 +440,55 @@ export const Disabled: Story = {
     );
 
     const cursorOn = (): string =>
-      frame.querySelector('[data-focused="true"] .rk-list-label')?.textContent ?? '(none)';
+      frame.querySelector('[role="option"][data-focused] .rk-list-label')?.textContent ?? '(none)';
     await userEvent.tab();
     await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(cursorOn()).toBe('src/junction.ts'));
+  },
+};
+
+/**
+ * A row that is both selected and disabled (0184). Tabbing in, React Aria
+ * aims at the selected row, cannot give it focus, and leaves focus on the list
+ * itself with no row under the cursor. That focus used to be invisible: the
+ * list drew no outline, so the keyboard was in the list but showed nowhere,
+ * and the first arrow seemed to be swallowed. The list now takes the focus
+ * ring while it holds focus itself, and the first arrow puts the cursor on
+ * the first row, as it does in any list nothing has been entered in yet.
+ */
+export const DisabledAndSelected: Story = {
+  name: 'Disabled and selected',
+  render: () => (
+    <Framed name="selected and disabled" width={20} rows={3}>
+      <Files
+        label="Chosen files"
+        rows={3}
+        files={FILES.slice(0, 3)}
+        disabled={['src/buffer.ts']}
+        selected={['src/buffer.ts']}
+      />
+    </Framed>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const box = canvas.getByRole('listbox', { name: 'Chosen files' });
+    // The row with the cursor, if any: the list carries data-focused too.
+    const cursorOn = (): string =>
+      box.querySelector('[role="option"][data-focused] .rk-list-label')?.textContent ?? '(none)';
+
+    await userEvent.tab();
+    await waitFor(() => expect(box).toHaveFocus());
+    expect(cursorOn()).toBe('(none)');
+    // The focus is on the list, and it shows.
+    expect(box).toHaveAttribute('data-focus-visible', 'true');
+    expect(getComputedStyle(box).outlineStyle).toBe('solid');
+
+    // The first arrow enters the rows; the ring gives way to the cursor.
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
+    expect(getComputedStyle(box).outlineStyle).toBe('none');
+    // And the next steps over the disabled row.
     await userEvent.keyboard('{ArrowDown}');
     await waitFor(() => expect(cursorOn()).toBe('src/junction.ts'));
   },
@@ -474,6 +523,13 @@ export const Empty: Story = {
         trimEnd: false,
       }),
     );
+
+    // With no rows to put the cursor on, the list itself holds focus, and
+    // shows it with the focus ring (0184).
+    const nothing = canvas.getByRole('listbox', { name: 'Nothing' });
+    await userEvent.tab();
+    await waitFor(() => expect(nothing).toHaveFocus());
+    expect(getComputedStyle(nothing).outlineStyle).toBe('solid');
   },
 };
 

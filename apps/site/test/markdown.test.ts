@@ -6,6 +6,7 @@ import {
   rehypeCallouts,
   rehypeCellGlyphs,
   rehypeRepositoryLinks,
+  rehypeScrollable,
   rehypeTableColumns,
 } from '../src/lib/markdown.ts';
 
@@ -29,6 +30,22 @@ describe('fitColumns', () => {
 
   test('keeps the longest words when even they do not fit, and lets the table scroll', () => {
     expect(fitColumns([40, 40], [30, 30], 50)).toEqual([30, 30]);
+  });
+});
+
+describe('rehypeScrollable', () => {
+  test('gives code a tab stop, and wraps a table in a scroller that can mark its edges', () => {
+    const table = el('table', [el('tr', [el('td', [text('a')])])]);
+    const tree = root(el('pre', [el('code', [text('x')])]), el('section', [table]));
+    rehypeScrollable()(tree);
+    expect(tree.children[0]).toMatchObject({ tagName: 'pre', properties: { tabIndex: 0 } });
+    const wrapper = (tree.children[1] as Element).children[0] as Element;
+    expect(wrapper).toMatchObject({
+      tagName: 'div',
+      properties: { className: ['rk-scroll-marks'], tabIndex: 0 },
+    });
+    expect(wrapper.children).toEqual([table]);
+    expect(table.properties).toEqual({});
   });
 });
 
@@ -100,6 +117,16 @@ describe('rehypeRepositoryLinks', () => {
     expect(link('../README.md')).toBe('https://github.com/oddurs/rockaway/blob/main/README.md');
     expect(link('../README.md#packages')).toBe(
       'https://github.com/oddurs/rockaway/blob/main/README.md#packages',
+    );
+  });
+
+  test('sends a link to another document to its page on the site, under the base', () => {
+    const tree = root(el('a', [text('x')], { href: 'getting-started.md#install' }));
+    rehypeRepositoryLinks({ base: '/rockaway/' })(tree, {
+      path: new URL('../../../docs/concept.md', import.meta.url).pathname,
+    });
+    expect((tree.children[0] as Element).properties.href).toBe(
+      '/rockaway/getting-started/#install',
     );
   });
 
