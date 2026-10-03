@@ -275,7 +275,7 @@ export function Cells() {
 
 /** The characters chrome is drawn with (cairn 0091). */
 export function Glyphs() {
-  const all = group(docs.base as Record<string, unknown>, 'glyph');
+  const all = group(docs.theme as Record<string, unknown>, 'glyph');
   const sets = ['single', 'double', 'heavy', 'rounded', 'ascii'];
   const slots = [
     'top-left',

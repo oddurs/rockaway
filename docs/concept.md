@@ -35,6 +35,13 @@ Fallback is by weight, not by name: a `double` junction that has no glyph falls
 back to `heavy`, then to `light`. A border set that cannot express a seam
 degrades instead of printing a hole.
 
+Titles commute too (`0175`). A title, or a label sunk into a rule, is text over
+border cells, and a rule crossing that edge would otherwise take a letter or
+lose its tee depending on which was drawn last. So a label is recorded rather
+than written, and set into its edge when the draw pass closes, once every edge
+is known: it owns its cells, stops short of the first junction in its edge,
+and truncates with the theme's ellipsis — `┌ si… ─┬─────┐`, whichever order.
+
 ## 2. The cell is `1ch` × `1lh`
 
 Across, a cell is the font's advance width. Down, it is the line box, which the
@@ -210,9 +217,11 @@ whole CSS pixels on its own, whatever box it is in:
 - An arc is a gradient, which is not snapped, so it is placed on whole pixels
   itself and aimed at where the straight strokes were *drawn*, not where they
   were asked to be. At a hairline's width the difference is a visible step.
-- The measured cell is rounded to the browser's layout unit (1/64 px). A run of
-  eight cells and eight runs of one would otherwise round differently, and the
-  same column would land in different places on different rows.
+- A run is sized from where it ends to where it starts, each rounded to the
+  browser's layout unit (1/64 px), not as `cells × cell`. A run of eight cells
+  and eight runs of one would otherwise round differently, and the same column
+  would land in different places on different rows. The cell itself stays the
+  font's true advance, which is where text puts its letters.
 
 Worth remembering when adding a painter: **the geometry is right when
 neighbours join without being told they are neighbours**, and only a picture of
@@ -388,11 +397,6 @@ Written down so it is a known limit rather than a later surprise.
   double line meeting a heavy one has no glyph, so the engine draws it one
   weight down (`0079`), and the cell strokes what the character says. Where
   that meets an undemoted neighbour the line steps, just as it does in a font.
-- **The cell is rounded to the layout unit.** So that a run of cells and the
-  same cells one by one land on the same pixels, the measured cell is rounded
-  to 1/64px. A font's advance is not, so a long run of text can sit up to half
-  a pixel off the cell grid by its far end. Nothing joins to text, so nothing
-  breaks; a canvas painter would not have the problem.
 - **Lines need the stylesheet.** Without `@rockaway/css` a shaped cell is an
   ordinary cell with its character in it, drawn by the font: legible, but back
   to meeting by coincidence.

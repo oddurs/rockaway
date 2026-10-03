@@ -96,6 +96,31 @@ export const Dark: Story = {
   play: async ({ canvasElement }) => eachRoleIsItsToken(canvasElement),
 };
 
+/**
+ * Code inside a theme island takes that theme's colours: the syntax roles are
+ * aliases into the palette, so an island re-declares them (0052).
+ */
+export const InATheme: Story = {
+  name: 'In a theme island',
+  play: async ({ canvasElement }) => {
+    const host = canvasElement.querySelector('.rk-prose') as HTMLElement;
+    const keyword = canvasElement.querySelector('.rk-syntax-keyword') as Element;
+    const outside = getComputedStyle(keyword).color;
+    try {
+      host.dataset.rkTheme = 'dracula';
+      const magenta = document.createElement('span');
+      magenta.style.color = 'var(--rk-ansi-magenta)';
+      host.append(magenta);
+      const inside = getComputedStyle(keyword).color;
+      await expect(inside).not.toBe(outside);
+      await expect(inside).toBe(getComputedStyle(magenta).color);
+      magenta.remove();
+    } finally {
+      delete host.dataset.rkTheme;
+    }
+  },
+};
+
 /** A change of mode recolours code at once: the colours are custom properties. */
 export const SwitchingMode: Story = {
   name: 'Switching mode',

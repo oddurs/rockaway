@@ -33,7 +33,7 @@ generator adjusts whatever falls short.
 - [x] The gate measures every p3 override, mapped to what a browser will display, in both modes
 - [x] Every declared pair passes 4.5:1 (or 3:1 for non-text) in sRGB and in p3, with the margin reported
 - [ ] Badge's stories pass axe on a p3 display
-- [ ] 0052's theme contexts go through the same gate
+- [x] 0052's theme contexts go through the same gate
 
 ## 2026-10-03
 

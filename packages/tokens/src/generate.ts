@@ -1,18 +1,25 @@
 /**
- * The theme generator (cairn 0062): five inputs in, DTCG 2025.10 files out.
- * The output is committed and reviewed, so a changed rule is a visible diff.
+ * The theme generator (cairn 0062, 0052): every theme in, DTCG 2025.10 files
+ * out. The output is committed and reviewed, so a changed rule is a visible
+ * diff.
  *
- *   base.tokens.json               font primitives (reference tier)
+ *   base.tokens.json               strokes and attributes: line weights, and how emphasis is drawn
  *   semantic.tokens.json           the semantic tier: colour, motion, focus
- *   palette.{mode}.tokens.json     the palette, one file per `mode` context
+ *   theme.{theme}.tokens.json      a theme: its palette in both modes, its type and glyphs
+ *   mode.{mode}.tokens.json        which half of the palette `ansi.*` reads
  *   density.{density}.tokens.json  the cell, space and control sizes, one per `density` context
  *   rockaway.resolver.json         how they combine
+ *
+ * A theme's palette is raw values under `palette.light.*` and `palette.dark.*`,
+ * and the mode only points `ansi.*` at one half of it. That split is what lets
+ * the CSS make theme and mode independent contexts: a theme island carries
+ * both halves, and the mode is a `color-scheme` the island inherits.
  */
 
-import { ansiSlots, roleSlots } from './ansi.ts';
+import { ansiSlots, type Palette, roleSlots } from './ansi.ts';
 import { breakpoints, controlRows, lineBox, spaceSteps } from './density.ts';
-import { color, type Group, px, type ResolverDocument, type Token } from './dtcg.ts';
-import { describeAdjustment, fittedPalette } from './fit.ts';
+import { alias, color, type Group, px, type ResolverDocument, type Token } from './dtcg.ts';
+import { describeAdjustment } from './fit.ts';
 import { attributes, glyphs, strokes } from './glyph.ts';
 import {
   type Density,
@@ -24,29 +31,14 @@ import {
 } from './inputs.ts';
 import { motion } from './motion.ts';
 import { semanticColors } from './semantic.ts';
+import { type ThemeContext, themeContexts } from './themes.ts';
 import { families, weights } from './type.ts';
 
 export type GeneratedFiles = ReadonlyMap<string, unknown>;
 
 export const resolverFile = 'rockaway.resolver.json';
 
-function base(inputs: ThemeInputs): Group {
-  const f = families[inputs.typePairing];
-  return {
-    font: {
-      $description: 'Font primitives (reference tier). Read through the text styles, not directly.',
-      family: {
-        $type: 'fontFamily',
-        mono: { $value: f.mono },
-        display: { $value: f.display },
-      },
-      weight: {
-        $type: 'fontWeight',
-        ...Object.fromEntries(Object.entries(weights).map(([k, w]) => [k, { $value: w }])),
-      },
-    },
-  };
-}
+const slots = [...ansiSlots, ...roleSlots];
 
 /**
  * How strictly the theme holds the grid (cairn 0072), as a token a page can
@@ -78,18 +70,66 @@ function semantic(): Group {
   };
 }
 
-function palette(inputs: ThemeInputs, mode: Mode): Group {
-  const { palette: colours, adjustments } = fittedPalette(inputs, mode);
-  const slots = [...ansiSlots, ...roleSlots];
-  const fitted =
-    adjustments.length === 0
-      ? ''
-      : ` Fitted to the contrast gate in every view a browser shows it (0163): ${adjustments.map(describeAdjustment).join('; ')}.`;
+function paletteGroup(palette: Palette, mode: Mode, theme: ThemeContext): Group {
+  const pinned = theme.modes.length === 1 && !theme.modes.includes(mode);
+  return {
+    $description: pinned
+      ? `${theme.title} has no ${mode} mode, so this is its ${theme.modes[0]} palette: the theme pins its mode.`
+      : `${theme.title}, ${mode}: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).`,
+    ...Object.fromEntries(slots.map((slot) => [slot, color(palette[slot])])),
+  };
+}
+
+/** One theme context: both halves of its palette, its type, its glyphs. */
+function theme(t: ThemeContext): Group {
+  const f = families[t.inputs.typePairing];
+  const notes = [
+    t.kind === 'imported'
+      ? `Imported from ${t.source} under ${t.licence?.spdx} (${t.licence?.copyright}).`
+      : 'Generated from the theme inputs.',
+    ...(t.adjustments.length === 0
+      ? []
+      : [`Fitted to the contrast gate: ${t.adjustments.map(describeAdjustment).join('; ')}.`]),
+  ];
+  return {
+    $description: `${t.title} (cairn 0052). ${notes.join(' ')}`,
+    $extensions: {
+      'dev.rockaway': {
+        kind: t.kind,
+        modes: t.modes,
+        ...(t.variants === undefined ? {} : { variants: t.variants }),
+      },
+    },
+    palette: {
+      $type: 'color',
+      $description: 'Raw colours, both modes. Read through `ansi.*`, which the mode points here.',
+      light: paletteGroup(t.palettes.light, 'light', t),
+      dark: paletteGroup(t.palettes.dark, 'dark', t),
+    },
+    font: {
+      $description: 'Font primitives (reference tier). Read through the text styles, not directly.',
+      family: {
+        $type: 'fontFamily',
+        mono: { $value: f.mono },
+        display: { $value: f.display },
+      },
+      weight: {
+        $type: 'fontWeight',
+        ...Object.fromEntries(Object.entries(weights).map(([k, w]) => [k, { $value: w }])),
+      },
+    },
+    ...glyphs(t.inputs.borderSet),
+    ...conformance(t.inputs),
+  } as unknown as Group;
+}
+
+/** The mode: which half of the theme's palette `ansi.*` reads. */
+function mode(m: Mode): Group {
   return {
     ansi: {
       $type: 'color',
-      $description: `The palette for ${mode} mode: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).${fitted}`,
-      ...Object.fromEntries(slots.map((slot) => [slot, color(colours[slot])])),
+      $description: `The palette in ${m} mode: the terminal's sixteen, plus the role slots (cairn 0089). Each is the current theme's palette.${m} slot.`,
+      ...Object.fromEntries(slots.map((slot) => [slot, alias(`palette.${m}.${slot}`)])),
     },
   };
 }
@@ -133,19 +173,28 @@ function density(d: Density): Group {
   };
 }
 
-function resolver(): ResolverDocument {
+function resolver(themes: readonly ThemeContext[]): ResolverDocument {
   const ref = ($ref: string) => ({ $ref });
   return {
     $schema: 'https://www.designtokens.org/schemas/2025.10/resolver.json',
     version: '2025.10',
     name: 'rockaway',
     description:
-      'Theme tokens generated from the theme inputs. Mode and density are runtime contexts (cairn 0058).',
+      'Theme tokens generated from every shipped theme. Theme, mode and density are runtime contexts (cairn 0058, 0052).',
     sets: { base: { sources: [ref('base.tokens.json'), ref('semantic.tokens.json')] } },
     modifiers: {
+      theme: {
+        description:
+          'The theme: a palette in both modes, its type and its glyphs. Overrides palette.*, font.* and glyph.* only.',
+        contexts: Object.fromEntries(
+          themes.map((t) => [t.name, [ref(`theme.${t.name}.tokens.json`)]]),
+        ),
+        default: themes[0]?.name ?? 'default',
+      },
       mode: {
-        description: 'Colour mode. Overrides ansi.* only.',
-        contexts: Object.fromEntries(modes.map((m) => [m, [ref(`palette.${m}.tokens.json`)]])),
+        description:
+          'Colour mode. Points ansi.* at one half of the theme palette, and nothing else.',
+        contexts: Object.fromEntries(modes.map((m) => [m, [ref(`mode.${m}.tokens.json`)]])),
         default: defaultContexts.mode,
       },
       density: {
@@ -154,23 +203,24 @@ function resolver(): ResolverDocument {
         default: defaultContexts.density,
       },
     },
-    resolutionOrder: [ref('#/sets/base'), ref('#/modifiers/mode'), ref('#/modifiers/density')],
+    resolutionOrder: [
+      ref('#/sets/base'),
+      ref('#/modifiers/theme'),
+      ref('#/modifiers/mode'),
+      ref('#/modifiers/density'),
+    ],
   };
 }
 
-export function generate(inputs: ThemeInputs): GeneratedFiles {
+/** Every theme's files. The first theme is the default context. */
+export function generate(themes: readonly ThemeContext[] = themeContexts): GeneratedFiles {
   const files = new Map<string, unknown>();
-  files.set('base.tokens.json', {
-    ...base(inputs),
-    ...conformance(inputs),
-    ...glyphs(inputs.borderSet),
-    ...strokes(),
-    ...attributes(),
-  });
+  files.set('base.tokens.json', { ...strokes(), ...attributes() });
   files.set('semantic.tokens.json', semantic());
-  for (const m of modes) files.set(`palette.${m}.tokens.json`, palette(inputs, m));
+  for (const t of themes) files.set(`theme.${t.name}.tokens.json`, theme(t));
+  for (const m of modes) files.set(`mode.${m}.tokens.json`, mode(m));
   for (const d of densities) files.set(`density.${d}.tokens.json`, density(d));
-  files.set(resolverFile, resolver());
+  files.set(resolverFile, resolver(themes));
   return files;
 }
 

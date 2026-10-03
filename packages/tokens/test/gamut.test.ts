@@ -15,59 +15,81 @@ import { checkContrast } from '../src/contrast-check.ts';
 import { fitContrast } from '../src/fit.ts';
 import { generate } from '../src/generate.ts';
 import { defaultTheme } from '../src/inputs.ts';
+import { themeContexts } from '../src/themes.ts';
 
 const root = path.join(import.meta.dirname, '..');
 
-/** Every `--rk-ansi-*` colour the stylesheet declares, by mode and by the gamut its block is for. */
+/**
+ * Every palette colour the stylesheets declare — tokens.css and each theme's
+ * sheet — by theme, mode and the gamut its block is for.
+ */
 async function declared(): Promise<Map<string, Oklch>> {
-  const css = await readFile(path.join(root, 'css/tokens.css'), 'utf8');
+  const sheets = [
+    'css/tokens.css',
+    ...themeContexts.filter((t) => t.name !== 'default').map((t) => `css/themes/${t.name}.css`),
+  ];
   const out = new Map<string, Oklch>();
-  let gamut: Gamut = 'srgb';
-  let mode: string | undefined;
-  for (const line of css.split('\n')) {
-    if (/^@media \(color-gamut: (p3|rec2020)\)/.test(line))
-      gamut = line.includes('p3') ? 'p3' : 'rec2020';
-    else if (/^@layer|^@property|^\/\*/.test(line)) gamut = 'srgb';
-    const selector = /\[data-theme='(light|dark)'\] \{/.exec(line);
-    if (selector) mode = selector[1];
-    else if (/^\s*:root/.test(line)) mode = undefined;
-    const value = /--rk-ansi-([\w-]+): oklch\(([\d.]+)% ([\d.]+) ([\d.]+)\);/.exec(line);
-    if (value && mode) {
-      const [, slot, l, c, h] = value;
-      out.set(`${mode} ${gamut} ${slot}`, { l: Number(l) / 100, c: Number(c), h: Number(h) });
+  for (const sheet of sheets) {
+    const css = await readFile(path.join(root, sheet), 'utf8');
+    let gamut: Gamut = 'srgb';
+    let theme = 'default';
+    for (const line of css.split('\n')) {
+      if (/^@media \(color-gamut: (p3|rec2020)\)/.test(line))
+        gamut = line.includes('p3') ? 'p3' : 'rec2020';
+      else if (/^@layer|^@property|^\/\*/.test(line)) gamut = 'srgb';
+      const island = /\[data-rk-theme='([\w-]+)'\] \{/.exec(line);
+      if (island) theme = island[1] as string;
+      else if (/^\s*:root \{/.test(line)) theme = 'default';
+      const value =
+        /--rk-palette-(light|dark)-([\w-]+): oklch\(([\d.]+)% ([\d.]+) ([\d.]+)\);/.exec(line);
+      if (value) {
+        const [, mode, slot, l, c, h] = value;
+        out.set(`${theme} ${mode} ${gamut} ${slot}`, {
+          l: Number(l) / 100,
+          c: Number(c),
+          h: Number(h),
+        });
+      }
     }
   }
   return out;
 }
 
 describe('the gate measures what the browser is given (0163)', () => {
-  test('the gamut mapping writes, colour for colour, what the stylesheet holds', async () => {
+  test('the gamut mapping writes, colour for colour, what every stylesheet holds', async () => {
     const css = await declared();
-    const files = generate(defaultTheme);
+    const files = generate();
     let compared = 0;
-    for (const mode of ['light', 'dark']) {
-      const ansi = (files.get(`palette.${mode}.tokens.json`) as { ansi: Record<string, unknown> })
-        .ansi;
-      for (const [slot, token] of Object.entries(ansi)) {
-        if (slot.startsWith('$')) continue;
-        const [l, c, h] = (token as { $value: { components: number[] } }).$value.components as [
-          number,
-          number,
-          number,
-        ];
-        for (const gamut of ['srgb', 'p3'] as const) {
-          const written = css.get(`${mode} ${gamut} ${slot}`);
-          if (written === undefined) continue;
-          const ours = asWritten(gamutMap({ l, c, h }, gamut));
-          expect(ours.l, `${mode} ${gamut} ${slot}`).toBeCloseTo(written.l, 4);
-          expect(ours.c, `${mode} ${gamut} ${slot}`).toBeCloseTo(written.c, 4);
-          expect(ours.h, `${mode} ${gamut} ${slot}`).toBeCloseTo(written.h, 1);
-          compared += 1;
+    for (const theme of themeContexts) {
+      const doc = files.get(`theme.${theme.name}.tokens.json`) as {
+        palette: Record<string, Record<string, unknown>>;
+      };
+      for (const mode of ['light', 'dark']) {
+        for (const [slot, token] of Object.entries(doc.palette[mode] ?? {})) {
+          if (slot.startsWith('$')) continue;
+          const [l, c, h] = (token as { $value: { components: number[] } }).$value.components as [
+            number,
+            number,
+            number,
+          ];
+          for (const gamut of ['srgb', 'p3'] as const) {
+            const where = `${theme.name} ${mode} ${gamut} ${slot}`;
+            const written = css.get(where);
+            if (written === undefined) {
+              expect(gamut, `${where} is not in the stylesheet`).toBe('p3');
+              continue;
+            }
+            const ours = asWritten(gamutMap({ l, c, h }, gamut));
+            expect(ours.l, where).toBeCloseTo(written.l, 4);
+            expect(ours.c, where).toBeCloseTo(written.c, 4);
+            expect(ours.h, where).toBeCloseTo(written.h, 1);
+            compared += 1;
+          }
         }
       }
     }
-    // Every slot in both modes, and the p3 overrides on top.
-    expect(compared).toBeGreaterThan(2 * 34);
+    // Every slot of every theme in both modes, and the p3 overrides on top.
+    expect(compared).toBeGreaterThan(themeContexts.length * 2 * 34);
   });
 
   test('a p3 override is measured as Chromium reports it: oklch(52% 0.16 150) is #008130', () => {
@@ -90,7 +112,7 @@ describe('the gate measures what the browser is given (0163)', () => {
   });
 
   test('every pair reports the view it reads worst in, and its margin', () => {
-    const results = checkContrast(generate(defaultTheme));
+    const results = checkContrast(generate());
     for (const r of results) {
       expect(views, `${r.fg} on ${r.bg}`).toContain(r.view);
       expect(r.margin, `${r.fg} on ${r.bg}`).toBeCloseTo(r.ratio - r.min, 10);

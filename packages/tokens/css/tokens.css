@@ -3,75 +3,51 @@
  * ------------------------------------------- */
 
 @property --rk-ansi-active {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(91.4% 0.0034 262);
 }
 
 @property --rk-ansi-background {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(98.5% 0.0019 262);
 }
 
 @property --rk-ansi-black {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(21% 0.0055 262);
 }
 
 @property --rk-ansi-blue {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(52% 0.16 262);
 }
 
 @property --rk-ansi-border {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(63% 0.006 262);
 }
 
 @property --rk-ansi-border-strong {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(56% 0.006 262);
 }
 
 @property --rk-ansi-border-subtle {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(92% 0.0033 262);
 }
 
 @property --rk-ansi-bright-black {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(42% 0.006 262);
 }
 
 @property --rk-ansi-bright-blue {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(44% 0.15 262);
 }
 
 @property --rk-ansi-bright-cyan {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-bright-cyan-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-bright-cyan-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-bright-cyan-rec2020 {
   syntax: '*';
   inherits: true;
 }
@@ -81,37 +57,19 @@
   inherits: true;
 }
 
-@property --rk-ansi-bright-green-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-bright-green-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-bright-green-rec2020 {
-  syntax: '*';
-  inherits: true;
-}
-
 @property --rk-ansi-bright-magenta {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(44% 0.15 320);
 }
 
 @property --rk-ansi-bright-red {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(44% 0.15 27);
 }
 
 @property --rk-ansi-bright-white {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(99% 0.0017 262);
 }
 
 @property --rk-ansi-bright-yellow {
@@ -119,25 +77,9 @@
   inherits: true;
 }
 
-@property --rk-ansi-bright-yellow-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-bright-yellow-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-bright-yellow-rec2020 {
-  syntax: '*';
-  inherits: true;
-}
-
 @property --rk-ansi-cursor {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(52% 0.16 262);
 }
 
 @property --rk-ansi-cyan {
@@ -145,31 +87,14 @@
   inherits: true;
 }
 
-@property --rk-ansi-cyan-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-cyan-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-cyan-rec2020 {
-  syntax: '*';
-  inherits: true;
-}
-
 @property --rk-ansi-faint {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(68% 0.006 262);
 }
 
 @property --rk-ansi-foreground {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(21% 0.0055 262);
 }
 
 @property --rk-ansi-green {
@@ -177,43 +102,24 @@
   inherits: true;
 }
 
-@property --rk-ansi-green-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-green-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-green-rec2020 {
-  syntax: '*';
-  inherits: true;
-}
-
 @property --rk-ansi-hover {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(93.5% 0.003 262);
 }
 
 @property --rk-ansi-magenta {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(52% 0.16 320);
 }
 
 @property --rk-ansi-muted {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(47% 0.006 262);
 }
 
 @property --rk-ansi-red {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(52% 0.16 27);
 }
 
 @property --rk-ansi-selection {
@@ -221,31 +127,14 @@
   inherits: true;
 }
 
-@property --rk-ansi-selection-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-selection-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-selection-rec2020 {
-  syntax: '*';
-  inherits: true;
-}
-
 @property --rk-ansi-subtle {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(95.8% 0.0025 262);
 }
 
 @property --rk-ansi-surface {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(100% 0 262);
 }
 
 @property --rk-ansi-tint-blue {
@@ -253,31 +142,14 @@
   inherits: true;
 }
 
-@property --rk-ansi-tint-blue-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-tint-blue-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-tint-blue-rec2020 {
-  syntax: '*';
-  inherits: true;
-}
-
 @property --rk-ansi-tint-cyan {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(95% 0.045 200);
 }
 
 @property --rk-ansi-tint-green {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(95% 0.045 150);
 }
 
 @property --rk-ansi-tint-red {
@@ -285,49 +157,17 @@
   inherits: true;
 }
 
-@property --rk-ansi-tint-red-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-tint-red-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-tint-red-rec2020 {
-  syntax: '*';
-  inherits: true;
-}
-
 @property --rk-ansi-tint-yellow {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(95% 0.045 85);
 }
 
 @property --rk-ansi-white {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(93% 0.0031 262);
 }
 
 @property --rk-ansi-yellow {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-yellow-srgb {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-yellow-p3 {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-ansi-yellow-rec2020 {
   syntax: '*';
   inherits: true;
 }
@@ -1210,6 +1050,554 @@
   initial-value: 80ms;
 }
 
+@property --rk-palette-dark-active {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(33.1% 0.0281 280.5);
+}
+
+@property --rk-palette-dark-background {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(22.6% 0.0214 280.5);
+}
+
+@property --rk-palette-dark-black {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(20.3% 0.016 279.3);
+}
+
+@property --rk-palette-dark-blue {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(71.9% 0.1322 264.2);
+}
+
+@property --rk-palette-dark-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(55.5% 0.0393 280.5);
+}
+
+@property --rk-palette-dark-border-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(59.8% 0.0452 280.5);
+}
+
+@property --rk-palette-dark-border-subtle {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(28.8% 0.0254 280.5);
+}
+
+@property --rk-palette-dark-bright-black {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(40.9% 0.0546 274.3);
+}
+
+@property --rk-palette-dark-bright-blue {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-blue-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-blue-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-blue-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-cyan {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-cyan-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-cyan-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-cyan-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-green {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(83.4% 0.1938 129.6);
+}
+
+@property --rk-palette-dark-bright-magenta {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(79.2% 0.1231 299.6);
+}
+
+@property --rk-palette-dark-bright-red {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(76.4% 0.1437 10.3);
+}
+
+@property --rk-palette-dark-bright-white {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(84.6% 0.0611 274.8);
+}
+
+@property --rk-palette-dark-bright-yellow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(82.9% 0.1448 78);
+}
+
+@property --rk-palette-dark-cursor {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(84.6% 0.0611 274.8);
+}
+
+@property --rk-palette-dark-cyan {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(82% 0.1051 235.7);
+}
+
+@property --rk-palette-dark-faint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(50.5% 0.0393 274.8);
+}
+
+@property --rk-palette-dark-foreground {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(84.6% 0.0611 274.8);
+}
+
+@property --rk-palette-dark-green {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(79.5% 0.1395 130.1);
+}
+
+@property --rk-palette-dark-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(30.7% 0.0266 280.5);
+}
+
+@property --rk-palette-dark-magenta {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(75.1% 0.1344 299.5);
+}
+
+@property --rk-palette-dark-muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(70% 0.0492 274.8);
+}
+
+@property --rk-palette-dark-red {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(72.3% 0.1589 10.3);
+}
+
+@property --rk-palette-dark-selection {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(33.2% 0.0642 268.4);
+}
+
+@property --rk-palette-dark-subtle {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(28.2% 0.025 280.5);
+}
+
+@property --rk-palette-dark-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(25.7% 0.0234 280.5);
+}
+
+@property --rk-palette-dark-tint-blue {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(29.5% 0.0369 280.5);
+}
+
+@property --rk-palette-dark-tint-cyan {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(30.9% 0.0331 280.5);
+}
+
+@property --rk-palette-dark-tint-green {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(30.6% 0.0379 280.5);
+}
+
+@property --rk-palette-dark-tint-red {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(29.6% 0.0407 280.5);
+}
+
+@property --rk-palette-dark-tint-yellow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(30.4% 0.0332 280.5);
+}
+
+@property --rk-palette-dark-white {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(76.7% 0.0537 275.5);
+}
+
+@property --rk-palette-dark-yellow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(78.4% 0.1057 75.4);
+}
+
+@property --rk-palette-light-active {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(84.5% 0.0322 277.2);
+}
+
+@property --rk-palette-light-background {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(91.3% 0.0068 277.2);
+}
+
+@property --rk-palette-light-black {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(77.4% 0.0057 274.9);
+}
+
+@property --rk-palette-light-blue {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-blue-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-blue-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-blue-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(57.8% 0.0741 277.2);
+}
+
+@property --rk-palette-light-border-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(57.7% 0.0965 277.2);
+}
+
+@property --rk-palette-light-border-subtle {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(87.3% 0.0217 277.2);
+}
+
+@property --rk-palette-light-bright-black {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(73.2% 0.0451 278);
+}
+
+@property --rk-palette-light-bright-blue {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-blue-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-blue-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-blue-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-cyan {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-cyan-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-cyan-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-cyan-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-green {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-green-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-green-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-green-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-magenta {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(64.6% 0.2224 299.3);
+}
+
+@property --rk-palette-light-bright-red {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-red-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-red-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-red-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-white {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(51.2% 0.1563 264.1);
+}
+
+@property --rk-palette-light-bright-yellow {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-yellow-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-yellow-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-yellow-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-cursor {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(51.2% 0.1563 264.1);
+}
+
+@property --rk-palette-light-cyan {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-cyan-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-cyan-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-cyan-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-faint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(73.3% 0.0741 264.1);
+}
+
+@property --rk-palette-light-foreground {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(35.7% 0.1563 264.1);
+}
+
+@property --rk-palette-light-green {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(45.5% 0.0929 130.3);
+}
+
+@property --rk-palette-light-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(86.1% 0.0262 277.2);
+}
+
+@property --rk-palette-light-magenta {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(50.4% 0.2245 299.5);
+}
+
+@property --rk-palette-light-muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(45.7% 0.1115 264.1);
+}
+
+@property --rk-palette-light-red {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-red-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-red-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-red-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-selection {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(81.4% 0.0492 272.4);
+}
+
+@property --rk-palette-light-subtle {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(87.7% 0.0203 277.2);
+}
+
+@property --rk-palette-light-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(89.3% 0.0143 277.2);
+}
+
+@property --rk-palette-light-tint-blue {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(86.9% 0.0311 277.2);
+}
+
+@property --rk-palette-light-tint-cyan {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(85.7% 0.0203 277.2);
+}
+
+@property --rk-palette-light-tint-green {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(85.9% 0.0189 277.2);
+}
+
+@property --rk-palette-light-tint-red {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(87.4% 0.0384 277.2);
+}
+
+@property --rk-palette-light-tint-yellow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(86.3% 0.0163 277.2);
+}
+
+@property --rk-palette-light-white {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(56.5% 0.0983 271.3);
+}
+
+@property --rk-palette-light-yellow {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(46.8% 0.0749 75.2);
+}
+
 @property --rk-row-0 {
   syntax: '<number>';
   inherits: true;
@@ -1482,41 +1870,41 @@
 
 @layer rk.tokens {
   :root {
-    color-scheme: light;
-    --rk-ansi-active: oklch(91.4% 0.0034 262);
-    --rk-ansi-background: oklch(98.5% 0.0019 262);
-    --rk-ansi-black: oklch(21% 0.0055 262);
-    --rk-ansi-blue: oklch(52% 0.16 262);
-    --rk-ansi-border: oklch(63% 0.006 262);
-    --rk-ansi-border-strong: oklch(56% 0.006 262);
-    --rk-ansi-border-subtle: oklch(92% 0.0033 262);
-    --rk-ansi-bright-black: oklch(42% 0.006 262);
-    --rk-ansi-bright-blue: oklch(44% 0.15 262);
-    --rk-ansi-bright-cyan: oklch(44.89% 0.0764 201.8);
-    --rk-ansi-bright-green: oklch(44.83% 0.1373 145.9);
-    --rk-ansi-bright-magenta: oklch(44% 0.15 320);
-    --rk-ansi-bright-red: oklch(44% 0.15 27);
-    --rk-ansi-bright-white: oklch(99% 0.0017 262);
-    --rk-ansi-bright-yellow: oklch(44.18% 0.0917 79.24);
-    --rk-ansi-cursor: oklch(52% 0.16 262);
-    --rk-ansi-cyan: oklch(50.39% 0.0857 201.6);
-    --rk-ansi-faint: oklch(68% 0.006 262);
-    --rk-ansi-foreground: oklch(21% 0.0055 262);
-    --rk-ansi-green: oklch(52.03% 0.152 147.6);
-    --rk-ansi-hover: oklch(93.5% 0.003 262);
-    --rk-ansi-magenta: oklch(52% 0.16 320);
-    --rk-ansi-muted: oklch(47% 0.006 262);
-    --rk-ansi-red: oklch(52% 0.16 27);
-    --rk-ansi-selection: oklch(94.54% 0.0278 246);
-    --rk-ansi-subtle: oklch(95.8% 0.0025 262);
-    --rk-ansi-surface: oklch(100% 0 262);
-    --rk-ansi-tint-blue: oklch(94.54% 0.0278 246);
-    --rk-ansi-tint-cyan: oklch(95% 0.045 200);
-    --rk-ansi-tint-green: oklch(95% 0.045 150);
-    --rk-ansi-tint-red: oklch(93.89% 0.031 30.99);
-    --rk-ansi-tint-yellow: oklch(95% 0.045 85);
-    --rk-ansi-white: oklch(93% 0.0031 262);
-    --rk-ansi-yellow: oklch(52.18% 0.108 80.13);
+    color-scheme: light dark;
+    --rk-ansi-active: light-dark(var(--rk-palette-light-active), var(--rk-palette-dark-active));
+    --rk-ansi-background: light-dark(var(--rk-palette-light-background), var(--rk-palette-dark-background));
+    --rk-ansi-black: light-dark(var(--rk-palette-light-black), var(--rk-palette-dark-black));
+    --rk-ansi-blue: light-dark(var(--rk-palette-light-blue), var(--rk-palette-dark-blue));
+    --rk-ansi-border: light-dark(var(--rk-palette-light-border), var(--rk-palette-dark-border));
+    --rk-ansi-border-strong: light-dark(var(--rk-palette-light-border-strong), var(--rk-palette-dark-border-strong));
+    --rk-ansi-border-subtle: light-dark(var(--rk-palette-light-border-subtle), var(--rk-palette-dark-border-subtle));
+    --rk-ansi-bright-black: light-dark(var(--rk-palette-light-bright-black), var(--rk-palette-dark-bright-black));
+    --rk-ansi-bright-blue: light-dark(var(--rk-palette-light-bright-blue), var(--rk-palette-dark-bright-blue));
+    --rk-ansi-bright-cyan: light-dark(var(--rk-palette-light-bright-cyan), var(--rk-palette-dark-bright-cyan));
+    --rk-ansi-bright-green: light-dark(var(--rk-palette-light-bright-green), var(--rk-palette-dark-bright-green));
+    --rk-ansi-bright-magenta: light-dark(var(--rk-palette-light-bright-magenta), var(--rk-palette-dark-bright-magenta));
+    --rk-ansi-bright-red: light-dark(var(--rk-palette-light-bright-red), var(--rk-palette-dark-bright-red));
+    --rk-ansi-bright-white: light-dark(var(--rk-palette-light-bright-white), var(--rk-palette-dark-bright-white));
+    --rk-ansi-bright-yellow: light-dark(var(--rk-palette-light-bright-yellow), var(--rk-palette-dark-bright-yellow));
+    --rk-ansi-cursor: light-dark(var(--rk-palette-light-cursor), var(--rk-palette-dark-cursor));
+    --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
+    --rk-ansi-faint: light-dark(var(--rk-palette-light-faint), var(--rk-palette-dark-faint));
+    --rk-ansi-foreground: light-dark(var(--rk-palette-light-foreground), var(--rk-palette-dark-foreground));
+    --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
+    --rk-ansi-hover: light-dark(var(--rk-palette-light-hover), var(--rk-palette-dark-hover));
+    --rk-ansi-magenta: light-dark(var(--rk-palette-light-magenta), var(--rk-palette-dark-magenta));
+    --rk-ansi-muted: light-dark(var(--rk-palette-light-muted), var(--rk-palette-dark-muted));
+    --rk-ansi-red: light-dark(var(--rk-palette-light-red), var(--rk-palette-dark-red));
+    --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
+    --rk-ansi-subtle: light-dark(var(--rk-palette-light-subtle), var(--rk-palette-dark-subtle));
+    --rk-ansi-surface: light-dark(var(--rk-palette-light-surface), var(--rk-palette-dark-surface));
+    --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
+    --rk-ansi-tint-cyan: light-dark(var(--rk-palette-light-tint-cyan), var(--rk-palette-dark-tint-cyan));
+    --rk-ansi-tint-green: light-dark(var(--rk-palette-light-tint-green), var(--rk-palette-dark-tint-green));
+    --rk-ansi-tint-red: light-dark(var(--rk-palette-light-tint-red), var(--rk-palette-dark-tint-red));
+    --rk-ansi-tint-yellow: light-dark(var(--rk-palette-light-tint-yellow), var(--rk-palette-dark-tint-yellow));
+    --rk-ansi-white: light-dark(var(--rk-palette-light-white), var(--rk-palette-dark-white));
+    --rk-ansi-yellow: light-dark(var(--rk-palette-light-yellow), var(--rk-palette-dark-yellow));
     /* Bold: the weight a heading or a label takes. */
     --rk-attribute-bold: 700;
     --rk-attribute-dim: var(--rk-ansi-muted);
@@ -1692,6 +2080,74 @@
     --rk-motion-tick-blink: 500ms;
     --rk-motion-tick-progress: 100ms;
     --rk-motion-tick-spinner: 80ms;
+    --rk-palette-dark-active: oklch(29.5% 0.006 262);
+    --rk-palette-dark-background: oklch(16.5% 0.0048 262);
+    --rk-palette-dark-black: oklch(24.5% 0.0059 262);
+    --rk-palette-dark-blue: oklch(66% 0.16 262);
+    --rk-palette-dark-border: oklch(53% 0.006 262);
+    --rk-palette-dark-border-strong: oklch(60% 0.006 262);
+    --rk-palette-dark-border-subtle: oklch(26% 0.006 262);
+    --rk-palette-dark-bright-black: oklch(36% 0.006 262);
+    --rk-palette-dark-bright-blue: oklch(77.35% 0.1158 258.9);
+    --rk-palette-dark-bright-cyan: oklch(78.82% 0.134 200.9);
+    --rk-palette-dark-bright-green: oklch(78% 0.15 150);
+    --rk-palette-dark-bright-magenta: oklch(78% 0.15 320);
+    --rk-palette-dark-bright-red: oklch(76.68% 0.1381 27.31);
+    --rk-palette-dark-bright-white: oklch(98% 0.002 262);
+    --rk-palette-dark-bright-yellow: oklch(78% 0.15 85);
+    --rk-palette-dark-cursor: oklch(66% 0.16 262);
+    --rk-palette-dark-cyan: oklch(66.9% 0.1138 201.2);
+    --rk-palette-dark-faint: oklch(46% 0.006 262);
+    --rk-palette-dark-foreground: oklch(94% 0.0029 262);
+    --rk-palette-dark-green: oklch(66% 0.16 150);
+    --rk-palette-dark-hover: oklch(27% 0.006 262);
+    --rk-palette-dark-magenta: oklch(66% 0.16 320);
+    --rk-palette-dark-muted: oklch(74% 0.006 262);
+    --rk-palette-dark-red: oklch(66% 0.16 27);
+    --rk-palette-dark-selection: oklch(26% 0.045 262);
+    --rk-palette-dark-subtle: oklch(24.5% 0.0059 262);
+    --rk-palette-dark-surface: oklch(20.5% 0.0054 262);
+    --rk-palette-dark-tint-blue: oklch(26% 0.045 262);
+    --rk-palette-dark-tint-cyan: oklch(26.04% 0.0443 200.1);
+    --rk-palette-dark-tint-green: oklch(26% 0.045 150);
+    --rk-palette-dark-tint-red: oklch(26% 0.045 27);
+    --rk-palette-dark-tint-yellow: oklch(26% 0.045 85);
+    --rk-palette-dark-white: oklch(86% 0.0044 262);
+    --rk-palette-dark-yellow: oklch(66.19% 0.1367 81.15);
+    --rk-palette-light-active: oklch(91.4% 0.0034 262);
+    --rk-palette-light-background: oklch(98.5% 0.0019 262);
+    --rk-palette-light-black: oklch(21% 0.0055 262);
+    --rk-palette-light-blue: oklch(52% 0.16 262);
+    --rk-palette-light-border: oklch(63% 0.006 262);
+    --rk-palette-light-border-strong: oklch(56% 0.006 262);
+    --rk-palette-light-border-subtle: oklch(92% 0.0033 262);
+    --rk-palette-light-bright-black: oklch(42% 0.006 262);
+    --rk-palette-light-bright-blue: oklch(44% 0.15 262);
+    --rk-palette-light-bright-cyan: oklch(44.89% 0.0764 201.8);
+    --rk-palette-light-bright-green: oklch(44.83% 0.1373 145.9);
+    --rk-palette-light-bright-magenta: oklch(44% 0.15 320);
+    --rk-palette-light-bright-red: oklch(44% 0.15 27);
+    --rk-palette-light-bright-white: oklch(99% 0.0017 262);
+    --rk-palette-light-bright-yellow: oklch(44.18% 0.0917 79.24);
+    --rk-palette-light-cursor: oklch(52% 0.16 262);
+    --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
+    --rk-palette-light-faint: oklch(68% 0.006 262);
+    --rk-palette-light-foreground: oklch(21% 0.0055 262);
+    --rk-palette-light-green: oklch(52.03% 0.152 147.6);
+    --rk-palette-light-hover: oklch(93.5% 0.003 262);
+    --rk-palette-light-magenta: oklch(52% 0.16 320);
+    --rk-palette-light-muted: oklch(47% 0.006 262);
+    --rk-palette-light-red: oklch(52% 0.16 27);
+    --rk-palette-light-selection: oklch(94.54% 0.0278 246);
+    --rk-palette-light-subtle: oklch(95.8% 0.0025 262);
+    --rk-palette-light-surface: oklch(100% 0 262);
+    --rk-palette-light-tint-blue: oklch(94.54% 0.0278 246);
+    --rk-palette-light-tint-cyan: oklch(95% 0.045 200);
+    --rk-palette-light-tint-green: oklch(95% 0.045 150);
+    --rk-palette-light-tint-red: oklch(93.89% 0.031 30.99);
+    --rk-palette-light-tint-yellow: oklch(95% 0.045 85);
+    --rk-palette-light-white: oklch(93% 0.0031 262);
+    --rk-palette-light-yellow: oklch(52.18% 0.108 80.13);
     --rk-row-0: 0;
     --rk-row-1: 1;
     --rk-row-2: 2;
@@ -1747,16 +2203,16 @@
 @media (color-gamut: p3) {
   @layer rk.tokens {
     :root {
-      color-scheme: light;
-      --rk-ansi-bright-cyan: oklch(44.76% 0.102 201.7);
-      --rk-ansi-bright-green: oklch(44% 0.15 150);
-      --rk-ansi-bright-yellow: oklch(44.16% 0.1053 79.86);
-      --rk-ansi-cyan: oklch(50.26% 0.1145 201.5);
-      --rk-ansi-green: oklch(51.5% 0.16 150);
-      --rk-ansi-selection: oklch(94.58% 0.0297 248.6);
-      --rk-ansi-tint-blue: oklch(94.58% 0.0297 248.6);
-      --rk-ansi-tint-red: oklch(94.41% 0.0365 29.35);
-      --rk-ansi-yellow: oklch(52.16% 0.1242 80.65);
+      color-scheme: light dark;
+      --rk-ansi-bright-cyan: light-dark(var(--rk-palette-light-bright-cyan), var(--rk-palette-dark-bright-cyan));
+      --rk-ansi-bright-green: light-dark(var(--rk-palette-light-bright-green), var(--rk-palette-dark-bright-green));
+      --rk-ansi-bright-yellow: light-dark(var(--rk-palette-light-bright-yellow), var(--rk-palette-dark-bright-yellow));
+      --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
+      --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
+      --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
+      --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
+      --rk-ansi-tint-red: light-dark(var(--rk-palette-light-tint-red), var(--rk-palette-dark-tint-red));
+      --rk-ansi-yellow: light-dark(var(--rk-palette-light-yellow), var(--rk-palette-dark-yellow));
       /* Tinted accent backgrounds: callouts, rows. */
       --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
       /* Tinted danger backgrounds: callouts, rows. */
@@ -1776,6 +2232,21 @@
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      --rk-palette-dark-bright-blue: oklch(77.33% 0.126 259.3);
+      --rk-palette-dark-bright-cyan: oklch(78% 0.15 200);
+      --rk-palette-dark-bright-red: oklch(78% 0.15 27);
+      --rk-palette-dark-cyan: oklch(66.38% 0.1512 200.5);
+      --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
+      --rk-palette-dark-yellow: oklch(66.04% 0.1562 84.25);
+      --rk-palette-light-bright-cyan: oklch(44.76% 0.102 201.7);
+      --rk-palette-light-bright-green: oklch(44% 0.15 150);
+      --rk-palette-light-bright-yellow: oklch(44.16% 0.1053 79.86);
+      --rk-palette-light-cyan: oklch(50.26% 0.1145 201.5);
+      --rk-palette-light-green: oklch(51.5% 0.16 150);
+      --rk-palette-light-selection: oklch(94.58% 0.0297 248.6);
+      --rk-palette-light-tint-blue: oklch(94.58% 0.0297 248.6);
+      --rk-palette-light-tint-red: oklch(94.41% 0.0365 29.35);
+      --rk-palette-light-yellow: oklch(52.16% 0.1242 80.65);
       /* Attribute and property keys in markup. */
       --rk-syntax-attribute: var(--rk-ansi-yellow);
       /* Numbers, booleans, constants. */
@@ -1793,16 +2264,16 @@
 @media (color-gamut: rec2020) {
   @layer rk.tokens {
     :root {
-      color-scheme: light;
-      --rk-ansi-bright-cyan: oklch(44% 0.15 200);
-      --rk-ansi-bright-green: oklch(44% 0.15 150);
-      --rk-ansi-bright-yellow: oklch(44.12% 0.1073 80.02);
-      --rk-ansi-cyan: oklch(49.5% 0.16 200);
-      --rk-ansi-green: oklch(51.5% 0.16 150);
-      --rk-ansi-selection: oklch(94.68% 0.0293 250.3);
-      --rk-ansi-tint-blue: oklch(94.68% 0.0293 250.3);
-      --rk-ansi-tint-red: oklch(95% 0.045 27);
-      --rk-ansi-yellow: oklch(52.12% 0.1265 80.81);
+      color-scheme: light dark;
+      --rk-ansi-bright-cyan: light-dark(var(--rk-palette-light-bright-cyan), var(--rk-palette-dark-bright-cyan));
+      --rk-ansi-bright-green: light-dark(var(--rk-palette-light-bright-green), var(--rk-palette-dark-bright-green));
+      --rk-ansi-bright-yellow: light-dark(var(--rk-palette-light-bright-yellow), var(--rk-palette-dark-bright-yellow));
+      --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
+      --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
+      --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
+      --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
+      --rk-ansi-tint-red: light-dark(var(--rk-palette-light-tint-red), var(--rk-palette-dark-tint-red));
+      --rk-ansi-yellow: light-dark(var(--rk-palette-light-yellow), var(--rk-palette-dark-yellow));
       /* Tinted accent backgrounds: callouts, rows. */
       --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
       /* Tinted danger backgrounds: callouts, rows. */
@@ -1822,6 +2293,21 @@
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      --rk-palette-dark-bright-blue: oklch(77.49% 0.1265 260.1);
+      --rk-palette-dark-bright-cyan: oklch(78% 0.15 200);
+      --rk-palette-dark-bright-red: oklch(78% 0.15 27);
+      --rk-palette-dark-cyan: oklch(66% 0.16 200);
+      --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
+      --rk-palette-dark-yellow: oklch(66.01% 0.1593 84.86);
+      --rk-palette-light-bright-cyan: oklch(44% 0.15 200);
+      --rk-palette-light-bright-green: oklch(44% 0.15 150);
+      --rk-palette-light-bright-yellow: oklch(44.12% 0.1073 80.02);
+      --rk-palette-light-cyan: oklch(49.5% 0.16 200);
+      --rk-palette-light-green: oklch(51.5% 0.16 150);
+      --rk-palette-light-selection: oklch(94.68% 0.0293 250.3);
+      --rk-palette-light-tint-blue: oklch(94.68% 0.0293 250.3);
+      --rk-palette-light-tint-red: oklch(95% 0.045 27);
+      --rk-palette-light-yellow: oklch(52.12% 0.1265 80.81);
       /* Attribute and property keys in markup. */
       --rk-syntax-attribute: var(--rk-ansi-yellow);
       /* Numbers, booleans, constants. */
@@ -1837,42 +2323,42 @@
 }
 
 @layer rk.tokens {
-  [data-theme='light'] {
-    color-scheme: light;
-    --rk-ansi-active: oklch(91.4% 0.0034 262);
-    --rk-ansi-background: oklch(98.5% 0.0019 262);
-    --rk-ansi-black: oklch(21% 0.0055 262);
-    --rk-ansi-blue: oklch(52% 0.16 262);
-    --rk-ansi-border: oklch(63% 0.006 262);
-    --rk-ansi-border-strong: oklch(56% 0.006 262);
-    --rk-ansi-border-subtle: oklch(92% 0.0033 262);
-    --rk-ansi-bright-black: oklch(42% 0.006 262);
-    --rk-ansi-bright-blue: oklch(44% 0.15 262);
-    --rk-ansi-bright-cyan: oklch(44.89% 0.0764 201.8);
-    --rk-ansi-bright-green: oklch(44.83% 0.1373 145.9);
-    --rk-ansi-bright-magenta: oklch(44% 0.15 320);
-    --rk-ansi-bright-red: oklch(44% 0.15 27);
-    --rk-ansi-bright-white: oklch(99% 0.0017 262);
-    --rk-ansi-bright-yellow: oklch(44.18% 0.0917 79.24);
-    --rk-ansi-cursor: oklch(52% 0.16 262);
-    --rk-ansi-cyan: oklch(50.39% 0.0857 201.6);
-    --rk-ansi-faint: oklch(68% 0.006 262);
-    --rk-ansi-foreground: oklch(21% 0.0055 262);
-    --rk-ansi-green: oklch(52.03% 0.152 147.6);
-    --rk-ansi-hover: oklch(93.5% 0.003 262);
-    --rk-ansi-magenta: oklch(52% 0.16 320);
-    --rk-ansi-muted: oklch(47% 0.006 262);
-    --rk-ansi-red: oklch(52% 0.16 27);
-    --rk-ansi-selection: oklch(94.54% 0.0278 246);
-    --rk-ansi-subtle: oklch(95.8% 0.0025 262);
-    --rk-ansi-surface: oklch(100% 0 262);
-    --rk-ansi-tint-blue: oklch(94.54% 0.0278 246);
-    --rk-ansi-tint-cyan: oklch(95% 0.045 200);
-    --rk-ansi-tint-green: oklch(95% 0.045 150);
-    --rk-ansi-tint-red: oklch(93.89% 0.031 30.99);
-    --rk-ansi-tint-yellow: oklch(95% 0.045 85);
-    --rk-ansi-white: oklch(93% 0.0031 262);
-    --rk-ansi-yellow: oklch(52.18% 0.108 80.13);
+  [data-rk-theme] {
+    --rk-ansi-active: light-dark(var(--rk-palette-light-active), var(--rk-palette-dark-active));
+    --rk-ansi-background: light-dark(var(--rk-palette-light-background), var(--rk-palette-dark-background));
+    --rk-ansi-black: light-dark(var(--rk-palette-light-black), var(--rk-palette-dark-black));
+    --rk-ansi-blue: light-dark(var(--rk-palette-light-blue), var(--rk-palette-dark-blue));
+    --rk-ansi-border: light-dark(var(--rk-palette-light-border), var(--rk-palette-dark-border));
+    --rk-ansi-border-strong: light-dark(var(--rk-palette-light-border-strong), var(--rk-palette-dark-border-strong));
+    --rk-ansi-border-subtle: light-dark(var(--rk-palette-light-border-subtle), var(--rk-palette-dark-border-subtle));
+    --rk-ansi-bright-black: light-dark(var(--rk-palette-light-bright-black), var(--rk-palette-dark-bright-black));
+    --rk-ansi-bright-blue: light-dark(var(--rk-palette-light-bright-blue), var(--rk-palette-dark-bright-blue));
+    --rk-ansi-bright-cyan: light-dark(var(--rk-palette-light-bright-cyan), var(--rk-palette-dark-bright-cyan));
+    --rk-ansi-bright-green: light-dark(var(--rk-palette-light-bright-green), var(--rk-palette-dark-bright-green));
+    --rk-ansi-bright-magenta: light-dark(var(--rk-palette-light-bright-magenta), var(--rk-palette-dark-bright-magenta));
+    --rk-ansi-bright-red: light-dark(var(--rk-palette-light-bright-red), var(--rk-palette-dark-bright-red));
+    --rk-ansi-bright-white: light-dark(var(--rk-palette-light-bright-white), var(--rk-palette-dark-bright-white));
+    --rk-ansi-bright-yellow: light-dark(var(--rk-palette-light-bright-yellow), var(--rk-palette-dark-bright-yellow));
+    --rk-ansi-cursor: light-dark(var(--rk-palette-light-cursor), var(--rk-palette-dark-cursor));
+    --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
+    --rk-ansi-faint: light-dark(var(--rk-palette-light-faint), var(--rk-palette-dark-faint));
+    --rk-ansi-foreground: light-dark(var(--rk-palette-light-foreground), var(--rk-palette-dark-foreground));
+    --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
+    --rk-ansi-hover: light-dark(var(--rk-palette-light-hover), var(--rk-palette-dark-hover));
+    --rk-ansi-magenta: light-dark(var(--rk-palette-light-magenta), var(--rk-palette-dark-magenta));
+    --rk-ansi-muted: light-dark(var(--rk-palette-light-muted), var(--rk-palette-dark-muted));
+    --rk-ansi-red: light-dark(var(--rk-palette-light-red), var(--rk-palette-dark-red));
+    --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
+    --rk-ansi-subtle: light-dark(var(--rk-palette-light-subtle), var(--rk-palette-dark-subtle));
+    --rk-ansi-surface: light-dark(var(--rk-palette-light-surface), var(--rk-palette-dark-surface));
+    --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
+    --rk-ansi-tint-cyan: light-dark(var(--rk-palette-light-tint-cyan), var(--rk-palette-dark-tint-cyan));
+    --rk-ansi-tint-green: light-dark(var(--rk-palette-light-tint-green), var(--rk-palette-dark-tint-green));
+    --rk-ansi-tint-red: light-dark(var(--rk-palette-light-tint-red), var(--rk-palette-dark-tint-red));
+    --rk-ansi-tint-yellow: light-dark(var(--rk-palette-light-tint-yellow), var(--rk-palette-dark-tint-yellow));
+    --rk-ansi-white: light-dark(var(--rk-palette-light-white), var(--rk-palette-dark-white));
+    --rk-ansi-yellow: light-dark(var(--rk-palette-light-yellow), var(--rk-palette-dark-yellow));
+    --rk-attribute-dim: var(--rk-ansi-muted);
     --rk-bg-accent-solid: var(--rk-ansi-blue);
     --rk-bg-accent-solid-hover: var(--rk-ansi-bright-blue);
     --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
@@ -1933,19 +2419,210 @@
   }
 }
 
+@layer rk.tokens {
+  [data-rk-theme='default'] {
+    /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
+    --rk-conformance: standard;
+    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-weight-bold: 700;
+    --rk-font-weight-medium: 500;
+    --rk-font-weight-regular: 400;
+    --rk-font-weight-semibold: 600;
+    --rk-glyph-bar-1: "▁";
+    --rk-glyph-bar-2: "▂";
+    --rk-glyph-bar-3: "▃";
+    --rk-glyph-bar-4: "▄";
+    --rk-glyph-bar-5: "▅";
+    --rk-glyph-bar-6: "▆";
+    --rk-glyph-bar-7: "▇";
+    --rk-glyph-bar-8: "█";
+    --rk-glyph-block-caret: "▏";
+    --rk-glyph-block-dark: "▓";
+    --rk-glyph-block-full: "█";
+    --rk-glyph-block-light: "░";
+    --rk-glyph-block-medium: "▒";
+    --rk-glyph-border-ascii-bottom-left: "+";
+    --rk-glyph-border-ascii-bottom-right: "+";
+    --rk-glyph-border-ascii-cross: "+";
+    --rk-glyph-border-ascii-horizontal: -;
+    --rk-glyph-border-ascii-tee-down: "+";
+    --rk-glyph-border-ascii-tee-left: "+";
+    --rk-glyph-border-ascii-tee-right: "+";
+    --rk-glyph-border-ascii-tee-up: "+";
+    --rk-glyph-border-ascii-top-left: "+";
+    --rk-glyph-border-ascii-top-right: "+";
+    --rk-glyph-border-ascii-vertical: "|";
+    --rk-glyph-border-current-bottom-left: "└";
+    --rk-glyph-border-current-bottom-right: "┘";
+    --rk-glyph-border-current-cross: "┼";
+    --rk-glyph-border-current-horizontal: "─";
+    --rk-glyph-border-current-tee-down: "┬";
+    --rk-glyph-border-current-tee-left: "┤";
+    --rk-glyph-border-current-tee-right: "├";
+    --rk-glyph-border-current-tee-up: "┴";
+    --rk-glyph-border-current-top-left: "┌";
+    --rk-glyph-border-current-top-right: "┐";
+    --rk-glyph-border-current-vertical: "│";
+    --rk-glyph-border-double-bottom-left: "╚";
+    --rk-glyph-border-double-bottom-right: "╝";
+    --rk-glyph-border-double-cross: "╬";
+    --rk-glyph-border-double-horizontal: "═";
+    --rk-glyph-border-double-tee-down: "╦";
+    --rk-glyph-border-double-tee-left: "╣";
+    --rk-glyph-border-double-tee-right: "╠";
+    --rk-glyph-border-double-tee-up: "╩";
+    --rk-glyph-border-double-top-left: "╔";
+    --rk-glyph-border-double-top-right: "╗";
+    --rk-glyph-border-double-vertical: "║";
+    --rk-glyph-border-heavy-bottom-left: "┗";
+    --rk-glyph-border-heavy-bottom-right: "┛";
+    --rk-glyph-border-heavy-cross: "╋";
+    --rk-glyph-border-heavy-horizontal: "━";
+    --rk-glyph-border-heavy-tee-down: "┳";
+    --rk-glyph-border-heavy-tee-left: "┫";
+    --rk-glyph-border-heavy-tee-right: "┣";
+    --rk-glyph-border-heavy-tee-up: "┻";
+    --rk-glyph-border-heavy-top-left: "┏";
+    --rk-glyph-border-heavy-top-right: "┓";
+    --rk-glyph-border-heavy-vertical: "┃";
+    --rk-glyph-border-rounded-bottom-left: "╰";
+    --rk-glyph-border-rounded-bottom-right: "╯";
+    --rk-glyph-border-rounded-cross: "┼";
+    --rk-glyph-border-rounded-horizontal: "─";
+    --rk-glyph-border-rounded-tee-down: "┬";
+    --rk-glyph-border-rounded-tee-left: "┤";
+    --rk-glyph-border-rounded-tee-right: "├";
+    --rk-glyph-border-rounded-tee-up: "┴";
+    --rk-glyph-border-rounded-top-left: "╭";
+    --rk-glyph-border-rounded-top-right: "╮";
+    --rk-glyph-border-rounded-vertical: "│";
+    --rk-glyph-border-single-bottom-left: "└";
+    --rk-glyph-border-single-bottom-right: "┘";
+    --rk-glyph-border-single-cross: "┼";
+    --rk-glyph-border-single-horizontal: "─";
+    --rk-glyph-border-single-tee-down: "┬";
+    --rk-glyph-border-single-tee-left: "┤";
+    --rk-glyph-border-single-tee-right: "├";
+    --rk-glyph-border-single-tee-up: "┴";
+    --rk-glyph-border-single-top-left: "┌";
+    --rk-glyph-border-single-top-right: "┐";
+    --rk-glyph-border-single-vertical: "│";
+    --rk-glyph-delimiter-control-close: "]";
+    --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-mark-blank: " ";
+    --rk-glyph-mark-bullet: "·";
+    --rk-glyph-mark-check: "✓";
+    --rk-glyph-mark-collapsed: "▸";
+    --rk-glyph-mark-cross: "✗";
+    --rk-glyph-mark-cursor: "▸";
+    --rk-glyph-mark-danger: "!";
+    --rk-glyph-mark-dash: "–";
+    --rk-glyph-mark-ellipsis: "…";
+    --rk-glyph-mark-expanded: "▾";
+    --rk-glyph-mark-external: "↗";
+    --rk-glyph-mark-overflow-end: "›";
+    --rk-glyph-mark-overflow-start: "‹";
+    --rk-glyph-mark-radio: "●";
+    --rk-glyph-mark-radio-empty: "○";
+    --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-sort-ascending: "▴";
+    --rk-glyph-mark-sort-descending: "▾";
+    --rk-glyph-mark-switch-thumb: "●";
+    --rk-glyph-mark-switch-track: "─";
+    --rk-glyph-spinner-1: "⠋";
+    --rk-glyph-spinner-2: "⠙";
+    --rk-glyph-spinner-3: "⠹";
+    --rk-glyph-spinner-4: "⠸";
+    --rk-glyph-spinner-5: "⠼";
+    --rk-glyph-spinner-6: "⠴";
+    --rk-glyph-spinner-7: "⠦";
+    --rk-glyph-spinner-8: "⠧";
+    --rk-glyph-spinner-9: "⠇";
+    --rk-glyph-spinner-10: "⠏";
+    --rk-palette-dark-active: oklch(29.5% 0.006 262);
+    --rk-palette-dark-background: oklch(16.5% 0.0048 262);
+    --rk-palette-dark-black: oklch(24.5% 0.0059 262);
+    --rk-palette-dark-blue: oklch(66% 0.16 262);
+    --rk-palette-dark-border: oklch(53% 0.006 262);
+    --rk-palette-dark-border-strong: oklch(60% 0.006 262);
+    --rk-palette-dark-border-subtle: oklch(26% 0.006 262);
+    --rk-palette-dark-bright-black: oklch(36% 0.006 262);
+    --rk-palette-dark-bright-blue: oklch(77.35% 0.1158 258.9);
+    --rk-palette-dark-bright-cyan: oklch(78.82% 0.134 200.9);
+    --rk-palette-dark-bright-green: oklch(78% 0.15 150);
+    --rk-palette-dark-bright-magenta: oklch(78% 0.15 320);
+    --rk-palette-dark-bright-red: oklch(76.68% 0.1381 27.31);
+    --rk-palette-dark-bright-white: oklch(98% 0.002 262);
+    --rk-palette-dark-bright-yellow: oklch(78% 0.15 85);
+    --rk-palette-dark-cursor: oklch(66% 0.16 262);
+    --rk-palette-dark-cyan: oklch(66.9% 0.1138 201.2);
+    --rk-palette-dark-faint: oklch(46% 0.006 262);
+    --rk-palette-dark-foreground: oklch(94% 0.0029 262);
+    --rk-palette-dark-green: oklch(66% 0.16 150);
+    --rk-palette-dark-hover: oklch(27% 0.006 262);
+    --rk-palette-dark-magenta: oklch(66% 0.16 320);
+    --rk-palette-dark-muted: oklch(74% 0.006 262);
+    --rk-palette-dark-red: oklch(66% 0.16 27);
+    --rk-palette-dark-selection: oklch(26% 0.045 262);
+    --rk-palette-dark-subtle: oklch(24.5% 0.0059 262);
+    --rk-palette-dark-surface: oklch(20.5% 0.0054 262);
+    --rk-palette-dark-tint-blue: oklch(26% 0.045 262);
+    --rk-palette-dark-tint-cyan: oklch(26.04% 0.0443 200.1);
+    --rk-palette-dark-tint-green: oklch(26% 0.045 150);
+    --rk-palette-dark-tint-red: oklch(26% 0.045 27);
+    --rk-palette-dark-tint-yellow: oklch(26% 0.045 85);
+    --rk-palette-dark-white: oklch(86% 0.0044 262);
+    --rk-palette-dark-yellow: oklch(66.19% 0.1367 81.15);
+    --rk-palette-light-active: oklch(91.4% 0.0034 262);
+    --rk-palette-light-background: oklch(98.5% 0.0019 262);
+    --rk-palette-light-black: oklch(21% 0.0055 262);
+    --rk-palette-light-blue: oklch(52% 0.16 262);
+    --rk-palette-light-border: oklch(63% 0.006 262);
+    --rk-palette-light-border-strong: oklch(56% 0.006 262);
+    --rk-palette-light-border-subtle: oklch(92% 0.0033 262);
+    --rk-palette-light-bright-black: oklch(42% 0.006 262);
+    --rk-palette-light-bright-blue: oklch(44% 0.15 262);
+    --rk-palette-light-bright-cyan: oklch(44.89% 0.0764 201.8);
+    --rk-palette-light-bright-green: oklch(44.83% 0.1373 145.9);
+    --rk-palette-light-bright-magenta: oklch(44% 0.15 320);
+    --rk-palette-light-bright-red: oklch(44% 0.15 27);
+    --rk-palette-light-bright-white: oklch(99% 0.0017 262);
+    --rk-palette-light-bright-yellow: oklch(44.18% 0.0917 79.24);
+    --rk-palette-light-cursor: oklch(52% 0.16 262);
+    --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
+    --rk-palette-light-faint: oklch(68% 0.006 262);
+    --rk-palette-light-foreground: oklch(21% 0.0055 262);
+    --rk-palette-light-green: oklch(52.03% 0.152 147.6);
+    --rk-palette-light-hover: oklch(93.5% 0.003 262);
+    --rk-palette-light-magenta: oklch(52% 0.16 320);
+    --rk-palette-light-muted: oklch(47% 0.006 262);
+    --rk-palette-light-red: oklch(52% 0.16 27);
+    --rk-palette-light-selection: oklch(94.54% 0.0278 246);
+    --rk-palette-light-subtle: oklch(95.8% 0.0025 262);
+    --rk-palette-light-surface: oklch(100% 0 262);
+    --rk-palette-light-tint-blue: oklch(94.54% 0.0278 246);
+    --rk-palette-light-tint-cyan: oklch(95% 0.045 200);
+    --rk-palette-light-tint-green: oklch(95% 0.045 150);
+    --rk-palette-light-tint-red: oklch(93.89% 0.031 30.99);
+    --rk-palette-light-tint-yellow: oklch(95% 0.045 85);
+    --rk-palette-light-white: oklch(93% 0.0031 262);
+    --rk-palette-light-yellow: oklch(52.18% 0.108 80.13);
+  }
+}
+
 @media (color-gamut: p3) {
   @layer rk.tokens {
-    [data-theme='light'] {
-      color-scheme: light;
-      --rk-ansi-bright-cyan: oklch(44.76% 0.102 201.7);
-      --rk-ansi-bright-green: oklch(44% 0.15 150);
-      --rk-ansi-bright-yellow: oklch(44.16% 0.1053 79.86);
-      --rk-ansi-cyan: oklch(50.26% 0.1145 201.5);
-      --rk-ansi-green: oklch(51.5% 0.16 150);
-      --rk-ansi-selection: oklch(94.58% 0.0297 248.6);
-      --rk-ansi-tint-blue: oklch(94.58% 0.0297 248.6);
-      --rk-ansi-tint-red: oklch(94.41% 0.0365 29.35);
-      --rk-ansi-yellow: oklch(52.16% 0.1242 80.65);
+    [data-rk-theme='default'] {
+      --rk-ansi-bright-cyan: light-dark(var(--rk-palette-light-bright-cyan), var(--rk-palette-dark-bright-cyan));
+      --rk-ansi-bright-green: light-dark(var(--rk-palette-light-bright-green), var(--rk-palette-dark-bright-green));
+      --rk-ansi-bright-yellow: light-dark(var(--rk-palette-light-bright-yellow), var(--rk-palette-dark-bright-yellow));
+      --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
+      --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
+      --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
+      --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
+      --rk-ansi-tint-red: light-dark(var(--rk-palette-light-tint-red), var(--rk-palette-dark-tint-red));
+      --rk-ansi-yellow: light-dark(var(--rk-palette-light-yellow), var(--rk-palette-dark-yellow));
       /* Tinted accent backgrounds: callouts, rows. */
       --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
       /* Tinted danger backgrounds: callouts, rows. */
@@ -1965,6 +2642,21 @@
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      --rk-palette-dark-bright-blue: oklch(77.33% 0.126 259.3);
+      --rk-palette-dark-bright-cyan: oklch(78% 0.15 200);
+      --rk-palette-dark-bright-red: oklch(78% 0.15 27);
+      --rk-palette-dark-cyan: oklch(66.38% 0.1512 200.5);
+      --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
+      --rk-palette-dark-yellow: oklch(66.04% 0.1562 84.25);
+      --rk-palette-light-bright-cyan: oklch(44.76% 0.102 201.7);
+      --rk-palette-light-bright-green: oklch(44% 0.15 150);
+      --rk-palette-light-bright-yellow: oklch(44.16% 0.1053 79.86);
+      --rk-palette-light-cyan: oklch(50.26% 0.1145 201.5);
+      --rk-palette-light-green: oklch(51.5% 0.16 150);
+      --rk-palette-light-selection: oklch(94.58% 0.0297 248.6);
+      --rk-palette-light-tint-blue: oklch(94.58% 0.0297 248.6);
+      --rk-palette-light-tint-red: oklch(94.41% 0.0365 29.35);
+      --rk-palette-light-yellow: oklch(52.16% 0.1242 80.65);
       /* Attribute and property keys in markup. */
       --rk-syntax-attribute: var(--rk-ansi-yellow);
       /* Numbers, booleans, constants. */
@@ -1981,17 +2673,16 @@
 
 @media (color-gamut: rec2020) {
   @layer rk.tokens {
-    [data-theme='light'] {
-      color-scheme: light;
-      --rk-ansi-bright-cyan: oklch(44% 0.15 200);
-      --rk-ansi-bright-green: oklch(44% 0.15 150);
-      --rk-ansi-bright-yellow: oklch(44.12% 0.1073 80.02);
-      --rk-ansi-cyan: oklch(49.5% 0.16 200);
-      --rk-ansi-green: oklch(51.5% 0.16 150);
-      --rk-ansi-selection: oklch(94.68% 0.0293 250.3);
-      --rk-ansi-tint-blue: oklch(94.68% 0.0293 250.3);
-      --rk-ansi-tint-red: oklch(95% 0.045 27);
-      --rk-ansi-yellow: oklch(52.12% 0.1265 80.81);
+    [data-rk-theme='default'] {
+      --rk-ansi-bright-cyan: light-dark(var(--rk-palette-light-bright-cyan), var(--rk-palette-dark-bright-cyan));
+      --rk-ansi-bright-green: light-dark(var(--rk-palette-light-bright-green), var(--rk-palette-dark-bright-green));
+      --rk-ansi-bright-yellow: light-dark(var(--rk-palette-light-bright-yellow), var(--rk-palette-dark-bright-yellow));
+      --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
+      --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
+      --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
+      --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
+      --rk-ansi-tint-red: light-dark(var(--rk-palette-light-tint-red), var(--rk-palette-dark-tint-red));
+      --rk-ansi-yellow: light-dark(var(--rk-palette-light-yellow), var(--rk-palette-dark-yellow));
       /* Tinted accent backgrounds: callouts, rows. */
       --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
       /* Tinted danger backgrounds: callouts, rows. */
@@ -2011,6 +2702,21 @@
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      --rk-palette-dark-bright-blue: oklch(77.49% 0.1265 260.1);
+      --rk-palette-dark-bright-cyan: oklch(78% 0.15 200);
+      --rk-palette-dark-bright-red: oklch(78% 0.15 27);
+      --rk-palette-dark-cyan: oklch(66% 0.16 200);
+      --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
+      --rk-palette-dark-yellow: oklch(66.01% 0.1593 84.86);
+      --rk-palette-light-bright-cyan: oklch(44% 0.15 200);
+      --rk-palette-light-bright-green: oklch(44% 0.15 150);
+      --rk-palette-light-bright-yellow: oklch(44.12% 0.1073 80.02);
+      --rk-palette-light-cyan: oklch(49.5% 0.16 200);
+      --rk-palette-light-green: oklch(51.5% 0.16 150);
+      --rk-palette-light-selection: oklch(94.68% 0.0293 250.3);
+      --rk-palette-light-tint-blue: oklch(94.68% 0.0293 250.3);
+      --rk-palette-light-tint-red: oklch(95% 0.045 27);
+      --rk-palette-light-yellow: oklch(52.12% 0.1265 80.81);
       /* Attribute and property keys in markup. */
       --rk-syntax-attribute: var(--rk-ansi-yellow);
       /* Numbers, booleans, constants. */
@@ -2019,338 +2725,6 @@
       --rk-syntax-inserted: var(--rk-ansi-green);
       /* Strings and template literals. */
       --rk-syntax-string: var(--rk-ansi-green);
-      /* Types, classes, components, tag names. */
-      --rk-syntax-type: var(--rk-ansi-cyan);
-    }
-  }
-}
-
-@layer rk.tokens {
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) {
-      color-scheme: dark;
-      --rk-ansi-active: oklch(29.5% 0.006 262);
-      --rk-ansi-background: oklch(16.5% 0.0048 262);
-      --rk-ansi-black: oklch(24.5% 0.0059 262);
-      --rk-ansi-blue: oklch(66% 0.16 262);
-      --rk-ansi-border: oklch(53% 0.006 262);
-      --rk-ansi-border-strong: oklch(60% 0.006 262);
-      --rk-ansi-border-subtle: oklch(26% 0.006 262);
-      --rk-ansi-bright-black: oklch(36% 0.006 262);
-      --rk-ansi-bright-blue: oklch(77.35% 0.1158 258.9);
-      --rk-ansi-bright-cyan: oklch(78.82% 0.134 200.9);
-      --rk-ansi-bright-green: oklch(78% 0.15 150);
-      --rk-ansi-bright-magenta: oklch(78% 0.15 320);
-      --rk-ansi-bright-red: oklch(76.68% 0.1381 27.31);
-      --rk-ansi-bright-white: oklch(98% 0.002 262);
-      --rk-ansi-bright-yellow: oklch(78% 0.15 85);
-      --rk-ansi-cursor: oklch(66% 0.16 262);
-      --rk-ansi-cyan: oklch(66.9% 0.1138 201.2);
-      --rk-ansi-faint: oklch(46% 0.006 262);
-      --rk-ansi-foreground: oklch(94% 0.0029 262);
-      --rk-ansi-green: oklch(66% 0.16 150);
-      --rk-ansi-hover: oklch(27% 0.006 262);
-      --rk-ansi-magenta: oklch(66% 0.16 320);
-      --rk-ansi-muted: oklch(74% 0.006 262);
-      --rk-ansi-red: oklch(66% 0.16 27);
-      --rk-ansi-selection: oklch(26% 0.045 262);
-      --rk-ansi-subtle: oklch(24.5% 0.0059 262);
-      --rk-ansi-surface: oklch(20.5% 0.0054 262);
-      --rk-ansi-tint-blue: oklch(26% 0.045 262);
-      --rk-ansi-tint-cyan: oklch(26.04% 0.0443 200.1);
-      --rk-ansi-tint-green: oklch(26% 0.045 150);
-      --rk-ansi-tint-red: oklch(26% 0.045 27);
-      --rk-ansi-tint-yellow: oklch(26% 0.045 85);
-      --rk-ansi-white: oklch(86% 0.0044 262);
-      --rk-ansi-yellow: oklch(66.19% 0.1367 81.15);
-      --rk-bg-accent-solid: var(--rk-ansi-blue);
-      --rk-bg-accent-solid-hover: var(--rk-ansi-bright-blue);
-      --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
-      --rk-bg-active: var(--rk-ansi-active);
-      --rk-bg-danger-solid: var(--rk-ansi-red);
-      --rk-bg-danger-solid-hover: var(--rk-ansi-bright-red);
-      --rk-bg-danger-subtle: var(--rk-ansi-tint-red);
-      --rk-bg-hover: var(--rk-ansi-hover);
-      --rk-bg-info-solid: var(--rk-ansi-cyan);
-      --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
-      --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-      --rk-bg-inverse: var(--rk-ansi-foreground);
-      --rk-bg-page: var(--rk-ansi-background);
-      --rk-bg-subtle: var(--rk-ansi-subtle);
-      --rk-bg-success-solid: var(--rk-ansi-green);
-      --rk-bg-success-solid-hover: var(--rk-ansi-bright-green);
-      --rk-bg-success-subtle: var(--rk-ansi-tint-green);
-      --rk-bg-surface: var(--rk-ansi-surface);
-      --rk-bg-warning-solid: var(--rk-ansi-yellow);
-      --rk-bg-warning-solid-hover: var(--rk-ansi-bright-yellow);
-      --rk-bg-warning-subtle: var(--rk-ansi-tint-yellow);
-      --rk-border-accent: var(--rk-ansi-blue);
-      --rk-border-control: var(--rk-ansi-border-strong);
-      --rk-border-danger: var(--rk-ansi-red);
-      --rk-border-default: var(--rk-ansi-border);
-      --rk-border-focus: var(--rk-ansi-blue);
-      --rk-border-info: var(--rk-ansi-cyan);
-      --rk-border-subtle: var(--rk-ansi-border-subtle);
-      --rk-border-success: var(--rk-ansi-green);
-      --rk-border-surface: var(--rk-ansi-border);
-      --rk-border-warning: var(--rk-ansi-yellow);
-      --rk-fg-accent: var(--rk-ansi-blue);
-      --rk-fg-danger: var(--rk-ansi-red);
-      --rk-fg-default: var(--rk-ansi-foreground);
-      --rk-fg-disabled: var(--rk-ansi-faint);
-      --rk-fg-info: var(--rk-ansi-cyan);
-      --rk-fg-muted: var(--rk-ansi-muted);
-      --rk-fg-on-accent: var(--rk-ansi-background);
-      --rk-fg-on-danger: var(--rk-ansi-background);
-      --rk-fg-on-info: var(--rk-ansi-background);
-      --rk-fg-on-inverse: var(--rk-ansi-background);
-      --rk-fg-on-success: var(--rk-ansi-background);
-      --rk-fg-on-warning: var(--rk-ansi-background);
-      --rk-fg-success: var(--rk-ansi-green);
-      --rk-fg-warning: var(--rk-ansi-yellow);
-      --rk-syntax-attribute: var(--rk-ansi-yellow);
-      --rk-syntax-comment: var(--rk-ansi-muted);
-      --rk-syntax-constant: var(--rk-ansi-yellow);
-      --rk-syntax-deleted: var(--rk-ansi-red);
-      --rk-syntax-error: var(--rk-ansi-red);
-      --rk-syntax-function: var(--rk-ansi-blue);
-      --rk-syntax-inserted: var(--rk-ansi-green);
-      --rk-syntax-keyword: var(--rk-ansi-magenta);
-      --rk-syntax-plain: var(--rk-ansi-foreground);
-      --rk-syntax-regexp: var(--rk-ansi-red);
-      --rk-syntax-string: var(--rk-ansi-green);
-      --rk-syntax-type: var(--rk-ansi-cyan);
-    }
-  }
-}
-
-@media (color-gamut: p3) {
-  @layer rk.tokens {
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme='light']) {
-        color-scheme: dark;
-        --rk-ansi-bright-blue: oklch(77.33% 0.126 259.3);
-        --rk-ansi-bright-cyan: oklch(78% 0.15 200);
-        --rk-ansi-bright-red: oklch(78% 0.15 27);
-        --rk-ansi-cyan: oklch(66.38% 0.1512 200.5);
-        --rk-ansi-tint-cyan: oklch(26% 0.045 200);
-        --rk-ansi-yellow: oklch(66.04% 0.1562 84.25);
-        --rk-bg-accent-solid-hover: var(--rk-ansi-bright-blue);
-        --rk-bg-danger-solid-hover: var(--rk-ansi-bright-red);
-        /* Filled info backgrounds. */
-        --rk-bg-info-solid: var(--rk-ansi-cyan);
-        --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
-        /* Tinted info backgrounds: callouts, rows. */
-        --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-        /* Filled warning backgrounds. */
-        --rk-bg-warning-solid: var(--rk-ansi-yellow);
-        --rk-border-info: var(--rk-ansi-cyan);
-        --rk-border-warning: var(--rk-ansi-yellow);
-        --rk-fg-info: var(--rk-ansi-cyan);
-        --rk-fg-warning: var(--rk-ansi-yellow);
-        /* Attribute and property keys in markup. */
-        --rk-syntax-attribute: var(--rk-ansi-yellow);
-        /* Numbers, booleans, constants. */
-        --rk-syntax-constant: var(--rk-ansi-yellow);
-        /* Types, classes, components, tag names. */
-        --rk-syntax-type: var(--rk-ansi-cyan);
-      }
-    }
-  }
-}
-
-@media (color-gamut: rec2020) {
-  @layer rk.tokens {
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme='light']) {
-        color-scheme: dark;
-        --rk-ansi-bright-blue: oklch(77.49% 0.1265 260.1);
-        --rk-ansi-bright-cyan: oklch(78% 0.15 200);
-        --rk-ansi-bright-red: oklch(78% 0.15 27);
-        --rk-ansi-cyan: oklch(66% 0.16 200);
-        --rk-ansi-tint-cyan: oklch(26% 0.045 200);
-        --rk-ansi-yellow: oklch(66.01% 0.1593 84.86);
-        --rk-bg-accent-solid-hover: var(--rk-ansi-bright-blue);
-        --rk-bg-danger-solid-hover: var(--rk-ansi-bright-red);
-        /* Filled info backgrounds. */
-        --rk-bg-info-solid: var(--rk-ansi-cyan);
-        --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
-        /* Tinted info backgrounds: callouts, rows. */
-        --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-        /* Filled warning backgrounds. */
-        --rk-bg-warning-solid: var(--rk-ansi-yellow);
-        --rk-border-info: var(--rk-ansi-cyan);
-        --rk-border-warning: var(--rk-ansi-yellow);
-        --rk-fg-info: var(--rk-ansi-cyan);
-        --rk-fg-warning: var(--rk-ansi-yellow);
-        /* Attribute and property keys in markup. */
-        --rk-syntax-attribute: var(--rk-ansi-yellow);
-        /* Numbers, booleans, constants. */
-        --rk-syntax-constant: var(--rk-ansi-yellow);
-        /* Types, classes, components, tag names. */
-        --rk-syntax-type: var(--rk-ansi-cyan);
-      }
-    }
-  }
-}
-
-@layer rk.tokens {
-  [data-theme='dark'] {
-    color-scheme: dark;
-    --rk-ansi-active: oklch(29.5% 0.006 262);
-    --rk-ansi-background: oklch(16.5% 0.0048 262);
-    --rk-ansi-black: oklch(24.5% 0.0059 262);
-    --rk-ansi-blue: oklch(66% 0.16 262);
-    --rk-ansi-border: oklch(53% 0.006 262);
-    --rk-ansi-border-strong: oklch(60% 0.006 262);
-    --rk-ansi-border-subtle: oklch(26% 0.006 262);
-    --rk-ansi-bright-black: oklch(36% 0.006 262);
-    --rk-ansi-bright-blue: oklch(77.35% 0.1158 258.9);
-    --rk-ansi-bright-cyan: oklch(78.82% 0.134 200.9);
-    --rk-ansi-bright-green: oklch(78% 0.15 150);
-    --rk-ansi-bright-magenta: oklch(78% 0.15 320);
-    --rk-ansi-bright-red: oklch(76.68% 0.1381 27.31);
-    --rk-ansi-bright-white: oklch(98% 0.002 262);
-    --rk-ansi-bright-yellow: oklch(78% 0.15 85);
-    --rk-ansi-cursor: oklch(66% 0.16 262);
-    --rk-ansi-cyan: oklch(66.9% 0.1138 201.2);
-    --rk-ansi-faint: oklch(46% 0.006 262);
-    --rk-ansi-foreground: oklch(94% 0.0029 262);
-    --rk-ansi-green: oklch(66% 0.16 150);
-    --rk-ansi-hover: oklch(27% 0.006 262);
-    --rk-ansi-magenta: oklch(66% 0.16 320);
-    --rk-ansi-muted: oklch(74% 0.006 262);
-    --rk-ansi-red: oklch(66% 0.16 27);
-    --rk-ansi-selection: oklch(26% 0.045 262);
-    --rk-ansi-subtle: oklch(24.5% 0.0059 262);
-    --rk-ansi-surface: oklch(20.5% 0.0054 262);
-    --rk-ansi-tint-blue: oklch(26% 0.045 262);
-    --rk-ansi-tint-cyan: oklch(26.04% 0.0443 200.1);
-    --rk-ansi-tint-green: oklch(26% 0.045 150);
-    --rk-ansi-tint-red: oklch(26% 0.045 27);
-    --rk-ansi-tint-yellow: oklch(26% 0.045 85);
-    --rk-ansi-white: oklch(86% 0.0044 262);
-    --rk-ansi-yellow: oklch(66.19% 0.1367 81.15);
-    --rk-bg-accent-solid: var(--rk-ansi-blue);
-    --rk-bg-accent-solid-hover: var(--rk-ansi-bright-blue);
-    --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
-    --rk-bg-active: var(--rk-ansi-active);
-    --rk-bg-danger-solid: var(--rk-ansi-red);
-    --rk-bg-danger-solid-hover: var(--rk-ansi-bright-red);
-    --rk-bg-danger-subtle: var(--rk-ansi-tint-red);
-    --rk-bg-hover: var(--rk-ansi-hover);
-    --rk-bg-info-solid: var(--rk-ansi-cyan);
-    --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
-    --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-    --rk-bg-inverse: var(--rk-ansi-foreground);
-    --rk-bg-page: var(--rk-ansi-background);
-    --rk-bg-subtle: var(--rk-ansi-subtle);
-    --rk-bg-success-solid: var(--rk-ansi-green);
-    --rk-bg-success-solid-hover: var(--rk-ansi-bright-green);
-    --rk-bg-success-subtle: var(--rk-ansi-tint-green);
-    --rk-bg-surface: var(--rk-ansi-surface);
-    --rk-bg-warning-solid: var(--rk-ansi-yellow);
-    --rk-bg-warning-solid-hover: var(--rk-ansi-bright-yellow);
-    --rk-bg-warning-subtle: var(--rk-ansi-tint-yellow);
-    --rk-border-accent: var(--rk-ansi-blue);
-    --rk-border-control: var(--rk-ansi-border-strong);
-    --rk-border-danger: var(--rk-ansi-red);
-    --rk-border-default: var(--rk-ansi-border);
-    --rk-border-focus: var(--rk-ansi-blue);
-    --rk-border-info: var(--rk-ansi-cyan);
-    --rk-border-subtle: var(--rk-ansi-border-subtle);
-    --rk-border-success: var(--rk-ansi-green);
-    --rk-border-surface: var(--rk-ansi-border);
-    --rk-border-warning: var(--rk-ansi-yellow);
-    --rk-fg-accent: var(--rk-ansi-blue);
-    --rk-fg-danger: var(--rk-ansi-red);
-    --rk-fg-default: var(--rk-ansi-foreground);
-    --rk-fg-disabled: var(--rk-ansi-faint);
-    --rk-fg-info: var(--rk-ansi-cyan);
-    --rk-fg-muted: var(--rk-ansi-muted);
-    --rk-fg-on-accent: var(--rk-ansi-background);
-    --rk-fg-on-danger: var(--rk-ansi-background);
-    --rk-fg-on-info: var(--rk-ansi-background);
-    --rk-fg-on-inverse: var(--rk-ansi-background);
-    --rk-fg-on-success: var(--rk-ansi-background);
-    --rk-fg-on-warning: var(--rk-ansi-background);
-    --rk-fg-success: var(--rk-ansi-green);
-    --rk-fg-warning: var(--rk-ansi-yellow);
-    --rk-syntax-attribute: var(--rk-ansi-yellow);
-    --rk-syntax-comment: var(--rk-ansi-muted);
-    --rk-syntax-constant: var(--rk-ansi-yellow);
-    --rk-syntax-deleted: var(--rk-ansi-red);
-    --rk-syntax-error: var(--rk-ansi-red);
-    --rk-syntax-function: var(--rk-ansi-blue);
-    --rk-syntax-inserted: var(--rk-ansi-green);
-    --rk-syntax-keyword: var(--rk-ansi-magenta);
-    --rk-syntax-plain: var(--rk-ansi-foreground);
-    --rk-syntax-regexp: var(--rk-ansi-red);
-    --rk-syntax-string: var(--rk-ansi-green);
-    --rk-syntax-type: var(--rk-ansi-cyan);
-  }
-}
-
-@media (color-gamut: p3) {
-  @layer rk.tokens {
-    [data-theme='dark'] {
-      color-scheme: dark;
-      --rk-ansi-bright-blue: oklch(77.33% 0.126 259.3);
-      --rk-ansi-bright-cyan: oklch(78% 0.15 200);
-      --rk-ansi-bright-red: oklch(78% 0.15 27);
-      --rk-ansi-cyan: oklch(66.38% 0.1512 200.5);
-      --rk-ansi-tint-cyan: oklch(26% 0.045 200);
-      --rk-ansi-yellow: oklch(66.04% 0.1562 84.25);
-      --rk-bg-accent-solid-hover: var(--rk-ansi-bright-blue);
-      --rk-bg-danger-solid-hover: var(--rk-ansi-bright-red);
-      /* Filled info backgrounds. */
-      --rk-bg-info-solid: var(--rk-ansi-cyan);
-      --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
-      /* Tinted info backgrounds: callouts, rows. */
-      --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-      /* Filled warning backgrounds. */
-      --rk-bg-warning-solid: var(--rk-ansi-yellow);
-      --rk-border-info: var(--rk-ansi-cyan);
-      --rk-border-warning: var(--rk-ansi-yellow);
-      --rk-fg-info: var(--rk-ansi-cyan);
-      --rk-fg-warning: var(--rk-ansi-yellow);
-      /* Attribute and property keys in markup. */
-      --rk-syntax-attribute: var(--rk-ansi-yellow);
-      /* Numbers, booleans, constants. */
-      --rk-syntax-constant: var(--rk-ansi-yellow);
-      /* Types, classes, components, tag names. */
-      --rk-syntax-type: var(--rk-ansi-cyan);
-    }
-  }
-}
-
-@media (color-gamut: rec2020) {
-  @layer rk.tokens {
-    [data-theme='dark'] {
-      color-scheme: dark;
-      --rk-ansi-bright-blue: oklch(77.49% 0.1265 260.1);
-      --rk-ansi-bright-cyan: oklch(78% 0.15 200);
-      --rk-ansi-bright-red: oklch(78% 0.15 27);
-      --rk-ansi-cyan: oklch(66% 0.16 200);
-      --rk-ansi-tint-cyan: oklch(26% 0.045 200);
-      --rk-ansi-yellow: oklch(66.01% 0.1593 84.86);
-      --rk-bg-accent-solid-hover: var(--rk-ansi-bright-blue);
-      --rk-bg-danger-solid-hover: var(--rk-ansi-bright-red);
-      /* Filled info backgrounds. */
-      --rk-bg-info-solid: var(--rk-ansi-cyan);
-      --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
-      /* Tinted info backgrounds: callouts, rows. */
-      --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-      /* Filled warning backgrounds. */
-      --rk-bg-warning-solid: var(--rk-ansi-yellow);
-      --rk-border-info: var(--rk-ansi-cyan);
-      --rk-border-warning: var(--rk-ansi-yellow);
-      --rk-fg-info: var(--rk-ansi-cyan);
-      --rk-fg-warning: var(--rk-ansi-yellow);
-      /* Attribute and property keys in markup. */
-      --rk-syntax-attribute: var(--rk-ansi-yellow);
-      /* Numbers, booleans, constants. */
-      --rk-syntax-constant: var(--rk-ansi-yellow);
       /* Types, classes, components, tag names. */
       --rk-syntax-type: var(--rk-ansi-cyan);
     }
@@ -2494,5 +2868,19 @@
     --rk-space-10: 10;
     --rk-space-12: 12;
     --rk-space-16: 16;
+  }
+}
+
+/*
+ * Mode islands (cairn 0058, 0052). Every colour is a light-dark() pair, so a
+ * mode is only a colour scheme: it works on any element, inside or around a
+ * theme island, and changes nothing else.
+ */
+@layer rk.tokens {
+  [data-theme='light'] {
+    color-scheme: light;
+  }
+  [data-theme='dark'] {
+    color-scheme: dark;
   }
 }
