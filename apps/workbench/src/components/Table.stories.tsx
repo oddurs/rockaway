@@ -455,14 +455,20 @@ export const Scrolls: Story = {
     expect(getComputedStyle(region, '::before').visibility).toBe('hidden');
     // The columns are the ones it would have had with room: nothing is squeezed.
     expect(screenshot(screenOf(canvasElement), { legend: false })).toBe(model(sortBy('name')));
-    // Scrolled part of the way, it comes to rest on a column's start, a whole cell.
+    // Scrolled part of the way, it comes to rest where a column starts or where
+    // the table ends. The region and the table are both whole cells wide, so
+    // either is a whole number of cells, to within the pixel a scroll position
+    // is rounded to.
     const cell = Number.parseFloat(getComputedStyle(region).getPropertyValue('--rk-cell-width'));
-    region.scrollTo({ left: cell * 9.4 });
-    await waitFor(() => {
-      const at = region.scrollLeft / cell;
-      expect(at).toBeGreaterThan(0);
-      expect(Math.abs(at - Math.round(at))).toBeLessThan(0.05);
-    });
+    const whole = (px: number): number => Math.abs(px / cell - Math.round(px / cell)) * cell;
+    expect(whole(region.clientWidth)).toBeLessThanOrEqual(1);
+    for (const left of [2.4, 4.6]) {
+      region.scrollTo({ left: cell * left });
+      await waitFor(() => {
+        expect(region.scrollLeft).toBeGreaterThan(0);
+        expect(whole(region.scrollLeft)).toBeLessThanOrEqual(1);
+      });
+    }
     region.scrollTo({ left: 0 });
   },
 };

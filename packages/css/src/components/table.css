@@ -135,6 +135,10 @@
    * at each edge that has more past it.
    */
   .rk-table-scrolls {
+    /* Whole cells wide, so where it comes to rest is a whole number of cells:
+     * a column's start, or the table's end. A sixteenth of a cell's grace for
+     * layout's 1/64px snapping, as fieldset.css explains. */
+    inline-size: round(down, calc(100% + var(--rk-cell-width) / 16), var(--rk-cell-width));
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
