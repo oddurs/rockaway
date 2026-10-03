@@ -3,12 +3,13 @@ id: 197
 uid: 5aeb7c3e-e6f5-4bbb-be10-c33fa8fc1152
 title: Meet WCAG 2.2 AA target size at the default density, and 44px at touch
 type: decision
-status: backlog
+status: done
 milestone: primitives
 depends_on:
 - 74
 created: 2026-10-03
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p0
 layer: tokens
 effort: s
@@ -45,3 +46,7 @@ pass.
 The default loses a little of the tight terminal look; `dense` keeps it for
 those who choose it. A system that sells accessibility as a feature does not
 fail AA by default.
+
+## Result
+
+The default density meets WCAG 2.2 AA: normal is a 1.5 line box (24px), touch 2.75 (44px, as 0074 promised), airy 2, dense 1 as a documented opt-in carried as a permanent known entry. Built in 0198 (#112).
