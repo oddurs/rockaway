@@ -49,3 +49,7 @@ The check cannot be "measure the bar", because headless hides it. It is: every
 element whose computed `overflow` scrolls must have `scrollbar-width: none`,
 checked after every story like conformance. Add a classic-scrollbar browser run
 if Chromium can be made to show them.
+
+## 2026-10-03
+
+Built in 0208. Classic scrollbars can be forced in headless Chromium by dropping Playwright's --hide-scrollbars default (ignoreDefaultArgs) and turning overlay scrollbars off; a native bar then measures 15px on macOS. The workbench has a classic-scrollbars project for it.
