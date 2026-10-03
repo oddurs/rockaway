@@ -18,6 +18,8 @@
  */
 
 export interface TargetFailure {
+  /** The target itself, so a caller can ask what context it is in. */
+  readonly target: HTMLElement;
   readonly element: string;
   readonly width: number;
   readonly height: number;
@@ -138,7 +140,7 @@ export function checkTargets(root: HTMLElement, options: TargetOptions = {}): Ta
   const radius = minimum / 2;
   for (const target of targets) {
     const { el, box } = target;
-    const size = { element: describe(el), width: box.width, height: box.height };
+    const size = { target: el, element: describe(el), width: box.width, height: box.height };
     if (options.minHeight !== undefined && box.height + 0.5 < options.minHeight) {
       failures.push({ ...size, rule: 'height' });
     }

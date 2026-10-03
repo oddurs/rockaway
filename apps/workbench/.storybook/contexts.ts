@@ -27,6 +27,14 @@ export function setContexts(root: HTMLElement, contexts: Contexts): void {
   }
 }
 
+/** The density an element is drawn at: the nearest context that sets one. */
+export function densityOf(el: Element): Density | undefined {
+  const attribute = contextAttributes.density;
+  return (el.closest(`[${attribute}]`)?.getAttribute(attribute) ?? undefined) as
+    | Density
+    | undefined;
+}
+
 /** What `root` says now, so a walk can put it back the way it found it. */
 export function readContexts(root: HTMLElement): Contexts {
   const contexts: Contexts = {};
