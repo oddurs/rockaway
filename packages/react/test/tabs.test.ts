@@ -1,7 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { layoutTabs, tabsText } from '../src/components/tabs.tsx';
+import { layoutTabs, tabsText } from '../src/components/tabs.pure.ts';
 
 const LABELS = ['files', 'log', 'diff'];
 

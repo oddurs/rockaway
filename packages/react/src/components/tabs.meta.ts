@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { tabsText } from './tabs.tsx';
+import { tabsText } from './tabs.pure.ts';
 
 const LABELS = ['files', 'log', 'diff'];
 const MANY = ['files', 'log', 'diff', 'blame', 'stash', 'remotes', 'tags'];

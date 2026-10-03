@@ -7,7 +7,9 @@
  * label that does not fit rather than wrapping it.
  *
  * Selected is reverse video and bold (0118): the tab's own figure and ground
- * swapped, not the inverse pair, so forced colors still shows it (0181).
+ * swapped. In forced colors that pair is the reader's text and canvas, and
+ * `forced-colors.css` takes the selected tab off the backplate with every
+ * other reversed element (0181).
  * Unselected tabs are muted; hovering underlines the label; a disabled tab is
  * dim. Focus is the ring, which costs no cell.
  */
@@ -26,15 +28,20 @@
     inset-inline-start: calc(var(--rk-tab-x, 0) * var(--rk-cell-width));
     inline-size: calc(var(--rk-tab-cols, 0) * var(--rk-cell-width));
     block-size: var(--rk-cell-height);
-    padding-inline: var(--rk-cell-width);
+    padding-inline: calc(var(--rk-tab-shown, 1) * var(--rk-cell-width));
     overflow: clip;
     overflow-clip-margin: var(--rk-cell-width);
     white-space: pre;
     color: var(--rk-fg-muted);
     background: var(--rk-bg-page);
     cursor: default;
-    /* Scrolled out of the edge: no cells and nothing seen, but still a tab. */
+    /*
+     * Scrolled out of the edge: no cells, clipped to nothing and not seen,
+     * but still a tab the keyboard reaches and a reader hears. Clipped rather
+     * than hidden, because a hidden element cannot take focus.
+     */
     opacity: var(--rk-tab-shown, 1);
+    clip-path: var(--rk-tab-clip, none);
   }
 
   .rk-tab-room {
@@ -60,15 +67,6 @@
 
   .rk-tab[data-disabled] {
     color: var(--rk-fg-disabled);
-  }
-
-  @media (forced-colors: active) {
-    /* The swap, in the reader's pair, without a backplate behind the label. */
-    .rk-tab[data-selected] {
-      forced-color-adjust: none;
-      background: CanvasText;
-      color: Canvas;
-    }
   }
 
   .rk-tab-panel {
