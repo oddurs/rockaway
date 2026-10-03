@@ -216,7 +216,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`##········` 13% · 3 of 24 done · due 2027-02-21
+`##········` 17% · 4 of 24 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -230,8 +230,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0113`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p1</sup>
 - [ ] [`0144`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0144-highlight-code-in-the-ansi-16.md) Highlight code in the ANSI 16 <sup>feature · tokens · p1</sup>
-- [ ] [`0145`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0145-enable-github-pages-for-the-repository.md) Enable GitHub Pages for the repository <sup>chore · tooling · p0 · needs-owner</sup>
-- [ ] [`0146`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0146-deploy-the-site-to-github-pages-on-every-push-to-main.md) Deploy the site to GitHub Pages on every push to main <sup>chore · tooling · p0</sup>
 - [ ] [`0147`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0147-document-every-component-on-its-own-page-generated-from-its-metadata.md) Document every component on its own page, generated from its metadata <sup>feature · site · p0</sup>
 - [ ] [`0148`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0148-switch-theme-mode-and-density-on-the-site-and-remember-the-choice-without-a-flash.md) Switch theme, mode and density on the site, and remember the choice without a flash <sup>feature · site · p0</sup>
 - [ ] [`0149`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0149-index-every-page-for-the-command-palette-at-build-time.md) Index every page for the command palette at build time <sup>feature · site · p1</sup>
@@ -244,11 +242,16 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0187`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0187-scroll-code-and-tables-with-overflow-marks-not-scrollbars.md) Scroll code and tables with overflow marks, not scrollbars <sup>feature · css · p2</sup>
 - [ ] [`0188`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0188-export-the-fitted-imported-themes-back-to-terminal-files.md) Export the fitted imported themes back to terminal files <sup>feature · tokens · p2</sup>
 
+### in progress
+
+- [ ] [`0146`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0146-deploy-the-site-to-github-pages-on-every-push-to-main.md) Deploy the site to GitHub Pages on every push to main <sup>chore · tooling · p0</sup>
+
 ### done
 
 - [x] [`0077`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0077-build-the-site-as-the-system-statically-on-pages.md) Build the site as the system, statically, on Pages <sup>decision · site · p0</sup>
 - [x] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
 - [x] [`0143`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0143-set-prose-on-the-grid-headings-lists-quotes-code-and-tables-from-markdown.md) Set prose on the grid: headings, lists, quotes, code and tables from Markdown <sup>feature · css · p0</sup>
+- [x] [`0145`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0145-enable-github-pages-for-the-repository.md) Enable GitHub Pages for the repository <sup>chore · tooling · p0 · needs-owner</sup>
 
 ## v0.1 — v0.1 — first release
 
