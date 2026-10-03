@@ -29,3 +29,4 @@ first thing an HN reader on a phone will notice.
 - [ ] The choice persists, and an inline script in the head applies it before first paint: no flash, asserted by a Playwright test that captures the first frame
 - [ ] Switching theme or density changes no geometry beyond the cell's own size, and conformance passes in every combination
 - [ ] With JavaScript disabled the page follows the system's mode and pointer, and the switcher is not shown
+- [ ] The site (0106, 0148) lists every theme and offers each terminal format for download
