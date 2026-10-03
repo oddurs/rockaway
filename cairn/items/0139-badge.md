@@ -3,15 +3,15 @@ id: 139
 uid: 3c9825f7-b830-4060-b8b4-0edeac238130
 title: Badge
 type: component
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 32
 - 118
 created: 2026-10-03
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p2
 layer: components
 effort: s
@@ -44,8 +44,8 @@ is said in words when it matters (the text is "failing", not only `✗`).
 - [x] Built on the behaviour layer; no hand-rolled focus or keyboard logic
 - [x] Styled from `data-*` state and semantic tokens only
 - [x] Stories cover every state, and run as Vitest browser tests
-- [ ] axe passes; keyboard walkthrough recorded in the story
-- [ ] Light, dark and forced-colors verified
+- [x] axe passes; keyboard walkthrough recorded in the story
+- [x] Light, dark and forced-colors verified
 - [x] Metadata written: props, anatomy, when to use, when not to
 - [x] Sized in cells, and drawn by the frame engine: no box characters written by hand
 - [x] Both painters render it identically, measured in cells
@@ -56,7 +56,7 @@ is said in words when it matters (the text is "failing", not only `✗`).
 - [x] Conforms at `strict`, or declares its exception with a reason
 - [x] Draws every state from the state vocabulary (0118), and no state changes its size in cells
 - [x] Reads its glyphs from the theme (0119): no box-drawing, block or mark literal in its source
-- [ ] Rendered by the cell renderer (0117): continuity passes at all four densities
+- [x] Rendered by the cell renderer (0117): continuity passes at all four densities
 - [x] One export line in `packages/react/src/index.ts` and one import line in `packages/css/src/index.css`, as 0122 sets out
 - [x] Every tone carries a mark or a word as well as a colour, shown in a greyscale story
 
@@ -79,3 +79,11 @@ Not interactive, so criteria 1 and 11 hold by having nothing to operate: no role
 ## 2026-10-03
 
 Rebased onto main after 0047 and 0117 landed: badge.meta.ts written to the schema (tone values described, no states, snapshot drawn by badgeBuffer), a Badge fixture added to the metadata test, and a changeset added, which main now requires. The rebase's merge=union on index.ts doubled Button's line against main's new one; resolved by hand from main plus Badge's line.
+
+## 2026-10-03
+
+Criteria 4, 5 and 16 ticked from the 0131 branch, as agreed with the CTO: once 0163 held the p3 overrides to the contrast gate, CI ran axe green on every Badge story in light, dark (the Dark story) and forced colors (the tagged story); and 0117's continuity check runs after every story, Badge's included, at the densities its stories draw.
+
+## Result
+
+Badge ships: tone variant with a theme mark per tone (neutral delimited), mark={false} for the delimited form, both forms two cells wider than the words.

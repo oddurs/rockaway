@@ -122,7 +122,7 @@ function Switcher() {
     <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
       <div role="toolbar" aria-label="Theme" style={{ display: 'flex', flexWrap: 'wrap' }}>
         {themeContexts.map((t) => (
-          <Button key={t.name} variant="quiet" onPress={() => setTheme(t.name)}>
+          <Button key={t.name} delimiters="none" onPress={() => setTheme(t.name)}>
             {t.title}
           </Button>
         ))}
