@@ -8,7 +8,7 @@
  * tell the accent from the body text. Every state is drawn on top of that
  * underline from the state vocabulary (0118), and none of them adds a cell:
  *
- *   - hover doubles the underline, because the underline is already taken
+ *   - hover is bold, because the underline is already taken (0209)
  *   - focus is the ring in `focus.css`, an outline that costs no cell
  *   - pressed is reverse video: the link's own colour becomes the ground
  *   - current (`aria-current`) is bold, in `fg.default`, with the cursor mark
