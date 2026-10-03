@@ -1,12 +1,12 @@
 ---
-id: 43
+id: 97c2c8e2-ca0c-402e-90d2-774c5627aed6
 title: Tooltip
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 34
-- 86
+- 7b8c9403-b317-424a-9871-6c665fdf99d8
+- 75e3579e-32a8-476a-8839-3602936b98b3
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

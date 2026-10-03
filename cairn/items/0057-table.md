@@ -1,11 +1,11 @@
 ---
-id: 57
+id: ee14fbc6-8883-43b5-a91b-bf68a9ae8a68
 title: Table
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 34
+- 7b8c9403-b317-424a-9871-6c665fdf99d8
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

@@ -1,12 +1,12 @@
 ---
-id: 39
+id: f3445f26-c9ae-4de5-a110-eb7203bef5de
 title: Dialog
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 33
-- 86
+- 3ffe299c-0f5b-40b5-986c-e6d59b523cec
+- 75e3579e-32a8-476a-8839-3602936b98b3
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

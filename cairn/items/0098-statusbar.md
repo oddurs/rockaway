@@ -1,11 +1,11 @@
 ---
-id: 98
+id: d0b12e4c-f353-4241-8693-f27ad52062ef
 title: StatusBar
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 86
+- 75e3579e-32a8-476a-8839-3602936b98b3
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

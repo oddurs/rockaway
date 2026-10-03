@@ -1,12 +1,12 @@
 ---
-id: 78
+id: 83c474e9-31d5-4b38-b45d-945b02ffd3ba
 title: 'Scaffold @rockaway/grid: the pure geometry core'
 type: feature
 status: done
 milestone: grid
 assignee: Oddur Sigurdsson
 depends_on:
-- 71
+- 441a34ff-27d5-4222-b503-4de930dffd03
 created: 2026-09-22
 updated: 2026-09-22
 closed_at: 2026-09-22

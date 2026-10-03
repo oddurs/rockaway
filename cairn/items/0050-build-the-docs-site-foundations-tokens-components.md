@@ -1,11 +1,11 @@
 ---
-id: 50
+id: 9699d3c0-3ef4-4d7c-8f94-384fee9a0fc2
 title: 'Build the docs site: foundations, tokens, components'
 type: docs
 status: dropped
 milestone: v0.1
 depends_on:
-- 47
+- 7f329bd1-d9fc-44c9-ae6e-678cd7131d61
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

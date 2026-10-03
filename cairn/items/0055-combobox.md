@@ -1,11 +1,11 @@
 ---
-id: 55
+id: 0795fc10-3a42-4b94-8053-af06525955e8
 title: Combobox
 type: component
 status: backlog
 milestone: later
 depends_on:
-- 34
+- 7b8c9403-b317-424a-9871-6c665fdf99d8
 created: 2026-09-22
 updated: 2026-09-22
 priority: p3

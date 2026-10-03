@@ -1,12 +1,12 @@
 ---
-id: 23
+id: ddb55a9f-83a9-455d-bdf4-043fdcc8f710
 title: Generate a token reference page from the sources
 type: docs
 status: done
 milestone: tokens
 assignee: Oddur Sigurdsson
 depends_on:
-- 20
+- 950b997c-4cc3-4b18-a2ff-fdcbc5d349a6
 created: 2026-09-22
 updated: 2026-09-22
 priority: p2

@@ -1,11 +1,11 @@
 ---
-id: 3
+id: 5ea85abb-5478-4fc3-a65c-1b52ef12e6d3
 key: runtime
 title: Runtime CSS
 type: milestone
 status: done
 depends_on:
-- 2
+- cb3582ba-a46b-40d2-a3d6-cfa40b8fb9a6
 created: 2026-09-22
 updated: 2026-09-22
 priority: p2

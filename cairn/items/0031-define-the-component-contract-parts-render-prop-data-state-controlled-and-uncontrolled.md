@@ -1,12 +1,12 @@
 ---
-id: 31
+id: e4909c64-062c-4052-aa67-428f1da596e2
 title: 'Define the component contract: parts, render prop, data-* state, controlled and uncontrolled'
 type: decision
 status: dropped
 milestone: primitives
 depends_on:
-- 8
-- 9
+- 20cb52cf-d3e7-4487-9b1d-c1daaf376338
+- 49f84d7f-dcce-4638-b4c6-03786870da1c
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

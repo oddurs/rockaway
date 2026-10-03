@@ -1,13 +1,13 @@
 ---
-id: 20
+id: 950b997c-4cc3-4b18-a2ff-fdcbc5d349a6
 title: Compile tokens to CSS custom properties with Terrazzo
 type: feature
 status: done
 milestone: tokens
 assignee: Oddur Sigurdsson
 depends_on:
-- 15
-- 17
+- fed4a869-2154-44f7-8d27-663acf1ea2c8
+- 5e36e640-9a00-4539-b059-8fa90f68fcd0
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

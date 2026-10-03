@@ -1,12 +1,12 @@
 ---
-id: 96
+id: b8a52e51-7044-4528-a43a-af56ad8ff79c
 title: Frame
 type: component
 status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
 depends_on:
-- 86
+- 75e3579e-32a8-476a-8839-3602936b98b3
 created: 2026-09-22
 updated: 2026-09-23
 closed_at: 2026-09-23

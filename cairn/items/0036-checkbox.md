@@ -1,12 +1,12 @@
 ---
-id: 36
+id: 6d078271-c0b8-4a1a-9dc4-f616c3e6433b
 title: Checkbox
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 33
-- 86
+- 3ffe299c-0f5b-40b5-986c-e6d59b523cec
+- 75e3579e-32a8-476a-8839-3602936b98b3
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

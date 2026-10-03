@@ -1,5 +1,5 @@
 ---
-id: 11
+id: 5a26a342-3d32-4bc3-ad85-3eb4797ffa16
 title: 'Choose the distribution model: versioned package plus copy-in registry'
 type: decision
 status: done

@@ -1,5 +1,5 @@
 ---
-id: 51
+id: 77b2e14f-c778-46c0-8f5a-7669b667ed38
 title: Write a getting-started guide for consuming apps
 type: docs
 status: backlog

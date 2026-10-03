@@ -1,11 +1,11 @@
 ---
-id: 103
+id: e1a6b9f8-1076-4387-81b4-1ecaf9350082
 title: 'Scaffold the site: Astro, islands, static, Pages'
 type: chore
 status: backlog
 milestone: site
 depends_on:
-- 77
+- 8a07961a-1c71-42d4-b758-905ad6181c48
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

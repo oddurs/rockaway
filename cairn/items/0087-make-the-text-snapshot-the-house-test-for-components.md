@@ -1,12 +1,12 @@
 ---
-id: 87
+id: 5cd85b50-1be3-4316-bd43-92cc7fc66e66
 title: Make the text snapshot the house test for components
 type: chore
 status: done
 milestone: grid
 assignee: Oddur Sigurdsson
 depends_on:
-- 83
+- 837fceaa-9b85-476a-ae75-d8871dcedc3e
 created: 2026-09-22
 updated: 2026-09-23
 closed_at: 2026-09-23

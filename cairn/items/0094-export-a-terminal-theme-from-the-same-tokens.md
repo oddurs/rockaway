@@ -1,13 +1,13 @@
 ---
-id: 94
+id: 3f05d3b9-861d-491b-9dbe-edbd737d36f6
 title: Export a terminal theme from the same tokens
 type: feature
 status: done
 milestone: retheme
 assignee: Oddur Sigurdsson
 depends_on:
-- 70
-- 89
+- 1929b9a2-f8b9-4b85-a168-75543ac854b0
+- 64e82068-47bd-43f1-a0e7-150453d44669
 created: 2026-09-22
 updated: 2026-09-23
 closed_at: 2026-09-23

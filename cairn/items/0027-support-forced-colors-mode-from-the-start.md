@@ -1,12 +1,12 @@
 ---
-id: 27
+id: 43abfc46-f6e3-4eab-9e44-5e8f81032a03
 title: Support forced-colors mode from the start
 type: feature
 status: done
 milestone: runtime
 assignee: Oddur Sigurdsson
 depends_on:
-- 24
+- e6ee56dd-75d9-4e6c-8a3b-2c1b3654a64e
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1
