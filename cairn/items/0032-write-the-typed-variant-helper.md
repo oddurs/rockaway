@@ -3,14 +3,14 @@ id: 32
 uid: 710ebab1-aeaa-4c49-a2cf-3e679dad42fd
 title: Write the typed variant helper
 type: feature
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 76
 created: 2026-09-22
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p0
 layer: components
 effort: s
@@ -40,7 +40,7 @@ the metadata reads. Button adopts it in its polish (0131). No class names, no st
 
 - [x] Prop types are inferred from the definition; no component hand-writes a variant union
 - [x] It emits `data-*` attributes only, with defaults written out, covered by unit tests
-- [ ] The metadata schema (0047) reads each component's variant values from it
+- [x] The metadata schema (0047) reads each component's variant values from it
 - [x] A check fails if a CSS rule keyed on a `data-*` variant other than `size` sets a width, height, padding, margin or inset: variants do not change geometry
 
 ## 2026-10-03
@@ -58,3 +58,11 @@ The geometry check (packages/react/test/variant-geometry.test.ts) covers every d
 ## 2026-10-03
 
 Button's quiet variant is the one declared exception: it zeroes the label's padding-inline because it drops its delimiters. Left as it is to keep Button's behaviour unchanged; 0131 should decide whether quiet stays a variant or the air keys off the delimiters' presence. Criterion 3 is left unticked: it is true only once 0047 reads buttonVariants.values, and 0047 depends on this item. buttonVariants is exported from button.tsx (not the package barrel) for 0047 to read.
+
+## 2026-10-03
+
+Criterion 3 is true with 0047: button.meta.ts publishes Button's variants through describeVariants(buttonVariants, ...), which takes the names, values and default from the helper and only adds words, keyed by the helper's values. Button's variant and size props in the metadata are typed from buttonVariants.values too. Closed in 0047's pull request.
+
+## Result
+
+defineVariants(values, defaults) in packages/react/src/variants.ts; a component exports xVariants: Variants<typeof VARIANTS>, writes data-* with xVariants.dataAttributes(), and its metadata reads the values with describeVariants(xVariants, ...).
