@@ -93,6 +93,21 @@ function applyStyle(el: HTMLElement, style: Style): void {
   if (attrs.length > 0) el.dataset.attrs = attrs.join(' ');
 }
 
+/**
+ * The data attributes that make one character a cell the cell draws, for
+ * chrome that is a single element rather than a painted screen: a spinner's
+ * frame, a mark. Give the element the `rk-run` class too, so it is a whole
+ * cell. Empty for a letter, which the font draws (cairn 0166).
+ */
+export function shapeAttributes(ch: string): Record<string, string> {
+  const shape = shapeOf(ch);
+  if (!shape) return {};
+  return {
+    'data-rk-shape': shape.key,
+    ...(shape.dots.length > 0 ? { 'data-rk-dots': shape.dots.join(' ') } : {}),
+  };
+}
+
 /** Paint `buffer` into `target`, replacing what was there, with strokes of this style. */
 export function paintCells(
   buffer: Buffer,
@@ -113,6 +128,9 @@ export function paintCells(
       el.className = `${prefix}-run`;
       if (run.cells !== 1) el.style.setProperty('--rk-run', String(run.cells));
       if (run.shape) el.dataset.rkShape = run.shape;
+      // A braille cell says which dots it raises; one rule draws them all (0166).
+      const dots = shapeOf(run.text)?.dots ?? [];
+      if (dots.length > 0) el.dataset.rkDots = dots.join(' ');
       applyStyle(el, run.style);
       el.textContent = run.text;
       row.append(el);
