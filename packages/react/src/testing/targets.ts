@@ -83,9 +83,9 @@ const clipped = (style: CSSStyleDeclaration): boolean =>
 function isHidden(el: HTMLElement, style: CSSStyleDeclaration): boolean {
   if (style.visibility === 'hidden' || style.display === 'none') return true;
   if (el.closest('[aria-hidden="true"], [inert]') !== null) return true;
-  // Visually hidden, on the element or by a wrapper: React Aria's checkbox and
-  // radio put the native input inside a clipped span, and the label around it
-  // is the target a pointer meets.
+  // Visually hidden, on the element or by a wrapper, is nothing a pointer can
+  // meet. A hidden input in a label never gets here: `pointerTarget` has
+  // already swapped it for the label.
   const view = el.ownerDocument.defaultView;
   for (let node: HTMLElement | null = el; node; node = node.parentElement) {
     const own = node === el ? style : view?.getComputedStyle(node);
@@ -94,23 +94,18 @@ function isHidden(el: HTMLElement, style: CSSStyleDeclaration): boolean {
   return false;
 }
 
-/** The sr-only technique, in either of its forms, as `conformance.ts` reads it. */
-function isClipped(style: CSSStyleDeclaration): boolean {
-  return style.clipPath.startsWith('inset(50%') || style.clip === 'rect(0px, 0px, 0px, 0px)';
-}
-
 /**
- * What a pointer actually hits for this element. A checkbox, radio or switch
- * drawn by its label keeps the native input inside a visually hidden span:
- * its own box is a 13px square nobody can see or press, and the target is the
- * label around it, which is what a reader sees and what toggles the control.
- * An input hidden that way with no label is no target at all.
+ * What a pointer actually hits for this element. React Aria's checkbox, radio
+ * and switch keep the native input inside a visually hidden span: its own box
+ * is a 13px square nobody can see or press, and the target is the label
+ * around it, which is what a reader sees and what toggles the control. An
+ * input hidden that way with no label is no target at all.
  */
 function pointerTarget(el: HTMLElement, view: Window | null): HTMLElement | undefined {
   if (el.tagName !== 'INPUT') return el;
   for (let up = el.parentElement; up; up = up.parentElement) {
     const style = view?.getComputedStyle(up);
-    if (style && isClipped(style)) {
+    if (style && clipped(style)) {
       return el.closest('label') ?? (el as HTMLInputElement).labels?.[0] ?? undefined;
     }
   }

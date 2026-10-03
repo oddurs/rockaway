@@ -446,8 +446,8 @@ export const InANarrowForm: Story = {
 };
 
 /**
- * Touch density: the same one-row switch, a finger's height, and the whole
- * row, track and words, is the target.
+ * Touch density: the same one-row switch, 44px tall, and the whole row,
+ * track and words, is the target.
  */
 export const Touch: Story = {
   render: () => (
@@ -462,10 +462,12 @@ export const Touch: Story = {
     await settled();
     const wrap = canvas.getByRole('switch', { name: 'Wrap lines' });
     const button = buttonOf(wrap);
-    expect(button.getBoundingClientRect().height).toBeGreaterThanOrEqual(32);
+    // One row is 44px at touch (0197), so the switch is a finger's height outright.
+    await measured(document.body);
+    expect(button.getBoundingClientRect().height).toBeGreaterThanOrEqual(44 - 0.5);
     // The target is the row a finger presses, not the hidden 13px input inside it.
     const frame = canvas.getByRole('group', { name: 'touch' });
-    const report = checkTargets(frame, { minimum: 24 });
+    const report = checkTargets(frame, { minHeight: 44 });
     expect(report.targets).toBe(2);
     expect(report.failures).toEqual([]);
     // A tap on the words toggles it, not only a tap on the track.
