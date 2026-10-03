@@ -102,6 +102,16 @@ describe('rehypeRepositoryLinks', () => {
     );
   });
 
+  test('sends a link to another document to its page on the site, under the base', () => {
+    const tree = root(el('a', [text('x')], { href: 'getting-started.md#install' }));
+    rehypeRepositoryLinks({ base: '/rockaway/' })(tree, {
+      path: new URL('../../../docs/concept.md', import.meta.url).pathname,
+    });
+    expect((tree.children[0] as Element).properties.href).toBe(
+      '/rockaway/getting-started/#install',
+    );
+  });
+
   test('leaves anchors, absolute paths and other origins alone', () => {
     expect(link('#two-layers')).toBe('#two-layers');
     expect(link('/rockaway/')).toBe('/rockaway/');

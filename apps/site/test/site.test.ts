@@ -174,6 +174,25 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.styled).toBe(0);
   });
 
+  test('publishes every document in docs/, linked to each other on the site (0107)', async () => {
+    const reader = await browser.newPage();
+    const response = await reader.goto(`${origin}${base}getting-started/`);
+    expect(response?.ok()).toBe(true);
+    const found = await reader.evaluate(() => ({
+      title: document.title,
+      h1: document.querySelector('article.rk-prose h1')?.textContent,
+      concept: [...document.querySelectorAll('a')]
+        .map((a) => a.getAttribute('href'))
+        .filter((href) => href?.includes('concept')),
+    }));
+    await reader.close();
+    expect(found.title).toBe('Getting started — rockaway');
+    expect(found.h1).toBe('Getting started');
+    // A document's link to another stays on the site, under its base.
+    expect(found.concept.length).toBeGreaterThan(0);
+    for (const href of found.concept) expect(href?.startsWith(`${base}concept/`)).toBe(true);
+  });
+
   test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
     const reader = await browser.newPage();
     const scripts: string[] = [];

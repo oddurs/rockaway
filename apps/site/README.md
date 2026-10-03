@@ -30,6 +30,7 @@ a packaging bug, and it is fixed in the package.
 | `src/styles/site.css` | The system's CSS as a consumer imports it, and page layout. |
 | `src/fonts/` | The one font, its metrics and its licence. |
 | `src/content.config.ts` | Content collections. `docs` is the repository's own `docs/`, so a document is written once for GitHub and the site. |
+| `src/pages/[doc].astro`, `src/lib/docs.ts` | One page per document in `docs/` (`concept.md` is `/concept/`), with its title and description. A document with no entry fails the build. |
 | `src/layouts/Prose.astro` | A page of Markdown: `<article class="rk-prose">`, and nothing else. |
 
 Component pages (0147) will read the components' metadata from
@@ -57,6 +58,17 @@ highlighter ships, so a change of theme or mode recolours code in place.
 
 The content layer caches rendered Markdown and cannot tell when the pipeline
 has changed, so `build` runs `astro build --force`.
+
+## The quickstart
+
+`docs/getting-started.md` is code a stranger runs, so it is run as a stranger
+would: `pnpm build && pnpm --filter site quickstart` packs the four packages,
+scaffolds a Vite app and a Next.js app with their own starters, installs the
+tarballs, writes in every fence marked `quickstart="vite"` or
+`quickstart="next"` (its `file` attribute is the path), builds each for
+production, and reads the screen back as text against the fence marked
+`quickstart="screen"`. It needs the network, so it is not part of `pnpm
+check`; CI runs it (0155).
 
 ## The base path
 

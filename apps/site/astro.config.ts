@@ -58,7 +58,7 @@ export default defineConfig({
     shikiConfig: { theme: ansiTheme, transformers: [roleClasses] },
     processor: unified({
       rehypePlugins: [
-        rehypeRepositoryLinks,
+        [rehypeRepositoryLinks, { base: normaliseBase(process.env.SITE_BASE) }],
         rehypeScrollable,
         // Columns are sized from the text before its box characters become cells.
         rehypeTableColumns,
