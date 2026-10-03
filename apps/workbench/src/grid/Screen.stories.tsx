@@ -54,6 +54,33 @@ export const MeasuresItsContainer: Story = {
   },
 };
 
+/**
+ * A box exactly n characters wide is n cells, at the widths a TUI layout is
+ * held to. The measured cell is rounded to the layout unit and can come out a
+ * hair wider than the font's advance; counted naively, forty characters made
+ * thirty-nine cells, and the frame drawn in them stopped short of its box.
+ */
+export const WholeWidths: Story = {
+  name: 'A box n characters wide is n cells',
+  args: { width: 0 },
+  render: () => (
+    <div style={{ display: 'grid', gap: '4px' }}>
+      {[40, 60, 80, 120].map((n) => (
+        <div key={n} style={{ inlineSize: `${n}ch`, blockSize: '3lh' }}>
+          <Screen data-testid={`${n}`} draw={draw} style={{ width: '100%', height: '100%' }} />
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    for (const n of [40, 60, 80, 120]) {
+      const screen = canvas.getByTestId(`${n}`);
+      await waitFor(() => expect(screen.dataset.rkCols, `${n}ch`).toBe(String(n)));
+      expect(screen.dataset.rkRows, `${n}ch`).toBe('3');
+    }
+  },
+};
+
 export const RespondsToResize: Story = {
   name: 'Responds to a resize',
   args: { width: 480 },

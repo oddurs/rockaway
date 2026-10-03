@@ -1,0 +1,67 @@
+/*
+ * Syntax (cairn 0144): code, highlighted in the ANSI 16.
+ *
+ * A highlighter marks each token with a role, `rk-syntax-<role>`, and this
+ * colours it from the `syntax.*` tokens, each of which is a palette slot:
+ * keywords magenta, strings green, comments dim, the way terminal editors do
+ * it. The colours are custom properties, so a change of theme or mode
+ * recolours every block of code on the page with nothing rebuilt, and the
+ * contrast gate holds every role on a surface and on a code block's ground.
+ *
+ * What matters in code also reads without colour. A comment is italic, as a
+ * terminal can draw it, and an error is underlined; a reader in greyscale or
+ * in forced colors still sees which is which.
+ */
+@layer rk.components {
+  .rk-syntax-plain {
+    color: var(--rk-syntax-plain);
+  }
+
+  .rk-syntax-comment {
+    color: var(--rk-syntax-comment);
+    font-style: italic;
+  }
+
+  .rk-syntax-keyword {
+    color: var(--rk-syntax-keyword);
+  }
+
+  .rk-syntax-string {
+    color: var(--rk-syntax-string);
+  }
+
+  .rk-syntax-constant {
+    color: var(--rk-syntax-constant);
+  }
+
+  .rk-syntax-function {
+    color: var(--rk-syntax-function);
+  }
+
+  .rk-syntax-type {
+    color: var(--rk-syntax-type);
+  }
+
+  .rk-syntax-attribute {
+    color: var(--rk-syntax-attribute);
+  }
+
+  .rk-syntax-regexp {
+    color: var(--rk-syntax-regexp);
+  }
+
+  .rk-syntax-inserted {
+    color: var(--rk-syntax-inserted);
+  }
+
+  .rk-syntax-deleted {
+    color: var(--rk-syntax-deleted);
+  }
+
+  .rk-syntax-error {
+    color: var(--rk-syntax-error);
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--rk-attribute-underline-thickness);
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+}

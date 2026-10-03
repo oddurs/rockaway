@@ -141,12 +141,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "label",
         "type": "string",
         "required": false,
-        "description": "A label sunk into the rule: `── files ───`. Horizontal rules only."
+        "description": "A label sunk into the rule, `╶─ files ───╴`, which is also the separator's accessible name. Drawn on horizontal rules only; a vertical one is still named by it. Too long for the rule, it truncates with the ellipsis."
       },
       {
         "name": "labelAlign",
         "type": "'start' | 'center' | 'end'",
-        "required": false
+        "required": false,
+        "description": "Where the label sits along the rule: near the start, by default."
       },
       {
         "name": "ends",
@@ -159,6 +160,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'role' | 'children'>"
     ],
     "tokens": [
+      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -177,7 +179,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       {
         "name": "titleAlign",
         "type": "'start' | 'center' | 'end'",
-        "required": false
+        "required": false,
+        "description": "Where the title sits in the top edge: after the corner, by default."
       },
       {
         "name": "border",
@@ -190,6 +193,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "readonly number[]",
         "required": false,
         "description": "Rows that get a rule across the frame, in cells from the frame's top. They join the sides through the junction model — a divider never draws a corner of its own."
+      },
+      {
+        "name": "dividerBorder",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set the dividers draw with; the frame's own when not given. A heavy box may hold light dividers (cairn 0073), and the junction table resolves the tee where they meet the sides: `┣━━┫` becomes `┠──┨`."
       },
       {
         "name": "pad",
@@ -213,6 +222,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
+      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",

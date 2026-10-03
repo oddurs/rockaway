@@ -10,6 +10,7 @@ import {
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
+import { settled } from '../settled.ts';
 
 const meta = {
   title: 'Components/Button',
@@ -29,12 +30,6 @@ function framed(title: string, rows: readonly string[]): string {
     ...rows.map((row) => `│ ${row.padEnd(COLS - 3)}│`),
     `└${'─'.repeat(COLS - 2)}┘`,
   ].join('\n');
-}
-
-/** Wait for the fonts and two frames, so every screen has measured its last cell. */
-async function settled(): Promise<void> {
-  await document.fonts.ready;
-  for (let i = 0; i < 2; i++) await new Promise((done) => requestAnimationFrame(done));
 }
 
 /** Every variant, with and without its delimiters, and disabled: three rows of controls. */

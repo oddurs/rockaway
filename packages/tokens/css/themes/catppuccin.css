@@ -195,7 +195,7 @@
     --rk-palette-light-foreground: oklch(37% 0.043 279.3);
     --rk-palette-light-green: oklch(48.63% 0.1653 142.4);
     --rk-palette-light-hover: oklch(89% 0.0106 264.5);
-    --rk-palette-light-magenta: oklch(72.6% 0.1739 338.4);
+    --rk-palette-light-magenta: oklch(52.6% 0.1739 338.4);
     --rk-palette-light-muted: oklch(47.2% 0.0318 279.3);
     --rk-palette-light-red: oklch(52.44% 0.2108 20.69);
     --rk-palette-light-selection: oklch(88.9% 0.0098 273.3);
@@ -207,7 +207,7 @@
     --rk-palette-light-tint-red: oklch(90.1% 0.0352 264.5);
     --rk-palette-light-tint-yellow: oklch(92.4% 0.0259 264.5);
     --rk-palette-light-white: oklch(75.8% 0.0205 273.2);
-    --rk-palette-light-yellow: oklch(52.08% 0.1208 61.18);
+    --rk-palette-light-yellow: oklch(51.08% 0.1186 61.06);
   }
 }
 
@@ -220,7 +220,7 @@
       --rk-palette-light-cyan: oklch(48.7% 0.0981 201.1);
       --rk-palette-light-green: oklch(48.5% 0.1772 140.4);
       --rk-palette-light-red: oklch(52% 0.2155 19.8);
-      --rk-palette-light-yellow: oklch(52.05% 0.1368 62.21);
+      --rk-palette-light-yellow: oklch(51.06% 0.1347 61.79);
     }
   }
 }
@@ -234,7 +234,7 @@
       --rk-palette-light-cyan: oklch(48.7% 0.0981 201.1);
       --rk-palette-light-green: oklch(48.5% 0.1772 140.4);
       --rk-palette-light-red: oklch(52% 0.2155 19.8);
-      --rk-palette-light-yellow: oklch(52.01% 0.1379 62.85);
+      --rk-palette-light-yellow: oklch(51.02% 0.1362 62);
     }
   }
 }

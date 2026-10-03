@@ -406,19 +406,29 @@ describe('the snapshots, as the site draws them', () => {
   test('Divider', () => {
     expect(snapshots(byName('Divider'))).toMatchInlineSnapshot(`
       "── Open and joined
-      ╶──────────╴
-      ├──────────┤
+      ╶──────────────────╴
+      ├──────────────────┤
+      ── Every border set
+      ├──────────────────┤
+      ╠══════════════════╣
+      ┣━━━━━━━━━━━━━━━━━━┫
+      +------------------+
       ── Labelled
-      ╶ files ───────────╴
+      ╶─ files ──────────╴
       ╶───── files ──────╴
-      ╶─────────── files ╴
-      ╶ far too… ──╴
+      ╶────────── files ─╴
+      ├ files ───────────┤
+      ├───── files ──────┤
+      ├─────────── files ┤
+      ╶─ a label far… ───╴
       ── Vertical
-      ┬
-      │
-      │
-      │
-      ┴"
+      ╷ ┬
+      │ │
+      │ │
+      │ │
+      ╵ ┴
+      ── Under an ASCII theme
+      -- a label far~ ----"
     `);
   });
 
@@ -447,7 +457,29 @@ describe('the snapshots, as the site draws them', () => {
       ╰──────────╯
       + ascii ---+
       |          |
-      +----------+"
+      +----------+
+      ── Titles
+      ┌ start ───────────┐
+      ┌───── center ─────┐
+      ┌───────────── end ┐
+      ┌ a title far to… ─┐
+      ── Dividers in a lighter set
+      ┏ heavy ━━━━━┓
+      ┃            ┃
+      ┠────────────┨
+      ┃            ┃
+      ┗━━━━━━━━━━━━┛
+      ╔ double ════╗
+      ║            ║
+      ╟────────────╢
+      ║            ║
+      ╚════════════╝
+      ── Under an ASCII theme
+      + a title fa~ -+
+      |              |
+      +--------------+
+      |              |
+      +--------------+"
     `);
   });
 
