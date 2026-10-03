@@ -21,6 +21,7 @@ import { frameMeta } from '../components/frame.meta.ts';
 import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
+import { treeMeta } from '../components/tree.meta.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
   AnatomyPart,
@@ -60,6 +61,7 @@ const sources: readonly ComponentMetaInput[] = [
   keyHintMeta,
   linkMeta,
   listMeta,
+  treeMeta,
 ];
 
 /** A variant prop's type is its values, and its default the helper's. */
