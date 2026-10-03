@@ -25,6 +25,14 @@ interface Grid {
   readonly cells: string[][];
 }
 
+/** The cells a piece of text may be drawn into: columns and rows, end-exclusive. */
+interface Clip {
+  readonly left: number;
+  readonly top: number;
+  readonly right: number;
+  readonly bottom: number;
+}
+
 export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOptions = {}): string {
   if (target instanceof Buffer) return toText(target, { trimEnd: options.trimEnd ?? true });
 
@@ -56,6 +64,43 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     write(grid, 0, index, row.textContent ?? '');
   });
 
+  // What a reader sees of an element: the screen, cut down by every ancestor
+  // that clips its overflow. A scrolled list's rows are in the DOM above and
+  // below its box, and drawing them would write over the frame (cairn 0160).
+  const everything: Clip = { left: 0, top: 0, right: cols, bottom: rows };
+  const clips = new Map<Element, Clip>();
+  const clipOf = (element: Element | null): Clip => {
+    if (element === null || !screen.contains(element)) return everything;
+    const known = clips.get(element);
+    if (known) return known;
+    const outer = clipOf(element === screen ? null : element.parentElement);
+    const { overflowX = 'visible', overflowY = 'visible' } =
+      element.ownerDocument.defaultView?.getComputedStyle(element) ?? {};
+    let clip = outer;
+    if (overflowX !== 'visible' || overflowY !== 'visible') {
+      // The padding box: what scrolls into view, without borders or scrollbars.
+      const r = element.getBoundingClientRect();
+      const left = r.left + element.clientLeft - box.left;
+      const top = r.top + element.clientTop - box.top;
+      clip = {
+        left:
+          overflowX === 'visible' ? outer.left : Math.max(outer.left, Math.round(left / cellWidth)),
+        right:
+          overflowX === 'visible'
+            ? outer.right
+            : Math.min(outer.right, Math.round((left + element.clientWidth) / cellWidth)),
+        top:
+          overflowY === 'visible' ? outer.top : Math.max(outer.top, Math.round(top / cellHeight)),
+        bottom:
+          overflowY === 'visible'
+            ? outer.bottom
+            : Math.min(outer.bottom, Math.round((top + element.clientHeight) / cellHeight)),
+      };
+    }
+    clips.set(element, clip);
+    return clip;
+  };
+
   // Everything else: real elements, placed by where they actually are.
   const walker = screen.ownerDocument.createTreeWalker(screen, NodeFilter.SHOW_TEXT);
   const attributes: { text: string; attrs: string; col: number; row: number }[] = [];
@@ -68,7 +113,9 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     const range = screen.ownerDocument.createRange();
     range.selectNodeContents(node);
     const { col, row } = at(range.getBoundingClientRect());
-    write(grid, col, row, text);
+    const clip = clipOf(parent);
+    if (row < clip.top || row >= clip.bottom) continue;
+    write(grid, col, row, text, clip);
 
     const attrs = parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs;
     if (attrs) attributes.push({ text: text.trim(), attrs, col, row });
@@ -88,14 +135,26 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
   return lines.join('\n');
 }
 
-function write(grid: Grid, col: number, row: number, text: string): void {
-  if (row < 0 || row >= grid.rows) return;
+function write(
+  grid: Grid,
+  col: number,
+  row: number,
+  text: string,
+  clip: Clip = { left: 0, top: 0, right: grid.cols, bottom: grid.rows },
+): void {
+  if (row < Math.max(0, clip.top) || row >= Math.min(grid.rows, clip.bottom)) return;
+  const left = Math.max(0, clip.left);
+  const right = Math.min(grid.cols, clip.right);
+  const cells = grid.cells[row] as string[];
   let x = col;
   for (const cluster of graphemes(text)) {
     const width = clusterWidth(cluster);
     if (width === 0) continue;
-    if (x >= 0 && x < grid.cols) (grid.cells[row] as string[])[x] = cluster;
-    if (width === 2 && x + 1 >= 0 && x + 1 < grid.cols) (grid.cells[row] as string[])[x + 1] = '';
+    // A wide character is drawn whole or not at all: half of one is not a cell.
+    if (x >= left && x + width <= right) {
+      cells[x] = cluster;
+      if (width === 2) cells[x + 1] = '';
+    }
     x += width;
   }
 }
