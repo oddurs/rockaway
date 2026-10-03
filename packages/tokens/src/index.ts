@@ -13,14 +13,23 @@ export {
 } from './ansi.ts';
 export {
   apca,
+  asWritten,
   contrast,
+  contrastIn,
+  type Gamut,
+  gamutMap,
+  gamuts,
   inSrgbGamut,
   luminance,
+  luminanceIn,
   type Oklch,
   round,
   toHex,
   toLinearSrgb,
   toSrgbGamut,
+  type View,
+  views,
+  worstContrast,
 } from './color.ts';
 export { type ContrastResult, checkContrast, describeFailure } from './contrast-check.ts';
 export { breakpoints, controlRows, lineBox, spaceSteps } from './density.ts';
@@ -32,6 +41,7 @@ export type {
   Token,
   TokenType,
 } from './dtcg.ts';
+export { type Adjustment, describeAdjustment, fitContrast, fittedPalette } from './fit.ts';
 export { type GeneratedFiles, generate, resolverFile, serialize } from './generate.ts';
 export {
   attributes,

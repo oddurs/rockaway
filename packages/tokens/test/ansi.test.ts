@@ -8,6 +8,7 @@ import {
   type TerminalTheme,
 } from '../src/ansi.ts';
 import { contrast } from '../src/color.ts';
+import { fittedPalette } from '../src/fit.ts';
 import { defaultTheme, modes, type NeutralTemperature, type ThemeInputs } from '../src/inputs.ts';
 
 const themes: ThemeInputs[] = [0, 45, 90, 135, 180, 225, 270, 315].flatMap((accentHue) =>
@@ -57,10 +58,12 @@ describe('the palette', () => {
     }
   });
 
+  // What ships is the palette fitted to the gate in every view a browser
+  // shows it in (0163), so that is what the promises are held to.
   test('what the palette promises holds for every theme', () => {
     for (const inputs of themes) {
       for (const mode of modes) {
-        const p = palette(inputs, mode);
+        const p = fittedPalette(inputs, mode).palette;
         const where = `accent ${inputs.accentHue}, ${inputs.neutralTemperature}, ${mode}`;
         expect(contrast(p.foreground, p.background), `foreground ${where}`).toBeGreaterThanOrEqual(
           7,
@@ -169,7 +172,7 @@ describe('the palettes that ship', () => {
     const inputs = parseTheme(JSON.parse(await readFile(file, 'utf8')), `themes/${name}.json`);
 
     for (const mode of modes) {
-      const p = palette(inputs, mode);
+      const p = fittedPalette(inputs, mode).palette;
       expect(contrast(p.foreground, p.background), `${name} ${mode}`).toBeGreaterThanOrEqual(7);
       expect(contrast(p.muted, p.background), `${name} ${mode}`).toBeGreaterThanOrEqual(4.5);
       for (const slot of ['red', 'green', 'yellow', 'blue', 'magenta', 'cyan'] as const) {
