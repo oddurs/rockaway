@@ -20,8 +20,11 @@ const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
  */
 const testTimeout = 30_000;
 
-/** The plugin owns `include`, and merges whatever `exclude` it is given. */
-const allButContinuity = ['**/!(Continuity|Prose).stories.tsx'];
+/**
+ * Stories tagged `zoom` run again at 200%: the continuity matrix, prose, and
+ * each component's own continuity stories beside its others.
+ */
+const ZOOM = 'zoom';
 
 interface Context {
   readonly forcedColors?: 'active';
@@ -150,10 +153,11 @@ const config: ViteUserConfig = defineConfig({
         },
       },
       {
-        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
+        plugins: [
+          storybookTest({ configDir, tags: { include: [ZOOM], exclude: [FORCED_COLORS, P3] } }),
+        ],
         test: {
-          name: 'zoom',
-          exclude: allButContinuity,
+          name: ZOOM,
           setupFiles,
           testTimeout,
           provide: { plan: plans.zoom },

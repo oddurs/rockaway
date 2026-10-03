@@ -84,7 +84,7 @@ describe('generated files', () => {
       if (name.startsWith('density.'))
         expect(groups, name).toEqual(['cell', 'space', 'row', 'size']);
       if (name === 'semantic.tokens.json') {
-        expect(groups, name).toEqual(['bg', 'fg', 'border', 'motion', 'focus']);
+        expect(groups, name).toEqual(['bg', 'fg', 'border', 'syntax', 'motion', 'focus']);
       }
     }
   });

@@ -4,7 +4,7 @@
  * meet there: 4.5:1 for text, 3:1 for control boundaries and focus (1.4.11).
  * `fg.default` is held to 7:1, above AA, because it is most of the text.
  */
-import { intents } from './semantic.ts';
+import { intents, syntaxRoles } from './semantic.ts';
 
 export interface Pair {
   readonly fg: string;
@@ -29,4 +29,12 @@ export const pairs: readonly Pair[] = [
   { fg: 'border.control', bg: ['bg.page', 'bg.surface'], min: 3 },
   { fg: 'border.focus', bg: ['bg.page', 'bg.surface'], min: 3 },
   { fg: 'bg.accent.solid', bg: ['bg.page', 'bg.surface'], min: 3 },
+  // Code sits on a surface, or on the subtle ground of a code block (0144).
+  ...syntaxRoles.map(
+    (role): Pair => ({
+      fg: `syntax.${role}`,
+      bg: ['bg.surface', 'bg.subtle'],
+      min: 4.5,
+    }),
+  ),
 ];

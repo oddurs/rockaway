@@ -37,3 +37,7 @@ test), the one line each barrel gets (0122), how variants are declared
 - [ ] `docs/component-recipe.md` exists, linked from CONTRIBUTING and from the component template's description in `cairn.toml`
 - [ ] Following it from a blank file produces a component that passes `pnpm check` (proven by the first wave-3 component, which records anything the recipe missed here)
 - [ ] Every one of the ten rules has a line saying which test proves it
+
+## 2026-10-03
+
+From 0164: the recipe's story section must say that a play function which hovers, presses with the pointer or compares geometry starts with await settled() from apps/workbench/src/settled.ts. CONTRIBUTING says so meanwhile. 0164's third criterion is ticked only when this recipe says it.
