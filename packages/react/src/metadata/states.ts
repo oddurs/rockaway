@@ -37,8 +37,9 @@ const ROWS = [
   {
     name: 'hover',
     selectors: ['[data-hovered]'],
-    drawnAs: 'underline on the label',
-    withoutColour: 'underline',
+    drawnAs:
+      'underline on the label; on an element underlined at rest, bold instead. Never a double underline, which a terminal cannot draw (0209)',
+    withoutColour: 'underline, or bold',
     global: false,
   },
   {
