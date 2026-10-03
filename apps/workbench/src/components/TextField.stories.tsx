@@ -197,6 +197,8 @@ export const Keyboard: Story = {
  * is hidden that way.
  */
 export const Overflow: Story = {
+  // The classic-scrollbars browser runs this again with bars that take room.
+  tags: ['classic-scrollbars'],
   render: () => (
     <Frame title="overflow" cols={40} rows={8}>
       <Form>
@@ -239,6 +241,7 @@ export const Overflow: Story = {
  * scrollbar is drawn in a cell column; no native one is drawn (0207).
  */
 export const Multiline: Story = {
+  tags: ['classic-scrollbars'],
   render: () => (
     <Frame title="multiline" cols={40} rows={7}>
       <TextField
@@ -257,6 +260,8 @@ export const Multiline: Story = {
     const row = cellOf(area).height;
     const bar = () => field.querySelector('.rk-text-field-scrollbar')?.textContent ?? '';
     expect(getComputedStyle(area).scrollbarWidth).toBe('none');
+    // No bar takes room, whichever browser draws them: the box is its cells.
+    expect(area.offsetWidth - area.clientWidth).toBe(0);
     expect(cells(area.getBoundingClientRect().height, row)).toBe(3);
 
     await scrollTo(area, 'y', 0);

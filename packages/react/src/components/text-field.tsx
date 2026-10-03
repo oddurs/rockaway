@@ -213,7 +213,8 @@ function Row({
       </span>
       <Input
         ref={input}
-        className="rk-text-field-input"
+        // Scrolls across: no bar of the browser's (0207); the overflow marks show where.
+        className="rk-scroll rk-text-field-input"
         {...(placeholder === undefined ? {} : { placeholder })}
       />
       <span aria-hidden="true" className="rk-text-field-end">
@@ -242,7 +243,8 @@ function Area({
       <TextArea
         ref={area}
         rows={rows}
-        className="rk-text-field-area"
+        // Scrolls down: no bar of the browser's (0207); the scrollbar column shows where.
+        className="rk-scroll rk-text-field-area"
         {...(placeholder === undefined ? {} : { placeholder })}
       />
       <Scrollbar total={lines.total} visible={rows} offset={lines.offset} />
