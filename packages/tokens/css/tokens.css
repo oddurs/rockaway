@@ -29,13 +29,13 @@
 @property --rk-ansi-border {
   syntax: '<color>';
   inherits: true;
-  initial-value: oklch(90% 0.0037 262);
+  initial-value: oklch(63% 0.006 262);
 }
 
 @property --rk-ansi-border-strong {
   syntax: '<color>';
   inherits: true;
-  initial-value: oklch(62% 0.006 262);
+  initial-value: oklch(56% 0.006 262);
 }
 
 @property --rk-ansi-border-subtle {
@@ -1427,8 +1427,8 @@
     --rk-ansi-background: oklch(98.5% 0.0019 262);
     --rk-ansi-black: oklch(21% 0.0055 262);
     --rk-ansi-blue: oklch(52% 0.16 262);
-    --rk-ansi-border: oklch(90% 0.0037 262);
-    --rk-ansi-border-strong: oklch(62% 0.006 262);
+    --rk-ansi-border: oklch(63% 0.006 262);
+    --rk-ansi-border-strong: oklch(56% 0.006 262);
     --rk-ansi-border-subtle: oklch(92% 0.0033 262);
     --rk-ansi-bright-black: oklch(42% 0.006 262);
     --rk-ansi-bright-blue: oklch(44% 0.15 262);
@@ -1751,8 +1751,8 @@
     --rk-ansi-background: oklch(98.5% 0.0019 262);
     --rk-ansi-black: oklch(21% 0.0055 262);
     --rk-ansi-blue: oklch(52% 0.16 262);
-    --rk-ansi-border: oklch(90% 0.0037 262);
-    --rk-ansi-border-strong: oklch(62% 0.006 262);
+    --rk-ansi-border: oklch(63% 0.006 262);
+    --rk-ansi-border-strong: oklch(56% 0.006 262);
     --rk-ansi-border-subtle: oklch(92% 0.0033 262);
     --rk-ansi-bright-black: oklch(42% 0.006 262);
     --rk-ansi-bright-blue: oklch(44% 0.15 262);
@@ -1909,8 +1909,8 @@
       --rk-ansi-background: oklch(16.5% 0.0048 262);
       --rk-ansi-black: oklch(24.5% 0.0059 262);
       --rk-ansi-blue: oklch(66% 0.16 262);
-      --rk-ansi-border: oklch(31% 0.006 262);
-      --rk-ansi-border-strong: oklch(54% 0.006 262);
+      --rk-ansi-border: oklch(53% 0.006 262);
+      --rk-ansi-border-strong: oklch(60% 0.006 262);
       --rk-ansi-border-subtle: oklch(26% 0.006 262);
       --rk-ansi-bright-black: oklch(36% 0.006 262);
       --rk-ansi-bright-blue: oklch(77.35% 0.1158 258.9);
@@ -2053,8 +2053,8 @@
     --rk-ansi-background: oklch(16.5% 0.0048 262);
     --rk-ansi-black: oklch(24.5% 0.0059 262);
     --rk-ansi-blue: oklch(66% 0.16 262);
-    --rk-ansi-border: oklch(31% 0.006 262);
-    --rk-ansi-border-strong: oklch(54% 0.006 262);
+    --rk-ansi-border: oklch(53% 0.006 262);
+    --rk-ansi-border-strong: oklch(60% 0.006 262);
     --rk-ansi-border-subtle: oklch(26% 0.006 262);
     --rk-ansi-bright-black: oklch(36% 0.006 262);
     --rk-ansi-bright-blue: oklch(77.35% 0.1158 258.9);
