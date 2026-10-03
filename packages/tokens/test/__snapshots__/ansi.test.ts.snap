@@ -26,12 +26,12 @@ exports[`the palette > the default palette matches its snapshot 1`] = `
     "border": {
       "c": 0.006,
       "h": 262,
-      "l": 0.31,
+      "l": 0.53,
     },
     "border-strong": {
       "c": 0.006,
       "h": 262,
-      "l": 0.54,
+      "l": 0.6,
     },
     "border-subtle": {
       "c": 0.006,
@@ -196,14 +196,14 @@ exports[`the palette > the default palette matches its snapshot 1`] = `
       "l": 0.52,
     },
     "border": {
-      "c": 0.0037,
+      "c": 0.006,
       "h": 262,
-      "l": 0.9,
+      "l": 0.63,
     },
     "border-strong": {
       "c": 0.006,
       "h": 262,
-      "l": 0.62,
+      "l": 0.56,
     },
     "border-subtle": {
       "c": 0.0033,

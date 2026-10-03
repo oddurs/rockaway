@@ -23,6 +23,9 @@ export const pairs: readonly Pair[] = [
     { fg: `fg.on-${i}`, bg: [`bg.${i}.solid`, `bg.${i}.solid-hover`], min: 4.5 },
     { fg: `border.${i}`, bg: ['bg.page', 'bg.surface'], min: 3 },
   ]),
+  // The ordinary edge is a boundary: on a grid a frame is all that separates
+  // a pane from the next, so it is a non-text pair like a control's (0178).
+  { fg: 'border.default', bg: ['bg.page', 'bg.surface', 'bg.subtle'], min: 3 },
   { fg: 'border.control', bg: ['bg.page', 'bg.surface'], min: 3 },
   { fg: 'border.focus', bg: ['bg.page', 'bg.surface'], min: 3 },
   { fg: 'bg.accent.solid', bg: ['bg.page', 'bg.surface'], min: 3 },

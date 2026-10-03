@@ -230,7 +230,22 @@ A grid nobody can break is a grid people quietly abandon (`0072`). Three levels
 `checkConformance` asserts that every box inside a screen measures a whole
 number of cells, in both directions, at every density and in every theme. It
 runs on every story via an `afterEach`. Anything off-grid without a reason
-fails; anything with one is printed in the report.
+fails; anything with one is printed in the report, grouped by reason and
+counted, so a page can say "3 exceptions, 2 reasons". An empty reason is not a
+reason: `data-rk-offgrid=""` fails on its own (`0123`).
+
+The level is declared with `data-rk-conformance` on the screen or any
+ancestor, and otherwise comes from the theme's `--rk-conformance` token:
+
+| Level | What the check holds to the grid |
+| --- | --- |
+| `strict` | every box, in whole cells; and the glyph painter only |
+| `standard` | every box, in whole cells, except half a cell inside a control (`data-rk-control`); either painter |
+| `loose` | screens and panes (`data-rk-pane`) in whole cells; anything inside a pane is free |
+
+The level belongs to the screen, not to a box in it, so a component cannot
+loosen the app it sits in. The workbench runs at `standard`, with a story
+pinned at each level.
 
 The deal is not "never break the grid". The deal is **breaking it quietly is
 what's forbidden** — exceptions become countable instead of accumulating.
