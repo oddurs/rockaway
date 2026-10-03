@@ -5,7 +5,6 @@ export { buttonBuffer } from '../components/button.pure.ts';
 export {
   Button,
   type ButtonProps,
-  type ButtonSize,
   type ButtonTextOptions,
   type ButtonVariant,
 } from '../components/button.tsx';

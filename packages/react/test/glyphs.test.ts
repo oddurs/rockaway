@@ -50,12 +50,12 @@ describe('glyphs from the theme', () => {
     expect(defaultGlyphs).toBe(themeGlyphs.default);
     expect(renderToStaticMarkup(createElement(Probe))).toBe('single ▸ █');
     // The scrollbar is rendered on the server too (0126): two rows, all thumb.
-    expect(serverText(controls())).toBe(' ✓a.ts  b.ts██[Publish]');
+    expect(serverText(controls())).toBe(' ✓a.ts  b.ts██[ Publish ]');
   });
 
   test('a provider swaps every glyph a component reads', () => {
     const tree = createElement(GlyphProvider, { glyphs: ascii }, createElement(Probe), controls());
-    expect(serverText(tree)).toBe('ascii > # xa.ts  b.ts##[Publish]');
+    expect(serverText(tree)).toBe('ascii > # xa.ts  b.ts##[ Publish ]');
   });
 
   test('the theme’s border set is the frame’s default, and its dividers’ too', () => {

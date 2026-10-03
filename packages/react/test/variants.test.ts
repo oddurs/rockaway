@@ -2,12 +2,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, expectTypeOf, test } from 'vitest';
 import { buttonVariants } from '../src/components/button.pure.ts';
-import {
-  Button,
-  type ButtonProps,
-  type ButtonSize,
-  type ButtonVariant,
-} from '../src/components/button.tsx';
+import { Button, type ButtonProps, type ButtonVariant } from '../src/components/button.tsx';
 import { defineVariants, type VariantProps, type VariantValue } from '../src/variants.ts';
 
 const TONES = { tone: ['plain', 'loud'], weight: ['light', 'heavy', 'double'] } as const;
@@ -118,13 +113,9 @@ describe('the types', () => {
 
 describe('Button, on the helper', () => {
   test('takes its variant props from the declaration, not a hand-written union', () => {
-    expectTypeOf<ButtonVariant>().toEqualTypeOf<'default' | 'fill' | 'quiet' | 'danger'>();
-    expectTypeOf<ButtonSize>().toEqualTypeOf<'md' | 'lg'>();
+    expectTypeOf<ButtonVariant>().toEqualTypeOf<'default' | 'fill' | 'danger'>();
     expectTypeOf<ButtonProps['variant']>().toEqualTypeOf<ButtonVariant | undefined>();
-    expect(buttonVariants.values).toEqual({
-      variant: ['default', 'fill', 'quiet', 'danger'],
-      size: ['md', 'lg'],
-    });
+    expect(buttonVariants.values).toEqual({ variant: ['default', 'fill', 'danger'] });
   });
 
   test('writes every variant, default included, on the element the CSS selects', () => {
@@ -136,14 +127,14 @@ describe('Button, on the helper', () => {
     const rows = [
       render({}),
       render({ variant: 'fill' }),
-      render({ variant: 'quiet', size: 'lg' }),
+      render({ delimiters: 'none' }),
       render({ variant: 'danger', delimiters: ['<', '>'] }),
     ];
     expect(rows.join('\n')).toMatchInlineSnapshot(`
-      "<button data-variant="default" data-size="md" class="rk-button" data-rac="" data-react-aria-pressable="true">[Go]</button>
-      <button data-variant="fill" data-size="md" class="rk-button" data-rac="" data-react-aria-pressable="true">[Go]</button>
-      <button data-variant="quiet" data-size="lg" class="rk-button" data-rac="" data-react-aria-pressable="true">Go</button>
-      <button data-variant="danger" data-size="md" class="rk-button" data-rac="" data-react-aria-pressable="true">&lt;Go&gt;</button>"
+      "<button data-variant="default" class="rk-button" data-rac="" data-react-aria-pressable="true">[ Go ]</button>
+      <button data-variant="fill" class="rk-button" data-rac="" data-react-aria-pressable="true">[ Go ]</button>
+      <button data-variant="default" class="rk-button" data-rac="" data-react-aria-pressable="true">Go</button>
+      <button data-variant="danger" class="rk-button" data-rac="" data-react-aria-pressable="true">&lt;!Go &gt;</button>"
     `);
   });
 });

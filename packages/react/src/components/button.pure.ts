@@ -1,9 +1,9 @@
 /**
  * `Button`: the pure half (cairn 0126).
  *
- * Its variants as data, and the button as cells. No React and no client
- * boundary, so a server component, a static renderer or a test can call it;
- * `button.tsx` imports it from here.
+ * Its variants as data, its chrome, and the button as cells. No React and no
+ * client boundary, so a server component, a static renderer or a test can
+ * call it; `button.tsx` imports it from here.
  */
 import { Buffer, drawText, stringWidth } from '@rockaway/grid';
 import type { Glyphs } from '@rockaway/tokens';
@@ -13,35 +13,45 @@ import type { ButtonProps, ButtonTextOptions, ButtonVariant } from './button.tsx
 import { formatKeys } from './key-hint.pure.ts';
 
 const VARIANTS = {
-  variant: ['default', 'fill', 'quiet', 'danger'],
-  size: ['md', 'lg'],
+  variant: ['default', 'fill', 'danger'],
 } as const;
 
 /** Button's variants, as data: the props, the attributes and the metadata all read this. */
 export const buttonVariants: Variants<typeof VARIANTS> = defineVariants(VARIANTS, {
   variant: 'default',
-  size: 'md',
 });
 
-/** The delimiters a button draws. `quiet` drops them unless they are asked for. */
-export function endsOf(
-  variant: ButtonVariant,
-  delimiters: ButtonProps['delimiters'],
-  glyphs: Glyphs,
-): readonly [string, string] | undefined {
-  if (delimiters === 'none') return undefined;
-  return delimiters ?? (variant === 'quiet' ? undefined : glyphs.delimiter.control);
+/** What a button draws around its label: the delimiters, and the mark cell inside the first. */
+interface Chrome {
+  readonly open: string;
+  readonly mark: string;
+  readonly air: string;
+  readonly close: string;
 }
 
 /**
- * The button as text, cell for cell, at the normal density: what it occupies
- * on the grid, and its text snapshot (cairn 0047). The delimiters come from
- * the same function the component draws them with, and the glyphs are the
- * theme's, as in the other buffer functions. The cell of air either side of
- * the label, and `lg`'s extra cell and three rows, are the stylesheet's, so
- * this has to follow `button.css` when that changes. Reverse video is an
- * attribute, and text has none: `fill` and a pressed button draw the same
- * cells as `default`.
+ * The chrome a button draws. Without delimiters there is nothing, not even
+ * the air; danger always has delimiters, so its mark always has its cell.
+ */
+export function chromeOf(
+  variant: ButtonVariant,
+  delimiters: ButtonProps['delimiters'],
+  glyphs: Glyphs,
+): Chrome | undefined {
+  const danger = variant === 'danger';
+  if (delimiters === 'none' && !danger) return undefined;
+  const [open, close] =
+    delimiters === undefined || delimiters === 'none' ? glyphs.delimiter.control : delimiters;
+  return { open, mark: danger ? glyphs.mark.danger : glyphs.mark.blank, air: ' ', close };
+}
+
+/**
+ * The button as text, cell for cell: what it occupies on the grid, and its
+ * text snapshot (cairn 0047). The chrome comes from the same function the
+ * component draws it with, and the glyphs are the theme's, as in the other
+ * buffer functions. Every cell is drawn here and in the DOM as text; the
+ * stylesheet adds none. Reverse video is an attribute, and text has none:
+ * `fill` and a pressed button draw the same cells as `default`.
  */
 export function buttonBuffer(
   label: string,
@@ -49,16 +59,16 @@ export function buttonBuffer(
   glyphs: Glyphs = themeGlyphs.default,
 ): Buffer {
   const chosen = buttonVariants.select(options);
-  const ends = endsOf(chosen.variant, options.delimiters, glyphs);
-  const air = chosen.variant === 'quiet' ? '' : ' ';
+  const chrome = chromeOf(chosen.variant, options.delimiters, glyphs);
   const hint =
     options.keys === undefined
       ? ''
       : ` ${formatKeys(options.keys, options.platform ?? 'other', 'platform', glyphs)}`;
-  const pad = chosen.size === 'lg' ? ' ' : '';
-  const line = `${pad}${ends?.[0] ?? ''}${air}${label}${hint}${air}${ends?.[1] ?? ''}${pad}`;
-  const rows = chosen.size === 'lg' ? 3 : 1;
-  return Buffer.create({ width: stringWidth(line), height: rows }).draw((draft) => {
-    drawText(draft, { x: 0, y: Math.floor(rows / 2) }, line);
+  const line =
+    chrome === undefined
+      ? `${label}${hint}`
+      : `${chrome.open}${chrome.mark}${label}${hint}${chrome.air}${chrome.close}`;
+  return Buffer.create({ width: stringWidth(line), height: 1 }).draw((draft) => {
+    drawText(draft, { x: 0, y: 0 }, line);
   });
 }
