@@ -1,5 +1,23 @@
 # Contributing to rockaway
 
+Thank you for wanting to. A few things first:
+
+- **Found a bug?** Open an issue with the bug template: what happens, what
+  should, and the smallest code that shows it.
+- **Want a component?** Check the [roadmap](ROADMAP.md) first. Many are already
+  planned as cairn items. If yours is not there, open a component request.
+- **Want to write code?** Planned work lives in [`cairn/items`](cairn/items),
+  not in issues (see below). `cairn next` lists what is ready. Say on an issue
+  or a draft pull request which item you are taking, so nobody else starts it.
+- **Found a vulnerability?** Report it privately, as [SECURITY.md](SECURITY.md)
+  says.
+
+Everyone taking part is expected to follow the [code of conduct](CODE_OF_CONDUCT.md).
+
+Before writing a component, read [the concept](docs/concept.md). Its ten
+rules at the end are the contract every component is held to, and the pull
+request template asks you to tick them.
+
 ## Setup
 
 Node 24 (see `.nvmrc`) and pnpm 12.
@@ -48,6 +66,8 @@ the decision first, in its own pull request, with the reasoning.
 
 ## Adding a component
 
+Until `docs/component-recipe.md` (cairn 0134) is written, this section is the
+recipe, and Button and List are its worked examples.
 A component adds one file, and one line to each barrel, and touches no other line:
 
 - `packages/react/src/entries/<name>.ts`: `export { … } from '../components/<name>.tsx';`,
