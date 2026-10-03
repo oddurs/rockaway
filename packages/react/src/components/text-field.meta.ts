@@ -1,7 +1,11 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
-import { formBuffer } from './field.tsx';
-import { type TextFieldTextOptions, textFieldBuffer, textFieldVariants } from './text-field.tsx';
+import { formBuffer } from './field.pure.ts';
+import {
+  type TextFieldTextOptions,
+  textFieldBuffer,
+  textFieldVariants,
+} from './text-field.pure.ts';
 
 const box = (options: TextFieldTextOptions): string =>
   toText(textFieldBuffer({ cols: 16, ...options }), { trimEnd: false });

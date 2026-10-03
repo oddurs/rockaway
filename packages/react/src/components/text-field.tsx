@@ -30,15 +30,13 @@
  * the box. Behaviour is React Aria's `TextField`, `Input` and `TextArea`; the
  * keyboard is the platform's own.
  */
-import { Attr, Buffer, drawText, stringWidth, wrap } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
 import {
   type CSSProperties,
   type ReactNode,
   type RefObject,
   useCallback,
   useEffect,
-  useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -50,26 +48,13 @@ import {
   type ValidationResult,
 } from 'react-aria-components';
 import { measureCell } from '../cell-metrics.ts';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
-import { paintGlyph } from '../paint/cells.ts';
-import {
-  defineVariants,
-  type VariantProps,
-  type Variants,
-  type VariantValue,
-} from '../variants.ts';
+import { useGlyphs } from '../glyphs.tsx';
+import { Chrome } from '../paint/chrome.tsx';
+import type { VariantProps, VariantValue } from '../variants.ts';
 import { Description, FieldError, fieldClass, Label } from './field.tsx';
-import { FieldFrame, fieldFrameBuffer } from './fieldset.tsx';
-import { scrollbarBuffer } from './list.tsx';
-
-const VARIANTS = {
-  size: ['md', 'lg'],
-} as const;
-
-/** TextField's variants, as data. */
-export const textFieldVariants: Variants<typeof VARIANTS> = defineVariants(VARIANTS, {
-  size: 'md',
-});
+import { FieldFrame } from './fieldset.tsx';
+import { scrollbarBuffer } from './list.pure.ts';
+import { DEFAULT_COLS, DEFAULT_ROWS, textFieldVariants } from './text-field.pure.ts';
 
 export type TextFieldSize = VariantValue<typeof textFieldVariants, 'size'>;
 
@@ -94,9 +79,6 @@ export interface TextFieldProps
   readonly className?: string;
   readonly style?: CSSProperties;
 }
-
-const DEFAULT_COLS = 20;
-const DEFAULT_ROWS = 3;
 
 /** What the cells either side of the text show: more that way, or nothing. */
 interface Overflow {
@@ -167,26 +149,22 @@ function useCellScroll(
   return { overflow, lines };
 }
 
-/** Runs before paint in a browser, and not at all on a server. */
-const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
-
-/** The scrollbar of a box of rows, painted into its own cell column. */
+/** The scrollbar of a box of rows: rendered chrome in its own cell column, as List's is. */
 function Scrollbar({
   total,
   visible,
   offset,
 }: {
-  total: number;
-  visible: number;
-  offset: number;
+  readonly total: number;
+  readonly visible: number;
+  readonly offset: number;
 }): ReactNode {
-  const host = useRef<HTMLSpanElement>(null);
   const glyphs = useGlyphs();
-  useIsomorphicLayoutEffect(() => {
-    const el = host.current;
-    if (el) paintGlyph(scrollbarBuffer({ total, visible, offset }, glyphs), el);
-  }, [total, visible, offset, glyphs]);
-  return <span ref={host} aria-hidden="true" className="rk-text-field-scrollbar" />;
+  const buffer = useMemo(
+    () => scrollbarBuffer({ total, visible, offset }, glyphs),
+    [total, visible, offset, glyphs],
+  );
+  return <Chrome buffer={buffer} className="rk-text-field-scrollbar" />;
 }
 
 /** One row: the input between two cells that are delimiters, air or overflow marks. */
@@ -312,98 +290,4 @@ export function TextField({
       )}
     </AriaTextField>
   );
-}
-
-/** What a text field's box shows, for its text model. */
-export interface TextFieldTextOptions {
-  readonly cols?: number;
-  readonly size?: TextFieldSize;
-  readonly multiline?: boolean;
-  readonly rows?: number;
-  /** The value, or the placeholder (drawn dim) when there is none. */
-  readonly value?: string;
-  readonly placeholder?: string;
-  /** Cells scrolled across (one row) or rows scrolled down (several). */
-  readonly scroll?: number;
-  /** The label, for a framed box's top edge. */
-  readonly label?: string;
-  readonly required?: boolean;
-  readonly invalid?: boolean;
-  readonly disabled?: boolean;
-  readonly readOnly?: boolean;
-  readonly focused?: boolean;
-}
-
-/**
- * A text field's box as cells: its text snapshot, and the control `formBuffer`
- * lays out beside a label. It follows `text-field.css` the way `buttonBuffer`
- * follows `button.css`. A `md` box is the delimiters around `cols` cells; a
- * framed one is `cols + 4` wide, the frame and a cell of air either side, and
- * three rows tall or `rows + 2`. Text hidden either way puts the theme's
- * overflow mark in the cell on that side.
- */
-export function textFieldBuffer(
-  options: TextFieldTextOptions = {},
-  glyphs: Glyphs = defaultGlyphs,
-): Buffer {
-  const cols = options.cols ?? DEFAULT_COLS;
-  const multiline = options.multiline ?? false;
-  const framed = multiline || options.size === 'lg';
-  const rows = multiline ? (options.rows ?? DEFAULT_ROWS) : 1;
-  const scroll = options.scroll ?? 0;
-  const empty = (options.value ?? '') === '';
-  const text = empty ? (options.placeholder ?? '') : (options.value ?? '');
-  const style = {
-    attrs: empty || options.disabled ? Attr.dim : Attr.none,
-    ...(empty ? { fg: 'fg.muted' } : options.disabled ? { fg: 'fg.disabled' } : {}),
-  };
-
-  if (!framed) {
-    const [open, close] = glyphs.delimiter.control;
-    const plain = options.readOnly ?? false;
-    const shown = text.slice(scroll, scroll + cols);
-    const start = scroll > 0 ? glyphs.mark['overflow-start'] : plain ? ' ' : open;
-    const end =
-      stringWidth(text) - scroll > cols ? glyphs.mark['overflow-end'] : plain ? ' ' : close;
-    return Buffer.create({ width: cols + 2, height: 1 }).draw((draft) => {
-      drawText(draft, { x: 0, y: 0 }, start);
-      drawText(draft, { x: 1, y: 0 }, shown, { style });
-      drawText(draft, { x: cols + 1, y: 0 }, end);
-    });
-  }
-
-  const frame = fieldFrameBuffer(
-    { width: cols + 4, height: rows + 2 },
-    {
-      label: options.label ?? '',
-      required: options.required ?? false,
-      invalid: options.invalid ?? false,
-      disabled: options.disabled ?? false,
-      focused: options.focused ?? false,
-    },
-    glyphs,
-  );
-  if (!multiline) {
-    const shown = text.slice(scroll, scroll + cols);
-    return frame.draw((draft) => {
-      if (scroll > 0) drawText(draft, { x: 1, y: 1 }, glyphs.mark['overflow-start']);
-      drawText(draft, { x: 2, y: 1 }, shown, { style });
-      if (stringWidth(text) - scroll > cols) {
-        drawText(draft, { x: cols + 2, y: 1 }, glyphs.mark['overflow-end']);
-      }
-    });
-  }
-  const lines = wrap(text, cols);
-  const bar = scrollbarBuffer(
-    { total: Math.max(1, lines.length), visible: rows, offset: scroll },
-    glyphs,
-  );
-  return frame.draw((draft) => {
-    for (let y = 0; y < rows; y++) {
-      drawText(draft, { x: 2, y: y + 1 }, lines[scroll + y] ?? '', { style });
-      drawText(draft, { x: cols + 2, y: y + 1 }, bar.at({ x: 0, y })?.ch ?? ' ', {
-        style: { fg: 'fg.muted', attrs: Attr.none },
-      });
-    }
-  });
 }

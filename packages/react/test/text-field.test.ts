@@ -1,9 +1,9 @@
 import { Attr, hasAttr, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { formBuffer } from '../src/components/field.tsx';
-import { fieldFrameBuffer } from '../src/components/fieldset.tsx';
-import { type TextFieldTextOptions, textFieldBuffer } from '../src/components/text-field.tsx';
+import { formBuffer } from '../src/components/field.pure.ts';
+import { fieldFrameBuffer } from '../src/components/fieldset.pure.ts';
+import { type TextFieldTextOptions, textFieldBuffer } from '../src/components/text-field.pure.ts';
 
 const box = (options: TextFieldTextOptions): string =>
   toText(textFieldBuffer({ cols: 16, ...options }), { trimEnd: false });

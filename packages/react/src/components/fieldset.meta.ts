@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
-import { type FieldFrameState, fieldFrameBuffer, fieldFrameVariants } from './fieldset.tsx';
+import { fieldFrameBuffer, fieldFrameVariants } from './fieldset.pure.ts';
+import type { FieldFrameState } from './fieldset.tsx';
 
 const frame = (state: Omit<FieldFrameState, 'label'>): string =>
   toText(fieldFrameBuffer({ width: 24, height: 3 }, { label: 'Notify', ...state }), {

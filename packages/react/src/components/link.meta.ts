@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type LinkState, linkBuffer } from './link.tsx';
+import { linkBuffer } from './link.pure.ts';
+import type { LinkState } from './link.tsx';
 
 const cells = (label: string, state: LinkState): string =>
   toText(linkBuffer(label, state), { trimEnd: false });
