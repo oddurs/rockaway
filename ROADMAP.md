@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`####······` 33% · 33 of 101 done · due 2027-01-31
+`####······` 34% · 34 of 101 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -135,7 +135,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
 - [ ] [`0137`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0137-tree.md) Tree <sup>component · components · p1</sup>
 - [ ] [`0138`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0138-codeblock.md) CodeBlock <sup>component · components · p1</sup>
-- [ ] [`0140`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0140-callout.md) Callout <sup>component · components · p2</sup>
 - [ ] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
@@ -210,6 +209,7 @@ The component contract, proven on a first set of components.
 - [x] [`0132`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0132-polish-keyhint-against-the-contract.md) Polish KeyHint against the contract <sup>chore · components · p1</sup>
 - [x] [`0133`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0133-polish-list-against-the-contract-and-the-cell-renderer.md) Polish List against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
+- [x] [`0140`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0140-callout.md) Callout <sup>component · components · p2</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 - [x] [`0165`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0165-ship-one-entry-point-per-component-so-an-islands-site-does-not-hydrate-the-whole-package.md) Ship one entry point per component, so an islands site does not hydrate the whole package <sup>feature · distribution · p1</sup>
 - [x] [`0175`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0175-never-let-a-junction-overwrite-a-title.md) Never let a junction overwrite a title <sup>bug · grid · p1</sup>
@@ -247,7 +247,6 @@ A website built out of the system it documents, which is the only honest way
 
 - [ ] [`0104`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0104-build-the-site-shell-as-a-tui.md) Build the site shell as a TUI <sup>feature · site · p0</sup>
 - [ ] [`0105`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0105-make-every-screen-copyable-as-text-and-as-ansi.md) Make every screen copyable as text and as ANSI <sup>feature · site · p1</sup>
-- [ ] [`0107`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0107-write-the-getting-started-guide.md) Write the getting-started guide <sup>docs · docs · p0</sup>
 - [ ] [`0108`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0108-build-the-landing-page.md) Build the landing page <sup>feature · site · p0</sup>
 - [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0113`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p1</sup>
@@ -265,6 +264,7 @@ A website built out of the system it documents, which is the only honest way
 
 ### in review
 
+- [ ] [`0107`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0107-write-the-getting-started-guide.md) Write the getting-started guide <sup>docs · docs · p0</sup>
 - [ ] [`0147`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0147-document-every-component-on-its-own-page-generated-from-its-metadata.md) Document every component on its own page, generated from its metadata <sup>feature · site · p0</sup>
 
 ### done
