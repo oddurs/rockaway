@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 29% · 27 of 92 done · due 2027-01-31
+`####······` 30% · 28 of 92 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -168,7 +168,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0204`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0204-verify-fieldframe-inside-numberfield-and-datefield.md) Verify FieldFrame inside NumberField and DateField <sup>chore · components · p2</sup>
 - [ ] [`0207`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0207-no-native-scrollbars-a-scroll-position-is-drawn-in-cells.md) No native scrollbars: a scroll position is drawn in cells <sup>decision · css · p0</sup>
 - [ ] [`0208`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0208-hide-every-native-scrollbar-show-position-in-cells-and-check-it-after-every-story.md) Hide every native scrollbar, show position in cells, and check it after every story <sup>bug · css · p0</sup>
-- [ ] [`0209`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0209-link-hover-is-bold-never-a-double-underline.md) Link hover is bold, never a double underline <sup>bug · css · p1</sup>
 
 ### in review
 
@@ -207,6 +206,7 @@ The component contract, proven on a first set of components.
 - [x] [`0175`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0175-never-let-a-junction-overwrite-a-title.md) Never let a junction overwrite a title <sup>bug · grid · p1</sup>
 - [x] [`0178`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0178-make-border-default-a-boundary-you-can-see-3-1-against-every-ground.md) Make border.default a boundary you can see: 3:1 against every ground <sup>bug · tokens · p0</sup>
 - [x] [`0181`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0181-make-reverse-video-survive-forced-colors-everywhere.md) Make reverse video survive forced colors everywhere <sup>bug · css · p1</sup>
+- [x] [`0209`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0209-link-hover-is-bold-never-a-double-underline.md) Link hover is bold, never a double underline <sup>bug · css · p1</sup>
 
 ## retheme — Tokens on the grid
 
