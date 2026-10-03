@@ -56,3 +56,7 @@ Proof: test/site.test.ts builds the site at /rockaway/ and at /, serves each und
 ## 2026-10-03
 
 CI found that Chromium on Linux has no subpixel positioning and rounds the 9.6px advance to 10px, so the cell there is 10px. The cell was right (it is what the text takes); the test now holds the cell to the laid-out advance rather than to 9.6px. Worth knowing for anything that reasons about pixel widths: 1ch is not always 0.6em exactly.
+
+## Result
+
+apps/site: Astro, static, React islands (one module per island in src/islands), built from the packages' dist with a guard against source; JetBrains Mono subset to 18 kB with metric-matched fallbacks; base /rockaway/ by default, SITE_BASE=/ for a domain root; pnpm build builds it and CI uploads it on PRs.
