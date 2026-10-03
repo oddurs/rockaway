@@ -8,7 +8,7 @@ milestone: later
 depends_on:
 - 113
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-10-03
 priority: p3
 layer: grid
 effort: m
@@ -29,3 +29,7 @@ the way the glyph painter already coalesces spans. Junctions stay per-cell.
 - [ ] A run of equal-weight edges paints as one element
 - [ ] A text snapshot of the same buffer is unchanged: coalescing is invisible
 - [ ] Node count asserted for a 80x24 full frame
+
+## 2026-10-03
+
+Likely superseded by 0117: if glyph and rule painters share a procedural renderer, the rule painter stops emitting a node per stroke and there is nothing left to coalesce. Drop this when 0117 lands, not before.
