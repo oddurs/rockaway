@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 30% · 24 of 81 done · due 2027-01-31
+`####······` 31% · 25 of 81 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -133,7 +133,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0126`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0126-paint-a-screen-s-chrome-on-the-server-so-the-first-paint-needs-no-javascript.md) Paint a screen's chrome on the server, so the first paint needs no JavaScript <sup>feature · grid · p0</sup>
 - [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
 - [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
-- [ ] [`0129`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0129-polish-frame-against-the-contract-and-the-cell-renderer.md) Polish Frame against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0130`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0130-polish-divider-against-the-contract-and-the-cell-renderer.md) Polish Divider against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0131`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0131-polish-button-against-the-contract-and-the-cell-renderer.md) Polish Button against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0134`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0134-write-the-component-recipe-the-files-the-export-lines-the-checklist.md) Write the component recipe: the files, the export lines, the checklist <sup>docs · docs · p1</sup>
@@ -189,6 +188,7 @@ The component contract, proven on a first set of components.
 - [x] [`0121`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0121-make-every-package-s-exports-correct-and-prove-it-with-publint-and-attw.md) Make every package's exports correct, and prove it with publint and attw <sup>chore · distribution · p0</sup>
 - [x] [`0122`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0122-give-each-component-one-line-in-the-barrels-so-parallel-work-merges-cleanly.md) Give each component one line in the barrels, so parallel work merges cleanly <sup>chore · tooling · p1</sup>
 - [x] [`0123`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0123-make-conformance-level-aware-and-refuse-an-exception-without-a-reason.md) Make conformance level-aware, and refuse an exception without a reason <sup>feature · tooling · p1</sup>
+- [x] [`0129`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0129-polish-frame-against-the-contract-and-the-cell-renderer.md) Polish Frame against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0132`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0132-polish-keyhint-against-the-contract.md) Polish KeyHint against the contract <sup>chore · components · p1</sup>
 - [x] [`0133`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0133-polish-list-against-the-contract-and-the-cell-renderer.md) Polish List against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
@@ -216,7 +216,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`##········` 17% · 4 of 24 done · due 2027-02-21
+`###·······` 21% · 5 of 24 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -241,7 +241,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0171`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0171-draw-each-component-s-snapshot-in-every-theme-on-the-site.md) Draw each component's snapshot in every theme on the site <sup>feature · site · p3</sup>
 - [ ] [`0177`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0177-let-checkcontinuity-check-shapes-drawn-outside-a-painted-layer.md) Let checkContinuity check shapes drawn outside a painted layer <sup>feature · tooling · p2</sup>
 - [ ] [`0187`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0187-scroll-code-and-tables-with-overflow-marks-not-scrollbars.md) Scroll code and tables with overflow marks, not scrollbars <sup>feature · css · p2</sup>
-- [ ] [`0188`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0188-export-the-fitted-imported-themes-back-to-terminal-files.md) Export the fitted imported themes back to terminal files <sup>feature · tokens · p2</sup>
 
 ### done
 
@@ -249,6 +248,7 @@ A website built out of the system it documents, which is the only honest way
 - [x] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
 - [x] [`0143`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0143-set-prose-on-the-grid-headings-lists-quotes-code-and-tables-from-markdown.md) Set prose on the grid: headings, lists, quotes, code and tables from Markdown <sup>feature · css · p0</sup>
 - [x] [`0144`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0144-highlight-code-in-the-ansi-16.md) Highlight code in the ANSI 16 <sup>feature · tokens · p1</sup>
+- [x] [`0188`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0188-export-the-fitted-imported-themes-back-to-terminal-files.md) Export the fitted imported themes back to terminal files <sup>feature · tokens · p2</sup>
 
 ## v0.1 — v0.1 — first release
 
