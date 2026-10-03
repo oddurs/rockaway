@@ -32,7 +32,7 @@ import {
 import { measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
-import { paintGlyph } from '../paint/glyph.ts';
+import { paintGlyph } from '../paint/cells.ts';
 
 export interface ScrollbarState {
   /** Rows in the list. */

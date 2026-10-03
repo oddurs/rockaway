@@ -200,6 +200,9 @@ const ARC_GLYPHS = index(ARCS);
 /** What the table holds, for tests and for documentation. */
 export const junctionTable: ReadonlyMap<number, string> = GLYPHS;
 
+/** The arcs a rounded set draws its four light corners with, by edge key. */
+export const arcTable: ReadonlyMap<number, string> = ARC_GLYPHS;
+
 function demote(edges: Edges, from: Weight, to: Weight): Edges {
   const step = (w: Weight): Weight => (w === from ? to : w);
   return {

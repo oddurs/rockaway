@@ -33,14 +33,26 @@ export const Chrome: Story = {
   },
 };
 
-/** The same frame, painted as CSS rules: same cells, no characters. */
+/**
+ * The same frame with hairline strokes: same cells, same characters. The rule
+ * painter used to draw no characters at all; now it shares the glyph painter's
+ * renderer, keeps every character transparent in its cell, and differs only in
+ * how heavy a line it strokes (cairn 0117).
+ */
 export const Ruled: Story = {
   args: { title: 'tokens', cols: 28, rows: 7, dividers: [4], painter: 'rule' },
   play: async ({ canvas }) => {
     const frame = canvas.getByRole('group', { name: 'tokens' });
     expect(frame.dataset.rkPainter).toBe('rule');
-    // No box characters anywhere: the rule painter draws strokes, not glyphs.
-    expect(frame.textContent ?? '').not.toMatch(/[┌┐└┘─│├┤]/);
+    expect(frame.querySelector('[data-rk-painted="rule"]')).not.toBeNull();
+    // The characters are there to copy, cell for cell the same as the glyph
+    // painter's, and the title is painted too.
+    const drawn = frameBuffer({ width: 28, height: 7 }, { title: 'tokens', dividers: [4] });
+    expect(screenshot(frame)).toBe(toText(drawn));
+    // But no box character is visible: the cell strokes them.
+    for (const cell of frame.querySelectorAll<HTMLElement>('[data-rk-shape]')) {
+      expect(getComputedStyle(cell).webkitTextFillColor).toBe('rgba(0, 0, 0, 0)');
+    }
     // And it still measures 28x7 cells, which is the point of one geometry.
     expect(frame.dataset.rkCols).toBe('28');
     expect(frame.dataset.rkRows).toBe('7');

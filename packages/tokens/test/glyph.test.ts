@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { stringWidth } from '@rockaway/grid';
+import { shapeOf, stringWidth } from '@rockaway/grid';
 import { describe, expect, test } from 'vitest';
 import {
   bars,
@@ -15,6 +15,7 @@ import {
   marks,
   type Repertoire,
   spinnerFrames,
+  strokeWeights,
 } from '../src/glyph.ts';
 import { themeGlyphs, themeNames, themes } from '../src/themes.ts';
 
@@ -189,3 +190,32 @@ function tokenValues(doc: unknown, trail: string[] = []): Map<string, string> {
   walk(doc as Record<string, unknown>, trail);
   return out;
 }
+describe('strokes (cairn 0117)', () => {
+  test('every border, block and bar a Unicode theme draws with is drawn by the cell', () => {
+    for (const borderSet of borderSetNames.filter((set) => set !== 'ascii')) {
+      const g = glyphsFor({ borderSet });
+      for (const ch of [...Object.values(g.border), ...Object.values(g.block), ...g.bar]) {
+        expect(shapeOf(ch), `${borderSet}: ${ch}`).toBeDefined();
+      }
+    }
+  });
+
+  test('an ASCII theme is letters throughout, so the font draws all of it', () => {
+    // `+--+` never joined in a terminal, and an ASCII theme's scrollbar is `#`
+    // and `.`: there is no shape in it for the cell to draw. Its cells are
+    // still whole cells, so backgrounds and reverse video still fill them.
+    const g = glyphsFor({ borderSet: 'ascii' });
+    for (const ch of [...Object.values(g.border), ...Object.values(g.block), ...g.bar]) {
+      expect(shapeOf(ch), ch).toBeUndefined();
+    }
+  });
+
+  test('a double line crossing a heavy one covers it, in both painters', () => {
+    // The junction geometry relies on light < heavy < the reach of a double
+    // line, light + gap / 2 on each side of its centre.
+    for (const { light, heavy, gap } of Object.values(strokeWeights)) {
+      expect(light).toBeLessThan(heavy);
+      expect(heavy).toBeLessThan(2 * light + gap);
+    }
+  });
+});

@@ -14,6 +14,11 @@
   "files": [
     "src"
   ],
+  "scripts": {
+    "generate": "node --conditions=@rockaway/source scripts/shapes.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/oddurs/rockaway.git",
@@ -22,5 +27,11 @@
   "homepage": "https://github.com/oddurs/rockaway",
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@rockaway/grid": "workspace:*",
+    "@types/node": "26.6.2",
+    "vite": "8.3.0",
+    "vitest": "4.1.11"
   }
 }

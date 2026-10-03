@@ -3,10 +3,11 @@ id: 116
 uid: 17f6f198-0ce9-4b31-bc57-94ed39a0dc29
 title: Draw lines, blocks and cell backgrounds from the cell, never from the font
 type: decision
-status: backlog
+status: done
 milestone: primitives
 created: 2026-10-03
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p0
 layer: grid
 effort: m
@@ -78,3 +79,11 @@ stroke reaches its cell edges, run on every story, the way grid conformance is.
 
 Revisit if: a browser ships a way to make a font`s box-drawing glyphs fill the
 line box (nothing on the horizon does).
+
+## 2026-10-03
+
+Accepted, and implemented by 0117: the geometry in packages/grid/src/shape.ts, the generated stylesheet packages/css/src/shapes.css, the shared renderer in packages/react/src/paint/cells.ts, and checkContinuity proving it in pixels. One refinement: a cell strokes the weights of the glyph it holds (the junction table's inverse), not the buffer's raw edges, so the picture always matches the copied character; see 0117's notes.
+
+## Result
+
+The cell draws box drawing, block elements and backgrounds; the font draws letters. Geometry in @rockaway/grid (shapes), strokes from a stylesheet generated off the junction table (@rockaway/css shapes.css), the character kept transparent in the cell, and checkContinuity proving the lines meet in pixels.

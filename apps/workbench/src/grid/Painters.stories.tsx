@@ -59,39 +59,78 @@ const meta = { title: 'Grid/Painters', component: Painters } satisfies Meta<type
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** How wide a stroke the painter that drew `layer` uses, read off the page. */
+function stroke(layer: Element, weight: 'light' | 'heavy'): number {
+  const probe = document.createElement('div');
+  probe.style.position = 'absolute';
+  probe.style.width = `var(--rk-stroke-${weight})`;
+  layer.append(probe);
+  const width = probe.getBoundingClientRect().width;
+  probe.remove();
+  return width;
+}
+
 export const GlyphAndRule: Story = {
   name: 'Glyph and rule',
   play: async ({ canvas }) => {
     const glyph = canvas.getByTestId('screen-glyph');
     const rule = canvas.getByTestId('screen-rule');
+    const glyphLayer = glyph.querySelector('[data-rk-painted]') as HTMLElement;
+    const ruleLayer = rule.querySelector('[data-rk-painted]') as HTMLElement;
 
     // Chrome is never announced: a reader hears the content, not the frame.
     for (const el of [glyph, rule]) {
       expect(el.querySelector('[aria-hidden="true"]')).not.toBeNull();
     }
 
-    // The glyph painter writes the characters the engine drew.
+    // Both painters write the characters the engine drew, cell for cell. The
+    // rule painter used to write none, which made it the one screen that could
+    // not be copied or read back as text; now the two differ only in strokes.
     const text = glyph.textContent ?? '';
     expect(text).toContain('┌ tokens');
     expect(text).toContain('├');
+    expect(rule.textContent).toBe(text);
     expect(toText(screen()).split('\n')[0]).toContain('┌ tokens');
 
-    // A run of identical cells is one node, not one per cell.
-    const spans = glyph.querySelectorAll('.rk-cells');
-    expect(spans.length).toBeLessThan(28 * 7);
+    // Selecting the screen and copying it gives the box, row by row, even
+    // though no box character is visible: the cell draws the lines.
+    const selection = getSelection() as Selection;
+    const range = document.createRange();
+    range.selectNodeContents(ruleLayer);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    expect(selection.toString().trimEnd()).toBe(toText(screen(), { trimEnd: false }));
+    selection.removeAllRanges();
 
-    // The rule painter draws no characters at all, only lines.
-    expect((rule.textContent ?? '').trim()).toBe('');
-    const marks = rule.querySelectorAll('.rk-rule');
-    expect(marks.length).toBeGreaterThan(0);
+    // One renderer: the same runs in the same places, whichever painter.
+    const runs = (el: Element) =>
+      [...el.querySelectorAll<HTMLElement>('.rk-run')].map(
+        (r) => r.dataset.rkShape ?? r.textContent,
+      );
+    expect(runs(rule)).toEqual(runs(glyph));
+    expect(glyphLayer.dataset.rkPainted).toBe('glyph');
+    expect(ruleLayer.dataset.rkPainted).toBe('rule');
 
-    // A line is strokes from the centre of each cell, not borders on its box
-    // (cairn 0110): that is what makes neighbours join into one line.
-    const ruleCell = rule.querySelector('.rk-rule') as HTMLElement;
-    expect(ruleCell.querySelectorAll('.rk-stroke').length).toBeGreaterThan(0);
-    expect(getComputedStyle(ruleCell).borderTopWidth).toBe('0px');
-    const sides = [...rule.querySelectorAll<HTMLElement>('.rk-stroke')].map((s) => s.dataset.side);
-    expect(new Set(sides)).toEqual(new Set(['north', 'east', 'south', 'west']));
+    // A run of identical cells is one node, not one per cell — and a line
+    // across the cell is one node however long it is.
+    expect(glyph.querySelectorAll('.rk-run').length).toBeLessThan(28 * 7);
+    const across = glyph.querySelectorAll('[data-rk-shape="box-0101"]');
+    expect([...across].some((r) => (r.textContent ?? '').length > 10)).toBe(true);
+
+    // The cell draws the line, not the font: the character is there to be
+    // copied, and transparent; the stroke is a background on the cell's own
+    // box, drawn from its centre, never a border on it (cairn 0110, 0116).
+    const corner = glyph.querySelector<HTMLElement>('[data-rk-shape="box-0110"]') as HTMLElement;
+    expect(corner.textContent).toBe('┌');
+    expect(getComputedStyle(corner).webkitTextFillColor).toBe('rgba(0, 0, 0, 0)');
+    expect(getComputedStyle(corner).backgroundImage).toContain('linear-gradient');
+    expect(getComputedStyle(corner).borderTopWidth).toBe('0px');
+
+    // Two stroke styles: weighted like the type, or a hairline.
+    expect(stroke(ruleLayer, 'light')).toBe(1);
+    expect(stroke(ruleLayer, 'heavy')).toBe(2);
+    expect(stroke(glyphLayer, 'light')).toBeGreaterThan(1);
+    expect(stroke(glyphLayer, 'heavy')).toBeGreaterThan(stroke(glyphLayer, 'light'));
 
     // Both measure the same, in whole cells.
     const a = glyph.getBoundingClientRect();

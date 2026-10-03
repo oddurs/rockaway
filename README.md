@@ -19,7 +19,8 @@ as data, two layers, four painters over one geometry, and the rules that follow.
 ## What it is
 
 - **An integer geometry engine.** Boxes, junctions, text measurement and layout, all in whole cells, with no DOM in it. It runs in a browser, in Node, and in a test.
-- **Four painters over one geometry.** Characters (`┌─┐`), CSS hairlines, ANSI escapes, or plain text. The same screen, four outputs, one source of truth.
+- **Four painters over one geometry.** Lines stroked like type, lines as CSS hairlines, ANSI escapes, or plain text. The same screen, four outputs, one source of truth.
+- **The font supplies letters; the cell supplies geometry.** Box drawing and block elements are drawn by the cell, the way kitty and Ghostty draw them, so a box closes at every density, in every font, at any zoom — and the characters stay in the page, so a screen still copies as `┌──┐`.
 - **Tokens as data.** DTCG sources, an ANSI-16 palette generated in OKLCH, and a contrast gate that every pair has to pass, in both modes.
 - **Components on React Aria.** Keyboard-first, because that is what a TUI is, and what React Aria is best at.
 
@@ -55,6 +56,9 @@ two tests that a pixel system cannot run:
 
 - **Grid conformance** — every box measures a whole number of cells, in every theme and density.
 - **Text snapshots** — a component's test looks like the component.
+
+And a third that reads real pixels: **continuity**, which proves every line
+reaches the edges of its cell and meets its neighbour there.
 
 ```diff
 - │ [ Publish ]  [ Cancel ]             │

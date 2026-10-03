@@ -237,6 +237,12 @@ export const vars = {
   'space.5': 'var(--rk-space-5)',
   'space.6': 'var(--rk-space-6)',
   'space.8': 'var(--rk-space-8)',
+  'stroke.glyph.gap': 'var(--rk-stroke-glyph-gap)',
+  'stroke.glyph.heavy': 'var(--rk-stroke-glyph-heavy)',
+  'stroke.glyph.light': 'var(--rk-stroke-glyph-light)',
+  'stroke.rule.gap': 'var(--rk-stroke-rule-gap)',
+  'stroke.rule.heavy': 'var(--rk-stroke-rule-heavy)',
+  'stroke.rule.light': 'var(--rk-stroke-rule-light)',
 } as const;
 
 export type TokenName = keyof typeof vars;
