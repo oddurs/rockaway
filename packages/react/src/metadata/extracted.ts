@@ -149,12 +149,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "label",
         "type": "string",
         "required": false,
-        "description": "A label sunk into the rule: `── files ───`. Horizontal rules only."
+        "description": "A label sunk into the rule, `╶─ files ───╴`, which is also the separator's accessible name. Drawn on horizontal rules only; a vertical one is still named by it. Too long for the rule, it truncates with the ellipsis."
       },
       {
         "name": "labelAlign",
         "type": "'start' | 'center' | 'end'",
-        "required": false
+        "required": false,
+        "description": "Where the label sits along the rule: near the start, by default."
       },
       {
         "name": "ends",

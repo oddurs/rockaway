@@ -1,9 +1,9 @@
 /**
  * `Divider`: the pure half (cairn 0126).
  *
- * The rule, drawn into any draft, and the rule on its own as a buffer. No React
- * and no client boundary, so a server component, a static renderer or a test
- * can call it; `divider.tsx` imports it from here.
+ * The rule, drawn into any draft, and the rule on its own as a buffer. No
+ * React and no client boundary, so a server component, a static renderer or a
+ * test can call them; `divider.tsx` imports them from here.
  */
 import {
   Attr,
@@ -20,8 +20,7 @@ import {
   type Size,
   type Style,
 } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
-import { themeGlyphs } from '@rockaway/tokens';
+import { type Glyphs, marks, themeGlyphs } from '@rockaway/tokens';
 import type { DividerOptions } from './divider.tsx';
 
 /**
@@ -31,6 +30,9 @@ import type { DividerOptions } from './divider.tsx';
  * in ANSI, and wherever else the buffer goes.
  */
 const LINE: Style = { fg: 'border.default', attrs: Attr.none };
+
+/** A label is text set into the line, so it is drawn in the text colour. */
+const TEXT: Style = { fg: 'fg.default', attrs: Attr.none };
 
 /**
  * Draw a rule along `line` — one cell tall for a horizontal rule, one cell
@@ -65,12 +67,19 @@ export function drawRule(
   }
 
   if (horizontal && options.label !== undefined && options.label !== '') {
-    // A label owns its cells and stops short of any rule crossing this one,
+    // An open end is a half stroke. A label set straight after it would leave
+    // that half cell stranded, `╶ files`, so on an open rule the label keeps a
+    // whole cell of line between it and either end: `╶─ files ──╴`. Within that,
+    // it owns its cells and stops short of any rule crossing this one,
     // whichever was drawn first (0175).
-    drawLabel(draft, rect(line.x, line.y, line.width, 1), options.label, {
+    const inset = options.ends === 'joined' ? 0 : 1;
+    const room = rect(line.x + inset, line.y, Math.max(0, line.width - 2 * inset), 1);
+    drawLabel(draft, room, options.label, {
       set,
+      style: TEXT,
       lineStyle: LINE,
-      ellipsis: glyphs.mark.ellipsis,
+      // A rule drawn in ASCII truncates in ASCII, whatever the theme.
+      ellipsis: set.ascii ? marks.ascii.ellipsis : glyphs.mark.ellipsis,
       ...(options.labelAlign === undefined ? {} : { align: options.labelAlign }),
     });
   }

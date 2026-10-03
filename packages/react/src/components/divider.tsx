@@ -30,8 +30,13 @@ export interface DividerOptions {
    * theme's when not given.
    */
   readonly border?: BorderSetName;
-  /** A label sunk into the rule: `── files ───`. Horizontal rules only. */
+  /**
+   * A label sunk into the rule, `╶─ files ───╴`, which is also the separator's
+   * accessible name. Drawn on horizontal rules only; a vertical one is still
+   * named by it. Too long for the rule, it truncates with the ellipsis.
+   */
   readonly label?: string;
+  /** Where the label sits along the rule: near the start, by default. */
   readonly labelAlign?: 'start' | 'center' | 'end';
   /**
    * `joined` adds the crossing edges at each end, so the table resolves a tee
