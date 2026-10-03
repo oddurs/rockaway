@@ -152,8 +152,12 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
         h1: article?.querySelector('h1')?.textContent,
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
         readme: [...document.querySelectorAll('a')].find((a) => a.textContent === 'README')?.href,
-        unreachable: [...document.querySelectorAll<HTMLElement>('pre, table')].filter(
+        // A table scrolls in a wrapper that can show its overflow marks.
+        unreachable: [...document.querySelectorAll<HTMLElement>('pre, .rk-scroll-marks')].filter(
           (el) => el.tabIndex !== 0,
+        ).length,
+        unwrapped: [...document.querySelectorAll('table')].filter(
+          (table) => !table.parentElement?.classList.contains('rk-scroll-marks'),
         ).length,
         shaped: [...document.querySelectorAll('pre [data-rk-shape]')].map((el) => el.textContent),
         styled: document.querySelectorAll('article [style]:not([data-rk-shape], col)').length,
@@ -167,11 +171,31 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.overflow).toBe(0);
     expect(found.readme).toBe('https://github.com/oddurs/rockaway/blob/main/README.md');
     expect(found.unreachable).toBe(0);
+    expect(found.unwrapped).toBe(0);
     // The diagram in section 4 is drawn by the cell, and still copies as text.
     expect(found.shaped).toContain('┌');
     // No page brings styles of its own: the only inline style is the pipeline's
     // run lengths and column widths.
     expect(found.styled).toBe(0);
+  });
+
+  test('publishes every document in docs/, linked to each other on the site (0107)', async () => {
+    const reader = await browser.newPage();
+    const response = await reader.goto(`${origin}${base}getting-started/`);
+    expect(response?.ok()).toBe(true);
+    const found = await reader.evaluate(() => ({
+      title: document.title,
+      h1: document.querySelector('article.rk-prose h1')?.textContent,
+      concept: [...document.querySelectorAll('a')]
+        .map((a) => a.getAttribute('href'))
+        .filter((href) => href?.includes('concept')),
+    }));
+    await reader.close();
+    expect(found.title).toBe('Getting started — rockaway');
+    expect(found.h1).toBe('Getting started');
+    // A document's link to another stays on the site, under its base.
+    expect(found.concept.length).toBeGreaterThan(0);
+    for (const href of found.concept) expect(href?.startsWith(`${base}concept/`)).toBe(true);
   });
 
   test('sets a Markdown alert as a callout, framed by the cell, with no script', async () => {
