@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`####······` 32% · 26 of 81 done · due 2027-01-31
+`####······` 30% · 27 of 89 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -158,11 +158,18 @@ The component contract, proven on a first set of components.
 - [ ] [`0191`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0191-report-an-off-grid-box-inside-nested-screens-once.md) Report an off-grid box inside nested screens once <sup>bug · tooling · p3</sup>
 - [ ] [`0192`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0192-tighten-what-the-metadata-extractor-credits-to-a-component.md) Tighten what the metadata extractor credits to a component <sup>bug · tooling · p3</sup>
 - [ ] [`0193`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0193-rename-screen-s-chrome-layer-from-rk-frame-to-rk-chrome.md) Rename Screen's chrome layer from rk-frame to rk-chrome <sup>chore · components · p3</sup>
+- [ ] [`0197`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0197-meet-wcag-2-2-aa-target-size-at-the-default-density-and-44px-at-touch.md) Meet WCAG 2.2 AA target size at the default density, and 44px at touch <sup>decision · tokens · p0</sup>
+- [ ] [`0198`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0198-set-the-density-line-boxes-to-meet-aa-at-normal-and-44px-at-touch.md) Set the density line boxes to meet AA at normal and 44px at touch <sup>bug · tokens · p0</sup>
+- [ ] [`0199`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0199-remeasure-a-screen-when-its-context-changes.md) Remeasure a screen when its context changes <sup>bug · components · p1</sup>
+- [ ] [`0200`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0200-clear-a-control-s-background-in-the-reset.md) Clear a control's background in the reset <sup>bug · css · p1</sup>
+- [ ] [`0201`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0201-check-that-every-reversing-rule-opts-out-of-the-forced-colors-backplate.md) Check that every reversing rule opts out of the forced-colors backplate <sup>chore · tooling · p2</sup>
+- [ ] [`0202`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0202-move-button-s-forced-colors-opt-out-into-its-own-stylesheet.md) Move Button's forced-colors opt-out into its own stylesheet <sup>chore · css · p3</sup>
+- [ ] [`0203`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0203-check-the-field-contract-from-the-testing-package.md) Check the field contract from the testing package <sup>feature · tooling · p1</sup>
+- [ ] [`0204`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0204-verify-fieldframe-inside-numberfield-and-datefield.md) Verify FieldFrame inside NumberField and DateField <sup>chore · components · p2</sup>
 
 ### in review
 
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
-- [ ] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
 - [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 - [ ] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
 - [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
@@ -172,6 +179,7 @@ The component contract, proven on a first set of components.
 
 - [x] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p0</sup>
 - [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
+- [x] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
 - [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
 - [x] [`0096`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0096-frame.md) Frame <sup>component · components · p0</sup>
 - [x] [`0097`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0097-divider.md) Divider <sup>component · components · p1</sup>
@@ -276,7 +284,7 @@ Something another project can install and build on.
 
 ## later — Later
 
-`··········` 0% · 0 of 8 done
+`··········` 0% · 0 of 10 done
 
 Worth doing, not yet worth scheduling.
 
@@ -290,4 +298,6 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0194`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0194-label-a-frame-s-dividers.md) Label a frame's dividers <sup>feature · components · p3</sup>
 - [ ] [`0195`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0195-lint-data-rk-offgrid-reasons-in-source.md) Lint data-rk-offgrid reasons in source <sup>chore · tooling · p2</sup>
 - [ ] [`0196`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0196-publish-the-markdown-pipeline-as-rockaway-markdown.md) Publish the Markdown pipeline as @rockaway/markdown <sup>feature · distribution · p3</sup>
+- [ ] [`0205`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0205-line-fieldset-fields-up-with-the-form-s-label-column.md) Line fieldset fields up with the form's label column <sup>feature · components · p3</sup>
+- [ ] [`0206`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0206-round-the-braille-dots.md) Round the braille dots <sup>feature · grid · p3</sup>
 
