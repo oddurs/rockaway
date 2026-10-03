@@ -40,20 +40,27 @@ type Screen = 'srgb' | 'display-p3-d65';
  * down to fit the page otherwise, and then a screenshot is not the pixels the
  * story drew — which the continuity check would rightly refuse.
  */
-const browser = (context: Context = {}, screen: Screen = 'srgb') => ({
+const browser = (
+  context: Context = {},
+  screen: Screen = 'srgb',
+  engine: 'chromium' | 'firefox' | 'webkit' = 'chromium',
+) => ({
   enabled: true as const,
   headless: true as const,
   viewport: { width: 1200, height: 900 },
   provider: playwright({
-    launchOptions: { args: [`--force-color-profile=${screen}`] },
+    // Only Chromium can be told what screen it is on.
+    ...(engine === 'chromium'
+      ? { launchOptions: { args: [`--force-color-profile=${screen}`] } }
+      : {}),
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
-  instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
+  instances: [{ browser: engine }] satisfies BrowserInstanceOption[],
   commands: { printToPdf, recordKnown },
 });
 
 /**
- * Four browsers. Forced colors is a mode of the browser itself (cairn 0027), so
+ * Six projects. Forced colors is a mode of the browser itself (cairn 0027), so
  * stories tagged `forced-colors` run in one launched with it active, and
  * nowhere else. A tag rather than a file name, so a component keeps its
  * forced-colors story beside its others.
@@ -69,6 +76,33 @@ const browser = (context: Context = {}, screen: Screen = 'srgb') => ({
  */
 const FORCED_COLORS = 'forced-colors';
 const P3 = 'p3';
+
+/**
+ * Firefox and WebKit are the fifth and sixth (cairn 0124): every story again in
+ * each, because the cell is `1ch` by `1lh` and those are exactly the
+ * measurements engines disagree on. Forced colours runs in Firefox too, which
+ * forces them for real (measured: author red on green becomes black on white,
+ * and background images go), but not in WebKit, which matches the media query
+ * under emulation and still paints the author's colours: Safari has no forced
+ * colours mode. Two projects stay Chromium's, each for a reason that is the
+ * browser's or the clock's:
+ *
+ * - p3: only Chromium can be told which screen it is on
+ *   (`--force-color-profile`), and the p3 project is that screen;
+ * - zoom: twice the device pixels is Chromium's here to keep the run short;
+ *   continuity at one device pixel already runs in all three engines.
+ *
+ * And stories tagged `print` stay out of Firefox and WebKit: Playwright prints
+ * to PDF only in Chromium. That is a capability an engine lacks; a defect in
+ * one engine is a known failure instead (`.storybook/known.ts`), printed in
+ * every run until it is fixed.
+ *
+ * `ENGINES` picks which of the three run, so CI can give Firefox and WebKit a
+ * job of their own beside Chromium's. Unset, all three run.
+ */
+const engines = (process.env.ENGINES ?? 'chromium,firefox,webkit').split(',');
+const others = (['firefox', 'webkit'] as const).filter((engine) => engines.includes(engine));
+const chromium = engines.includes('chromium');
 
 /**
  * What each project walks after every story (cairn 0125). Conformance and
@@ -89,6 +123,7 @@ const plans = {
   [P3]: { densities: [], modes, continuity: 'own', axe: true },
   zoom: { densities, modes: [], continuity: 'every', axe: false },
   [FORCED_COLORS]: { densities, modes: [], continuity: 'every', axe: false },
+  engine: { densities, modes: [], continuity: 'every', axe: false },
 } as const satisfies Record<string, Plan>;
 
 /**
@@ -103,7 +138,7 @@ const staleKnown: Reporter = {
     const used = known.filter((k) => ledger.used.has(k.id));
     if (used.length > 0) {
       console.info(
-        `\nKnown failures still failing (.storybook/known.ts):\n${used.map((k) => `  ${k.id}: ${k.ticket}`).join('\n')}`,
+        `\nKnown failures still failing (.storybook/known.ts):\n${used.map((k) => `  ${k.id}: ${k.reason}\n    settled by: ${k.ticket}`).join('\n')}`,
       );
     }
     if (stale.length > 0) {
@@ -115,52 +150,89 @@ const staleKnown: Reporter = {
   },
 };
 
-const config: ViteUserConfig = defineConfig({
+/** Chromium's projects: the geometry, a p3 screen, forced colors and zoom. */
+const chromiumProjects = [
+  {
+    plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
+    test: {
+      name: 'storybook',
+      setupFiles,
+      testTimeout,
+      provide: { plan: plans.storybook, project: 'storybook' },
+      browser: browser(),
+    },
+  },
+  {
+    plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS] } })],
+    test: {
+      name: P3,
+      setupFiles,
+      testTimeout,
+      provide: { plan: plans[P3], project: P3 },
+      browser: browser({}, 'display-p3-d65'),
+    },
+  },
+  {
+    plugins: [storybookTest({ configDir, tags: { include: [FORCED_COLORS] } })],
+    test: {
+      name: FORCED_COLORS,
+      setupFiles,
+      testTimeout,
+      provide: { plan: plans[FORCED_COLORS], project: FORCED_COLORS },
+      browser: browser({ forcedColors: 'active' }),
+    },
+  },
+  {
+    plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
+    test: {
+      name: 'zoom',
+      exclude: allButContinuity,
+      setupFiles,
+      testTimeout,
+      provide: { plan: plans.zoom, project: 'zoom' },
+      browser: browser({ deviceScaleFactor: 2 }),
+    },
+  },
+];
+
+/** Firefox and WebKit: every story, but the ones only Chromium can run, and forced colours in Firefox. */
+const engineProjects = others.map((engine) => ({
+  plugins: [
+    storybookTest({
+      configDir,
+      tags: {
+        exclude: [FORCED_COLORS, P3, 'print'],
+      },
+    }),
+  ],
   test: {
-    reporters: ['default', staleKnown],
-    projects: [
-      {
-        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
-        test: {
-          name: 'storybook',
-          setupFiles,
-          testTimeout,
-          provide: { plan: plans.storybook },
-          browser: browser(),
-        },
-      },
-      {
-        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS] } })],
-        test: {
-          name: P3,
-          setupFiles,
-          testTimeout,
-          provide: { plan: plans[P3] },
-          browser: browser({}, 'display-p3-d65'),
-        },
-      },
+    name: engine,
+    setupFiles,
+    testTimeout,
+    provide: { plan: plans.engine, project: engine },
+    browser: browser({}, 'srgb', engine),
+  },
+}));
+
+const firefoxForcedColors = others.includes('firefox')
+  ? [
       {
         plugins: [storybookTest({ configDir, tags: { include: [FORCED_COLORS] } })],
         test: {
-          name: FORCED_COLORS,
+          name: `${FORCED_COLORS}-firefox`,
           setupFiles,
           testTimeout,
-          provide: { plan: plans[FORCED_COLORS] },
-          browser: browser({ forcedColors: 'active' }),
+          provide: { plan: plans[FORCED_COLORS], project: `${FORCED_COLORS}-firefox` },
+          browser: browser({ forcedColors: 'active' }, 'srgb', 'firefox'),
         },
       },
-      {
-        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
-        test: {
-          name: 'zoom',
-          exclude: allButContinuity,
-          setupFiles,
-          testTimeout,
-          provide: { plan: plans.zoom },
-          browser: browser({ deviceScaleFactor: 2 }),
-        },
-      },
-    ],
+    ]
+  : [];
+
+const config: ViteUserConfig = defineConfig({
+  test: {
+    reporters: ['default', staleKnown],
+    projects: [...(chromium ? chromiumProjects : []), ...engineProjects, ...firefoxForcedColors],
   },
 });
 

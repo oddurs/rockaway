@@ -9,6 +9,7 @@ import {
 import type { Density, Mode } from '@rockaway/tokens';
 import { type Contexts, readContexts, setContexts } from './contexts.ts';
 import { type Check, type Known, known } from './known.ts';
+import { runner } from './runner.ts';
 
 /**
  * The context matrix (cairn 0125).
@@ -82,6 +83,8 @@ export interface KnownUse {
 }
 
 export interface Walk {
+  /** The Vitest project, for known failures that belong to one engine or mode of it. */
+  readonly project?: string | undefined;
   readonly capture?: Capture | undefined;
   readonly plan?: Plan | undefined;
   /** Runs axe on the story as it is now, throwing on a violation. */
@@ -270,9 +273,17 @@ async function checkCell(
   return { failures, ran };
 }
 
-function covers(entry: Known, storyId: string, cell: Cell, check: Check): boolean {
+function covers(
+  entry: Known,
+  storyId: string,
+  cell: Cell,
+  check: Check,
+  project: string | undefined,
+): boolean {
+  const checks: readonly Check[] = typeof entry.check === 'string' ? [entry.check] : entry.check;
   return (
-    entry.check === check &&
+    checks.includes(check) &&
+    (entry.projects === undefined || (project !== undefined && entry.projects.includes(project))) &&
     (entry.stories === undefined || entry.stories.some((id) => storyId.startsWith(id))) &&
     (entry.densities === undefined || entry.densities.includes(cell.density)) &&
     (entry.modes === undefined || entry.modes.includes(cell.mode))
@@ -290,7 +301,7 @@ export async function walk(
   storyId: string,
   canvas: HTMLElement,
   parameters: Parameters,
-  { capture, plan, axe, record }: Walk,
+  { project, capture, plan, axe, record }: Walk,
 ): Promise<void> {
   const root = document.documentElement;
   const own = ownCell(root);
@@ -305,7 +316,8 @@ export async function walk(
   const sort = (cell: Cell, ran: ReadonlySet<Check>, failures: readonly Failure[]) => {
     for (const check of ran) {
       for (const entry of known) {
-        if (covers(entry, storyId, cell, check) && canvas.querySelector(entry.present)) {
+        const here = entry.present === undefined || canvas.querySelector(entry.present);
+        if (covers(entry, storyId, cell, check, project) && here) {
           inPlay.add(entry.id);
         }
       }
@@ -313,7 +325,7 @@ export async function walk(
     const fresh: string[] = [];
     for (const failure of failures) {
       const entry = known.find(
-        (k) => covers(k, storyId, cell, failure.check) && excuses(k, failure),
+        (k) => covers(k, storyId, cell, failure.check, project) && excuses(k, failure),
       );
       if (!entry) {
         fresh.push(failure.text);
@@ -340,12 +352,14 @@ export async function walk(
       sort(cell, ran, failures);
     }
 
-    // axe has already run in the story's own cell. Contrast is a question of
-    // colour, not of size, so each other mode is checked once, at the story's
-    // own density.
-    for (const mode of plan?.axe ? plan.modes : []) {
+    // axe runs here rather than on its own, so its failures meet the known
+    // ones like any other check's: in the story's own cell, and in each other
+    // mode the plan asks for. Contrast is a question of colour, not of size,
+    // so each mode is checked once, at the story's own density.
+    const axeModes = [own.mode, ...(plan?.axe ? plan.modes : []).filter((m) => m !== own.mode)];
+    for (const mode of axeModes) {
       const cell = { density: own.density, mode };
-      if (mode === own.mode || skipFor(cell, parameters.matrix?.skip)) continue;
+      if (skipFor(cell, parameters.matrix?.skip)) continue;
       await switchTo(root, canvas, cell);
       try {
         await axe();
@@ -363,15 +377,40 @@ export async function walk(
 
   if (skipped.length > 0) console.info(`left out of the matrix:\n  ${skipped.join('\n  ')}`);
   // One line per known failure, not one per element: enough to see that it
-  // is still there and where, without burying the run.
+  // is still there and where. Its reason and ticket close the run.
   for (const [id, lines] of excused) {
-    const entry = known.find((k) => k.id === id);
     const where = [...new Set(lines.map((line) => line.slice(0, line.indexOf(':'))))];
     console.info(
-      `known failure ${id}, ${lines.length}× in ${where.join('; ')} (${entry?.ticket}): ${entry?.reason}\n  e.g. ${lines[0]}`,
+      `known failure ${id}, ${lines.length}× in ${where.join('; ')}\n  e.g. ${lines[0]}`,
     );
   }
   if (unknown.length > 0) {
     throw new Error(`the matrix failed in ${unknown.length} cell(s)\n\n${unknown.join('\n\n')}`);
+  }
+}
+
+/**
+ * A story's own assertion that is a known failure somewhere (`known.ts`,
+ * check `play`). Where the entry covers this project, a failure is printed and
+ * counted rather than thrown, and a pass counts towards making the entry
+ * stale; everywhere else the assertion is an assertion.
+ */
+export async function expectKnown(id: string, assertion: () => unknown): Promise<void> {
+  const entry = known.find(
+    (k) =>
+      k.id === id &&
+      (k.check === 'play' || (typeof k.check !== 'string' && k.check.includes('play'))),
+  );
+  if (!entry) throw new Error(`no known failure named ${id} with check 'play' in known.ts`);
+  const run = runner();
+  const covered =
+    run !== undefined && (entry.projects === undefined || entry.projects.includes(run.project));
+  try {
+    await assertion();
+    if (covered) await run.record({ inPlay: [id], used: [] });
+  } catch (error) {
+    if (!covered) throw error;
+    await run.record({ inPlay: [id], used: [id] });
+    console.info(`known failure ${id}\n  e.g. ${(error as Error).message.split('\n')[0]}`);
   }
 }

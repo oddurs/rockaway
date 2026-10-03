@@ -3,6 +3,7 @@ import { Frame, Screen } from '@rockaway/react';
 import { expectContinuity } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
+import { expectKnown } from '../../.storybook/matrix.ts';
 import { runner } from '../../.storybook/runner.ts';
 import { text } from '../text.ts';
 
@@ -157,8 +158,11 @@ export const Strokes: Story = {
     // neighbour, in ink that can be told from the reader's canvas.
     const run = runner();
     if (!run) return;
-    const report = await expectContinuity(canvasElement, { capture: run.capture });
-    await expect(report.shapes).toBeGreaterThanOrEqual(cells.length);
-    await expect(report.joins).toBeGreaterThan(40);
+    // Not yet in Firefox: printed as a known failure there (cairn 0124).
+    await expectKnown('firefox-forced-corners', async () => {
+      const report = await expectContinuity(canvasElement, { capture: run.capture });
+      await expect(report.shapes).toBeGreaterThanOrEqual(cells.length);
+      await expect(report.joins).toBeGreaterThan(40);
+    });
   },
 };

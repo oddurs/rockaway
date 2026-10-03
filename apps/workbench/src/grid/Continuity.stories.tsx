@@ -16,6 +16,7 @@ import { type PainterName, Screen } from '@rockaway/react';
 import { checkContinuity, expectContinuity, formatContinuity } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
+import { expectKnown } from '../../.storybook/matrix.ts';
 import { runner } from '../../.storybook/runner.ts';
 
 /**
@@ -271,6 +272,8 @@ async function inkRows(
  */
 export const Prints: Story = {
   args: { density: 'normal' },
+  // Playwright prints to PDF only in Chromium (cairn 0124).
+  tags: ['print'],
   render: () => <Screen data-testid="print" draw={junctions('single')} cols={14} rows={6} />,
   play: async ({ canvas }) => {
     const run = runner();
@@ -378,7 +381,8 @@ export const Columns: Story = {
         (row) => (row.lastElementChild as HTMLElement).getBoundingClientRect().left,
       );
       expect(rows[0]?.children).toHaveLength(41);
-      expect(lefts[0], `${size}px`).toBe(lefts[1]);
+      // Not yet in Firefox: printed as a known failure there (cairn 0124).
+      await expectKnown('firefox-columns', () => expect(lefts[0], `${size}px`).toBe(lefts[1]));
     }
   },
 };

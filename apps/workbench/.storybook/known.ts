@@ -12,18 +12,24 @@ import type { Density, Mode } from '@rockaway/tokens';
  * something it is about (`present`) is on the page there; an entry that was
  * in play somewhere in a run and covered nothing is stale.
  */
-export type Check = 'remeasure' | 'conformance' | 'targets' | 'continuity' | 'axe';
+export type Check = 'remeasure' | 'conformance' | 'targets' | 'continuity' | 'axe' | 'play';
 
 export interface Known {
   /** A short, stable name, printed with every failure it covers. */
   readonly id: string;
-  readonly check: Check;
+  /** The check, or checks, whose failure it is: one defect can show in the walk and in a play function. */
+  readonly check: Check | readonly Check[];
   /** The rule within the check: a violation's `what`, or `size` / `height` for targets. */
   readonly rule?: string;
   /** Matched against the failing element's description (for axe, the whole message). */
   readonly element: RegExp;
-  /** A selector for what the entry is about; it is in play only where this is on the page. */
-  readonly present: string;
+  /**
+   * A selector for what the entry is about; it is in play only where this is
+   * on the page. Without one, it is in play wherever it covers the cell.
+   */
+  readonly present?: string;
+  /** Only in these Vitest projects (`firefox`, `forced-colors-firefox`). Default: every one. */
+  readonly projects?: readonly string[];
   /** Only these stories, by id prefix (`components-list--disabled`). Default: every story. */
   readonly stories?: readonly string[];
   readonly densities?: readonly Density[];
@@ -89,5 +95,37 @@ export const known: readonly Known[] = [
     reason:
       "the reset clears a control's padding, border and colour but not its background, so a bare button keeps Chrome's dark ButtonFace (#6b6b6b) under the page's text: 4.46:1",
     ticket: 'the reset clears a control background (proposed in the 0125 report)',
+  },
+  {
+    id: 'firefox-columns',
+    check: 'play',
+    projects: ['firefox'],
+    stories: ['grid-continuity--columns'],
+    element: /./,
+    reason:
+      'Firefox lays text out in sixtieths of a pixel and the cell is rounded to sixty-fourths, so forty one-cell runs and one run of forty end apart: measured 0.083px at 15.3px, 0.317px at 16.4px and 0.050px at 17px (Chromium and WebKit: 0)',
+    ticket: "round the cell to the engine's layout unit (proposed in the 0124 report)",
+  },
+  {
+    id: 'firefox-forced-corners',
+    check: ['continuity', 'play'],
+    projects: ['forced-colors-firefox'],
+    rule: 'gap',
+    element: /rk-frame/,
+    present: '[data-rk-shape]',
+    reason:
+      "under forced colours in Firefox, a top-left corner's east stroke stops short of its cell's edge (┌ and ╔ at 0,0), so the corner does not meet the line beside it",
+    ticket: 'corners meet under forced colours in Firefox (proposed in the 0124 report)',
+  },
+  {
+    id: 'firefox-forced-highlight',
+    check: 'axe',
+    projects: ['forced-colors-firefox'],
+    element: /color-contrast[\s\S]*background color: #3399ff/,
+    present: '[data-rk-fill], .rk-button',
+    reason:
+      "Firefox's emulated forced-colours palette pairs HighlightText (#ffffff) with Highlight (#3399ff), 2.94:1, and a solid control is drawn in that pair",
+    ticket:
+      'decide what a solid control draws in under forced colours when the system pair is weak (proposed in the 0124 report)',
   },
 ];
