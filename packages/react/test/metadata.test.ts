@@ -15,7 +15,7 @@ import { createElement, Fragment, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { type Analysis, analyse, packageRoot, render } from '../scripts/extract.ts';
-import { formatKeys, parseKeys } from '../src/components/key-hint.tsx';
+import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
 import schema from '../src/metadata/meta.schema.json' with { type: 'json' };
@@ -43,6 +43,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  Chrome:
+    "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
 
 /**
@@ -67,7 +69,18 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Form: (props) => createElement(rockaway.Form, props, createElement(rockaway.Label, null, 'Name')),
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
+  Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  Tree: (props) =>
+    createElement(
+      rockaway.Tree,
+      { 'aria-label': 'files', defaultExpandedKeys: ['src'], ...props },
+      createElement(
+        rockaway.TreeItem,
+        { id: 'src', title: 'src' },
+        createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
+      ),
+    ),
   List: (props) =>
     createElement(
       rockaway.List,
@@ -564,6 +577,25 @@ describe('the snapshots, as the site draws them', () => {
       Cmd+S save
       Shift+Up select
       S-Up select"
+    `);
+  });
+
+  test('Keymap', () => {
+    expect(snapshots(byName('Keymap'))).toMatchInlineSnapshot(`
+      "── Help, on any keyboard but Apple’s
+      Ctrl+K  Open the palette
+      /       Search
+      G H     Go home
+      J       Next row
+      K       Previous row
+      ?       Show this help
+      ── Help, on an Apple keyboard
+      ⌘K   Open the palette
+      /    Search
+      G H  Go home
+      J    Next row
+      K    Previous row
+      ?    Show this help"
     `);
   });
 

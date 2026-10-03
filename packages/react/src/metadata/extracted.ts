@@ -233,7 +233,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-bg-surface",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -485,7 +484,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-bg-surface",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -538,6 +536,64 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-muted",
       "--rk-x-1"
+    ]
+  },
+  "Keymap": {
+    "file": "keymap.tsx",
+    "props": [
+      {
+        "name": "modal",
+        "type": "boolean",
+        "required": false,
+        "description": "A scope that hides every binding outside it while it is mounted: a dialog's, so the page behind it does not answer the keys.",
+        "default": "false"
+      },
+      {
+        "name": "timeout",
+        "type": "number",
+        "required": false,
+        "description": "At the root: how long the second key of a sequence may take, in milliseconds."
+      },
+      {
+        "name": "onConflict",
+        "type": "(conflict: KeymapConflict) => void",
+        "required": false,
+        "description": "At the root: told of each conflict once. A console warning unless given."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-x-2"
+    ]
+  },
+  "KeymapHelp": {
+    "file": "keymap.tsx",
+    "props": [
+      {
+        "name": "platform",
+        "type": "Platform | 'auto'",
+        "required": false,
+        "description": "Which keyboard to draw the chords for. The reader's by default.",
+        "default": "'auto'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-x-2"
     ]
   },
   "Label": {
@@ -637,7 +693,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "ReactNode",
         "required": false,
         "description": "What an empty list says, in its first row. `renderEmptyState` replaces it.",
-        "default": "'Nothing here.'"
+        "default": "EMPTY"
       },
       {
         "name": "className",
@@ -669,6 +725,80 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [
       "Omit<ListBoxItemProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "Tree": {
+    "file": "tree.tsx",
+    "props": [
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTreeProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "TreeItem": {
+    "file": "tree.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "The row's label, and the text type-ahead matches."
+      },
+      {
+        "name": "textValue",
+        "type": "string",
+        "required": false,
+        "description": "What type-ahead matches, when it is not the title."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The rows under this one. A row with children carries the expand mark."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTreeItemProps<T>, 'className' | 'children' | 'textValue'>"
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
