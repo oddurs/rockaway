@@ -7,7 +7,8 @@
  *
  *   - what you see: `⌘S` on an Apple keyboard, `Ctrl+S` elsewhere, `^S` in
  *     terminal notation
- *   - what a reader hears: "Command S", because `⌘` is not a word
+ *   - what a reader hears: "Command S" on an Apple keyboard, "Control S"
+ *     elsewhere, because `⌘` is not a word
  *   - what the platform is told: `Meta+s`, for `aria-keyshortcuts`
  *
  * The glyphs are `aria-hidden` and the spoken form sits beside them, so a hint
@@ -78,7 +79,17 @@ const NAMED: Readonly<
 };
 
 const WORDS = { ctrl: 'Ctrl', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
-const SPOKEN = { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Command' } as const;
+/**
+ * What a reader hears for each modifier, by the keyboard it is on: the word
+ * printed on the key. An Apple keyboard says Command and Option; anyone
+ * else's says Alt, and the meta key is Meta, whatever its cap shows (a
+ * Windows logo, a Super, a diamond), which is also what `aria-keyshortcuts`
+ * calls it (cairn 0189).
+ */
+const SPOKEN = {
+  apple: { ctrl: 'Control', alt: 'Option', shift: 'Shift', meta: 'Command' },
+  other: { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Meta' },
+} as const satisfies Record<Platform, Record<Modifier, string>>;
 
 /** `mod+shift+k` → the spec. `mod` is Command on an Apple keyboard, Control elsewhere. */
 export function parseKeys(spec: string, platform: Platform = 'other'): KeySpec {
@@ -155,7 +166,7 @@ export function spokenKeys(spec: string, platform: Platform = 'other'): string {
   const keys = parseKeys(spec, platform);
   const named = NAMED[keys.key];
   const face = named ? named.spoken : keys.key.toUpperCase();
-  return [...held(keys, SPOKEN), face].join(' ');
+  return [...held(keys, SPOKEN[platform]), face].join(' ');
 }
 
 /** What the platform is told: the value for `aria-keyshortcuts`. */
