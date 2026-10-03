@@ -255,6 +255,89 @@ export const FontDrawn: Story = {
   },
 };
 
+/** Lines every few cells, both ways, and a block run: every kind of seam, many times over. */
+const lattice = ({ width, height }: Size): Buffer =>
+  Buffer.create({ width, height }).draw((d) => {
+    const area = rect(0, 0, width, height);
+    drawBox(d, area, { set: borderSets.single, title: 'scrolled' });
+    for (let y = 2; y < height - 1; y += 2) drawDivider(d, area, y, { set: borderSets.single });
+    drawColumnRules(
+      d,
+      area,
+      Array.from({ length: Math.floor((width - 2) / 4) }, (_, i) => 4 * (i + 1)),
+      { set: borderSets.double },
+    );
+    drawText(d, { x: 2, y: 1 }, '█▓▒░▁▂▃▄▅▆▇█');
+  });
+
+/** A screen bigger than its region, scrolled to a part of it that starts between pixels. */
+const REGION = { inlineSize: '260.4px', blockSize: '200.6px', overflow: 'auto' } as const;
+
+function Scrolled({ testId, className }: { testId: string; className?: string }) {
+  const name = `a screen, scrolled (${testId})`;
+  const cls = ['rk-scroll', className].filter(Boolean).join(' ');
+  return (
+    // A region a reader can scroll, so one they can reach from the keyboard.
+    // biome-ignore lint/a11y/noNoninteractiveTabindex: axe requires it (scrollable-region-focusable)
+    <section aria-label={name} tabIndex={0} data-testid={testId} className={cls} style={REGION}>
+      <Screen draw={lattice} cols={40} rows={13} />
+    </section>
+  );
+}
+
+/**
+ * A scrolled region shows part of a screen, and only that part can be
+ * photographed. The check reads the cells wholly in view and counts the rest
+ * as unseen, so a scrolled table or list can be checked as it stands. It still
+ * finds what is broken in view: the same region with its shapes handed back to
+ * the font breaks, as it would whole.
+ */
+export const ScrolledRegion: Story = {
+  name: 'In a scrolled region',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+      <style>
+        {
+          '.font-drawn [data-rk-shape] { background-image: none; -webkit-text-fill-color: currentColor; }'
+        }
+      </style>
+      <Scrolled testId="drawn" />
+      <Scrolled testId="font" className="font-drawn" />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    for (const id of ['drawn', 'font']) {
+      const region = canvas.getByTestId(id);
+      region.scrollTo(61.3, 37.7);
+    }
+    const run = runner();
+    if (!run) return;
+    const drawn = canvas.getByTestId('drawn');
+    // Every cell that draws a shape: a run of them is one element.
+    const total = [...drawn.querySelectorAll('[data-rk-shape]')].reduce(
+      (n, run) => n + [...(run.textContent ?? '')].length,
+      0,
+    );
+    const report = await expectContinuity(drawn, { capture: run.capture });
+    // Some of it was looked at, some of it could not be, and nothing was
+    // counted twice or dropped.
+    expect(report.shapes).toBeGreaterThan(100);
+    expect(report.joins).toBeGreaterThan(100);
+    expect(report.unseen).toBeGreaterThan(100);
+    expect(report.shapes + report.unseen).toBe(total);
+    // The region is still where the play function put it.
+    expect(drawn.scrollLeft).toBeGreaterThan(60);
+
+    const font = await checkContinuity(canvas.getByTestId('font'), { capture: run.capture });
+    const gaps = font.breaks.filter((b) => b.what === 'gap');
+    expect(gaps.length, formatContinuity(font)).toBeGreaterThan(10);
+    expect(font.shapes).toBe(report.shapes);
+    // And only in view: no break is reported for a cell it could not see.
+    expect(font.unseen).toBe(report.unseen);
+  },
+};
+
 /**
  * One cell, measured. The ink of a vertical line runs the full height of its
  * cell at every density: no gap to the next row and no overlap into it.

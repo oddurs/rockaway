@@ -23,6 +23,11 @@
  * And for every run with a background: does it reach the top and bottom rows
  * of the cell (**stripe**), so reverse video is a solid block?
  *
+ * A layer inside a region that scrolls or clips is checked where it can be
+ * seen: the screenshot is of the part the region shows, and only the cells
+ * wholly inside it are read. The cells it hides are counted as `unseen`, so a
+ * check of a scrolled table says how much of it was looked at.
+ *
  * Only a test runner can take a screenshot, so the caller supplies one:
  * `capture` gets an element and returns a PNG of it, as base64 or a Blob.
  * Under Vitest's browser mode that is
@@ -59,6 +64,8 @@ export interface ContinuityReport {
   readonly joins: number;
   /** Runs with a background, checked top and bottom. */
   readonly fills: number;
+  /** Cells that draw their own shape but are scrolled or clipped out of view, so not checked. */
+  readonly unseen: number;
   readonly breaks: readonly Break[];
 }
 
@@ -168,17 +175,41 @@ export async function checkContinuity(
   let shapes = 0;
   let joins = 0;
   let fills = 0;
+  let unseen = 0;
 
   for (const layer of layers) {
     const bounds = layer.getBoundingClientRect();
     if (bounds.width === 0 || bounds.height === 0) continue;
-    const image = await decode(await chromeOnly(layer, options.capture));
+    const shown = shownPart(layer);
+    if (shown && (shown.width <= 0 || shown.height <= 0)) {
+      for (const run of layer.querySelectorAll('[data-rk-shape]')) {
+        unseen += [...graphemes(run.textContent ?? '')].length;
+      }
+      continue;
+    }
+    // A clipped layer is photographed through a window over the part it
+    // shows; anything else, whole.
+    const pane = shown ? openWindow(layer, shown) : undefined;
+    let image: Image;
+    let frame: DOMRect;
+    try {
+      image = await decode(await chromeOnly(layer, options.capture, pane ?? layer));
+      // The screenshot was taken after any scrolling it needed, so it is all
+      // measured again: only positions relative to what was taken are used.
+      frame = (pane ?? layer).getBoundingClientRect();
+    } finally {
+      pane?.remove();
+    }
     const view = layer.ownerDocument.defaultView;
     const dpr = view?.devicePixelRatio ?? 1;
-    // The screenshot was taken after any scrolling it needed, so the layer is
-    // measured again: only positions relative to it are used.
-    const frame = layer.getBoundingClientRect();
     const [originX, originY] = origin(frame, dpr, image);
+    /** Whether a box, in CSS pixels, is wholly in what was photographed. */
+    const seen = (left: number, top: number, right: number, bottom: number): boolean =>
+      !pane ||
+      (left >= frame.left - 1e-3 &&
+        top >= frame.top - 1e-3 &&
+        right <= frame.right + 1e-3 &&
+        bottom <= frame.bottom + 1e-3);
 
     const pixel = (x: number, y: number): RGB => {
       const i = (y * image.width + x) * 4;
@@ -219,7 +250,7 @@ export async function checkContinuity(
 
         if (!shape) {
           const bg = getComputedStyle(run).backgroundColor;
-          if (opaque(bg)) {
+          if (opaque(bg) && seen(rect.left, rect.top, rect.right, rect.bottom)) {
             fills += 1;
             const want = rgb(bg);
             const { x0, y0, x1, y1 } = inside(rect.left, rect.top, rect.right, rect.bottom);
@@ -251,8 +282,12 @@ export async function checkContinuity(
         const alpha = Math.max(...shape.marks.map((m) => (m.kind === 'rect' ? m.alpha : 1)));
 
         for (let i = 0; i < clusters.length; i++) {
-          shapes += 1;
           const left = rect.left + i * cellWidth;
+          if (!seen(left, rect.top, left + cellWidth, rect.bottom)) {
+            unseen += 1;
+            continue;
+          }
+          shapes += 1;
           const box = inside(left, rect.top, left + cellWidth, rect.bottom);
           const outer = touching(left, rect.top, left + cellWidth, rect.bottom);
           const { x0, y0, x1, y1 } = box;
@@ -394,7 +429,7 @@ export async function checkContinuity(
     }
   }
 
-  return { layers: layers.length, shapes, joins, fills, breaks };
+  return { layers: layers.length, shapes, joins, fills, unseen, breaks };
 }
 
 /**
@@ -404,7 +439,11 @@ export async function checkContinuity(
  * transparent for the moment of the screenshot, which moves nothing and takes
  * focus from nothing.
  */
-async function chromeOnly(layer: HTMLElement, capture: Capture): Promise<string | Blob> {
+async function chromeOnly(
+  layer: HTMLElement,
+  capture: Capture,
+  target: HTMLElement,
+): Promise<string | Blob> {
   // Not the content layer the chrome is itself inside, like a list's scrollbar
   // in a frame: only the ones laid over it.
   const content = [
@@ -413,12 +452,83 @@ async function chromeOnly(layer: HTMLElement, capture: Capture): Promise<string 
   const before = content.map((el) => el.style.opacity);
   for (const el of content) el.style.opacity = '0';
   try {
-    return await capture(layer);
+    return await capture(target);
   } finally {
     content.forEach((el, i) => {
       el.style.opacity = before[i] ?? '';
     });
   }
+}
+
+/**
+ * The part of a layer the page shows, when an ancestor clips it: its box cut
+ * by the padding box of every ancestor whose overflow is not visible, on the
+ * axes that one clips. Undefined when nothing clips it, so it is photographed
+ * whole as before. The page itself is not a clip: a screenshot of an element
+ * scrolls the page to it.
+ */
+function shownPart(layer: HTMLElement): DOMRect | undefined {
+  const doc = layer.ownerDocument;
+  const box = layer.getBoundingClientRect();
+  let left = box.left;
+  let top = box.top;
+  let right = box.right;
+  let bottom = box.bottom;
+  for (
+    let el = layer.parentElement;
+    el && el !== doc.body && el !== doc.documentElement;
+    el = el.parentElement
+  ) {
+    const style = getComputedStyle(el);
+    const clipsX = style.overflowX !== 'visible';
+    const clipsY = style.overflowY !== 'visible';
+    if (!clipsX && !clipsY) continue;
+    const r = el.getBoundingClientRect();
+    const x0 = r.left + el.clientLeft;
+    const y0 = r.top + el.clientTop;
+    if (clipsX) {
+      left = Math.max(left, x0);
+      right = Math.min(right, x0 + el.clientWidth);
+    }
+    if (clipsY) {
+      top = Math.max(top, y0);
+      bottom = Math.min(bottom, y0 + el.clientHeight);
+    }
+  }
+  const clipped =
+    left > box.left + 1e-3 ||
+    top > box.top + 1e-3 ||
+    right < box.right - 1e-3 ||
+    bottom < box.bottom - 1e-3;
+  return clipped ? new DOMRect(left, top, right - left, bottom - top) : undefined;
+}
+
+/**
+ * A transparent element exactly over part of the page, to photograph that part
+ * by: a screenshot of an element is of the page within its box. It is placed
+ * in the document, not the viewport, so scrolling the page to take it moves it
+ * with everything else, and corrected once by where it actually landed.
+ */
+function openWindow(layer: HTMLElement, shown: DOMRect): HTMLElement {
+  const doc = layer.ownerDocument;
+  const pane = doc.createElement('div');
+  pane.setAttribute('aria-hidden', 'true');
+  const place = (left: number, top: number) => {
+    pane.style.cssText = [
+      'position: absolute',
+      `left: ${left}px`,
+      `top: ${top}px`,
+      `width: ${shown.width}px`,
+      `height: ${shown.height}px`,
+      'margin: 0',
+      'pointer-events: none',
+    ].join('; ');
+  };
+  place(shown.left, shown.top);
+  doc.body.append(pane);
+  const landed = pane.getBoundingClientRect();
+  place(shown.left + (shown.left - landed.left), shown.top + (shown.top - landed.top));
+  return pane;
 }
 
 /**
