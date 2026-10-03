@@ -61,22 +61,6 @@ jobs:
       - name: Install Chromium
         run: pnpm --filter workbench exec playwright install --with-deps chromium
 
-      # EXPERIMENT (cairn 0164), removed before merge: the pointer stories alone,
-      # each run a fresh browser with a cold font cache, twenty times over.
-      - name: EXPERIMENT pointer stories from a cold cache
-        run: |
-          failed=0
-          for i in $(seq 1 20); do
-            if pnpm --filter workbench exec vitest run --project storybook src/components/Link.stories.tsx src/components/Button.stories.tsx > run.log 2>&1; then
-              echo "run $i: pass"
-            else
-              failed=$((failed + 1))
-              echo "run $i: FAIL"
-              grep -E "×|expected" run.log | head -8
-            fi
-          done
-          echo "$failed of 20 failed"
-
       - name: Tests (tokens, stories in Vitest browser mode with axe, the built site)
         run: pnpm test
         env:
