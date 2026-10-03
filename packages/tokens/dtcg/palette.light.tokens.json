@@ -256,8 +256,8 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.9,
-          0.0037,
+          0.63,
+          0.006,
           262
         ]
       }
@@ -266,7 +266,7 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.62,
+          0.56,
           0.006,
           262
         ]

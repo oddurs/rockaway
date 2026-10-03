@@ -92,6 +92,25 @@ function attributesIn(selectors: readonly string[]): string[] {
   ].sort();
 }
 
+/**
+ * React Aria's render prop for a state attribute: `[data-focused]` is
+ * `isFocused`, `[data-focus-visible]` is `isFocusVisible`.
+ */
+function renderPropOf(selector: string): string | undefined {
+  const name = /^\[data-([a-z-]+)\]$/.exec(selector)?.[1];
+  if (name === undefined) return undefined;
+  if (name === 'readonly') return 'isReadOnly';
+  return `is${name.replace(/(?:^|-)([a-z])/g, (_, ch: string) => ch.toUpperCase())}`;
+}
+
+/** Whether a component's source reads the render prop for a state. */
+function readsRenderProp(file: string, selector: string): boolean {
+  const prop = renderPropOf(selector);
+  if (prop === undefined) return false;
+  const source = readFileSync(path.join(packageRoot, 'src/components', file), 'utf8');
+  return new RegExp(`\\.${prop}\\b`).test(source);
+}
+
 const rowOf = (name: string): StateRow | undefined => stateVocabulary.find((r) => r.name === name);
 
 /** What the metadata says that the component does not bear out. Empty when it is true. */
@@ -140,14 +159,18 @@ function problems(meta: ComponentMeta, found: Analysis): string[] {
       continue;
     }
     if (!parts.has(state.part)) out.push(`state ${state.state} is on ${state.part}, not a part`);
+    // A state is drawn by a rule that selects it, or by a mark the component
+    // writes from React Aria's render prop for it: List's cursor is a glyph in
+    // a reserved cell, not a style.
     const drawn = row.global
       ? focusable
-      : found.selectors.some((s) => row.selectors.some((r) => s.includes(r.replace(/\]$/, ''))));
+      : found.selectors.some((s) => row.selectors.some((r) => s.includes(r.replace(/\]$/, '')))) ||
+        row.selectors.some((r) => readsRenderProp(found.file, r));
     if (!drawn) {
       out.push(
         row.global
           ? `state ${state.state} needs a focusable element, and it renders none`
-          : `state ${state.state} is read by no rule in its stylesheets (${row.selectors.join(', ')})`,
+          : `state ${state.state} is read by no rule in its stylesheets (${row.selectors.join(', ')}), and its source draws nothing from it`,
       );
     }
   }
@@ -317,7 +340,7 @@ describe('the checks fail when the metadata is wrong', () => {
     const invalid = { ...button.states[0], state: 'invalid' } as StateMeta;
     const states = [...button.states.filter((s) => s.state !== 'pressed'), invalid];
     expect(problems({ ...button, states }, found)).toEqual([
-      'state invalid is read by no rule in its stylesheets ([data-invalid])',
+      'state invalid is read by no rule in its stylesheets ([data-invalid]), and its source draws nothing from it',
       'its stylesheet draws data-pressed, and its metadata names no state for it',
     ]);
   });
@@ -452,15 +475,27 @@ describe('the snapshots, as the site draws them', () => {
 
   test('List', () => {
     expect(snapshots(byName('List'))).toMatchInlineSnapshot(`
-      "── The scrollbar as the list scrolls
-      offset  0  ███░░░░░
-      offset  4  ░███░░░░
-      offset  8  ░░░███░░
-      offset 12  ░░░░███░
-      offset 16  ░░░░░███
-      ── Nothing to scroll, and a very long list
-      fits     ████████
-      10,000   █░░░░░░░"
+      "── Single select
+      ▸src/index.ts    █
+       src/buffer.ts   █
+       src/junction.ts █
+       src/layout.ts   █
+       README.md       █
+      ── Multi-select
+        src/index.ts   █
+       ✓src/buffer.ts  █
+      ▸✓src/junction.ts█
+        src/layout.ts  █
+        README.md      █
+      ── Scrolled
+       line 8 of a ░
+       line 9 of a ░
+       line 10 of a░
+       line 11 of a█
+      ── Empty
+       Nothing here.   █
+                       █
+                       █"
     `);
   });
 });

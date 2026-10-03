@@ -3,13 +3,14 @@ id: 118
 uid: 2ba64b83-5818-4777-adb2-9b11d1d79315
 title: 'Fix the state vocabulary: how every state is drawn on the grid'
 type: decision
-status: backlog
+status: done
 milestone: primitives
 depends_on:
 - 76
 - 91
 created: 2026-10-03
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p0
 layer: css
 effort: m
@@ -86,3 +87,11 @@ Adopted by the CTO as the working answer for every wave from here, so the parall
 ## 2026-10-03
 
 From Link (0135): two rows of the table needed reading for an inline control. Hover cannot be 'underline' when the control is underlined at rest, so Link doubles it. Current's cursor mark needs a reserved cell; a link in a sentence has none of its own, so the mark hangs in the cell before the link, which the layout keeps blank in every state (the word space, the gap). Worth a sentence in the table when this closes.
+
+## 2026-10-03
+
+Confirmed against a real multi-select in 0133, row by row, for the rows List draws. Cursor (data-focused) is the cursor mark in a reserved cell and nothing else. Selected (data-selected) is reverse video, plus the check mark in a second reserved cell under multi-select. Every pairing of the two reads apart in text, in greyscale and in forced colors (List's Cursor and selection and Forced colors stories), and none moves a cell. One refinement, not a change of row: reverse video has to be an element's own figure and ground swapped. The bg.inverse/fg.on-inverse pair is mapped to Canvas on both halves in forced colors, so a row reversed with it vanishes there. List swaps fg.default and bg.surface instead, and a story fails if it reverts to the pair. A second, already in #71: React Aria reflects aria-current as data-current, so the current row selects either. docs/concept.md now has section 9, States, with the table.
+
+## Result
+
+The state vocabulary holds. Every component draws each state one way, from the table in docs/concept.md section 9 (and stateVocabulary in @rockaway/react/metadata), and no state changes geometry. Cursor and selection are separate signals: the cursor mark in a reserved cell, and reverse video plus a check in a second reserved cell under multi-select. Reverse video means an element's own figure and ground swapped, so forced colors keeps it.
