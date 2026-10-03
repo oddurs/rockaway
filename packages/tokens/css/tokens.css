@@ -353,7 +353,7 @@
 @property --rk-cell-line {
   syntax: '<number>';
   inherits: true;
-  initial-value: 1.25;
+  initial-value: 1.5;
 }
 
 @property --rk-conformance {
@@ -2026,7 +2026,7 @@
     --rk-border-success: var(--rk-ansi-green);
     --rk-border-surface: var(--rk-ansi-border);
     --rk-border-warning: var(--rk-ansi-yellow);
-    --rk-cell-line: 1.25;
+    --rk-cell-line: 1.5;
     /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
     --rk-conformance: standard;
     --rk-fg-accent: var(--rk-ansi-blue);
@@ -2887,41 +2887,6 @@
 
 @layer rk.tokens {
   [data-density='normal'] {
-    --rk-cell-line: 1.25;
-    --rk-row-0: 0;
-    --rk-row-1: 1;
-    --rk-row-2: 2;
-    --rk-row-3: 3;
-    --rk-row-4: 4;
-    --rk-row-5: 5;
-    --rk-row-6: 6;
-    --rk-row-8: 8;
-    --rk-row-10: 10;
-    --rk-row-12: 12;
-    --rk-row-16: 16;
-    --rk-size-control-lg: 3;
-    --rk-size-control-md: 1;
-    --rk-size-control-sm: 1;
-    --rk-size-screen-full: 120;
-    --rk-size-screen-medium: 60;
-    --rk-size-screen-narrow: 40;
-    --rk-size-screen-wide: 80;
-    --rk-space-0: 0;
-    --rk-space-1: 1;
-    --rk-space-2: 2;
-    --rk-space-3: 3;
-    --rk-space-4: 4;
-    --rk-space-5: 5;
-    --rk-space-6: 6;
-    --rk-space-8: 8;
-    --rk-space-10: 10;
-    --rk-space-12: 12;
-    --rk-space-16: 16;
-  }
-}
-
-@layer rk.tokens {
-  [data-density='airy'] {
     --rk-cell-line: 1.5;
     --rk-row-0: 0;
     --rk-row-1: 1;
@@ -2956,8 +2921,43 @@
 }
 
 @layer rk.tokens {
-  [data-density='touch'] {
+  [data-density='airy'] {
     --rk-cell-line: 2;
+    --rk-row-0: 0;
+    --rk-row-1: 1;
+    --rk-row-2: 2;
+    --rk-row-3: 3;
+    --rk-row-4: 4;
+    --rk-row-5: 5;
+    --rk-row-6: 6;
+    --rk-row-8: 8;
+    --rk-row-10: 10;
+    --rk-row-12: 12;
+    --rk-row-16: 16;
+    --rk-size-control-lg: 3;
+    --rk-size-control-md: 1;
+    --rk-size-control-sm: 1;
+    --rk-size-screen-full: 120;
+    --rk-size-screen-medium: 60;
+    --rk-size-screen-narrow: 40;
+    --rk-size-screen-wide: 80;
+    --rk-space-0: 0;
+    --rk-space-1: 1;
+    --rk-space-2: 2;
+    --rk-space-3: 3;
+    --rk-space-4: 4;
+    --rk-space-5: 5;
+    --rk-space-6: 6;
+    --rk-space-8: 8;
+    --rk-space-10: 10;
+    --rk-space-12: 12;
+    --rk-space-16: 16;
+  }
+}
+
+@layer rk.tokens {
+  [data-density='touch'] {
+    --rk-cell-line: 2.75;
     --rk-row-0: 0;
     --rk-row-1: 1;
     --rk-row-2: 2;
