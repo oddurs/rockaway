@@ -1,6 +1,7 @@
 import { Button, Frame } from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
+import { settled } from '../settled.ts';
 
 const meta = {
   title: 'Components/Button',
@@ -60,6 +61,7 @@ export const Keyboard: Story = {
 export const Pressed: Story = {
   args: { children: 'Hold' },
   play: async ({ canvas }) => {
+    await settled();
     const button = canvas.getByRole('button', { name: 'Hold' });
     await userEvent.pointer({ keys: '[MouseLeft>]', target: button });
     expect(button.dataset.pressed).toBe('true');

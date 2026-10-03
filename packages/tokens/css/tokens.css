@@ -882,6 +882,91 @@
   inherits: true;
 }
 
+@property --rk-glyph-key-alt {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-backspace {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-ctrl {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-delete {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-end {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-enter {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-home {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-meta {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-pagedown {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-pageup {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-shift {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-space {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-tab {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-key-up {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-blank {
   syntax: '*';
   inherits: true;
@@ -2047,6 +2132,23 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-key-alt: "⌥";
+    --rk-glyph-key-backspace: "⌫";
+    --rk-glyph-key-ctrl: "⌃";
+    --rk-glyph-key-delete: "⌦";
+    --rk-glyph-key-down: "↓";
+    --rk-glyph-key-end: "↘";
+    --rk-glyph-key-enter: "⏎";
+    --rk-glyph-key-home: "↖";
+    --rk-glyph-key-left: "←";
+    --rk-glyph-key-meta: "⌘";
+    --rk-glyph-key-pagedown: "⇟";
+    --rk-glyph-key-pageup: "⇞";
+    --rk-glyph-key-right: "→";
+    --rk-glyph-key-shift: "⇧";
+    --rk-glyph-key-space: "␣";
+    --rk-glyph-key-tab: "⇥";
+    --rk-glyph-key-up: "↑";
     --rk-glyph-mark-blank: " ";
     --rk-glyph-mark-bullet: "·";
     --rk-glyph-mark-check: "✓";
@@ -2510,6 +2612,23 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-key-alt: "⌥";
+    --rk-glyph-key-backspace: "⌫";
+    --rk-glyph-key-ctrl: "⌃";
+    --rk-glyph-key-delete: "⌦";
+    --rk-glyph-key-down: "↓";
+    --rk-glyph-key-end: "↘";
+    --rk-glyph-key-enter: "⏎";
+    --rk-glyph-key-home: "↖";
+    --rk-glyph-key-left: "←";
+    --rk-glyph-key-meta: "⌘";
+    --rk-glyph-key-pagedown: "⇟";
+    --rk-glyph-key-pageup: "⇞";
+    --rk-glyph-key-right: "→";
+    --rk-glyph-key-shift: "⇧";
+    --rk-glyph-key-space: "␣";
+    --rk-glyph-key-tab: "⇥";
+    --rk-glyph-key-up: "↑";
     --rk-glyph-mark-blank: " ";
     --rk-glyph-mark-bullet: "·";
     --rk-glyph-mark-check: "✓";

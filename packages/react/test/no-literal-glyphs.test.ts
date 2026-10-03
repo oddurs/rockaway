@@ -1,6 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { bars, blocks, marks, spinnerFrames } from '@rockaway/tokens';
+import { bars, blocks, keyLegends, marks, spinnerFrames } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
 
 /**
@@ -25,6 +25,7 @@ const themed = new Set(
     ...Object.values(blocks.unicode),
     ...bars.unicode,
     ...spinnerFrames.unicode,
+    ...Object.values(keyLegends.unicode),
   ].filter((ch) => (ch.codePointAt(0) ?? 0) > 0x7e),
 );
 
