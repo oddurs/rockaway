@@ -311,12 +311,17 @@ interface Stylesheet {
   readonly rules: readonly { readonly selector: string; readonly vars: readonly string[] }[];
 }
 
-function selectorOf(rule: Rule): string {
-  const parts = [rule.selector];
+/**
+ * Each selector a rule applies to, in full, nesting included. A selector list
+ * is split: `.a, .rk-button[data-pressed]` is two selectors, and only one of
+ * them is Button's.
+ */
+function selectorsOf(rule: Rule): string[] {
+  const parents: string[] = [];
   for (let node: CssNode | undefined = rule.parent; node; node = node.parent) {
-    if (node.type === 'rule') parts.unshift((node as Rule).selector);
+    if (node.type === 'rule') parents.unshift((node as Rule).selector);
   }
-  return parts.join(' ').replace(/\s+/g, ' ');
+  return rule.selectors.map((one) => [...parents, one].join(' ').replace(/\s+/g, ' '));
 }
 
 function cssFiles(dir: string): string[] {
@@ -342,7 +347,7 @@ function stylesheets(): readonly Stylesheet[] {
           if (child.type === 'decl')
             vars.push(...[...child.value.matchAll(VAR)].map((m) => m[1] ?? ''));
         });
-        rules.push({ selector: selectorOf(rule), vars });
+        for (const selector of selectorsOf(rule)) rules.push({ selector, vars });
       });
       return { file: path.relative(cssRoot, file), rules };
     });

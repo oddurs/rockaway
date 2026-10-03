@@ -1,7 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { fitStatus, type StatusText, statusBarBuffer } from '../src/components/status-bar.tsx';
+import { fitStatus, type StatusText, statusBarBuffer } from '../src/components/status-bar.pure.ts';
 
 /**
  * A bar as an editor has it: the mode, the file, a message line, the cursor

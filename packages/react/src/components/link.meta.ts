@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type LinkState, linkBuffer } from './link.tsx';
+import { linkBuffer } from './link.pure.ts';
+import type { LinkState } from './link.tsx';
 
 const cells = (label: string, state: LinkState): string =>
   toText(linkBuffer(label, state), { trimEnd: false });
@@ -55,7 +56,7 @@ export const linkMeta: ComponentMetaInput = defineMeta({
     {
       state: 'hover',
       part: 'Link',
-      note: 'The underline is already taken, so hover doubles it.',
+      note: 'The underline is already taken, so hover is bold (0209): an attribute a terminal has, and no wider in a monospace face. Current is bold too, but in the body colour and with the cursor mark.',
     },
     { state: 'focus-unframed', part: 'Link' },
     {
@@ -88,7 +89,7 @@ export const linkMeta: ComponentMetaInput = defineMeta({
     {
       title: 'In place, current, and opening a new tab',
       description:
-        'The first cell is the one before the link. Hover, focus and pressed draw the same cells as rest: they are a doubled underline, an outline and reverse video, which text has no way to show.',
+        'The first cell is the one before the link. Hover, focus and pressed draw the same cells as rest: they are bold, an outline and reverse video, which text has no way to show.',
       text: [
         `rest     ${cells('docs', {})}`,
         `current  ${cells('docs', { current: true })}`,

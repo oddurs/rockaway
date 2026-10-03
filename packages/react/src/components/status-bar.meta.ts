@@ -1,7 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
-import { type StatusText, statusBarBuffer, statusSegmentVariants } from './status-bar.tsx';
+import { type StatusText, statusBarBuffer, statusSegmentVariants } from './status-bar.pure.ts';
 
 /** An editor's bar: the mode, the file, the position, and what the keys do. */
 const BAR: readonly StatusText[] = [

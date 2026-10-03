@@ -7,9 +7,10 @@
  * cell, and a segment that has been cut ends in the theme's ellipsis.
  *
  * The mode segment is reverse video: the bar's own figure and ground
- * swapped, rather than the inverse pair, so forced colors, which maps that
- * pair to the canvas, still shows it (cairn 0181). Swapping a pair keeps its
- * contrast, so the gate on fg.default over bg.subtle holds both ways.
+ * swapped. In forced colors that pair is the reader's text and canvas, and
+ * `forced-colors.css` takes the mode off the backplate with every other
+ * reversed element (cairn 0181). Swapping a pair keeps its contrast, so the
+ * gate on fg.default over bg.subtle holds both ways.
  */
 @layer rk.components {
   .rk-status-segment {
@@ -45,18 +46,5 @@
   .rk-status-segment[data-variant="mode"] {
     background: var(--rk-fg-default);
     color: var(--rk-bg-subtle);
-  }
-
-  /*
-   * Forced colors would lay a canvas backplate behind the mode's text, which
-   * is the colour of the text: the word vanished into its own ground. The
-   * segment opts out and swaps the reader's pair itself.
-   */
-  @media (forced-colors: active) {
-    .rk-status-segment[data-variant="mode"] {
-      forced-color-adjust: none;
-      background: CanvasText;
-      color: Canvas;
-    }
   }
 }

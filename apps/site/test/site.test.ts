@@ -152,8 +152,12 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
         h1: article?.querySelector('h1')?.textContent,
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
         readme: [...document.querySelectorAll('a')].find((a) => a.textContent === 'README')?.href,
-        unreachable: [...document.querySelectorAll<HTMLElement>('pre, table')].filter(
+        // A table scrolls in a wrapper that can show its overflow marks.
+        unreachable: [...document.querySelectorAll<HTMLElement>('pre, .rk-scroll-marks')].filter(
           (el) => el.tabIndex !== 0,
+        ).length,
+        unwrapped: [...document.querySelectorAll('table')].filter(
+          (table) => !table.parentElement?.classList.contains('rk-scroll-marks'),
         ).length,
         shaped: [...document.querySelectorAll('pre [data-rk-shape]')].map((el) => el.textContent),
         styled: document.querySelectorAll('article [style]:not([data-rk-shape], col)').length,
@@ -167,11 +171,58 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.overflow).toBe(0);
     expect(found.readme).toBe('https://github.com/oddurs/rockaway/blob/main/README.md');
     expect(found.unreachable).toBe(0);
+    expect(found.unwrapped).toBe(0);
     // The diagram in section 4 is drawn by the cell, and still copies as text.
     expect(found.shaped).toContain('┌');
     // No page brings styles of its own: the only inline style is the pipeline's
     // run lengths and column widths.
     expect(found.styled).toBe(0);
+  });
+
+  test('sets a Markdown alert as a callout, framed by the cell, with no script', async () => {
+    const reader = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    await reader.goto(`${origin}${base}concept/`);
+    await reader.evaluate(() => document.fonts.ready);
+    const found = await reader.evaluate(() => {
+      const note = document.querySelector<HTMLElement>('article aside.rk-callout-static');
+      // One cell, as the callout's own corner measures it: whatever face the
+      // page is set in, a corner is one cell wide.
+      const cell = note?.querySelector('[data-rk-shape]')?.getBoundingClientRect().width ?? 1;
+      const box = (el: Element | null | undefined) => el?.getBoundingClientRect();
+      const [top, , body, , bottom] = note ? [...note.children] : [];
+      const sides = note ? [...note.querySelectorAll('.rk-callout-side')] : [];
+      return {
+        role: note?.getAttribute('role'),
+        label: note?.getAttribute('aria-label'),
+        top: top?.textContent,
+        bottom: bottom?.textContent,
+        hidden: [top, bottom, ...sides].every((el) => el?.getAttribute('aria-hidden') === 'true'),
+        shaped: note?.querySelectorAll('[data-rk-shape]').length,
+        body: body?.textContent?.replace(/\s+/g, ' ').trim(),
+        width: (box(note)?.width ?? 0) / cell,
+        // The sides run the whole height of the content, whatever it wrapped to.
+        sides: sides.map((el) => Math.round(box(el)?.height ?? 0)),
+        content: Math.round(box(body)?.height ?? 0),
+        edges: [Math.round(box(top)?.height ?? 0), Math.round(box(bottom)?.height ?? 0)],
+      };
+    });
+    await reader.close();
+    expect(found.role).toBe('note');
+    expect(found.label).toBe('Note');
+    expect(found.top).toMatch(/^┌ ● Note ─┐$/);
+    expect(found.bottom).toBe('└─┘');
+    expect(found.hidden).toBe(true);
+    // Four corners, two edges across and two down.
+    expect(found.shaped).toBe(8);
+    expect(found.body).toMatch(/^The deal is not .never break the grid.\./);
+    expect(Math.abs(found.width - Math.round(found.width))).toBeLessThan(0.05);
+    expect(found.sides).toEqual([found.content, found.content]);
+    // Each edge is one row, and the content between is whole rows: on a phone
+    // the sentence wraps, and the sides are as tall as it wrapped to.
+    const [row = 0, bottom] = found.edges;
+    expect(bottom).toBe(row);
+    expect(found.content % row).toBe(0);
+    expect(found.content).toBeGreaterThan(row);
   });
 
   test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {

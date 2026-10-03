@@ -1,3 +1,5 @@
+import { expect, waitFor } from 'storybook/test';
+
 /**
  * Wait until the page has stopped moving, before a story measures or points
  * (cairn 0164).
@@ -30,4 +32,23 @@ export async function settled(): Promise<void> {
   for (let frame = 0; frame < 2; frame++) {
     await new Promise((done) => requestAnimationFrame(done));
   }
+}
+
+/**
+ * `settled()`, and then every screen under `root` drawn at its own size.
+ *
+ * A screen inside a screen (a fieldset in a frame) measures itself only after
+ * the screen around it has measured and laid it out, a frame or two later
+ * than `settled()` waits. Call this before reading back a page of nested
+ * screens: it waits until every screen's measured columns fill its box.
+ */
+export async function measured(root: HTMLElement): Promise<void> {
+  await settled();
+  await waitFor(() => {
+    for (const screen of root.querySelectorAll<HTMLElement>('.rk-screen')) {
+      const cell = Number.parseFloat(getComputedStyle(screen).getPropertyValue('--rk-cell-width'));
+      const cols = Number(screen.dataset.rkCols);
+      expect(Math.abs(screen.getBoundingClientRect().width - cols * cell)).toBeLessThan(cell);
+    }
+  });
 }

@@ -45,7 +45,7 @@ withdrawn: it would cost a cell only when disabled.
 
 | State | Source | Drawn as | Without colour |
 | --- | --- | --- | --- |
-| hover | `data-hovered` | underline on the label | underline |
+| hover | `data-hovered` | underline on the label; on an element underlined at rest, bold instead (0209). Never a double underline: a terminal cannot draw one | underline, or bold |
 | focus, unframed control | `data-focus-visible` | the focus ring (0061): an outline that costs no cell | outline |
 | focus, framed control | `data-focus-visible` | the frame goes `heavy` in `border.focus` | weight |
 | pressed | `data-pressed` | reverse video; a filled control reverses back | reverse |

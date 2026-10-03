@@ -11,11 +11,11 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
-import { createElement, type ReactElement } from 'react';
+import { createElement, Fragment, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { type Analysis, analyse, packageRoot, render } from '../scripts/extract.ts';
-import { formatKeys, parseKeys } from '../src/components/key-hint.tsx';
+import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
 import schema from '../src/metadata/meta.schema.json' with { type: 'json' };
@@ -43,6 +43,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  Chrome:
+    "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
 
 /**
@@ -53,7 +55,18 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
 const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => ReactElement>> = {
   Badge: (props) => createElement(rockaway.Badge, props, 'passing'),
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
+  Callout: (props) =>
+    createElement(rockaway.Callout, props, createElement('p', null, 'Mind the gap.')),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
+  // Both parts of the module: the variant is FieldFrame's, and Fieldset is always a group.
+  Fieldset: (props) =>
+    createElement(
+      Fragment,
+      null,
+      createElement(rockaway.Fieldset, { legend: 'Notify' }),
+      createElement(rockaway.FieldFrame, { label: 'Message', ...props }),
+    ),
+  Form: (props) => createElement(rockaway.Form, props, createElement(rockaway.Label, null, 'Name')),
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
@@ -64,6 +77,16 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       { cols: 30 },
       createElement(rockaway.StatusSegment, { variant: 'mode', ...props }, 'NORMAL'),
       createElement(rockaway.StatusMessage, null, 'Copied'),
+    ),
+  Tree: (props) =>
+    createElement(
+      rockaway.Tree,
+      { 'aria-label': 'files', defaultExpandedKeys: ['src'], ...props },
+      createElement(
+        rockaway.TreeItem,
+        { id: 'src', title: 'src' },
+        createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
+      ),
     ),
   List: (props) =>
     createElement(
@@ -401,34 +424,100 @@ describe('the snapshots, as the site draws them', () => {
       "── Variants
       default [ Publish ]
       fill    [ Publish ]
-      quiet   Publish
-      danger  [ Publish ]
+      danger  [!Publish ]
+      ── Without delimiters
+      default Publish
+      danger  [!Discard ]
       ── With a shortcut
       [ Save Ctrl+S ]
-      [ Save ⌘S ]
-      ── Large
-                   
-       [ Publish ] 
-                   "
+      [ Save ⌘S ]"
     `);
   });
 
   test('Divider', () => {
     expect(snapshots(byName('Divider'))).toMatchInlineSnapshot(`
       "── Open and joined
-      ╶──────────╴
-      ├──────────┤
+      ╶──────────────────╴
+      ├──────────────────┤
+      ── Every border set
+      ├──────────────────┤
+      ╠══════════════════╣
+      ┣━━━━━━━━━━━━━━━━━━┫
+      +------------------+
       ── Labelled
-      ╶ files ───────────╴
+      ╶─ files ──────────╴
       ╶───── files ──────╴
-      ╶─────────── files ╴
-      ╶ far too… ──╴
+      ╶────────── files ─╴
+      ├ files ───────────┤
+      ├───── files ──────┤
+      ├─────────── files ┤
+      ╶─ a label far… ───╴
       ── Vertical
-      ┬
-      │
-      │
-      │
-      ┴"
+      ╷ ┬
+      │ │
+      │ │
+      │ │
+      ╵ ┴
+      ── Under an ASCII theme
+      -- a label far~ ----"
+    `);
+  });
+
+  test('Fieldset', () => {
+    expect(snapshots(byName('Fieldset'))).toMatchInlineSnapshot(`
+      "── Every state
+      ┌ Notify ──────────────┐
+      │                      │
+      └──────────────────────┘
+      ┌ Notify* ─────────────┐
+      │                      │
+      └──────────────────────┘
+      ┏ Notify ━━━━━━━━━━━━━━┓
+      ┃                      ┃
+      ┗━━━━━━━━━━━━━━━━━━━━━━┛
+      ┏ Notify ━━━━━━━━━━━━━━┓
+      ┃                      ┃
+      ┗━━━━━━━━━━━━━━━━━━━━━━┛"
+    `);
+  });
+
+  test('Form', () => {
+    expect(snapshots(byName('Form'))).toMatchInlineSnapshot(`
+      "── A form of mixed fields
+      Name         [Ada Lovelace        ]
+
+      Email*       [ada@                ]
+                   Where the receipts go.
+                   ✗ Enter an email address.
+
+      Repository   [rockaway            ]
+
+                   [✓] Sign commits
+
+                   ┌ Notify* ────────────────────────────────────────┐
+                   │ ● always  ○ never                               │
+                   └─────────────────────────────────────────────────┘
+
+                   [ Save ]
+      ── Under 60 cells
+      Name
+      [Ada Lovelace        ]
+
+      Email*
+      [ada@                ]
+      Where the receipts go.
+      ✗ Enter an email address.
+
+      Repository
+      [rockaway            ]
+
+      [✓] Sign commits
+
+      ┌ Notify* ─────────────────────────────┐
+      │ ● always  ○ never                    │
+      └──────────────────────────────────────┘
+
+      [ Save ]"
     `);
   });
 
