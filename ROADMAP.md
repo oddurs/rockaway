@@ -144,7 +144,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
-- [ ] [`0164`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0164-make-hover-and-pointer-stories-reliable-in-ci.md) Make hover and pointer stories reliable in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0166`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0166-draw-braille-from-the-cell-like-blocks.md) Draw braille from the cell, like blocks <sup>feature · grid · p2</sup>
 - [ ] [`0167`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0167-add-size-in-cells-and-conformance-level-to-component-metadata.md) Add size in cells and conformance level to component metadata <sup>feature · docs · p1</sup>
 - [ ] [`0168`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0168-re-export-or-document-the-router-hook-up-for-link.md) Re-export or document the router hook-up for Link <sup>feature · components · p2</sup>
@@ -170,6 +169,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 - [ ] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
 - [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
+- [ ] [`0164`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0164-make-hover-and-pointer-stories-reliable-in-ci.md) Make hover and pointer stories reliable in CI <sup>chore · tooling · p1</sup>
 
 ### done
 
@@ -216,7 +216,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`##········` 13% · 3 of 24 done · due 2027-02-21
+`##········` 17% · 4 of 24 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -229,7 +229,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0108`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0108-build-the-landing-page.md) Build the landing page <sup>feature · site · p0</sup>
 - [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0113`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p1</sup>
-- [ ] [`0144`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0144-highlight-code-in-the-ansi-16.md) Highlight code in the ANSI 16 <sup>feature · tokens · p1</sup>
 - [ ] [`0145`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0145-enable-github-pages-for-the-repository.md) Enable GitHub Pages for the repository <sup>chore · tooling · p0 · needs-owner</sup>
 - [ ] [`0146`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0146-deploy-the-site-to-github-pages-on-every-push-to-main.md) Deploy the site to GitHub Pages on every push to main <sup>chore · tooling · p0</sup>
 - [ ] [`0147`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0147-document-every-component-on-its-own-page-generated-from-its-metadata.md) Document every component on its own page, generated from its metadata <sup>feature · site · p0</sup>
@@ -249,6 +248,7 @@ A website built out of the system it documents, which is the only honest way
 - [x] [`0077`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0077-build-the-site-as-the-system-statically-on-pages.md) Build the site as the system, statically, on Pages <sup>decision · site · p0</sup>
 - [x] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
 - [x] [`0143`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0143-set-prose-on-the-grid-headings-lists-quotes-code-and-tables-from-markdown.md) Set prose on the grid: headings, lists, quotes, code and tables from Markdown <sup>feature · css · p0</sup>
+- [x] [`0144`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0144-highlight-code-in-the-ansi-16.md) Highlight code in the ANSI 16 <sup>feature · tokens · p1</sup>
 
 ## v0.1 — v0.1 — first release
 
