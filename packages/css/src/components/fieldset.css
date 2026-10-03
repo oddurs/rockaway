@@ -1,0 +1,77 @@
+/*
+ * FieldFrame and Fieldset (cairn 0127): a label set into a frame's top edge.
+ *
+ * The frame is a screen whose content is in flow, so it is as tall as what is
+ * in it, in whole rows, and as wide as its column, rounded down to a whole
+ * cell. The engine draws the border and the label in the edge; the weight of
+ * the line is the engine's, and its colour is set here, from the state React
+ * Aria's `Group` writes on the frame.
+ */
+@layer rk.components {
+  .rk-field-frame {
+    --rk-field-frame-ink: var(--rk-border-control);
+
+    justify-self: stretch;
+    /* Whole cells, measured by the cell around it: the screen inside takes
+     * this width and measures its own cell from it, so rounding on the screen
+     * itself would round by a cell it has not measured yet. */
+    inline-size: round(down, 100%, var(--rk-cell-width));
+    /* Fields inside a fieldset stack under 60 cells of it, as in a form. */
+    container: rk-form / inline-size;
+  }
+
+  .rk-fieldset {
+    --rk-field-frame-ink: var(--rk-border-default);
+  }
+
+  .rk-field-frame > .rk-screen > .rk-frame {
+    color: var(--rk-field-frame-ink);
+  }
+
+  /* In flow, so the frame grows with what it holds. */
+  .rk-field-frame > .rk-screen > .rk-content {
+    position: relative;
+  }
+
+  .rk-field-frame[data-disabled] {
+    --rk-field-frame-ink: var(--rk-fg-disabled);
+  }
+
+  .rk-field-frame[data-invalid] {
+    --rk-field-frame-ink: var(--rk-border-danger);
+  }
+
+  /* Focus outranks invalid while it lasts: the reader needs to see where
+   * they are, and the error row still says what is wrong. */
+  .rk-field-frame[data-kind="control"][data-focus-visible] {
+    --rk-field-frame-ink: var(--rk-border-focus);
+  }
+
+  /* A fieldset's fields line up with each other as a form's do, one per row. */
+  .rk-fieldset-fields {
+    display: grid;
+    grid-template-columns:
+      [label-start] max-content
+      [label-end control-start] minmax(0, 1fr)
+      [control-end];
+    align-items: start;
+    justify-items: start;
+    white-space: normal;
+  }
+
+  .rk-fieldset-fields > * {
+    grid-column: control;
+  }
+
+  .rk-fieldset-fields > .rk-field {
+    grid-column: label-start / control-end;
+    grid-template-columns: subgrid;
+    justify-self: stretch;
+  }
+
+  @container rk-form (width < 60ch) {
+    .rk-fieldset-fields {
+      grid-template-columns: [label-start control-start] minmax(0, 1fr) [label-end control-end];
+    }
+  }
+}

@@ -25,6 +25,8 @@
  * them; packages/react/test/barrels.test.ts fails on a missing or doubled line.
  */
 @import "./components/button.css";
+@import "./components/field.css";
+@import "./components/fieldset.css";
 @import "./components/key-hint.css";
 @import "./components/link.css";
 @import "./components/list.css";

@@ -1,0 +1,127 @@
+/*
+ * The field contract (cairn 0127): where a field's parts sit on the grid.
+ *
+ * A field is two columns of cells. The label column holds the label, bold,
+ * on the field's first row, with one cell after it reserved for the required
+ * mark and two cells of air after that. The control column holds the
+ * control, then the description, then the error, each on rows of its own.
+ * Everything is placed by column alone and flows down in source order, so a
+ * field with no label (a checkbox, a framed control) is simply a field whose
+ * label column is empty.
+ *
+ * A form lines its fields up: each field is a subgrid of the form's two
+ * columns, so the label column is as wide as the form's longest label and
+ * every control starts in the same cell. Under 60 cells the two columns
+ * become one, and each label sits on the row above its control.
+ *
+ * `formBuffer` in `@rockaway/react` is the text model of this layout; change
+ * one and the workbench fails until the other follows.
+ *
+ * States never move anything (0118). Required is a mark in a cell that is
+ * there either way; disabled dims; invalid is the error row, which is
+ * content, and the control's own frame.
+ */
+@layer rk.components {
+  /* Text in a field wraps at its column, whatever the screen around it does:
+   * a screen keeps its chrome on one line with `white-space: pre`. Every
+   * character is a cell, so a wrapped line is still whole cells. */
+  .rk-label,
+  .rk-description,
+  .rk-field-error-message {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .rk-label {
+    padding-inline-end: var(--rk-x-2);
+    font-weight: var(--rk-attribute-bold);
+    color: var(--rk-fg-default);
+  }
+
+  /* The required mark's cell, there whether or not the mark is. */
+  .rk-label-mark {
+    display: inline-block;
+    vertical-align: top;
+    inline-size: var(--rk-cell-width);
+    block-size: var(--rk-cell-height);
+  }
+
+  .rk-field {
+    display: grid;
+    grid-template-columns:
+      [label-start] max-content
+      [label-end control-start] minmax(0, 1fr)
+      [control-end];
+    align-items: start;
+    justify-items: start;
+  }
+
+  .rk-field > * {
+    grid-column: control;
+  }
+
+  .rk-field > .rk-label {
+    grid-column: label;
+  }
+
+  .rk-field[data-required] > .rk-label .rk-label-mark {
+    color: var(--rk-fg-danger);
+  }
+
+  .rk-description {
+    color: var(--rk-fg-muted);
+  }
+
+  /* The mark, a cell of air, then the message, which hangs: a second line
+   * starts under its first word, not under the mark. */
+  .rk-field-error {
+    display: grid;
+    grid-template-columns: var(--rk-x-2) minmax(0, 1fr);
+    color: var(--rk-fg-danger);
+  }
+
+  /* The description stays as it is: it is help a reader may still want, and
+   * dimmed it would be text below contrast that nothing marks as inactive. */
+  .rk-field[data-disabled] > .rk-label,
+  .rk-field[data-disabled] > .rk-label .rk-label-mark {
+    color: var(--rk-fg-disabled);
+  }
+
+  /*
+   * The form is the container its width is asked of, and the grid inside it
+   * holds the columns. The grid is a whole number of cells wide, so its
+   * columns are, wherever the page puts the form.
+   */
+  .rk-form {
+    container: rk-form / inline-size;
+  }
+
+  .rk-form-grid {
+    display: grid;
+    grid-template-columns:
+      [label-start] var(--rk-form-label, max-content)
+      [label-end control-start] minmax(0, 1fr)
+      [control-end];
+    row-gap: var(--rk-y-1);
+    align-items: start;
+    justify-items: start;
+    inline-size: round(down, 100%, var(--rk-cell-width));
+  }
+
+  /* Anything that is not a field (a row of buttons) lines up with the controls. */
+  .rk-form-grid > * {
+    grid-column: control;
+  }
+
+  .rk-form-grid > .rk-field {
+    grid-column: label-start / control-end;
+    grid-template-columns: subgrid;
+    justify-self: stretch;
+  }
+
+  @container rk-form (width < 60ch) {
+    .rk-form-grid {
+      grid-template-columns: [label-start control-start] minmax(0, 1fr) [label-end control-end];
+    }
+  }
+}

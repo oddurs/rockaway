@@ -72,6 +72,109 @@ the merge keeps both versions. `pnpm --filter @rockaway/react test` then fails
 with the component listed twice. Delete the stale line, keep the one with every
 name, and run `pnpm format`.
 
+## Building a field
+
+> Interim home. This section belongs in the component recipe
+> (`docs/component-recipe.md`, cairn 0134), and moves there when that is
+> written. Until then it is the recipe for Text field, Checkbox, Switch, Radio
+> group and Select (0035–0038, 0042), and for any custom field.
+
+A field is a React Aria field component with our parts on it (cairn 0127).
+React Aria supplies the semantics: the label names the control, the
+description and the error are linked to it by `aria-describedby`, and
+validation is React Aria's. The parts decide where each piece sits on the grid.
+Do not lay a field out yourself; put the parts in and let `field.css` place
+them.
+
+1. **Put `fieldClass()` on the React Aria root.** It makes the root two
+   columns of cells, a label column and a control column, and it is what a
+   `Form` finds to line the field up with the others.
+
+   ```tsx
+   <AriaTextField {...props} className={fieldClass('rk-text-field', className)}>
+   ```
+
+2. **Put the parts inside, in this order:** the label, the control, the
+   description, the error. Each part is placed by column and flows down in
+   source order, so the order is the layout.
+
+   ```tsx
+   {({ isRequired }) => (
+     <>
+       <Label isRequired={isRequired}>{label}</Label>
+       <span className="rk-text-field-box">…the control…</span>
+       {description === undefined ? null : <Description>{description}</Description>}
+       <FieldError>{errorMessage}</FieldError>
+     </>
+   )}
+   ```
+
+3. **Pass `isRequired` from the render props to `Label`.** The label draws the
+   mark in a cell it keeps either way, so required moves nothing; the control
+   carries `aria-required`, so the mark is `aria-hidden`. Nothing else can tell
+   the label: React Aria does not put required in any context a label reads.
+
+4. **Always render `<FieldError>`.** It renders nothing until the field is
+   invalid, and then the cross and the message, from the field's own
+   validation unless it is given words. Do not make it, or anything near it, a
+   live region: on a failed submit focus moves to the first invalid control
+   and the error is heard there, as part of its description. A live region
+   would say it twice.
+
+5. **A control that carries its own words has no `Label`.** A checkbox is
+   `[✓] Sign commits`: its root still takes `fieldClass()`, so it sits in the
+   control column of a form, and its description and error go under it.
+
+6. **A framed control sets its label into its frame's top edge, with
+   `FieldFrame`, not `Label`.** Put the `FieldFrame` where the control goes,
+   inside the React Aria root; its visually hidden label takes the field's
+   ids, so it names the control. Pass `isRequired`, `isInvalid` and
+   `isDisabled` from the render props. Its focus state is its own: `kind="control"` (the default)
+   goes heavy in `border.focus` while focus is inside it.
+
+   ```tsx
+   {({ isRequired, isInvalid }) => (
+     <>
+       <FieldFrame label={label} isRequired={isRequired} isInvalid={isInvalid}>
+         <TextArea … />
+       </FieldFrame>
+       <FieldError />
+     </>
+   )}
+   ```
+
+7. **A group of controls is a `Fieldset` inside the React Aria group.** The
+   group keeps its role and the legend becomes its label; the frame reads the
+   group's invalid and disabled states itself. Pass `isRequired` from the
+   group's render props: a checkbox group's state stops being required once
+   something is checked, so it cannot be read from there. Fields put inside a
+   standalone `Fieldset` line up with each other as a form's do, and stack
+   under 60 cells of the fieldset's own width.
+
+   ```tsx
+   <AriaCheckboxGroup className={fieldClass('rk-checkbox-group')} {...props}>
+     {({ isRequired }) => (
+       <>
+         <Fieldset legend={label} isRequired={isRequired}>{children}</Fieldset>
+         <FieldError />
+       </>
+     )}
+   </AriaCheckboxGroup>
+   ```
+
+8. **Draw states from the root's `data-*` attributes and 0118's table.** The
+   parts already draw the label's states (required, disabled) and the error.
+   The control draws its own: an unframed control's invalid colour, a framed
+   one's weight (which `FieldFrame` does). No state may change a size; the
+   error row is content and may add rows below, never cells beside.
+
+9. **Prove the layout with the form model.** `formBuffer` is the text model of
+   `field.css`. Give it your control's buffer (or, for a framed control, a
+   function of the column's width) and snapshot it in Node; then render the
+   same form in a story and assert that `screenshot()` of it equals the model.
+   `Components/Form` in the workbench does exactly this, with sketches of the
+   field family built from these parts, and is the place to copy from.
+
 ## Changesets
 
 A change to what a published package ships (its `src`, or anything else in its

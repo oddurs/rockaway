@@ -134,7 +134,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0124`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0124-run-the-story-tests-in-firefox-and-webkit-as-well-as-chromium.md) Run the story tests in Firefox and WebKit as well as Chromium <sup>chore · tooling · p1</sup>
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 - [ ] [`0126`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0126-paint-a-screen-s-chrome-on-the-server-so-the-first-paint-needs-no-javascript.md) Paint a screen's chrome on the server, so the first paint needs no JavaScript <sup>feature · grid · p0</sup>
-- [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
 - [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
 - [ ] [`0129`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0129-polish-frame-against-the-contract-and-the-cell-renderer.md) Polish Frame against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0130`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0130-polish-divider-against-the-contract-and-the-cell-renderer.md) Polish Divider against the contract and the cell renderer <sup>chore · components · p1</sup>
@@ -162,6 +161,7 @@ The component contract, proven on a first set of components.
 ### in review
 
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
+- [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
 - [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 
 ### done

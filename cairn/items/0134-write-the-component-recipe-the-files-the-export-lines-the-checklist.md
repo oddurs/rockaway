@@ -37,3 +37,7 @@ test), the one line each barrel gets (0122), how variants are declared
 - [ ] `docs/component-recipe.md` exists, linked from CONTRIBUTING and from the component template's description in `cairn.toml`
 - [ ] Following it from a blank file produces a component that passes `pnpm check` (proven by the first wave-3 component, which records anything the recipe missed here)
 - [ ] Every one of the ten rules has a line saying which test proves it
+
+## 2026-10-03
+
+0127 put the recipe for building a field from Label, Description, FieldError, FieldFrame, Fieldset and fieldClass in CONTRIBUTING.md, under 'Building a field', marked as interim. Move it into docs/component-recipe.md as its own section when this is written, and leave a link behind.

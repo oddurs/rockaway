@@ -6,6 +6,8 @@
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
 export { Button, type ButtonProps, type ButtonSize, type ButtonTextOptions, type ButtonVariant, buttonBuffer } from './components/button.tsx';
 export { Divider, type DividerOptions, type DividerProps, dividerBuffer, drawRule, type Orientation } from './components/divider.tsx';
+export { Description, type DescriptionProps, FieldError, type FieldErrorProps, type FieldText, Form, type FormProps, type FormTextOptions, fieldClass, formBuffer, Label, type LabelProps } from './components/field.tsx';
+export { FieldFrame, type FieldFrameKind, type FieldFrameProps, type FieldFrameState, Fieldset, type FieldsetProps, fieldFrameBuffer } from './components/fieldset.tsx';
 export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './components/frame.tsx';
 export { formatKeys, KeyHint, type KeyHintProps, type KeyNotation, type KeySpec, keyShortcut, type Platform, parseKeys, spokenKeys } from './components/key-hint.tsx';
 export { Link, type LinkProps, type LinkState, linkBuffer } from './components/link.tsx';

@@ -77,6 +77,30 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-x-1"
     ]
   },
+  "Description": {
+    "file": "field.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<TextProps, 'slot' | 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-y-1"
+    ]
+  },
   "Divider": {
     "file": "divider.tsx",
     "props": [
@@ -118,6 +142,193 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-font-family-mono"
+    ]
+  },
+  "FieldError": {
+    "file": "field.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaFieldErrorProps, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-y-1"
+    ]
+  },
+  "FieldFrame": {
+    "file": "fieldset.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Set into the top edge, and the label a reader hears."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "isInvalid",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "kind",
+        "type": "FieldFrameKind",
+        "required": false,
+        "description": "`control` is a control's own frame (an `lg` text field): focus inside it makes it heavy (0118's focus-framed). `group` frames several controls, each of which shows its own focus, so focus leaves the frame alone."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the border, in cells, as `Frame` takes it."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof fieldFrameVariants>"
+    ],
+    "tokens": [
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-default",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono"
+    ]
+  },
+  "Fieldset": {
+    "file": "fieldset.tsx",
+    "props": [
+      {
+        "name": "legend",
+        "type": "string",
+        "required": true,
+        "description": "Set into the top edge, and the group's accessible name."
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "required": false,
+        "description": "Draws the required mark after the legend. Pass the group's own `isRequired`, which its render props carry, as a field passes its own to `Label`: the group's state cannot say, because a checkbox group stops being required once something in it is checked."
+      },
+      {
+        "name": "isInvalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Inside a checkbox or radio group, the group's own when not given."
+      },
+      {
+        "name": "isDisabled",
+        "type": "boolean",
+        "required": false,
+        "description": "Dims the frame. It does not disable what is inside: inside a checkbox or radio group, the group's `isDisabled` does both, and is the frame's when this is not given."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-default",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono"
+    ]
+  },
+  "Form": {
+    "file": "field.tsx",
+    "props": [
+      {
+        "name": "labelWidth",
+        "type": "number",
+        "required": false,
+        "description": "The label column, in cells, the gap after the labels included. As wide as the longest label in the form when not given; a label longer than the column wraps inside it."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaFormProps, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-y-1"
     ]
   },
   "Frame": {
@@ -220,6 +431,42 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-muted",
       "--rk-x-1"
+    ]
+  },
+  "Label": {
+    "file": "field.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "isRequired",
+        "type": "boolean",
+        "required": false,
+        "description": "Draws the required mark in the cell after the label. Pass the field's own `isRequired`, which its render props carry. The mark is `aria-hidden`: the control says it is required with `aria-required`.",
+        "default": "false"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaLabelProps, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-y-1"
     ]
   },
   "Link": {

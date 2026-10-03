@@ -100,3 +100,34 @@ export const DeclaredException: Story = {
     expect(formatReport(report)).toContain('1 declared exception(s)');
   },
 };
+
+/**
+ * Inside a visually hidden box is hidden too: a checkbox or a radio keeps its
+ * native input in a clipped span, a box of its own size inside a box of none.
+ */
+export const InsideVisuallyHidden: Story = {
+  name: 'Inside a visually hidden box',
+  render: () => (
+    <div data-testid="host">
+      <Screen draw={draw} cols={24} rows={6}>
+        <span
+          style={{
+            position: 'absolute',
+            width: '1px',
+            height: '1px',
+            overflow: 'hidden',
+            clipPath: 'inset(50%)',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <input type="checkbox" aria-label="hidden" style={{ width: '13px', height: '13px' }} />
+        </span>
+      </Screen>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const screen = canvas.getByTestId('host').firstElementChild as HTMLElement;
+    await waitFor(() => expect(screen.querySelector('.rk-row')).not.toBeNull());
+    expect(checkConformance(screen).violations).toEqual([]);
+  },
+};

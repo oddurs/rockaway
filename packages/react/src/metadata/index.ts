@@ -13,6 +13,8 @@
  */
 import { buttonMeta } from '../components/button.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
+import { formMeta } from '../components/field.meta.ts';
+import { fieldsetMeta } from '../components/fieldset.meta.ts';
 import { frameMeta } from '../components/frame.meta.ts';
 import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
@@ -48,6 +50,8 @@ export { type StateName, type StateRow, stateVocabulary } from './states.ts';
 const sources: readonly ComponentMetaInput[] = [
   buttonMeta,
   dividerMeta,
+  fieldsetMeta,
+  formMeta,
   frameMeta,
   keyHintMeta,
   linkMeta,
