@@ -40,4 +40,8 @@ test), the one line each barrel gets (0122), how variants are declared
 
 ## 2026-10-03
 
+From 0164: the recipe's story section must say that a play function which hovers, presses with the pointer or compares geometry starts with await settled() from apps/workbench/src/settled.ts. CONTRIBUTING says so meanwhile. 0164's third criterion is ticked only when this recipe says it.
+
+## 2026-10-03
+
 0127 put the recipe for building a field from Label, Description, FieldError, FieldFrame, Fieldset and fieldClass in CONTRIBUTING.md, under 'Building a field', marked as interim. Move it into docs/component-recipe.md as its own section when this is written, and leave a link behind.

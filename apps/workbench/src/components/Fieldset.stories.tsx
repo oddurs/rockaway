@@ -26,6 +26,7 @@ import {
   TextField,
 } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { measured } from '../settled.ts';
 
 /*
  * FieldFrame and Fieldset (cairn 0127): a label set into a frame's top edge,
@@ -87,11 +88,6 @@ function cellOf(screen: Element): number {
   return Number.parseFloat(getComputedStyle(screen).getPropertyValue('--rk-cell-width'));
 }
 
-async function settled(): Promise<void> {
-  await document.fonts.ready;
-  for (let i = 0; i < 3; i++) await new Promise((done) => requestAnimationFrame(done));
-}
-
 /** The painted top edge of the frame inside a group. */
 function edge(group: Element): string {
   return group.querySelector('.rk-frame .rk-row')?.textContent ?? '';
@@ -137,7 +133,7 @@ export const Legend: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const address = canvas.getByRole('group', { name: 'Address' });
     // Named by a real label with the legend's words, and nothing else.
     const id = address.getAttribute('aria-labelledby') ?? '';
@@ -190,7 +186,7 @@ export const Fields: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const frame = canvas.getByRole('group', { name: 'fields' });
     // The fieldset's own chrome, read back where it sits inside the frame's.
     expect(`\n${screenshot(frame, { legend: false })}`).toBe(`
@@ -227,7 +223,7 @@ export const States: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const [rest, required, invalid, disabled] = canvas.getAllByRole('group', { name: 'Branches' });
     if (!rest || !required || !invalid || !disabled) throw new Error('four groups');
     const sizes = [rest, required, invalid, disabled].map((g) => {
@@ -285,7 +281,7 @@ export const FramedControl: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const message = canvas.getByRole('textbox', { name: 'Message' });
     const frame = message.closest('.rk-field-frame') as HTMLElement;
     // No group of its own: the text field is the thing a reader meets.
@@ -321,7 +317,7 @@ export const Painters: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const shots = ['glyph', 'rule'].map((painter) =>
       screenshot(canvas.getByRole('group', { name: painter }), { legend: false })
         .split('\n')
@@ -349,7 +345,7 @@ export const Ascii: Story = {
     </GlyphProvider>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const [required, invalid] = canvas.getAllByRole('group', { name: 'Branches' });
     if (!required || !invalid) throw new Error('two groups');
     expect(edge(required)).toMatch(/^\+ Branches\* -+\+$/);
@@ -372,7 +368,7 @@ export const ForcedColors: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     expect(matchMedia('(forced-colors: active)').matches).toBe(true);
     const [invalid, disabled] = canvas.getAllByRole('group', { name: 'Branches' });
     if (!invalid || !disabled) throw new Error('two groups');

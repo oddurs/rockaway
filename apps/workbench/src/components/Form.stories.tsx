@@ -28,6 +28,7 @@ import {
   type TextFieldProps,
 } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { measured } from '../settled.ts';
 
 /*
  * The field contract (cairn 0127), shown with fields sketched from its parts:
@@ -200,15 +201,6 @@ function inside(shot: string, cols: number): string {
     .join('\n');
 }
 
-/**
- * Wait for the fonts and two frames, so every screen has measured its last
- * cell and painted, nested ones included.
- */
-async function settled(): Promise<void> {
-  await document.fonts.ready;
-  for (let i = 0; i < 3; i++) await new Promise((done) => requestAnimationFrame(done));
-}
-
 const meta = {
   title: 'Components/Form',
   component: Form,
@@ -234,7 +226,7 @@ export const MixedFields: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const frame = canvas.getByRole('group', { name: 'new repository' });
     const page = inside(screenshot(frame, { legend: false }), WIDE);
     expect(page).toBe(toText(mixedModel(WIDE - 4)));
@@ -250,7 +242,7 @@ export const Stacked: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const frame = canvas.getByRole('group', { name: 'new repository' });
     const page = inside(screenshot(frame, { legend: false }), NARROW);
     expect(page).toBe(toText(mixedModel(NARROW - 4)));
@@ -335,7 +327,7 @@ export const States: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const boxes = ['Rest', 'Required', 'Invalid', 'Disabled'].map((name) => {
       const box = canvas.getByRole('textbox', { name }).getBoundingClientRect();
       return { left: box.left, width: box.width, height: box.height };
@@ -379,7 +371,7 @@ export const LabelWidth: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     const frame = canvas.getByRole('group', { name: 'commit' });
     const cell = Number.parseFloat(getComputedStyle(frame).getPropertyValue('--rk-cell-width'));
     for (const name of ['Branch', 'Commit message']) {
@@ -405,7 +397,7 @@ export const Densities: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     for (const density of ['dense', 'normal', 'airy', 'touch']) {
       const frame = canvas.getByRole('group', { name: density });
       expect(inside(screenshot(frame, { legend: false }), WIDE)).toBe(toText(mixedModel(WIDE - 4)));
@@ -422,7 +414,7 @@ export const Dark: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     expect(document.documentElement.dataset.theme).toBe('dark');
     const error = canvas.getByText('Enter an email address.');
     expect(getComputedStyle(error).color).toBe(resolved('--rk-fg-danger', error));
@@ -451,7 +443,7 @@ export const ForcedColors: Story = {
     </Frame>
   ),
   play: async ({ canvas }) => {
-    await settled();
+    await measured(document.body);
     expect(matchMedia('(forced-colors: active)').matches).toBe(true);
     const label = labelOf(canvas.getByRole('textbox', { name: 'Disabled' }));
     expect(getComputedStyle(label).color).toBe(resolved('GrayText', label));

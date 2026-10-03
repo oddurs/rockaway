@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
+import { settled } from '../settled.ts';
 
 /**
  * Every theme is a CSS context (cairn 0052): `data-rk-theme` on any element,
@@ -138,6 +139,7 @@ function Switcher() {
 export const Switching: Story = {
   render: () => <Switcher />,
   play: async ({ canvas }) => {
+    await settled();
     const island = () => canvas.getByRole('region');
     const cells = () => {
       const screen = screenOf(island());

@@ -1,5 +1,5 @@
 {
-  "$description": "Catppuccin (cairn 0052). Imported from https://github.com/catppuccin/ghostty under MIT (Copyright (c) 2021 Catppuccin). Fitted to the contrast gate: light foreground: #4c4f69 → #3b3d56 (for fg.default on bg.surface); light muted: #797c91 → #575a6d (for fg.muted on bg.page); light blue: #1e66f5 → #0b55e4 (for fg.accent on bg.page); light bright-blue: #1e66f5 → #1b63f2 (for fg.on-accent on bg.accent.solid-hover); light cyan: #179299 → #006f76 (for fg.info on bg.page); light bright-cyan: #179299 → #007a81 (for fg.on-info on bg.info.solid-hover); light green: #40a02b → #017500 (for fg.success on bg.page); light bright-green: #40a02b → #187f00 (for fg.on-success on bg.success.solid-hover); light yellow: #df8e1d → #9a5600 (for fg.warning on bg.page); light bright-yellow: #df8e1d → #a35c00 (for fg.on-warning on bg.warning.solid-hover); light red: #d20f39 → #c70030 (for fg.danger on bg.surface); light border: #9ea6b4 → #79808e (for border.default on bg.page); light border-strong: #858e9f → #767f90 (for border.control on bg.page); dark muted: #929ab4 → #9ba3bd (for fg.muted on bg.hover); dark border: #686980 → #74758c (for border.default on bg.surface).",
+  "$description": "Catppuccin (cairn 0052). Imported from https://github.com/catppuccin/ghostty under MIT (Copyright (c) 2021 Catppuccin). Fitted to the contrast gate: light foreground: #4c4f69 → #3b3d56 (for fg.default on bg.surface); light muted: #797c91 → #575a6d (for fg.muted on bg.page); light blue: #1e66f5 → #0b55e4 (for fg.accent on bg.page); light bright-blue: #1e66f5 → #1b63f2 (for fg.on-accent on bg.accent.solid-hover); light cyan: #179299 → #006f76 (for fg.info on bg.page); light bright-cyan: #179299 → #007a81 (for fg.on-info on bg.info.solid-hover); light green: #40a02b → #017500 (for fg.success on bg.page); light bright-green: #40a02b → #187f00 (for fg.on-success on bg.success.solid-hover); light yellow: #df8e1d → #965300 (for fg.warning on bg.page); light bright-yellow: #df8e1d → #a35c00 (for fg.on-warning on bg.warning.solid-hover); light red: #d20f39 → #c70030 (for fg.danger on bg.surface); light border: #9ea6b4 → #79808e (for border.default on bg.page); light border-strong: #858e9f → #767f90 (for border.control on bg.page); light magenta: #ea76cb → #a6378c (for syntax.keyword on bg.surface); dark muted: #929ab4 → #9ba3bd (for fg.muted on bg.hover); dark border: #686980 → #74758c (for border.default on bg.surface).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "imported",
@@ -52,7 +52,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.519,
+            0.509,
             0.1494,
             67.8
           ]
@@ -72,7 +72,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.726,
+            0.526,
             0.1739,
             338.4
           ]
@@ -1107,6 +1107,60 @@
         "close": {
           "$value": "]"
         }
+      }
+    },
+    "key": {
+      "$description": "Key legends, for KeyHint (cairn 0132). Symbols in Unicode; words in ASCII, the only glyphs wider than a cell.",
+      "ctrl": {
+        "$value": "⌃"
+      },
+      "alt": {
+        "$value": "⌥"
+      },
+      "shift": {
+        "$value": "⇧"
+      },
+      "meta": {
+        "$value": "⌘"
+      },
+      "enter": {
+        "$value": "⏎"
+      },
+      "tab": {
+        "$value": "⇥"
+      },
+      "space": {
+        "$value": "␣"
+      },
+      "backspace": {
+        "$value": "⌫"
+      },
+      "delete": {
+        "$value": "⌦"
+      },
+      "up": {
+        "$value": "↑"
+      },
+      "down": {
+        "$value": "↓"
+      },
+      "left": {
+        "$value": "←"
+      },
+      "right": {
+        "$value": "→"
+      },
+      "pageup": {
+        "$value": "⇞"
+      },
+      "pagedown": {
+        "$value": "⇟"
+      },
+      "home": {
+        "$value": "↖"
+      },
+      "end": {
+        "$value": "↘"
       }
     }
   },

@@ -1,5 +1,9 @@
+import { type Glyphs, glyphsFor } from '@rockaway/tokens';
+import { defaultGlyphs } from '../glyphs.tsx';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
 import { formatKeys, type KeyNotation, type Platform } from './key-hint.tsx';
+
+const ascii = glyphsFor({ borderSet: 'ascii' });
 
 /** A hint as it occupies the grid: the chord, a cell, then the action. */
 const hint = (
@@ -7,13 +11,13 @@ const hint = (
   action: string,
   platform: Platform,
   notation: KeyNotation = 'platform',
-): string => `${formatKeys(keys, platform, notation)} ${action}`;
+  glyphs: Glyphs = defaultGlyphs,
+): string => `${formatKeys(keys, platform, notation, glyphs)} ${action}`;
 
 export const keyHintMeta: ComponentMetaInput = defineMeta({
   name: 'KeyHint',
-  summary: 'A chord and the action it performs: `⌘S save`.',
-  description:
-    'How a TUI teaches itself. One spec gives three strings: what you see (`⌘S` on an Apple keyboard, `Ctrl+S` elsewhere, `^S` in terminal notation), what a reader hears ("Command S"), and what the platform is told (`Meta+s`, for aria-keyshortcuts).',
+  summary: `A chord and the action it performs: \`${hint('mod+s', 'save', 'apple')}\`.`,
+  description: `How a TUI teaches itself. One spec gives three strings: what you see (\`${formatKeys('mod+s', 'apple')}\` on an Apple keyboard, \`Ctrl+S\` elsewhere, \`^S\` in terminal notation), what a reader hears ("Command S"), and what the platform is told (\`Meta+s\`, for aria-keyshortcuts). The key legends are the theme's: symbols in Unicode, words in an ASCII theme.`,
   whenToUse: [
     'In a status bar or a footer, to list what the keys on this screen do.',
     'Beside an action that has a shortcut, outside a control.',
@@ -60,7 +64,7 @@ export const keyHintMeta: ComponentMetaInput = defineMeta({
     announces: '"Command S save".',
     notes: [
       '`decorative` hides the whole hint, for use inside a control that carries aria-keyshortcuts instead.',
-      'The keyboard is detected after hydration. The server, and the first client render, use the neutral form.',
+      "The keyboard comes from usePlatform(), which Button shares, so a chord is drawn and announced for the same keyboard. The server renders the neutral form, hydration agrees with it, and the reader's keyboard follows on the next render.",
     ],
   },
   snapshots: [
@@ -81,6 +85,15 @@ export const keyHintMeta: ComponentMetaInput = defineMeta({
         hint('esc', 'close', 'other'),
         hint('ctrl+shift+k', 'delete', 'other'),
       ].join('  '),
+    },
+    {
+      title: 'Under an ASCII theme',
+      description: 'The legends are words, so an Apple chord is spelled out rather than stacked.',
+      text: [
+        hint('mod+s', 'save', 'apple', 'platform', ascii),
+        hint('shift+up', 'select', 'other', 'platform', ascii),
+        hint('shift+up', 'select', 'other', 'terminal', ascii),
+      ].join('\n'),
     },
   ],
 });
