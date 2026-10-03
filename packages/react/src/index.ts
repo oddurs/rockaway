@@ -15,6 +15,7 @@ export * from './entries/field.ts';
 export * from './entries/fieldset.ts';
 export * from './entries/frame.ts';
 export * from './entries/key-hint.ts';
+export * from './entries/keymap.ts';
 export * from './entries/link.ts';
 export * from './entries/list.ts';
 export * from './entries/overlay.ts';
