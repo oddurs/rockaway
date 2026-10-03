@@ -14,6 +14,8 @@
 import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
+import { formMeta } from '../components/field.meta.ts';
+import { fieldsetMeta } from '../components/fieldset.meta.ts';
 import { frameMeta } from '../components/frame.meta.ts';
 import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
@@ -50,6 +52,8 @@ const sources: readonly ComponentMetaInput[] = [
   badgeMeta,
   buttonMeta,
   dividerMeta,
+  fieldsetMeta,
+  formMeta,
   frameMeta,
   keyHintMeta,
   linkMeta,

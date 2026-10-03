@@ -102,6 +102,16 @@ const checks: [string, unknown, unknown][] = [
   ['scrollbarBuffer', pure.scrollbarBuffer({ total: 4, visible: 2, offset: 0 }).row(0), '█'],
   ['formatKeys', pure.formatKeys('mod+s', 'apple'), '⌘S'],
   ['buttonBuffer', pure.buttonBuffer('Go').row(0), '[ Go ]'],
+  [
+    'fieldFrameBuffer',
+    pure.fieldFrameBuffer({ width: 12, height: 3 }, { label: 'Name', required: true }).row(0),
+    '┌ Name* ───┐',
+  ],
+  [
+    'formBuffer',
+    pure.formBuffer([{ label: 'Name', control: pure.buttonBuffer('Go') }], { width: 64 }).row(0),
+    `Name   [ Go ]${' '.repeat(51)}`,
+  ],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)
