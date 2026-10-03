@@ -264,8 +264,10 @@ export const FramedControl: Story = {
         <TextField className={fieldClass()} isRequired>
           {({ isRequired, isInvalid }) => (
             <FieldFrame label="Message" isRequired={isRequired} isInvalid={isInvalid}>
+              {/* A textarea scrolls, so the browser draws no bar of its own (0207). */}
               <TextArea
                 rows={2}
+                className="rk-scroll"
                 style={{
                   ...field,
                   inlineSize: '100%',

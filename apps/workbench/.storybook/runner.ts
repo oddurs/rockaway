@@ -18,6 +18,12 @@ export interface Runner {
    * dialog has them by default: how many filled shapes the PDF draws.
    */
   readonly print: (html: string) => Promise<{ readonly fills: number }>;
+  /** The document in a page with JavaScript off: its painted rows, as text. */
+  readonly withoutScripts: (html: string) => Promise<{
+    readonly rows: readonly string[];
+    readonly shapes: number;
+    readonly ran: boolean;
+  }>;
   /** Which densities and modes this project walks after every story, and what it checks in each (cairn 0125). */
   readonly plan: Plan;
   /** Tells the run which known failures a story put in play and used, so a stale one fails it. */
