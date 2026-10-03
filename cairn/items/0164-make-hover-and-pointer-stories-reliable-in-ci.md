@@ -46,3 +46,7 @@ After merging main: List's stories from #87 had their own copy of the weaker wai
 ## 2026-10-03
 
 Five full CI runs on 18dbc2d, the final head with the experiment removed, all green: run 37148040833, attempts 1 to 5.
+
+## 2026-10-03
+
+After merging main again: Themes/Switching from #95 clicks a theme button and compares cell geometry, so it now calls settled() too. Every story with a pointer interaction (Link, Button, List, Themes) imports the shared helper. These five green runs were before Themes joined; one more green CI run on the new head covers it.
