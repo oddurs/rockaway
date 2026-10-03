@@ -29,6 +29,8 @@
 @import "./components/badge.css";
 @import "./components/button.css";
 @import "./components/callout.css";
+@import "./components/field.css";
+@import "./components/fieldset.css";
 @import "./components/key-hint.css";
 @import "./components/link.css";
 @import "./components/list.css";

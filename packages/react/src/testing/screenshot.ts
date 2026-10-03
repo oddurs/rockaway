@@ -59,11 +59,6 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     row: Math.round((rect.top - box.top) / cellHeight),
   });
 
-  // The painted chrome, which is already cell-aligned row by row.
-  screen.querySelectorAll<HTMLElement>('.rk-frame .rk-row').forEach((row, index) => {
-    write(grid, 0, index, row.textContent ?? '');
-  });
-
   // What a reader sees of an element: the screen, cut down by every ancestor
   // that clips its overflow. A scrolled list's rows are in the DOM above and
   // below its box, and drawing them would write over the frame (cairn 0160).
@@ -100,6 +95,18 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     clips.set(element, clip);
     return clip;
   };
+
+  // The painted chrome, which is already cell-aligned row by row. A screen
+  // inside this one — a fieldset in a form — paints its own, which is written
+  // where it sits and after the outer chrome, so it lies over it as it does on
+  // the page.
+  for (const layer of screen.querySelectorAll<HTMLElement>('.rk-frame')) {
+    const { col, row } = at(layer.getBoundingClientRect());
+    const clip = clipOf(layer.parentElement);
+    layer.querySelectorAll<HTMLElement>(':scope > .rk-row').forEach((line, index) => {
+      write(grid, col, row + index, line.textContent ?? '', clip);
+    });
+  }
 
   // Everything else: real elements, placed by where they actually are.
   const walker = screen.ownerDocument.createTreeWalker(screen, NodeFilter.SHOW_TEXT);
