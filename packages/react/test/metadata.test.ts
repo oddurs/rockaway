@@ -57,6 +57,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  Panes: (props) =>
+    createElement(
+      rockaway.Panes,
+      { cols: 30, rows: 5, ...props },
+      createElement(rockaway.Pane, { title: 'files', size: 12 }, 'a.ts'),
+      createElement(rockaway.Pane, { title: 'diff' }, '+1 -1'),
+    ),
   List: (props) =>
     createElement(
       rockaway.List,
@@ -496,6 +503,38 @@ describe('the snapshots, as the site draws them', () => {
       rest      docs
       current  ▸docs
       new tab   docs↗"
+    `);
+  });
+
+  test('Panes', () => {
+    expect(snapshots(byName('Panes'))).toMatchInlineSnapshot(`
+      "── Three panes, one split again
+      ┌ files ─────────┬ diff ───────────────────────┐
+      │                │                             │
+      │                │                             │
+      │                ├ log ────────────────────────┤
+      │                │                             │
+      │                │                             │
+      │                │                             │
+      └────────────────┴─────────────────────────────┘
+      ── Collapsing as the screen narrows
+      ┌ nav ─────────────┬ main ───────────────────────────────────────────────┬ outline ─────────┬ details ─────────────────┐
+      │                  │                                                     │                  │                          │
+      └──────────────────┴─────────────────────────────────────────────────────┴──────────────────┴──────────────────────────┘
+      ┌ nav ─────────────┬ main ──────────────────────────────────┬ outline ─────────┐
+      │                  │                                        │                  │
+      └──────────────────┴────────────────────────────────────────┴──────────────────┘
+      ┌ nav ─────────────┬ main ─────────────────────────────────┐
+      │                  │                                       │
+      └──────────────────┴───────────────────────────────────────┘
+      ┌ main ────────────────────────────────┐
+      │                                      │
+      └──────────────────────────────────────┘
+      ── Sizes
+      ┌ 10 ──────┬ 2fr ────────────────────────────┬ 1fr ───────────┬ auto ──────────┐
+      │          │                                 │                │                │
+      └──────────┴─────────────────────────────────┴────────────────┴────────────────┘
+      10 + 33 + 16 + 16 cells of content"
     `);
   });
 

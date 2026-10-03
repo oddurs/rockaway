@@ -14,6 +14,7 @@ export * from './entries/frame.ts';
 export * from './entries/key-hint.ts';
 export * from './entries/link.ts';
 export * from './entries/list.ts';
+export * from './entries/panes.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle } from './paint/index.ts';
 export { detectPlatform, type PlatformHints, usePlatform } from './platform.ts';
