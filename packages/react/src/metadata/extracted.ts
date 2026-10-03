@@ -701,6 +701,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
+      "--rk-bg-surface",
       "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -766,6 +767,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
+      "--rk-bg-surface",
       "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
