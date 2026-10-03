@@ -181,8 +181,11 @@ them.
 
 ## Changesets
 
-A change to what a published package ships (its `src`, or anything else in its
-`files`) needs a changeset. Tests, stories, scripts and the workbench do not. CI
+A change to what a published package ships needs a changeset. That means its
+`src`, anything else in its `files`, and the fields of its `package.json` that
+reach an install: `exports`, `dependencies`, `peerDependencies`, `sideEffects`,
+`files`, `engines`, `publishConfig` and the like. Tests, stories, scripts,
+devDependencies and the workbench do not. CI
 fails a pull request that changes a package without naming it in a changeset,
 and `pnpm changeset:check` runs the same check locally.
 
