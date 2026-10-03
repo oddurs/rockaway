@@ -495,11 +495,26 @@ export const Measured: Story = {
 };
 
 /**
+ * At 200%: the zoom browser walks every density itself and reads every
+ * stroke, so one table is the whole of what it needs to see. Densities does
+ * the same with four tables in the ordinary browser.
+ */
+export const Zoom: Story = {
+  tags: ['zoom'],
+  render: () => <Files cols={44} />,
+  play: async ({ canvasElement }) => {
+    await measured(document.body);
+    expect(screenshot(screenOf(canvasElement), { legend: false })).toBe(
+      model(sortBy('name'), { width: 44 }),
+    );
+  },
+};
+
+/**
  * Every density: the same cells, a row a row. The continuity check runs on
- * the frame and its rules after the story, at every density and at 200%.
+ * the frame and its rules after the story, at every density.
  */
 export const Densities: Story = {
-  tags: ['zoom'],
   render: () => (
     <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
       {(['dense', 'normal', 'airy', 'touch'] as const).map((density) => (
