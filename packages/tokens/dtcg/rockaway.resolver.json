@@ -2,7 +2,7 @@
   "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
   "version": "2025.10",
   "name": "rockaway",
-  "description": "Theme tokens generated from the theme inputs. Mode and density are runtime contexts (cairn 0058).",
+  "description": "Theme tokens generated from every shipped theme. Theme, mode and density are runtime contexts (cairn 0058, 0052).",
   "sets": {
     "base": {
       "sources": [
@@ -16,17 +16,68 @@
     }
   },
   "modifiers": {
+    "theme": {
+      "description": "The theme: a palette in both modes, its type and its glyphs. Overrides palette.*, font.* and glyph.* only.",
+      "contexts": {
+        "default": [
+          {
+            "$ref": "theme.default.tokens.json"
+          }
+        ],
+        "ice": [
+          {
+            "$ref": "theme.ice.tokens.json"
+          }
+        ],
+        "ink": [
+          {
+            "$ref": "theme.ink.tokens.json"
+          }
+        ],
+        "phosphor": [
+          {
+            "$ref": "theme.phosphor.tokens.json"
+          }
+        ],
+        "catppuccin": [
+          {
+            "$ref": "theme.catppuccin.tokens.json"
+          }
+        ],
+        "dracula": [
+          {
+            "$ref": "theme.dracula.tokens.json"
+          }
+        ],
+        "nord": [
+          {
+            "$ref": "theme.nord.tokens.json"
+          }
+        ],
+        "solarized": [
+          {
+            "$ref": "theme.solarized.tokens.json"
+          }
+        ],
+        "tokyo-night": [
+          {
+            "$ref": "theme.tokyo-night.tokens.json"
+          }
+        ]
+      },
+      "default": "default"
+    },
     "mode": {
-      "description": "Colour mode. Overrides ansi.* only.",
+      "description": "Colour mode. Points ansi.* at one half of the theme palette, and nothing else.",
       "contexts": {
         "light": [
           {
-            "$ref": "palette.light.tokens.json"
+            "$ref": "mode.light.tokens.json"
           }
         ],
         "dark": [
           {
-            "$ref": "palette.dark.tokens.json"
+            "$ref": "mode.dark.tokens.json"
           }
         ]
       },
@@ -62,6 +113,9 @@
   "resolutionOrder": [
     {
       "$ref": "#/sets/base"
+    },
+    {
+      "$ref": "#/modifiers/theme"
     },
     {
       "$ref": "#/modifiers/mode"

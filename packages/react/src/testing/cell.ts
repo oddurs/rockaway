@@ -6,15 +6,19 @@
  * JavaScript never ran — so it is resolved by laying a box of exactly one cell
  * out inside the screen, rather than by parsing the property.
  */
+const SPAN = 1000;
+
 export function cellOf(screen: HTMLElement): { readonly width: number; readonly height: number } {
   const probe = screen.ownerDocument.createElement('div');
   probe.setAttribute('aria-hidden', 'true');
   probe.style.position = 'absolute';
   probe.style.visibility = 'hidden';
-  probe.style.inlineSize = 'var(--rk-cell-width)';
-  probe.style.blockSize = 'var(--rk-cell-height)';
+  // A thousand cells, not one: a box's size is rounded to the browser's layout
+  // unit (1/64px), and one cell's rounding would be the whole error.
+  probe.style.inlineSize = `calc(var(--rk-cell-width) * ${SPAN})`;
+  probe.style.blockSize = `calc(var(--rk-cell-height) * ${SPAN})`;
   screen.append(probe);
   const { width, height } = probe.getBoundingClientRect();
   probe.remove();
-  return { width, height };
+  return { width: width / SPAN, height: height / SPAN };
 }

@@ -1,4 +1,16 @@
+import { readdirSync } from 'node:fs';
 import type { UserConfig } from 'tsdown';
+
+/**
+ * One entry per component (cairn 0165), found rather than listed, so a new
+ * component's entry builds without anyone touching this file. An islands site
+ * hydrates `@rockaway/react/frame` and ships a frame, not the package.
+ */
+const components = Object.fromEntries(
+  readdirSync(new URL('./src/entries/', import.meta.url))
+    .filter((file) => file.endsWith('.ts'))
+    .map((file) => [`entries/${file.slice(0, -3)}`, `src/entries/${file}`]),
+);
 
 const config: UserConfig = {
   // Named entries, so each lands at the path package.json gives it rather than
@@ -8,6 +20,7 @@ const config: UserConfig = {
     'paint/index': 'src/paint/index.ts',
     'testing/index': 'src/testing/index.ts',
     'metadata/index': 'src/metadata/index.ts',
+    ...components,
   },
   format: 'esm',
   platform: 'neutral',

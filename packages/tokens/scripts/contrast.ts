@@ -20,11 +20,11 @@ for (const name of await readdir(dir))
 const results = checkContrast(files);
 const pad = (s: string, n: number) => s.padEnd(n);
 console.log(
-  `${pad('mode', 6)}${pad('foreground', 20)}${pad('background', 24)}${pad('WCAG', 9)}${pad('min', 6)}${pad('margin', 8)}${pad('worst in', 17)}APCA Lc`,
+  `${pad('theme', 13)}${pad('mode', 6)}${pad('foreground', 20)}${pad('background', 24)}${pad('WCAG', 9)}${pad('min', 6)}${pad('margin', 8)}${pad('worst in', 17)}APCA Lc`,
 );
 for (const r of results) {
   console.log(
-    `${pad(r.mode, 6)}${pad(r.fg, 20)}${pad(r.bg, 24)}${pad(`${r.ratio.toFixed(2)}:1`, 9)}${pad(String(r.min), 6)}${pad(`${r.margin >= 0 ? '+' : ''}${r.margin.toFixed(2)}`, 8)}${pad(r.view, 17)}${r.apca.toFixed(1).padStart(6)}${r.pass ? '' : '  FAIL'}`,
+    `${pad(r.theme, 13)}${pad(r.mode, 6)}${pad(r.fg, 20)}${pad(r.bg, 24)}${pad(`${r.ratio.toFixed(2)}:1`, 9)}${pad(String(r.min), 6)}${pad(`${r.margin >= 0 ? '+' : ''}${r.margin.toFixed(2)}`, 8)}${pad(r.view, 17)}${r.apca.toFixed(1).padStart(6)}${r.pass ? '' : '  FAIL'}`,
   );
 }
 const failures = results.filter((r) => !r.pass);
@@ -35,6 +35,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 const closest = results.reduce((a, b) => (b.margin < a.margin ? b : a));
+const themes = new Set(results.map((r) => r.theme)).size;
 console.log(
-  `\n${results.length} pairs, all at or above their minimum in every view. Closest: ${closest.fg} on ${closest.bg} (${closest.mode}, ${closest.view}), +${closest.margin.toFixed(3)}.`,
+  `\n${results.length} pairs across ${themes} themes, all at or above their minimum in every view. Closest: ${closest.theme} ${closest.fg} on ${closest.bg} (${closest.mode}, ${closest.view}), +${closest.margin.toFixed(3)}.`,
 );
