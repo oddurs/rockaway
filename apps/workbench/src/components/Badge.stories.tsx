@@ -2,6 +2,7 @@ import { Badge, type BadgeTone, Button, badgeBuffer, Frame } from '@rockaway/rea
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { expect, userEvent } from 'storybook/test';
+import { settled } from '../settled.ts';
 
 const meta = {
   title: 'Components/Badge',
@@ -49,12 +50,6 @@ function resolved(colour: string, within: Element, property: 'color' | 'backgrou
 /** A token name from the engine (`bg.success.subtle`) as its custom property. */
 function cssVar(token: string | undefined): string {
   return `--rk-${(token ?? '').replaceAll('.', '-')}`;
-}
-
-/** Wait for the fonts and two frames, so the screen has measured its last cell. */
-async function settled(): Promise<void> {
-  await document.fonts.ready;
-  for (let i = 0; i < 2; i++) await new Promise((done) => requestAnimationFrame(done));
 }
 
 /** The badge whose words are these. */

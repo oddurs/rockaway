@@ -47,28 +47,6 @@ export const known: readonly Known[] = [
     ticket: 'Screen remeasures on a context change (the 1ch × 1lh probe, after #88)',
   },
   {
-    id: 'touch-height',
-    check: 'targets',
-    rule: 'height',
-    densities: ['touch'],
-    element: /./,
-    present: TARGETS,
-    reason:
-      'the touch line box is 2 (32px at 16px), so a one-row control is 32px, not the 44px decision 0074 promised',
-    ticket: 'touch line box becomes 2.75 (CTO decision on 0125)',
-  },
-  {
-    id: 'normal-one-row',
-    check: 'targets',
-    rule: 'size',
-    densities: ['normal'],
-    element: /./,
-    present: TARGETS,
-    reason:
-      'a one-row target is one 20px cell tall, so two that sit a row or a cell apart (list rows, links in a nav, a button beside a list) crowd each other and neither the 24px minimum nor the spacing exception of WCAG 2.5.8 holds',
-    ticket: 'normal line box becomes 1.5, 24px rows (CTO decision on 0125)',
-  },
-  {
     id: 'dense-one-row',
     check: 'targets',
     rule: 'size',
@@ -76,7 +54,7 @@ export const known: readonly Known[] = [
     element: /./,
     present: TARGETS,
     reason:
-      'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented',
-    ticket: 'dense trades target size for density (CTO decision on 0125)',
+      'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented. A permanent entry, never a silent pass',
+    ticket: '0197: the default density meets AA; dense is the documented opt-in that does not',
   },
 ];

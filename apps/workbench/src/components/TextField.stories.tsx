@@ -476,7 +476,7 @@ export const Dark: Story = {
   },
 };
 
-/** Touch density: a one-row box is a cell tall, and a cell is a finger's height. */
+/** Touch density: a one-row box is a cell tall, and a cell is 44px (0197). */
 export const Touch: Story = {
   render: () => (
     <div data-density="touch">
@@ -489,7 +489,7 @@ export const Touch: Story = {
     await measured(document.body);
     const name = canvas.getByRole('textbox', { name: 'Name' });
     expect(cells(name.getBoundingClientRect().height, cellOf(name).height)).toBe(1);
-    expect(name.getBoundingClientRect().height).toBeGreaterThanOrEqual(32);
+    expect(name.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
   },
 };
 

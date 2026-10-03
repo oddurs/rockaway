@@ -67,7 +67,7 @@ the platform's own; nothing is intercepted.
 - [x] Both painters render it identically, measured in cells
 - [x] Frame glyphs are `aria-hidden`; the accessible name never contains one
 - [x] Ships a text snapshot, which is its documentation as much as its test
-- [ ] Operable by keyboard alone, and usable with a finger at touch density
+- [x] Operable by keyboard alone, and usable with a finger at touch density
 - [x] State reads without colour: an attribute or a mark carries it too
 - [x] Conforms at `strict`, or declares its exception with a reason
 - [x] Draws every state from the state vocabulary (0118), and no state changes its size in cells
@@ -78,6 +78,7 @@ the platform's own; nothing is intercepted.
 - [x] Text longer than the box scrolls inside it by whole cells, and the box never grows
 - [x] `multiline` scrolls whole rows and never shows half a line
 - [x] Placeholder, read-only and disabled are distinguishable in greyscale
+- [ ] The textarea takes `rk-scroll` (0207/0208) and shows its position in cells if it scrolls by rows; a story tagged `classic-scrollbars` proves one scrollbar only
 
 ## 2026-10-03
 
@@ -94,3 +95,11 @@ Whole-cell scrolling: the browser scrolls a field by pixels to wherever the care
 ## 2026-10-03
 
 Criterion 11 left open: keyboard alone is proven (Keyboard story), and the box is one cell tall at every density, but touch is 32px until 0197 makes the touch line box 2.75; the known-failures table carries it (touch-height). Nothing here changes when 0197 lands. Focus on a framed box is React Aria's focus-visible (keyboard), as everywhere: a click puts the caret in without making the frame heavy.
+
+## 2026-10-03
+
+Batch 6 added criterion 22 while this branch ticked the rest. The textarea and the input take rk-scroll (and text-field.css hides the bar itself), multiline shows its position in a drawn scrollbar column, and Overflow and Multiline are tagged classic-scrollbars, with Multiline asserting no bar takes room from the box. Left unticked until #107 lands: the classic-scrollbars browser project is in that PR, so on main the tag runs nowhere yet and the assertion is vacuous in headless Chromium.
+
+## 2026-10-03
+
+Criterion 11 ticked after merging 0198 (#112): touch's line box is now 2.75, so the one-row box is 44px at touch; the Touch story asserts at least 44.
