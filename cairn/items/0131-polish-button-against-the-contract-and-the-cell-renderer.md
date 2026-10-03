@@ -57,3 +57,4 @@ first thing a reviewer opens is not the weakest.
 - [ ] `aria-keyshortcuts` and the visible hint agree on every platform, through one shared platform hook with KeyHint
 - [ ] Variants come from the variant helper (0032)
 - [ ] `quiet` is decided: either a variant that drops its delimiters and padding (and the one declared geometry exception is justified in 0118's terms), or `delimiters="none"` with padding that follows the delimiters and no exception left
+- [ ] The 'On the grid' story's buttons sit on a content row, not on the frame's divider row where they hide it
