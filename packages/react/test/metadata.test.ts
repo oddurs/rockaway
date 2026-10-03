@@ -57,6 +57,19 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  Tabs: (props) =>
+    createElement(
+      rockaway.Tabs,
+      { cols: 30, rows: 4, ...props },
+      createElement(
+        rockaway.TabList,
+        { 'aria-label': 'View' },
+        createElement(rockaway.Tab, { id: 'files' }, 'files'),
+        createElement(rockaway.Tab, { id: 'log' }, 'log'),
+      ),
+      createElement(rockaway.TabPanel, { id: 'files' }, 'a.ts'),
+      createElement(rockaway.TabPanel, { id: 'log' }, 'ce9af26'),
+    ),
   List: (props) =>
     createElement(
       rockaway.List,
@@ -496,6 +509,24 @@ describe('the snapshots, as the site draws them', () => {
       rest      docs
       current  ▸docs
       new tab   docs↗"
+    `);
+  });
+
+  test('Tabs', () => {
+    expect(snapshots(byName('Tabs'))).toMatchInlineSnapshot(`
+      "── Tabs in the top edge
+      ┌ files ─ log ─ diff ────────┐
+      │                            │
+      │                            │
+      └────────────────────────────┘
+      ── Scrolled by whole tabs
+      ┌ files ─ log ─ diff ─────›┐
+      ┌ files ─ log ─ diff ─────›┐
+      ┌ files ─ log ─ diff ─────›┐
+      ┌‹─ log ─ diff ─ blame ───›┐
+      ┌‹─ diff ─ blame ─ stash ─›┐
+      ┌‹─ stash ─ remotes ──────›┐
+      ┌‹─ remotes ─ tags ────────┐"
     `);
   });
 

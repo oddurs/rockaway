@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 30% · 24 of 81 done · due 2027-01-31
+`####······` 31% · 25 of 81 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -115,7 +115,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
 - [ ] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
 - [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
-- [ ] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
 - [ ] [`0041`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0041-menu.md) Menu <sup>component · components · p1</sup>
 - [ ] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [ ] [`0043`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0043-tooltip.md) Tooltip <sup>component · components · p1</sup>
@@ -174,6 +173,7 @@ The component contract, proven on a first set of components.
 
 - [x] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p0</sup>
 - [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
+- [x] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
 - [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
 - [x] [`0096`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0096-frame.md) Frame <sup>component · components · p0</sup>
 - [x] [`0097`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0097-divider.md) Divider <sup>component · components · p1</sup>

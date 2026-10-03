@@ -387,6 +387,137 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled",
       "--rk-fg-muted"
     ]
+  },
+  "Tab": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "id",
+        "type": "Key",
+        "required": true,
+        "description": "The tab's key: its `TabPanel` takes the same `id`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The tab's label."
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabProps, 'className' | 'style' | 'children' | 'id'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono"
+    ]
+  },
+  "TabList": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabListProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono"
+    ]
+  },
+  "TabPanel": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabPanelProps, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono"
+    ]
+  },
+  "Tabs": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set draws the frame; the theme's when not given."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the frame, in cells: one across by default, as `Frame` has."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "A `TabList` and its `TabPanel`s."
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabsProps, 'className' | 'style' | 'children'>",
+      "Pick<ScreenProps, 'painter' | 'cols' | 'rows' | 'fallback'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono"
+    ]
   }
 };
 
