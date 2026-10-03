@@ -30,6 +30,7 @@ import type { VariantProps, VariantValue } from '../variants.ts';
 import { buttonVariants, chromeOf } from './button.pure.ts';
 import { keyShortcut } from './key-hint.pure.ts';
 import { KeyHint, type Platform } from './key-hint.tsx';
+import { useKeymapIfAny } from './keymap.tsx';
 
 export type ButtonVariant = VariantValue<typeof buttonVariants, 'variant'>;
 
@@ -54,6 +55,9 @@ export interface ButtonProps
   /**
    * The chord that fires it: `mod+s`. It draws the hint beside the label and
    * announces the shortcut, which is how a TUI teaches itself (cairn 0099).
+   * Inside a `Keymap` it also binds it: the chord presses the button, and the
+   * help screen lists it under the button's label (cairn 0225). Outside one,
+   * the app listens for the chord itself.
    */
   readonly keys?: string;
   readonly platform?: Platform | 'auto';
@@ -123,6 +127,14 @@ export function Button({
     if (shortcut === undefined) el.removeAttribute('aria-keyshortcuts');
     else el.setAttribute('aria-keyshortcuts', shortcut);
   }, [shortcut]);
+  // Inside a Keymap, `keys` is bound as well as described: one spec for the
+  // hint, the announcement and the binding. The binding presses the button,
+  // so a disabled one is not bound, and the help screen names it by its label.
+  const label = typeof children === 'string' ? children : (aria['aria-label'] ?? keys ?? '');
+  useKeymapIfAny(
+    keys === undefined ? [] : [{ keys, description: label, action: () => host.current?.click() }],
+    { enabled: aria.isDisabled !== true },
+  );
   const chosen = buttonVariants.select({ variant });
   const glyphs = useGlyphs();
   const chrome = chromeOf(chosen.variant, delimiters, glyphs);
