@@ -33,7 +33,16 @@
  * `FieldFrame` is the part a framed control is drawn in. `Fieldset` is a
  * `FieldFrame` that is a group, named by its legend.
  */
-import { Attr, type BorderSetName, type Buffer, stringWidth, truncate } from '@rockaway/grid';
+import {
+  Attr,
+  type BorderSetName,
+  Buffer,
+  borderSets,
+  drawBox,
+  rect,
+  stringWidth,
+  truncate,
+} from '@rockaway/grid';
 import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useContext, useId, useMemo } from 'react';
 import {
@@ -54,7 +63,6 @@ import {
   type Variants,
   type VariantValue,
 } from '../variants.ts';
-import { frameBuffer } from './frame.tsx';
 
 const VARIANTS = {
   kind: ['control', 'group'],
@@ -85,8 +93,8 @@ function heavier(set: BorderSetName): BorderSetName {
 
 /**
  * A field frame as a buffer: a frame with the label set into its top edge,
- * and the required mark after it. Pure, so it is the text snapshot, and the
- * text a server renders.
+ * and the required mark after it, both bold, or dim when disabled. Pure, so
+ * it is the text snapshot, and the text a server renders.
  *
  * The label is truncated here, before the frame sees it, so that the mark is
  * never the part that is cut off. The frame's lines carry no colour of their
@@ -104,29 +112,20 @@ export function fieldFrameBuffer(
   // of the words: what `drawBox` leaves a title.
   const room = Math.max(0, size.width - 6 - stringWidth(mark));
   const label = truncate(state.label, room, glyphs.mark.ellipsis);
-  const frame = frameBuffer(size, { title: `${label}${mark}`, border }, glyphs);
+  // The words are a label in the edge, which the engine sets when the pass
+  // closes and which gives way to any junction drawn into the edge (0175). A
+  // label has one style, so the mark is drawn in the words' style.
   const words = {
     fg: state.disabled ? 'fg.disabled' : 'fg.default',
     attrs: state.disabled ? Attr.dim : Attr.bold,
   };
-  return frame.draw((draft) => {
-    if (size.width < 7 || label === '') return;
-    // Restyle the title's cells: the words bold (or dim), the mark in
-    // `fg.danger` like the mark after an inline label.
-    for (let x = 2; x < 2 + stringWidth(label); x++) {
-      const cell = draft.at({ x, y: 0 });
-      if (cell) draft.set({ x, y: 0 }, { ...cell, style: words });
-    }
-    if (mark !== '') {
-      const at = { x: 2 + stringWidth(label), y: 0 };
-      const cell = draft.at(at);
-      if (cell) {
-        draft.set(at, {
-          ...cell,
-          style: state.disabled ? words : { fg: 'fg.danger', attrs: Attr.bold },
-        });
-      }
-    }
+  return Buffer.create(size).draw((draft) => {
+    drawBox(draft, rect(0, 0, size.width, size.height), {
+      set: borderSets[border],
+      ellipsis: glyphs.mark.ellipsis,
+      title: `${label}${mark}`,
+      titleStyle: words,
+    });
   });
 }
 

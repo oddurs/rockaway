@@ -43,8 +43,16 @@ export function measureCell(el: HTMLElement): CellMetrics {
   };
 }
 
+/**
+ * Layout snaps every box to 1/64px, and the cell is the font's true advance,
+ * so a box exactly n cells wide can lay out a hair under n cells: 51 cells of
+ * 9.6328125px is 491.273px, laid out as 491.266px. Within this much of a
+ * whole cell is that cell, the tolerance conformance holds a box to.
+ */
+const SNAP = 0.5;
+
 /** How many whole cells fit. Never negative, never fractional. */
 export function cellsIn(pixels: number, cell: number): number {
   if (!Number.isFinite(pixels) || !Number.isFinite(cell) || cell <= 0) return 0;
-  return Math.max(0, Math.floor(pixels / cell));
+  return Math.max(0, Math.floor((pixels + SNAP) / cell));
 }

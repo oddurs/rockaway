@@ -232,10 +232,11 @@ describe('fieldFrameBuffer', () => {
     }
   });
 
-  test('the words are bold, or dim when disabled, and the mark is danger', () => {
+  test('the words and the mark are bold, or dim when disabled', () => {
     const rest = fieldFrameBuffer(size, { label: 'Name', required: true });
     expect(rest.at({ x: 2, y: 0 })?.style).toEqual({ fg: 'fg.default', attrs: Attr.bold });
-    expect(rest.at({ x: 6, y: 0 })?.style).toEqual({ fg: 'fg.danger', attrs: Attr.bold });
+    // The mark is part of the label in the edge, which has one style.
+    expect(rest.at({ x: 6, y: 0 })?.style).toEqual({ fg: 'fg.default', attrs: Attr.bold });
     // The line is not coloured by the buffer: the stylesheet does that from the state.
     expect(rest.at({ x: 10, y: 0 })?.style.fg).toBeUndefined();
     const disabled = fieldFrameBuffer(size, { label: 'Name', disabled: true });

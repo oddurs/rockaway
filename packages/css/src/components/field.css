@@ -105,7 +105,8 @@
     row-gap: var(--rk-y-1);
     align-items: start;
     justify-items: start;
-    inline-size: round(down, 100%, var(--rk-cell-width));
+    /* A sixteenth of a cell's grace, for layout's 1/64px snapping: see fieldset.css. */
+    inline-size: round(down, calc(100% + var(--rk-cell-width) / 16), var(--rk-cell-width));
   }
 
   /* Anything that is not a field (a row of buttons) lines up with the controls. */

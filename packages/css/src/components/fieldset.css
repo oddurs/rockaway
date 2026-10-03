@@ -14,8 +14,11 @@
     justify-self: stretch;
     /* Whole cells, measured by the cell around it: the screen inside takes
      * this width and measures its own cell from it, so rounding on the screen
-     * itself would round by a cell it has not measured yet. */
-    inline-size: round(down, 100%, var(--rk-cell-width));
+     * itself would round by a cell it has not measured yet. The cell is the
+     * font's true advance and layout snaps to 1/64px, so a column of 51 cells
+     * can come out a hair short of 51: a sixteenth of a cell's grace keeps it
+     * 51 rather than rounding it down to 50. */
+    inline-size: round(down, calc(100% + var(--rk-cell-width) / 16), var(--rk-cell-width));
     /* Fields inside a fieldset stack under 60 cells of it, as in a form. */
     container: rk-form / inline-size;
   }
