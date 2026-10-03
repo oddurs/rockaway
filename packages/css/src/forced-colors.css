@@ -135,7 +135,8 @@
     .rk-button[data-variant="fill"],
     .rk-button[data-pressed],
     .rk-link[data-pressed],
-    .rk-list-item[data-selected] {
+    .rk-list-item[data-selected],
+    .rk-tree-item[data-selected] {
       forced-color-adjust: none;
     }
   }

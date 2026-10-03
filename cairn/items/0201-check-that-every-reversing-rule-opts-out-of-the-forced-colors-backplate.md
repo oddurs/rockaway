@@ -34,3 +34,7 @@ packages/css/test/reverse-opt-out.test.ts parses every stylesheet in @rockaway/c
 ## Result
 
 packages/css/test/reverse-opt-out.test.ts fails any rule that draws words in a ground colour without a forced-colors opt-out covering it; it found and fixed [data-rk-fill]:focus-visible.
+
+## 2026-10-03
+
+After main merged in, the check went red on a real bug: Tree (#122) reversed a selected row, .rk-tree-item[data-selected], without opting out, so selected tree rows vanished in forced colors. Added to the opt-out. A screenshot showed a second problem the CSS check cannot see: the row's guides are shapes the cell draws, and forced colors inks every shape in CanvasText, the very ground the row is reversed onto. tree.css now inks a selected row's guides in Canvas under forced colors. Forced colors > Reverse video checks the tree row's words and each guide cell in pixels. A one-line cell leaks about 4% canvas-coloured pixels at its edges even when the line is invisible, and a visible line shows 8% or more, so the guide check asks for more than 6%; it fails without the fix (0.04).

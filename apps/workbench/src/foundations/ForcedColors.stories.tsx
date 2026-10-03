@@ -1,5 +1,5 @@
 import { Attr, Buffer, drawText, fromText } from '@rockaway/grid';
-import { Button, Frame, Link, List, ListItem, Screen } from '@rockaway/react';
+import { Button, Frame, Link, List, ListItem, Screen, Tree, TreeItem } from '@rockaway/react';
 import { expectContinuity } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
@@ -223,11 +223,15 @@ async function share(
  * words in the canvas colour. A backplate behind the words, or a pair that
  * collapsed to the canvas, leaves almost none of the figure at all.
  */
-async function expectReversed(words: HTMLElement, figure = 'CanvasText'): Promise<void> {
+async function expectReversed(
+  words: HTMLElement,
+  figure = 'CanvasText',
+  ink = 0.02,
+): Promise<void> {
   const seen = await share(words, figure);
   if (!seen) return;
   await expect(seen.text).toBeGreaterThan(0.5);
-  await expect(seen.canvas).toBeGreaterThan(0.02);
+  await expect(seen.canvas).toBeGreaterThan(ink);
 }
 
 /**
@@ -255,6 +259,18 @@ export const ReverseVideo: Story = {
           <ListItem id="a">a.ts</ListItem>
           <ListItem id="b">b.ts</ListItem>
         </List>
+      </div>
+      <div style={{ inlineSize: '20ch' }}>
+        <Tree
+          aria-label="Folders"
+          selectionMode="single"
+          defaultExpandedKeys={['src']}
+          defaultSelectedKeys={['index']}
+        >
+          <TreeItem id="src" title="src">
+            <TreeItem id="index" title="index.ts" />
+          </TreeItem>
+        </Tree>
       </div>
     </div>
   ),
@@ -310,6 +326,25 @@ export const ReverseVideo: Story = {
     const row = canvasElement.querySelector('[role="option"][data-selected]') as HTMLElement;
     await expect(inkAndGround(row)).toEqual(swapped);
     await expectReversed(part(row, '.rk-list-label'));
+
+    // And in a tree: its words, and the guides drawn into the row with them.
+    const branch = await waitFor(() => {
+      const found = canvasElement.querySelector<HTMLElement>('.rk-tree-item[data-selected]');
+      if (!found) throw new Error('no selected tree row yet');
+      return found;
+    });
+    await expect(inkAndGround(branch)).toEqual(swapped);
+    await expectReversed(part(branch, '.rk-tree-label'));
+    // The guides are shapes the cell draws, inked in the reversed figure. A
+    // cell holding one line is mostly ground, and its edges leak about 4% of
+    // canvas-coloured pixels even when the line is invisible; a visible line
+    // shows as 8% or more.
+    for (const shape of branch.querySelectorAll<HTMLElement>('.rk-tree-guides [data-rk-shape]')) {
+      await expectReversed(shape, 'CanvasText', 0.06);
+    }
+    await expect(branch.querySelectorAll('.rk-tree-guides [data-rk-shape]').length).toBeGreaterThan(
+      0,
+    );
   },
 };
 
