@@ -7,6 +7,7 @@
  * reference to something another draw pass is changing underneath it.
  */
 import { bottom, contains, type Point, type Rect, rect, right, type Size } from './geometry.ts';
+import { type Label, setLabel } from './label.ts';
 import { EMPTY_STYLE, type Style } from './style.ts';
 
 /** What sits in one cell. A wide character occupies its cell plus a continuation. */
@@ -37,17 +38,21 @@ export class Buffer {
   /** Row-major, `width * height` long. */
   readonly #cells: readonly Cell[];
   readonly #edges: readonly Edges[];
+  /** Titles and labels set into edges, kept so a later pass can set them again (0175). */
+  readonly #labels: readonly Label[];
 
   private constructor(
     width: number,
     height: number,
     cells: readonly Cell[],
     edges: readonly Edges[],
+    labels: readonly Label[] = [],
   ) {
     this.width = width;
     this.height = height;
     this.#cells = cells;
     this.#edges = edges;
+    this.#labels = labels;
   }
 
   static create({ width, height }: Size, fill: Cell = BLANK): Buffer {
@@ -97,10 +102,11 @@ export class Buffer {
   draw(fn: (draft: Draft) => void): Buffer {
     const cells = this.#cells.slice();
     const edges = this.#edges.slice();
-    const draft = new Draft(this.width, this.height, cells, edges);
+    const labels = this.#labels.slice();
+    const draft = new Draft(this.width, this.height, cells, edges, labels);
     fn(draft);
     draft.close();
-    return new Buffer(this.width, this.height, cells, edges);
+    return new Buffer(this.width, this.height, cells, edges, labels);
   }
 
   /** A rectangular region as its own buffer. */
@@ -138,12 +144,14 @@ export class Draft {
   readonly height: number;
   readonly #cells: Cell[];
   readonly #edges: Edges[];
+  readonly #labels: Label[];
 
-  constructor(width: number, height: number, cells: Cell[], edges: Edges[]) {
+  constructor(width: number, height: number, cells: Cell[], edges: Edges[], labels: Label[] = []) {
     this.width = width;
     this.height = height;
     this.#cells = cells;
     this.#edges = edges;
+    this.#labels = labels;
   }
 
   get bounds(): Rect {
@@ -196,7 +204,25 @@ export class Draft {
     return this.fill(r, BLANK);
   }
 
+  /**
+   * Record a label to set into its edge when the pass closes. Use `drawLabel`,
+   * which is what a title or a rule's label is drawn with.
+   */
+  addLabel(label: Label): this {
+    this.#assertOpen();
+    this.#labels.push(label);
+    return this;
+  }
+
+  /**
+   * End the pass. Labels are set into their edges last, once every edge in the
+   * pass is known, so a title gives way to a junction however the two were
+   * drawn (0175).
+   */
   close(): void {
+    for (let i = 0; i < this.#labels.length; i++) {
+      this.#labels[i] = setLabel(this, this.#labels[i] as Label);
+    }
     this.#open = false;
   }
 }

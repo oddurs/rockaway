@@ -35,6 +35,13 @@ Fallback is by weight, not by name: a `double` junction that has no glyph falls
 back to `heavy`, then to `light`. A border set that cannot express a seam
 degrades instead of printing a hole.
 
+Titles commute too (`0175`). A title, or a label sunk into a rule, is text over
+border cells, and a rule crossing that edge would otherwise take a letter or
+lose its tee depending on which was drawn last. So a label is recorded rather
+than written, and set into its edge when the draw pass closes, once every edge
+is known: it owns its cells, stops short of the first junction in its edge,
+and truncates with the theme's ellipsis — `┌ si… ─┬─────┐`, whichever order.
+
 ## 2. The cell is `1ch` × `1lh`
 
 Across, a cell is the font's advance width. Down, it is the line box, which the
