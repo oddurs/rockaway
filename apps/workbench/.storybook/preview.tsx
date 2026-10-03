@@ -1,4 +1,5 @@
 import { GlyphProvider } from '@rockaway/react';
+import { expectField } from '@rockaway/react/testing';
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import { afterEach as axe } from '@storybook/addon-a11y/preview';
 import type { Decorator, Preview, StoryContext } from '@storybook/react-vite';
@@ -125,8 +126,15 @@ const preview: Preview = {
  * run once, in the context the toolbar shows.
  */
 export const afterEach = async (context: StoryContext): Promise<void> => {
+  // The field contract (cairn 0203) is a question of semantics, not of cells,
+  // so it is asked once, in the story's own context, of every field on the page.
+  const parameters = context.parameters as Parameters;
+  if (parameters.fields !== false && context.canvasElement.querySelector('.rk-field')) {
+    const theme = context.globals.theme as ThemeName | undefined;
+    expectField(context.canvasElement, { glyphs: themeGlyphs[theme ?? 'default'] });
+  }
   const run = runner();
-  await walk(context.id, context.canvasElement, context.parameters as Parameters, {
+  await walk(context.id, context.canvasElement, parameters, {
     capture: run?.capture,
     plan: run?.plan,
     record: run?.record,
