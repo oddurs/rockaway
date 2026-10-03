@@ -1,11 +1,11 @@
 ---
-id: 104
+id: 562ba731-e93f-474e-a13e-938b31be29ad
 title: Build the site shell as a TUI
 type: feature
 status: backlog
 milestone: site
 depends_on:
-- 103
+- e1a6b9f8-1076-4387-81b4-1ecaf9350082
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

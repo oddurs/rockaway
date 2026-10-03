@@ -1,13 +1,13 @@
 ---
-id: 26
+id: abef3daf-68ba-46b9-93a2-f1729fd5eab5
 title: Build focus ring, motion and reduced-motion foundations
 type: feature
 status: done
 milestone: runtime
 assignee: Oddur Sigurdsson
 depends_on:
-- 24
-- 61
+- e6ee56dd-75d9-4e6c-8a3b-2c1b3654a64e
+- 11a80c31-06e2-48ef-80e3-81678841c54e
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

@@ -1,14 +1,14 @@
 ---
-id: 25
+id: 2fad46a9-6b5f-4245-9fff-c137cbeffba1
 title: Write the reset and base typography
 type: feature
 status: done
 milestone: runtime
 assignee: Oddur Sigurdsson
 depends_on:
-- 20
-- 24
-- 59
+- 950b997c-4cc3-4b18-a2ff-fdcbc5d349a6
+- e6ee56dd-75d9-4e6c-8a3b-2c1b3654a64e
+- aba0c1f9-8761-4d07-8069-e55bf6abb211
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

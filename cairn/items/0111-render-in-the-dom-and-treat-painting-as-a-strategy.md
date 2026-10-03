@@ -1,5 +1,5 @@
 ---
-id: 111
+id: a920e7ad-de4b-41f0-abbf-158d51c9c857
 title: Render in the DOM, and treat painting as a strategy
 type: decision
 status: done

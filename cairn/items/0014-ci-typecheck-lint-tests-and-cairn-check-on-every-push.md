@@ -1,12 +1,12 @@
 ---
-id: 14
+id: 7e86d360-cbf6-4927-a6df-aa49909269c8
 title: 'CI: typecheck, lint, tests and cairn check on every push'
 type: chore
 status: done
 milestone: foundations
 assignee: Oddur Sigurdsson
 depends_on:
-- 12
+- 75eedfec-f1c9-4072-b220-53f77877c322
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

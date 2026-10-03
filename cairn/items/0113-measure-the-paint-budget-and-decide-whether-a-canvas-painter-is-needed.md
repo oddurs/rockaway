@@ -1,11 +1,11 @@
 ---
-id: 113
+id: b3d91ec7-4af8-4303-87a9-219129522ee2
 title: Measure the paint budget, and decide whether a canvas painter is needed
 type: spike
 status: backlog
 milestone: later
 depends_on:
-- 111
+- a920e7ad-de4b-41f0-abbf-158d51c9c857
 created: 2026-09-23
 updated: 2026-09-23
 priority: p2

@@ -1,14 +1,14 @@
 ---
-id: 21
+id: 25aed42b-59ff-48be-aec1-61a0eb191be1
 title: Express light and dark through the DTCG Resolver module
 type: feature
 status: done
 milestone: tokens
 assignee: Oddur Sigurdsson
 depends_on:
-- 19
-- 20
-- 62
+- 0c39a331-ef49-4060-b55c-d4096186592b
+- 950b997c-4cc3-4b18-a2ff-fdcbc5d349a6
+- 9c5997f0-b2cd-4996-b8a5-75c754ab9849
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

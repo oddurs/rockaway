@@ -1,12 +1,12 @@
 ---
-id: 92
+id: a017bac6-5c67-4676-a63f-3725367286b6
 title: Retire radius, shadow and the type scale
 type: chore
 status: done
 milestone: retheme
 assignee: Oddur Sigurdsson
 depends_on:
-- 75
+- 6c289a60-5ba9-446e-8c9d-5c7d4a653eb1
 created: 2026-09-22
 updated: 2026-09-23
 closed_at: 2026-09-23

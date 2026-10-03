@@ -60,7 +60,7 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/oddurs/cairn/main/install.sh | sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
         env:
-          CAIRN_VERSION: v0.2.1
+          CAIRN_VERSION: v1.0.0-alpha.1
           CAIRN_BINDIR: /home/runner/.local/bin
 
       - name: Items match the schema

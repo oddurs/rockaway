@@ -1,11 +1,11 @@
 ---
-id: 101
+id: d98b4d5a-3c78-44cc-82af-92bd2e826c5a
 title: Progress
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 86
+- 75e3579e-32a8-476a-8839-3602936b98b3
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

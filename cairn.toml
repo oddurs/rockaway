@@ -16,13 +16,12 @@
 # Order is behaviour: the order of [[status]] blocks is the board's column order,
 # and the order of an enum's `values` is its sort order. Do not tidy it.
 
-format = 3
+format = 4
 
 [project]
 name = "rockaway"
 description = "A TUI design system for the web: everything on a character grid."
 dir = "cairn/items"
-id_width = 4
 default_type = "feature"
 default_status = "backlog"
 url = "https://github.com/oddurs/rockaway/blob/main"

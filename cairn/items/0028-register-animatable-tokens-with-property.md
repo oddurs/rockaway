@@ -1,12 +1,12 @@
 ---
-id: 28
+id: 906e54b8-4aa4-4d2a-a591-82b6cf7e0737
 title: Register animatable tokens with @property
 type: feature
 status: done
 milestone: runtime
 assignee: Oddur Sigurdsson
 depends_on:
-- 20
+- 950b997c-4cc3-4b18-a2ff-fdcbc5d349a6
 created: 2026-09-22
 updated: 2026-09-22
 priority: p2

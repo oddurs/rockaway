@@ -1,12 +1,12 @@
 ---
-id: 112
+id: a513bd43-e0e0-4539-9445-03b0344b8770
 title: 'Write the concept doc: how a TUI becomes a web page'
 type: docs
 status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
 depends_on:
-- 111
+- a920e7ad-de4b-41f0-abbf-158d51c9c857
 created: 2026-09-23
 updated: 2026-09-23
 closed_at: 2026-09-23

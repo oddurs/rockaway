@@ -1,11 +1,11 @@
 ---
-id: 114
+id: cdc15a8d-8702-48a7-9e92-8d5cb93affaa
 title: Coalesce rule-painter strokes into runs
 type: chore
 status: backlog
 milestone: later
 depends_on:
-- 113
+- b3d91ec7-4af8-4303-87a9-219129522ee2
 created: 2026-09-23
 updated: 2026-09-23
 priority: p3

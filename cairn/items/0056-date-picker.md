@@ -1,11 +1,11 @@
 ---
-id: 56
+id: 64deca41-fe90-4978-a9c7-926a9b17dbf3
 title: Date picker
 type: component
 status: backlog
 milestone: later
 depends_on:
-- 34
+- 7b8c9403-b317-424a-9871-6c665fdf99d8
 created: 2026-09-22
 updated: 2026-09-22
 priority: p3

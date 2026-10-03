@@ -1,14 +1,14 @@
 ---
-id: 62
+id: 9c5997f0-b2cd-4996-b8a5-75c754ab9849
 title: 'Build the theme generator: inputs in, DTCG sources out'
 type: feature
 status: done
 milestone: tokens
 assignee: Oddur Sigurdsson
 depends_on:
-- 16
-- 58
-- 59
+- f8b51014-3019-438f-bb35-7981d91496cc
+- b1fb72a7-845b-47bd-8167-2be07a2fbf67
+- aba0c1f9-8761-4d07-8069-e55bf6abb211
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

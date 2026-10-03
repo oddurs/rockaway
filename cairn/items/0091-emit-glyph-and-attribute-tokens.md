@@ -1,13 +1,13 @@
 ---
-id: 91
+id: 3cedcc59-2e27-4c7b-8447-afe157f996c5
 title: Emit glyph and attribute tokens
 type: feature
 status: done
 milestone: retheme
 assignee: Oddur Sigurdsson
 depends_on:
-- 73
-- 75
+- fa8b4c06-b6a8-491d-b3e8-7b2b5e47150d
+- 6c289a60-5ba9-446e-8c9d-5c7d4a653eb1
 created: 2026-09-22
 updated: 2026-09-23
 closed_at: 2026-09-23

@@ -1,12 +1,12 @@
 ---
-id: 8
+id: 20cb52cf-d3e7-4487-9b1d-c1daaf376338
 title: 'Choose the behaviour layer: React Aria Components or Base UI'
 type: decision
 status: done
 milestone: foundations
 assignee: Oddur Sigurdsson
 depends_on:
-- 7
+- 41eadd6e-8719-4dc0-86d4-e0c0ba63eaca
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

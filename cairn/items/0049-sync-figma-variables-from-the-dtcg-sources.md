@@ -1,11 +1,11 @@
 ---
-id: 49
+id: d736b125-bbdb-4e94-843b-fcb455ccb2bd
 title: Sync Figma Variables from the DTCG sources
 type: feature
 status: backlog
 milestone: later
 depends_on:
-- 21
+- 25aed42b-59ff-48be-aec1-61a0eb191be1
 created: 2026-09-22
 updated: 2026-09-22
 priority: p3
