@@ -247,7 +247,10 @@ A grid nobody can break is a grid people quietly abandon (`0072`). Three levels
 
 `checkConformance` asserts that every box inside a screen measures a whole
 number of cells, in both directions, at every density and in every theme. It
-runs on every story via an `afterEach`. Anything off-grid without a reason
+runs on every story via an `afterEach`, which then switches the root through
+all four densities and both modes and runs it again in each, with continuity
+and a target-size check beside it, so a failure names the density and mode it
+failed at (`0125`). Anything off-grid without a reason
 fails; anything with one is printed in the report, grouped by reason and
 counted, so a page can say "3 exceptions, 2 reasons". An empty reason is not a
 reason: `data-rk-offgrid=""` fails on its own (`0123`).
