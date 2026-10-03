@@ -25,7 +25,7 @@ a packaging bug, and it is fixed in the package.
 | --- | --- |
 | `src/pages/` | One file per route. Pages compose; they bring no CSS of their own. |
 | `src/layouts/Document.astro` | The one `<html>`: head order, the font, the stylesheet. |
-| `src/islands/` | One module per hydrated thing, never a component hydrated straight from the package (see `frame.ts` for why). |
+| `src/islands/` | Compositions of the system's components that the site hydrates. A single component is hydrated from its own entry, `@rockaway/react/<component>`, never from the package's index: an island keeps every export of the module it comes from, and the index would ship the whole package for one box. |
 | `src/lib/` | Logic, in TypeScript. Astro frontmatter is not typechecked, so keep it thin. |
 | `src/styles/site.css` | The system's CSS as a consumer imports it, and page layout. |
 | `src/fonts/` | The one font, its metrics and its licence. |
