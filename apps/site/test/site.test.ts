@@ -203,10 +203,6 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     for (const url of pages) {
       await reader.goto(url);
       await reader.evaluate(() => document.fonts.ready);
-      // Islands hydrate when they are seen: show each one, then wait for it.
-      for (const island of await reader.locator('astro-island').all()) {
-        await island.scrollIntoViewIfNeeded();
-      }
       await reader.waitForFunction(
         () => document.querySelectorAll('astro-island[ssr]').length === 0,
       );
@@ -242,6 +238,53 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     }
     await context.close();
   });
+
+  test('renders every live example without JavaScript, chrome included (0147)', async () => {
+    // What an example shows: the words it holds, and whether a server painted
+    // its chrome. A measured screen is drawn at its fallback size on the
+    // server and fitted on the client (0126), so its lines may be longer or
+    // shorter; what it says, and that it is framed, may not differ.
+    const shown = () => {
+      const island = document.querySelector<HTMLElement>(
+        'astro-island[component-export="Example"]',
+      );
+      const text = island?.innerText ?? '';
+      return {
+        words: text
+          .replace(/[\u2500-\u259f]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim(),
+        chrome: /[\u2500-\u259f]/.test(text),
+      };
+    };
+    // The server draws a chord for a keyboard it cannot see; the client
+    // redraws it for the reader's. The same chord either way.
+    const chord = (text: string) => text.replaceAll('⌘', 'Ctrl+').replaceAll('Command', 'Control');
+    const off = await browser.newContext({ javaScriptEnabled: false });
+    const on = await browser.newContext();
+    const [still, live] = [await off.newPage(), await on.newPage()];
+    for (const component of components as { name: string }[]) {
+      const slug = component.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      const url = `${origin}${base}components/${slug}/`;
+      await still.goto(url);
+      await live.goto(url);
+      await live.waitForFunction(() => document.querySelectorAll('astro-island[ssr]').length === 0);
+      const [before, after] = [await still.evaluate(shown), await live.evaluate(shown)];
+      expect(before.words.length, component.name).toBeGreaterThan(0);
+      if (component.name === 'Keymap') {
+        // Shortcuts are registered by script, so without it there are none to
+        // list: the help screen is the one thing that only exists with it.
+        expect(chord(after.words).startsWith(chord(before.words)), component.name).toBe(true);
+      } else {
+        expect(chord(before.words), component.name).toBe(chord(after.words));
+      }
+      expect(before.chrome, `${component.name} has no chrome without JavaScript`).toBe(
+        after.chrome,
+      );
+    }
+    await off.close();
+    await on.close();
+  }, 120_000);
 
   test('draws the foundations with the system, for a phone, with no script (0106)', async () => {
     const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });

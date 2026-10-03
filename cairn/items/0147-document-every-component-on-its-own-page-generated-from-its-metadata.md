@@ -48,7 +48,7 @@ generated. Each page has, in this order:
 
 - [x] Every component in `@rockaway/react` has a page, and a build check fails if one is missing
 - [x] Props, states, keyboard map and tokens come from the metadata, not from hand-written tables
-- [ ] Every live example also renders as its snapshot with JavaScript disabled
+- [x] Every live example also renders as its snapshot with JavaScript disabled
 - [x] Every page passes axe, conformance and continuity in the built site
 - [ ] Every page can be copied as text (0105)
 
@@ -67,3 +67,7 @@ Not ticked: (3) a live example renders as its snapshot without JavaScript. The p
 ## 2026-10-03
 
 Proved itself on the merge: main brought Callout (#115), and the build failed with 'Callout has no page' until its example was added.
+
+## 2026-10-03
+
+After merging main (#88 server-painted chrome, Tree, Keymap): Tree and Keymap have pages. Examples hydrate on load, not when visible, because an island with no box (Keymap's help, before it has bindings) is never seen and so never hydrates. Criterion 3 now holds: with JavaScript off, every example shows the same words as it does hydrated, and its chrome, painted on the server. Two allowed differences, both printed in the test: a measured screen is drawn at its fallback size on the server and fitted on the client (0126), so line lengths can differ; and Keymap's help lists shortcuts that only exist once script registers them. Found: Callout's server render uses Screen's 80x24 fallback, because its height is measured from its prose, so without JavaScript a one-line callout is drawn about twenty rows tall and shrinks on hydration. Reported to the CTO.
