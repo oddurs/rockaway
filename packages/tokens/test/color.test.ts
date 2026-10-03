@@ -18,13 +18,15 @@ describe('OKLCH maths', () => {
     expect(b).toBeCloseTo(0, 3);
   });
 
-  test('gamut mapping keeps lightness and hue, reduces chroma, and lands in gamut', () => {
+  test('gamut mapping reduces chroma, keeps lightness and hue to within a JND, and lands in gamut', () => {
+    // CSS Color 4 (§13.2): chroma comes down until clipping the rest is
+    // invisible, then it clips — so lightness and hue move, but not by much.
     const vivid = { l: 0.74, c: 0.3, h: 262 };
     expect(inSrgbGamut(vivid)).toBe(false);
     const mapped = toSrgbGamut(vivid);
     expect(inSrgbGamut(mapped)).toBe(true);
-    expect(mapped.l).toBe(vivid.l);
-    expect(mapped.h).toBe(vivid.h);
+    expect(Math.abs(mapped.l - vivid.l)).toBeLessThan(0.02);
+    expect(Math.abs(mapped.h - vivid.h)).toBeLessThan(3);
     expect(mapped.c).toBeLessThan(vivid.c);
   });
 

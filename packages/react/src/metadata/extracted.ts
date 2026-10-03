@@ -6,6 +6,59 @@
 import type { ExtractedPart } from './schema.ts';
 
 export const extracted: { readonly [component: string]: ExtractedPart } = {
+  "Badge": {
+    "file": "badge.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "BadgeTone",
+        "required": false,
+        "description": "What the badge is saying. The colour and the mark only repeat it."
+      },
+      {
+        "name": "mark",
+        "type": "boolean",
+        "required": false,
+        "description": "Draw the tone's mark before the words. `false` draws the delimiters instead, and then the words alone must say the tone.",
+        "default": "true"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof badgeVariants>"
+    ],
+    "tokens": [
+      "--rk-bg-accent-subtle",
+      "--rk-bg-danger-subtle",
+      "--rk-bg-subtle",
+      "--rk-bg-success-subtle",
+      "--rk-bg-warning-subtle",
+      "--rk-border-accent",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-success",
+      "--rk-border-warning",
+      "--rk-fg-accent",
+      "--rk-fg-danger",
+      "--rk-fg-muted",
+      "--rk-fg-success",
+      "--rk-fg-warning"
+    ]
+  },
   "Button": {
     "file": "button.tsx",
     "props": [
