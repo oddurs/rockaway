@@ -62,15 +62,23 @@ function junctions(border: BorderSetName, rule: BorderSetName = border, title: s
 /**
  * Block elements, each kind on a row of its own and named beside it, and a
  * scrollbar down the right edge: a thumb that has to be one solid run over its
- * track. The groups start in one column, so each row also meets the row above
- * it, and the solid run and the shade runs meet the rows either side of them.
+ * track. The kinds start in one column, so each row meets the rows either side
+ * of it.
+ *
+ * Every mark that reaches an edge of its cell meets one that reaches the same
+ * edge from the other side, or nothing: at 200% Chrome snaps a background to
+ * whole CSS pixels, so ink that reaches an edge on a half-pixel boundary lands
+ * a device pixel inside the next cell, and against a mark with no line on that
+ * edge the check reads it as a leak. Hence the order: the eighth bars first,
+ * the halves so that `▌` stands on `▕`, and the quadrants so that each one
+ * that reaches its right edge is followed by one that reaches its left.
  */
 const BLOCKS: readonly (readonly [label: string, cells: string])[] = [
-  ['shades', '█▓▒░'],
   ['eighth bars', '▁▂▃▄▅▆▇█'],
-  ['halves', '▀▄▌▐'],
+  ['shades', '█▓▒░'],
   ['eighth edges', '▔▕▏'],
-  ['quadrants', '▖▗▘▝▙▚▛▜▞▟'],
+  ['halves', '▀▌▐▄'],
+  ['quadrants', '▗▙▛▜▚▞▟▖▝▘'],
   ['solid run', '██████████'],
   ['shade runs', '░░░░░░░░░░'],
   ['', '▓▓▓▓▓▓▓▓▓▓'],
@@ -373,6 +381,11 @@ export const SubPixel: Story = {
               fontSize: `${size}px`,
               paddingInlineStart: `${shift}px`,
               paddingBlockStart: `${shift}px`,
+              // Each screen on its own: a screen's edge ink lands up to a
+              // device pixel past it at 200%, so screens that touch would
+              // each be read with the other's ink in them.
+              display: 'grid',
+              gap: 'var(--rk-y-1)',
             }}
           >
             <Screen draw={blocks} cols={BLOCK.cols} rows={BLOCK.rows} />

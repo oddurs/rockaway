@@ -34,3 +34,7 @@ story that looks broken is a bad story, and this workbench is shown to people.
 ## 2026-10-03
 
 Blocks: one row per kind, named in fg.muted, scrollbar thumb over track down the right edge; groups share a column so rows still meet. Junction frames 18 cells, rule at 11, so every title reads whole; mixed frames titled mixed and weights. Play function requires whole titles and named block rows; 0175's ellipsis stays proved by label.test.ts. Continuity counts unchanged (18 layers, >600 shapes, >500 joins, 8 fills; SubPixel 27 layers, >900 joins).
+
+## 2026-10-03
+
+At 200% Chrome snaps a background to whole CSS pixels, so a mark reaching an edge on a half-pixel boundary spills a device pixel into the next cell; the leak check reads that as ink on an edge with no line. The old fixture was exposed too (▄ over ▗) and passed by where it happened to land. The block rows and the quadrants are ordered so every edge-reaching mark meets a mark reaching the same edge, or nothing; SubPixel's stacked screens get a row of air so one screen's edge ink is not read in the next. Proposed follow-up: let the leak rule allow a neighbour's reaching ink within the same half-CSS-pixel slack the reach rule already allows.
