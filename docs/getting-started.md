@@ -130,6 +130,9 @@ you use. The title is the frame's accessible name: a screen reader hears
 - **Make it yours.** The tokens are custom properties. Every theme ships as a
   stylesheet and applies to whatever element carries it:
   `import '@rockaway/tokens/themes/nord.css'`, then `data-rk-theme="nord"`.
+  Chrome is drawn in JavaScript, so wrap it in `<GlyphProvider
+  glyphs={themeGlyphs.nord}>` (from `@rockaway/react` and `@rockaway/tokens`)
+  for the theme's border set and marks.
 - **Use your font.** The cell is your font's: set `--rk-font-family-mono` to
   any monospace family and every size follows it.
 - **Build your own component** on the grid: every component is held to [the
