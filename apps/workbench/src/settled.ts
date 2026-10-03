@@ -24,8 +24,6 @@
  * or compares geometry.
  */
 export async function settled(): Promise<void> {
-  // EXPERIMENT: no wait at all, to see the failure on CI before the fix.
-  if (Math.random() < 2) return;
   const { font } = getComputedStyle(document.documentElement);
   if (font !== '') await document.fonts.load(font);
   await document.fonts.ready;
