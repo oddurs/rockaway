@@ -3,14 +3,14 @@ id: 121
 uid: 1c4aeb9a-ca5c-4462-8d8f-44fe4209598d
 title: Make every package's exports correct, and prove it with publint and attw
 type: chore
-status: doing
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 12
 created: 2026-10-03
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p0
 layer: distribution
 effort: m
@@ -38,7 +38,7 @@ first.
 
 ## Acceptance criteria
 
-- [ ] `publint` and `@arethetypeswrong/cli` pass for all four packages, in CI, on every pull request
+- [x] `publint` and `@arethetypeswrong/cli` pass for all four packages, in CI, on every pull request
 - [x] Every entry resolves to the file that was built for it, with a `types` condition, for both `import` and bundler resolution
 - [x] The testing helpers are exported from `@rockaway/react/testing` only, and the main entry no longer pulls them in
 - [x] Component entries carry `'use client'`, and a fixture imports `Frame` from a server component without error
@@ -60,3 +60,7 @@ attw runs with --profile esm-only (node10 and require() of ESM are out of scope)
 ## 2026-10-03
 
 Watch: 'use client' makes every export of a component module a client reference, so frameBuffer, dividerBuffer, drawRule, formatKeys and the like cannot be called from a server component while they live in the component's file. Splitting the pure buffer functions into their own modules would fix that.
+
+## Result
+
+Exports carry @rockaway/source, types, default; publishConfig.exports is the same map without the source condition. Testing helpers only at @rockaway/react/testing. Components are 'use client' and react builds unbundled. pnpm packages:check (CI) packs every package, lists it, runs publint --strict and attw --profile esm-only on the tarball, and renders Frame from a server component.
