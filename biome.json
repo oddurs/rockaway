@@ -13,6 +13,7 @@
       "!packages/tokens/css",
       "!packages/tokens/terminal",
       "!packages/tokens/src/names.ts",
+      "!packages/react/src/metadata/extracted.ts",
       "!cairn/items",
       "!ROADMAP.md",
       "!CLAUDE.md"

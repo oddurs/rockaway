@@ -57,6 +57,11 @@ A component adds one line to each barrel and touches no other line:
   the component imports, in path order.
 - Every component file needs `'use client'` as its first line if it uses a hook
   or an event handler. CI fails the packed build without it.
+- `packages/react/src/components/<name>.meta.ts`: its metadata (cairn 0047),
+  added to the list in `src/metadata/index.ts`. Then run
+  `pnpm --filter @rockaway/react metadata` to read its props and tokens.
+  `test/metadata.test.ts` fails for a component exported without metadata, and
+  for metadata that names a part, variant or state the component does not have.
 
 Both barrels merge with `merge=union` (see `.gitattributes`), so two branches
 that each added a line rebase without a conflict. The joined lines can come out
