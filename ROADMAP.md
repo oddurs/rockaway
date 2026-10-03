@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`####······` 34% · 31 of 92 done · due 2027-01-31
+`####······` 35% · 32 of 92 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -147,7 +147,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0180`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0180-rename-the-context-attributes-to-data-rk-and-fail-on-the-old-ones.md) Rename the context attributes to data-rk-*, and fail on the old ones <sup>chore · css · p1</sup>
 - [ ] [`0182`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0182-mark-controls-and-panes-so-the-conformance-levels-can-see-them.md) Mark controls and panes so the conformance levels can see them <sup>feature · components · p1</sup>
 - [ ] [`0183`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0183-decide-what-goes-heavy-means-under-an-ascii-theme.md) Decide what goes heavy means under an ASCII theme <sup>decision · grid · p2</sup>
-- [ ] [`0184`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0184-selected-and-disabled-rows-trap-the-first-arrow-key.md) Selected-and-disabled rows trap the first arrow key <sup>bug · components · p2</sup>
 - [ ] [`0185`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0185-check-0072-s-type-rule-in-conformance.md) Check 0072's type rule in conformance <sup>feature · tooling · p2</sup>
 - [ ] [`0186`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0186-make-the-full-workbench-run-hold-up-under-load.md) Make the full workbench run hold up under load <sup>chore · tooling · p2</sup>
 - [ ] [`0189`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0189-speak-meta-not-command-off-apple-keyboards.md) Speak Meta, not Command, off Apple keyboards <sup>bug · components · p3</sup>
@@ -208,6 +207,7 @@ The component contract, proven on a first set of components.
 - [x] [`0175`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0175-never-let-a-junction-overwrite-a-title.md) Never let a junction overwrite a title <sup>bug · grid · p1</sup>
 - [x] [`0178`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0178-make-border-default-a-boundary-you-can-see-3-1-against-every-ground.md) Make border.default a boundary you can see: 3:1 against every ground <sup>bug · tokens · p0</sup>
 - [x] [`0181`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0181-make-reverse-video-survive-forced-colors-everywhere.md) Make reverse video survive forced colors everywhere <sup>bug · css · p1</sup>
+- [x] [`0184`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0184-selected-and-disabled-rows-trap-the-first-arrow-key.md) Selected-and-disabled rows trap the first arrow key <sup>bug · components · p2</sup>
 - [x] [`0200`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0200-clear-a-control-s-background-in-the-reset.md) Clear a control's background in the reset <sup>bug · css · p1</sup>
 - [x] [`0209`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0209-link-hover-is-bold-never-a-double-underline.md) Link hover is bold, never a double underline <sup>bug · css · p1</sup>
 
