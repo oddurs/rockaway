@@ -446,7 +446,11 @@ cairn carries these as acceptance criteria, and the `component` template in
 2. **Both painters render it identically,** measured in cells.
 3. **Chrome is `aria-hidden`;** the accessible name never contains a glyph.
 4. **Behaviour comes from the behaviour layer.** No hand-rolled focus or
-   keyboard logic.
+   keyboard logic. React Aria handles the keys inside a component; the
+   keymap (`0141`) is the one handler for the page's own, so a shortcut is
+   bound with `useKeymap` and never with a listener of a component's: one
+   place decides which scope a key belongs to, keeps plain keys out of text
+   fields, finds conflicts, and lists every shortcut in the help screen.
 5. **Styled from `data-*` state and semantic tokens only.** A component that
    needs a reference token is a missing semantic.
 6. **Ships a text snapshot,** which is its documentation as much as its test.

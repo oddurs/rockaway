@@ -65,6 +65,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Form: (props) => createElement(rockaway.Form, props, createElement(rockaway.Label, null, 'Name')),
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
+  Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
   List: (props) =>
     createElement(
@@ -562,6 +563,25 @@ describe('the snapshots, as the site draws them', () => {
       Cmd+S save
       Shift+Up select
       S-Up select"
+    `);
+  });
+
+  test('Keymap', () => {
+    expect(snapshots(byName('Keymap'))).toMatchInlineSnapshot(`
+      "── Help, on any keyboard but Apple’s
+      Ctrl+K  Open the palette
+      /       Search
+      G H     Go home
+      J       Next row
+      K       Previous row
+      ?       Show this help
+      ── Help, on an Apple keyboard
+      ⌘K   Open the palette
+      /    Search
+      G H  Go home
+      J    Next row
+      K    Previous row
+      ?    Show this help"
     `);
   });
 
