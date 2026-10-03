@@ -70,6 +70,7 @@ export function Screen({
 }: ScreenProps): ReactNode {
   const host = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLDivElement>(null);
+  const probe = useRef<HTMLSpanElement>(null);
   const [cell, setCell] = useState<CellMetrics>(DEFAULT_CELL);
   const [measured, setMeasured] = useState<Size | undefined>(undefined);
 
@@ -105,6 +106,12 @@ export function Screen({
       frameId = requestAnimationFrame(remeasure);
     });
     observer.observe(el);
+    // A screen given its size in cells sizes its own box from the cell it
+    // measured, so a new density, a font that loads late or a zoom changes the
+    // cell without resizing that box, and the observer above never hears of
+    // it. The probe is one cell, in the units that mean one cell, so it
+    // resizes whenever the cell does.
+    if (probe.current) observer.observe(probe.current);
     return () => {
       cancelAnimationFrame(frameId);
       observer.disconnect();
@@ -147,9 +154,21 @@ export function Screen({
           {children}
         </div>
       )}
+      <span ref={probe} aria-hidden="true" style={PROBE} />
     </div>
   );
 }
+
+/** One cell, in the units that are one cell: `1ch` by `1lh`. Unseen, and on the grid at the origin. */
+const PROBE: CSSProperties = {
+  position: 'absolute',
+  insetBlockStart: 0,
+  insetInlineStart: 0,
+  inlineSize: '1ch',
+  blockSize: '1lh',
+  visibility: 'hidden',
+  pointerEvents: 'none',
+};
 
 function insetStyle(inset: Inset | undefined): CSSProperties | undefined {
   if (!inset) return undefined;

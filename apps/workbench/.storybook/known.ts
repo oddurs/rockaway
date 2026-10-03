@@ -38,13 +38,17 @@ const TARGETS = '.rk-button, .rk-link, .rk-list-item, button, a[href], [role="op
 
 export const known: readonly Known[] = [
   {
-    id: 'screen-remeasure',
-    check: 'remeasure',
-    element: /rk-screen/,
-    present: '.rk-screen[data-rk-cols]',
+    id: 'list-dense-offset',
+    check: 'conformance',
+    rule: 'y',
+    densities: ['dense'],
+    stories: ['components-list--disabled'],
+    element: /rk-list/,
+    present: '.rk-list-item',
     reason:
-      'Screen observes only its own box, which a screen sized in cells sizes from the cell it last measured, so a new density never reaches it; conformance and continuity cannot be read in a cell it has not caught up with',
-    ticket: 'Screen remeasures on a context change (the 1ch × 1lh probe, after #88)',
+      "after keyboard navigation, a list's rows sit a pixel above the grid at dense: y = 15, 31 and 47px in 16px cells, so the list has scrolled by one pixel that a whole row would not",
+    ticket:
+      'list rows stay on the grid at dense after keyboard navigation (proposed in the 0199 report)',
   },
   {
     id: 'touch-height',
