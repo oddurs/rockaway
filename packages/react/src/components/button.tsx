@@ -17,6 +17,7 @@
 import { type ReactNode, useEffect, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
+import { useGlyphs } from '../glyphs.tsx';
 import {
   defineVariants,
   type VariantProps,
@@ -52,8 +53,9 @@ export interface ButtonProps
   /** `md` is one row; `lg` is three, with a border drawn around the label. */
   readonly size?: ButtonSize;
   /**
-   * The delimiters around the label. Chrome, so they are hidden from the
-   * accessible name. `none` for a bare label in a toolbar.
+   * The delimiters around the label: the theme's control delimiters unless
+   * given. Chrome, so they are hidden from the accessible name. `none` for a
+   * bare label in a toolbar.
    */
   readonly delimiters?: readonly [string, string] | 'none';
   /**
@@ -65,8 +67,6 @@ export interface ButtonProps
   readonly className?: string;
   readonly style?: React.CSSProperties;
 }
-
-const DEFAULT_DELIMITERS: readonly [string, string] = ['[', ']'];
 
 /** The shortcut has to be resolved for the server too, so `auto` is `other`. */
 function resolve(platform: Platform | 'auto'): Platform {
@@ -95,10 +95,11 @@ export function Button({
     else el.setAttribute('aria-keyshortcuts', shortcut);
   }, [shortcut]);
   const chosen = buttonVariants.select({ variant, size });
+  const glyphs = useGlyphs();
   const ends =
     delimiters === 'none'
       ? undefined
-      : (delimiters ?? (chosen.variant === 'quiet' ? undefined : DEFAULT_DELIMITERS));
+      : (delimiters ?? (chosen.variant === 'quiet' ? undefined : glyphs.delimiter.control));
 
   return (
     <AriaButton

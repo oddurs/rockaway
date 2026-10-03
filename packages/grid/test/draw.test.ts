@@ -84,6 +84,13 @@ describe('titles', () => {
     expect(top.endsWith('┐')).toBe(true);
     expect(top).toContain('…');
   });
+
+  test('a theme that cannot draw … names its own ellipsis', () => {
+    const top = screen(12, 3, (d) =>
+      drawBox(d, rect(0, 0, 12, 3), { title: 'a very long title', ellipsis: '~' }),
+    )[0] as string;
+    expect(top).toBe('┌ a ver~ ──┐');
+  });
 });
 
 describe('lines and junctions', () => {
@@ -158,6 +165,8 @@ describe('text', () => {
     expect(screen(8, 1, (d) => drawText(d, { x: 0, y: 0 }, 'rockaway', { maxWidth: 5 }))[0]).toBe(
       'rock…   ',
     );
+    const ascii = { maxWidth: 5, ellipsis: '~' };
+    expect(screen(8, 1, (d) => drawText(d, { x: 0, y: 0 }, 'rockaway', ascii))[0]).toBe('rock~   ');
   });
 });
 

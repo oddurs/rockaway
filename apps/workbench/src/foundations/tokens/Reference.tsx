@@ -1,3 +1,4 @@
+import { glyphsFor } from '@rockaway/tokens';
 import type { CSSProperties, ReactNode } from 'react';
 import { text } from '../../text.ts';
 import { aliasOf, docs, entries, group, type TokenEntry } from './walk.ts';
@@ -289,8 +290,20 @@ export function Glyphs() {
   const glyphOf = (set: string, slot: string): string =>
     String(all.find((t) => t.path === `glyph.border.${set}.${slot}`)?.value ?? '');
   const marks = all.filter(
-    (t) => t.path.startsWith('glyph.mark.') || t.path.startsWith('glyph.block.'),
+    (t) =>
+      t.path.startsWith('glyph.mark.') ||
+      t.path.startsWith('glyph.block.') ||
+      t.path.startsWith('glyph.delimiter.'),
   );
+  // What the same token holds in a theme that draws in ASCII (cairn 0119).
+  const ascii = glyphsFor({ borderSet: 'ascii' });
+  const asciiOf = (path: string): string => {
+    const [, kind, name, end] = path.split('.');
+    if (kind === 'mark') return ascii.mark[name as keyof typeof ascii.mark];
+    if (kind === 'block') return ascii.block[name as keyof typeof ascii.block];
+    const pair = ascii.delimiter[name as keyof typeof ascii.delimiter];
+    return end === 'open' ? pair[0] : pair[1];
+  };
   const frames = all.filter(
     (t) => t.path.startsWith('glyph.spinner.') || t.path.startsWith('glyph.bar.'),
   );
@@ -298,7 +311,7 @@ export function Glyphs() {
   return (
     <Page
       title="Glyphs"
-      lead="Chrome is text, so the characters are theme values. Every one is a single cell, and the junction table resolves the seams between them."
+      lead="Chrome is text, so the characters are theme values. Every one is a single cell, and the junction table resolves the seams between them. A theme whose border set is ascii draws everything in ASCII, and components read these through useGlyphs() rather than writing them."
     >
       <Table caption="Border sets" head={['Set', ...slots]}>
         {sets.map((set) => (
@@ -315,13 +328,14 @@ export function Glyphs() {
         ))}
       </Table>
 
-      <Table caption="Marks and blocks" head={['Token', 'Glyph']}>
+      <Table caption="Marks, blocks and delimiters" head={['Token', 'Glyph', 'In ASCII']}>
         {marks.map((t) => (
           <tr key={t.path}>
             <td style={cell}>
               <code style={mono}>{t.path}</code>
             </td>
-            <td style={{ ...cell, ...mono }}>{String(t.value)}</td>
+            <td style={{ ...cell, ...mono, whiteSpace: 'pre' }}>{String(t.value)}</td>
+            <td style={{ ...cell, ...mono, whiteSpace: 'pre' }}>{asciiOf(t.path)}</td>
           </tr>
         ))}
       </Table>

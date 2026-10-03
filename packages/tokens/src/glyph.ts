@@ -97,34 +97,157 @@ export const borderSets: Readonly<Record<BorderSetName, BorderGlyphs>> = {
   },
 };
 
-/** The marks a UI makes when it cannot use colour alone. */
-export const marks = {
-  check: '✓',
-  cross: '✗',
-  bullet: '·',
-  cursor: '▸',
-  expanded: '▾',
-  collapsed: '▸',
-  ellipsis: '…',
-  dash: '–',
-  radio: '●',
-  'radio-empty': '○',
-} as const;
+/**
+ * A theme draws in Unicode or, when its border set is `ascii`, in ASCII
+ * throughout. A terminal that cannot be trusted with `┌` cannot be trusted
+ * with `▸` or `░` either, so the border set decides the whole repertoire
+ * rather than a sixth theme input that could disagree with it.
+ */
+export type Repertoire = 'unicode' | 'ascii';
+
+export function repertoireOf(set: BorderSetName): Repertoire {
+  return set === 'ascii' ? 'ascii' : 'unicode';
+}
+
+export const markNames = [
+  'check',
+  'cross',
+  'bullet',
+  'cursor',
+  'expanded',
+  'collapsed',
+  'ellipsis',
+  'dash',
+  'radio',
+  'radio-empty',
+  'blank',
+  'switch-thumb',
+  'switch-track',
+  'sort-ascending',
+  'sort-descending',
+  'overflow-start',
+  'overflow-end',
+  'required',
+  'danger',
+  'external',
+] as const;
+export type MarkName = (typeof markNames)[number];
+
+/**
+ * The marks a UI makes when it cannot use colour alone (cairn 0118). A
+ * checkbox is `check`, `dash` or `blank` between the control delimiters; a
+ * radio is `radio` or `radio-empty` on its own, so its empty state is still a
+ * visible mark. Tree guides are not here: they are edges, and the junction
+ * table draws them.
+ */
+export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string>>>> = {
+  unicode: {
+    check: '✓',
+    cross: '✗',
+    bullet: '·',
+    cursor: '▸',
+    expanded: '▾',
+    collapsed: '▸',
+    ellipsis: '…',
+    dash: '–',
+    radio: '●',
+    'radio-empty': '○',
+    blank: ' ',
+    'switch-thumb': '●',
+    'switch-track': '─',
+    'sort-ascending': '▴',
+    'sort-descending': '▾',
+    'overflow-start': '‹',
+    'overflow-end': '›',
+    required: '*',
+    danger: '!',
+    external: '↗',
+  },
+  ascii: {
+    check: 'x',
+    cross: 'X',
+    bullet: '*',
+    cursor: '>',
+    expanded: 'v',
+    collapsed: '>',
+    ellipsis: '~',
+    dash: '-',
+    radio: '*',
+    'radio-empty': 'o',
+    blank: ' ',
+    'switch-thumb': 'O',
+    'switch-track': '-',
+    'sort-ascending': '^',
+    'sort-descending': 'v',
+    'overflow-start': '<',
+    'overflow-end': '>',
+    required: '*',
+    danger: '!',
+    external: '^',
+  },
+};
+
+export const blockNames = ['full', 'dark', 'medium', 'light', 'caret'] as const;
+export type BlockName = (typeof blockNames)[number];
 
 /** Blocks, for fills, scrollbars, backdrops and meters. */
-export const blocks = {
-  full: '█',
-  dark: '▓',
-  medium: '▒',
-  light: '░',
-  caret: '▏',
-} as const;
+export const blocks: Readonly<Record<Repertoire, Readonly<Record<BlockName, string>>>> = {
+  unicode: { full: '█', dark: '▓', medium: '▒', light: '░', caret: '▏' },
+  ascii: { full: '#', dark: '%', medium: ':', light: '.', caret: '|' },
+};
 
-/** The eight-step bar, for sparklines and meters. */
-export const bars = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'] as const;
+/** The eight-step bar, for sparklines and meters, from one eighth to full. */
+export const bars: Readonly<Record<Repertoire, readonly string[]>> = {
+  unicode: ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'],
+  ascii: ['_', '_', '.', '-', '-', '=', '=', '#'],
+};
 
-/** Braille frames: the spinner every terminal has agreed on. */
-export const spinnerFrames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'] as const;
+/** Braille frames, the spinner every terminal has agreed on. ASCII has four. */
+export const spinnerFrames: Readonly<Record<Repertoire, readonly string[]>> = {
+  unicode: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
+  ascii: ['|', '/', '-', '\\'],
+};
+
+export const delimiterNames = ['control'] as const;
+export type DelimiterName = (typeof delimiterNames)[number];
+export type Delimiters = readonly [open: string, close: string];
+
+/** What a control's value sits between: `[ Publish ]`, `[✓]`. The same in ASCII. */
+export const delimiters: Readonly<Record<DelimiterName, Delimiters>> = {
+  control: ['[', ']'],
+};
+
+/**
+ * Every character a theme draws with, resolved (cairn 0119). Components get
+ * this through `useGlyphs()` in `@rockaway/react` rather than from the CSS
+ * custom properties, because chrome is drawn into a buffer in JavaScript,
+ * possibly on a server, where there is no computed style to read.
+ */
+export interface Glyphs {
+  /** The set the junction table draws borders with. */
+  readonly borderSet: BorderSetName;
+  /** That set's characters by slot, for anything drawing outside the engine. */
+  readonly border: BorderGlyphs;
+  readonly mark: Readonly<Record<MarkName, string>>;
+  readonly block: Readonly<Record<BlockName, string>>;
+  readonly bar: readonly string[];
+  readonly spinner: readonly string[];
+  readonly delimiter: Readonly<Record<DelimiterName, Delimiters>>;
+}
+
+/** The glyphs a theme draws with. Its CSS tokens are written from this too. */
+export function glyphsFor(theme: { readonly borderSet: BorderSetName }): Glyphs {
+  const r = repertoireOf(theme.borderSet);
+  return {
+    borderSet: theme.borderSet,
+    border: borderSets[theme.borderSet],
+    mark: marks[r],
+    block: blocks[r],
+    bar: bars[r],
+    spinner: spinnerFrames[r],
+    delimiter: delimiters,
+  };
+}
 
 /** What emphasis means in this theme (cairn 0075). */
 export function attributes(): Group {
@@ -150,34 +273,38 @@ export function attributes(): Group {
   };
 }
 
-/** The characters, as tokens a theme can swap. */
+/**
+ * The characters, as tokens a theme can swap. Written from `glyphsFor`, so the
+ * CSS a page reads and the object a component draws with cannot disagree.
+ */
 export function glyphs(set: BorderSetName): Group {
-  const text = (value: string, description?: string): Group =>
-    ({ $value: value, ...(description ? { $description: description } : {}) }) as unknown as Group;
+  const text = (value: string): Group => ({ $value: value }) as unknown as Group;
+  const table = <K extends string>(entries: Readonly<Record<K, string>>): Group =>
+    Object.fromEntries(Object.entries<string>(entries).map(([slot, ch]) => [slot, text(ch)]));
+  const sequence = (frames: readonly string[]): Group =>
+    Object.fromEntries(frames.map((ch, i) => [String(i + 1), text(ch)]));
+  const resolved = glyphsFor({ borderSet: set });
 
   return {
     glyph: {
       $type: 'fontFamily',
       $description:
-        'The characters chrome is drawn with (cairn 0091). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.',
+        'The characters chrome is drawn with (cairn 0091, 0119). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.',
       border: {
         $description: `The theme draws with the ${set} set; the others are here to be switched to.`,
-        ...Object.fromEntries(
-          borderSetNames.map((name) => [
-            name,
-            Object.fromEntries(
-              Object.entries(borderSets[name]).map(([slot, ch]) => [slot, text(ch)]),
-            ),
-          ]),
-        ),
-        current: Object.fromEntries(
-          Object.entries(borderSets[set]).map(([slot, ch]) => [slot, text(ch)]),
-        ),
+        ...Object.fromEntries(borderSetNames.map((name) => [name, table(borderSets[name])])),
+        current: table(resolved.border),
       },
-      mark: Object.fromEntries(Object.entries(marks).map(([name, ch]) => [name, text(ch)])),
-      block: Object.fromEntries(Object.entries(blocks).map(([name, ch]) => [name, text(ch)])),
-      bar: Object.fromEntries(bars.map((ch, i) => [String(i + 1), text(ch)])),
-      spinner: Object.fromEntries(spinnerFrames.map((ch, i) => [String(i + 1), text(ch)])),
+      mark: table(resolved.mark),
+      block: table(resolved.block),
+      bar: sequence(resolved.bar),
+      spinner: sequence(resolved.spinner),
+      delimiter: Object.fromEntries(
+        Object.entries(resolved.delimiter).map(([name, [open, close]]) => [
+          name,
+          { open: text(open), close: text(close) },
+        ]),
+      ),
     },
   };
 }

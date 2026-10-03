@@ -32,13 +32,20 @@ register('react-server-dom-webpack/node-loader', import.meta.url);
 
 const { createElement } = await import('react');
 const { renderToPipeableStream } = await import('react-server-dom-webpack/server');
-const { Frame } = await import('@rockaway/react');
+const { Frame, GlyphProvider } = await import('@rockaway/react');
+const { themeGlyphs } = await import('@rockaway/tokens');
 
+// The theme's glyphs are plain data, so a server component can choose them
+// and hand them across the boundary to the provider (cairn 0119).
 function Page() {
   return createElement(
     'main',
     null,
-    createElement(Frame, { title: 'server' }, 'Rendered by a server component.'),
+    createElement(
+      GlyphProvider,
+      { glyphs: themeGlyphs.ink },
+      createElement(Frame, { title: 'server' }, 'Rendered by a server component.'),
+    ),
   );
 }
 
@@ -75,5 +82,14 @@ if (!imported || !fromItsModule) {
   console.error(flight);
   throw new Error('Frame was not sent as a client reference to components/frame.js.');
 }
+const provider = /^\w+:I\[.*,"GlyphProvider"\]$/m.test(flight);
+if (
+  !provider ||
+  !flight.includes('/dist/glyphs.js"') ||
+  !flight.includes('"borderSet":"rounded"')
+) {
+  console.error(flight);
+  throw new Error('GlyphProvider was not sent as a client reference with the theme as its props.');
+}
 
-console.log('server component rendered Frame as a client reference');
+console.log('server component rendered GlyphProvider and Frame as client references');
