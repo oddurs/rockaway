@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`###·······` 24% · 16 of 68 done · due 2027-01-31
+`###·······` 25% · 17 of 68 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -139,7 +139,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0129`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0129-polish-frame-against-the-contract-and-the-cell-renderer.md) Polish Frame against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0130`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0130-polish-divider-against-the-contract-and-the-cell-renderer.md) Polish Divider against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0131`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0131-polish-button-against-the-contract-and-the-cell-renderer.md) Polish Button against the contract and the cell renderer <sup>chore · components · p1</sup>
-- [ ] [`0132`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0132-polish-keyhint-against-the-contract.md) Polish KeyHint against the contract <sup>chore · components · p1</sup>
 - [ ] [`0133`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0133-polish-list-against-the-contract-and-the-cell-renderer.md) Polish List against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0134`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0134-write-the-component-recipe-the-files-the-export-lines-the-checklist.md) Write the component recipe: the files, the export lines, the checklist <sup>docs · docs · p1</sup>
 - [ ] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
@@ -182,6 +181,7 @@ The component contract, proven on a first set of components.
 - [x] [`0120`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0120-recast-motion-as-frames-on-a-tick-and-retire-the-easing-curves.md) Recast motion as frames on a tick, and retire the easing curves <sup>feature · tokens · p1</sup>
 - [x] [`0121`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0121-make-every-package-s-exports-correct-and-prove-it-with-publint-and-attw.md) Make every package's exports correct, and prove it with publint and attw <sup>chore · distribution · p0</sup>
 - [x] [`0122`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0122-give-each-component-one-line-in-the-barrels-so-parallel-work-merges-cleanly.md) Give each component one line in the barrels, so parallel work merges cleanly <sup>chore · tooling · p1</sup>
+- [x] [`0132`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0132-polish-keyhint-against-the-contract.md) Polish KeyHint against the contract <sup>chore · components · p1</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 
 ## retheme — Tokens on the grid

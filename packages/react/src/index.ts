@@ -13,6 +13,7 @@ export { List, ListItem, type ListItemProps, type ListProps, type ScrollbarState
 export { cx } from './cx.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle } from './paint/index.ts';
+export { detectPlatform, type PlatformHints, usePlatform } from './platform.ts';
 export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenProps } from './screen.tsx';
 export { useTick } from './tick.ts';
 export { defineVariants, type VariantAttributes, type VariantDefinition, type VariantInput, type VariantProps, type VariantSelection, type Variants, type VariantValue, type VariantValues } from './variants.ts';
