@@ -51,7 +51,8 @@ import {
   type VariantValue,
 } from '../variants.ts';
 import { Description, FieldError, type FieldErrorProps, fieldClass } from './field.tsx';
-import { Fieldset, fieldFrameBuffer } from './fieldset.tsx';
+import { fieldFrameBuffer } from './fieldset.pure.ts';
+import { Fieldset } from './fieldset.tsx';
 
 const VARIANTS = {
   orientation: ['vertical', 'horizontal'],

@@ -45,3 +45,7 @@ From 0164: the recipe's story section must say that a play function which hovers
 ## 2026-10-03
 
 0127 put the recipe for building a field from Label, Description, FieldError, FieldFrame, Fieldset and fieldClass in CONTRIBUTING.md, under 'Building a field', marked as interim. Move it into docs/component-recipe.md as its own section when this is written, and leave a link behind.
+
+## 2026-10-03
+
+From 0208: the recipe must say that anything that scrolls takes rk-scroll (no native scrollbar, decision 0207) and shows its position in cells, either a scrollbar column drawn by the engine (List) or rk-scroll-marks for a region that scrolls across. Stories that scroll get the classic-scrollbars tag. CONTRIBUTING's Adding a component has the interim wording.

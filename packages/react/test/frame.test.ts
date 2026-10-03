@@ -1,7 +1,8 @@
 import { type BorderSetName, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { type FrameOptions, frameBuffer } from '../src/components/frame.tsx';
+import { frameBuffer } from '../src/components/frame.pure.ts';
+import type { FrameOptions } from '../src/components/frame.tsx';
 
 /**
  * Every variant a frame has, as the workbench's Frame/Variants story draws it

@@ -103,10 +103,11 @@ describe('radioBuffer', () => {
           createElement(Radio, { value: 'main' }, 'main'),
         ),
       );
-    // The legend is the hidden label's text; the radio follows it.
-    expect(one({})).toBe(`Branch${text({})}`);
-    expect(one({ defaultValue: 'main' })).toBe(`Branch${text({ selected: true })}`);
-    expect(one({ isReadOnly: true })).toBe(`Branch${text({ readOnly: true })}`);
+    // The frame's chrome comes first, painted on the server (0126); then the
+    // legend, the hidden label's text; then the radio.
+    expect(one({})).toMatch(new RegExp(`Branch${text({})}$`));
+    expect(one({ defaultValue: 'main' })).toMatch(new RegExp(`Branch${text({ selected: true })}$`));
+    expect(one({ isReadOnly: true })).toMatch(new RegExp(`Branch${text({ readOnly: true })}$`));
   });
 
   test('the mark is chrome, and the radio is a radio named by its words', () => {

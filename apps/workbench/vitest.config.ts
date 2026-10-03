@@ -3,7 +3,7 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
-import { knownLedger, printToPdf, recordKnown } from './.storybook/commands.ts';
+import { knownLedger, printToPdf, readWithoutScripts, recordKnown } from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
 import { known } from './.storybook/known.ts';
 import type { Plan } from './.storybook/matrix.ts';
@@ -43,20 +43,29 @@ type Screen = 'srgb' | 'display-p3-d65';
  * down to fit the page otherwise, and then a screenshot is not the pixels the
  * story drew — which the continuity check would rightly refuse.
  */
-const browser = (context: Context = {}, screen: Screen = 'srgb') => ({
+const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = false) => ({
   enabled: true as const,
   headless: true as const,
   viewport: { width: 1200, height: 900 },
   provider: playwright({
-    launchOptions: { args: [`--force-color-profile=${screen}`] },
+    launchOptions: {
+      args: [
+        `--force-color-profile=${screen}`,
+        // Classic scrollbars, which take room from the box, where the platform has them.
+        ...(scrollbars ? ['--disable-features=OverlayScrollbar'] : []),
+      ],
+      // Playwright hides every scrollbar in headless Chromium, so a native bar
+      // measures 0px and nothing could ever see one take a cell's room.
+      ...(scrollbars ? { ignoreDefaultArgs: ['--hide-scrollbars'] } : {}),
+    },
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { printToPdf, recordKnown },
+  commands: { printToPdf, readWithoutScripts, recordKnown },
 });
 
 /**
- * Four browsers. Forced colors is a mode of the browser itself (cairn 0027), so
+ * Five browsers. Forced colors is a mode of the browser itself (cairn 0027), so
  * stories tagged `forced-colors` run in one launched with it active, and
  * nowhere else. A tag rather than a file name, so a component keeps its
  * forced-colors story beside its others.
@@ -69,9 +78,17 @@ const browser = (context: Context = {}, screen: Screen = 'srgb') => ({
  * p3 is the fourth: every story again on a p3 screen, where the tokens' p3
  * overrides apply and axe measures them as Chromium reports them (cairn 0163).
  * Stories tagged `p3` are about that screen and run only there.
+ *
+ * Classic scrollbars are the fifth (cairn 0207, 0208). Playwright launches
+ * headless Chromium with `--hide-scrollbars`, so in every other run a native
+ * scrollbar measures 0px, and a box that would lose fifteen pixels to one in a
+ * reader's browser passed. This run drops that flag and turns overlay
+ * scrollbars off, so a native bar takes its room as it does with a mouse
+ * attached, and stories tagged `classic-scrollbars` run again in it.
  */
 const FORCED_COLORS = 'forced-colors';
 const P3 = 'p3';
+const CLASSIC_SCROLLBARS = 'classic-scrollbars';
 
 /**
  * What each project walks after every story (cairn 0125). Conformance and
@@ -179,6 +196,21 @@ const config: ViteUserConfig = defineConfig({
           testTimeout,
           provide: { plan: plans.zoom },
           browser: browser({ deviceScaleFactor: 2 }),
+        },
+      },
+      {
+        plugins: [
+          storybookTest({
+            configDir,
+            tags: { include: [CLASSIC_SCROLLBARS], exclude: [FORCED_COLORS, P3] },
+          }),
+        ],
+        // So a story can tell it is in the run that must show classic bars.
+        define: { 'import.meta.env.RK_SCROLLBARS': JSON.stringify('classic') },
+        test: {
+          name: CLASSIC_SCROLLBARS,
+          setupFiles,
+          browser: browser({}, 'srgb', true),
         },
       },
     ],
