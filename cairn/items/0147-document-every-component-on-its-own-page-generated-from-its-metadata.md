@@ -63,3 +63,7 @@ Checks. getStaticPaths fails the build if a component in the metadata has no MDX
 ## 2026-10-03
 
 Not ticked: (3) a live example renders as its snapshot without JavaScript. The page shows the snapshots without JavaScript, but an example built on Screen (Frame, Divider, List) has no chrome until the client paints it; server-painted chrome is 0126 (#88). Once that lands, the examples need nothing more. (5) Copy as text (0105): every snapshot copies as its text by selection, but the copy button 0105 describes does not exist yet. Also not on the pages: size in cells and conformance level, because the metadata schema has no field for them (0047's proposal named them). Live rows per state, which would need a way to render a component in a state without interacting with it.
+
+## 2026-10-03
+
+Proved itself on the merge: main brought Callout (#115), and the build failed with 'Callout has no page' until its example was added.
