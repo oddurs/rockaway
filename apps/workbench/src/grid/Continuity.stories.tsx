@@ -34,30 +34,62 @@ type Density = (typeof DENSITIES)[number];
 const PAINTERS: readonly PainterName[] = ['glyph', 'rule'];
 const SETS: readonly BorderSetName[] = ['single', 'double', 'heavy', 'rounded', 'ascii'];
 
-/** A frame with every kind of seam: corners, tees on all four sides, and a crossing. */
-function junctions(border: BorderSetName, rule: BorderSetName = border) {
+/**
+ * Where a junction frame's column rule falls: after the longest title it
+ * carries, a cell of air and a cell of line, so every title reads whole and
+ * the tee under the top edge is plainly a tee (0175 sets what happens when a
+ * title does not fit; `label.test.ts` in the grid proves that).
+ */
+const RULE_AT = 11;
+/** A junction frame: the rule, and as much again after it. */
+const JUNCTION = { cols: 18, rows: 6 } as const;
+
+/**
+ * A frame with every kind of seam: corners, tees on all four sides, and a
+ * crossing. Titled with what it is: its border set, unless it mixes two.
+ */
+function junctions(border: BorderSetName, rule: BorderSetName = border, title: string = border) {
   return ({ width, height }: Size): Buffer =>
     Buffer.create({ width, height }).draw((d) => {
       const area = rect(0, 0, width, height);
-      drawBox(d, area, { set: borderSets[border], title: border });
+      drawBox(d, area, { set: borderSets[border], title });
       drawDivider(d, area, 3, { set: borderSets[rule] });
-      drawColumnRules(d, area, [7], { set: borderSets[rule] });
+      drawColumnRules(d, area, [RULE_AT], { set: borderSets[rule] });
       drawText(d, { x: 2, y: 1 }, 'cell');
     });
 }
 
-/** Block elements, and a scrollbar thumb that has to be one solid run. */
+/**
+ * Block elements, each kind on a row of its own and named beside it, and a
+ * scrollbar down the right edge: a thumb that has to be one solid run over its
+ * track. The groups start in one column, so each row also meets the row above
+ * it, and the solid run and the shade runs meet the rows either side of them.
+ */
+const BLOCKS: readonly (readonly [label: string, cells: string])[] = [
+  ['shades', '█▓▒░'],
+  ['eighth bars', '▁▂▃▄▅▆▇█'],
+  ['halves', '▀▄▌▐'],
+  ['eighth edges', '▔▕▏'],
+  ['quadrants', '▖▗▘▝▙▚▛▜▞▟'],
+  ['solid run', '██████████'],
+  ['shade runs', '░░░░░░░░░░'],
+  ['', '▓▓▓▓▓▓▓▓▓▓'],
+];
+/** The longest name and a cell of air. */
+const NAMES = 13;
+/** The names, the widest row, two cells of air, and the scrollbar. */
+const BLOCK = { cols: NAMES + 10 + 2 + 1, rows: BLOCKS.length } as const;
+/** The scrollbar's thumb, in rows; the track is the rest. */
+const THUMB = 6;
+
 const blocks = (): Buffer =>
-  fromText(
-    [
-      '█▓▒░ ▁▂▃▄▅▆▇█',
-      '█  ▀▄▌▐▔▕▏',
-      '█  ▖▗▘▝▙▚▛▜▞▟',
-      '█  ████████',
-      '░  ░░░░░░░░',
-      '░  ▓▓▓▓▓▓▓▓',
-    ].join('\n'),
-  );
+  Buffer.create({ width: BLOCK.cols, height: BLOCK.rows }).draw((d) => {
+    BLOCKS.forEach(([label, cells], y) => {
+      drawText(d, { x: 0, y }, label, { style: { fg: 'fg.muted', attrs: Attr.none } });
+      drawText(d, { x: NAMES, y }, cells);
+      drawText(d, { x: BLOCK.cols - 1, y }, y < THUMB ? '█' : '░');
+    });
+  });
 
 /** Reverse video and a filled background, row on row: no stripes between them. */
 const filled = ({ width, height }: Size): Buffer =>
@@ -89,30 +121,30 @@ function Matrix({ density }: { density: Density }) {
               data-testid={`${density} ${painter} ${set}`}
               draw={junctions(set)}
               painter={painter}
-              cols={14}
-              rows={6}
+              cols={JUNCTION.cols}
+              rows={JUNCTION.rows}
             />
           ))}
           <Screen
             data-testid={`${density} ${painter} mixed`}
-            draw={junctions('double', 'single')}
+            draw={junctions('double', 'single', 'mixed')}
             painter={painter}
-            cols={14}
-            rows={6}
+            cols={JUNCTION.cols}
+            rows={JUNCTION.rows}
           />
           <Screen
             data-testid={`${density} ${painter} heavy rules`}
-            draw={junctions('single', 'heavy')}
+            draw={junctions('single', 'heavy', 'weights')}
             painter={painter}
-            cols={14}
-            rows={6}
+            cols={JUNCTION.cols}
+            rows={JUNCTION.rows}
           />
           <Screen
             data-testid={`${density} ${painter} blocks`}
             draw={blocks}
             painter={painter}
-            cols={14}
-            rows={6}
+            cols={BLOCK.cols}
+            rows={BLOCK.rows}
           />
           <Screen
             data-testid={`${density} ${painter} filled`}
@@ -144,15 +176,23 @@ type Story = StoryObj<typeof meta>;
 const matrix = (density: Density): Story => ({
   args: { density },
   play: async ({ canvasElement }) => {
-    // A title gives way to the rule under it: it reads whole, or ends in the
-    // ellipsis, and is never cut by the tee (0175).
+    // Every frame is wide enough for its title, so each one reads whole: a
+    // reader is told what each frame is, not shown an ellipsis.
+    const titled = [
+      ...SETS.map((set) => [set, set]),
+      ['mixed', 'mixed'],
+      ['heavy rules', 'weights'],
+    ];
     for (const painter of PAINTERS) {
-      for (const set of SETS) {
-        const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${set}"]`);
+      for (const [id, name] of titled) {
+        const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${id}"]`);
         const top = screen?.querySelector('.rk-row')?.textContent ?? '';
-        const title = top.split(' ')[1] ?? '';
-        expect(title === set || title.endsWith('…'), `${set}: ${top}`).toBe(true);
+        expect(top.split(' ')[1], `${id}: ${top}`).toBe(name);
       }
+      // And every row of blocks says what it is.
+      const blocks = canvasElement.querySelector(`[data-testid="${density} ${painter} blocks"]`);
+      const rows = [...(blocks?.querySelectorAll('.rk-row') ?? [])].map((r) => r.textContent ?? '');
+      expect(rows.map((r) => r.slice(0, NAMES).trim())).toEqual(BLOCKS.map(([label]) => label));
     }
     const run = runner();
     if (!run) return;
@@ -188,7 +228,12 @@ export const FontDrawn: Story = {
           '.font-drawn [data-rk-shape] { background-image: none; -webkit-text-fill-color: currentColor; }'
         }
       </style>
-      <Screen data-testid="font" draw={junctions('single')} cols={14} rows={6} />
+      <Screen
+        data-testid="font"
+        draw={junctions('single')}
+        cols={JUNCTION.cols}
+        rows={JUNCTION.rows}
+      />
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -273,7 +318,14 @@ async function inkRows(
  */
 export const Prints: Story = {
   args: { density: 'normal' },
-  render: () => <Screen data-testid="print" draw={junctions('single')} cols={14} rows={6} />,
+  render: () => (
+    <Screen
+      data-testid="print"
+      draw={junctions('single')}
+      cols={JUNCTION.cols}
+      rows={JUNCTION.rows}
+    />
+  ),
   play: async ({ canvas }) => {
     const run = runner();
     if (!run) return;
@@ -323,9 +375,14 @@ export const SubPixel: Story = {
               paddingBlockStart: `${shift}px`,
             }}
           >
-            <Screen draw={blocks} cols={14} rows={6} />
-            <Screen draw={junctions('double')} painter="rule" cols={14} rows={6} />
-            <Screen draw={junctions('rounded')} cols={14} rows={6} />
+            <Screen draw={blocks} cols={BLOCK.cols} rows={BLOCK.rows} />
+            <Screen
+              draw={junctions('double')}
+              painter="rule"
+              cols={JUNCTION.cols}
+              rows={JUNCTION.rows}
+            />
+            <Screen draw={junctions('rounded')} cols={JUNCTION.cols} rows={JUNCTION.rows} />
           </div>
         )),
       )}
