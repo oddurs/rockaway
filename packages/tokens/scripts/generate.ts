@@ -1,28 +1,28 @@
 /**
- * Writes the DTCG files for a theme.
+ * Writes the DTCG files for every theme that ships (cairn 0052).
  *
- *   node scripts/generate.ts                 themes/default.json → dtcg/
+ *   node scripts/generate.ts                 themes/ → dtcg/
  *   node scripts/generate.ts --check         exit 1 if dtcg/ is stale
+ *
+ * A theme fitted to the contrast gate has its adjustments printed here, so a
+ * moved colour is something the person running the generator reads.
  */
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { describeAdjustment, fittedPalette } from '../src/fit.ts';
+import { describeAdjustment } from '../src/fit.ts';
 import { generate, serialize } from '../src/generate.ts';
-import { modes } from '../src/inputs.ts';
-import { parseTheme } from '../src/validate.ts';
+import { themeContexts } from '../src/themes.ts';
 
 const root = path.join(import.meta.dirname, '..');
-const themeFile = path.join(root, 'themes/default.json');
 const outDir = path.join(root, 'dtcg');
 const check = process.argv.includes('--check');
 
-const inputs = parseTheme(JSON.parse(await readFile(themeFile, 'utf8')), 'themes/default.json');
-const files = generate(inputs);
+const files = generate(themeContexts);
 if (!check) {
-  for (const mode of modes) {
-    for (const a of fittedPalette(inputs, mode).adjustments) {
-      console.log(`fitted to the contrast gate: ${describeAdjustment(a)}`);
-    }
+  for (const theme of themeContexts) {
+    if (theme.adjustments.length === 0) continue;
+    console.log(`${theme.name}: fitted to the contrast gate`);
+    for (const a of theme.adjustments) console.log(`  ${describeAdjustment(a)}`);
   }
 }
 

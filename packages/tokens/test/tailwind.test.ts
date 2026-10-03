@@ -4,7 +4,6 @@ import { compile } from 'tailwindcss';
 import { describe, expect, test } from 'vitest';
 import { themeName } from '../scripts/terrazzo-tailwind.ts';
 import { generate } from '../src/generate.ts';
-import { defaultTheme } from '../src/inputs.ts';
 
 const root = path.join(import.meta.dirname, '..');
 
@@ -40,7 +39,7 @@ describe('Tailwind adapter (0030)', () => {
 
   test('every semantic colour token reaches the theme', async () => {
     const file = await css();
-    const semantic = generate(defaultTheme).get('semantic.tokens.json') as Record<string, unknown>;
+    const semantic = generate().get('semantic.tokens.json') as Record<string, unknown>;
     const groups = ['bg', 'fg', 'border'] as const;
     const paths: string[] = [];
     const walk = (node: Record<string, unknown>, trail: string[]) => {
