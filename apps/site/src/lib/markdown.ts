@@ -102,6 +102,29 @@ export function fitColumns(
 }
 
 /**
+ * Each column's width in cells, its gap included, for a table of this text;
+ * or nothing, when the table fits the measure as it is. What `<col
+ * style="--rk-cols: N">` carries, for the pipeline and for any table the site
+ * writes itself.
+ */
+export function columnCells(rows: readonly (readonly string[])[]): number[] | undefined {
+  const natural: number[] = [];
+  const minimum: number[] = [];
+  for (const row of rows) {
+    row.forEach((raw, i) => {
+      const content = raw.trim().replace(/\s+/g, ' ');
+      const longestWord = Math.max(0, ...content.split(' ').map(stringWidth));
+      natural[i] = Math.max(natural[i] ?? 0, stringWidth(content));
+      minimum[i] = Math.max(minimum[i] ?? 0, longestWord);
+    });
+  }
+  const gaps = GAP * Math.max(0, natural.length - 1);
+  if (natural.reduce((a, b) => a + b, 0) + gaps <= MEASURE) return undefined;
+  const widths = fitColumns(natural, minimum, MEASURE - gaps);
+  return widths.map((width, i) => width + (i < widths.length - 1 ? GAP : 0));
+}
+
+/**
  * A table wider than the measure would otherwise not wrap at all (prose.css
  * never lets the browser squeeze one, because it squeezes in fractions of a
  * pixel). This gives each column a width in whole cells that fits the
@@ -115,26 +138,19 @@ export function rehypeTableColumns(): (tree: Root) => void {
       walk(table, (el) => {
         if (el.tagName === 'tr') rows.push(el);
       });
-      const natural: number[] = [];
-      const minimum: number[] = [];
-      for (const row of rows) {
-        const cells = row.children.filter(
-          (c): c is Element => c.type === 'element' && (c.tagName === 'th' || c.tagName === 'td'),
-        );
-        cells.forEach((cell, i) => {
-          const content = text(cell).trim().replace(/\s+/g, ' ');
-          const longestWord = Math.max(0, ...content.split(' ').map(stringWidth));
-          natural[i] = Math.max(natural[i] ?? 0, stringWidth(content));
-          minimum[i] = Math.max(minimum[i] ?? 0, longestWord);
-        });
-      }
-      const gaps = GAP * Math.max(0, natural.length - 1);
-      if (natural.reduce((a, b) => a + b, 0) + gaps <= MEASURE) return;
-      const widths = fitColumns(natural, minimum, MEASURE - gaps);
-      const cols: Element[] = widths.map((width, i) => ({
+      const cells = rows.map((row) =>
+        row.children
+          .filter(
+            (c): c is Element => c.type === 'element' && (c.tagName === 'th' || c.tagName === 'td'),
+          )
+          .map((c) => text(c)),
+      );
+      const widths = columnCells(cells);
+      if (!widths) return;
+      const cols: Element[] = widths.map((width) => ({
         type: 'element',
         tagName: 'col',
-        properties: { style: `--rk-cols: ${width + (i < widths.length - 1 ? GAP : 0)}` },
+        properties: { style: `--rk-cols: ${width}` },
         children: [],
       }));
       table.children.unshift({

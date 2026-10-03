@@ -254,6 +254,12 @@
     white-space: normal;
   }
 
+  /* Code in a sized column breaks only at spaces, never after a hyphen: the
+   * column is at least its longest word wide, and `--rk-fg-muted` is one. */
+  .rk-prose :where(table:has(col)) :where(code) {
+    white-space: nowrap;
+  }
+
   /* Rows that wrap are a blank row apart, or they read as one. */
   .rk-prose :where(table:has(col)) :where(tbody tr + tr) > :where(th, td) {
     padding-block-start: var(--rk-y-1);
