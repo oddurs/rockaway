@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`####······` 35% · 32 of 92 done · due 2027-01-31
+`####······` 35% · 35 of 101 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -135,7 +135,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
 - [ ] [`0137`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0137-tree.md) Tree <sup>component · components · p1</sup>
 - [ ] [`0138`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0138-codeblock.md) CodeBlock <sup>component · components · p1</sup>
-- [ ] [`0140`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0140-callout.md) Callout <sup>component · components · p2</sup>
 - [ ] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
@@ -155,14 +154,20 @@ The component contract, proven on a first set of components.
 - [ ] [`0191`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0191-report-an-off-grid-box-inside-nested-screens-once.md) Report an off-grid box inside nested screens once <sup>bug · tooling · p3</sup>
 - [ ] [`0192`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0192-tighten-what-the-metadata-extractor-credits-to-a-component.md) Tighten what the metadata extractor credits to a component <sup>bug · tooling · p3</sup>
 - [ ] [`0193`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0193-rename-screen-s-chrome-layer-from-rk-frame-to-rk-chrome.md) Rename Screen's chrome layer from rk-frame to rk-chrome <sup>chore · components · p3</sup>
-- [ ] [`0197`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0197-meet-wcag-2-2-aa-target-size-at-the-default-density-and-44px-at-touch.md) Meet WCAG 2.2 AA target size at the default density, and 44px at touch <sup>decision · tokens · p0</sup>
-- [ ] [`0198`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0198-set-the-density-line-boxes-to-meet-aa-at-normal-and-44px-at-touch.md) Set the density line boxes to meet AA at normal and 44px at touch <sup>bug · tokens · p0</sup>
 - [ ] [`0199`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0199-remeasure-a-screen-when-its-context-changes.md) Remeasure a screen when its context changes <sup>bug · components · p0</sup>
 - [ ] [`0202`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0202-move-button-s-forced-colors-opt-out-into-its-own-stylesheet.md) Move Button's forced-colors opt-out into its own stylesheet <sup>chore · css · p3</sup>
-- [ ] [`0203`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0203-check-the-field-contract-from-the-testing-package.md) Check the field contract from the testing package <sup>feature · tooling · p1</sup>
 - [ ] [`0204`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0204-verify-fieldframe-inside-numberfield-and-datefield.md) Verify FieldFrame inside NumberField and DateField <sup>chore · components · p2</sup>
 - [ ] [`0207`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0207-no-native-scrollbars-a-scroll-position-is-drawn-in-cells.md) No native scrollbars: a scroll position is drawn in cells <sup>decision · css · p0</sup>
 - [ ] [`0208`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0208-hide-every-native-scrollbar-show-position-in-cells-and-check-it-after-every-story.md) Hide every native scrollbar, show position in cells, and check it after every story <sup>bug · css · p0</sup>
+- [ ] [`0210`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0210-make-the-continuity-stories-readable.md) Make the continuity stories readable <sup>chore · tooling · p1</sup>
+- [ ] [`0211`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0211-list-rows-stay-on-the-grid-at-dense-after-keyboard-navigation.md) List rows stay on the grid at dense after keyboard navigation <sup>bug · components · p2</sup>
+- [ ] [`0212`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0212-round-the-cell-to-the-engine-s-layout-unit.md) Round the cell to the engine's layout unit <sup>bug · grid · p1</sup>
+- [ ] [`0213`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0213-tolerate-float-error-in-cellsin.md) Tolerate float error in cellsIn <sup>bug · grid · p1</sup>
+- [ ] [`0214`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0214-corners-meet-under-forced-colours-in-firefox.md) Corners meet under forced colours in Firefox <sup>bug · css · p2</sup>
+- [ ] [`0215`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0215-decide-what-a-solid-control-draws-when-the-system-colour-pair-is-weak.md) Decide what a solid control draws when the system colour pair is weak <sup>decision · css · p2</sup>
+- [ ] [`0216`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0216-keep-a-focused-tab-in-view-under-manual-activation.md) Keep a focused tab in view under manual activation <sup>bug · components · p2</sup>
+- [ ] [`0217`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0217-scroll-codeblock-vertically-with-a-drawn-scrollbar.md) Scroll CodeBlock vertically with a drawn scrollbar <sup>feature · components · p2</sup>
+- [ ] [`0220`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0220-check-the-page-chrome-for-native-scrollbars-too.md) Check the page chrome for native scrollbars too <sup>chore · tooling · p3</sup>
 
 ### in progress
 
@@ -175,6 +180,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 - [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
 - [ ] [`0164`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0164-make-hover-and-pointer-stories-reliable-in-ci.md) Make hover and pointer stories reliable in CI <sup>chore · tooling · p1</sup>
+- [ ] [`0203`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0203-check-the-field-contract-from-the-testing-package.md) Check the field contract from the testing package <sup>feature · tooling · p1</sup>
 
 ### done
 
@@ -202,11 +208,14 @@ The component contract, proven on a first set of components.
 - [x] [`0132`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0132-polish-keyhint-against-the-contract.md) Polish KeyHint against the contract <sup>chore · components · p1</sup>
 - [x] [`0133`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0133-polish-list-against-the-contract-and-the-cell-renderer.md) Polish List against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
+- [x] [`0140`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0140-callout.md) Callout <sup>component · components · p2</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 - [x] [`0165`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0165-ship-one-entry-point-per-component-so-an-islands-site-does-not-hydrate-the-whole-package.md) Ship one entry point per component, so an islands site does not hydrate the whole package <sup>feature · distribution · p1</sup>
 - [x] [`0175`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0175-never-let-a-junction-overwrite-a-title.md) Never let a junction overwrite a title <sup>bug · grid · p1</sup>
 - [x] [`0178`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0178-make-border-default-a-boundary-you-can-see-3-1-against-every-ground.md) Make border.default a boundary you can see: 3:1 against every ground <sup>bug · tokens · p0</sup>
 - [x] [`0181`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0181-make-reverse-video-survive-forced-colors-everywhere.md) Make reverse video survive forced colors everywhere <sup>bug · css · p1</sup>
+- [x] [`0197`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0197-meet-wcag-2-2-aa-target-size-at-the-default-density-and-44px-at-touch.md) Meet WCAG 2.2 AA target size at the default density, and 44px at touch <sup>decision · tokens · p0</sup>
+- [x] [`0198`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0198-set-the-density-line-boxes-to-meet-aa-at-normal-and-44px-at-touch.md) Set the density line boxes to meet AA at normal and 44px at touch <sup>bug · tokens · p0</sup>
 - [x] [`0200`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0200-clear-a-control-s-background-in-the-reset.md) Clear a control's background in the reset <sup>bug · css · p1</sup>
 - [x] [`0201`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0201-check-that-every-reversing-rule-opts-out-of-the-forced-colors-backplate.md) Check that every reversing rule opts out of the forced-colors backplate <sup>chore · tooling · p2</sup>
 - [x] [`0209`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0209-link-hover-is-bold-never-a-double-underline.md) Link hover is bold, never a double underline <sup>bug · css · p1</sup>
@@ -230,7 +239,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`###·······` 26% · 6 of 23 done · due 2027-02-21
+`###·······` 24% · 6 of 25 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -253,6 +262,8 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0152`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0152-review-the-site-end-to-end-phone-zoom-keyboard-screen-reader-slow-network.md) Review the site end to end: phone, zoom, keyboard, screen reader, slow network <sup>chore · site · p0</sup>
 - [ ] [`0171`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0171-draw-each-component-s-snapshot-in-every-theme-on-the-site.md) Draw each component's snapshot in every theme on the site <sup>feature · site · p3</sup>
 - [ ] [`0177`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0177-let-checkcontinuity-check-shapes-drawn-outside-a-painted-layer.md) Let checkContinuity check shapes drawn outside a painted layer <sup>feature · tooling · p2</sup>
+- [ ] [`0218`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0218-show-overflow-marks-where-scroll-state-queries-are-missing.md) Show overflow marks where scroll-state queries are missing <sup>feature · css · p2</sup>
+- [ ] [`0219`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0219-prove-the-static-callout-in-the-workbench.md) Prove the static callout in the workbench <sup>chore · tooling · p2</sup>
 
 ### done
 
@@ -289,7 +300,7 @@ Something another project can install and build on.
 
 ## later — Later
 
-`··········` 0% · 0 of 10 done
+`··········` 0% · 0 of 13 done
 
 Worth doing, not yet worth scheduling.
 
@@ -305,4 +316,7 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0196`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0196-publish-the-markdown-pipeline-as-rockaway-markdown.md) Publish the Markdown pipeline as @rockaway/markdown <sup>feature · distribution · p3</sup>
 - [ ] [`0205`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0205-line-fieldset-fields-up-with-the-form-s-label-column.md) Line fieldset fields up with the form's label column <sup>feature · components · p3</sup>
 - [ ] [`0206`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0206-round-the-braille-dots.md) Round the braille dots <sup>feature · grid · p3</sup>
+- [ ] [`0221`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0221-wrap-codeblock-lines-in-whole-cells.md) Wrap CodeBlock lines in whole cells <sup>feature · p3</sup>
+- [ ] [`0222`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0222-draw-vertical-tabs-in-the-frame-s-side-edge.md) Draw vertical tabs in the frame's side edge <sup>feature · p3</sup>
+- [ ] [`0223`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0223-zoom-continuity-in-firefox-and-webkit.md) Zoom continuity in Firefox and WebKit <sup>chore · p3</sup>
 
