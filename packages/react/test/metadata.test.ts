@@ -408,19 +408,29 @@ describe('the snapshots, as the site draws them', () => {
   test('Divider', () => {
     expect(snapshots(byName('Divider'))).toMatchInlineSnapshot(`
       "── Open and joined
-      ╶──────────╴
-      ├──────────┤
+      ╶──────────────────╴
+      ├──────────────────┤
+      ── Every border set
+      ├──────────────────┤
+      ╠══════════════════╣
+      ┣━━━━━━━━━━━━━━━━━━┫
+      +------------------+
       ── Labelled
-      ╶ files ───────────╴
+      ╶─ files ──────────╴
       ╶───── files ──────╴
-      ╶─────────── files ╴
-      ╶ far too… ──╴
+      ╶────────── files ─╴
+      ├ files ───────────┤
+      ├───── files ──────┤
+      ├─────────── files ┤
+      ╶─ a label far… ───╴
       ── Vertical
-      ┬
-      │
-      │
-      │
-      ┴"
+      ╷ ┬
+      │ │
+      │ │
+      │ │
+      ╵ ┴
+      ── Under an ASCII theme
+      -- a label far~ ----"
     `);
   });
 

@@ -1,12 +1,16 @@
 import { toText } from '@rockaway/grid';
+import { type Glyphs, glyphsFor } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { dividerBuffer } from './divider.tsx';
+import { type DividerOptions, dividerBuffer } from './divider.tsx';
+
+const cells = (width: number, options: DividerOptions = {}, glyphs?: Glyphs): string =>
+  toText(dividerBuffer({ width, height: 1 }, options, glyphs), { trimEnd: false });
 
 export const dividerMeta: ComponentMetaInput = defineMeta({
   name: 'Divider',
   summary: 'A rule across a frame or between panes.',
   description:
-    'It adds edge weights and nothing else. Where a rule meets a border, the junction table resolves the seam into a tee, so a divider never picks a glyph or draws a corner of its own. `ends="joined"` gives a standalone rule the crossing edges it would have met.',
+    'It adds edge weights and nothing else. Where a rule meets a border, the junction table resolves the seam into a tee, so a divider never picks a glyph or draws a corner of its own. `ends="joined"` gives a standalone rule the crossing edges it would have met. Its line is `border.default`; a label sunk into it is text, in `fg.default`.',
   whenToUse: [
     'To separate two panes side by side, or two regions one above the other.',
     'To head a section, with a label sunk into the rule.',
@@ -17,6 +21,9 @@ export const dividerMeta: ComponentMetaInput = defineMeta({
       instead: 'Frame',
     },
     { text: 'For decoration. A divider is a separator, and a reader is told so.' },
+    {
+      text: 'As a splitter a reader drags or moves with the keyboard. That is a control with real behaviour, and a different component.',
+    },
   ],
   related: [{ name: 'Frame', why: 'Its `dividers` prop draws this rule, with the same function.' }],
   anatomy: [
@@ -41,37 +48,54 @@ export const dividerMeta: ComponentMetaInput = defineMeta({
     keyboard: [],
     typeAhead: false,
     announces: '"separator", or "files, separator" when labelled.',
-    notes: ['`aria-orientation` says which way it runs.'],
+    notes: [
+      '`aria-orientation` says which way it runs.',
+      'Nothing to operate, so no keyboard: a divider is never a tab stop, and Tab goes from the control before it to the control after it. That is the whole of its keyboard support, not a gap in it.',
+      'No state of its own, for the same reason.',
+    ],
   },
   snapshots: [
     {
       title: 'Open and joined',
-      description: 'A joined rule ends in tees, as if it met a border.',
-      text: [
-        toText(dividerBuffer({ width: 12, height: 1 }), { trimEnd: false }),
-        toText(dividerBuffer({ width: 12, height: 1 }, { ends: 'joined' }), { trimEnd: false }),
-      ].join('\n'),
+      description:
+        'An open rule ends in half strokes; a joined one ends in tees, as if it met a border.',
+      text: [cells(20), cells(20, { ends: 'joined' })].join('\n'),
+    },
+    {
+      title: 'Every border set',
+      text: (['single', 'double', 'heavy', 'ascii'] as const)
+        .map((border) => cells(20, { border, ends: 'joined' }))
+        .join('\n'),
     },
     {
       title: 'Labelled',
-      description: 'At the start, the centre and the end. A label too long for the rule truncates.',
+      description:
+        'At the start, the centre and the end, on an open rule and a joined one. An open rule keeps a whole cell of line between its end and the label. A label too long for the rule truncates.',
       text: [
-        ...(['start', 'center', 'end'] as const).map((labelAlign) =>
-          toText(dividerBuffer({ width: 20, height: 1 }, { label: 'files', labelAlign }), {
-            trimEnd: false,
-          }),
+        ...(['open', 'joined'] as const).flatMap((ends) =>
+          (['start', 'center', 'end'] as const).map((labelAlign) =>
+            cells(20, { label: 'files', labelAlign, ends }),
+          ),
         ),
-        toText(dividerBuffer({ width: 14, height: 1 }, { label: 'far too long a label' }), {
-          trimEnd: false,
-        }),
+        cells(20, { label: 'a label far too long for it' }),
       ].join('\n'),
     },
     {
       title: 'Vertical',
-      text: toText(
-        dividerBuffer({ width: 1, height: 5 }, { orientation: 'vertical', ends: 'joined' }),
-        { trimEnd: false },
-      ),
+      description: 'Open and joined, side by side.',
+      text: (['open', 'joined'] as const)
+        .map((ends) =>
+          toText(dividerBuffer({ width: 1, height: 5 }, { orientation: 'vertical', ends }), {
+            trimEnd: false,
+          }).split('\n'),
+        )
+        .reduce((a, b) => a.map((row, i) => `${row} ${b[i] ?? ''}`))
+        .join('\n'),
+    },
+    {
+      title: 'Under an ASCII theme',
+      description: 'Every character is ASCII, the ellipsis included.',
+      text: cells(20, { label: 'a label far too long for it' }, glyphsFor({ borderSet: 'ascii' })),
     },
   ],
 });

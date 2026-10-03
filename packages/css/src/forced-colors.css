@@ -46,12 +46,15 @@
       --rk-bg-subtle: Canvas;
       --rk-bg-hover: Canvas;
       --rk-bg-active: Canvas;
-      --rk-bg-inverse: Canvas;
+      /* Reverse video is the figure and the ground swapped, here the reader's
+       * text and canvas swapped (0181). Collapsing both halves to the canvas,
+       * as every other surface does, would erase every reversal. */
+      --rk-bg-inverse: CanvasText;
 
       --rk-fg-default: CanvasText;
       --rk-fg-muted: CanvasText;
       --rk-fg-disabled: GrayText;
-      --rk-fg-on-inverse: CanvasText;
+      --rk-fg-on-inverse: Canvas;
       --rk-fg-accent: LinkText;
 
       --rk-border-subtle: CanvasText;
@@ -105,6 +108,30 @@
     /* Surfaces that separated by tone or shadow need a real edge here. */
     hr {
       border-block-start-color: CanvasText;
+    }
+  }
+}
+
+/*
+ * Reverse video (0181). A reversed element is drawn in the reader's text
+ * colour with its words in their canvas colour. Remapping the inverse pair is
+ * not enough on its own: under the default adjustment the browser paints a
+ * canvas-coloured backplate behind every line of text, and canvas-coloured
+ * words on it vanish. So everything that reverses opts out of the adjustment.
+ * Its colours are still the reader's, because every token it reads is a
+ * system colour here.
+ *
+ * Button's rules are here rather than in button.css so that Button's own
+ * polish (0131) can move them without this fix waiting on it.
+ */
+@layer rk.base {
+  @media (forced-colors: active) {
+    [data-attrs~="reverse"],
+    .rk-button[data-variant="fill"],
+    .rk-button[data-pressed],
+    .rk-link[data-pressed],
+    .rk-list-item[data-selected] {
+      forced-color-adjust: none;
     }
   }
 }
