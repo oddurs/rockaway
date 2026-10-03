@@ -90,7 +90,7 @@ export { motion, type TickName, tickNames, ticks } from './motion.ts';
 export { type TokenName, vars } from './names.ts';
 export { type Pair, pairs } from './pairs.ts';
 export { resolveTree, resolveValue } from './resolve.ts';
-export { type Intent, intents, semanticColors } from './semantic.ts';
+export { type Intent, intents, type SyntaxRole, semanticColors, syntaxRoles } from './semantic.ts';
 export { parseGhostty, type TerminalFormat, type ThemeFile, terminalThemes } from './terminal.ts';
 export {
   type ImportedName,
