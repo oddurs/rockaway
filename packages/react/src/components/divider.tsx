@@ -21,14 +21,12 @@ import {
   borderSets,
   type Draft,
   drawHLine,
-  drawText,
+  drawLabel,
   drawVLine,
   type Edges,
   type Rect,
   rect,
   type Size,
-  stringWidth,
-  truncate,
 } from '@rockaway/grid';
 import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useMemo } from 'react';
@@ -89,23 +87,14 @@ export function drawRule(
   }
 
   if (horizontal && options.label !== undefined && options.label !== '') {
-    drawLabel(draft, line, options, glyphs.mark.ellipsis);
+    // A label owns its cells and stops short of any rule crossing this one,
+    // whichever was drawn first (0175).
+    drawLabel(draft, rect(line.x, line.y, line.width, 1), options.label, {
+      set,
+      ellipsis: glyphs.mark.ellipsis,
+      ...(options.labelAlign === undefined ? {} : { align: options.labelAlign }),
+    });
   }
-}
-
-function drawLabel(draft: Draft, line: Rect, options: DividerOptions, ellipsis: string): void {
-  const room = line.width - 4;
-  if (room <= 0) return;
-  const text = ` ${truncate(options.label ?? '', room - 2, ellipsis)} `;
-  const width = stringWidth(text);
-  const align = options.labelAlign ?? 'start';
-  const offset =
-    align === 'start'
-      ? 1
-      : align === 'end'
-        ? Math.max(1, line.width - 1 - width)
-        : Math.max(1, Math.floor((line.width - width) / 2));
-  drawText(draft, { x: line.x + offset, y: line.y }, text, { maxWidth: line.width - 2 });
 }
 
 /** The rule on its own, as a buffer: what the component draws and the tests read. */

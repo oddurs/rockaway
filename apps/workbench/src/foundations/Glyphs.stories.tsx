@@ -82,7 +82,7 @@ export const Ascii: Story = {
     const text = screenshot(frame, { legend: false });
     expect(text).toBe(
       [
-        '+ a title too long for it~ --+',
+        '+ a title too long for its~ -+',
         '|  xsrc/index.ts           # |',
         '|   src/glyph.ts           # |',
         '|   src/theme.ts           . |',

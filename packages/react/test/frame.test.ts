@@ -34,7 +34,7 @@ describe('frameBuffer', () => {
       ┏ heavy ━━━┓
       ┃          ┃
       ┗━━━━━━━━━━┛
-      ╭ round… ──╮
+      ╭ rounded ─╮
       │          │
       ╰──────────╯
       + ascii ---+

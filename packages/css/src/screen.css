@@ -41,7 +41,21 @@
   .rk-run {
     display: inline-block;
     vertical-align: top;
-    inline-size: calc(var(--rk-run, 1) * var(--rk-cell-width));
+    /*
+     * From where the run ends to where it starts, each rounded to the layout
+     * unit, rather than `cells × cell`: the widths then sum to exactly where
+     * each column is, so a run of eight cells and eight runs of one land on
+     * the same pixels in every row, and the cell itself stays the font's true
+     * advance, which is where text puts its letters (cairn 0117).
+     */
+    inline-size: calc(
+      round(
+        nearest,
+        calc((var(--rk-col, 0) + var(--rk-run, 1)) * var(--rk-cell-width)),
+        0.015625px
+      ) -
+      round(nearest, calc(var(--rk-col, 0) * var(--rk-cell-width)), 0.015625px)
+    );
     block-size: var(--rk-cell-height);
     white-space: pre;
     /* A screen is a picture: its colours and lines print as they are. */
