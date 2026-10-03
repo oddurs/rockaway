@@ -129,7 +129,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
 - [ ] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p2</sup>
 - [ ] [`0124`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0124-run-the-story-tests-in-firefox-and-webkit-as-well-as-chromium.md) Run the story tests in Firefox and WebKit as well as Chromium <sup>chore · tooling · p1</sup>
-- [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 - [ ] [`0126`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0126-paint-a-screen-s-chrome-on-the-server-so-the-first-paint-needs-no-javascript.md) Paint a screen's chrome on the server, so the first paint needs no JavaScript <sup>feature · grid · p0</sup>
 - [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
 - [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
@@ -163,6 +162,10 @@ The component contract, proven on a first set of components.
 - [ ] [`0191`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0191-report-an-off-grid-box-inside-nested-screens-once.md) Report an off-grid box inside nested screens once <sup>bug · tooling · p3</sup>
 - [ ] [`0192`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0192-tighten-what-the-metadata-extractor-credits-to-a-component.md) Tighten what the metadata extractor credits to a component <sup>bug · tooling · p3</sup>
 - [ ] [`0193`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0193-rename-screen-s-chrome-layer-from-rk-frame-to-rk-chrome.md) Rename Screen's chrome layer from rk-frame to rk-chrome <sup>chore · components · p3</sup>
+
+### in progress
+
+- [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 
 ### in review
 

@@ -2,13 +2,23 @@ import path from 'node:path';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
-import type { BrowserInstanceOption } from 'vitest/node';
-import { printToPdf } from './.storybook/commands.ts';
+import type { BrowserInstanceOption, Reporter } from 'vitest/node';
+import { knownLedger, printToPdf, recordKnown } from './.storybook/commands.ts';
+import { densities, modes } from './.storybook/contexts.ts';
+import { known } from './.storybook/known.ts';
+import type { Plan } from './.storybook/matrix.ts';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
 /** Gives every story what only the runner can do: a real screenshot, and a real print. */
 const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
+
+/**
+ * A story is its play function and then the matrix after it: up to eight
+ * cells, five of them with a screenshot read pixel by pixel (cairn 0125). The
+ * default fifteen seconds was set for one cell.
+ */
+const testTimeout = 30_000;
 
 /** The plugin owns `include`, and merges whatever `exclude` it is given. */
 const allButContinuity = ['**/!(Continuity|Prose).stories.tsx'];
@@ -39,7 +49,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb') => ({
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { printToPdf },
+  commands: { printToPdf, recordKnown },
 });
 
 /**
@@ -60,20 +70,84 @@ const browser = (context: Context = {}, screen: Screen = 'srgb') => ({
 const FORCED_COLORS = 'forced-colors';
 const P3 = 'p3';
 
+/**
+ * What each project walks after every story (cairn 0125). Conformance and
+ * target size are cheap, so they run in every cell a project walks; pixel
+ * continuity and axe are not, so each runs only where its project exists to
+ * look.
+ *
+ * - `storybook` is the geometry: every density in both modes, with the pixels
+ *   read across them (every density once, every mode once: five screenshots,
+ *   not eight), and axe again in the mode the story did not run in.
+ * - `p3` is colour. Its geometry is `storybook`'s, so it walks the modes only,
+ *   reads the pixels once, and runs axe in both.
+ * - `zoom` and `forced-colors` are about how lines are drawn: every density,
+ *   in the story's own mode, which forced colours overrides anyway.
+ */
+const plans = {
+  storybook: { densities, modes, continuity: 'across', axe: true },
+  [P3]: { densities: [], modes, continuity: 'own', axe: true },
+  zoom: { densities, modes: [], continuity: 'every', axe: false },
+  [FORCED_COLORS]: { densities, modes: [], continuity: 'every', axe: false },
+} as const satisfies Record<string, Plan>;
+
+/**
+ * A known failure that no longer fails is a ticket that landed and an entry
+ * nobody removed (cairn 0125). Only entries a story put in play count, so a
+ * run of one file does not condemn the entries about the others.
+ */
+const staleKnown: Reporter = {
+  onTestRunEnd() {
+    const ledger = knownLedger();
+    const stale = known.filter((k) => ledger.inPlay.has(k.id) && !ledger.used.has(k.id));
+    const used = known.filter((k) => ledger.used.has(k.id));
+    if (used.length > 0) {
+      console.info(
+        `\nKnown failures still failing (.storybook/known.ts):\n${used.map((k) => `  ${k.id}: ${k.ticket}`).join('\n')}`,
+      );
+    }
+    if (stale.length > 0) {
+      console.error(
+        `\nKnown failures that no longer fail; remove them from .storybook/known.ts:\n${stale.map((k) => `  ${k.id}: ${k.ticket}`).join('\n')}`,
+      );
+      process.exitCode = 1;
+    }
+  },
+};
+
 const config: ViteUserConfig = defineConfig({
   test: {
+    reporters: ['default', staleKnown],
     projects: [
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
-        test: { name: 'storybook', setupFiles, browser: browser() },
+        test: {
+          name: 'storybook',
+          setupFiles,
+          testTimeout,
+          provide: { plan: plans.storybook },
+          browser: browser(),
+        },
       },
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS] } })],
-        test: { name: P3, setupFiles, browser: browser({}, 'display-p3-d65') },
+        test: {
+          name: P3,
+          setupFiles,
+          testTimeout,
+          provide: { plan: plans[P3] },
+          browser: browser({}, 'display-p3-d65'),
+        },
       },
       {
         plugins: [storybookTest({ configDir, tags: { include: [FORCED_COLORS] } })],
-        test: { name: FORCED_COLORS, setupFiles, browser: browser({ forcedColors: 'active' }) },
+        test: {
+          name: FORCED_COLORS,
+          setupFiles,
+          testTimeout,
+          provide: { plan: plans[FORCED_COLORS] },
+          browser: browser({ forcedColors: 'active' }),
+        },
       },
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
@@ -81,6 +155,8 @@ const config: ViteUserConfig = defineConfig({
           name: 'zoom',
           exclude: allButContinuity,
           setupFiles,
+          testTimeout,
+          provide: { plan: plans.zoom },
           browser: browser({ deviceScaleFactor: 2 }),
         },
       },
