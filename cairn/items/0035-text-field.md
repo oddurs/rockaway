@@ -6,10 +6,10 @@ type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 33
-- 86
+- 127
+- 129
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-03
 priority: p1
 layer: components
 effort: m
@@ -17,23 +17,41 @@ effort: m
 
 ## Purpose
 
-What it is for, and what it is deliberately not for.
+Free text on one row, or several: a name, a path, a commit message. The
+terminal form field, which the reader already knows how to use. Not for
+choosing from a known set (Select, Combobox), and not a code editor.
 
 ## Anatomy
 
-Parts and slots, e.g. `<Select.Trigger>`, `<Select.Popover>`.
+`<TextField label description errorMessage cols>` on React Aria's `TextField`,
+built from the field parts (0127).
+
+- `md` (default): one row. Label inline at the start, then the input as a run
+  of exactly `cols` cells on `bg.subtle`, between the control delimiters:
+  `Name  [hello               ]`.
+- `lg`: three rows. A frame drawn by the engine with the label set into its
+  top edge: `┌ Name ──────────┐`. The frame goes heavy on focus (0118).
+- `multiline`: React Aria's `TextArea`, `rows` tall, scrolling whole rows.
+
+The caret is a block where the browser supports `caret-shape: block`, and the
+default bar elsewhere.
 
 ## States
 
-The `data-*` attributes it exposes. These are public API.
+`data-focused`, `data-focus-visible`, `data-invalid`, `data-disabled`,
+`data-readonly`, `data-required`, `data-empty`, `data-size`.
 
 ## Tokens consumed
 
-Semantic tokens only. A component that needs a reference token is a missing semantic.
+`bg.subtle`, `fg.default`, `fg.muted` (placeholder), `border.control`,
+`border.focus`, `border.danger`, `fg.danger`.
 
 ## Accessibility
 
-Role, keyboard map, focus behaviour, announcements.
+Native `input` / `textarea` with React Aria's labelling: the label names it,
+description and error are linked by `aria-describedby`, `aria-invalid` and
+`aria-required` are set. Delimiters and frame are `aria-hidden`. Keyboard is
+the platform's own; nothing is intercepted.
 
 ## Acceptance criteria
 
@@ -43,14 +61,22 @@ Role, keyboard map, focus behaviour, announcements.
 - [ ] axe passes; keyboard walkthrough recorded in the story
 - [ ] Light, dark and forced-colors verified
 - [ ] Metadata written: props, anatomy, when to use, when not to
-
-## 2026-09-22
-
-## TUI criteria (added by the pivot, cairn 0076)
-
 - [ ] Sized in cells, and drawn by the frame engine: no box characters written by hand
+- [ ] Both painters render it identically, measured in cells
 - [ ] Frame glyphs are `aria-hidden`; the accessible name never contains one
 - [ ] Ships a text snapshot, which is its documentation as much as its test
 - [ ] Operable by keyboard alone, and usable with a finger at touch density
 - [ ] State reads without colour: an attribute or a mark carries it too
 - [ ] Conforms at `strict`, or declares its exception with a reason
+- [ ] Draws every state from the state vocabulary (0118), and no state changes its size in cells
+- [ ] Reads its glyphs from the theme (0119): no box-drawing, block or mark literal in its source
+- [ ] Rendered by the cell renderer (0117): continuity passes at all four densities
+- [ ] One export line in `packages/react/src/index.ts` and one import line in `packages/css/src/index.css`, as 0122 sets out
+- [ ] The input box is exactly `cols` cells wide and one row tall (`md`) or three (`lg`), at every density
+- [ ] Text longer than the box scrolls inside it by whole cells, and the box never grows
+- [ ] `multiline` scrolls whole rows and never shows half a line
+- [ ] Placeholder, read-only and disabled are distinguishable in greyscale
+
+## 2026-10-03
+
+Rewritten by the program plan: the pre-pivot template text is replaced with how this works on the grid, the criteria are one list (the template, plus the contracts from the plan, plus this item's own), and the dependencies point at the contracts it is built on.

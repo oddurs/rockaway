@@ -5,9 +5,11 @@ title: Virtualise the list by row
 type: feature
 status: backlog
 milestone: primitives
+depends_on:
+- 133
 created: 2026-09-23
-updated: 2026-09-23
-priority: p1
+updated: 2026-10-03
+priority: p2
 layer: components
 effort: m
 ---
