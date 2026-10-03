@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
-import { type ButtonTextOptions, buttonBuffer, buttonVariants } from './button.tsx';
+import { buttonBuffer, buttonVariants } from './button.pure.ts';
+import type { ButtonTextOptions } from './button.tsx';
 
 const cells = (label: string, options: ButtonTextOptions = {}): string =>
   toText(buttonBuffer(label, options), { trimEnd: false });

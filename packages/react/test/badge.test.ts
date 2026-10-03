@@ -1,7 +1,8 @@
 import { type Buffer, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { type BadgeOptions, badgeBuffer, badgeVariants } from '../src/components/badge.tsx';
+import { badgeBuffer, badgeVariants } from '../src/components/badge.pure.ts';
+import type { BadgeOptions } from '../src/components/badge.tsx';
 
 /** Each run of cells that share a colour, as `cells fg on bg`. */
 function runs(buffer: Buffer): string {

@@ -89,7 +89,7 @@ import { cellsIn, measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
 import { type PainterName, Screen } from '../screen.tsx';
-import { drawRule } from './divider.tsx';
+import { drawRule } from './divider.pure.ts';
 
 /** How wide a column's content is: cells, a share of what is left, or its widest value. */
 export type ColumnWidth = number | 'auto' | `${number}fr`;
