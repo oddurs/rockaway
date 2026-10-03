@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`##········` 19% · 11 of 57 done · due 2027-01-31
+`###·······` 20% · 12 of 59 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -133,7 +133,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0116`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0116-draw-lines-blocks-and-cell-backgrounds-from-the-cell-never-from-the-font.md) Draw lines, blocks and cell backgrounds from the cell, never from the font <sup>decision · grid · p0</sup>
 - [ ] [`0117`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0117-render-box-drawing-blocks-and-cell-backgrounds-procedurally-at-full-cell-size.md) Render box-drawing, blocks and cell backgrounds procedurally, at full cell size <sup>feature · grid · p0</sup>
 - [ ] [`0118`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0118-fix-the-state-vocabulary-how-every-state-is-drawn-on-the-grid.md) Fix the state vocabulary: how every state is drawn on the grid <sup>decision · css · p0</sup>
-- [ ] [`0120`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0120-recast-motion-as-frames-on-a-tick-and-retire-the-easing-curves.md) Recast motion as frames on a tick, and retire the easing curves <sup>feature · tokens · p1</sup>
 - [ ] [`0123`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0123-make-conformance-level-aware-and-refuse-an-exception-without-a-reason.md) Make conformance level-aware, and refuse an exception without a reason <sup>feature · tooling · p1</sup>
 - [ ] [`0124`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0124-run-the-story-tests-in-firefox-and-webkit-as-well-as-chromium.md) Run the story tests in Firefox and WebKit as well as Chromium <sup>chore · tooling · p1</sup>
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
@@ -146,7 +145,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0132`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0132-polish-keyhint-against-the-contract.md) Polish KeyHint against the contract <sup>chore · components · p1</sup>
 - [ ] [`0133`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0133-polish-list-against-the-contract-and-the-cell-renderer.md) Polish List against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [ ] [`0134`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0134-write-the-component-recipe-the-files-the-export-lines-the-checklist.md) Write the component recipe: the files, the export lines, the checklist <sup>docs · docs · p1</sup>
-- [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 - [ ] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
 - [ ] [`0137`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0137-tree.md) Tree <sup>component · components · p1</sup>
 - [ ] [`0138`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0138-codeblock.md) CodeBlock <sup>component · components · p1</sup>
@@ -154,10 +152,13 @@ The component contract, proven on a first set of components.
 - [ ] [`0140`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0140-callout.md) Callout <sup>component · components · p2</sup>
 - [ ] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
+- [ ] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
+- [ ] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 
 ### in review
 
 - [ ] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p0</sup>
+- [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 
 ### done
 
@@ -170,6 +171,7 @@ The component contract, proven on a first set of components.
 - [x] [`0111`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0111-render-in-the-dom-and-treat-painting-as-a-strategy.md) Render in the DOM, and treat painting as a strategy <sup>decision · grid · p0</sup>
 - [x] [`0112`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0112-write-the-concept-doc-how-a-tui-becomes-a-web-page.md) Write the concept doc: how a TUI becomes a web page <sup>docs · docs · p0</sup>
 - [x] [`0119`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0119-read-the-theme-s-glyphs-in-components-and-emit-the-control-marks.md) Read the theme's glyphs in components, and emit the control marks <sup>feature · tokens · p0</sup>
+- [x] [`0120`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0120-recast-motion-as-frames-on-a-tick-and-retire-the-easing-curves.md) Recast motion as frames on a tick, and retire the easing curves <sup>feature · tokens · p1</sup>
 - [x] [`0121`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0121-make-every-package-s-exports-correct-and-prove-it-with-publint-and-attw.md) Make every package's exports correct, and prove it with publint and attw <sup>chore · distribution · p0</sup>
 - [x] [`0122`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0122-give-each-component-one-line-in-the-barrels-so-parallel-work-merges-cleanly.md) Give each component one line in the barrels, so parallel work merges cleanly <sup>chore · tooling · p1</sup>
 
@@ -223,7 +225,7 @@ A website built out of the system it documents, which is the only honest way
 
 ## v0.1 — v0.1 — first release
 
-`··········` 0% · 0 of 9 done · due 2027-03-21
+`··········` 0% · 0 of 10 done · due 2027-03-21
 
 Something another project can install and build on.
 
@@ -238,10 +240,11 @@ Something another project can install and build on.
 - [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
 - [ ] [`0157`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0157-walk-every-component-with-voiceover-and-nvda-and-record-what-is-heard.md) Walk every component with VoiceOver and NVDA, and record what is heard <sup>chore · components · p1 · needs-owner</sup>
 - [ ] [`0158`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0158-launch-tag-0-1-0-publish-and-post-show-hn.md) Launch: tag 0.1.0, publish, and post Show HN <sup>chore · distribution · p1 · needs-owner</sup>
+- [ ] [`0162`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0162-require-a-changeset-for-every-package-change-and-back-fill-the-missing-ones.md) Require a changeset for every package change, and back-fill the missing ones <sup>chore · distribution · p1</sup>
 
 ## later — Later
 
-`··········` 0% · 0 of 3 done
+`··········` 0% · 0 of 4 done
 
 Worth doing, not yet worth scheduling.
 
@@ -250,4 +253,5 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0049`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0049-sync-figma-variables-from-the-dtcg-sources.md) Sync Figma Variables from the DTCG sources <sup>feature · tokens · p3 · needs-owner</sup>
 - [ ] [`0056`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0056-date-picker.md) Date picker <sup>component · components · p3</sup>
 - [ ] [`0114`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0114-coalesce-rule-painter-strokes-into-runs.md) Coalesce rule-painter strokes into runs <sup>chore · grid · p3</sup>
+- [ ] [`0161`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0161-check-for-literal-glyphs-with-a-parser-not-a-scanner.md) Check for literal glyphs with a parser, not a scanner <sup>chore · tooling · p3</sup>
 
