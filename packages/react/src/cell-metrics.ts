@@ -12,10 +12,11 @@ export interface CellMetrics {
 
 /**
  * A number to fall back on when a measurement comes back empty, as in a
- * detached element. `Screen` never draws with it: until it has measured, its
+ * detached element: a 16px system mono at the default density, whose line box
+ * is 24px (0197). `Screen` never draws with it: until it has measured, its
  * cell is `1ch` by `1lh`, the font's own (cairn 0126).
  */
-export const DEFAULT_CELL: CellMetrics = { width: 8.4, height: 20 };
+export const DEFAULT_CELL: CellMetrics = { width: 8.4, height: 24 };
 
 const PROBE = '0'.repeat(50);
 
