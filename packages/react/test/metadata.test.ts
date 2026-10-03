@@ -11,7 +11,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
-import { createElement, type ReactElement } from 'react';
+import { createElement, Fragment, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { type Analysis, analyse, packageRoot, render } from '../scripts/extract.ts';
@@ -54,6 +54,15 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Badge: (props) => createElement(rockaway.Badge, props, 'passing'),
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
+  // Both parts of the module: the variant is FieldFrame's, and Fieldset is always a group.
+  Fieldset: (props) =>
+    createElement(
+      Fragment,
+      null,
+      createElement(rockaway.Fieldset, { legend: 'Notify' }),
+      createElement(rockaway.FieldFrame, { label: 'Message', ...props }),
+    ),
+  Form: (props) => createElement(rockaway.Form, props, createElement(rockaway.Label, null, 'Name')),
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
@@ -429,6 +438,64 @@ describe('the snapshots, as the site draws them', () => {
       ╵ ┴
       ── Under an ASCII theme
       -- a label far~ ----"
+    `);
+  });
+
+  test('Fieldset', () => {
+    expect(snapshots(byName('Fieldset'))).toMatchInlineSnapshot(`
+      "── Every state
+      ┌ Notify ──────────────┐
+      │                      │
+      └──────────────────────┘
+      ┌ Notify* ─────────────┐
+      │                      │
+      └──────────────────────┘
+      ┏ Notify ━━━━━━━━━━━━━━┓
+      ┃                      ┃
+      ┗━━━━━━━━━━━━━━━━━━━━━━┛
+      ┏ Notify ━━━━━━━━━━━━━━┓
+      ┃                      ┃
+      ┗━━━━━━━━━━━━━━━━━━━━━━┛"
+    `);
+  });
+
+  test('Form', () => {
+    expect(snapshots(byName('Form'))).toMatchInlineSnapshot(`
+      "── A form of mixed fields
+      Name         [Ada Lovelace        ]
+
+      Email*       [ada@                ]
+                   Where the receipts go.
+                   ✗ Enter an email address.
+
+      Repository   [rockaway            ]
+
+                   [✓] Sign commits
+
+                   ┌ Notify* ────────────────────────────────────────┐
+                   │ ● always  ○ never                               │
+                   └─────────────────────────────────────────────────┘
+
+                   [ Save ]
+      ── Under 60 cells
+      Name
+      [Ada Lovelace        ]
+
+      Email*
+      [ada@                ]
+      Where the receipts go.
+      ✗ Enter an email address.
+
+      Repository
+      [rockaway            ]
+
+      [✓] Sign commits
+
+      ┌ Notify* ─────────────────────────────┐
+      │ ● always  ○ never                    │
+      └──────────────────────────────────────┘
+
+      [ Save ]"
     `);
   });
 
