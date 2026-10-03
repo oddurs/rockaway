@@ -337,3 +337,48 @@ export const SubPixel: Story = {
     expect(report.joins).toBeGreaterThan(900);
   },
 };
+
+/**
+ * A column lands on the same pixel in every row, however its row splits into
+ * runs: forty runs of one cell and one run of forty put the rule after them in
+ * exactly the same place, at every font size.
+ */
+export const Columns: Story = {
+  name: 'A column is a column',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
+      {[15.3, 16, 16.4, 17].map((size) => (
+        <div key={size} style={{ fontSize: `${size}px` }}>
+          <Screen
+            data-testid={`columns ${size}`}
+            cols={41}
+            rows={2}
+            draw={({ width, height }) =>
+              Buffer.create({ width, height }).draw((d) => {
+                for (let x = 0; x < 40; x++) {
+                  drawText(d, { x, y: 0 }, 'x', {
+                    style: { attrs: x % 2 ? Attr.bold : Attr.none },
+                  });
+                }
+                drawText(d, { x: 0, y: 1 }, 'x'.repeat(40));
+                drawText(d, { x: 40, y: 0 }, '│');
+                drawText(d, { x: 40, y: 1 }, '│');
+              })
+            }
+          />
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    for (const size of [15.3, 16, 16.4, 17]) {
+      const rows = canvas.getByTestId(`columns ${size}`).querySelectorAll('.rk-row');
+      const lefts = [...rows].map(
+        (row) => (row.lastElementChild as HTMLElement).getBoundingClientRect().left,
+      );
+      expect(rows[0]?.children).toHaveLength(41);
+      expect(lefts[0], `${size}px`).toBe(lefts[1]);
+    }
+  },
+};
