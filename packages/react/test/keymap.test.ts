@@ -2,13 +2,8 @@ import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.pure.ts';
-import {
-  type Binding,
-  chordMatches,
-  KeymapEngine,
-  type KeyStroke,
-  keymapHelpBuffer,
-} from '../src/components/keymap.tsx';
+import { chordMatches, KeymapEngine, keymapHelpBuffer } from '../src/components/keymap.pure.ts';
+import type { Binding, KeyStroke } from '../src/components/keymap.tsx';
 
 /** A keystroke as the DOM would report it. */
 function stroke(key: string, held: Partial<Omit<KeyStroke, 'key'>> = {}): KeyStroke {

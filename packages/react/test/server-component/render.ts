@@ -130,6 +130,11 @@ const checks: [string, unknown, unknown][] = [
       .row(1),
     ' └── a.ts ',
   ],
+  [
+    'keymapHelpBuffer',
+    pure.keymapHelpBuffer([{ keys: 'mod+k', description: 'Palette' }], 'apple').row(0),
+    '⌘K  Palette',
+  ],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)

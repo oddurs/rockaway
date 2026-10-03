@@ -1,4 +1,7 @@
 // `@rockaway/react/keymap`, and the only list of what the keymap makes public (cairn 0165).
+
+// The pure half: no client boundary, so a server can call these (cairn 0126).
+export { keymapHelpBuffer } from '../components/keymap.pure.ts';
 export {
   type ActiveBinding,
   type Binding,
@@ -7,7 +10,6 @@ export {
   KeymapHelp,
   type KeymapHelpProps,
   type KeymapProps,
-  keymapHelpBuffer,
   type UseKeymapOptions,
   useActiveBindings,
   useKeymap,

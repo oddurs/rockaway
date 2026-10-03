@@ -568,7 +568,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
     ]
@@ -591,7 +590,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
     ]
