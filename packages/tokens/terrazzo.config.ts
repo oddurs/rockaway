@@ -11,7 +11,7 @@ const out = process.env.RK_TOKENS_OUT ?? import.meta.dirname;
 const defaults = { mode: 'light', density: 'normal' };
 
 /** Tokens that change with mode: the palette and every alias into it (0016, 0089). */
-const modeTokens = ['ansi.**', 'bg.**', 'fg.**', 'border.**'];
+const modeTokens = ['ansi.**', 'bg.**', 'fg.**', 'border.**', 'syntax.**'];
 
 /** Tokens that change with density. */
 const densityTokens = ['cell.**', 'space.**', 'row.**', 'size.**'];

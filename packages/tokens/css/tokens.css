@@ -1420,6 +1420,66 @@
   initial-value: 1px;
 }
 
+@property --rk-syntax-attribute {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-comment {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-constant {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-deleted {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-error {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-function {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-inserted {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-keyword {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-plain {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-regexp {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-string {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-syntax-type {
+  syntax: '*';
+  inherits: true;
+}
+
 @layer rk.tokens {
   :root {
     color-scheme: light;
@@ -1669,6 +1729,18 @@
     --rk-stroke-rule-gap: 1px;
     --rk-stroke-rule-heavy: 2px;
     --rk-stroke-rule-light: 1px;
+    --rk-syntax-attribute: var(--rk-ansi-yellow);
+    --rk-syntax-comment: var(--rk-ansi-muted);
+    --rk-syntax-constant: var(--rk-ansi-yellow);
+    --rk-syntax-deleted: var(--rk-ansi-red);
+    --rk-syntax-error: var(--rk-ansi-red);
+    --rk-syntax-function: var(--rk-ansi-blue);
+    --rk-syntax-inserted: var(--rk-ansi-green);
+    --rk-syntax-keyword: var(--rk-ansi-magenta);
+    --rk-syntax-plain: var(--rk-ansi-foreground);
+    --rk-syntax-regexp: var(--rk-ansi-red);
+    --rk-syntax-string: var(--rk-ansi-green);
+    --rk-syntax-type: var(--rk-ansi-cyan);
   }
 }
 
@@ -1704,6 +1776,16 @@
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      /* Attribute and property keys in markup. */
+      --rk-syntax-attribute: var(--rk-ansi-yellow);
+      /* Numbers, booleans, constants. */
+      --rk-syntax-constant: var(--rk-ansi-yellow);
+      /* Added lines in a diff. */
+      --rk-syntax-inserted: var(--rk-ansi-green);
+      /* Strings and template literals. */
+      --rk-syntax-string: var(--rk-ansi-green);
+      /* Types, classes, components, tag names. */
+      --rk-syntax-type: var(--rk-ansi-cyan);
     }
   }
 }
@@ -1740,6 +1822,16 @@
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      /* Attribute and property keys in markup. */
+      --rk-syntax-attribute: var(--rk-ansi-yellow);
+      /* Numbers, booleans, constants. */
+      --rk-syntax-constant: var(--rk-ansi-yellow);
+      /* Added lines in a diff. */
+      --rk-syntax-inserted: var(--rk-ansi-green);
+      /* Strings and template literals. */
+      --rk-syntax-string: var(--rk-ansi-green);
+      /* Types, classes, components, tag names. */
+      --rk-syntax-type: var(--rk-ansi-cyan);
     }
   }
 }
@@ -1826,6 +1918,18 @@
     --rk-fg-on-warning: var(--rk-ansi-background);
     --rk-fg-success: var(--rk-ansi-green);
     --rk-fg-warning: var(--rk-ansi-yellow);
+    --rk-syntax-attribute: var(--rk-ansi-yellow);
+    --rk-syntax-comment: var(--rk-ansi-muted);
+    --rk-syntax-constant: var(--rk-ansi-yellow);
+    --rk-syntax-deleted: var(--rk-ansi-red);
+    --rk-syntax-error: var(--rk-ansi-red);
+    --rk-syntax-function: var(--rk-ansi-blue);
+    --rk-syntax-inserted: var(--rk-ansi-green);
+    --rk-syntax-keyword: var(--rk-ansi-magenta);
+    --rk-syntax-plain: var(--rk-ansi-foreground);
+    --rk-syntax-regexp: var(--rk-ansi-red);
+    --rk-syntax-string: var(--rk-ansi-green);
+    --rk-syntax-type: var(--rk-ansi-cyan);
   }
 }
 
@@ -1861,6 +1965,16 @@
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      /* Attribute and property keys in markup. */
+      --rk-syntax-attribute: var(--rk-ansi-yellow);
+      /* Numbers, booleans, constants. */
+      --rk-syntax-constant: var(--rk-ansi-yellow);
+      /* Added lines in a diff. */
+      --rk-syntax-inserted: var(--rk-ansi-green);
+      /* Strings and template literals. */
+      --rk-syntax-string: var(--rk-ansi-green);
+      /* Types, classes, components, tag names. */
+      --rk-syntax-type: var(--rk-ansi-cyan);
     }
   }
 }
@@ -1897,6 +2011,16 @@
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      /* Attribute and property keys in markup. */
+      --rk-syntax-attribute: var(--rk-ansi-yellow);
+      /* Numbers, booleans, constants. */
+      --rk-syntax-constant: var(--rk-ansi-yellow);
+      /* Added lines in a diff. */
+      --rk-syntax-inserted: var(--rk-ansi-green);
+      /* Strings and template literals. */
+      --rk-syntax-string: var(--rk-ansi-green);
+      /* Types, classes, components, tag names. */
+      --rk-syntax-type: var(--rk-ansi-cyan);
     }
   }
 }
@@ -1984,6 +2108,18 @@
       --rk-fg-on-warning: var(--rk-ansi-background);
       --rk-fg-success: var(--rk-ansi-green);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      --rk-syntax-attribute: var(--rk-ansi-yellow);
+      --rk-syntax-comment: var(--rk-ansi-muted);
+      --rk-syntax-constant: var(--rk-ansi-yellow);
+      --rk-syntax-deleted: var(--rk-ansi-red);
+      --rk-syntax-error: var(--rk-ansi-red);
+      --rk-syntax-function: var(--rk-ansi-blue);
+      --rk-syntax-inserted: var(--rk-ansi-green);
+      --rk-syntax-keyword: var(--rk-ansi-magenta);
+      --rk-syntax-plain: var(--rk-ansi-foreground);
+      --rk-syntax-regexp: var(--rk-ansi-red);
+      --rk-syntax-string: var(--rk-ansi-green);
+      --rk-syntax-type: var(--rk-ansi-cyan);
     }
   }
 }
@@ -2012,6 +2148,12 @@
         --rk-border-warning: var(--rk-ansi-yellow);
         --rk-fg-info: var(--rk-ansi-cyan);
         --rk-fg-warning: var(--rk-ansi-yellow);
+        /* Attribute and property keys in markup. */
+        --rk-syntax-attribute: var(--rk-ansi-yellow);
+        /* Numbers, booleans, constants. */
+        --rk-syntax-constant: var(--rk-ansi-yellow);
+        /* Types, classes, components, tag names. */
+        --rk-syntax-type: var(--rk-ansi-cyan);
       }
     }
   }
@@ -2041,6 +2183,12 @@
         --rk-border-warning: var(--rk-ansi-yellow);
         --rk-fg-info: var(--rk-ansi-cyan);
         --rk-fg-warning: var(--rk-ansi-yellow);
+        /* Attribute and property keys in markup. */
+        --rk-syntax-attribute: var(--rk-ansi-yellow);
+        /* Numbers, booleans, constants. */
+        --rk-syntax-constant: var(--rk-ansi-yellow);
+        /* Types, classes, components, tag names. */
+        --rk-syntax-type: var(--rk-ansi-cyan);
       }
     }
   }
@@ -2128,6 +2276,18 @@
     --rk-fg-on-warning: var(--rk-ansi-background);
     --rk-fg-success: var(--rk-ansi-green);
     --rk-fg-warning: var(--rk-ansi-yellow);
+    --rk-syntax-attribute: var(--rk-ansi-yellow);
+    --rk-syntax-comment: var(--rk-ansi-muted);
+    --rk-syntax-constant: var(--rk-ansi-yellow);
+    --rk-syntax-deleted: var(--rk-ansi-red);
+    --rk-syntax-error: var(--rk-ansi-red);
+    --rk-syntax-function: var(--rk-ansi-blue);
+    --rk-syntax-inserted: var(--rk-ansi-green);
+    --rk-syntax-keyword: var(--rk-ansi-magenta);
+    --rk-syntax-plain: var(--rk-ansi-foreground);
+    --rk-syntax-regexp: var(--rk-ansi-red);
+    --rk-syntax-string: var(--rk-ansi-green);
+    --rk-syntax-type: var(--rk-ansi-cyan);
   }
 }
 
@@ -2154,6 +2314,12 @@
       --rk-border-warning: var(--rk-ansi-yellow);
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      /* Attribute and property keys in markup. */
+      --rk-syntax-attribute: var(--rk-ansi-yellow);
+      /* Numbers, booleans, constants. */
+      --rk-syntax-constant: var(--rk-ansi-yellow);
+      /* Types, classes, components, tag names. */
+      --rk-syntax-type: var(--rk-ansi-cyan);
     }
   }
 }
@@ -2181,6 +2347,12 @@
       --rk-border-warning: var(--rk-ansi-yellow);
       --rk-fg-info: var(--rk-ansi-cyan);
       --rk-fg-warning: var(--rk-ansi-yellow);
+      /* Attribute and property keys in markup. */
+      --rk-syntax-attribute: var(--rk-ansi-yellow);
+      /* Numbers, booleans, constants. */
+      --rk-syntax-constant: var(--rk-ansi-yellow);
+      /* Types, classes, components, tag names. */
+      --rk-syntax-type: var(--rk-ansi-cyan);
     }
   }
 }
