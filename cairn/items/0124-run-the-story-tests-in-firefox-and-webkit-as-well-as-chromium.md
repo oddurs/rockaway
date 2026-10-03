@@ -49,3 +49,7 @@ A fourth Firefox difference, found after merging main: Frame's 'Forty cells wide
 ## 2026-10-03
 
 When this branch next merges main, drop the firefox-forced-highlight known entry: #129 (0215) draws solid controls in CanvasText/Canvas under forced colours, which settles it. Not before #129 is in the branch, or the forced-colors-firefox project goes red; the stale-entry check fails the full run if it is left behind.
+
+## 2026-10-03
+
+Also drop firefox-columns (fixed by #139, 0212, the cell rounded to the engine's layout unit) and firefox-forced-corners (fixed by #141, 0214) when this branch merges a main that has them; Rendering proved both in Firefox. If this lands before they do, follow up with a PR that removes the two entries. With firefox-forced-highlight (#129), that leaves firefox-cells-in as the one Firefox entry, unless #139 also settles it: check it on the merge.
