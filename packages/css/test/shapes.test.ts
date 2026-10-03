@@ -14,7 +14,8 @@ describe('src/shapes.css', () => {
   test('draws every shape the engine knows, one layer per mark', () => {
     const css = stylesheet();
     for (const shape of shapes.values()) {
-      const block = css.split(`[data-rk-shape="${shape.key}"] {`)[1]?.split('}')[0] ?? '';
+      const after = css.split(`[data-rk-shape="${shape.key}"]`)[1] ?? '';
+      const block = after.slice(after.indexOf('{') + 1).split('}')[0] ?? '';
       expect(block, shape.ch).not.toBe('');
       const sizes = block.split('background-size:')[1]?.split(';')[0] ?? '';
       // Layers are separated by commas at the top level of the list.

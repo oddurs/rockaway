@@ -5,7 +5,7 @@
  */
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { palette } from '../src/ansi.ts';
+import { fittedPalette } from '../src/fit.ts';
 import { modes } from '../src/inputs.ts';
 import { terminalThemes } from '../src/terminal.ts';
 import { parseTheme } from '../src/validate.ts';
@@ -23,7 +23,10 @@ for (const file of themes) {
     file,
   );
   for (const mode of modes) {
-    for (const theme of terminalThemes(palette(inputs, mode), `rockaway-${name}-${mode}`)) {
+    for (const theme of terminalThemes(
+      fittedPalette(inputs, mode).palette,
+      `rockaway-${name}-${mode}`,
+    )) {
       const dir = path.join(out, theme.format);
       await mkdir(dir, { recursive: true });
       await writeFile(path.join(dir, theme.filename), theme.contents);

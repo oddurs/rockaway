@@ -103,7 +103,7 @@ export const ClipsToTheScrollContainer: Story = {
   render: () => (
     <Frame title="months" cols={20} rows={5}>
       <div style={{ inlineSize: 'calc(var(--rk-cell-width) * 16)' }}>
-        <List aria-label="Months" rows={3} total={months.length}>
+        <List aria-label="Months" rows={3}>
           {months.map((month) => (
             <ListItem key={month} id={month}>
               {month}

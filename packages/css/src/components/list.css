@@ -1,21 +1,22 @@
 /*
- * List (cairn 0100).
+ * List (cairn 0100, 0133).
  *
  * The viewport is exactly as many cells tall as it says, so a list never ends
- * mid-row: scrolling moves whole rows, which is the whole reason a terminal list
- * feels solid. The scrollbar is a one-cell column painted by the engine.
+ * mid-row: scrolling moves whole rows, and snaps to them, which is the whole
+ * reason a terminal list feels solid. The scrollbar is a one-cell column
+ * painted by the engine.
  *
- * Selection is a cursor glyph and reverse video together. Either alone is a
- * single point of failure — the glyph is lost to a reader who cannot see it, the
- * reverse is lost to forced colors that reverse everything.
+ * The cursor and the selection are separate signals (0118). The cursor is a
+ * mark in a cell every row reserves, written by the component. A selected row
+ * is reverse video, and under multi-select a check mark in a second reserved
+ * cell as well. Neither adds a cell, so neither moves a row.
  */
 @layer rk.components {
   .rk-list {
     display: grid;
     grid-template-columns: 1fr var(--rk-cell-width);
     /* One row, and it may not grow past the viewport: an `auto` row would take
-     * its height from a thousand list rows, the box would never scroll, and the
-     * virtualiser would see every row as visible. */
+     * its height from a thousand list rows and the box would never scroll. */
     grid-template-rows: minmax(0, 1fr);
     block-size: calc(var(--rk-cell-height) * var(--rk-list-rows, 8));
     background: var(--rk-bg-surface);
@@ -28,6 +29,9 @@
     min-block-size: 0;
     overflow: hidden auto;
     outline: none;
+    /* A scrolled list stops on a whole row at every density, however it was
+     * scrolled: the wheel, a finger, or the keyboard bringing a row in. */
+    scroll-snap-type: block mandatory;
   }
 
   .rk-list-scrollbar {
@@ -36,14 +40,24 @@
     user-select: none;
   }
 
-  .rk-list-item {
+  .rk-list-item,
+  .rk-list-empty {
     display: flex;
     align-items: center;
     block-size: var(--rk-cell-height);
+    scroll-snap-align: start;
+  }
+
+  .rk-list-item {
     cursor: pointer;
   }
 
-  .rk-list-cursor {
+  .rk-list-empty {
+    color: var(--rk-fg-muted);
+  }
+
+  /* The reserved cells: the cursor's, and the check's under multi-select. */
+  .rk-list-mark {
     inline-size: var(--rk-cell-width);
     flex: none;
   }
@@ -59,15 +73,21 @@
     text-underline-offset: var(--rk-attribute-underline-offset);
   }
 
-  /* Reverse video, the way a terminal shows the row the cursor is on. */
-  .rk-list-item[data-selected],
-  .rk-list-item[data-focused] {
-    background: var(--rk-bg-inverse);
-    color: var(--rk-fg-on-inverse);
+  /* Selected: reverse video, the list's own figure and ground swapped. Swapped
+   * rather than read from the inverse pair, so forced colors, which maps both
+   * halves of that pair to the canvas, still shows a reversed row. */
+  .rk-list-item[data-selected] {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-surface);
   }
 
   .rk-list-item[data-disabled] {
     color: var(--rk-fg-disabled);
     cursor: default;
+  }
+
+  .rk-list-item[data-disabled][data-selected] {
+    background: var(--rk-fg-disabled);
+    color: var(--rk-bg-surface);
   }
 }

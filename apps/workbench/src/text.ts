@@ -12,7 +12,6 @@ export function text(style: 'body' | 'label' | 'code' | 'heading' | 'lead'): CSS
       return {
         fontWeight: 'var(--rk-attribute-bold)' as CSSProperties['fontWeight'],
         textTransform: 'uppercase',
-        letterSpacing: '0.08em',
       };
     case 'lead':
       return { color: 'var(--rk-fg-muted)' };

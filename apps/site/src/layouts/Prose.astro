@@ -1,0 +1,22 @@
+---
+/**
+ * A page of prose (cairn 0143). Markdown goes in the slot and `.rk-prose`
+ * sets it; a page brings no styles of its own.
+ */
+import Document from './Document.astro';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<Document title={title} description={description}>
+  <main>
+    <article class="rk-prose">
+      <slot />
+    </article>
+  </main>
+</Document>

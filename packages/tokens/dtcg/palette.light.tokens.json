@@ -1,7 +1,7 @@
 {
   "ansi": {
     "$type": "color",
-    "$description": "The palette for light mode: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
+    "$description": "The palette for light mode: the terminal's sixteen, plus the role slots a design system needs (cairn 0089). Fitted to the contrast gate in every view a browser shows it (0163): light cyan: #007b81 → #007279 (for fg.info on bg.page); light green: #008130 → #007f2f (for fg.success on bg.success.subtle).",
     "black": {
       "$value": {
         "colorSpace": "oklch",
@@ -26,7 +26,7 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.52,
+          0.515,
           0.16,
           150
         ]
@@ -66,7 +66,7 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.52,
+          0.495,
           0.16,
           200
         ]
@@ -256,8 +256,8 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.9,
-          0.0037,
+          0.63,
+          0.006,
           262
         ]
       }
@@ -266,7 +266,7 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.62,
+          0.56,
           0.006,
           262
         ]

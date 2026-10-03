@@ -72,6 +72,7 @@ export const vars = {
   'border.surface': 'var(--rk-border-surface)',
   'border.warning': 'var(--rk-border-warning)',
   'cell.line': 'var(--rk-cell-line)',
+  'conformance': 'var(--rk-conformance)',
   'fg.accent': 'var(--rk-fg-accent)',
   'fg.danger': 'var(--rk-fg-danger)',
   'fg.default': 'var(--rk-fg-default)',

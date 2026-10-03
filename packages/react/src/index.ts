@@ -4,6 +4,7 @@
 // or listed twice. Names are listed rather than `export *`, so a value a file exports for its
 // tests or metadata does not become public API by accident.
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
+export { Badge, type BadgeOptions, type BadgeProps, type BadgeTone, badgeBuffer } from './components/badge.tsx';
 export { Button, type ButtonProps, type ButtonSize, type ButtonTextOptions, type ButtonVariant, buttonBuffer } from './components/button.tsx';
 export { Divider, type DividerOptions, type DividerProps, dividerBuffer, drawRule, type Orientation } from './components/divider.tsx';
 export { Description, type DescriptionProps, FieldError, type FieldErrorProps, type FieldText, Form, type FormProps, type FormTextOptions, fieldClass, formBuffer, Label, type LabelProps } from './components/field.tsx';
@@ -11,7 +12,7 @@ export { FieldFrame, type FieldFrameKind, type FieldFrameProps, type FieldFrameS
 export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './components/frame.tsx';
 export { formatKeys, KeyHint, type KeyHintProps, type KeyNotation, type KeySpec, keyShortcut, type Platform, parseKeys, spokenKeys } from './components/key-hint.tsx';
 export { Link, type LinkProps, type LinkState, linkBuffer } from './components/link.tsx';
-export { List, ListItem, type ListItemProps, type ListProps, type ScrollbarState, scrollbarBuffer } from './components/list.tsx';
+export { List, type ListBufferOptions, ListItem, type ListItemProps, type ListProps, type ListRow, type ListRowState, listBuffer, listMarks, listRowStyle, type ScrollbarState, scrollbarBuffer } from './components/list.tsx';
 export { cx } from './cx.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle } from './paint/index.ts';
