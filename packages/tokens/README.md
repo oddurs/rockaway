@@ -80,6 +80,14 @@ The `--rk-glyph-*` properties are written from the same object, but components
 do not read them: chrome is drawn into a buffer in JavaScript, possibly on a
 server, so `@rockaway/react` passes the object down through `GlyphProvider`.
 
+## Terminal themes
+
+Every theme also ships for the terminal, in each mode it declares:
+`@rockaway/tokens/terminal/{ghostty,kitty,alacritty,iterm2}/rockaway-<theme>-<mode>`.
+The colours are the ones the web uses, fitted to the same contrast gate. An
+imported theme's files open with where it came from, what fitting changed, and
+its upstream licence in full.
+
 ## Tailwind
 
 ```css
