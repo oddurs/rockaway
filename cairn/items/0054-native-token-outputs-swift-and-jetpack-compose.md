@@ -3,12 +3,12 @@ id: 54
 uid: 96ba686d-2d99-468b-b50b-9546bcd671b3
 title: 'Native token outputs: Swift and Jetpack Compose'
 type: feature
-status: backlog
+status: dropped
 milestone: later
 depends_on:
 - 20
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-03
 priority: p3
 layer: tokens
 effort: m
@@ -21,3 +21,7 @@ effort: m
 ## Acceptance criteria
 
 - [ ]
+
+## 2026-10-03
+
+Dropped by the program plan. 0070 made the web the contract and the terminal an export; a native Swift or Compose target is neither, and nothing in a character-grid system would consume it. Revisit only if a native TUI runtime is ever on the table.

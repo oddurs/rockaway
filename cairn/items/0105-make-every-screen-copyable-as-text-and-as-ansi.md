@@ -6,9 +6,10 @@ type: feature
 status: backlog
 milestone: site
 depends_on:
+- 98
 - 104
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-03
 priority: p1
 layer: site
 effort: m
@@ -24,3 +25,7 @@ can take it with you.
 - [ ] Copy any screen as text, and as ANSI with colour
 - [ ] Paste it into a terminal and it looks the same
 - [ ] The button is keyboard reachable and says what it copied
+
+## 2026-10-03
+
+The program plan adds the status bar's message slot (0098) as the place the copy button says what it copied, and depends on it.

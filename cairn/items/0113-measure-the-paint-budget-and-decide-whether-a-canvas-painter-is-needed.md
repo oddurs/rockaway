@@ -4,12 +4,14 @@ uid: b3d91ec7-4af8-4303-87a9-219129522ee2
 title: Measure the paint budget, and decide whether a canvas painter is needed
 type: spike
 status: backlog
-milestone: later
+milestone: site
 depends_on:
+- 104
 - 111
+- 117
 created: 2026-09-23
-updated: 2026-09-23
-priority: p2
+updated: 2026-10-03
+priority: p1
 layer: grid
 effort: m
 ---
@@ -32,3 +34,7 @@ a full-page frame at 120x40 is thousands of nodes. Nobody has measured it.
 ## Findings
 
 ## Recommendation
+
+## 2026-10-03
+
+Moved to the site milestone by the program plan: the time box says it waits for a real page, and the dog-food site is that page. Depends on 0117, which changes what the rule painter costs.

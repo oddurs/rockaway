@@ -7,8 +7,11 @@ status: backlog
 milestone: site
 depends_on:
 - 104
+- 121
+- 138
+- 143
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-03
 priority: p0
 layer: docs
 effort: m
@@ -18,4 +21,10 @@ effort: m
 
 - [ ] Install, import the CSS, render a screen, in under twenty lines
 - [ ] Says plainly what the system will not do: no arbitrary sizes, no radii, no emoji
-- [ ] A migration note for anyone who used the pixel-era packages
+- [ ] The code on the page is the code the quickstart job (0155) extracts and runs from a clean install
+- [ ] Covers Vite and Next.js (app router, server components), and where the CSS import goes in each
+- [ ] Links to the recipe for anyone building their own component on the grid
+
+## 2026-10-03
+
+The pixel-era migration note is removed: nothing was ever published before the pivot, so nobody has anything to migrate from. 0051 was a duplicate of this item and is dropped in its favour.
