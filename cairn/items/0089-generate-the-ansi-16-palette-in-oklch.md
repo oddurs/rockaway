@@ -1,12 +1,13 @@
 ---
-id: 64e82068-47bd-43f1-a0e7-150453d44669
+id: 89
+uid: 64e82068-47bd-43f1-a0e7-150453d44669
 title: Generate the ANSI 16 palette in OKLCH
 type: feature
 status: done
 milestone: retheme
 assignee: Oddur Sigurdsson
 depends_on:
-- 6c289a60-5ba9-446e-8c9d-5c7d4a653eb1
+- 75
 created: 2026-09-22
 updated: 2026-09-23
 closed_at: 2026-09-23

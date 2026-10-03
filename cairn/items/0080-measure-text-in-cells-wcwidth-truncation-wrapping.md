@@ -1,13 +1,14 @@
 ---
-id: cf6c0dcd-9b9d-4a74-be7b-cefe99ff86d0
+id: 80
+uid: cf6c0dcd-9b9d-4a74-be7b-cefe99ff86d0
 title: 'Measure text in cells: wcwidth, truncation, wrapping'
 type: feature
 status: done
 milestone: grid
 assignee: Oddur Sigurdsson
 depends_on:
-- fa8b4c06-b6a8-491d-b3e8-7b2b5e47150d
-- 83c474e9-31d5-4b38-b45d-945b02ffd3ba
+- 73
+- 78
 created: 2026-09-22
 updated: 2026-09-22
 closed_at: 2026-09-22

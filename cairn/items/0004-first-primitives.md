@@ -1,12 +1,13 @@
 ---
-id: d1cb877b-50a8-4f08-934e-95a49eaeb080
+id: 4
+uid: d1cb877b-50a8-4f08-934e-95a49eaeb080
 key: primitives
 title: First primitives
 type: milestone
 status: backlog
 depends_on:
-- 5ea85abb-5478-4fc3-a65c-1b52ef12e6d3
-- cfec3750-e99e-4ce5-98c8-c258358c3e45
+- 3
+- 68
 created: 2026-09-22
 updated: 2026-09-23
 priority: p2

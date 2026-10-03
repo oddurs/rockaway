@@ -1,11 +1,12 @@
 ---
-id: 9406f8f5-8420-4bf8-bcbd-21923612cd0d
+id: 63
+uid: 9406f8f5-8420-4bf8-bcbd-21923612cd0d
 title: Ship Editorial, Instrument and Soft as theme presets
 type: feature
 status: dropped
 milestone: v0.1
 depends_on:
-- 9c5997f0-b2cd-4996-b8a5-75c754ab9849
+- 62
 created: 2026-09-22
 updated: 2026-09-22
 priority: p2

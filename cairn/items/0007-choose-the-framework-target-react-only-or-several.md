@@ -1,5 +1,6 @@
 ---
-id: 41eadd6e-8719-4dc0-86d4-e0c0ba63eaca
+id: 7
+uid: 41eadd6e-8719-4dc0-86d4-e0c0ba63eaca
 title: 'Choose the framework target: React only, or several'
 type: decision
 status: done

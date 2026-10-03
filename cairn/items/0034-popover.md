@@ -1,12 +1,13 @@
 ---
-id: 7b8c9403-b317-424a-9871-6c665fdf99d8
+id: 34
+uid: 7b8c9403-b317-424a-9871-6c665fdf99d8
 title: Popover
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 3ffe299c-0f5b-40b5-986c-e6d59b523cec
-- 75e3579e-32a8-476a-8839-3602936b98b3
+- 33
+- 86
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

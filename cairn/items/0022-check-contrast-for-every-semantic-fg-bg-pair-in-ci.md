@@ -1,13 +1,14 @@
 ---
-id: 2ae97df0-ecbd-48f4-b31e-3c0e24d567d1
+id: 22
+uid: 2ae97df0-ecbd-48f4-b31e-3c0e24d567d1
 title: Check contrast for every semantic fg/bg pair in CI
 type: feature
 status: done
 milestone: tokens
 assignee: Oddur Sigurdsson
 depends_on:
-- 7e86d360-cbf6-4927-a6df-aa49909269c8
-- 25aed42b-59ff-48be-aec1-61a0eb191be1
+- 14
+- 21
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

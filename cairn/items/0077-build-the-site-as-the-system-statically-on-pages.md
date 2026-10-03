@@ -1,5 +1,6 @@
 ---
-id: 8a07961a-1c71-42d4-b758-905ad6181c48
+id: 77
+uid: 8a07961a-1c71-42d4-b758-905ad6181c48
 title: Build the site as the system, statically, on Pages
 type: decision
 status: done

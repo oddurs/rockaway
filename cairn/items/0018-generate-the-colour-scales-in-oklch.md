@@ -1,13 +1,14 @@
 ---
-id: 464aab4c-fba2-4003-91f4-498415d8cec4
+id: 18
+uid: 464aab4c-fba2-4003-91f4-498415d8cec4
 title: Generate the colour scales in OKLCH
 type: feature
 status: done
 milestone: tokens
 assignee: Oddur Sigurdsson
 depends_on:
-- f8b51014-3019-438f-bb35-7981d91496cc
-- b1fb72a7-845b-47bd-8167-2be07a2fbf67
+- 16
+- 58
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

@@ -1,12 +1,13 @@
 ---
-id: 570abc45-84f2-4acc-8874-7c47bb60ab01
+id: 42
+uid: 570abc45-84f2-4acc-8874-7c47bb60ab01
 title: Select
 type: component
 status: backlog
 milestone: primitives
 depends_on:
-- 7b8c9403-b317-424a-9871-6c665fdf99d8
-- 75e3579e-32a8-476a-8839-3602936b98b3
+- 34
+- 86
 created: 2026-09-22
 updated: 2026-09-22
 priority: p1

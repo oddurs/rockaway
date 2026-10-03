@@ -1,5 +1,6 @@
 ---
-id: fa8b4c06-b6a8-491d-b3e8-7b2b5e47150d
+id: 73
+uid: fa8b4c06-b6a8-491d-b3e8-7b2b5e47150d
 title: Fix the glyph sets, the Unicode floor and how text is measured
 type: decision
 status: done

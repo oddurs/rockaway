@@ -1,15 +1,16 @@
 ---
-id: 3ffe299c-0f5b-40b5-986c-e6d59b523cec
+id: 33
+uid: 3ffe299c-0f5b-40b5-986c-e6d59b523cec
 title: Button
 type: component
 status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
 depends_on:
-- 25aed42b-59ff-48be-aec1-61a0eb191be1
-- e6ee56dd-75d9-4e6c-8a3b-2c1b3654a64e
-- e4909c64-062c-4052-aa67-428f1da596e2
-- 75e3579e-32a8-476a-8839-3602936b98b3
+- 21
+- 24
+- 31
+- 86
 created: 2026-09-22
 updated: 2026-09-23
 closed_at: 2026-09-23

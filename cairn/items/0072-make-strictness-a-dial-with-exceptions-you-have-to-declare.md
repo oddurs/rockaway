@@ -1,5 +1,6 @@
 ---
-id: 7a0423ec-42f9-468f-9fe8-5b76c0b38dbf
+id: 72
+uid: 7a0423ec-42f9-468f-9fe8-5b76c0b38dbf
 title: Make strictness a dial, with exceptions you have to declare
 type: decision
 status: done

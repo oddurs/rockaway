@@ -1,11 +1,12 @@
 ---
-id: cb3582ba-a46b-40d2-a3d6-cfa40b8fb9a6
+id: 2
+uid: cb3582ba-a46b-40d2-a3d6-cfa40b8fb9a6
 key: tokens
 title: Token pipeline
 type: milestone
 status: done
 depends_on:
-- 78ae9fa5-ff6c-42fb-8d0b-8320b11bf091
+- 1
 created: 2026-09-22
 updated: 2026-09-22
 priority: p2

@@ -1,13 +1,14 @@
 ---
-id: 0c39a331-ef49-4060-b55c-d4096186592b
+id: 19
+uid: 0c39a331-ef49-4060-b55c-d4096186592b
 title: 'Build the semantic colour tier: surface, fg, border, accent and status roles'
 type: feature
 status: done
 milestone: tokens
 assignee: Oddur Sigurdsson
 depends_on:
-- 464aab4c-fba2-4003-91f4-498415d8cec4
-- b1fb72a7-845b-47bd-8167-2be07a2fbf67
+- 18
+- 58
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

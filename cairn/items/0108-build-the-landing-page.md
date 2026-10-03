@@ -1,11 +1,12 @@
 ---
-id: 1ff38058-4629-4d78-87d5-62852fd128ac
+id: 108
+uid: 1ff38058-4629-4d78-87d5-62852fd128ac
 title: Build the landing page
 type: feature
 status: backlog
 milestone: site
 depends_on:
-- 562ba731-e93f-474e-a13e-938b31be29ad
+- 104
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0

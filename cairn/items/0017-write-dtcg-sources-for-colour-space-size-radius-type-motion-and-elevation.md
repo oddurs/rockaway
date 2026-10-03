@@ -1,14 +1,15 @@
 ---
-id: 5e36e640-9a00-4539-b059-8fa90f68fcd0
+id: 17
+uid: 5e36e640-9a00-4539-b059-8fa90f68fcd0
 title: Write DTCG sources for colour, space, size, radius, type, motion and elevation
 type: feature
 status: done
 milestone: tokens
 assignee: Oddur Sigurdsson
 depends_on:
-- f8b51014-3019-438f-bb35-7981d91496cc
-- 0c39a331-ef49-4060-b55c-d4096186592b
-- 9c5997f0-b2cd-4996-b8a5-75c754ab9849
+- 16
+- 19
+- 62
 created: 2026-09-22
 updated: 2026-09-22
 priority: p0
