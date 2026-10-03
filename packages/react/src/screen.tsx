@@ -20,8 +20,7 @@ import {
   useState,
 } from 'react';
 import { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
-import { paintGlyph } from './paint/glyph.ts';
-import { paintRule } from './paint/rule.ts';
+import { paintCells } from './paint/cells.ts';
 
 export type PainterName = 'glyph' | 'rule';
 
@@ -34,7 +33,7 @@ export interface Inset {
 export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'color'> {
   /** Draw the screen at the size it has been given, in cells. */
   draw: (size: Size) => Buffer;
-  /** How the chrome is drawn. Both read the same geometry. */
+  /** How the chrome's lines are stroked: weighted like type, or hairlines. Same cells either way. */
   painter?: PainterName;
   /** Fix the size in cells instead of measuring the container. */
   cols?: number;
@@ -117,8 +116,7 @@ export function Screen({
   useIsomorphicLayoutEffect(() => {
     const el = frame.current;
     if (!el) return;
-    if (painter === 'glyph') paintGlyph(buffer, el);
-    else paintRule(buffer, el);
+    paintCells(buffer, el, painter);
   }, [buffer, painter]);
 
   const vars = {

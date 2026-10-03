@@ -31,6 +31,7 @@ export {
   union,
 } from './geometry.ts';
 export {
+  arcTable,
   type BorderSet,
   type BorderSetName,
   borderSets,
@@ -61,6 +62,21 @@ export {
   toAnsi,
 } from './paint/ansi.ts';
 export { fromText, type ToTextOptions, toText } from './paint/text.ts';
+export {
+  type ArcMark,
+  arcMarks,
+  boxMarks,
+  type Mark,
+  type Measure,
+  type Metrics,
+  type RectMark,
+  resolve,
+  type Shape,
+  type Side,
+  shapeOf,
+  shapes,
+  type Terms,
+} from './shape.ts';
 export { bufferSerializer, frame, type SnapshotSerializer } from './snapshot.ts';
 export {
   Attr,

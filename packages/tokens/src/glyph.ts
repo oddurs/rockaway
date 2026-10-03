@@ -10,7 +10,7 @@
  * these are the same characters, named, for CSS and for anything drawing a
  * border outside the engine.
  */
-import type { Group } from './dtcg.ts';
+import { type Group, px } from './dtcg.ts';
 
 export const borderSetNames = ['single', 'double', 'heavy', 'rounded', 'ascii'] as const;
 export type BorderSetName = (typeof borderSetNames)[number];
@@ -246,6 +246,45 @@ export function glyphsFor(theme: { readonly borderSet: BorderSetName }): Glyphs 
     bar: bars[r],
     spinner: spinnerFrames[r],
     delimiter: delimiters,
+  };
+}
+
+/**
+ * How heavy a line the cell draws (cairn 0116, 0117). Box drawing is geometry
+ * the cell draws, not a glyph the font does, so its weight is a theme value.
+ *
+ * The glyph painter's strokes are a fraction of the font size, weighted like
+ * the type they sit beside; the CSS layer turns the fraction into a length.
+ * The rule painter's are hairlines, whatever the size. Each set keeps
+ * `heavy < 2 × light + gap`, so a double line crossing a heavy one covers it.
+ */
+export const strokeWeights = {
+  glyph: { light: 0.08, heavy: 0.16, gap: 0.12 },
+  rule: { light: 1, heavy: 2, gap: 1 },
+} as const;
+
+export function strokes(): Group {
+  const { glyph, rule } = strokeWeights;
+  return {
+    stroke: {
+      $description:
+        'Line weights for box drawing, which the cell draws rather than the font (cairn 0116).',
+      glyph: {
+        $type: 'number',
+        $description:
+          'The glyph painter: a fraction of the font size, so a line is weighted like the type beside it.',
+        light: { $value: glyph.light },
+        heavy: { $value: glyph.heavy },
+        gap: { $value: glyph.gap, $description: "The space between a double line's strokes." },
+      },
+      rule: {
+        $type: 'dimension',
+        $description: 'The rule painter: hairlines, whatever the font size.',
+        light: px(rule.light),
+        heavy: px(rule.heavy),
+        gap: { ...px(rule.gap), $description: "The space between a double line's strokes." },
+      },
+    },
   };
 }
 

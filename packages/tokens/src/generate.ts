@@ -12,7 +12,7 @@
 import { palette as ansiPalette, ansiSlots, roleSlots } from './ansi.ts';
 import { breakpoints, controlRows, lineBox, spaceSteps } from './density.ts';
 import { color, type Group, px, type ResolverDocument, type Token } from './dtcg.ts';
-import { attributes, glyphs } from './glyph.ts';
+import { attributes, glyphs, strokes } from './glyph.ts';
 import {
   type Density,
   defaultContexts,
@@ -139,7 +139,12 @@ function resolver(): ResolverDocument {
 
 export function generate(inputs: ThemeInputs): GeneratedFiles {
   const files = new Map<string, unknown>();
-  files.set('base.tokens.json', { ...base(inputs), ...glyphs(inputs.borderSet), ...attributes() });
+  files.set('base.tokens.json', {
+    ...base(inputs),
+    ...glyphs(inputs.borderSet),
+    ...strokes(),
+    ...attributes(),
+  });
   files.set('semantic.tokens.json', semantic());
   for (const m of modes) files.set(`palette.${m}.tokens.json`, palette(inputs, m));
   for (const d of densities) files.set(`density.${d}.tokens.json`, density(d));

@@ -24,8 +24,78 @@
     color: var(--rk-fg-default);
   }
 
+  /*
+   * Every painted cell is a whole cell (cairn 0117). A row is a line of runs,
+   * each exactly as tall as the cell and as wide as the cells it holds, so a
+   * background fills the cell rather than the font's ascent and descent, and a
+   * character from a fallback font cannot push the rest of the row along.
+   *
+   * The runs are inline blocks, not flex items: a block-level run would put a
+   * line break between every run when a reader copies the screen, and `┌──┐`
+   * would paste as three lines.
+   */
   .rk-row {
-    height: var(--rk-cell-height);
+    block-size: var(--rk-cell-height);
+  }
+
+  .rk-run {
+    display: inline-block;
+    vertical-align: top;
+    inline-size: calc(var(--rk-run, 1) * var(--rk-cell-width));
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+    /* A screen is a picture: its colours and lines print as they are. */
+    print-color-adjust: exact;
+  }
+
+  /*
+   * The font supplies letters; the cell supplies geometry (cairn 0116). A
+   * painter chooses how heavy a line is: the glyph painter's strokes are a
+   * fraction of the font size, weighted like the type beside them, and the
+   * rule painter's are hairlines. `shapes.css` places the strokes.
+   */
+  [data-rk-painted] {
+    --rk-stroke-light: calc(var(--rk-stroke-glyph-light) * 1em);
+    --rk-stroke-heavy: calc(var(--rk-stroke-glyph-heavy) * 1em);
+    --rk-stroke-gap: calc(var(--rk-stroke-glyph-gap) * 1em);
+  }
+
+  [data-rk-painted="rule"] {
+    --rk-stroke-light: var(--rk-stroke-rule-light);
+    --rk-stroke-heavy: var(--rk-stroke-rule-heavy);
+    --rk-stroke-gap: var(--rk-stroke-rule-gap);
+  }
+
+  /*
+   * A cell that draws its own shape keeps its character, transparent, so copy
+   * and paste still gives `┌──┐` and find in page still finds it. The ink is
+   * the cell's colour; a shade is that colour, partly.
+   */
+  [data-rk-shape] {
+    --rk-ink-colour: currentColor;
+    --rk-ink: linear-gradient(var(--rk-ink-colour) 0 0);
+    --rk-ink-25: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 25%, transparent) 0 0);
+    --rk-ink-50: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 50%, transparent) 0 0);
+    --rk-ink-75: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 75%, transparent) 0 0);
+    --rk-stroke-radius: calc(
+      min(var(--rk-cell-width), var(--rk-cell-height)) /
+      2 -
+      var(--rk-stroke-light)
+    );
+    background-repeat: no-repeat;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /*
+   * Forced colors drops every background image that is not a URL, which is
+   * every stroke. The cell opts out of the adjustment and draws in the
+   * reader's text colour instead, whatever colour the cell asked for.
+   */
+  @media (forced-colors: active) {
+    [data-rk-shape] {
+      forced-color-adjust: none;
+      --rk-ink-colour: CanvasText;
+    }
   }
 
   .rk-frame,

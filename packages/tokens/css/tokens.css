@@ -1379,6 +1379,42 @@
   initial-value: 16;
 }
 
+@property --rk-stroke-glyph-gap {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0.12;
+}
+
+@property --rk-stroke-glyph-heavy {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0.16;
+}
+
+@property --rk-stroke-glyph-light {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0.08;
+}
+
+@property --rk-stroke-rule-gap {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 1px;
+}
+
+@property --rk-stroke-rule-heavy {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 2px;
+}
+
+@property --rk-stroke-rule-light {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 1px;
+}
+
 @layer rk.tokens {
   :root {
     color-scheme: light;
@@ -1618,6 +1654,14 @@
     --rk-space-10: 10;
     --rk-space-12: 12;
     --rk-space-16: 16;
+    /* The space between a double line's strokes. */
+    --rk-stroke-glyph-gap: 0.12;
+    --rk-stroke-glyph-heavy: 0.16;
+    --rk-stroke-glyph-light: 0.08;
+    /* The space between a double line's strokes. */
+    --rk-stroke-rule-gap: 1px;
+    --rk-stroke-rule-heavy: 2px;
+    --rk-stroke-rule-light: 1px;
   }
 }
 

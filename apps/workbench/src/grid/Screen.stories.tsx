@@ -113,7 +113,11 @@ export const RulePainter: Story = {
     // Same measurement, different paint.
     expect(rule.dataset.rkCols).toBe(glyph.dataset.rkCols);
     expect(rule.dataset.rkRows).toBe(glyph.dataset.rkRows);
-    expect(rule.querySelectorAll('.rk-rule').length).toBeGreaterThan(0);
-    expect(glyph.querySelectorAll('.rk-rule').length).toBe(0);
+    // One renderer: the same characters in the same cells, stroked differently.
+    expect(rule.querySelector('[data-rk-painted]')?.getAttribute('data-rk-painted')).toBe('rule');
+    expect(glyph.querySelector('[data-rk-painted]')?.getAttribute('data-rk-painted')).toBe('glyph');
+    expect(rule.querySelector('.rk-frame')?.textContent).toBe(
+      glyph.querySelector('.rk-frame')?.textContent,
+    );
   },
 };

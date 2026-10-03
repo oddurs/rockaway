@@ -160,8 +160,10 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     });
     // The cell is the font's advance as the browser lays it out: 0.6em is
     // 9.6px at 16px, which Chromium on Linux, without subpixel positioning,
-    // rounds to 10px. Either way the screen measured what the text uses.
-    expect(Number.parseFloat(cell)).toBeCloseTo(web / 100, 2);
+    // rounds to 10px. Either way the screen measured what the text uses, to
+    // the layout unit: the measurement is rounded to 1/64px, so a run of cells
+    // and the same cells one by one land on the same pixels (cairn 0117).
+    expect(Math.abs(Number.parseFloat(cell) - web / 100)).toBeLessThanOrEqual(1 / 128);
     expect(Math.abs(web / 100 - 9.6)).toBeLessThanOrEqual(0.5);
     // At least one adjusted system font must be here for this to mean anything.
     expect(available.length).toBeGreaterThan(0);

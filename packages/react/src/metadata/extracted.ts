@@ -114,7 +114,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'role' | 'children'>"
     ],
     "tokens": [
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -169,7 +168,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",

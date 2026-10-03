@@ -1,5 +1,9 @@
+import { fromText } from '@rockaway/grid';
+import { Frame, Screen } from '@rockaway/react';
+import { expectContinuity } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
+import { runner } from '../../.storybook/runner.ts';
 import { text } from '../text.ts';
 
 /**
@@ -87,5 +91,63 @@ export const Active: Story = {
     const edge = getComputedStyle(canvas.getByLabelText('Surface'));
     await expect(edge.borderTopStyle).toBe('solid');
     await expect(Number.parseFloat(edge.borderTopWidth)).toBeGreaterThan(0);
+  },
+};
+
+/** The colour a CSS colour value computes to, here and now. */
+function computed(colour: string): string {
+  const probe = document.createElement('span');
+  probe.style.color = colour;
+  probe.style.setProperty('forced-color-adjust', 'none');
+  document.body.append(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
+}
+
+/**
+ * Forced colors drops every background image that is not a URL, and every
+ * stroke the cell draws is one (cairn 0117). Stroked cells opt out of the
+ * adjustment and draw in the reader's text colour, so a frame keeps its lines
+ * in Windows High Contrast — proven here in pixels, in a browser with forced
+ * colors on.
+ */
+export const Strokes: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 'calc(var(--rk-space-4) * 1ch)', padding: '1ch' }}>
+      <Frame title="glyph" cols={16} rows={5} dividers={[2]} />
+      <Frame title="rule" cols={16} rows={5} dividers={[2]} painter="rule" />
+      <Frame title="rounded" border="rounded" cols={16} rows={5} />
+      <Frame title="double" border="double" cols={16} rows={5} dividers={[2]} />
+      <Screen data-testid="blocks" draw={() => fromText('█░\n█░\n░█')} cols={2} rows={3} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    await expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    const cells = [...canvasElement.querySelectorAll<HTMLElement>('[data-rk-shape]')];
+    await expect(cells.length).toBeGreaterThan(40);
+    const canvasText = computed('CanvasText');
+    for (const cell of cells) {
+      const style = getComputedStyle(cell);
+      // Not adjusted, so the strokes survive...
+      await expect(style.getPropertyValue('forced-color-adjust')).toBe('none');
+      await expect(style.backgroundImage).toContain('gradient');
+      // ...and drawn in the reader's own text colour.
+      const probe = document.createElement('span');
+      probe.style.color = 'var(--rk-ink-colour)';
+      // Unadjusted itself, so it reports the ink and not a colour forced on it.
+      probe.style.setProperty('forced-color-adjust', 'none');
+      cell.append(probe);
+      const ink = getComputedStyle(probe).color;
+      probe.remove();
+      await expect(ink).toBe(canvasText);
+    }
+    // And the pixels agree: every line reaches its edges and meets its
+    // neighbour, in ink that can be told from the reader's canvas.
+    const run = runner();
+    if (!run) return;
+    const report = await expectContinuity(canvasElement, { capture: run.capture });
+    await expect(report.shapes).toBeGreaterThanOrEqual(cells.length);
+    await expect(report.joins).toBeGreaterThan(40);
   },
 };

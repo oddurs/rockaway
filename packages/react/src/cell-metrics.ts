@@ -35,12 +35,24 @@ export function measureCell(el: HTMLElement): CellMetrics {
   const lineHeight = Number.parseFloat(style?.lineHeight ?? '');
   probe.remove();
 
-  const width = rect.width / PROBE.length;
-  const height = Number.isFinite(lineHeight) && lineHeight > 0 ? lineHeight : rect.height;
+  const width = layoutUnits(rect.width / PROBE.length);
+  const height = layoutUnits(
+    Number.isFinite(lineHeight) && lineHeight > 0 ? lineHeight : rect.height,
+  );
   return {
     width: width > 0 ? width : DEFAULT_CELL.width,
     height: height > 0 ? height : DEFAULT_CELL.height,
   };
+}
+
+/**
+ * A length a browser can lay out exactly: a whole number of sixty-fourths of
+ * a pixel. A run of eight cells is sized `8 × cell`, and a single cell `1 × cell`
+ * — if the cell were not exact, each would round on its own, and the same
+ * column would land a fraction of a pixel apart in different rows (cairn 0117).
+ */
+function layoutUnits(px: number): number {
+  return Math.round(px * 64) / 64;
 }
 
 /** How many whole cells fit. Never negative, never fractional. */

@@ -55,6 +55,8 @@ export {
   type Repertoire,
   repertoireOf,
   spinnerFrames,
+  strokes,
+  strokeWeights,
 } from './glyph.ts';
 export {
   type BorderSetName,

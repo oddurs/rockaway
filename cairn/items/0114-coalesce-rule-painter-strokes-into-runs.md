@@ -3,7 +3,7 @@ id: 114
 uid: cdc15a8d-8702-48a7-9e92-8d5cb93affaa
 title: Coalesce rule-painter strokes into runs
 type: chore
-status: backlog
+status: dropped
 milestone: later
 depends_on:
 - 113
@@ -33,3 +33,7 @@ the way the glyph painter already coalesces spans. Junctions stay per-cell.
 ## 2026-10-03
 
 Likely superseded by 0117: if glyph and rule painters share a procedural renderer, the rule painter stops emitting a node per stroke and there is nothing left to coalesce. Drop this when 0117 lands, not before.
+
+## 2026-10-03
+
+Dropped: superseded by 0117. The glyph and rule painters now share one renderer that writes rows of whole-cell runs; the rule painter no longer positions an element per ruled cell and per stroke, so there is nothing left to coalesce. A line across the cell (─ ━ ═) is already one run however long, and an 80x24 frame is 72 runs whichever painter (it was 612 elements for the rule painter); packages/react/test/paint.test.ts asserts that count.
