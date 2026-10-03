@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`##········` 16% · 9 of 57 done · due 2027-01-31
+`##········` 18% · 10 of 57 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -133,7 +133,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0116`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0116-draw-lines-blocks-and-cell-backgrounds-from-the-cell-never-from-the-font.md) Draw lines, blocks and cell backgrounds from the cell, never from the font <sup>decision · grid · p0</sup>
 - [ ] [`0117`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0117-render-box-drawing-blocks-and-cell-backgrounds-procedurally-at-full-cell-size.md) Render box-drawing, blocks and cell backgrounds procedurally, at full cell size <sup>feature · grid · p0</sup>
 - [ ] [`0118`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0118-fix-the-state-vocabulary-how-every-state-is-drawn-on-the-grid.md) Fix the state vocabulary: how every state is drawn on the grid <sup>decision · css · p0</sup>
-- [ ] [`0119`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0119-read-the-theme-s-glyphs-in-components-and-emit-the-control-marks.md) Read the theme's glyphs in components, and emit the control marks <sup>feature · tokens · p0</sup>
 - [ ] [`0120`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0120-recast-motion-as-frames-on-a-tick-and-retire-the-easing-curves.md) Recast motion as frames on a tick, and retire the easing curves <sup>feature · tokens · p1</sup>
 - [ ] [`0122`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0122-give-each-component-one-line-in-the-barrels-so-parallel-work-merges-cleanly.md) Give each component one line in the barrels, so parallel work merges cleanly <sup>chore · tooling · p1</sup>
 - [ ] [`0123`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0123-make-conformance-level-aware-and-refuse-an-exception-without-a-reason.md) Make conformance level-aware, and refuse an exception without a reason <sup>feature · tooling · p1</sup>
@@ -171,6 +170,7 @@ The component contract, proven on a first set of components.
 - [x] [`0100`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0100-list.md) List <sup>component · components · p0</sup>
 - [x] [`0111`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0111-render-in-the-dom-and-treat-painting-as-a-strategy.md) Render in the DOM, and treat painting as a strategy <sup>decision · grid · p0</sup>
 - [x] [`0112`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0112-write-the-concept-doc-how-a-tui-becomes-a-web-page.md) Write the concept doc: how a TUI becomes a web page <sup>docs · docs · p0</sup>
+- [x] [`0119`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0119-read-the-theme-s-glyphs-in-components-and-emit-the-control-marks.md) Read the theme's glyphs in components, and emit the control marks <sup>feature · tokens · p0</sup>
 - [x] [`0121`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0121-make-every-package-s-exports-correct-and-prove-it-with-publint-and-attw.md) Make every package's exports correct, and prove it with publint and attw <sup>chore · distribution · p0</sup>
 
 ## retheme — Tokens on the grid

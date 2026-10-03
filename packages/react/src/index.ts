@@ -34,7 +34,7 @@ export {
   scrollbarBuffer,
 } from './components/list.tsx';
 export { cx } from './cx.ts';
-export { defaultGlyphs, GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
+export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { type PaintOptions, paintGlyph, paintRule, ruledSides } from './paint/index.ts';
 export {
   type Inset,

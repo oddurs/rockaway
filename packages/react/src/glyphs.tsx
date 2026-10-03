@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Glyphs from the theme (cairn 0119).
  *
@@ -9,6 +11,11 @@
  *
  * With no provider a component gets the default theme's glyphs, so it works
  * on its own and renders on a server.
+ *
+ * A client boundary, because context is. `defaultGlyphs` stays out of the
+ * package's barrel for the same reason: a server component importing a value
+ * from here would get a client reference, not the object. Server code reads
+ * `themeGlyphs.default` from `@rockaway/tokens` instead.
  */
 import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import { createContext, type ReactNode, useContext } from 'react';

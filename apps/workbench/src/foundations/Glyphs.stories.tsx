@@ -1,4 +1,5 @@
-import { Button, Frame, GlyphProvider, List, ListItem, screenshot } from '@rockaway/react';
+import { Button, Frame, GlyphProvider, List, ListItem } from '@rockaway/react';
+import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs, themeNames } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
