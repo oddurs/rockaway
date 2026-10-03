@@ -79,15 +79,4 @@ export const known: readonly Known[] = [
       'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented',
     ticket: 'dense trades target size for density (CTO decision on 0125)',
   },
-  {
-    id: 'dark-button-face',
-    check: 'axe',
-    modes: ['dark'],
-    // Only this failure: the contrast rule, against Chrome's dark ButtonFace.
-    element: /color-contrast[\s\S]*background color: #6b6b6b/,
-    present: 'button:not(.rk-button)',
-    reason:
-      "the reset clears a control's padding, border and colour but not its background, so a bare button keeps Chrome's dark ButtonFace (#6b6b6b) under the page's text: 4.46:1",
-    ticket: 'the reset clears a control background (proposed in the 0125 report)',
-  },
 ];
