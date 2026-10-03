@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * `List` (cairn 0100): the selection primitive a TUI leans on.
  *

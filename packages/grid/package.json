@@ -8,6 +8,7 @@
   "exports": {
     ".": {
       "@rockaway/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
@@ -22,7 +23,14 @@
   },
   "homepage": "https://github.com/oddurs/rockaway",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
   },
   "scripts": {
     "build": "tsdown",

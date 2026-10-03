@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * `Divider` (cairn 0097): a rule across a frame or between panes.
  *

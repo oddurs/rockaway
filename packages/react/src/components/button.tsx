@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * `Button` (cairn 0033): the first control, and the conventions the rest follow.
  *

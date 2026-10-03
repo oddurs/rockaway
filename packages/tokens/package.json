@@ -10,6 +10,7 @@
   "exports": {
     ".": {
       "@rockaway/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
     "./tokens.css": "./css/tokens.css",
@@ -42,7 +43,19 @@
   },
   "homepage": "https://github.com/oddurs/rockaway",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./tokens.css": "./css/tokens.css",
+      "./dtcg/*": "./dtcg/*",
+      "./themes/*": "./themes/*",
+      "./package.json": "./package.json",
+      "./tailwind.css": "./css/tailwind.css",
+      "./terminal/*": "./terminal/*"
+    }
   },
   "devDependencies": {
     "@rockaway/grid": "workspace:*",

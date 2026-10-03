@@ -1,0 +1,135 @@
+/**
+ * Checks every published package as a consumer receives it (cairn 0121).
+ *
+ * The workspace resolves through the `@rockaway/source` condition, so nothing
+ * else ever touches `dist`. This packs each package, lists what the tarball
+ * holds, and runs publint and Are the Types Wrong against the tarball itself,
+ * with `publishConfig` applied the way `pnpm publish` applies it. Run it after
+ * `pnpm build`.
+ */
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
+
+interface Manifest {
+  name: string;
+  private?: boolean;
+  files?: string[];
+  exports?: unknown;
+  publishConfig?: { exports?: unknown };
+}
+
+const root = path.join(import.meta.dirname, '..');
+const bin = (name: string): string => path.join(root, 'node_modules', '.bin', name);
+
+/** Files npm adds whatever `files` says. */
+const always = new Set(['package.json', 'README.md', 'LICENSE']);
+
+/** Things that are never meant to ship, whichever directory they turn up in. */
+const forbidden: ReadonlyArray<[RegExp, string]> = [
+  [/(^|\/)(test|tests|__tests__)\//, 'a test directory'],
+  [/\.(test|spec)\.[cm]?[jt]sx?$/, 'a test'],
+  [/\.stories\.[jt]sx?$/, 'a story'],
+  [/(^|\/)__screenshots__\//, 'a screenshot'],
+  [/(?<!\.d)\.[cm]?tsx?$/, 'TypeScript source'],
+  [/\.tsbuildinfo$/, 'build state'],
+];
+
+/** The workspace-only condition, removed to give what consumers should see. */
+function withoutSource(exports: unknown): unknown {
+  if (typeof exports !== 'object' || exports === null) return exports;
+  return Object.fromEntries(
+    Object.entries(exports)
+      .filter(([key]) => key !== '@rockaway/source')
+      .map(([key, value]) => [key, withoutSource(value)]),
+  );
+}
+
+const out = mkdtempSync(path.join(tmpdir(), 'rockaway-pack-'));
+const failures: string[] = [];
+
+/** Runs a check, printing its output, and records a failure rather than stopping. */
+function run(label: string, command: string, args: string[]): void {
+  try {
+    execFileSync(command, args, { stdio: 'inherit' });
+  } catch {
+    failures.push(label);
+  }
+}
+
+for (const dir of readdirSync(path.join(root, 'packages')).sort()) {
+  const cwd = path.join(root, 'packages', dir);
+  const manifest = JSON.parse(readFileSync(path.join(cwd, 'package.json'), 'utf8')) as Manifest;
+  if (manifest.private) continue;
+  const { name } = manifest;
+  console.log(`\n━━ ${name}\n`);
+
+  // What is published must be the workspace map minus the source condition:
+  // two copies of one map, and nothing else keeps them in step.
+  const published = manifest.publishConfig?.exports ?? manifest.exports;
+  if (!isDeepStrictEqual(published, withoutSource(manifest.exports))) {
+    failures.push(`${name}: publishConfig.exports is not exports without @rockaway/source`);
+  }
+
+  // Each entry its own build, typed by the declarations emitted beside it. Both
+  // tools pass a subpath that quietly points at another entry's file, which is
+  // how `./testing` came to resolve to the main bundle.
+  const seen = new Map<string, string>();
+  for (const [subpath, target] of Object.entries(published ?? {})) {
+    if (typeof target !== 'object' || target === null) continue;
+    const { types, default: js } = target as { types?: string; default?: string };
+    if (js === undefined) continue;
+    if (types !== js.replace(/\.js$/, '.d.ts')) {
+      failures.push(`${name}: ${subpath} is typed by ${types}, not by the declarations for ${js}`);
+    }
+    const other = seen.get(js);
+    if (other !== undefined) {
+      failures.push(`${name}: ${subpath} and ${other} both resolve to ${js}`);
+    }
+    seen.set(js, subpath);
+  }
+
+  const packed = JSON.parse(
+    execFileSync('pnpm', ['pack', '--json', '--pack-destination', out], { cwd, encoding: 'utf8' }),
+  ) as { filename: string; files: { path: string }[] };
+  const paths = packed.files.map((file) => file.path).sort();
+
+  console.log(`${paths.length} files in ${path.basename(packed.filename)}:`);
+  for (const file of paths) console.log(`  ${file}`);
+
+  const roots = manifest.files ?? [];
+  for (const file of paths) {
+    if (!always.has(file) && !roots.some((r) => file === r || file.startsWith(`${r}/`))) {
+      failures.push(`${name}: ${file} is outside "files"`);
+    }
+    for (const [pattern, what] of forbidden) {
+      if (pattern.test(file)) failures.push(`${name}: ${file} is ${what}`);
+    }
+  }
+
+  console.log('');
+  run(`${name}: publint`, bin('publint'), ['run', '--strict', packed.filename]);
+  // ESM only, deliberately: node10 and CommonJS `require` are out of scope.
+  // Stylesheets are entries for a bundler's CSS pipeline, not for TypeScript,
+  // so they are left out rather than reported as unresolvable modules.
+  const stylesheets = Object.keys(published ?? {}).filter((key) => key.endsWith('.css'));
+  run(`${name}: attw`, bin('attw'), [
+    '--profile',
+    'esm-only',
+    '--no-emoji',
+    ...(stylesheets.length > 0 ? ['--exclude-entrypoints', ...stylesheets] : []),
+    '--',
+    packed.filename,
+  ]);
+}
+
+rmSync(out, { recursive: true, force: true });
+
+if (failures.length > 0) {
+  console.error(`\n${failures.length} problem(s):`);
+  for (const failure of failures) console.error(`  ✗ ${failure}`);
+  process.exit(1);
+}
+console.log('\nEvery package packs cleanly.');

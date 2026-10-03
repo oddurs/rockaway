@@ -1,5 +1,6 @@
 import { Buffer, contentArea, drawBox, drawText, rect, type Size } from '@rockaway/grid';
-import { Screen, screenshot } from '@rockaway/react';
+import { Screen } from '@rockaway/react';
+import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 

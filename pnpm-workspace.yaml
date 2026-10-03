@@ -8,3 +8,12 @@ savePrefix: ''
 # Install scripts are blocked by default; allow only what is known to need one.
 allowBuilds:
   esbuild: true
+
+# The server-component fixture in @rockaway/react uses only this package's Node
+# loader and Flight server, never its webpack plugin, so webpack (and the
+# fifty-odd packages behind it) need not be installed for it.
+packageExtensions:
+  react-server-dom-webpack:
+    peerDependenciesMeta:
+      webpack:
+        optional: true

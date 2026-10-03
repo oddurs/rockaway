@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * `KeyHint` (cairn 0099): `⌘S save` — how a TUI teaches itself.
  *

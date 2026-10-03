@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * `Frame` (cairn 0096): the box every other component is drawn inside.
  *
