@@ -122,6 +122,54 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-size-control-md"
     ]
   },
+  "Callout": {
+    "file": "callout.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "CalloutTone",
+        "required": false,
+        "description": "Which kind of aside it is. The border, the mark and the colour all follow it."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "The words in the top edge, and what a reader hears it called. The tone's name by default."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "How the frame's lines are stroked. The same cells either way."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof calloutVariants>"
+    ],
+    "tokens": [
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono"
+    ]
+  },
   "Description": {
     "file": "field.tsx",
     "props": [
@@ -184,6 +232,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'role' | 'children'>"
     ],
     "tokens": [
+      "--rk-bg-surface",
       "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -271,6 +320,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "VariantProps<typeof fieldFrameVariants>"
     ],
     "tokens": [
+      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-border-default",
@@ -332,6 +382,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-border-default",
@@ -433,6 +484,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
+      "--rk-bg-surface",
       "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -617,6 +669,80 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [
       "Omit<ListBoxItemProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "Tree": {
+    "file": "tree.tsx",
+    "props": [
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTreeProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "TreeItem": {
+    "file": "tree.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "The row's label, and the text type-ahead matches."
+      },
+      {
+        "name": "textValue",
+        "type": "string",
+        "required": false,
+        "description": "What type-ahead matches, when it is not the title."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The rows under this one. A row with children carries the expand mark."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTreeItemProps<T>, 'className' | 'children' | 'textValue'>"
     ],
     "tokens": [
       "--rk-attribute-underline-offset",

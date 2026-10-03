@@ -53,6 +53,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
 const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => ReactElement>> = {
   Badge: (props) => createElement(rockaway.Badge, props, 'passing'),
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
+  Callout: (props) =>
+    createElement(rockaway.Callout, props, createElement('p', null, 'Mind the gap.')),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
   // Both parts of the module: the variant is FieldFrame's, and Fieldset is always a group.
   Fieldset: (props) =>
@@ -66,6 +68,16 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  Tree: (props) =>
+    createElement(
+      rockaway.Tree,
+      { 'aria-label': 'files', defaultExpandedKeys: ['src'], ...props },
+      createElement(
+        rockaway.TreeItem,
+        { id: 'src', title: 'src' },
+        createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
+      ),
+    ),
   List: (props) =>
     createElement(
       rockaway.List,
