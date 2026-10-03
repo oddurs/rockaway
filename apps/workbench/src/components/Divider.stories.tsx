@@ -13,7 +13,7 @@ import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
-import { cellsOf } from '../cells.ts';
+import { cellsOf, cellsOfBuffer } from '../cells.ts';
 
 const meta = {
   title: 'Components/Divider',
@@ -231,67 +231,66 @@ export const InAFrame: Story = {
 };
 
 /**
- * Every variant, with each painter, side by side. The page holds exactly the
- * text the buffer draws — the snapshot in `divider.test.ts` — and the two
- * painters put every run in the same cells.
+ * Every variant, with one painter. The page holds exactly the text the buffer
+ * draws — the snapshot in `divider.test.ts` — and every run lands in the cells
+ * the buffer gives it. Each painter is held to the buffer, so the two are
+ * identical, measured in cells. One story a painter keeps each one's pixel
+ * check inside a story's time on a loaded runner.
  */
-export const Variants: Story = {
-  render: () => (
-    <div style={{ display: 'flex', gap: 'var(--rk-x-4)', alignItems: 'start' }}>
-      {PAINTERS.map((painter) => (
-        <Column key={painter} painter={painter} />
-      ))}
-    </div>
-  ),
+const variants = (painter: PainterName): Story => ({
+  name: `Variants, ${painter} painter`,
+  render: () => <Column painter={painter} />,
   play: async ({ canvas }) => {
     await document.fonts.ready;
     for (const variant of VARIANTS) {
-      const drawn = toText(dividerBuffer(sizeOf(variant), variant.options, glyphsOf(variant)));
-      const [glyph, rule] = PAINTERS.map((painter) =>
-        canvas.getByTestId(`${variant.name} ${painter}`),
-      ) as [HTMLElement, HTMLElement];
-      expect(screenshot(glyph), variant.name).toBe(drawn);
-      expect(screenshot(rule), variant.name).toBe(drawn);
-      expect(cellsOf(rule), variant.name).toEqual(cellsOf(glyph));
+      const buffer = dividerBuffer(sizeOf(variant), variant.options, glyphsOf(variant));
+      const screen = canvas.getByTestId(`${variant.name} ${painter}`);
+      expect(screenshot(screen), variant.name).toBe(toText(buffer));
+      expect(cellsOf(screen), variant.name).toEqual(cellsOfBuffer(buffer));
     }
     // Under an ASCII theme every character is ASCII, the ellipsis included.
-    const ascii = screenshot(canvas.getByTestId('ascii theme glyph'));
+    const ascii = screenshot(canvas.getByTestId(`ascii theme ${painter}`));
     expect([...ascii].every((ch) => ch.charCodeAt(0) < 0x7f)).toBe(true);
   },
-};
+});
+
+export const VariantsGlyph: Story = variants('glyph');
+export const VariantsRule: Story = variants('rule');
 
 /**
- * Open ends, joined ends and labels at every alignment, with both stroke
- * styles, at one density (cairn 0117): every half stroke reaches its cell's
- * edge and meets the line beside it. The zoom browser runs these at 200%.
+ * Open ends, joined ends and labels at every alignment, with one stroke style,
+ * at one density (cairn 0117): every half stroke reaches its cell's edge and
+ * meets the line beside it. The zoom browser runs these at 200%.
  */
-const continuity = (density: (typeof DENSITIES)[number]): Story => ({
-  name: `Continuity, ${density}`,
+const continuity = (density: (typeof DENSITIES)[number], painter: PainterName): Story => ({
+  name: `Continuity, ${density}, ${painter} painter`,
   // The play function runs the check itself and asserts what it covered.
   parameters: { continuity: false },
   render: () => (
-    <div data-density={density} style={{ display: 'flex', gap: 'var(--rk-x-4)' }}>
-      {PAINTERS.map((painter) => (
-        <Column key={painter} painter={painter} />
-      ))}
+    <div data-density={density}>
+      <Column painter={painter} />
     </div>
   ),
   play: async ({ canvasElement }) => {
     const run = runner();
     if (!run) return;
     const report = await expectContinuity(canvasElement, { capture: run.capture });
-    // Not a vacuous pass: sixteen rules a painter, two painters.
-    expect(report.layers).toBe(32);
-    expect(report.joins).toBeGreaterThan(300);
+    // Not a vacuous pass: sixteen rules, every one looked at.
+    expect(report.layers).toBe(16);
+    expect(report.joins).toBeGreaterThan(150);
   },
 });
 
 // The tag is written on each story, not inside the factory: Storybook reads
 // tags from the source without running it, and the zoom browser selects by tag.
-export const ContinuityDense: Story = { ...continuity('dense'), tags: ['zoom'] };
-export const ContinuityNormal: Story = { ...continuity('normal'), tags: ['zoom'] };
-export const ContinuityAiry: Story = { ...continuity('airy'), tags: ['zoom'] };
-export const ContinuityTouch: Story = { ...continuity('touch'), tags: ['zoom'] };
+export const ContinuityDenseGlyph: Story = { ...continuity('dense', 'glyph'), tags: ['zoom'] };
+export const ContinuityDenseRule: Story = { ...continuity('dense', 'rule'), tags: ['zoom'] };
+export const ContinuityNormalGlyph: Story = { ...continuity('normal', 'glyph'), tags: ['zoom'] };
+export const ContinuityNormalRule: Story = { ...continuity('normal', 'rule'), tags: ['zoom'] };
+export const ContinuityAiryGlyph: Story = { ...continuity('airy', 'glyph'), tags: ['zoom'] };
+export const ContinuityAiryRule: Story = { ...continuity('airy', 'rule'), tags: ['zoom'] };
+export const ContinuityTouchGlyph: Story = { ...continuity('touch', 'glyph'), tags: ['zoom'] };
+export const ContinuityTouchRule: Story = { ...continuity('touch', 'rule'), tags: ['zoom'] };
 
 /**
  * From the keyboard: a divider separates and is never a stop. Tab goes from
