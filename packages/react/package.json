@@ -39,6 +39,7 @@
   "dependencies": {
     "@rockaway/css": "workspace:^",
     "@rockaway/grid": "workspace:^",
+    "@rockaway/tokens": "workspace:^",
     "react-aria-components": "1.21.1"
   },
   "devDependencies": {

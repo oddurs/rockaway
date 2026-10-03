@@ -1027,6 +1027,21 @@
   inherits: true;
 }
 
+@property --rk-glyph-delimiter-control-close {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-delimiter-control-open {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-blank {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-bullet {
   syntax: '*';
   inherits: true;
@@ -1052,6 +1067,11 @@
   inherits: true;
 }
 
+@property --rk-glyph-mark-danger {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-dash {
   syntax: '*';
   inherits: true;
@@ -1067,12 +1087,52 @@
   inherits: true;
 }
 
+@property --rk-glyph-mark-external {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-overflow-end {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-overflow-start {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-radio {
   syntax: '*';
   inherits: true;
 }
 
 @property --rk-glyph-mark-radio-empty {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-required {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-sort-ascending {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-sort-descending {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-switch-thumb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-mark-switch-track {
   syntax: '*';
   inherits: true;
 }
@@ -1509,16 +1569,28 @@
     --rk-glyph-border-single-top-left: "┌";
     --rk-glyph-border-single-top-right: "┐";
     --rk-glyph-border-single-vertical: "│";
+    --rk-glyph-delimiter-control-close: "]";
+    --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-mark-blank: " ";
     --rk-glyph-mark-bullet: "·";
     --rk-glyph-mark-check: "✓";
     --rk-glyph-mark-collapsed: "▸";
     --rk-glyph-mark-cross: "✗";
     --rk-glyph-mark-cursor: "▸";
+    --rk-glyph-mark-danger: "!";
     --rk-glyph-mark-dash: "–";
     --rk-glyph-mark-ellipsis: "…";
     --rk-glyph-mark-expanded: "▾";
+    --rk-glyph-mark-external: "↗";
+    --rk-glyph-mark-overflow-end: "›";
+    --rk-glyph-mark-overflow-start: "‹";
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
+    --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-sort-ascending: "▴";
+    --rk-glyph-mark-sort-descending: "▾";
+    --rk-glyph-mark-switch-thumb: "●";
+    --rk-glyph-mark-switch-track: "─";
     --rk-glyph-spinner-1: "⠋";
     --rk-glyph-spinner-2: "⠙";
     --rk-glyph-spinner-3: "⠹";

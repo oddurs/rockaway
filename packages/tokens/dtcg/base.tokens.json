@@ -44,7 +44,7 @@
   },
   "glyph": {
     "$type": "fontFamily",
-    "$description": "The characters chrome is drawn with (cairn 0091). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.",
+    "$description": "The characters chrome is drawn with (cairn 0091, 0119). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.",
     "border": {
       "$description": "The theme draws with the single set; the others are here to be switched to.",
       "single": {
@@ -288,6 +288,36 @@
       },
       "radio-empty": {
         "$value": "○"
+      },
+      "blank": {
+        "$value": " "
+      },
+      "switch-thumb": {
+        "$value": "●"
+      },
+      "switch-track": {
+        "$value": "─"
+      },
+      "sort-ascending": {
+        "$value": "▴"
+      },
+      "sort-descending": {
+        "$value": "▾"
+      },
+      "overflow-start": {
+        "$value": "‹"
+      },
+      "overflow-end": {
+        "$value": "›"
+      },
+      "required": {
+        "$value": "*"
+      },
+      "danger": {
+        "$value": "!"
+      },
+      "external": {
+        "$value": "↗"
       }
     },
     "block": {
@@ -363,6 +393,16 @@
       },
       "10": {
         "$value": "⠏"
+      }
+    },
+    "delimiter": {
+      "control": {
+        "open": {
+          "$value": "["
+        },
+        "close": {
+          "$value": "]"
+        }
       }
     }
   },

@@ -10,6 +10,7 @@ export { Frame, type FrameOptions, type FrameProps, frameBuffer } from './compon
 export { formatKeys, KeyHint, type KeyHintProps, type KeyNotation, type KeySpec, keyShortcut, type Platform, parseKeys, spokenKeys } from './components/key-hint.tsx';
 export { List, ListItem, type ListItemProps, type ListProps, type ScrollbarState, scrollbarBuffer } from './components/list.tsx';
 export { cx } from './cx.ts';
+export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { type PaintOptions, paintGlyph, paintRule, ruledSides } from './paint/index.ts';
 export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenProps } from './screen.tsx';
 export { defineVariants, type VariantAttributes, type VariantDefinition, type VariantInput, type VariantProps, type VariantSelection, type Variants, type VariantValue, type VariantValues } from './variants.ts';

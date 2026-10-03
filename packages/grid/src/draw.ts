@@ -22,6 +22,8 @@ export interface BoxOptions extends DrawOptions {
   readonly title?: string;
   readonly titleAlign?: 'start' | 'center' | 'end';
   readonly titleStyle?: Style;
+  /** What a truncated title ends with. A theme drawing in ASCII cannot use `…`. */
+  readonly ellipsis?: string;
 }
 
 const NONE: Edges = { north: 0, east: 0, south: 0, west: 0 };
@@ -105,7 +107,7 @@ function drawTitle(draft: Draft, area: Rect, options: BoxOptions): void {
   // runs into them: `┌─ title ──┐`.
   const room = area.width - 4;
   if (room <= 0) return;
-  const text = ` ${truncate(options.title ?? '', room - 2)} `;
+  const text = ` ${truncate(options.title ?? '', room - 2, options.ellipsis)} `;
   const width = stringWidth(text);
   const spare = area.width - 2 - width;
   const align = options.titleAlign ?? 'start';
@@ -125,6 +127,8 @@ export interface TextOptions {
   readonly style?: Style;
   /** Truncate to this many cells, ellipsis included. */
   readonly maxWidth?: number;
+  /** What truncated text ends with. `…` unless the theme says otherwise. */
+  readonly ellipsis?: string;
 }
 
 /**
@@ -133,7 +137,8 @@ export interface TextOptions {
  */
 export function drawText(draft: Draft, at: Point, text: string, options: TextOptions = {}): number {
   const style = options.style ?? EMPTY_STYLE;
-  const content = options.maxWidth === undefined ? text : truncate(text, options.maxWidth);
+  const content =
+    options.maxWidth === undefined ? text : truncate(text, options.maxWidth, options.ellipsis);
   let x = at.x;
   for (const cluster of graphemes(content)) {
     const width = clusterWidth(cluster);

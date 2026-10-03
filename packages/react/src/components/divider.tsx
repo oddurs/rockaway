@@ -30,15 +30,20 @@ import {
   stringWidth,
   truncate,
 } from '@rockaway/grid';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useMemo } from 'react';
 import { cx } from '../cx.ts';
+import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
 import { Screen, type ScreenProps } from '../screen.tsx';
 
 export type Orientation = 'horizontal' | 'vertical';
 
 export interface DividerOptions {
   readonly orientation?: Orientation;
-  /** The weight comes from the set, the same way a frame's border does. */
+  /**
+   * The weight comes from the set, the same way a frame's border does: the
+   * theme's when not given.
+   */
   readonly border?: BorderSetName;
   /** A label sunk into the rule: `── files ───`. Horizontal rules only. */
   readonly label?: string;
@@ -55,8 +60,13 @@ export interface DividerOptions {
  * Draw a rule along `line` — one cell tall for a horizontal rule, one cell
  * wide for a vertical one — into a draft that may already hold a frame.
  */
-export function drawRule(draft: Draft, line: Rect, options: DividerOptions = {}): void {
-  const set = borderSets[options.border ?? 'single'];
+export function drawRule(
+  draft: Draft,
+  line: Rect,
+  options: DividerOptions = {},
+  glyphs: Glyphs = defaultGlyphs,
+): void {
+  const set = borderSets[options.border ?? glyphs.borderSet];
   const horizontal = (options.orientation ?? 'horizontal') === 'horizontal';
   const length = horizontal ? line.width : line.height;
   if (length < 1) return;
@@ -79,14 +89,14 @@ export function drawRule(draft: Draft, line: Rect, options: DividerOptions = {})
   }
 
   if (horizontal && options.label !== undefined && options.label !== '') {
-    drawLabel(draft, line, options);
+    drawLabel(draft, line, options, glyphs.mark.ellipsis);
   }
 }
 
-function drawLabel(draft: Draft, line: Rect, options: DividerOptions): void {
+function drawLabel(draft: Draft, line: Rect, options: DividerOptions, ellipsis: string): void {
   const room = line.width - 4;
   if (room <= 0) return;
-  const text = ` ${truncate(options.label ?? '', room - 2)} `;
+  const text = ` ${truncate(options.label ?? '', room - 2, ellipsis)} `;
   const width = stringWidth(text);
   const align = options.labelAlign ?? 'start';
   const offset =
@@ -99,9 +109,13 @@ function drawLabel(draft: Draft, line: Rect, options: DividerOptions): void {
 }
 
 /** The rule on its own, as a buffer: what the component draws and the tests read. */
-export function dividerBuffer(size: Size, options: DividerOptions = {}): Buffer {
+export function dividerBuffer(
+  size: Size,
+  options: DividerOptions = {},
+  glyphs: Glyphs = defaultGlyphs,
+): Buffer {
   return Buffer.create(size).draw((draft) => {
-    drawRule(draft, rect(0, 0, size.width, size.height), options);
+    drawRule(draft, rect(0, 0, size.width, size.height), options, glyphs);
   });
 }
 
@@ -125,6 +139,7 @@ export function Divider({
   ...screen
 }: DividerProps): ReactNode {
   const horizontal = orientation === 'horizontal';
+  const glyphs = useGlyphs();
   const draw = useMemo(() => {
     const options: DividerOptions = {
       orientation,
@@ -133,8 +148,8 @@ export function Divider({
       ...(labelAlign === undefined ? {} : { labelAlign }),
       ...(ends === undefined ? {} : { ends }),
     };
-    return (size: Size) => dividerBuffer(size, options);
-  }, [orientation, border, label, labelAlign, ends]);
+    return (size: Size) => dividerBuffer(size, options, glyphs);
+  }, [orientation, border, label, labelAlign, ends, glyphs]);
 
   return (
     <Screen
