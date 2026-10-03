@@ -13,6 +13,7 @@ import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
+import { cellsOf } from '../cells.ts';
 
 const meta = {
   title: 'Components/Frame',
@@ -195,30 +196,6 @@ export const Variants: Story = {
     expect([...ascii].every((ch) => ch.charCodeAt(0) < 0x7f)).toBe(true);
   },
 };
-
-/** Where every run lands, in cells from the screen's corner: what "identical" means. */
-function cellsOf(screen: HTMLElement): string[] {
-  const style = getComputedStyle(screen);
-  const width = Number.parseFloat(style.getPropertyValue('--rk-cell-width'));
-  const height = Number.parseFloat(style.getPropertyValue('--rk-cell-height'));
-  const origin = screen.getBoundingClientRect();
-  return [...screen.querySelectorAll<HTMLElement>('.rk-run')].map((run) => {
-    const box = run.getBoundingClientRect();
-    const cell = (px: number, size: number) => {
-      const n = px / size;
-      expect(Math.abs(n - Math.round(n)) * size).toBeLessThan(0.5);
-      return Math.round(n);
-    };
-    return [
-      cell(box.left - origin.left, width),
-      cell(box.top - origin.top, height),
-      cell(box.width, width),
-      cell(box.height, height),
-      run.dataset.rkShape ?? 'text',
-      run.textContent,
-    ].join(' ');
-  });
-}
 
 /**
  * Every variant with a divider, both stroke styles, at one density (cairn

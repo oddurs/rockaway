@@ -32,7 +32,7 @@ import {
   stringWidth,
   truncate,
 } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
+import { type Glyphs, marks } from '@rockaway/tokens';
 import { type ReactNode, useMemo } from 'react';
 import { cx } from '../cx.ts';
 import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
@@ -47,8 +47,13 @@ export interface DividerOptions {
    * theme's when not given.
    */
   readonly border?: BorderSetName;
-  /** A label sunk into the rule: `── files ───`. Horizontal rules only. */
+  /**
+   * A label sunk into the rule, `╶─ files ───╴`, which is also the separator's
+   * accessible name. Drawn on horizontal rules only; a vertical one is still
+   * named by it. Too long for the rule, it truncates with the ellipsis.
+   */
   readonly label?: string;
+  /** Where the label sits along the rule: near the start, by default. */
   readonly labelAlign?: 'start' | 'center' | 'end';
   /**
    * `joined` adds the crossing edges at each end, so the table resolves a tee
@@ -65,6 +70,9 @@ export interface DividerOptions {
  * in ANSI, and wherever else the buffer goes.
  */
 const LINE: Style = { fg: 'border.default', attrs: Attr.none };
+
+/** A label is text set into the line, so it is drawn in the text colour. */
+const TEXT: Style = { fg: 'fg.default', attrs: Attr.none };
 
 /**
  * Draw a rule along `line` — one cell tall for a horizontal rule, one cell
@@ -99,7 +107,14 @@ export function drawRule(
   }
 
   if (horizontal && options.label !== undefined && options.label !== '') {
-    drawLabel(draft, line, options, glyphs.mark.ellipsis);
+    // An open end is a half stroke. A label set straight after it would leave
+    // that half cell stranded, `╶ files`, so on an open rule the label keeps a
+    // whole cell of line between it and either end: `╶─ files ──╴`.
+    const room =
+      options.ends === 'joined' ? line : rect(line.x + 1, line.y, Math.max(0, line.width - 2), 1);
+    // A rule drawn in ASCII truncates in ASCII, whatever the theme.
+    const ellipsis = set.ascii ? marks.ascii.ellipsis : glyphs.mark.ellipsis;
+    drawLabel(draft, room, options, ellipsis);
   }
 }
 
@@ -115,7 +130,10 @@ function drawLabel(draft: Draft, line: Rect, options: DividerOptions, ellipsis: 
       : align === 'end'
         ? Math.max(1, line.width - 1 - width)
         : Math.max(1, Math.floor((line.width - width) / 2));
-  drawText(draft, { x: line.x + offset, y: line.y }, text, { maxWidth: line.width - 2 });
+  drawText(draft, { x: line.x + offset, y: line.y }, text, {
+    style: TEXT,
+    maxWidth: line.width - 2,
+  });
 }
 
 /** The rule on its own, as a buffer: what the component draws and the tests read. */
