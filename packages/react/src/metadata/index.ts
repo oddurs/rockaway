@@ -11,6 +11,7 @@
  * variant helpers and buffer functions. In a React Server Component graph
  * their exports are client references, so read `meta.json` there instead.
  */
+import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
 import { frameMeta } from '../components/frame.meta.ts';
@@ -46,6 +47,7 @@ export { type StateName, type StateRow, stateVocabulary } from './states.ts';
 
 /** Every component's metadata, as written beside it. In name order. */
 const sources: readonly ComponentMetaInput[] = [
+  badgeMeta,
   buttonMeta,
   dividerMeta,
   frameMeta,
