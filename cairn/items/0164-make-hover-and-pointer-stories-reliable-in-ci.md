@@ -24,7 +24,7 @@ hover story will meet it.
 ## Acceptance criteria
 
 - [x] A shared helper in the workbench waits for fonts and two frames before a story measures or points, or hover is driven by the real pointer through `vitest/browser`
-- [ ] Every existing hover story uses it, and a CI run repeated five times passes every time
+- [x] Every existing hover story uses it, and a CI run repeated five times passes every time
 - [ ] The recipe (0134) says to use it
 
 ## 2026-10-03
@@ -42,3 +42,7 @@ settled() lives in apps/workbench/src/settled.ts. It awaits document.fonts.load(
 ## 2026-10-03
 
 After merging main: List's stories from #87 had their own copy of the weaker wait, fonts.ready plus two frames, and now import the shared settled() too. Its hover and click stories (Hovered, Densities, CursorAndSelection, AsText, ForcedColors) are covered by it.
+
+## 2026-10-03
+
+Five full CI runs on 18dbc2d, the final head with the experiment removed, all green: run 37148040833, attempts 1 to 5.
