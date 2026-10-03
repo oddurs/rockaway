@@ -1,0 +1,292 @@
+/*
+ * Prose (cairn 0143): long-form text, from Markdown or by hand, set on the
+ * grid by one class.
+ *
+ *   <article class="rk-prose">…</article>
+ *
+ * Everything is spaced in whole rows and indented in whole cells, and the box
+ * itself is a whole number of cells wide, so a page of prose stays on the grid
+ * however long it runs. One size throughout (0075): a heading is weight, case
+ * and a rule, never a bigger font.
+ *
+ * The rules under headings, the quote gutter and `hr` are strokes drawn by the
+ * cell (0116), the same geometry `shapes.css` gives a painted `═`, `─` or `│`,
+ * on boxes that are exactly a row tall or a cell wide. They are decoration:
+ * pseudo-elements with no text, so nothing in them is read aloud or copied.
+ *
+ * In `rk.prose`, under the components, so a component placed in a page of
+ * prose keeps its own spacing.
+ */
+@layer rk.prose {
+  .rk-prose {
+    /*
+     * The measure: eighty columns, the width terminals have always been, or
+     * as many whole cells as fit when the box is narrower. Rounding down is
+     * what keeps every block inside on the grid on a phone, whose width is
+     * whatever the phone is.
+     */
+    max-inline-size: min(calc(80 * var(--rk-cell-width)), round(down, 100%, var(--rk-cell-width)));
+    /* At forty cells a long word or a URL breaks rather than scrolling the page. */
+    overflow-wrap: anywhere;
+    /* Prose wraps, even inside a screen, whose chrome never does. */
+    white-space: normal;
+    /* Strokes weighted like the type beside them, as the glyph painter's are. */
+    --rk-stroke-light: calc(var(--rk-stroke-glyph-light) * 1em);
+    --rk-stroke-heavy: calc(var(--rk-stroke-glyph-heavy) * 1em);
+    --rk-stroke-gap: calc(var(--rk-stroke-glyph-gap) * 1em);
+  }
+
+  /*
+   * The boxes that draw a line. `shapes.css` places the strokes (they share
+   * the rules for `═`, `─` and `│`); this is what a shaped cell has besides:
+   * the ink, which is the box's colour, and the promise that a line prints
+   * and survives forced colors.
+   */
+  .rk-prose :where(h1, h2, thead th)::after,
+  .rk-prose :where(blockquote)::before,
+  .rk-prose :where(hr) {
+    --rk-ink-colour: currentColor;
+    --rk-ink: linear-gradient(var(--rk-ink-colour) 0 0);
+    background-repeat: no-repeat;
+    print-color-adjust: exact;
+  }
+
+  @media (forced-colors: active) {
+    .rk-prose :where(h1, h2, thead th)::after,
+    .rk-prose :where(blockquote)::before,
+    .rk-prose :where(hr) {
+      forced-color-adjust: none;
+      --rk-ink-colour: CanvasText;
+    }
+  }
+
+  /* Blocks are a blank row apart. */
+  .rk-prose
+    :where(*)
+    + :where(p, ul, ol, dl, blockquote, pre, table, hr, figure, details, h1, h2, h3, h4, h5, h6) {
+    margin-block-start: var(--rk-y-1);
+  }
+
+  /* ── Headings ────────────────────────────────────────────────────────────
+   * One size. h1 is bold capitals over a double rule, h2 bold over a single
+   * one, h3 bold, and h4 to h6 bold and dim. A new section gets two blank
+   * rows above it; a minor heading sits on its text, the way a man page does.
+   */
+  .rk-prose :where(h1, h2, h3, h4, h5, h6) {
+    font-weight: var(--rk-attribute-bold);
+  }
+
+  .rk-prose :where(h4, h5, h6) {
+    color: var(--rk-attribute-dim);
+  }
+
+  .rk-prose :where(*) + :where(h1, h2) {
+    margin-block-start: var(--rk-y-2);
+  }
+
+  .rk-prose :where(h3, h4, h5, h6) + :where(*) {
+    margin-block-start: 0;
+  }
+
+  /* After a rule, a section needs no more air than the rule gives it. */
+  .rk-prose :where(hr) + :where(*) {
+    margin-block-start: var(--rk-y-1);
+  }
+
+  /*
+   * The rule is as long as the heading, like a setext underline, and takes
+   * the row below it. A heading that wraps is as wide as the measure, which
+   * is whole cells, so the rule ends on a cell boundary either way.
+   */
+  .rk-prose :where(h1, h2) {
+    position: relative;
+    inline-size: fit-content;
+    padding-block-end: var(--rk-y-1);
+  }
+
+  .rk-prose :where(h1, h2)::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--rk-cell-height);
+    color: var(--rk-fg-muted);
+  }
+
+  /* ── Lists ───────────────────────────────────────────────────────────────
+   * The marker sits in the cells before the text: a bullet and a space, or a
+   * number right-aligned in a column four cells wide, so `9.` and `10.` end
+   * in the same cell. Native markers, so a list is still a list to a reader.
+   */
+  .rk-prose :where(ul) {
+    padding-inline-start: var(--rk-x-2);
+    /* Where ::marker cannot take content (Safari), the same bullet as a string. */
+    list-style-type: "· ";
+  }
+
+  .rk-prose :where(ol) {
+    padding-inline-start: var(--rk-x-4);
+  }
+
+  .rk-prose :where(ul) > li::marker {
+    content: var(--rk-glyph-mark-bullet) " ";
+  }
+
+  .rk-prose :where(ul, ol) > li::marker {
+    color: var(--rk-fg-muted);
+  }
+
+  /* A tight list is one item a row; a loose one (paragraphs in its items) is
+   * spaced like paragraphs. A list inside an item hangs from it. */
+  .rk-prose :where(li:has(> p) + li) {
+    margin-block-start: var(--rk-y-1);
+  }
+
+  .rk-prose :where(li) > :where(ul, ol) {
+    margin-block-start: 0;
+  }
+
+  .rk-prose :where(dt) {
+    font-weight: var(--rk-attribute-bold);
+  }
+
+  .rk-prose :where(dd) {
+    padding-inline-start: var(--rk-x-2);
+  }
+
+  /* ── Quotes ──────────────────────────────────────────────────────────────
+   * A gutter one cell wide and as tall as the quote, then a blank cell. */
+  .rk-prose :where(blockquote) {
+    position: relative;
+    padding-inline-start: var(--rk-x-2);
+  }
+
+  .rk-prose :where(blockquote)::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    inline-size: var(--rk-cell-width);
+    color: var(--rk-border-default);
+  }
+
+  /* ── Code ────────────────────────────────────────────────────────────────
+   * A block is a subtle ground with a row above and below and two cells
+   * either side, and scrolls rather than wraps: code is the one thing whose
+   * line breaks mean something. Inline code is the same ground, no wider than
+   * its characters.
+   */
+  .rk-prose :where(pre) {
+    max-inline-size: 100%;
+    padding: var(--rk-y-1) var(--rk-x-2);
+    overflow-x: auto;
+    overflow-wrap: normal;
+    background: var(--rk-bg-subtle);
+    white-space: pre;
+  }
+
+  .rk-prose :where(:not(pre) > code) {
+    background: var(--rk-bg-subtle);
+  }
+
+  /*
+   * A box-drawing or block character in prose, a diagram in a code block or a
+   * `┌` in a sentence, is a cell box the cell draws (0116): a Markdown
+   * pipeline marks it `data-rk-shape`, as the site's does, and `shapes.css`
+   * strokes it. A run of one line (`──`) is one box `--rk-run` cells wide.
+   */
+  .rk-prose :where([data-rk-shape]) {
+    display: inline-block;
+    inline-size: calc(var(--rk-run, 1) * var(--rk-cell-width));
+    block-size: var(--rk-cell-height);
+    vertical-align: top;
+    print-color-adjust: exact;
+  }
+
+  /* The chord colour KeyHint gives its keys. */
+  .rk-prose :where(kbd) {
+    color: var(--rk-fg-accent);
+  }
+
+  /* ── Links ───────────────────────────────────────────────────────────────
+   * Underlined always (base); hovering doubles the underline, as Link does,
+   * so the state is an attribute and not only a colour. */
+  .rk-prose :where(a:hover) {
+    text-decoration-style: double;
+  }
+
+  /* ── Tables ──────────────────────────────────────────────────────────────
+   * A table is never squeezed: the browser shares out a squeezed table's
+   * width in fractions of a pixel, and its columns fall off the grid. So a
+   * table is as wide as its columns, which are whole cells, and scrolls in
+   * its own box when that is wider than the space it has.
+   *
+   * On its own a cell does not wrap, so a column is as wide as its longest
+   * cell. A Markdown pipeline that knows the text can do better: give each
+   * `<col>` a width in cells (`style="--rk-cols: 18"`, the two-cell gap
+   * included) and the cells wrap inside it. The site's pipeline does, fitting
+   * a table to the measure the way a terminal program sizes its columns.
+   *
+   * Columns are two blank cells apart; the header is bold over a single rule
+   * that runs under every column, gaps included.
+   */
+  .rk-prose :where(table) {
+    display: block;
+    inline-size: max-content;
+    max-inline-size: 100%;
+    overflow-x: auto;
+    overflow-wrap: normal;
+  }
+
+  .rk-prose :where(th, td) {
+    padding: 0;
+    padding-inline-end: var(--rk-x-2);
+    vertical-align: top;
+    white-space: nowrap;
+  }
+
+  .rk-prose :where(col) {
+    inline-size: calc(var(--rk-cols, 0) * var(--rk-cell-width));
+  }
+
+  .rk-prose :where(table:has(col)) :where(th, td) {
+    white-space: normal;
+  }
+
+  /* Rows that wrap are a blank row apart, or they read as one. */
+  .rk-prose :where(table:has(col)) :where(tbody tr + tr) > :where(th, td) {
+    padding-block-start: var(--rk-y-1);
+  }
+
+  .rk-prose :where(th, td):last-child {
+    padding-inline-end: 0;
+  }
+
+  /* Alignment from the Markdown (`align="right"`) wins; otherwise the start. */
+  .rk-prose :where(th:not([align])) {
+    text-align: start;
+  }
+
+  .rk-prose :where(thead th) {
+    position: relative;
+    padding-block-end: var(--rk-y-1);
+    font-weight: var(--rk-attribute-bold);
+  }
+
+  .rk-prose :where(thead th)::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: var(--rk-cell-height);
+    color: var(--rk-border-default);
+  }
+
+  /* ── Rules ───────────────────────────────────────────────────────────────
+   * `hr` is a row with a single line through it, as Divider draws one. */
+  .rk-prose :where(hr) {
+    block-size: var(--rk-cell-height);
+    border: 0;
+    color: var(--rk-border-subtle);
+  }
+}

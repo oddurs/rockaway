@@ -2,6 +2,12 @@ import { fileURLToPath } from 'node:url';
 import react from '@astrojs/react';
 import type { ViteUserConfig } from 'astro';
 import { defineConfig } from 'astro/config';
+import {
+  rehypeCellGlyphs,
+  rehypeRepositoryLinks,
+  rehypeScrollable,
+  rehypeTableColumns,
+} from './src/lib/markdown.ts';
 import { normaliseBase } from './src/lib/paths.ts';
 
 /** Vite's plugin type, through Astro, which owns the Vite the site runs. */
@@ -43,6 +49,18 @@ export default defineConfig({
   output: 'static',
   integrations: [react()],
   devToolbar: { enabled: false },
+  markdown: {
+    // No borrowed palette: code is highlighted in the ANSI 16 by 0144, and
+    // until then it is plain text on the grid.
+    syntaxHighlight: false,
+    rehypePlugins: [
+      rehypeRepositoryLinks,
+      rehypeScrollable,
+      // Columns are sized from the text before its box characters become cells.
+      rehypeTableColumns,
+      rehypeCellGlyphs,
+    ],
+  },
   vite: {
     plugins: [publishedPackagesOnly()],
   },

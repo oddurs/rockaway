@@ -51,6 +51,7 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
  * with metadata and no fixture fails below.
  */
 const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => ReactElement>> = {
+  Badge: (props) => createElement(rockaway.Badge, props, 'passing'),
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
