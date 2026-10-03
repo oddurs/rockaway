@@ -66,6 +66,12 @@ A component adds one file, and one line to each barrel, and touches no other lin
   `pnpm --filter @rockaway/react metadata` to read its props and tokens.
   `test/metadata.test.ts` fails for a component exported without metadata, and
   for metadata that names a part, variant or state the component does not have.
+- Anything that scrolls takes `rk-scroll`, so the browser draws no scrollbar of
+  its own (decision 0207), and shows its position in cells: a scrollbar column
+  drawn by the engine for a viewport that scrolls by rows (see List), or
+  `rk-scroll-marks` for a region that scrolls across. A check after every story
+  fails a scrolling element without it. Tag the stories `classic-scrollbars` to
+  run them again with scrollbars that take room.
 
 Both barrels merge with `merge=union` (see `.gitattributes`), so two branches
 that each added a line rebase without a conflict. The joined lines can come out
@@ -117,6 +123,7 @@ them.
    mark in a cell it keeps either way, so required moves nothing; the control
    carries `aria-required`, so the mark is `aria-hidden`. Nothing else can tell
    the label: React Aria does not put required in any context a label reads.
+   If you forget, `checkField` (below) says so.
 
 4. **Always render `<FieldError>`.** It renders nothing until the field is
    invalid, and then the cross and the message, from the field's own
@@ -179,10 +186,21 @@ them.
    `Components/Form` in the workbench does exactly this, with sketches of the
    field family built from these parts, and is the place to copy from.
 
+10. **The contract is checked for you.** After every story with a field on
+    the page, the workbench runs `checkField` from `@rockaway/react/testing`
+    (cairn 0203): the required mark is drawn exactly when the field is
+    required, and is `aria-hidden`; the description and the error are in the
+    control's `aria-describedby`; no name holds a glyph; nothing is a live
+    region. `Grid/Field check` shows each failure. A story that breaks the
+    contract on purpose sets `parameters: { fields: false }`.
+
 ## Changesets
 
-A change to what a published package ships (its `src`, or anything else in its
-`files`) needs a changeset. Tests, stories, scripts and the workbench do not. CI
+A change to what a published package ships needs a changeset. That means its
+`src`, anything else in its `files`, and the fields of its `package.json` that
+reach an install: `exports`, `dependencies`, `peerDependencies`, `sideEffects`,
+`files`, `engines`, `publishConfig` and the like. Tests, stories, scripts,
+devDependencies and the workbench do not. CI
 fails a pull request that changes a package without naming it in a changeset,
 and `pnpm changeset:check` runs the same check locally.
 

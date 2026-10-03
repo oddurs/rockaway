@@ -1,9 +1,10 @@
 import { Buffer, drawText, toText } from '@rockaway/grid';
 import { themeGlyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { buttonBuffer } from './button.tsx';
-import { type FieldText, formBuffer } from './field.tsx';
-import { fieldFrameBuffer } from './fieldset.tsx';
+import { buttonBuffer } from './button.pure.ts';
+import { formBuffer } from './field.pure.ts';
+import type { FieldText } from './field.tsx';
+import { fieldFrameBuffer } from './fieldset.pure.ts';
 
 const glyphs = themeGlyphs.default;
 const [open, close] = glyphs.delimiter.control;

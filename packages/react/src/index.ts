@@ -9,6 +9,7 @@ export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-met
 export { cx } from './cx.ts';
 export * from './entries/badge.ts';
 export * from './entries/button.ts';
+export * from './entries/callout.ts';
 export * from './entries/divider.ts';
 export * from './entries/field.ts';
 export * from './entries/fieldset.ts';
@@ -16,8 +17,9 @@ export * from './entries/frame.ts';
 export * from './entries/key-hint.ts';
 export * from './entries/link.ts';
 export * from './entries/list.ts';
+export * from './entries/tree.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
-export { type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle } from './paint/index.ts';
+export { Chrome, type ChromeProps, chromeRows, type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle } from './paint/index.ts';
 export { detectPlatform, type PlatformHints, usePlatform } from './platform.ts';
 export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenProps } from './screen.tsx';
 export { useTick } from './tick.ts';

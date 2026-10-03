@@ -47,30 +47,7 @@ export const known: readonly Known[] = [
     present: '.rk-list-item',
     reason:
       "after keyboard navigation, a list's rows sit a pixel above the grid at dense: y = 15, 31 and 47px in 16px cells, so the list has scrolled by one pixel that a whole row would not",
-    ticket:
-      'list rows stay on the grid at dense after keyboard navigation (proposed in the 0199 report)',
-  },
-  {
-    id: 'touch-height',
-    check: 'targets',
-    rule: 'height',
-    densities: ['touch'],
-    element: /./,
-    present: TARGETS,
-    reason:
-      'the touch line box is 2 (32px at 16px), so a one-row control is 32px, not the 44px decision 0074 promised',
-    ticket: 'touch line box becomes 2.75 (CTO decision on 0125)',
-  },
-  {
-    id: 'normal-one-row',
-    check: 'targets',
-    rule: 'size',
-    densities: ['normal'],
-    element: /./,
-    present: TARGETS,
-    reason:
-      'a one-row target is one 20px cell tall, so two that sit a row or a cell apart (list rows, links in a nav, a button beside a list) crowd each other and neither the 24px minimum nor the spacing exception of WCAG 2.5.8 holds',
-    ticket: 'normal line box becomes 1.5, 24px rows (CTO decision on 0125)',
+    ticket: '0211: list rows stay on the grid at dense after keyboard navigation',
   },
   {
     id: 'dense-one-row',
@@ -80,18 +57,7 @@ export const known: readonly Known[] = [
     element: /./,
     present: TARGETS,
     reason:
-      'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented',
-    ticket: 'dense trades target size for density (CTO decision on 0125)',
-  },
-  {
-    id: 'dark-button-face',
-    check: 'axe',
-    modes: ['dark'],
-    // Only this failure: the contrast rule, against Chrome's dark ButtonFace.
-    element: /color-contrast[\s\S]*background color: #6b6b6b/,
-    present: 'button:not(.rk-button)',
-    reason:
-      "the reset clears a control's padding, border and colour but not its background, so a bare button keeps Chrome's dark ButtonFace (#6b6b6b) under the page's text: 4.46:1",
-    ticket: 'the reset clears a control background (proposed in the 0125 report)',
+      'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented. A permanent entry, never a silent pass',
+    ticket: '0197: the default density meets AA; dense is the documented opt-in that does not',
   },
 ];
