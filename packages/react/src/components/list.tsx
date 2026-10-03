@@ -190,7 +190,12 @@ export function List<T extends object>({
   return (
     <RowCount.Provider value={report}>
       <div className={cx('rk-list', className)} style={{ '--rk-list-rows': rows } as CSSProperties}>
-        <ListBox {...list} ref={box} className="rk-list-box" renderEmptyState={emptyState}>
+        <ListBox
+          {...list}
+          ref={box}
+          className="rk-list-box rk-scroll"
+          renderEmptyState={emptyState}
+        >
           {children}
         </ListBox>
         <Scrollbar state={{ total: total ?? count ?? 0, visible: rows, offset }} />

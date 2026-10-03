@@ -39,6 +39,7 @@ import {
   Label as AriaLabel,
   CheckboxGroupStateContext,
   Group,
+  GroupContext,
   LabelContext,
   RadioGroupStateContext,
   useSlottedContext,
@@ -123,40 +124,47 @@ function FrameGroup({
 }: FrameGroupProps): ReactNode {
   const glyphs = useGlyphs();
   const chosen = fieldFrameVariants.select({ kind });
+  // A field whose input is a group of its own (NumberField, DateField) hands
+  // that group's props, its labelling and its press handling, to any Group
+  // under it. The frame is a Group, and they are not its: it takes none of
+  // them, and passes them on unchanged to what it frames (cairn 0204).
+  const outer = useContext(GroupContext);
   return (
-    <Group
-      role={role}
-      {...(labelId === undefined ? {} : { 'aria-labelledby': labelId })}
-      isInvalid={isInvalid}
-      isDisabled={isDisabled}
-      className={cx('rk-field-frame', className)}
-      {...fieldFrameVariants.dataAttributes(chosen)}
-    >
-      {({ isFocusVisible }) => (
-        <FrameScreen
-          state={{
-            label,
-            required: isRequired,
-            invalid: isInvalid,
-            disabled: isDisabled,
-            focused: chosen.kind === 'control' && isFocusVisible,
-          }}
-          glyphs={glyphs}
-          inset={insetOf(pad)}
-          {...(painter === undefined ? {} : { painter })}
-        >
-          {/* The label a reader hears: the edge's words, without the edge. */}
-          <VisuallyHidden
-            elementType={AriaLabel}
-            className="rk-field-frame-label"
-            {...(labelId === undefined ? {} : { id: labelId })}
+    <GroupContext.Provider value={null}>
+      <Group
+        role={role}
+        {...(labelId === undefined ? {} : { 'aria-labelledby': labelId })}
+        isInvalid={isInvalid}
+        isDisabled={isDisabled}
+        className={cx('rk-field-frame', className)}
+        {...fieldFrameVariants.dataAttributes(chosen)}
+      >
+        {({ isFocusVisible }) => (
+          <FrameScreen
+            state={{
+              label,
+              required: isRequired,
+              invalid: isInvalid,
+              disabled: isDisabled,
+              focused: chosen.kind === 'control' && isFocusVisible,
+            }}
+            glyphs={glyphs}
+            inset={insetOf(pad)}
+            {...(painter === undefined ? {} : { painter })}
           >
-            {label}
-          </VisuallyHidden>
-          {children}
-        </FrameScreen>
-      )}
-    </Group>
+            {/* The label a reader hears: the edge's words, without the edge. */}
+            <VisuallyHidden
+              elementType={AriaLabel}
+              className="rk-field-frame-label"
+              {...(labelId === undefined ? {} : { id: labelId })}
+            >
+              {label}
+            </VisuallyHidden>
+            <GroupContext.Provider value={outer}>{children}</GroupContext.Provider>
+          </FrameScreen>
+        )}
+      </Group>
+    </GroupContext.Provider>
   );
 }
 

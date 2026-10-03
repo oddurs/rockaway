@@ -125,7 +125,11 @@ export const FrameForgotIsRequired: Story = {
     <Page>
       <TextField className={fieldClass()} isRequired>
         <FieldFrame label="Message">
-          <TextArea rows={1} style={{ ...box, inlineSize: '100%', display: 'block' }} />
+          <TextArea
+            rows={1}
+            className="rk-scroll"
+            style={{ ...box, inlineSize: '100%', display: 'block' }}
+          />
         </FieldFrame>
       </TextField>
     </Page>
