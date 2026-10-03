@@ -6,7 +6,6 @@ import type { Oklch } from './color.ts';
 
 export type TokenType =
   | 'color'
-  | 'cubicBezier'
   | 'dimension'
   | 'duration'
   | 'fontFamily'

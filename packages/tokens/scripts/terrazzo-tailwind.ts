@@ -22,7 +22,6 @@
  *   shadow.overlay     → --shadow-overlay      shadow-overlay
  *   text.body          → --text-body           text-body
  *   font.family.sans   → --font-sans           font-sans
- *   motion.easing.enter→ --ease-enter          ease-enter
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -53,7 +52,6 @@ export function themeName(path: string): string | undefined {
   if (group === 'shadow') return `--shadow-${name}`;
   if (group === 'space') return name === '1' ? '--spacing' : undefined;
   if (group === 'font' && rest[0] === 'family') return `--font-${rest[1]}`;
-  if (group === 'motion' && rest[0] === 'easing') return `--ease-${rest[1]}`;
   return undefined;
 }
 
