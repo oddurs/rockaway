@@ -63,9 +63,11 @@ export const dividerMeta: ComponentMetaInput = defineMeta({
     },
     {
       title: 'Every border set',
+      // A blank row between them: stacked, the tees of one would meet the
+      // next and draw a seam no screen would have.
       text: (['single', 'double', 'heavy', 'ascii'] as const)
         .map((border) => cells(20, { border, ends: 'joined' }))
-        .join('\n'),
+        .join('\n\n'),
     },
     {
       title: 'Labelled',

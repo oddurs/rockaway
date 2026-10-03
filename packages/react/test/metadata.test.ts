@@ -419,8 +419,11 @@ describe('the snapshots, as the site draws them', () => {
       ├──────────────────┤
       ── Every border set
       ├──────────────────┤
+
       ╠══════════════════╣
+
       ┣━━━━━━━━━━━━━━━━━━┫
+
       +------------------+
       ── Labelled
       ╶─ files ──────────╴

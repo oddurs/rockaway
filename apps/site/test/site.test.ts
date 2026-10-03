@@ -14,8 +14,10 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { frameBuffer } from '@rockaway/react';
+import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { checkPage, servePackageFile } from './checks.ts';
 
 const site = path.join(import.meta.dirname, '..');
 
@@ -30,6 +32,12 @@ const types: Record<string, string> = {
 function serve(dir: string, base: string): Promise<Server> {
   const server = createServer((request, response) => {
     const url = new URL(request.url ?? '/', 'http://localhost');
+    // The installed packages, for the checks a page runs on itself.
+    const module = servePackageFile(url.pathname);
+    if (module !== undefined) {
+      response.writeHead(200, { 'content-type': 'text/javascript' }).end(module);
+      return;
+    }
     if (!url.pathname.startsWith(base)) {
       response.writeHead(404).end();
       return;
@@ -56,6 +64,8 @@ beforeAll(async () => {
 afterAll(async () => {
   await browser?.close();
 });
+
+const components = (meta as { components: unknown[] }).components;
 
 describe.each(['/rockaway/', '/'])('served at %s', (base) => {
   let out: string;
@@ -175,6 +185,56 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     // No page brings styles of its own: the only inline style is the pipeline's
     // run lengths and column widths.
     expect(found.styled).toBe(0);
+  });
+
+  test('documents every component on a page that passes axe, conformance and continuity (0147)', async () => {
+    const reader = await browser.newPage();
+    const index = await reader.goto(`${origin}${base}components/`);
+    expect(index?.ok()).toBe(true);
+    const pages = await reader.evaluate(() =>
+      [...document.querySelectorAll<HTMLAnchorElement>('article li > a')].map((a) => a.href),
+    );
+    expect(pages.length).toBe(components.length);
+    for (const url of pages) {
+      await reader.goto(url);
+      await reader.evaluate(() => document.fonts.ready);
+      // Islands hydrate when they are seen: show each one, then wait for it.
+      for (const island of await reader.locator('astro-island').all()) {
+        await island.scrollIntoViewIfNeeded();
+      }
+      await reader.waitForFunction(
+        () => document.querySelectorAll('astro-island[ssr]').length === 0,
+      );
+      const report = await checkPage(reader);
+      expect(report.axe, url).toEqual([]);
+      expect(report.offGrid, `${url}\n${report.conformance}`).toBe(0);
+      expect(report.breaks, `${url}\n${report.continuity}`).toBe(0);
+    }
+    await reader.close();
+  });
+
+  test('shows every component as its snapshots with JavaScript off (0147)', async () => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const reader = await context.newPage();
+    for (const component of components as { name: string; snapshots: { text: string }[] }[]) {
+      const slug = component.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      await reader.goto(`${origin}${base}components/${slug}/`);
+      // Each snapshot is painted, and copies as the text it was drawn from.
+      const painted = await reader.evaluate(() =>
+        [...document.querySelectorAll('figure[role="img"] [data-rk-painted]')].map((layer) =>
+          [...layer.querySelectorAll('.rk-row')]
+            .map((row) => row.textContent?.trimEnd())
+            .join('\n'),
+        ),
+      );
+      const trimmed = (text: string) =>
+        text
+          .split('\n')
+          .map((line) => line.trimEnd())
+          .join('\n');
+      expect(painted, component.name).toEqual(component.snapshots.map((s) => trimmed(s.text)));
+    }
+    await context.close();
   });
 
   test('draws the foundations with the system, for a phone, with no script (0106)', async () => {

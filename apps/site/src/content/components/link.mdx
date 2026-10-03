@@ -1,0 +1,11 @@
+---
+name: Link
+---
+
+import { Example } from '../../islands/examples/link.tsx';
+import source from '../../islands/examples/link.tsx?raw';
+import Source from '../../components/Source.astro';
+
+<Example client:visible />
+
+<Source code={source} lang="tsx" />
