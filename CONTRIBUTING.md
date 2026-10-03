@@ -47,12 +47,15 @@ the decision first, in its own pull request, with the reasoning.
 
 ## Adding a component
 
-A component adds one line to each barrel and touches no other line:
+A component adds one file, and one line to each barrel, and touches no other line:
 
-- `packages/react/src/index.ts`: one `export { … } from './components/<name>.tsx';`
-  naming the component's public values and types, on one line. Names are listed
-  rather than `export *`, so anything the file exports only for its tests or
-  metadata stays out of the public API.
+- `packages/react/src/entries/<name>.ts`: `export { … } from '../components/<name>.tsx';`,
+  naming the component's public values and types. This is `@rockaway/react/<name>`,
+  the entry an islands site hydrates the component from, and the one list of
+  what the component makes public: anything else the component file exports
+  for its tests or metadata stays private. The build, the exports map and the
+  package check all find it without being told.
+- `packages/react/src/index.ts`: one `export * from './entries/<name>.ts';`.
 - `packages/css/src/index.css`: one `@import "./components/<name>.css";` among
   the component imports, in path order.
 - Every component file needs `'use client'` as its first line if it uses a hook
@@ -67,10 +70,10 @@ Both barrels merge with `merge=union` (see `.gitattributes`), so two branches
 that each added a line rebase without a conflict. The joined lines can come out
 of order: `pnpm format` sorts the TypeScript barrel, and the barrel test fails
 until the CSS imports are back in path order. Union cannot judge, though: if
-two branches changed the *same* line, say both added a name to Button's export,
-the merge keeps both versions. `pnpm --filter @rockaway/react test` then fails
-with the component listed twice. Delete the stale line, keep the one with every
-name, and run `pnpm format`.
+two branches changed the *same* line, the merge keeps both versions, and
+`pnpm --filter @rockaway/react test` fails with the component listed twice.
+Delete the stale line and run `pnpm format`. A component's public names live
+in its entry, not in the barrel, so adding one never touches a shared line.
 
 ## Changesets
 
