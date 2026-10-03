@@ -719,6 +719,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-attribute-underline-offset",
       "--rk-bg-inverse",
+      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-border-focus",
