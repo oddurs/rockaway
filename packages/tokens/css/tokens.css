@@ -1187,37 +1187,22 @@
   inherits: true;
 }
 
-@property --rk-motion-duration-base {
+@property --rk-motion-tick-blink {
   syntax: '<time>';
   inherits: true;
-  initial-value: 200ms;
+  initial-value: 500ms;
 }
 
-@property --rk-motion-duration-fast {
+@property --rk-motion-tick-progress {
   syntax: '<time>';
   inherits: true;
-  initial-value: 120ms;
+  initial-value: 100ms;
 }
 
-@property --rk-motion-duration-slow {
+@property --rk-motion-tick-spinner {
   syntax: '<time>';
   inherits: true;
-  initial-value: 320ms;
-}
-
-@property --rk-motion-easing-enter {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-motion-easing-exit {
-  syntax: '*';
-  inherits: true;
-}
-
-@property --rk-motion-easing-standard {
-  syntax: '*';
-  inherits: true;
+  initial-value: 80ms;
 }
 
 @property --rk-row-0 {
@@ -1601,12 +1586,9 @@
     --rk-glyph-spinner-8: "⠧";
     --rk-glyph-spinner-9: "⠇";
     --rk-glyph-spinner-10: "⠏";
-    --rk-motion-duration-base: 200ms;
-    --rk-motion-duration-fast: 120ms;
-    --rk-motion-duration-slow: 320ms;
-    --rk-motion-easing-enter: cubic-bezier(0, 0, 0, 1);
-    --rk-motion-easing-exit: cubic-bezier(0.3, 0, 1, 1);
-    --rk-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+    --rk-motion-tick-blink: 500ms;
+    --rk-motion-tick-progress: 100ms;
+    --rk-motion-tick-spinner: 80ms;
     --rk-row-0: 0;
     --rk-row-1: 1;
     --rk-row-2: 2;

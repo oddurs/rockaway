@@ -1,11 +1,31 @@
+import { useGlyphs, useTick } from '@rockaway/react';
+import { themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { text } from '../text.ts';
 
 /**
- * Focus and motion (cairn 0026, 0061). One ring for everything, and motion
- * that collapses when the reader asks for it, from the system setting or from
- * an in-app one.
+ * Motion is frames on a tick (cairn 0120): the theme's braille frames, one
+ * every `motion.tick.spinner`. The glyph is chrome, so the reader hears the
+ * label and not a dot pattern.
+ */
+function Spinner({ label }: { label: string }) {
+  const { spinner } = useGlyphs();
+  const frame = useTick('spinner', spinner.length);
+  return (
+    <span role="status">
+      <span aria-hidden="true" data-testid="spinner">
+        {spinner[frame]}
+      </span>{' '}
+      {label}
+    </span>
+  );
+}
+
+/**
+ * Focus and motion (cairn 0026, 0061, 0120). One ring for everything, and
+ * motion that stops on its first frame when the reader asks, from the system
+ * setting or from an in-app one.
  */
 function FocusAndMotion() {
   const control = {
@@ -46,14 +66,11 @@ function FocusAndMotion() {
         </button>
       </div>
 
+      <Spinner label="Indexing" />
+
       <div
-        data-testid="animated"
-        style={{
-          width: 120,
-          height: 24,
-          background: 'var(--rk-bg-accent-solid)',
-          transition: 'background var(--rk-motion-duration-base) var(--rk-motion-easing-standard)',
-        }}
+        data-testid="typed"
+        style={{ width: 120, height: 24, background: 'var(--rk-bg-accent-solid)' }}
       />
     </div>
   );
@@ -92,33 +109,62 @@ export const Focus: Story = {
   },
 };
 
+/** The in-app motion setting, on the root where an app would put it. */
+function motionSetting(value: 'full' | 'reduced') {
+  return () => {
+    const root = document.documentElement;
+    root.dataset.motion = value;
+    return () => {
+      delete root.dataset.motion;
+    };
+  };
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Frames on a tick: the spinner steps through its braille, one frame per tick. */
+export const Ticking: Story = {
+  beforeEach: motionSetting('full'),
+  play: async ({ canvas }) => {
+    const spinner = canvas.getByTestId('spinner');
+    // The accessible name is the label: the frame is aria-hidden.
+    await expect(canvas.getByRole('status')).toHaveTextContent('Indexing');
+    const first = spinner.textContent;
+    await waitFor(() => expect(spinner.textContent).not.toBe(first), { timeout: 1000 });
+  },
+};
+
+/**
+ * Reduced motion: the frames stop and the first frame stays. Switching the
+ * setting at runtime starts and stops the clock without a reload.
+ */
 export const ReducedMotion: Story = {
   name: 'Reduced motion',
+  beforeEach: motionSetting('reduced'),
   play: async ({ canvas }) => {
     const root = document.documentElement;
-    const box = canvas.getByTestId('animated');
-    const duration = () =>
-      getComputedStyle(root).getPropertyValue('--rk-motion-duration-base').trim();
+    const spinner = canvas.getByTestId('spinner');
+    const first = themeGlyphs.default.spinner[0];
 
-    await expect(duration()).toBe('0.2s');
-    await expect(getComputedStyle(box).transitionDuration).toBe('0.2s');
+    // Ten ticks' worth of waiting, and the spinner has not moved.
+    await expect(spinner.textContent).toBe(first);
+    await sleep(800);
+    await expect(spinner.textContent).toBe(first);
 
+    // Asked for motion, it moves; asked again for none, it is back on its first frame.
+    root.dataset.motion = 'full';
+    await waitFor(() => expect(spinner.textContent).not.toBe(first), { timeout: 1000 });
     root.dataset.motion = 'reduced';
-    try {
-      await expect(duration()).toBe('0.001s');
-      await expect(getComputedStyle(box).transitionDuration).toBe('0.001s');
-    } finally {
-      delete root.dataset.motion;
-    }
-
-    await expect(duration()).toBe('0.2s');
+    await waitFor(() => expect(spinner.textContent).toBe(first));
+    await sleep(400);
+    await expect(spinner.textContent).toBe(first);
   },
 };
 
 export const TypedProperties: Story = {
   name: 'Typed custom properties',
   play: async ({ canvas }) => {
-    const box = canvas.getByTestId('animated');
+    const box = canvas.getByTestId('typed');
     const cells = () => getComputedStyle(box).getPropertyValue('--rk-space-4').trim();
 
     // Space is a count of cells now (0090), not a length.

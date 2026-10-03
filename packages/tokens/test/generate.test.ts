@@ -86,6 +86,27 @@ describe('generated files', () => {
     }
   });
 
+  test('motion is frames on a tick, with no durations to ease between (0075, 0120)', () => {
+    // A terminal steps through whole frames; it never tweens. So the tokens
+    // are intervals, one per kind of stepped animation, and nothing is a
+    // duration to transition over or a curve to transition along.
+    const semantic = files.get('semantic.tokens.json') as Node;
+    const motion = semantic.motion as Node;
+    expect(Object.keys(motion).filter((k) => !k.startsWith('$'))).toEqual(['tick']);
+    expect(Object.fromEntries([...tokens(motion)].map(([id, t]) => [id, t.$value]))).toEqual({
+      'tick.spinner': { value: 80, unit: 'ms' },
+      'tick.blink': { value: 500, unit: 'ms' },
+      'tick.progress': { value: 100, unit: 'ms' },
+    });
+    for (const [name, doc] of files) {
+      if (name === resolverFile) continue;
+      for (const [id, , type] of tokens(doc as Node)) {
+        expect(type, `${name}: ${id}`).not.toBe('cubicBezier');
+        expect(id, `${name}: ${id}`).not.toMatch(/^motion\.(duration|easing)\./);
+      }
+    }
+  });
+
   test('every semantic alias names a palette slot that exists in both modes (0019, 0089)', () => {
     const semantic = files.get('semantic.tokens.json') as Node;
     const colours = { bg: semantic.bg, fg: semantic.fg, border: semantic.border } as Node;

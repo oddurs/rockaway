@@ -65,14 +65,12 @@ describe('Tailwind adapter (0030)', () => {
       'border-line-control',
       'p-4',
       'font-mono',
-      'ease-enter',
     ]);
 
     expect(out).toContain('var(--rk-bg-surface)');
     expect(out).toContain('var(--rk-fg-muted)');
     expect(out).toContain('var(--rk-border-control)');
     expect(out).toContain('var(--rk-font-family-mono)');
-    expect(out).toContain('var(--rk-motion-easing-enter)');
 
     // Spacing is the density unit, so p-4 follows the density context.
     expect(out).toContain('calc(var(--rk-space-1) * 4)');

@@ -1,31 +1,22 @@
 /*
- * Motion (cairn 0026).
+ * Motion (cairn 0026, 0120).
+ *
+ * Rockaway's own motion is frames on a tick, stepped in JavaScript by
+ * `useTick`, and nothing in this package transitions or eases: a check in
+ * @rockaway/react's tests fails the build if anything here starts to. So
+ * there is no token to collapse. Under reduced motion the frames stop and the
+ * first frame stays, and `useTick` reads the same two signals this file does.
  *
  * Reduced motion comes from two places: the reader's system setting, and an
  * in-app setting, which an app expresses as `data-motion="reduced"` on the
- * root. Both collapse the duration tokens, so anything reading them stops
- * animating, and both stop animation already written in CSS.
+ * root (`data-motion="full"` overrides the system). What is left here stops
+ * animation a consumer wrote in their own CSS. It shortens durations and
+ * never adds motion.
  *
  * The blanket rule is deliberately `!important`, and Biome's rule against it
  * is turned off for this file alone: this is the one place where the system
  * overrules a consumer, because the reader asked it to.
  */
-@layer rk.base {
-  @media (prefers-reduced-motion: reduce) {
-    :root:not([data-motion="full"]) {
-      --rk-motion-duration-fast: 1ms;
-      --rk-motion-duration-base: 1ms;
-      --rk-motion-duration-slow: 1ms;
-    }
-  }
-
-  :root[data-motion="reduced"] {
-    --rk-motion-duration-fast: 1ms;
-    --rk-motion-duration-base: 1ms;
-    --rk-motion-duration-slow: 1ms;
-  }
-}
-
 @layer rk.reset {
   @media (prefers-reduced-motion: reduce) {
     :root:not([data-motion="full"]) *,

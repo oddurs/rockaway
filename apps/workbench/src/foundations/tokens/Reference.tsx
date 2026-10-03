@@ -191,17 +191,18 @@ export function SemanticColours() {
 export function Motion() {
   const motion = entries(docs.semantic.motion, ['motion']);
   return (
-    <Page title="Motion" lead="Frames on a tick. Reduced motion collapses them in the base CSS.">
-      <Table caption="Durations and easings" head={['Token', 'Value']}>
+    <Page
+      title="Motion"
+      lead="Frames on a tick: how long each frame of a stepped animation holds. There are no durations to ease between and no curves. useTick() steps a frame counter on these intervals, one timer per interval for the whole page, and under reduced motion the frames stop on the first."
+    >
+      <Table caption="Ticks" head={['Token', 'Frame holds for']}>
         {motion.map((t) => (
           <tr key={t.path}>
             <td style={cell}>
               <code style={mono}>{t.path}</code>
             </td>
             <td style={{ ...cell, ...mono, ...muted }}>
-              {Array.isArray(t.value)
-                ? `cubic-bezier(${t.value.join(', ')})`
-                : `${(t.value as { value: number }).value}ms`}
+              {`${(t.value as { value: number }).value}ms`}
             </td>
           </tr>
         ))}
