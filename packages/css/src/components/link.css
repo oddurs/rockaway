@@ -1,0 +1,70 @@
+/*
+ * Link (cairn 0135).
+ *
+ * Inline text, always underlined, so a link never depends on its colour to be
+ * found. Each state is an attribute laid over the underline (0118), and none
+ * sets a size: a link in a sentence never moves the words after it.
+ *
+ * The link's colour is one custom property, set by the state that owns it.
+ * Pressed reverses that colour into the ground, and the cursor mark reads it
+ * too, so no rule reaches into a child to restate a colour per state.
+ */
+@layer rk.components {
+  .rk-link {
+    --rk-link-fg: var(--rk-fg-accent);
+
+    color: var(--rk-link-fg);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: var(--rk-attribute-underline-thickness);
+    text-underline-offset: var(--rk-attribute-underline-offset);
+    cursor: pointer;
+  }
+
+  /*
+   * The cursor mark's cell is the one before the link, which the layout leaves
+   * blank in every state. Out of flow, so it costs the link nothing; placed at
+   * the link's start and stepped back one cell, so it lands on that blank
+   * whichever way the text runs.
+   */
+  .rk-link-cursor {
+    position: absolute;
+    inline-size: var(--rk-cell-width);
+    margin-inline-start: calc(-1 * var(--rk-cell-width));
+    color: var(--rk-link-fg);
+  }
+
+  /* The external mark is a cell of the link's own. An inline-block, so the
+   * underline that runs under the words stops before it. */
+  .rk-link-external {
+    display: inline-block;
+    inline-size: var(--rk-cell-width);
+  }
+
+  /* Hover: the underline is already taken, so it doubles. */
+  .rk-link[data-hovered] {
+    text-decoration-style: double;
+  }
+
+  /* Current: bold, the body colour, and the cursor mark in the cell before. */
+  .rk-link[data-current] {
+    --rk-link-fg: var(--rk-fg-default);
+
+    font-weight: var(--rk-attribute-bold);
+  }
+
+  /* Pressed: reverse video. The link's colour becomes the ground, which is a
+   * swap a terminal makes and forced colors keeps (LinkText behind Canvas). */
+  .rk-link[data-pressed] {
+    background: var(--rk-link-fg);
+    color: var(--rk-bg-page);
+  }
+
+  /* Disabled dims, and is still underlined: it is a link that cannot be used
+   * right now, not body text. */
+  .rk-link[data-disabled] {
+    --rk-link-fg: var(--rk-fg-disabled);
+
+    cursor: default;
+  }
+}
