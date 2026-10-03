@@ -3,12 +3,14 @@ id: 210
 uid: bbfe101f-e008-44b1-a43d-3e1c47a8eed4
 title: Make the continuity stories readable
 type: chore
-status: backlog
+status: done
 milestone: primitives
+assignee: Oddur Sigurdsson
 depends_on:
 - 117
 created: 2026-10-03
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p1
 layer: tooling
 effort: s
@@ -25,6 +27,10 @@ story that looks broken is a bad story, and this workbench is shown to people.
 
 ## Acceptance criteria
 
-- [ ] Every block fixture row carries its name (shades, eighth bars, halves, eighth edges, quadrants, solid run, shade runs)
-- [ ] Every junction frame is wide enough that its title reads whole, and the play function requires it
-- [ ] The continuity assertions are exactly as strong as before
+- [x] Every block fixture row carries its name (shades, eighth bars, halves, eighth edges, quadrants, solid run, shade runs)
+- [x] Every junction frame is wide enough that its title reads whole, and the play function requires it
+- [x] The continuity assertions are exactly as strong as before
+
+## 2026-10-03
+
+Blocks: one row per kind, named in fg.muted, scrollbar thumb over track down the right edge; groups share a column so rows still meet. Junction frames 18 cells, rule at 11, so every title reads whole; mixed frames titled mixed and weights. Play function requires whole titles and named block rows; 0175's ellipsis stays proved by label.test.ts. Continuity counts unchanged (18 layers, >600 shapes, >500 joins, 8 fills; SubPixel 27 layers, >900 joins).
