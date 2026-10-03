@@ -60,6 +60,8 @@ export interface Parameters {
   readonly conformance?: boolean;
   readonly continuity?: boolean;
   readonly targets?: boolean;
+  /** `false` for a story that breaks the field contract on purpose, to show the check. */
+  readonly fields?: boolean;
   readonly matrix?: { readonly skip?: readonly Skip[] };
 }
 
