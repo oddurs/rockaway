@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`####······` 37% · 37 of 101 done · due 2027-01-31
+`####······` 38% · 38 of 101 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -152,7 +152,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0191`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0191-report-an-off-grid-box-inside-nested-screens-once.md) Report an off-grid box inside nested screens once <sup>bug · tooling · p3</sup>
 - [ ] [`0192`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0192-tighten-what-the-metadata-extractor-credits-to-a-component.md) Tighten what the metadata extractor credits to a component <sup>bug · tooling · p3</sup>
 - [ ] [`0193`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0193-rename-screen-s-chrome-layer-from-rk-frame-to-rk-chrome.md) Rename Screen's chrome layer from rk-frame to rk-chrome <sup>chore · components · p3</sup>
-- [ ] [`0199`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0199-remeasure-a-screen-when-its-context-changes.md) Remeasure a screen when its context changes <sup>bug · components · p0</sup>
 - [ ] [`0201`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0201-check-that-every-reversing-rule-opts-out-of-the-forced-colors-backplate.md) Check that every reversing rule opts out of the forced-colors backplate <sup>chore · tooling · p2</sup>
 - [ ] [`0202`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0202-move-button-s-forced-colors-opt-out-into-its-own-stylesheet.md) Move Button's forced-colors opt-out into its own stylesheet <sup>chore · css · p3</sup>
 - [ ] [`0207`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0207-no-native-scrollbars-a-scroll-position-is-drawn-in-cells.md) No native scrollbars: a scroll position is drawn in cells <sup>decision · css · p0</sup>
@@ -216,6 +215,7 @@ The component contract, proven on a first set of components.
 - [x] [`0181`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0181-make-reverse-video-survive-forced-colors-everywhere.md) Make reverse video survive forced colors everywhere <sup>bug · css · p1</sup>
 - [x] [`0197`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0197-meet-wcag-2-2-aa-target-size-at-the-default-density-and-44px-at-touch.md) Meet WCAG 2.2 AA target size at the default density, and 44px at touch <sup>decision · tokens · p0</sup>
 - [x] [`0198`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0198-set-the-density-line-boxes-to-meet-aa-at-normal-and-44px-at-touch.md) Set the density line boxes to meet AA at normal and 44px at touch <sup>bug · tokens · p0</sup>
+- [x] [`0199`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0199-remeasure-a-screen-when-its-context-changes.md) Remeasure a screen when its context changes <sup>bug · components · p0</sup>
 - [x] [`0200`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0200-clear-a-control-s-background-in-the-reset.md) Clear a control's background in the reset <sup>bug · css · p1</sup>
 - [x] [`0204`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0204-verify-fieldframe-inside-numberfield-and-datefield.md) Verify FieldFrame inside NumberField and DateField <sup>chore · components · p2</sup>
 - [x] [`0209`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0209-link-hover-is-bold-never-a-double-underline.md) Link hover is bold, never a double underline <sup>bug · css · p1</sup>
