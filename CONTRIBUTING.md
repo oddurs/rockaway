@@ -66,6 +66,9 @@ A component adds one file, and one line to each barrel, and touches no other lin
   `pnpm --filter @rockaway/react metadata` to read its props and tokens.
   `test/metadata.test.ts` fails for a component exported without metadata, and
   for metadata that names a part, variant or state the component does not have.
+  Then run `pnpm api:write`, which rewrites every package's `API.md` from
+  source in a few seconds, and read the diff: a new component adds its entry
+  point, its classes and its attributes there (cairn 0153).
 - Anything that scrolls takes `rk-scroll`, so the browser draws no scrollbar of
   its own (decision 0207), and shows its position in cells: a scrollbar column
   drawn by the engine for a viewport that scrolls by rows (see List), or
