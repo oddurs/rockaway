@@ -73,12 +73,19 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       createElement(rockaway.ListItem, { id: 'a' }, 'a.ts'),
       createElement(rockaway.ListItem, { id: 'b' }, 'b.ts'),
     ),
+  RadioGroup: (props) =>
+    createElement(
+      rockaway.RadioGroup,
+      { label: 'Branch', ...props },
+      createElement(rockaway.Radio, { value: 'main' }, 'main'),
+    ),
 };
 
 /** A role a part may have without writing it, because its element implies it. */
 const IMPLICIT: Readonly<Record<string, RegExp>> = {
   button: /<button[\s>]/,
   link: /<a [^>]*href=/,
+  radio: /<input [^>]*type="radio"/,
 };
 
 const FOCUSABLE = /<(?:button|input|select|textarea)[\s>]|<a [^>]*href=|tabindex="0"/;
@@ -597,6 +604,29 @@ describe('the snapshots, as the site draws them', () => {
        Nothing here.   █
                        █
                        █"
+    `);
+  });
+
+  test('RadioGroup', () => {
+    expect(snapshots(byName('RadioGroup'))).toMatchInlineSnapshot(`
+      "── Vertical
+      ┌ Branch ──────────────────────┐
+      │ ● main                       │
+      │ ○ develop                    │
+      │ ○ release                    │
+      └──────────────────────────────┘
+      ── Horizontal
+      ┌ Branch ──────────────────────┐
+      │ ● main  ○ develop  ○ release │
+      └──────────────────────────────┘
+      ── Required and invalid
+      ┏ Branch* ━━━━━━━━━━━━━━━━━━━━━┓
+      ┃ ● main  ○ develop  ○ release ┃
+      ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+      ── Read-only
+      ┌ Branch ──────────────────────┐
+      │ ● main    develop    release │
+      └──────────────────────────────┘"
     `);
   });
 });
