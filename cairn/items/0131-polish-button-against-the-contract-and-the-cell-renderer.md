@@ -56,3 +56,4 @@ first thing a reviewer opens is not the weakest.
 - [ ] `danger` carries its mark, and a greyscale screenshot story shows it
 - [ ] `aria-keyshortcuts` and the visible hint agree on every platform, through one shared platform hook with KeyHint
 - [ ] Variants come from the variant helper (0032)
+- [ ] `quiet` is decided: either a variant that drops its delimiters and padding (and the one declared geometry exception is justified in 0118's terms), or `delimiters="none"` with padding that follows the delimiters and no exception left

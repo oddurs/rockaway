@@ -51,9 +51,11 @@ function ForcedColors() {
   );
 }
 
-const meta = { title: 'Foundations/Forced colors', component: ForcedColors } satisfies Meta<
-  typeof ForcedColors
->;
+const meta = {
+  title: 'Foundations/Forced colors',
+  component: ForcedColors,
+  tags: ['forced-colors'],
+} satisfies Meta<typeof ForcedColors>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

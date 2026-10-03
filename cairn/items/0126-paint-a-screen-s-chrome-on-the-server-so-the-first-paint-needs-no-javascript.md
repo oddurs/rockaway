@@ -38,3 +38,4 @@ the measured size differs.
 - [ ] A measured screen renders at its fallback on the server, and corrects to the measured size on the client without a layout shift outside its own box
 - [ ] A story renders a server-rendered screen with scripts disabled and asserts its text snapshot
 - [ ] The concept's "Where it is thin" entry about static pages is rewritten to say what is now true
+- [ ] The pure buffer functions (`frameBuffer`, `dividerBuffer`, `drawRule`, `scrollbarBuffer`, `formatKeys` and the rest) live in modules without `'use client'`, so a server component or text renderer can call them; the component files import them
