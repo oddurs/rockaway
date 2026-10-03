@@ -47,3 +47,5 @@ first thing a reviewer opens is not the weakest.
 - [ ] Focus and selection are distinguishable in a multi-select list, in a snapshot and in forced colors
 - [ ] An empty list draws an empty state, through React Aria's `renderEmptyState`
 - [ ] No hard-coded pixel value is left in the component
+- [ ] A pure `listBuffer` draws the whole List (rows, cursor cell, scrollbar) and `ListItem` renders from it, so List's snapshot is the component and not only its scrollbar
+- [ ] List counts its rows from the collection, not from one `scrollHeight` read taken before React Aria renders it; stories that pass `total` only for this stop passing it
