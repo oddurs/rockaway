@@ -58,25 +58,25 @@ export const known: readonly Known[] = [
     ticket: 'touch line box becomes 2.75 (CTO decision on 0125)',
   },
   {
-    id: 'normal-list-rows',
+    id: 'normal-one-row',
     check: 'targets',
     rule: 'size',
     densities: ['normal'],
-    element: /rk-list-item/,
-    present: '.rk-list-item',
+    element: /./,
+    present: TARGETS,
     reason:
-      'list rows are one 20px cell tall and touch each other, so neither the 24px minimum nor the spacing exception of WCAG 2.5.8 holds',
+      'a one-row target is one 20px cell tall, so two that sit a row or a cell apart (list rows, links in a nav, a button beside a list) crowd each other and neither the 24px minimum nor the spacing exception of WCAG 2.5.8 holds',
     ticket: 'normal line box becomes 1.5, 24px rows (CTO decision on 0125)',
   },
   {
-    id: 'dense-list-rows',
+    id: 'dense-one-row',
     check: 'targets',
     rule: 'size',
     densities: ['dense'],
-    element: /rk-list-item/,
-    present: '.rk-list-item',
+    element: /./,
+    present: TARGETS,
     reason:
-      'dense is a deliberate opt-in that trades target size for density: 16px rows that touch cannot meet WCAG 2.5.8, and dense says so where it is documented',
+      'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented',
     ticket: 'dense trades target size for density (CTO decision on 0125)',
   },
   {

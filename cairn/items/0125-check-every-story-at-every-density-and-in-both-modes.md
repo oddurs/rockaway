@@ -55,3 +55,7 @@ What the matrix found (see the report): (1) Screen never remeasures on a context
 ## 2026-10-03
 
 Known failures are declared in .storybook/known.ts (approved by the CTO): each names the check, rule, cells, element, the reason and the ticket. Every one it excuses is printed in the run, and a reporter fails the run on any entry that was in play (its subject was on the page in a cell it covers) yet excused nothing, so an entry has to go when its ticket lands. Prose opts out of dense/airy/touch with a reason: its hand-built screen is measured by its own play function, which walks the densities itself.
+
+## 2026-10-03
+
+CI on the PR found one-row targets crowding each other beyond List: nav links at normal (Link Current) and a Button beside a List row (Glyphs, Themes) at normal and dense. Both are what the CTO's density decisions settle, so the normal and dense entries now cover every one-row target (normal-one-row, dense-one-row). A broad entry can go unused in a run of a few files, so the stale reporter fails only a run of the whole workbench and warns in a filtered one.

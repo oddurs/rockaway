@@ -2,7 +2,7 @@ import path from 'node:path';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
-import type { BrowserInstanceOption, Reporter } from 'vitest/node';
+import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
 import { knownLedger, printToPdf, recordKnown } from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
 import { known } from './.storybook/known.ts';
@@ -96,31 +96,48 @@ const plans = {
 
 /**
  * A known failure that no longer fails is a ticket that landed and an entry
- * nobody removed (cairn 0125). Only entries a story put in play count, so a
- * run of one file does not condemn the entries about the others.
+ * nobody removed (cairn 0125): in a run of the whole workbench, it fails the
+ * run. A run of part of it may simply not have reached the stories that still
+ * fail, so there a stale entry is only a warning.
  */
-const staleKnown: Reporter = {
-  onTestRunEnd() {
-    const ledger = knownLedger();
-    const stale = known.filter((k) => ledger.inPlay.has(k.id) && !ledger.used.has(k.id));
-    const used = known.filter((k) => ledger.used.has(k.id));
-    if (used.length > 0) {
-      console.info(
-        `\nKnown failures still failing (.storybook/known.ts):\n${used.map((k) => `  ${k.id}: ${k.ticket}`).join('\n')}`,
-      );
-    }
-    if (stale.length > 0) {
+const staleKnown = (): Reporter => {
+  let vitest: Vitest | undefined;
+  let partial = false;
+  return {
+    onInit(instance) {
+      vitest = instance;
+    },
+    async onTestRunStart(specifications) {
+      if (!vitest) return;
+      const every = await vitest.globTestSpecifications();
+      partial = specifications.length < every.length || vitest.config.testNamePattern !== undefined;
+    },
+    onTestRunEnd() {
+      const ledger = knownLedger();
+      const stale = known.filter((k) => ledger.inPlay.has(k.id) && !ledger.used.has(k.id));
+      const used = known.filter((k) => ledger.used.has(k.id));
+      if (used.length > 0) {
+        console.info(
+          `\nKnown failures still failing (.storybook/known.ts):\n${used.map((k) => `  ${k.id}: ${k.reason}\n    settled by: ${k.ticket}`).join('\n')}`,
+        );
+      }
+      if (stale.length === 0) return;
+      const list = stale.map((k) => `  ${k.id}: ${k.ticket}`).join('\n');
+      if (partial) {
+        console.warn(`\nKnown failures that did not fail in this part of the workbench:\n${list}`);
+        return;
+      }
       console.error(
-        `\nKnown failures that no longer fail; remove them from .storybook/known.ts:\n${stale.map((k) => `  ${k.id}: ${k.ticket}`).join('\n')}`,
+        `\nKnown failures that no longer fail; remove them from .storybook/known.ts:\n${list}`,
       );
       process.exitCode = 1;
-    }
-  },
+    },
+  };
 };
 
 const config: ViteUserConfig = defineConfig({
   test: {
-    reporters: ['default', staleKnown],
+    reporters: ['default', staleKnown()],
     projects: [
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
