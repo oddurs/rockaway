@@ -178,7 +178,6 @@ export const Painters: Story = {
  * at every line box.
  */
 export const Densities: Story = {
-  tags: ['zoom'],
   // Off and on only: every painted track is a screenshot the continuity check
   // reads in every cell of the matrix, and the other states draw the same line.
   render: () => (
@@ -207,6 +206,28 @@ export const Densities: Story = {
         expect(trackOf(input).getBoundingClientRect().height).toBeCloseTo(cell, 1);
       }
     }
+  },
+};
+
+/**
+ * At 200%: the zoom browser walks every density itself and reads every
+ * stroke, so one frame, off and on, is the whole of what it needs to see.
+ * Densities does the same with four frames in the ordinary browser.
+ */
+export const Zoom: Story = {
+  tags: ['zoom'],
+  render: () => (
+    <Frame title="zoom" cols={COLS} rows={4}>
+      <Switch>Wrap lines</Switch>
+      <Switch defaultSelected>Show hidden files</Switch>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const frame = canvas.getByRole('group', { name: 'zoom' });
+    expect(screenshot(frame, { legend: false })).toBe(
+      framed('zoom', [cells('Wrap lines'), cells('Show hidden files', { selected: true })]),
+    );
   },
 };
 
