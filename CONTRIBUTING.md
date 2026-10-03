@@ -66,6 +66,12 @@ A component adds one file, and one line to each barrel, and touches no other lin
   `pnpm --filter @rockaway/react metadata` to read its props and tokens.
   `test/metadata.test.ts` fails for a component exported without metadata, and
   for metadata that names a part, variant or state the component does not have.
+- Anything that scrolls takes `rk-scroll`, so the browser draws no scrollbar of
+  its own (decision 0207), and shows its position in cells: a scrollbar column
+  drawn by the engine for a viewport that scrolls by rows (see List), or
+  `rk-scroll-marks` for a region that scrolls across. A check after every story
+  fails a scrolling element without it. Tag the stories `classic-scrollbars` to
+  run them again with scrollbars that take room.
 
 Both barrels merge with `merge=union` (see `.gitattributes`), so two branches
 that each added a line rebase without a conflict. The joined lines can come out

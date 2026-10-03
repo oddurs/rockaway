@@ -1,5 +1,10 @@
 import { GlyphProvider } from '@rockaway/react';
-import { expectConformance, expectContinuity, formatReport } from '@rockaway/react/testing';
+import {
+  expectConformance,
+  expectContinuity,
+  expectNoNativeScrollbars,
+  formatReport,
+} from '@rockaway/react/testing';
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import type { Decorator, Preview } from '@storybook/react-vite';
 import '@fontsource-variable/jetbrains-mono';
@@ -118,8 +123,11 @@ export const afterEach = async ({
   parameters,
 }: {
   canvasElement: HTMLElement;
-  parameters: { conformance?: boolean; continuity?: boolean };
+  parameters: { conformance?: boolean; continuity?: boolean; scrollbars?: boolean };
 }): Promise<void> => {
+  // No native scrollbar is ever drawn (0207). By computed style, because a
+  // headless browser hides scrollbars and every bar would measure 0px.
+  if (parameters.scrollbars !== false) expectNoNativeScrollbars(canvasElement);
   if (parameters.conformance !== false) {
     // Every screen in one pass, so an exception inside nested screens is
     // counted once.

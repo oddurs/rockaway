@@ -63,7 +63,25 @@
   /* Blocks are a blank row apart. */
   .rk-prose
     :where(*)
-    + :where(p, ul, ol, dl, blockquote, pre, table, hr, figure, details, h1, h2, h3, h4, h5, h6) {
+    + :where(
+      p,
+      ul,
+      ol,
+      dl,
+      blockquote,
+      pre,
+      table,
+      .rk-scroll-marks,
+      hr,
+      figure,
+      details,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6
+    ) {
     margin-block-start: var(--rk-y-1);
   }
 
@@ -178,11 +196,18 @@
    */
   .rk-prose :where(pre) {
     max-inline-size: 100%;
-    padding: var(--rk-y-1) var(--rk-x-2);
+    padding-block: var(--rk-y-1);
     overflow-x: auto;
     overflow-wrap: normal;
     background: var(--rk-bg-subtle);
     white-space: pre;
+    /* Its overflow marks (scroll.css) cover a cell on its own ground. */
+    --rk-scroll-ground: var(--rk-bg-subtle);
+  }
+
+  /* The two cells either side are the code's, so the marks reach the edge. */
+  .rk-prose :where(pre > code) {
+    padding-inline: var(--rk-x-2);
   }
 
   .rk-prose :where(:not(pre) > code) {
@@ -236,6 +261,22 @@
     max-inline-size: 100%;
     overflow-x: auto;
     overflow-wrap: normal;
+  }
+
+  /*
+   * A table that can show where it has scrolled to is wrapped, and the wrapper
+   * scrolls instead: `<div class="rk-scroll-marks" tabindex="0"><table>`. A
+   * table holds several boxes, a header and a body, and the overflow marks
+   * need one (scroll.css). The site's pipeline wraps every table.
+   */
+  .rk-prose :where(.rk-scroll-marks) {
+    max-inline-size: 100%;
+    overflow-x: auto;
+  }
+
+  .rk-prose :where(.rk-scroll-marks > table) {
+    max-inline-size: none;
+    overflow: visible;
   }
 
   .rk-prose :where(th, td) {
