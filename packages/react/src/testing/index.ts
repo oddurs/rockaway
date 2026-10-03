@@ -23,6 +23,14 @@ export {
   expectContinuity,
   formatContinuity,
 } from './continuity.ts';
+export {
+  checkField,
+  expectField,
+  type FieldOptions,
+  type FieldProblem,
+  type FieldReport,
+  formatFields,
+} from './field.ts';
 export { type ScreenshotOptions, screenshot } from './screenshot.ts';
 export {
   checkTargets,
