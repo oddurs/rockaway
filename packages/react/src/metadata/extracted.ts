@@ -93,7 +93,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       },
       {
         "name": "platform",
-        "type": "'apple' | 'other' | 'auto'",
+        "type": "Platform | 'auto'",
         "required": false,
         "default": "'auto'"
       },
@@ -185,7 +185,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       {
         "name": "titleAlign",
         "type": "'start' | 'center' | 'end'",
-        "required": false
+        "required": false,
+        "description": "Where the title sits in the top edge: after the corner, by default."
       },
       {
         "name": "border",
@@ -198,6 +199,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "readonly number[]",
         "required": false,
         "description": "Rows that get a rule across the frame, in cells from the frame's top. They join the sides through the junction model — a divider never draws a corner of its own."
+      },
+      {
+        "name": "dividerBorder",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set the dividers draw with; the frame's own when not given. A heavy box may hold light dividers (cairn 0073), and the junction table resolves the tee where they meet the sides: `┣━━┫` becomes `┠──┨`."
       },
       {
         "name": "pad",
@@ -238,9 +245,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       },
       {
         "name": "platform",
-        "type": "'apple' | 'other' | 'auto'",
+        "type": "Platform | 'auto'",
         "required": false,
-        "description": "Which keyboard to render for. Detected after mount by default.",
+        "description": "Which keyboard to render for. The reader's by default, through `usePlatform()`.",
         "default": "'auto'"
       },
       {
@@ -336,7 +343,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "ReactNode",
         "required": false,
         "description": "What an empty list says, in its first row. `renderEmptyState` replaces it.",
-        "default": "'Nothing here.'"
+        "default": "EMPTY"
       },
       {
         "name": "className",

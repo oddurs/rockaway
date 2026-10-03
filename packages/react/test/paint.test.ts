@@ -1,6 +1,6 @@
 import { Attr, Buffer, drawText, fromText } from '@rockaway/grid';
 import { describe, expect, test } from 'vitest';
-import { frameBuffer } from '../src/components/frame.tsx';
+import { frameBuffer } from '../src/components/frame.pure.ts';
 import { rowRuns } from '../src/paint/cells.ts';
 
 const runs = (buffer: Buffer, y: number) =>
@@ -58,6 +58,7 @@ describe('rowRuns', () => {
 
   test('ascii borders are letters, so the font draws them', () => {
     const ascii = frameBuffer({ width: 6, height: 3 }, { border: 'ascii' });
-    expect(rowRuns(ascii, 0)).toEqual([{ text: '+----+', cells: 6, style: { attrs: 0 } }]);
+    const line = { fg: 'border.default', attrs: 0 };
+    expect(rowRuns(ascii, 0)).toEqual([{ text: '+----+', cells: 6, style: line }]);
   });
 });

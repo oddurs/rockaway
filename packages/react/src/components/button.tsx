@@ -1,43 +1,13 @@
 'use client';
-
-/**
- * `Button` (cairn 0033): the first control, and the conventions the rest follow.
- *
- * A TUI button is delimited text — `[ Publish ]` — and it inverts when you
- * press it, the way a terminal has always shown a key going down. So:
- *
- *   - the delimiters are chrome: `aria-hidden`, never part of the name
- *   - pressing reverses the video, which needs no colour at all
- *   - hover underlines, disabled dims, focus is the ring in `focus.css`
- *
- * Behaviour is React Aria's. It supplies `data-hovered`, `data-pressed`,
- * `data-focus-visible` and `data-disabled`, and the CSS reads nothing else:
- * there is no state in here that is not in the DOM.
- */
-import { Buffer, drawText, stringWidth } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useEffect, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
-import {
-  defineVariants,
-  type VariantProps,
-  type Variants,
-  type VariantValue,
-} from '../variants.ts';
-import { formatKeys, KeyHint, keyShortcut, type Platform } from './key-hint.tsx';
-
-const VARIANTS = {
-  variant: ['default', 'fill', 'quiet', 'danger'],
-  size: ['md', 'lg'],
-} as const;
-
-/** Button's variants, as data: the props, the attributes and the metadata all read this. */
-export const buttonVariants: Variants<typeof VARIANTS> = defineVariants(VARIANTS, {
-  variant: 'default',
-  size: 'md',
-});
+import { useGlyphs } from '../glyphs.tsx';
+import { usePlatform } from '../platform.ts';
+import type { VariantProps, VariantValue } from '../variants.ts';
+import { buttonVariants, endsOf } from './button.pure.ts';
+import { keyShortcut } from './key-hint.pure.ts';
+import { KeyHint, type Platform } from './key-hint.tsx';
 
 export type ButtonVariant = VariantValue<typeof buttonVariants, 'variant'>;
 export type ButtonSize = VariantValue<typeof buttonVariants, 'size'>;
@@ -70,52 +40,9 @@ export interface ButtonProps
   readonly style?: React.CSSProperties;
 }
 
-/** The delimiters a button draws. `quiet` drops them unless they are asked for. */
-function endsOf(
-  variant: ButtonVariant,
-  delimiters: ButtonProps['delimiters'],
-  glyphs: Glyphs,
-): readonly [string, string] | undefined {
-  if (delimiters === 'none') return undefined;
-  return delimiters ?? (variant === 'quiet' ? undefined : glyphs.delimiter.control);
-}
-
 export interface ButtonTextOptions
   extends Pick<ButtonProps, 'variant' | 'size' | 'delimiters' | 'keys'> {
   readonly platform?: Platform;
-}
-
-/**
- * The button as text, cell for cell, at the normal density: what it occupies
- * on the grid, and its text snapshot (cairn 0047). The delimiters come from
- * the same function the component draws them with, and the glyphs are the
- * theme's, as in the other buffer functions. The cell of air either side of
- * the label, and `lg`'s extra cell and three rows, are the stylesheet's, so
- * this has to follow `button.css` when that changes. Reverse video is an
- * attribute, and text has none: `fill` and a pressed button draw the same
- * cells as `default`.
- */
-export function buttonBuffer(
-  label: string,
-  options: ButtonTextOptions = {},
-  glyphs: Glyphs = defaultGlyphs,
-): Buffer {
-  const chosen = buttonVariants.select(options);
-  const ends = endsOf(chosen.variant, options.delimiters, glyphs);
-  const air = chosen.variant === 'quiet' ? '' : ' ';
-  const hint =
-    options.keys === undefined ? '' : ` ${formatKeys(options.keys, options.platform ?? 'other')}`;
-  const pad = chosen.size === 'lg' ? ' ' : '';
-  const line = `${pad}${ends?.[0] ?? ''}${air}${label}${hint}${air}${ends?.[1] ?? ''}${pad}`;
-  const rows = chosen.size === 'lg' ? 3 : 1;
-  return Buffer.create({ width: stringWidth(line), height: rows }).draw((draft) => {
-    drawText(draft, { x: 0, y: Math.floor(rows / 2) }, line);
-  });
-}
-
-/** The shortcut has to be resolved for the server too, so `auto` is `other`. */
-function resolve(platform: Platform | 'auto'): Platform {
-  return platform === 'auto' ? 'other' : platform;
 }
 
 export function Button({
@@ -132,7 +59,10 @@ export function Button({
   // `aria-keyshortcuts` never reaches the element through props. It is the right
   // attribute for a chord, so it goes on afterwards, by hand.
   const host = useRef<HTMLButtonElement>(null);
-  const shortcut = keys === undefined ? undefined : keyShortcut(keys, resolve(platform));
+  // One keyboard for what is drawn and what is announced, so a Mac shows ⌘S and
+  // is told Meta+s, never Control+s (cairn 0132).
+  const keyboard = usePlatform(platform);
+  const shortcut = keys === undefined ? undefined : keyShortcut(keys, keyboard);
   useEffect(() => {
     const el = host.current;
     if (!el) return;
@@ -160,7 +90,7 @@ export function Button({
         {keys === undefined ? null : (
           <>
             {' '}
-            <KeyHint keys={keys} platform={platform} decorative />
+            <KeyHint keys={keys} platform={keyboard} decorative />
           </>
         )}
       </span>

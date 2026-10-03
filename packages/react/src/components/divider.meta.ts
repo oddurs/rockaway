@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { dividerBuffer } from './divider.tsx';
+import { dividerBuffer } from './divider.pure.ts';
 
 export const dividerMeta: ComponentMetaInput = defineMeta({
   name: 'Divider',

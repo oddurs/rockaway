@@ -1,8 +1,10 @@
 import { Buffer, contentArea, drawBox, drawText, rect, type Size } from '@rockaway/grid';
-import { renderScreenToText, Screen } from '@rockaway/react';
+import { Frame, frameBuffer, renderScreenToText, Screen } from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 import { expect, waitFor } from 'storybook/test';
+import { runner } from '../../.storybook/runner.ts';
 
 /** Draws to whatever size it is given, which is the whole point. */
 function draw({ width, height }: Size): Buffer {
@@ -51,6 +53,33 @@ export const MeasuresItsContainer: Story = {
     const cell = Number.parseFloat(getComputedStyle(screen).getPropertyValue('--rk-cell-width'));
     expect(cell).toBeGreaterThan(4);
     expect(cols).toBe(Math.floor(host.getBoundingClientRect().width / cell));
+  },
+};
+
+/**
+ * A box exactly n characters wide is n cells, at the widths a TUI layout is
+ * held to. The measured cell is rounded to the layout unit and can come out a
+ * hair wider than the font's advance; counted naively, forty characters made
+ * thirty-nine cells, and the frame drawn in them stopped short of its box.
+ */
+export const WholeWidths: Story = {
+  name: 'A box n characters wide is n cells',
+  args: { width: 0 },
+  render: () => (
+    <div style={{ display: 'grid', gap: '4px' }}>
+      {[40, 60, 80, 120].map((n) => (
+        <div key={n} style={{ inlineSize: `${n}ch`, blockSize: '3lh' }}>
+          <Screen data-testid={`${n}`} draw={draw} style={{ width: '100%', height: '100%' }} />
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    for (const n of [40, 60, 80, 120]) {
+      const screen = canvas.getByTestId(`${n}`);
+      await waitFor(() => expect(screen.dataset.rkCols, `${n}ch`).toBe(String(n)));
+      expect(screen.dataset.rkRows, `${n}ch`).toBe('3');
+    }
   },
 };
 
@@ -119,5 +148,102 @@ export const RulePainter: Story = {
     expect(rule.querySelector('.rk-frame')?.textContent).toBe(
       glyph.querySelector('.rk-frame')?.textContent,
     );
+  },
+};
+
+/**
+ * Server-rendered, then hydrated (cairn 0126). The chrome arrives in the
+ * markup, and hydration keeps the very nodes the server sent: no mismatch, no
+ * repaint, and a screen with a fixed size in cells does not change width when
+ * its cell goes from `1ch` to the measured pixels.
+ */
+export const Hydrates: Story = {
+  name: 'Hydrates without a repaint',
+  args: { width: 480 },
+  render: () => <div data-testid="island" />,
+  play: async ({ canvas }) => {
+    const island = canvas.getByTestId('island');
+    const tree = <Screen draw={draw} cols={24} rows={5} />;
+    island.innerHTML = renderToString(tree);
+    const screen = island.querySelector<HTMLElement>('.rk-screen') as HTMLElement;
+    const rows = [...island.querySelectorAll('.rk-row')];
+    const width = screen.getBoundingClientRect().width;
+    expect(rows[0]?.textContent).toContain('┌ 24×5');
+    expect(getComputedStyle(screen).getPropertyValue('--rk-cell-width').trim()).toBe('1ch');
+
+    const errors: unknown[] = [];
+    const root = hydrateRoot(island, tree, { onRecoverableError: (error) => errors.push(error) });
+    await waitFor(() =>
+      expect(getComputedStyle(screen).getPropertyValue('--rk-cell-width')).toMatch(/px$/),
+    );
+    expect(errors).toEqual([]);
+    expect(island.querySelector('.rk-screen')).toBe(screen);
+    expect([...island.querySelectorAll('.rk-row')]).toEqual(rows);
+    for (const [i, row] of rows.entries()) expect(island.querySelectorAll('.rk-row')[i]).toBe(row);
+    expect(screen.getBoundingClientRect().width).toBeCloseTo(width, 1);
+    root.unmount();
+  },
+};
+
+/**
+ * A measured screen has no size on a server, so it renders at its fallback and
+ * corrects on the client. The correction stays inside the box the page gave
+ * it: nothing around the screen moves.
+ */
+export const HydratesMeasured: Story = {
+  name: 'A measured screen corrects itself inside its own box',
+  args: { width: 480 },
+  render: () => (
+    <div>
+      <div data-testid="host" style={{ width: 240, height: 120 }} />
+      <p data-testid="after">after</p>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const host = canvas.getByTestId('host');
+    const after = canvas.getByTestId('after');
+    const tree = (
+      <Screen
+        draw={draw}
+        fallback={{ width: 40, height: 8 }}
+        style={{ width: '100%', height: '100%' }}
+      />
+    );
+    host.innerHTML = renderToString(tree);
+    const screen = host.querySelector<HTMLElement>('.rk-screen') as HTMLElement;
+    expect(screen.dataset.rkCols).toBe('40');
+    const box = screen.getBoundingClientRect();
+    const below = after.getBoundingClientRect().top;
+
+    const root = hydrateRoot(host, tree);
+    await waitFor(() => expect(Number(screen.dataset.rkCols)).toBeLessThan(40));
+    expect(screen.getBoundingClientRect()).toEqual(box);
+    expect(after.getBoundingClientRect().top).toBe(below);
+    expect(screen.textContent).toContain(`┌ ${screen.dataset.rkCols}×`);
+    root.unmount();
+  },
+};
+
+/**
+ * With JavaScript off. A frame rendered on a server and loaded in a page that
+ * runs no script at all still has its chrome, drawn by the cell renderer:
+ * the rows are the text snapshot, and the lines are shapes, not the font.
+ */
+export const WithoutJavaScript: Story = {
+  name: 'Paints with JavaScript off',
+  args: { width: 480 },
+  play: async () => {
+    const run = runner();
+    if (!run) return;
+    const html = renderToString(<Frame title="static" cols={30} rows={5} dividers={[2]} />);
+    const css = [...document.styleSheets]
+      .map((sheet) => [...sheet.cssRules].map((rule) => rule.cssText).join('\n'))
+      .join('\n');
+    const page = `<!doctype html><html data-theme="light" data-density="normal"><style>${css}</style><body><script>document.body.dataset.ran = 'yes'</script>${html}</body></html>`;
+    const read = await run.withoutScripts(page);
+    expect(read.ran).toBe(false);
+    const want = frameBuffer({ width: 30, height: 5 }, { title: 'static', dividers: [2] });
+    expect(read.rows).toEqual(Array.from({ length: 5 }, (_, y) => want.row(y)));
+    expect(read.shapes).toBeGreaterThan(10);
   },
 };

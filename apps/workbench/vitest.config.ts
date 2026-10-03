@@ -3,15 +3,18 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption } from 'vitest/node';
-import { printToPdf } from './.storybook/commands.ts';
+import { printToPdf, readWithoutScripts } from './.storybook/commands.ts';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
 /** Gives every story what only the runner can do: a real screenshot, and a real print. */
 const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
 
-/** The plugin owns `include`, and merges whatever `exclude` it is given. */
-const allButContinuity = ['**/!(Continuity|Prose).stories.tsx'];
+/**
+ * Stories tagged `zoom` run again at 200%: the continuity matrix, prose, and
+ * each component's own continuity stories beside its others.
+ */
+const ZOOM = 'zoom';
 
 interface Context {
   readonly forcedColors?: 'active';
@@ -39,7 +42,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb') => ({
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { printToPdf },
+  commands: { printToPdf, readWithoutScripts },
 });
 
 /**
@@ -76,10 +79,11 @@ const config: ViteUserConfig = defineConfig({
         test: { name: FORCED_COLORS, setupFiles, browser: browser({ forcedColors: 'active' }) },
       },
       {
-        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
+        plugins: [
+          storybookTest({ configDir, tags: { include: [ZOOM], exclude: [FORCED_COLORS, P3] } }),
+        ],
         test: {
-          name: 'zoom',
-          exclude: allButContinuity,
+          name: ZOOM,
           setupFiles,
           browser: browser({ deviceScaleFactor: 2 }),
         },

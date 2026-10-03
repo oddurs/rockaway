@@ -15,7 +15,7 @@ import { createElement, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { type Analysis, analyse, packageRoot, render } from '../scripts/extract.ts';
-import { formatKeys, parseKeys } from '../src/components/key-hint.tsx';
+import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
 import schema from '../src/metadata/meta.schema.json' with { type: 'json' };
@@ -43,6 +43,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  Chrome:
+    "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
 
 /**
@@ -449,7 +451,29 @@ describe('the snapshots, as the site draws them', () => {
       ╰──────────╯
       + ascii ---+
       |          |
-      +----------+"
+      +----------+
+      ── Titles
+      ┌ start ───────────┐
+      ┌───── center ─────┐
+      ┌───────────── end ┐
+      ┌ a title far to… ─┐
+      ── Dividers in a lighter set
+      ┏ heavy ━━━━━┓
+      ┃            ┃
+      ┠────────────┨
+      ┃            ┃
+      ┗━━━━━━━━━━━━┛
+      ╔ double ════╗
+      ║            ║
+      ╟────────────╢
+      ║            ║
+      ╚════════════╝
+      ── Under an ASCII theme
+      + a title fa~ -+
+      |              |
+      +--------------+
+      |              |
+      +--------------+"
     `);
   });
 
@@ -460,7 +484,11 @@ describe('the snapshots, as the site draws them', () => {
       Ctrl+S save
       ^S save
       ── A status bar
-      ↑ move  Enter open  Esc close  Ctrl+Shift+K delete"
+      ↑ move  Enter open  Esc close  Ctrl+Shift+K delete
+      ── Under an ASCII theme
+      Cmd+S save
+      Shift+Up select
+      S-Up select"
     `);
   });
 

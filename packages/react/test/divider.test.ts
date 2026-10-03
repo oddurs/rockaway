@@ -1,7 +1,7 @@
 import { Buffer, rect, toText } from '@rockaway/grid';
 import { describe, expect, test } from 'vitest';
-import { dividerBuffer, drawRule } from '../src/components/divider.tsx';
-import { frameBuffer } from '../src/components/frame.tsx';
+import { dividerBuffer, drawRule } from '../src/components/divider.pure.ts';
+import { frameBuffer } from '../src/components/frame.pure.ts';
 
 describe('dividerBuffer', () => {
   test('a horizontal rule, open and joined', () => {

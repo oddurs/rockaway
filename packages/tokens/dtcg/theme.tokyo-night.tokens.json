@@ -1108,6 +1108,60 @@
           "$value": "]"
         }
       }
+    },
+    "key": {
+      "$description": "Key legends, for KeyHint (cairn 0132). Symbols in Unicode; words in ASCII, the only glyphs wider than a cell.",
+      "ctrl": {
+        "$value": "⌃"
+      },
+      "alt": {
+        "$value": "⌥"
+      },
+      "shift": {
+        "$value": "⇧"
+      },
+      "meta": {
+        "$value": "⌘"
+      },
+      "enter": {
+        "$value": "⏎"
+      },
+      "tab": {
+        "$value": "⇥"
+      },
+      "space": {
+        "$value": "␣"
+      },
+      "backspace": {
+        "$value": "⌫"
+      },
+      "delete": {
+        "$value": "⌦"
+      },
+      "up": {
+        "$value": "↑"
+      },
+      "down": {
+        "$value": "↓"
+      },
+      "left": {
+        "$value": "←"
+      },
+      "right": {
+        "$value": "→"
+      },
+      "pageup": {
+        "$value": "⇞"
+      },
+      "pagedown": {
+        "$value": "⇟"
+      },
+      "home": {
+        "$value": "↖"
+      },
+      "end": {
+        "$value": "↘"
+      }
     }
   },
   "conformance": {

@@ -10,7 +10,9 @@
  * Given a buffer instead of an element, it is simply the buffer as text, so
  * the same helper works in Node and in a browser.
  */
+
 import { Buffer, clusterWidth, graphemes, toText } from '@rockaway/grid';
+import { cellOf } from './cell.ts';
 
 export interface ScreenshotOptions {
   /** List the cells carrying an attribute underneath the screen. Default true. */
@@ -37,9 +39,7 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
   if (target instanceof Buffer) return toText(target, { trimEnd: options.trimEnd ?? true });
 
   const screen = target.closest<HTMLElement>('.rk-screen') ?? target;
-  const style = screen.ownerDocument.defaultView?.getComputedStyle(screen);
-  const cellWidth = Number.parseFloat(style?.getPropertyValue('--rk-cell-width') ?? '');
-  const cellHeight = Number.parseFloat(style?.getPropertyValue('--rk-cell-height') ?? '');
+  const { width: cellWidth, height: cellHeight } = cellOf(screen);
   const box = screen.getBoundingClientRect();
 
   const cols = Number(screen.dataset.rkCols ?? Math.floor(box.width / cellWidth) ?? 0);
