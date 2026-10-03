@@ -35,6 +35,9 @@ const PAINTERS = ['glyph', 'rule'] as const;
 const meta = {
   title: 'Components/List',
   component: List,
+  // The classic-scrollbars browser runs every story here again, with native
+  // scrollbars that take room from their box (0207).
+  tags: ['classic-scrollbars'],
   parameters: { layout: 'centered' },
 } satisfies Meta<typeof List>;
 
