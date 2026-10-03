@@ -366,8 +366,14 @@ export const Keyboard: Story = {
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(chosen()).toEqual([]));
 
+    // Every row is chosen, the ones out of view too: the list is virtualised,
+    // so only the rows in the page can be read, and each of them is.
     await userEvent.keyboard(`{${MOD}>}a{/${MOD}}`);
-    await waitFor(() => expect(chosen()).toHaveLength(FILES.length));
+    await waitFor(() => {
+      const options = [...box.querySelectorAll('[role="option"]')];
+      expect(options.length).toBeGreaterThan(0);
+      expect(chosen()).toHaveLength(options.length);
+    });
     await userEvent.keyboard('{Escape}');
 
     await userEvent.keyboard('{End}');
@@ -627,8 +633,9 @@ export const Touch: Story = {
 };
 
 /**
- * A thousand rows, all in the DOM for now (virtualisation is 0115). The
- * scrollbar counts them from the collection: there is no `total` here.
+ * A thousand rows, virtualised (0115): the scrollbar counts them from the
+ * collection, not the page, so it shows the whole length. There is no `total`
+ * here.
  */
 export const LongList: Story = {
   name: 'A thousand rows',
@@ -647,6 +654,7 @@ export const LongList: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
+    await settled();
     const box = canvas.getByRole('listbox', { name: 'Lines' });
     expect(box.scrollHeight / box.clientHeight).toBeGreaterThan(50);
     const bar = box.parentElement?.querySelector('.rk-list-scrollbar');
@@ -657,6 +665,104 @@ export const LongList: Story = {
     await waitFor(() => expect(bar?.textContent).toBe(one(0)));
     box.scrollTop = box.scrollHeight;
     await waitFor(() => expect(bar?.textContent).toBe(one(990)));
+  },
+};
+
+/** Ten thousand lines of a log, as items: the collection, not the page, holds them. */
+const LOG = Array.from({ length: 10_000 }, (_, i) => ({
+  id: `entry-${i}`,
+  text: `${String(i).padStart(5, '0')} ${i % 7 === 0 ? 'warn' : 'info'} tick ${i}`,
+}));
+
+/**
+ * Ten thousand rows, virtualised (cairn 0115): only the rows near the viewport
+ * are in the page, every one on a whole cell, and the scrollbar still counts
+ * all ten thousand. The keyboard reaches either end, and type-ahead finds a
+ * row that was never rendered.
+ */
+export const TenThousand: Story = {
+  name: 'Ten thousand rows',
+  render: () => (
+    <Framed name="log" width={30} rows={10}>
+      <List aria-label="Log" rows={10} selectionMode="single" items={LOG}>
+        {(entry) => (
+          <ListItem id={entry.id} textValue={entry.text}>
+            {entry.text}
+          </ListItem>
+        )}
+      </List>
+    </Framed>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const box = canvas.getByRole('listbox', { name: 'Log' });
+    const bar = box.closest('.rk-list')?.querySelector('.rk-list-scrollbar');
+    const rendered = () => box.querySelectorAll('[role="option"]').length;
+    const cursorOn = (): string =>
+      box.querySelector('[data-focused="true"] .rk-list-label')?.textContent ?? '(none)';
+    const thumb = (offset: number): string =>
+      toText(scrollbarBuffer({ total: 10_000, visible: 10, offset }))
+        .split('\n')
+        .join('');
+
+    // Only the window and its overscan are in the page, and the sizer is the
+    // whole list tall, in whole cells.
+    await waitFor(() => expect(rendered()).toBeGreaterThan(0));
+    expect(rendered()).toBeLessThan(60);
+    const cell = Number.parseFloat(getComputedStyle(box).lineHeight);
+    expect(box.scrollHeight).toBeCloseTo(10_000 * cell, -1);
+    await waitFor(() => expect(bar?.textContent).toBe(thumb(0)));
+
+    // End: the last row of the collection, not of the window.
+    await userEvent.tab();
+    await waitFor(() => expect(cursorOn()).toBe(LOG[0]?.text));
+    await userEvent.keyboard('{End}');
+    await waitFor(() => expect(cursorOn()).toBe(LOG.at(-1)?.text));
+    expect(document.activeElement?.textContent).toContain(LOG.at(-1)?.text);
+    await waitFor(() => expect(bar?.textContent).toBe(thumb(9990)));
+    expect(rendered()).toBeLessThan(60);
+
+    // And the page reads back as the list's last ten rows, cursor on the
+    // last, and the scrollbar at the bottom: screenshot() reads the window.
+    const frame = canvas.getByRole('group', { name: 'log' });
+    const all = LOG.map((entry, i) => ({ label: entry.text, cursor: i === LOG.length - 1 }));
+    await waitFor(() =>
+      expect(inside(frame, 30)).toBe(
+        toText(listBuffer({ rows: all, width: 30, visible: 10, offset: 9990 }), {
+          trimEnd: false,
+        }),
+      ),
+    );
+
+    // Home: back to the first.
+    await userEvent.keyboard('{Home}');
+    await waitFor(() => expect(cursorOn()).toBe(LOG[0]?.text));
+    await waitFor(() => expect(box.scrollTop).toBe(0));
+
+    // Page down moves a page, not the window's last rendered row.
+    await userEvent.keyboard('{PageDown}');
+    await waitFor(() => expect(cursorOn()).not.toBe(LOG[0]?.text));
+
+    // Type-ahead to a row that has never been rendered.
+    await userEvent.keyboard('07777');
+    await waitFor(() => expect(cursorOn()).toBe(LOG[7777]?.text));
+
+    // Wherever the keyboard took it, the list stopped on a whole row, and the
+    // rows in the page sit on whole cells.
+    await waitFor(() => expect(box.scrollTop % cell).toBeCloseTo(0, 0));
+
+    // And scrolled to a fraction of a row far from anything rendered, it comes
+    // to rest on a whole one once the rows there are in the page.
+    box.scrollTo({ top: cell * 5000.4 });
+    await waitFor(() => {
+      expect(Math.abs(box.scrollTop - cell * 5000)).toBeLessThan(cell);
+      expect(box.scrollTop % cell).toBeCloseTo(0, 0);
+    });
+    await waitFor(() => expect(bar?.textContent).toBe(thumb(5000)));
+    for (const option of box.querySelectorAll<HTMLElement>('[role="option"]')) {
+      const top = option.getBoundingClientRect().top - box.getBoundingClientRect().top;
+      expect(Math.abs(top / cell - Math.round(top / cell)) * cell).toBeLessThan(0.5);
+    }
   },
 };
 

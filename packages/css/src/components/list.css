@@ -30,8 +30,15 @@
     overflow: hidden auto;
     outline: none;
     /* A scrolled list stops on a whole row at every density, however it was
-     * scrolled: the wheel, a finger, or the keyboard bringing a row in. */
-    scroll-snap-type: block mandatory;
+     * scrolled: the wheel, a finger, or the keyboard bringing a row in. Only
+     * the rows near the viewport are in the page (0115), so they are the only
+     * snap points: "mandatory" would pull a jump far down the list back to
+     * them. "proximity" lets it land, then the rows there snap it to a whole
+     * row; List keeps its top row across a change of density itself. */
+    scroll-snap-type: block proximity;
+    /* The virtualiser places every row itself; the browser's scroll anchoring
+     * would move the position again when the rows in the page change. */
+    overflow-anchor: none;
   }
 
   .rk-list-scrollbar {
