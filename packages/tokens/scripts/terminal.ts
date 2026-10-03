@@ -1,38 +1,46 @@
 /**
- * Writes the terminal themes for every palette that ships (cairn 0094).
+ * Writes the terminal themes for every theme that ships (cairn 0094, 0188):
+ * each preset in both modes, and each imported theme in the modes it
+ * declares, fitted to the contrast gate, with its credit and licence at the
+ * top of every file.
  *
  *   node scripts/terminal.ts
  */
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fittedPalette } from '../src/fit.ts';
-import { modes } from '../src/inputs.ts';
-import { terminalThemes } from '../src/terminal.ts';
-import { parseTheme } from '../src/validate.ts';
+import { importedHeader, terminalThemes } from '../src/terminal.ts';
+import { themeContexts } from '../src/themes.ts';
 
 const root = path.join(import.meta.dirname, '..');
 const out = path.join(root, 'terminal');
 
-const themes = (await readdir(path.join(root, 'themes'))).filter((f) => f.endsWith('.json'));
-let written = 0;
-
-for (const file of themes) {
-  const name = path.basename(file, '.json');
-  const inputs = parseTheme(
-    JSON.parse(await readFile(path.join(root, 'themes', file), 'utf8')),
-    file,
-  );
-  for (const mode of modes) {
-    for (const theme of terminalThemes(
-      fittedPalette(inputs, mode).palette,
-      `rockaway-${name}-${mode}`,
+const files = new Map<string, string>();
+for (const theme of themeContexts) {
+  const licence =
+    theme.licence === undefined
+      ? undefined
+      : await readFile(path.join(root, 'themes/terminal', theme.licence.file), 'utf8');
+  for (const mode of theme.modes) {
+    const header = licence === undefined ? [] : importedHeader(theme, mode, licence);
+    for (const file of terminalThemes(
+      theme.palettes[mode],
+      `rockaway-${theme.name}-${mode}`,
+      header,
     )) {
-      const dir = path.join(out, theme.format);
-      await mkdir(dir, { recursive: true });
-      await writeFile(path.join(dir, theme.filename), theme.contents);
-      written += 1;
+      files.set(path.join(file.format, file.filename), file.contents);
     }
   }
 }
 
-console.log(`wrote ${written} terminal theme files to terminal/`);
+// A theme that no longer ships takes its files with it.
+for (const format of await readdir(out).catch(() => [] as string[])) {
+  for (const name of await readdir(path.join(out, format))) {
+    if (!files.has(path.join(format, name))) await rm(path.join(out, format, name));
+  }
+}
+for (const [file, contents] of files) {
+  await mkdir(path.dirname(path.join(out, file)), { recursive: true });
+  await writeFile(path.join(out, file), contents);
+}
+
+console.log(`wrote ${files.size} terminal theme files to terminal/`);
