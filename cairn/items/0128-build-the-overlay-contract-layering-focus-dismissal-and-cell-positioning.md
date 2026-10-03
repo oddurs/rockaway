@@ -3,8 +3,10 @@ id: 128
 uid: fb73ba36-7208-484d-a759-adcdb2ed445f
 title: 'Build the overlay contract: layering, focus, dismissal and cell positioning'
 type: feature
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 96
 - 117

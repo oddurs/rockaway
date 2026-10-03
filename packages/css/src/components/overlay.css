@@ -1,0 +1,84 @@
+/*
+ * Overlays (cairn 0128): the layer, the backdrop and the surface.
+ *
+ * React Aria places a popover in pixels and a modal in the middle of the
+ * viewport; the component then moves the surface onto the cell grid with a
+ * translate. Nothing here sets a position in pixels. The surface is a screen
+ * whose content is in flow, so it is as tall as what it holds and as wide,
+ * in whole cells, and never taller than `--rk-overlay-max-rows`: past that its
+ * content scrolls, with no native scrollbar (0207), and the frame's right edge
+ * shows where.
+ *
+ * There is no motion: an overlay is there on the next frame, fully drawn.
+ */
+@layer rk.components {
+  /* The portal root sits at the corner of whatever holds it and takes no room. */
+  .rk-overlay-layer {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  .rk-overlay {
+    display: inline-block;
+    color: var(--rk-fg-default);
+  }
+
+  /* The screen grows with what it holds, as a field frame's does. */
+  .rk-overlay > .rk-screen {
+    background: var(--rk-bg-surface);
+  }
+
+  .rk-overlay > .rk-screen > .rk-content {
+    position: relative;
+  }
+
+  .rk-overlay-body {
+    max-block-size: calc(var(--rk-cell-height) * var(--rk-overlay-max-rows, 1000));
+    overflow: hidden auto;
+    white-space: normal;
+  }
+
+  /* Under 60 cells, or at touch density: as wide as the viewport, in whole cells. */
+  .rk-overlay-sheet {
+    display: block;
+    inline-size: round(down, 100vw, var(--rk-cell-width));
+  }
+
+  /*
+   * The modal's underlay: the viewport, a grid that centres the surface (and
+   * puts a sheet on the bottom rows), over the backdrop's screen of shade.
+   */
+  .rk-overlay-backdrop {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+  }
+
+  .rk-overlay-backdrop-sheet {
+    place-items: end start;
+  }
+
+  /*
+   * The shade runs a cell past the viewport on the right and at the bottom, so
+   * the measured screen, which counts whole cells, still covers every pixel.
+   */
+  .rk-overlay-scrim {
+    position: absolute;
+    inset-block: 0 calc(-1 * var(--rk-cell-height));
+    inset-inline: 0 calc(-1 * var(--rk-cell-width));
+  }
+
+  .rk-overlay-modal {
+    position: relative;
+    outline: none;
+  }
+
+  .rk-overlay-popover {
+    outline: none;
+  }
+}
