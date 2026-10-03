@@ -6,12 +6,12 @@ import { expect } from 'storybook/test';
 import { cellsOf, type Plan, readsPixels, skipFor, walk } from '../../.storybook/matrix.ts';
 
 /**
- * A screen that claims a 10 × 20px cell, holding a box one line box tall. At
- * `normal` the line box is 20px and the two agree; at every other density the
+ * A screen that claims a 10 × 24px cell, holding a box one line box tall. At
+ * `normal` the line box is 24px and the two agree; at every other density the
  * box moves with the line box and the screen does not, so it is off the grid
  * there and nowhere else.
  */
-const cell = { '--rk-cell-width': '10px', '--rk-cell-height': '20px' } as CSSProperties;
+const cell = { '--rk-cell-width': '10px', '--rk-cell-height': '24px' } as CSSProperties;
 
 function OnlyAtNormal() {
   return (
@@ -129,6 +129,24 @@ export const Targets: Story = {
           big
         </button>
       </div>
+      {/* React Aria's checkbox: the native input sits in a clipped wrapper,
+          and the label around it is what a pointer meets. */}
+      <div data-testid="visually-hidden">
+        <label style={{ display: 'block', blockSize: '44px' }}>
+          <span
+            style={{
+              position: 'absolute',
+              inlineSize: '1px',
+              blockSize: '1px',
+              overflow: 'hidden',
+              clipPath: 'inset(50%)',
+            }}
+          >
+            <input type="checkbox" />
+          </span>
+          a checkbox drawn in cells
+        </label>
+      </div>
     </div>
   ),
   play: async ({ canvas }) => {
@@ -142,5 +160,10 @@ export const Targets: Story = {
     expect(checkTargets(big, { minHeight: 44 }).failures).toEqual([
       expect.objectContaining({ rule: 'height', height: 32 }),
     ]);
+    // A visually hidden input is not a target, however big its box claims to be.
+    expect(checkTargets(canvas.getByTestId('visually-hidden'), { minHeight: 44 })).toEqual({
+      targets: 0,
+      failures: [],
+    });
   },
 };

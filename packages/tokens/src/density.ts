@@ -11,13 +11,20 @@
  */
 import type { Density } from './inputs.ts';
 
-/** Line box per density, as a multiple of the font size. */
+/**
+ * Line box per density, as a multiple of the font size (cairn 0197). At 16px:
+ *
+ *   dense   16px  an opt-in: a terminal's tightness, at the cost of WCAG 2.5.8
+ *                 for targets that sit next to each other
+ *   normal  24px  the default, and the AA target size (2.5.8) for one row
+ *   airy    32px  room to read
+ *   touch   44px  coarse pointers: a one-row control is a 44px target (0074)
+ */
 export const lineBox: Readonly<Record<Density, number>> = {
   dense: 1,
-  normal: 1.25,
-  airy: 1.5,
-  /** Coarse pointers: the same grid, twice as tall (0074). */
-  touch: 2,
+  normal: 1.5,
+  airy: 2,
+  touch: 2.75,
 };
 
 /** Space steps, in cells. Whole cells only: there is no half a cell. */
