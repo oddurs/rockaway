@@ -4,8 +4,9 @@
  * The workspace resolves through the `@rockaway/source` condition, so nothing
  * else ever touches `dist`. This packs each package, lists what the tarball
  * holds, and runs publint and Are the Types Wrong against the tarball itself,
- * with `publishConfig` applied the way `pnpm publish` applies it. Run it after
- * `pnpm build`.
+ * with `publishConfig` applied the way `pnpm publish` applies it. It also fails
+ * any shipped module that needs the client but does not say `'use client'`.
+ * Run it after `pnpm build`.
  */
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
@@ -36,6 +37,19 @@ const forbidden: ReadonlyArray<[RegExp, string]> = [
   [/(?<!\.d)\.[cm]?tsx?$/, 'TypeScript source'],
   [/\.tsbuildinfo$/, 'build state'],
 ];
+
+/**
+ * What makes a module client-only under React Server Components: a hook
+ * imported from React, anything from React Aria, or an event handler prop.
+ */
+const clientOnly: ReadonlyArray<[RegExp, string]> = [
+  [/^import\s*\{[^}]*\buse[A-Z]\w*[^}]*\}\s*from\s*["']react["']/m, 'imports a React hook'],
+  [/from\s*["']react-(aria|aria-components|stately)["']/, 'imports React Aria'],
+  [/\bon[A-Z][A-Za-z]*\s*:/, 'passes an event handler'],
+];
+
+/** The directive as a module's first statement, after any leading comments. */
+const useClient = /^(?:\s|\/\/[^\n]*\n|\/\*[\s\S]*?\*\/)*["']use client["']/;
 
 /** The workspace-only condition, removed to give what consumers should see. */
 function withoutSource(exports: unknown): unknown {
@@ -106,6 +120,18 @@ for (const dir of readdirSync(path.join(root, 'packages')).sort()) {
     }
     for (const [pattern, what] of forbidden) {
       if (pattern.test(file)) failures.push(`${name}: ${file} is ${what}`);
+    }
+  }
+
+  // A component that lands without `'use client'` breaks every server-component
+  // app that imports the package, and nothing in the workspace would notice
+  // (cairn 0122). The server-component fixture only follows Frame's imports.
+  for (const file of paths.filter((p) => p.endsWith('.js'))) {
+    const code = readFileSync(path.join(cwd, file), 'utf8');
+    if (useClient.test(code)) continue;
+    const reason = clientOnly.find(([pattern]) => pattern.test(code))?.[1];
+    if (reason !== undefined) {
+      failures.push(`${name}: ${file} ${reason} but does not begin with 'use client'`);
     }
   }
 

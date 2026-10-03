@@ -6,3 +6,10 @@ ROADMAP.md merge=cairn
 # The driver unions its sequence fields, where two branches both meant what
 # they added, and leaves everything else to a person.
 cairn/items/*.md merge=cairn
+
+# The barrels hold one line per component, and parallel branches each add one.
+# Union keeps both sides' lines instead of stopping on a conflict; Biome sorts
+# the TypeScript barrel, and packages/react/test/barrels.test.ts fails on a
+# component that is missing or listed twice (cairn 0122).
+packages/react/src/index.ts merge=union
+packages/css/src/index.css merge=union
