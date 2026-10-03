@@ -2,12 +2,12 @@ import { Attr, type Buffer, hasAttr, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
 import {
-  type ListRow,
   listBuffer,
   listMarks,
   listRowStyle,
   scrollbarBuffer,
-} from '../src/components/list.tsx';
+} from '../src/components/list.pure.ts';
+import type { ListRow } from '../src/components/list.tsx';
 
 const NAMES: ReadonlyArray<readonly [number, string]> = [
   [Attr.bold, 'bold'],

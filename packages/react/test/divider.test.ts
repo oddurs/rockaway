@@ -1,8 +1,9 @@
 import { type BorderSetName, Buffer, rect, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { type DividerOptions, dividerBuffer, drawRule } from '../src/components/divider.tsx';
-import { frameBuffer } from '../src/components/frame.tsx';
+import { dividerBuffer, drawRule } from '../src/components/divider.pure.ts';
+import type { DividerOptions } from '../src/components/divider.tsx';
+import { frameBuffer } from '../src/components/frame.pure.ts';
 
 /**
  * Every variant a divider has, as the workbench's Divider/Variants story draws
