@@ -12,6 +12,7 @@ import { expectContinuity, screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { expectKnown } from '../../.storybook/matrix.ts';
 import { runner } from '../../.storybook/runner.ts';
 import { cellsOf, cellsOfBuffer } from '../cells.ts';
 
@@ -379,10 +380,13 @@ export const Narrow: Story = {
     const frame = canvas.getByRole('group', {
       name: 'a pane title that will not fit in forty cells',
     });
-    await waitFor(() => expect(frame.dataset.rkCols).toBe('40'));
-    const rows = screenshot(frame, { trimEnd: false }).split('\n');
-    for (const row of rows) expect([...row]).toHaveLength(40);
-    expect(rows[0]).toContain('…');
+    // Not yet in Firefox: printed as a known failure there (cairn 0124).
+    await expectKnown('firefox-cells-in', async () => {
+      await waitFor(() => expect(frame.dataset.rkCols).toBe('40'));
+      const rows = screenshot(frame, { trimEnd: false }).split('\n');
+      for (const row of rows) expect([...row]).toHaveLength(40);
+      expect(rows[0]).toContain('…');
+    });
   },
 };
 

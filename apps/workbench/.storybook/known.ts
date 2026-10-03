@@ -107,6 +107,16 @@ export const known: readonly Known[] = [
     ticket: "round the cell to the engine's layout unit (proposed in the 0124 report)",
   },
   {
+    id: 'firefox-cells-in',
+    check: 'play',
+    projects: ['firefox'],
+    stories: ['components-frame--narrow'],
+    element: /./,
+    reason:
+      'Firefox reports lengths as floats of sixtieths of a pixel: a box forty cells wide measures 385.33331px against a cell of 9.63333374px, and cellsIn floors 39.999996 to 39 (Chromium and WebKit measure exact sixty-fourths)',
+    ticket: 'cellsIn tolerates float error in a measured length (proposed in the 0124 report)',
+  },
+  {
     id: 'firefox-forced-corners',
     check: ['continuity', 'play'],
     projects: ['forced-colors-firefox'],

@@ -41,3 +41,7 @@ Projects: storybook, p3, forced-colors and zoom stay Chromium; firefox and webki
 ## 2026-10-03
 
 Engine differences, each a known failure in .storybook/known.ts (printed every run, stale fails the run), not a tolerance: (1) firefox-columns: forty one-cell runs vs one run of forty end apart in Firefox: 15.3px -0.083px, 16px 0, 16.4px +0.317px, 17px -0.050px (Chromium and WebKit exactly 0). Firefox lays text out in 1/60px and the cell is rounded to 1/64px. (2) firefox-forced-corners: under forced colours in Firefox, the east stroke of the top-left corner (┌, ╔ at 0,0) stops short of the cell edge. (3) firefox-forced-highlight: Firefox's emulated palette pairs HighlightText #ffffff with Highlight #3399ff, 2.94:1, and the solid button draws in that pair. To let play-function assertions meet the table, axe now runs inside the walk (the addon's own run is off) and stories wrap an engine-specific assertion in expectKnown(id, ...).
+
+## 2026-10-03
+
+A fourth Firefox difference, found after merging main: Frame's 'Forty cells wide' measures 39 cells. Measured: the 40 x 1ch container is 385.33331px and the measured cell 9.63333374px, so cellsIn floors 39.999996 to 39. Firefox reports lengths as floats of sixtieths; Chromium and WebKit report exact sixty-fourths. Known entry firefox-cells-in; proposed ticket: cellsIn tolerates float error in a measured length.
