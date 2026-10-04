@@ -14,6 +14,7 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { frameBuffer } from '@rockaway/react';
+import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
@@ -24,6 +25,9 @@ const types: Record<string, string> = {
   '.js': 'text/javascript',
   '.css': 'text/css',
   '.woff2': 'font/woff2',
+  '.txt': 'text/plain; charset=utf-8',
+  '.md': 'text/markdown; charset=utf-8',
+  '.json': 'application/json',
 };
 
 /** Serve `dir` at `base`, and nothing anywhere else, as Pages would. */
@@ -328,6 +332,35 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     // No colour is written into the page: roles are classes.
     expect(found.styled).toBe(0);
     expect(found.blocks).toBe(0);
+  });
+
+  test('serves llms.txt, and every link in it, as text an agent can read (0048)', async () => {
+    const read = async (url: string) => {
+      const response = await fetch(url);
+      expect(response.status, url).toBe(200);
+      return response.text();
+    };
+    const index = await read(`${origin}${base}llms.txt`);
+    expect(index.startsWith('# rockaway\n\n> ')).toBe(true);
+    // The links are absolute, where SITE_URL places the site; here, they are
+    // followed on the site as built, under its base.
+    const links = [...index.matchAll(/\]\((https?:[^)]+)\)/g)].map(([, url]) => new URL(url ?? ''));
+    const own = links.filter((url) => url.hostname !== 'github.com');
+    expect(own.filter((url) => !url.pathname.startsWith(base)).map(String)).toEqual([]);
+    const names = meta.components.map((c) => c.name);
+    expect(own.filter((url) => url.pathname.startsWith(`${base}components/`))).toHaveLength(
+      names.length,
+    );
+    for (const url of own) {
+      const body = await read(`${origin}${url.pathname}`);
+      if (url.pathname.endsWith('.md')) expect(body).toMatch(/^# \S/);
+    }
+    const full = await read(`${origin}${base}llms-full.txt`);
+    for (const name of names) expect(full).toContain(`\n# ${name}\n`);
+    const button = await read(`${origin}${base}components/button.md`);
+    for (const snapshot of meta.components.find((c) => c.name === 'Button')?.snapshots ?? []) {
+      expect(button).toContain(`\n${snapshot.text}\n`);
+    }
   });
 
   test('the cell is the font, and the fallback has the same cell', async () => {

@@ -322,7 +322,6 @@ Something another project can install and build on.
 
 - [ ] [`0045`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0045-publish-the-four-packages-to-npm-with-changesets-and-provenance.md) Publish the four packages to npm with Changesets and provenance <sup>feature · distribution · p0</sup>
 - [ ] [`0046`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0046-serve-compositions-from-a-copy-in-registry.md) Serve compositions from a copy-in registry <sup>feature · distribution · p1</sup>
-- [ ] [`0048`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
 - [ ] [`0153`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0153-decide-what-is-public-api-and-what-counts-as-a-breaking-change.md) Decide what is public API, and what counts as a breaking change <sup>decision · distribution · p0</sup>
 - [ ] [`0154`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0154-claim-the-rockaway-npm-scope-and-set-up-trusted-publishing.md) Claim the @rockaway npm scope and set up trusted publishing <sup>chore · distribution · p0 · needs-owner</sup>
 - [ ] [`0155`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0155-prove-the-quickstart-from-a-clean-install-in-ci.md) Prove the quickstart from a clean install in CI <sup>chore · tooling · p0</sup>
@@ -337,6 +336,7 @@ Something another project can install and build on.
 
 ### in review
 
+- [ ] [`0048`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
 - [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
 
 ### done
