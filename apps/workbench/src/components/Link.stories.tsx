@@ -1,7 +1,7 @@
-import { Frame, Link, linkBuffer } from '@rockaway/react';
+import { Frame, Link, linkBuffer, RouterProvider } from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
 import { settled } from '../settled.ts';
 
@@ -539,5 +539,67 @@ export const ForcedColors: Story = {
     expect(getComputedStyle(pressed).backgroundColor).toBe(figure);
     fireEvent.pointerUp(document.body, { pointerId: 1, pointerType: 'mouse', button: 0 });
     await waitFor(() => expect(pressed.dataset.pressed).toBeUndefined());
+  },
+};
+
+/**
+ * The smallest client router there is: a path in state, and a `navigate`
+ * that sets it. A real app passes its router's own (`useNavigate()`), and
+ * `useHref` when it has a base path.
+ */
+function Routed(): ReactNode {
+  const [path, setPath] = useState('/');
+  const pages = [
+    { href: '/', label: 'home' },
+    { href: '/docs', label: 'docs' },
+    { href: '/changelog', label: 'changelog' },
+  ];
+  return (
+    <RouterProvider navigate={setPath} useHref={(href) => `/app${href}`}>
+      <Frame title="routed" cols={40} rows={4}>
+        <nav aria-label="pages" style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+          {pages.map((page) => (
+            <Link
+              key={page.href}
+              href={page.href}
+              {...(path === page.href ? { 'aria-current': 'page' as const } : {})}
+            >
+              {page.label}
+            </Link>
+          ))}
+        </nav>
+        <p data-testid="path" style={{ margin: 0 }}>{`at ${path}`}</p>
+      </Frame>
+    </RouterProvider>
+  );
+}
+
+/**
+ * Client-side routing (0168): inside `RouterProvider`, from @rockaway/react,
+ * a Link navigates through the router instead of loading a page, takes its
+ * href through the router's `useHref`, and the current page carries the
+ * cursor mark. A link the reader opens in a new tab is still the browser's.
+ */
+export const ClientRouter: Story = {
+  name: 'With a client router',
+  render: () => <Routed />,
+  play: async ({ canvas }) => {
+    await settled();
+    const before = window.location.href;
+    const docs = canvas.getByRole('link', { name: 'docs' });
+    // The router's href: a base path in front, so a new tab opens the right page.
+    expect(docs).toHaveAttribute('href', '/app/docs');
+
+    await userEvent.click(docs);
+    await waitFor(() => expect(canvas.getByTestId('path')).toHaveTextContent('at /docs'));
+    expect(window.location.href).toBe(before);
+    expect(docs).toHaveAttribute('aria-current', 'page');
+
+    // The keyboard goes through the router too.
+    const changelog = canvas.getByRole('link', { name: 'changelog' });
+    changelog.focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => expect(canvas.getByTestId('path')).toHaveTextContent('at /changelog'));
+    expect(window.location.href).toBe(before);
   },
 };
