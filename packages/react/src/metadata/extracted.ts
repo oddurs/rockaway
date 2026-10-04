@@ -889,6 +889,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "file": "menu.tsx",
     "props": [
       {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The items. For items from data, a React Aria `Collection` among them."
+      },
+      {
         "name": "title",
         "type": "string",
         "required": false,
@@ -901,7 +907,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       }
     ],
     "inherits": [
-      "Omit<AriaMenuSectionProps<T>, 'className' | 'style'>"
+      "Omit<AriaMenuSectionProps<T>, 'className' | 'style' | 'children'>"
     ],
     "tokens": [
       "--rk-attribute-underline-offset",

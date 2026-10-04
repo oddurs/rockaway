@@ -1,7 +1,10 @@
 import {
   Button,
+  detectPlatform,
   Frame,
+  formatKeys,
   GlyphProvider,
+  keyShortcut,
   Menu,
   MenuItem,
   type MenuProps,
@@ -10,7 +13,7 @@ import {
 } from '@rockaway/react';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { MenuTrigger, SubmenuTrigger } from 'react-aria-components';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { measured } from '../settled.ts';
@@ -177,6 +180,68 @@ export const Default: Story = {
 };
 
 /**
+ * Every state, each read without colour: hover underlines the label, the
+ * cursor is a mark and reverse video, a press reverses the cursor's row
+ * back, and a disabled item is dim and refuses the cursor. None moves a cell.
+ */
+export const States: Story = {
+  render: () => <Page open={false} />,
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    canvas.getByRole('button', { name: 'File' }).focus();
+    await userEvent.keyboard('{Enter}');
+    await surfaces();
+    await waitFor(() => expect(item('New file')).toHaveFocus());
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(item('Open')).toHaveFocus());
+
+    // The cursor: the mark in its reserved cell, and reverse video.
+    const open = item('Open');
+    const before = open.getBoundingClientRect();
+    expect(open.dataset.focused).toBe('true');
+    expect(open.querySelector('.rk-menu-cursor')?.textContent).toBe(mark.cursor);
+    const reversed = getComputedStyle(open).backgroundColor;
+    expect(reversed).not.toBe(getComputedStyle(item('New file')).backgroundColor);
+
+    // Hover: the label underlined.
+    const delete_ = item('Delete');
+    await userEvent.hover(delete_);
+    await waitFor(() => expect(item('Delete').dataset.hovered).toBe('true'));
+    const label = item('Delete').querySelector('.rk-menu-label') as HTMLElement;
+    expect(getComputedStyle(label).textDecorationLine).toBe('underline');
+
+    // Pressed: the cursor's row reverses back, in the same cells.
+    const target = item('Delete');
+    await userEvent.pointer({ keys: '[MouseLeft>]', target });
+    await waitFor(() => expect(item('Delete').dataset.pressed).toBe('true'));
+    expect(item('Delete').getBoundingClientRect().height).toBe(before.height);
+    expect(item('Delete').getBoundingClientRect().width).toBe(before.width);
+
+    // Disabled: dim, and announced as such.
+    const purge = item('Purge');
+    expect(purge.dataset.disabled).toBe('true');
+    expect(purge.getAttribute('aria-disabled')).toBe('true');
+    expect(getComputedStyle(purge).color).not.toBe(getComputedStyle(item('Open')).color);
+    expect(purge.getBoundingClientRect().height).toBe(before.height);
+  },
+};
+
+/** Held to `strict`: every box in the page and the menu in whole cells, glyph-painted. */
+export const Strict: Story = {
+  name: 'At strict',
+  globals: { conformance: 'strict' },
+  render: () => <Page title="strict" />,
+  play: async () => {
+    await measured(document.body);
+    const [surface] = await surfaces();
+    if (!surface) throw new Error('no menu');
+    expect(surface.closest('[data-rk-conformance]')?.getAttribute('data-rk-conformance')).toBe(
+      'strict',
+    );
+  },
+};
+
+/**
  * Shortcuts are KeyHints at the end of the row, hidden from the reader, and
  * announced as `aria-keyshortcuts` on the item; every label starts in the
  * same column, and every chord ends in the same one.
@@ -188,7 +253,12 @@ export const Shortcuts: Story = {
     const [surface] = await surfaces();
     if (!surface) throw new Error('no menu');
     const newFile = item('New file');
-    expect(newFile.getAttribute('aria-keyshortcuts')).toBe('Control+N');
+    // One keyboard for what is drawn and what is announced.
+    const keyboard = detectPlatform(navigator);
+    await waitFor(() =>
+      expect(newFile.getAttribute('aria-keyshortcuts')).toBe(keyShortcut('mod+n', keyboard)),
+    );
+    expect(newFile.querySelector('.rk-menu-keys')?.textContent).toBe(formatKeys('mod+n', keyboard));
     expect(newFile.querySelector('.rk-menu-keys .rk-keyhint')?.getAttribute('aria-hidden')).toBe(
       'true',
     );
@@ -243,10 +313,16 @@ export const Keyboard: Story = {
     await userEvent.keyboard('d');
     await waitFor(() => expect(item('Delete')).toHaveFocus());
 
-    // Into the submenu and out again.
-    item('Open recent').focus();
+    // Up past the separator to the submenu's item, into the submenu and out again.
+    await userEvent.keyboard('{ArrowUp}');
+    await waitFor(() => expect(item('Open recent')).toHaveFocus());
     await userEvent.keyboard('{ArrowRight}');
-    await waitFor(() => expect(item('rockaway')).toHaveFocus());
+    await waitFor(() =>
+      expect(
+        item('rockaway'),
+        `focus is on ${document.activeElement?.outerHTML.slice(0, 120)}`,
+      ).toHaveFocus(),
+    );
     expect(item('Open recent').querySelector('.rk-menu-end')?.textContent).toBe(mark.expanded);
     await userEvent.keyboard('{ArrowLeft}');
     await waitFor(() => expect(item('Open recent')).toHaveFocus());
@@ -272,6 +348,9 @@ export const Submenu: Story = {
     await userEvent.click(item('Open recent'));
     const [parent, child] = await surfaces(2);
     if (!parent || !child) throw new Error('no submenu');
+    // The submenu has measured and drawn itself at its own size.
+    await measured(document.body);
+    await waitFor(() => expect(edges(child)[0]).toMatch(/^┏━+┓$/));
     const opener = placeOf(item('Open recent'), trigger);
     const outer = placeOf(parent, trigger);
     const inner = placeOf(child, trigger);
@@ -279,7 +358,61 @@ export const Submenu: Story = {
     expect(inner.x).toBe(outer.x + outer.width);
     // Its first item on the row of the item that opened it.
     expect(inner.y + 1).toBe(opener.y);
-    expect(edges(child)[0]).toMatch(/^┏━+┓$/);
+  },
+};
+
+/** A File menu against the right edge of its boundary: no room beside it on the right. */
+function Cornered(): ReactNode {
+  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null);
+  const bounded = boundary === null ? {} : { boundaryElement: boundary };
+  return (
+    <div ref={setBoundary} style={{ display: 'inline-block' }}>
+      <Frame title="cornered" cols={48} rows={12}>
+        <div style={{ display: 'flex', justifyContent: 'end' }}>
+          <MenuTrigger>
+            <Button>File</Button>
+            <Menu aria-label="File" {...bounded}>
+              <MenuItem id="new">New file</MenuItem>
+              <SubmenuTrigger>
+                <MenuItem id="recent">Open recent</MenuItem>
+                <Menu aria-label="Open recent" {...bounded}>
+                  <MenuItem id="a">rockaway</MenuItem>
+                  <MenuItem id="b">design-sense</MenuItem>
+                </Menu>
+              </SubmenuTrigger>
+            </Menu>
+          </MenuTrigger>
+        </div>
+      </Frame>
+    </div>
+  );
+}
+
+/**
+ * With no room on the right, a submenu flips to the left of its menu, in
+ * whole cells, a cell clear of the parent's frame, and still on the row of
+ * the item that opened it.
+ */
+export const SubmenuFlip: Story = {
+  name: 'Submenu flips',
+  render: () => <Cornered />,
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const trigger = canvas.getByRole('button', { name: 'File' });
+    await userEvent.click(trigger);
+    await surfaces();
+    await userEvent.click(item('Open recent'));
+    const [parent, child] = await surfaces(2);
+    if (!parent || !child) throw new Error('no submenu');
+    await measured(document.body);
+    await waitFor(() => expect(edges(child)[0]).toMatch(/^┏━+┓$/));
+    const popover = child.closest('.rk-menu-popover') as HTMLElement;
+    await waitFor(() => expect(popover.dataset.placement).toBe('left'));
+    const opener = placeOf(item('Open recent'), trigger);
+    const outer = placeOf(parent, trigger);
+    const inner = placeOf(child, trigger);
+    expect(inner.x + inner.width).toBe(outer.x);
+    expect(inner.y + 1).toBe(opener.y);
   },
 };
 

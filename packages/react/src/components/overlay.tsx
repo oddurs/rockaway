@@ -505,6 +505,7 @@ export function OverlayPopover({
   const container = useContext(LayerContext);
   const context = useSlottedContext(PopoverContext);
   const triggerRef = aria.triggerRef ?? context?.triggerRef;
+  const nested = (aria.trigger ?? context?.trigger) === 'SubmenuTrigger';
   const anchor = useCallback(() => triggerRef?.current, [triggerRef]);
   const sheet = useSheet(anchor);
   const origin = useOrigin(anchor);
@@ -529,7 +530,11 @@ export function OverlayPopover({
       crossOffset={crossOffset}
       containerPadding={0}
       className={cx('rk-overlay-popover', sheet && 'rk-overlay-popover-sheet', className)}
-      {...(container === null ? {} : { UNSTABLE_portalContainer: container })}
+      // A submenu, or a dialog opened from a menu, goes where React Aria puts
+      // it: inside its root popover's own container, which is already in the
+      // layer. Sent to the layer itself, it is outside the root popover, which
+      // then takes focus back from it as from anything outside.
+      {...(container === null || nested ? {} : { UNSTABLE_portalContainer: container })}
     >
       <Surface
         kind="popover"

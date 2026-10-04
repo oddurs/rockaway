@@ -29,7 +29,6 @@
 import {
   createContext,
   type ReactNode,
-  type RefObject,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -44,6 +43,7 @@ import {
   MenuSection as AriaMenuSection,
   type MenuSectionProps as AriaMenuSectionProps,
   Header,
+  type MenuItemRenderProps,
   PopoverContext,
   Separator,
   useSlottedContext,
@@ -61,6 +61,9 @@ import { Popover, type PopoverProps } from './popover.tsx';
 /** Runs before paint in a browser, and not at all on a server. */
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
+/** Past the parent's frame, and up a row to its border, in cells. */
+const SUBMENU_SHIFT = { main: 1, cross: -1 } as const;
+
 /** Whether every row of the menu reserves a cell for the check. */
 const Checkable = createContext(false);
 
@@ -70,7 +73,9 @@ function useDividers(menu: HTMLElement | null): readonly OverlayDivider[] {
   useIsomorphicLayoutEffect(() => {
     if (!menu) return;
     const read = (): void => {
-      const row = measureCell(menu).height;
+      // Measured beside the menu, not in it: the probe measureCell adds is a
+      // mutation, and inside the menu it would call this again, for ever.
+      const row = measureCell(menu.parentElement ?? menu.ownerDocument.body).height;
       if (!(row > 0)) return;
       const top = menu.getBoundingClientRect().top;
       const next: OverlayDivider[] = [];
@@ -135,7 +140,11 @@ export function Menu<T extends object>({
     menu.selectionMode !== undefined && menu.selectionMode !== 'none',
   );
   // A submenu opens beside the item that opens it, and is as wide as it
-  // needs to be; a menu from a button is at least as wide as the button.
+  // needs to be; a menu from a button is at least as wide as the button. An
+  // item runs from side to side of its menu's frame, so beside the item is on
+  // that frame: a cell further out clears it, and a row up puts the
+  // submenu's first item on the row of the item that opened it. React Aria
+  // mirrors both when it flips the submenu to the other side.
   const submenu = useSlottedContext(PopoverContext)?.trigger === 'SubmenuTrigger';
   return (
     <Popover
@@ -144,6 +153,7 @@ export function Menu<T extends object>({
       dividers={dividers}
       minCols={submenu ? 0 : 'trigger'}
       placement={placement ?? (submenu ? 'end top' : 'bottom start')}
+      {...(submenu ? { shift: SUBMENU_SHIFT } : {})}
       {...(maxRows === undefined ? {} : { maxRows })}
       {...(shouldFlip === undefined ? {} : { shouldFlip })}
       {...(boundaryElement === undefined ? {} : { boundaryElement })}
@@ -162,14 +172,59 @@ export interface MenuItemProps<T extends object>
   readonly className?: string;
 }
 
-/** `aria-keyshortcuts` on an element React Aria renders, which filters it from props. */
-function useKeyShortcuts(ref: RefObject<HTMLElement | null>, shortcut: string | undefined): void {
+/**
+ * A row's cells, drawn inside React Aria's item. React Aria renders an item
+ * from its collection, not from the wrapper's render, so what a row reads
+ * from the menu (whether it reserves a check cell) and what it writes on the
+ * item (`aria-keyshortcuts`, which React Aria filters from props) are done
+ * here, inside it.
+ */
+function Row({
+  state,
+  keys,
+  children,
+}: {
+  readonly state: MenuItemRenderProps;
+  readonly keys: string | undefined;
+  readonly children: ReactNode;
+}): ReactNode {
+  const glyphs = useGlyphs();
+  const checkable = useContext(Checkable);
+  const keyboard = usePlatform('auto');
+  const cell = useRef<HTMLSpanElement>(null);
+  const shortcut = keys === undefined ? undefined : keyShortcut(keys, keyboard);
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (shortcut === undefined) el.removeAttribute('aria-keyshortcuts');
-    else el.setAttribute('aria-keyshortcuts', shortcut);
-  }, [ref, shortcut]);
+    const item = cell.current?.closest('[role^="menuitem"]');
+    if (!item) return;
+    if (shortcut === undefined) item.removeAttribute('aria-keyshortcuts');
+    else item.setAttribute('aria-keyshortcuts', shortcut);
+  }, [shortcut]);
+  const [cursor, check] = menuMarks(
+    { cursor: state.isFocused, checked: state.isSelected },
+    checkable || state.selectionMode !== 'none',
+    glyphs,
+  );
+  return (
+    <>
+      <span ref={cell} aria-hidden="true" className="rk-menu-mark rk-menu-cursor">
+        {cursor}
+      </span>
+      {check === undefined ? null : (
+        <span aria-hidden="true" className="rk-menu-mark rk-menu-check">
+          {check}
+        </span>
+      )}
+      <span className="rk-menu-label">{children}</span>
+      {keys === undefined ? null : (
+        <span className="rk-menu-keys">
+          <KeyHint keys={keys} platform={keyboard} decorative />
+        </span>
+      )}
+      <span aria-hidden="true" className="rk-menu-mark rk-menu-end">
+        {menuEnd({ submenu: state.hasSubmenu, open: state.isOpen }, glyphs)}
+      </span>
+    </>
+  );
 }
 
 /**
@@ -183,51 +238,20 @@ export function MenuItem<T extends object>({
   children,
   ...item
 }: MenuItemProps<T>): ReactNode {
-  const glyphs = useGlyphs();
-  const checkable = useContext(Checkable);
-  const keyboard = usePlatform('auto');
-  const host = useRef<HTMLDivElement>(null);
-  useKeyShortcuts(host, keys === undefined ? undefined : keyShortcut(keys, keyboard));
   // The marks make the row's children a function, which React Aria cannot
   // read type-ahead from. A plain label is still the text to type, so say so.
   const text = item.textValue ?? (typeof children === 'string' ? children : undefined);
   return (
     <AriaMenuItem
       {...item}
-      ref={host}
       {...(text === undefined ? {} : { textValue: text })}
       className={cx('rk-menu-item', className)}
     >
-      {(render) => {
-        const [cursor, check] = menuMarks(
-          { cursor: render.isFocused, checked: render.isSelected },
-          checkable || render.selectionMode !== 'none',
-          glyphs,
-        );
-        return (
-          <>
-            <span aria-hidden="true" className="rk-menu-mark rk-menu-cursor">
-              {cursor}
-            </span>
-            {check === undefined ? null : (
-              <span aria-hidden="true" className="rk-menu-mark rk-menu-check">
-                {check}
-              </span>
-            )}
-            <span className="rk-menu-label">
-              {typeof children === 'function' ? children(render) : children}
-            </span>
-            {keys === undefined ? null : (
-              <span className="rk-menu-keys">
-                <KeyHint keys={keys} platform={keyboard} decorative />
-              </span>
-            )}
-            <span aria-hidden="true" className="rk-menu-mark rk-menu-end">
-              {menuEnd({ submenu: render.hasSubmenu, open: render.isOpen }, glyphs)}
-            </span>
-          </>
-        );
-      }}
+      {(render) => (
+        <Row state={render} keys={keys}>
+          {typeof children === 'function' ? children(render) : children}
+        </Row>
+      )}
     </AriaMenuItem>
   );
 }
