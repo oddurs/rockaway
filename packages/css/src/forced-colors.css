@@ -140,6 +140,8 @@
     [data-attrs~="reverse"],
     [data-rk-fill]:focus-visible {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }
