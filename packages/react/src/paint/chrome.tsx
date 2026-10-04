@@ -35,6 +35,7 @@ export function chromeRows(buffer: Buffer): ReactNode[] {
             style={markup.style as CSSProperties}
             data-rk-shape={markup.shape}
             data-attrs={markup.attrs}
+            data-rk-dots={markup.dots}
           >
             {run.text}
           </span>
