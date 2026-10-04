@@ -7,12 +7,18 @@
  */
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import type { MetadataDocument } from '@rockaway/react/metadata';
 import { vars } from '@rockaway/tokens';
 import type { Data } from '../src/data.ts';
 
 const json = (url: URL): unknown => JSON.parse(readFileSync(url, 'utf8'));
+
+/**
+ * `meta.json` is built, not written, so it is read when this runs rather than
+ * imported: typechecking comes before the build, and would not find it.
+ */
+const meta = (): MetadataDocument =>
+  json(new URL(import.meta.resolve('@rockaway/react/meta.json'))) as MetadataDocument;
 
 /** Everything the server needs, read from where the build left it. */
 export function collect(): Data {
@@ -36,7 +42,7 @@ export function collect(): Data {
     }));
   return {
     version: react.version,
-    components: (meta as unknown as MetadataDocument).components,
+    components: meta().components,
     tokens,
     // `var(--rk-fg-muted)` is `--rk-fg-muted`: the name a stylesheet writes.
     vars: Object.fromEntries(

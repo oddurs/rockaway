@@ -9,12 +9,14 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
-import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import type { MetadataDocument } from '@rockaway/react/metadata';
 import { vars } from '@rockaway/tokens';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
-const { components } = meta as unknown as MetadataDocument;
+// Read, not imported: `meta.json` is built, and typechecking comes before the build.
+const { components } = JSON.parse(
+  readFileSync(new URL(import.meta.resolve('@rockaway/react/meta.json')), 'utf8'),
+) as MetadataDocument;
 const bin = fileURLToPath(new URL('../dist/bin.js', import.meta.url));
 const dtcg = new URL('dtcg/', import.meta.resolve('@rockaway/tokens/package.json'));
 const tokenFile = (name: string): Record<string, unknown> =>
