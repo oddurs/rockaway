@@ -52,7 +52,17 @@ const NAMED: Readonly<
 };
 
 const WORDS = { ctrl: 'Ctrl', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
-const SPOKEN = { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Command' } as const;
+/**
+ * What a reader hears for each modifier, by the keyboard it is on: the word
+ * printed on the key. An Apple keyboard says Command and Option; anyone
+ * else's says Alt, and the meta key is Meta, whatever its cap shows (a
+ * Windows logo, a Super, a diamond), which is also what `aria-keyshortcuts`
+ * calls it (cairn 0189).
+ */
+const SPOKEN = {
+  apple: { ctrl: 'Control', alt: 'Option', shift: 'Shift', meta: 'Command' },
+  other: { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Meta' },
+} as const satisfies Record<Platform, Record<Modifier, string>>;
 
 /**
  * The chords of a sequence, in order: `g h` is two, `mod+k` one. Chords are
@@ -147,7 +157,7 @@ export function spokenKeys(spec: string, platform: Platform = 'other'): string {
   const keys = parseKeys(spec, platform);
   const named = NAMED[keys.key];
   const face = named ? named.spoken : keys.key.toUpperCase();
-  return [...held(keys, SPOKEN), face].join(' ');
+  return [...held(keys, SPOKEN[platform]), face].join(' ');
 }
 
 /**

@@ -43,6 +43,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  RouterProvider:
+    "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
   Chrome:
     "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
@@ -80,6 +82,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
         { id: 'src', title: 'src' },
         createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
       ),
+    ),
+  // Closed: a popover has no trigger here, and on a server an open one renders nothing anyway.
+  OverlayPopover: (props) =>
+    createElement(
+      rockaway.OverlayLayer,
+      null,
+      createElement(rockaway.OverlayPopover, { isOpen: false, ...props }, 'inside'),
     ),
   List: (props) =>
     createElement(

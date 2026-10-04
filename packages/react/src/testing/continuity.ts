@@ -549,6 +549,15 @@ async function chromeOnly(
   hide.textContent = `[${UNMARKED}]::before, [${UNMARKED}]::after { visibility: hidden !important; }`;
   if (regions.length > 0) doc.head.append(hide);
   for (const el of regions) el.setAttribute(UNMARKED, '');
+  // Nor any overlay open above it (cairn 0128): a backdrop would be read as
+  // the frame's own ink. An overlay's own chrome is read with every other
+  // part of the overlay layer hidden, so a dialog does not cover its backdrop.
+  const layers = [...layer.ownerDocument.querySelectorAll<HTMLElement>('.rk-overlay-layer')];
+  const own = layer.closest<HTMLElement>('.rk-screen');
+  const shown = layers.map((el) => el.style.visibility);
+  const ownShown = own?.style.visibility ?? '';
+  for (const el of layers) el.style.visibility = 'hidden';
+  if (own && layers.some((el) => el.contains(own))) own.style.visibility = 'visible';
   try {
     return await capture(target);
   } finally {
@@ -557,6 +566,10 @@ async function chromeOnly(
     });
     for (const el of regions) el.removeAttribute(UNMARKED);
     hide.remove();
+    layers.forEach((el, i) => {
+      el.style.visibility = shown[i] ?? '';
+    });
+    if (own) own.style.visibility = ownShown;
   }
 }
 
