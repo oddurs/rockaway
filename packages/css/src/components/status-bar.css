@@ -8,8 +8,7 @@
  *
  * The mode segment is reverse video: the bar's own figure and ground
  * swapped. In forced colors that pair is the reader's text and canvas, and
- * `forced-colors.css` takes the mode off the backplate with every other
- * reversed element (cairn 0181). Swapping a pair keeps its contrast, so the
+ * the mode opts out of the backplate below (cairn 0181, 0202). Swapping a pair keeps its contrast, so the
  * gate on fg.default over bg.subtle holds both ways.
  */
 @layer rk.components {
@@ -46,5 +45,15 @@
   .rk-status-segment[data-variant="mode"] {
     background: var(--rk-fg-default);
     color: var(--rk-bg-subtle);
+  }
+
+  /* Reversed words are drawn in a ground colour, which under forced colors is
+   * the canvas the browser paints behind text unless told not to. So the mode
+   * opts out of the adjustment (0181), and keeps the reader's colours through
+   * the tokens it reads. */
+  @media (forced-colors: active) {
+    .rk-status-segment[data-variant="mode"] {
+      forced-color-adjust: none;
+    }
   }
 }
