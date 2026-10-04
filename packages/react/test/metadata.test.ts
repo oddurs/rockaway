@@ -696,16 +696,16 @@ describe('the snapshots, as the site draws them', () => {
       "── Help, on any keyboard but Apple’s
       Ctrl+K  Open the palette
       /       Search
-      G H     Go home
-      J       Next row
-      K       Previous row
+      g h     Go home
+      j       Next row
+      k       Previous row
       ?       Show this help
       ── Help, on an Apple keyboard
       ⌘K   Open the palette
       /    Search
-      G H  Go home
-      J    Next row
-      K    Previous row
+      g h  Go home
+      j    Next row
+      k    Previous row
       ?    Show this help"
     `);
   });
