@@ -47,6 +47,14 @@ export const items: readonly ItemSource[] = [
     component: 'ConfirmDestructive',
   },
   {
+    name: 'git-client',
+    title: 'Git client',
+    description:
+      'A git client: changes and what is staged in a tree, the diff under the cursor, a commit form, the log, and the keys that do it all in the status bar. Under 60 cells, one pane at a time.',
+    component: 'GitClient',
+    example: true,
+  },
+  {
     name: 'settings',
     title: 'Settings',
     description:

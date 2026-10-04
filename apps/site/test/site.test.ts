@@ -623,6 +623,102 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     }
   });
 
+  test('the git client works by keyboard alone, in panes and in tabs (0151)', async () => {
+    for (const { width, density } of [
+      { width: 1200, density: undefined },
+      { width: 420, density: undefined },
+      { width: 420, density: 'touch' },
+    ]) {
+      const reader = await browser.newPage({ viewport: { width, height: 1000 } });
+      const errors: string[] = [];
+      reader.on('pageerror', (error) => errors.push(error.message));
+      reader.on('console', (message) => {
+        if (message.type() === 'error') errors.push(message.text());
+      });
+      await reader.goto(`${origin}${base}examples/git-client/`);
+      if (density) {
+        await reader.evaluate((d) => {
+          document.documentElement.dataset.density = d;
+        }, density);
+      }
+      await reader.waitForSelector('astro-island:not([ssr])');
+      const narrow = width < 600;
+      const at = `${width}px${density ? `, ${density}` : ''}`;
+
+      // Under 60 cells it is tabs, one pane at a time; over, every pane at once.
+      if (narrow) await reader.getByRole('tab', { name: 'Files' }).waitFor();
+      await expect(reader.getByRole('tab').count(), at).resolves.toBe(narrow ? 3 : 0);
+      const overflow = await reader.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow, at).toBe(0);
+
+      // Tab into the tree, and Space on a file stages it.
+      const list = reader.getByRole('row', { name: /list\.tsx/ });
+      for (
+        let i = 0;
+        i < 10 && !(await reader.evaluate(() => document.activeElement?.role === 'row'));
+        i++
+      ) {
+        await reader.keyboard.press('Tab');
+      }
+      await list.focus();
+      await reader.keyboard.press('Space');
+      await expect(list.getAttribute('aria-selected'), at).resolves.toBe('true');
+      await reader.getByRole('status').getByText('Staged src/components/list.tsx').waitFor();
+
+      // The summary, then mod+enter from the field commits what is staged.
+      await reader.keyboard.press('Tab');
+      await expect(
+        reader
+          .getByRole('textbox', { name: 'Summary' })
+          .evaluate((el) => el === document.activeElement),
+        at,
+      ).resolves.toBe(true);
+      await reader.keyboard.type('Clamp the list');
+      await reader.keyboard.press('ControlOrMeta+Enter');
+      await reader
+        .getByRole('status')
+        .getByText(/^Committed [0-9a-f]{7}, signed$/)
+        .waitFor();
+      await expect(list.count(), at).resolves.toBe(0);
+
+      // `?` lists the keys, generated from the bindings.
+      const tree = reader.getByRole('row', { name: /tree\.tsx/ });
+      await tree.focus();
+      await reader.keyboard.press('Shift+Slash');
+      const help = reader.getByRole('dialog', { name: 'Keys' });
+      await help.waitFor();
+      await expect(help.textContent()).resolves.toContain('Discard the file’s changes');
+      await reader.keyboard.press('Escape');
+      await help.waitFor({ state: 'detached' });
+
+      // Backspace asks first; Discard drops the file, and focus goes to the next.
+      await tree.focus();
+      await reader.keyboard.press('Backspace');
+      const ask = reader.getByRole('alertdialog', { name: /Discard changes/ });
+      await ask.waitFor();
+      const discard = ask.getByRole('button', { name: 'Discard' });
+      for (
+        let i = 0;
+        i < 4 && !(await discard.evaluate((el) => el === document.activeElement));
+        i++
+      ) {
+        await reader.keyboard.press('Tab');
+      }
+      await reader.keyboard.press('Enter');
+      await ask.waitFor({ state: 'detached' });
+      await expect(tree.count(), at).resolves.toBe(0);
+      await expect(
+        reader.evaluate(() => document.activeElement?.getAttribute('data-key')),
+        at,
+      ).resolves.toBe('docs/old.md');
+
+      expect(errors, at).toEqual([]);
+      await reader.close();
+    }
+  });
+
   test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
     // The page's own script, and a highlighter if one shipped, would load here.
     const live = await browser.newPage();
