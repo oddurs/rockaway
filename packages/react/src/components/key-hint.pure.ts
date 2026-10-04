@@ -29,26 +29,37 @@ const MODIFIERS: Readonly<Record<string, Modifier>> = {
 
 /**
  * Named keys: the legend a keycap prints, from the theme (cairn 0132); the
- * word for a keyboard that prints words; and what a reader hears. Arrows are
- * symbols on every keyboard, so they take their legend on both.
+ * word for a keyboard that prints words; what a reader hears; and its name in
+ * `aria-keyshortcuts`, which is the UI Events `key` value, except the space
+ * bar, which ARIA names `Space`. Arrows are symbols on every keyboard, so
+ * they take their legend on both.
  */
 const NAMED: Readonly<
-  Record<string, { legend?: KeyName; word: string; spoken: string; everywhere?: boolean }>
+  Record<
+    string,
+    { legend?: KeyName; word: string; spoken: string; aria: string; everywhere?: boolean }
+  >
 > = {
-  enter: { legend: 'enter', word: 'Enter', spoken: 'Enter' },
-  esc: { word: 'Esc', spoken: 'Escape' },
-  tab: { legend: 'tab', word: 'Tab', spoken: 'Tab' },
-  space: { legend: 'space', word: 'Space', spoken: 'Space' },
-  backspace: { legend: 'backspace', word: 'Bksp', spoken: 'Backspace' },
-  delete: { legend: 'delete', word: 'Del', spoken: 'Delete' },
-  up: { legend: 'up', word: 'Up', spoken: 'Up arrow', everywhere: true },
-  down: { legend: 'down', word: 'Down', spoken: 'Down arrow', everywhere: true },
-  left: { legend: 'left', word: 'Left', spoken: 'Left arrow', everywhere: true },
-  right: { legend: 'right', word: 'Right', spoken: 'Right arrow', everywhere: true },
-  pageup: { legend: 'pageup', word: 'PgUp', spoken: 'Page up' },
-  pagedown: { legend: 'pagedown', word: 'PgDn', spoken: 'Page down' },
-  home: { legend: 'home', word: 'Home', spoken: 'Home' },
-  end: { legend: 'end', word: 'End', spoken: 'End' },
+  enter: { legend: 'enter', word: 'Enter', spoken: 'Enter', aria: 'Enter' },
+  esc: { word: 'Esc', spoken: 'Escape', aria: 'Escape' },
+  tab: { legend: 'tab', word: 'Tab', spoken: 'Tab', aria: 'Tab' },
+  space: { legend: 'space', word: 'Space', spoken: 'Space', aria: 'Space' },
+  backspace: { legend: 'backspace', word: 'Bksp', spoken: 'Backspace', aria: 'Backspace' },
+  delete: { legend: 'delete', word: 'Del', spoken: 'Delete', aria: 'Delete' },
+  up: { legend: 'up', word: 'Up', spoken: 'Up arrow', aria: 'ArrowUp', everywhere: true },
+  down: { legend: 'down', word: 'Down', spoken: 'Down arrow', aria: 'ArrowDown', everywhere: true },
+  left: { legend: 'left', word: 'Left', spoken: 'Left arrow', aria: 'ArrowLeft', everywhere: true },
+  right: {
+    legend: 'right',
+    word: 'Right',
+    spoken: 'Right arrow',
+    aria: 'ArrowRight',
+    everywhere: true,
+  },
+  pageup: { legend: 'pageup', word: 'PgUp', spoken: 'Page up', aria: 'PageUp' },
+  pagedown: { legend: 'pagedown', word: 'PgDn', spoken: 'Page down', aria: 'PageDown' },
+  home: { legend: 'home', word: 'Home', spoken: 'Home', aria: 'Home' },
+  end: { legend: 'end', word: 'End', spoken: 'End', aria: 'End' },
 };
 
 const WORDS = { ctrl: 'Ctrl', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
@@ -151,13 +162,31 @@ export function spokenKeys(spec: string, platform: Platform = 'other'): string {
 }
 
 /**
+ * A key's name in `aria-keyshortcuts` (WAI-ARIA 1.2): a printable character
+ * as it is printed, so a letter is its capital, as every example in the spec
+ * writes it; a function key as `F1`; any other named key as its UI Events
+ * `key` value, `Escape` or `ArrowUp`.
+ */
+function ariaKey(key: string): string {
+  const named = NAMED[key];
+  if (named !== undefined) return named.aria;
+  if (/^f\d{1,2}$/.test(key)) return key.toUpperCase();
+  return key.length === 1 ? key.toUpperCase() : key;
+}
+
+/**
  * What the platform is told: the value for `aria-keyshortcuts`. One chord:
  * the attribute has no way to say "this, then that", and a space in its value
  * means "or", so a sequence has no value here and gives `undefined`.
+ *
+ * The modifiers are the UI Events names, first, in one order; the key is
+ * last, as `ariaKey` names it. ARIA counts `a` and `A` as the same key, so a
+ * capital says nothing more about Shift: `shift+y` is `Shift+Y`, and `y`
+ * alone is `Y`.
  */
 export function keyShortcut(spec: string, platform: Platform = 'other'): string | undefined {
   if (stepsOf(spec).length > 1) return undefined;
   const keys = parseKeys(spec, platform);
   const names = { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
-  return [...held(keys, names), keys.key].join('+');
+  return [...held(keys, names), ariaKey(keys.key)].join('+');
 }

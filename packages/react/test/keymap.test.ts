@@ -196,7 +196,7 @@ describe('sequences in KeyHint', () => {
     expect(formatKeys('mod+k g', 'apple')).toBe('⌘K G');
     expect(spokenKeys('g h')).toBe('G then H');
     expect(keyShortcut('g h')).toBeUndefined();
-    expect(keyShortcut('mod+k', 'apple')).toBe('Meta+k');
+    expect(keyShortcut('mod+k', 'apple')).toBe('Meta+K');
   });
 });
 

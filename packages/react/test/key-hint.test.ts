@@ -52,15 +52,58 @@ describe('a chord, three ways', () => {
 
   test('what the platform is told', () => {
     expect(SPECS.map((spec) => keyShortcut(spec, 'apple')).join('\n')).toMatchInlineSnapshot(`
-      "Meta+s
-      Control+Shift+k
-      Alt+x
-      Alt+Shift+Meta+p
-      esc
-      Meta+enter
-      Shift+up
-      Shift+enter"
+      "Meta+S
+      Control+Shift+K
+      Alt+X
+      Alt+Shift+Meta+P
+      Escape
+      Meta+Enter
+      Shift+ArrowUp
+      Shift+Enter"
     `);
+  });
+});
+
+/**
+ * `aria-keyshortcuts` names keys as WAI-ARIA 1.2 does: modifiers by their UI
+ * Events names, first; then one key, a printable character as it is printed
+ * or a UI Events key name, with `Space` for the space bar. ARIA counts `a`
+ * and `A` as one key, and writes letters as capitals in every example.
+ */
+describe('aria-keyshortcuts', () => {
+  test('a letter is its capital, with Shift or without it', () => {
+    expect(keyShortcut('shift+y')).toBe('Shift+Y');
+    expect(keyShortcut('y')).toBe('Y');
+    expect(keyShortcut('mod+shift+p', 'apple')).toBe('Shift+Meta+P');
+    // However the spec was written.
+    expect(keyShortcut('Shift+Y')).toBe(keyShortcut('shift+y'));
+  });
+
+  test('a named key is its UI Events key value, and the space bar is Space', () => {
+    const named = ['enter', 'esc', 'tab', 'space', 'backspace', 'delete'];
+    const moves = ['up', 'down', 'left', 'right', 'pageup', 'pagedown', 'home', 'end'];
+    expect([...named, ...moves].map((key) => keyShortcut(key)).join(' ')).toBe(
+      'Enter Escape Tab Space Backspace Delete ArrowUp ArrowDown ArrowLeft ArrowRight PageUp PageDown Home End',
+    );
+  });
+
+  test('a function key is F and its number, and a digit or a sign is itself', () => {
+    expect(keyShortcut('f1')).toBe('F1');
+    expect(keyShortcut('shift+f12')).toBe('Shift+F12');
+    expect(keyShortcut('ctrl+2')).toBe('Control+2');
+    expect(keyShortcut('ctrl+.')).toBe('Control+.');
+    expect(keyShortcut('/')).toBe('/');
+  });
+
+  test('every value is a valid shortcut: modifiers first, one key last', () => {
+    const MODIFIER = /^(Alt|Control|Shift|Meta)$/;
+    for (const spec of [...SPECS, 'shift+y', 'f5', 'ctrl+alt+delete']) {
+      const tokens = (keyShortcut(spec) ?? '').split('+');
+      const key = tokens.pop() ?? '';
+      expect(key, spec).not.toMatch(MODIFIER);
+      expect(key, spec).not.toMatch(/^[a-z]$/);
+      for (const token of tokens) expect(token, spec).toMatch(MODIFIER);
+    }
   });
 });
 
@@ -104,7 +147,7 @@ describe('parseKeys', () => {
     expect(formatKeys('esc', 'apple')).toBe('Esc');
     expect(formatKeys('a', 'apple')).toBe('A');
     expect(spokenKeys('pageup')).toBe('Page up');
-    expect(keyShortcut('esc')).toBe('esc');
+    expect(keyShortcut('esc')).toBe('Escape');
   });
 
   test('an empty spec is empty, not a crash', () => {

@@ -118,7 +118,7 @@ export function Button({
   // setting `ref={host}` used to drop the caller's on the floor.
   const refs = useBothRefs(host, ref);
   // One keyboard for what is drawn and what is announced, so a Mac shows ⌘S and
-  // is told Meta+s, never Control+s (cairn 0132).
+  // is told Meta+S, never Control+S (cairn 0132).
   const keyboard = usePlatform(platform);
   const shortcut = keys === undefined ? undefined : keyShortcut(keys, keyboard);
   useEffect(() => {
