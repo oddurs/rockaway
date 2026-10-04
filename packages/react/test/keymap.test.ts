@@ -192,8 +192,8 @@ describe('the engine', () => {
 
 describe('sequences in KeyHint', () => {
   test('drawn a cell apart, spoken with "then", and never an aria-keyshortcuts value', () => {
-    expect(formatKeys('g h')).toBe('G H');
-    expect(formatKeys('mod+k g', 'apple')).toBe('⌘K G');
+    expect(formatKeys('g h')).toBe('g h');
+    expect(formatKeys('mod+k g', 'apple')).toBe('⌘K g');
     expect(spokenKeys('g h')).toBe('G then H');
     expect(keyShortcut('g h')).toBeUndefined();
     expect(keyShortcut('mod+k', 'apple')).toBe('Meta+K');
@@ -221,20 +221,20 @@ describe('keymapHelpBuffer', () => {
     ).toMatchInlineSnapshot(`
       "Ctrl+K   Open the palette
       ?        Show this help
-      G H      Go home
-      J        Next row
+      g h      Go home
+      j        Next row
       Shift+↑  Select upwards
 
       ⌘K   Open the palette
       ?    Show this help
-      G H  Go home
-      J    Next row
+      g h  Go home
+      j    Next row
       ⇧↑   Select upwards
 
       Cmd+K     Open the palette
       ?         Show this help
-      G H       Go home
-      J         Next row
+      g h       Go home
+      j         Next row
       Shift+Up  Select upwards"
     `);
   });

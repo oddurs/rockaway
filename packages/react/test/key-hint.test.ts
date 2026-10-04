@@ -107,6 +107,46 @@ describe('aria-keyshortcuts', () => {
   });
 });
 
+/**
+ * A letter on its own is what you type, so it shows as you type it; with a
+ * modifier it is a keycap, which prints a capital. In terminal notation a
+ * capital alone is Shift, so `y` and `shift+y` never read the same.
+ */
+describe('the case of a letter', () => {
+  test('bare is lower case, held with anything is a capital', () => {
+    const rows = ['y', 'shift+y', 'mod+k', 'alt+x', 'g h', 'mod+k g'].map(
+      (spec) =>
+        `${spec.padEnd(8)} ${formatKeys(spec, 'apple').padEnd(5)} ${formatKeys(spec, 'other').padEnd(8)} ${formatKeys(spec, 'other', 'terminal')}`,
+    );
+    expect(rows.join('\n')).toMatchInlineSnapshot(`
+      "y        y     y        y
+      shift+y  ⇧Y    Shift+Y  Y
+      mod+k    ⌘K    Ctrl+K   ^K
+      alt+x    ⌥X    Alt+X    M-X
+      g h      g h   g h      g h
+      mod+k g  ⌘K g  Ctrl+K g ^K g"
+    `);
+  });
+
+  test('y and shift+y never look the same, in any notation or theme', () => {
+    const ascii = glyphsFor({ borderSet: 'ascii' });
+    for (const platform of ['apple', 'other'] as const) {
+      for (const notation of ['platform', 'terminal'] as const) {
+        for (const glyphs of [undefined, ascii]) {
+          expect(formatKeys('y', platform, notation, glyphs)).not.toBe(
+            formatKeys('shift+y', platform, notation, glyphs),
+          );
+        }
+      }
+    }
+  });
+
+  test('a character that is not a letter has no case to change', () => {
+    expect(formatKeys('?')).toBe('?');
+    expect(formatKeys('/', 'other', 'terminal')).toBe('/');
+  });
+});
+
 describe('parseKeys', () => {
   test('mod follows the keyboard, and nothing else does', () => {
     expect(parseKeys('mod+s', 'apple')).toEqual({
@@ -145,7 +185,7 @@ describe('parseKeys', () => {
 
   test('a bare key is still a chord', () => {
     expect(formatKeys('esc', 'apple')).toBe('Esc');
-    expect(formatKeys('a', 'apple')).toBe('A');
+    expect(formatKeys('a', 'apple')).toBe('a');
     expect(spokenKeys('pageup')).toBe('Page up');
     expect(keyShortcut('esc')).toBe('Escape');
   });

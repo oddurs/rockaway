@@ -124,15 +124,20 @@ export function formatKeys(
     return steps.map((step) => formatKeys(step, platform, notation, glyphs)).join(' ');
   }
   const keys = parseKeys(spec, platform);
-  const face = keyFace(keys.key, platform, glyphs);
+  // A letter on its own is what you type, so it shows as you type it: `y`,
+  // and `g h`. With a modifier it is a keycap, which prints a capital: `⌘K`,
+  // `Ctrl+K`, `⇧Y`. A bare capital would read as Shift held, which it is not.
+  const letter = keys.key.length === 1 && keys.key >= 'a' && keys.key <= 'z';
+  const bare = !keys.ctrl && !keys.alt && !keys.shift && !keys.meta;
+  const face = letter && bare ? keys.key : keyFace(keys.key, platform, glyphs);
 
   if (notation === 'terminal') {
     // The notation a terminal has always used: ^ for control, M- for meta.
     // A capital letter carries shift, because `^K` and `^⇧K` are the same chord
-    // to a terminal — but a named key has no capital, so `shift+up` has to say
-    // so or it reads as plain `up`.
-    // A single letter has a capital to carry it; `up` and `enter` do not.
-    const carried = keys.key.length === 1 && keys.key >= 'a' && keys.key <= 'z';
+    // to a terminal, and alone a capital is shift: `Y` is `shift+y`, and `y`
+    // is `y`. A named key has no capital, so `shift+up` has to say so or it
+    // reads as plain `up`.
+    const carried = letter;
     // Shift is the theme's symbol where it is one cell, and emacs's `S-` where
     // the theme spells it out.
     const symbol = glyphs.key.shift;
