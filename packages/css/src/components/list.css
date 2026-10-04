@@ -47,10 +47,12 @@
    * so only !important reaches them. The rows' heights and offsets are its
    * own, and right: they are the measured cell. */
   .rk-list-box > [role="presentation"] {
+    /* biome-ignore lint/complexity/noImportantStyles: the virtualiser's size is an inline style */
     inline-size: auto !important;
   }
 
   .rk-list-box > [role="presentation"] > [role="presentation"] {
+    /* biome-ignore lint/complexity/noImportantStyles: the virtualiser's size is an inline style */
     inline-size: 100% !important;
   }
 
