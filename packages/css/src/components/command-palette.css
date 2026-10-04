@@ -1,0 +1,116 @@
+/*
+ * CommandPalette (cairn 0102), a modal on the overlay contract (0128) with no
+ * padding: every row runs from one side of the double frame to the other.
+ *
+ *   ║ ▸ open fi                Ctrl+K  ║   the input row
+ *   ╟──────────────────────────────────╢   the frame's rule
+ *   ╟ Files ───────────────────────────╢   a section's title, the frame's
+ *   ║▸Open file                Ctrl+O ░║   a Menu row, and the scrollbar column
+ *
+ * The input row and the results end in the same two cells: a menu row's end
+ * cell and the results' scrollbar column, so every chord ends in one column.
+ * The results scroll on their own under the input row, in whole rows, with
+ * no native scrollbar (0207).
+ */
+@layer rk.components {
+  .rk-palette {
+    outline: none;
+  }
+
+  /* A cell of air, the prompt, a cell of air, the input, the chord, two cells. */
+  .rk-palette-search {
+    display: flex;
+    align-items: center;
+    block-size: var(--rk-cell-height);
+    padding-inline: var(--rk-x-1) var(--rk-x-2);
+    white-space: pre;
+  }
+
+  .rk-palette-prompt {
+    inline-size: var(--rk-cell-width);
+    margin-inline-end: var(--rk-x-1);
+    flex: none;
+    color: var(--rk-fg-accent);
+  }
+
+  .rk-palette-input {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    block-size: var(--rk-cell-height);
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    outline: none;
+  }
+
+  /* The search field draws no clear button: Escape clears, then closes. */
+  .rk-palette-input::-webkit-search-cancel-button {
+    appearance: none;
+  }
+
+  .rk-palette-input::placeholder {
+    color: var(--rk-fg-muted);
+    opacity: 1;
+  }
+
+  .rk-palette-chord {
+    padding-inline-start: var(--rk-x-2);
+    color: var(--rk-fg-muted);
+  }
+
+  .rk-palette-chord .rk-keyhint-keys {
+    color: inherit;
+  }
+
+  /* The row the frame's rule crosses. */
+  .rk-palette-rule {
+    block-size: var(--rk-cell-height);
+  }
+
+  /* The results and their scrollbar column, as tall as the rows they show. */
+  .rk-palette-results {
+    display: grid;
+    grid-template-columns: 1fr var(--rk-cell-width);
+    grid-template-rows: minmax(0, auto);
+    max-block-size: calc(var(--rk-cell-height) * var(--rk-palette-rows, 8));
+  }
+
+  .rk-palette-box {
+    min-block-size: 0;
+    max-block-size: calc(var(--rk-cell-height) * var(--rk-palette-rows, 8));
+    overflow: hidden auto;
+    scroll-snap-type: block mandatory;
+  }
+
+  .rk-palette-box .rk-menu-item,
+  .rk-palette-box .rk-menu-title {
+    scroll-snap-align: start;
+  }
+
+  .rk-palette-scrollbar {
+    color: var(--rk-fg-muted);
+    user-select: none;
+  }
+
+  /* A matched grapheme: underlined, as well as in the accent. */
+  .rk-palette-match {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+    color: var(--rk-fg-accent);
+  }
+
+  /* On the cursor's reversed row the match keeps its underline and takes the row's colour. */
+  .rk-menu-item[data-focused] .rk-palette-match {
+    color: inherit;
+  }
+
+  /* Loading, nothing at all, or nothing matching: the first row says which. */
+  .rk-palette-empty {
+    block-size: var(--rk-cell-height);
+    padding-inline-start: var(--rk-x-1);
+    color: var(--rk-fg-muted);
+    white-space: pre;
+  }
+}

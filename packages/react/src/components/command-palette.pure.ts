@@ -7,7 +7,7 @@
  * client boundary, so a server component, a static renderer or a test can
  * call them; `command-palette.tsx` imports them from here.
  */
-import { Attr, type Buffer, drawText, graphemes, type Style, stringWidth } from '@rockaway/grid';
+import { Attr, Buffer, drawText, graphemes, type Style, stringWidth } from '@rockaway/grid';
 import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import { formatKeys } from './key-hint.pure.ts';
 import { scrollbarBuffer } from './list.pure.ts';
@@ -198,6 +198,29 @@ export function promptMark(glyphs: Glyphs = themeGlyphs.default): string {
   return glyphs.mark.cursor;
 }
 
+/**
+ * The results' scrollbar column, as tall as the rows in sight: a List's
+ * track and thumb while there is more than fits, and blank while there is
+ * not. A section title's row is blank in it too: the frame's rule runs
+ * through that row, the column's cell with it.
+ */
+export function paletteScrollbar(
+  { total, visible, offset }: { total: number; visible: number; offset: number },
+  titles: ReadonlySet<number>,
+  glyphs: Glyphs = themeGlyphs.default,
+): Buffer {
+  const rows = Math.max(0, visible);
+  const bar = total > rows ? scrollbarBuffer({ total, visible: rows, offset }, glyphs) : undefined;
+  return Buffer.create({ width: 1, height: rows }).draw((draft) => {
+    for (let y = 0; y < rows; y++) {
+      if (titles.has(y) || bar === undefined) continue;
+      drawText(draft, { x: 0, y }, bar.at({ x: 0, y })?.ch ?? ' ', {
+        style: { fg: 'fg.muted', attrs: Attr.none },
+      });
+    }
+  });
+}
+
 /** The input row, the rule under it: the first result is on the frame's fourth row. */
 const RESULTS_TOP = 3;
 
@@ -261,22 +284,25 @@ export function commandPaletteBuffer(
   // The results scroll on their own, under an input row that stays: their
   // position is a scrollbar column in their last cell, as a List's is, not
   // the frame's edge, which runs past the input row too.
+  const titles = new Set(
+    lines.slice(offset, offset + visible).flatMap((line, y) => (line.kind === 'title' ? [y] : [])),
+  );
   const bar =
-    state === 'results' && lines.length > visible
-      ? scrollbarBuffer({ total: lines.length, visible, offset }, glyphs)
+    state === 'results'
+      ? paletteScrollbar({ total: lines.length, visible, offset }, titles, glyphs)
       : undefined;
 
   const prompt = promptMark(glyphs);
   const muted: Style = { fg: 'fg.muted', attrs: Attr.none };
   return chrome.draw((draft) => {
     // The input row: a cell of air, the prompt, a cell of air, the query;
-    // the chord at the end, a cell of air before the frame.
+    // the chord at the end, in the column the results' chords end in.
     const opener = chord === undefined ? '' : formatKeys(chord, 'other', 'platform', glyphs);
-    const room = Math.max(0, inner - 3 - (opener === '' ? 0 : stringWidth(opener) + 2));
+    const room = Math.max(0, inner - 5 - (opener === '' ? 0 : stringWidth(opener) + 2));
     drawText(draft, { x: 2, y: 1 }, prompt, { style: { fg: 'fg.accent', attrs: Attr.none } });
     drawText(draft, { x: 4, y: 1 }, query, { maxWidth: room, ellipsis: '' });
     if (opener !== '') {
-      drawText(draft, { x: across - 2 - stringWidth(opener), y: 1 }, opener, { style: muted });
+      drawText(draft, { x: across - 3 - stringWidth(opener), y: 1 }, opener, { style: muted });
     }
 
     if (state !== 'results') {
@@ -306,8 +332,10 @@ export function commandPaletteBuffer(
         line.result.command.keys === undefined
           ? ''
           : formatKeys(line.result.command.keys, 'other', 'platform', glyphs);
-      const end = across - 2;
-      const labelRoom = Math.max(0, inner - 2 - (keys === '' ? 0 : stringWidth(keys) + 2));
+      // A menu row's end cell, blank here (a command opens no submenu), then
+      // the scrollbar's column: the chord ends before both.
+      const end = across - 3;
+      const labelRoom = Math.max(0, inner - 4 - (keys === '' ? 0 : stringWidth(keys) + 2));
       const marked = new Set(line.result.match.indices);
       let x = 2;
       [...graphemes(line.result.command.label)].forEach((g, i) => {
@@ -323,11 +351,9 @@ export function commandPaletteBuffer(
     });
     if (bar !== undefined) {
       for (let y = 0; y < visible; y++) {
-        // A title's row is a rule, and the rule runs through the column.
-        if (lines[offset + y]?.kind === 'title') continue;
-        drawText(draft, { x: across - 2, y: RESULTS_TOP + y }, bar.at({ x: 0, y })?.ch ?? ' ', {
-          style: muted,
-        });
+        const ch = bar.at({ x: 0, y })?.ch ?? ' ';
+        if (ch !== ' ')
+          drawText(draft, { x: across - 2, y: RESULTS_TOP + y }, ch, { style: muted });
       }
     }
   });

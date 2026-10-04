@@ -67,8 +67,25 @@ const SUBMENU_SHIFT = { main: 1, cross: -1 } as const;
 /** Whether every row of the menu reserves a cell for the check. */
 const Checkable = createContext(false);
 
-/** The rows of a menu's separators and titles, read off the page. */
-function useDividers(menu: HTMLElement | null): readonly OverlayDivider[] {
+export interface DividerOptions {
+  /**
+   * The element scrolls its rows itself: rows are counted from its visible
+   * top, read again as it scrolls, and a row out of sight is dropped.
+   */
+  readonly scrolls?: boolean;
+  /** Rows of the surface's content above the element: added to every row. */
+  readonly above?: number;
+}
+
+/**
+ * The rows of the separators and section titles in `menu`, read off the
+ * page, for the frame to draw: a menu's own, or the results of a palette.
+ * Exported from this module and not the package.
+ */
+export function useDividers(
+  menu: HTMLElement | null,
+  { scrolls = false, above = 0 }: DividerOptions = {},
+): readonly OverlayDivider[] {
   const [dividers, setDividers] = useState<readonly OverlayDivider[]>([]);
   useIsomorphicLayoutEffect(() => {
     if (!menu) return;
@@ -78,11 +95,15 @@ function useDividers(menu: HTMLElement | null): readonly OverlayDivider[] {
       const row = measureCell(menu.parentElement ?? menu.ownerDocument.body).height;
       if (!(row > 0)) return;
       const top = menu.getBoundingClientRect().top;
+      const visible = scrolls ? Math.round(menu.clientHeight / row) : Number.POSITIVE_INFINITY;
       const next: OverlayDivider[] = [];
       for (const el of menu.querySelectorAll<HTMLElement>('.rk-menu-separator, .rk-menu-title')) {
         const at = Math.round((el.getBoundingClientRect().top - top) / row);
+        if (at < 0 || at >= visible) continue;
         const title = el.classList.contains('rk-menu-title') ? (el.textContent ?? '') : undefined;
-        next.push(title === undefined || title === '' ? { row: at } : { row: at, title });
+        next.push(
+          title === undefined || title === '' ? { row: above + at } : { row: above + at, title },
+        );
       }
       setDividers((was) =>
         was.length === next.length &&
@@ -96,11 +117,13 @@ function useDividers(menu: HTMLElement | null): readonly OverlayDivider[] {
     resizes?.observe(menu);
     const mutations = new MutationObserver(read);
     mutations.observe(menu, { childList: true, subtree: true, characterData: true });
+    if (scrolls) menu.addEventListener('scroll', read, { passive: true });
     return () => {
       resizes?.disconnect();
       mutations.disconnect();
+      menu.removeEventListener('scroll', read);
     };
-  }, [menu]);
+  }, [menu, scrolls, above]);
   return dividers;
 }
 

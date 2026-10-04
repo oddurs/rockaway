@@ -264,6 +264,90 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-y-1"
     ]
   },
+  "CommandPalette": {
+    "file": "command-palette.tsx",
+    "props": [
+      {
+        "name": "commands",
+        "type": "readonly PaletteEntry[]",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "What the palette is called: its dialog's name, and its input's.",
+        "default": "'Commands'"
+      },
+      {
+        "name": "chords",
+        "type": "readonly string[]",
+        "required": false,
+        "description": "The chords that open it, bound through the keymap. The first is shown at the end of the input row.",
+        "default": "['mod+k', '/']"
+      },
+      {
+        "name": "isOpen",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "default": "false"
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(isOpen: boolean) => void",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "The commands are still loading: the spinner and what it is waiting for.",
+        "default": "false"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": "Said in the empty input.",
+        "default": "'Type a command'"
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the results take before they scroll.",
+        "default": "8"
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "Cells across, the frame included.",
+        "default": "60"
+      },
+      {
+        "name": "onAction",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": "Called with a command's id when it runs, after its own `onAction`."
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-muted",
+      "--rk-x-1",
+      "--rk-x-2"
+    ]
+  },
   "Description": {
     "file": "field.tsx",
     "props": [

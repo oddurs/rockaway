@@ -30,6 +30,7 @@
 @import "./components/badge.css";
 @import "./components/button.css";
 @import "./components/callout.css";
+@import "./components/command-palette.css";
 @import "./components/field.css";
 @import "./components/fieldset.css";
 @import "./components/key-hint.css";

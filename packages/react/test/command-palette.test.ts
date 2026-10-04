@@ -75,17 +75,17 @@ describe('commandPaletteBuffer', () => {
     ).toMatchInlineSnapshot(`
       "
       ╔══════════════════════════════════╗|
-      ║ ▸                         Ctrl+K ║|
+      ║ ▸                        Ctrl+K  ║|
       ╟──────────────────────────────────╢|
       ╟ Files ───────────────────────────╢|
-      ║▸Open file                 Ctrl+O ║|
+      ║▸Open file                Ctrl+O  ║|
       ║ Open recent                      ║|
-      ║ Save                      Ctrl+S ║|
+      ║ Save                     Ctrl+S  ║|
       ╟ View ────────────────────────────╢|
       ║ Change theme                     ║|
       ║ Change density                   ║|
       ╟ Help ────────────────────────────╢|
-      ║ Show keyboard shortcuts        ? ║|
+      ║ Show keyboard shortcuts       ?  ║|
       ╚══════════════════════════════════╝|"
     `);
   });
@@ -98,7 +98,7 @@ describe('commandPaletteBuffer', () => {
       ║ ▸ of                             ║|
       ╟──────────────────────────────────╢|
       ╟ Files ───────────────────────────╢|
-      ║▸Open file                 Ctrl+O ║|
+      ║▸Open file                Ctrl+O  ║|
       ╚══════════════════════════════════╝|"
     `);
     // `O` and `f` of `Open file`, on the first result's row.
@@ -139,7 +139,7 @@ describe('commandPaletteBuffer', () => {
       ║ Change theme                    ░║|
       ║ Change density                  ░║|
       ╟ Help ────────────────────────────╢|
-      ║▸Show keyboard shortcuts        ?█║|
+      ║▸Show keyboard shortcuts       ? █║|
       ╚══════════════════════════════════╝|"
     `);
   });
@@ -153,10 +153,10 @@ describe('commandPaletteBuffer', () => {
     );
     expect(text).toMatchInlineSnapshot(`
       "+----------------------------------+
-      | > o                       Ctrl+K |
+      | > o                      Ctrl+K  |
       +----------------------------------+
       + Files ---------------------------+
-      |>Open file                 Ctrl+O#|
+      |>Open file                Ctrl+O #|
       | Open recent                     #|
       + Help ----------------------------+
       +----------------------------------+"

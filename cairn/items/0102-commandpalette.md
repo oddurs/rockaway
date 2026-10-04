@@ -79,3 +79,11 @@ Rewritten by the program plan: the pre-pivot template text is replaced with how 
 ## 2026-10-03
 
 Pure half first, while Dialog (#169) and TextField (#117) land: fuzzyMatch (a subsequence ignoring case, every start of the first character tried, word starts and runs scored up, gaps down), matchCommands (sections kept; with a query, ranked within a section and sections by their best), paletteState (results, loading, empty, no-match) and commandPaletteBuffer, the modal frame with the input row, a rule, section titles set into the frame as Menu's are, matched graphemes underlined and in the accent. The results scroll on their own under a fixed input row, so their position is a List scrollbar column, not the frame edge, which would run past the input row. The prompt mark is glyphs.mark.prompt from tokens' #183; the cursor mark stands in until it lands.
+
+## 2026-10-03
+
+Depends on TextField (0035, #117) in name only: TextField is a labelled box with delimiters, and the palette's input is a bare prompt row inside the modal's frame, so it is React Aria's SearchField and Input under Autocomplete, styled as that row. Agreed with the CTO.
+
+## 2026-10-03
+
+Built on OverlayModal and React Aria's Autocomplete, SearchField and Menu, with Menu's MenuItem and MenuSection for rows and Menu's useDividers (now exported from menu.tsx, with a scrolls/above option) for the section titles. Swap to Dialog once #169 is on main: fields has added padding and dividers to it (6051b7b). Two things found: a modal mounted closed (the palette is mounted with the page) captured its opener once at first render, so it took the page's body as its anchor for good, with the wrong density and painter; OverlayModal now re-reads the opener each time it opens. And axe wants the results' scroll region focusable, so it keeps its tab stop, as the site's code blocks do. A stories note: a modal open from the first render does not get focus into it reliably in the workbench, so the interactive stories open the palette as a reader does, with a slash from the page.

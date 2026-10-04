@@ -14,6 +14,7 @@
 import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
+import { commandPaletteMeta } from '../components/command-palette.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
 import { formMeta } from '../components/field.meta.ts';
 import { fieldsetMeta } from '../components/fieldset.meta.ts';
@@ -59,6 +60,7 @@ const sources: readonly ComponentMetaInput[] = [
   badgeMeta,
   buttonMeta,
   calloutMeta,
+  commandPaletteMeta,
   dividerMeta,
   fieldsetMeta,
   formMeta,

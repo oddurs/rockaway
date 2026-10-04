@@ -88,6 +88,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       null,
       createElement(rockaway.OverlayPopover, { isOpen: false, ...props }, 'inside'),
     ),
+  // Closed: a modal renders nothing on a server. The keymap it binds through is around it.
+  CommandPalette: (props) =>
+    createElement(
+      rockaway.Keymap,
+      null,
+      createElement(rockaway.CommandPalette, { commands: [], ...props }),
+    ),
   // Closed, as Popover's is: a menu opens in one, and has no trigger here.
   Menu: (props) =>
     createElement(
