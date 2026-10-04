@@ -126,11 +126,19 @@
    * Forced colors drops every background image that is not a URL, which is
    * every stroke. The cell opts out of the adjustment and draws in the
    * reader's text colour instead, whatever colour the cell asked for.
+   *
+   * The text beside it does not opt out, so the browser puts a backplate in
+   * the reader's canvas colour behind it, and Firefox draws that backplate a
+   * pixel or so wider than the text's own cells: over a corner's last pixels,
+   * where a title follows it (0214). A positioned cell paints after the
+   * row's unpositioned runs, backplates included, so the stroke stays on
+   * top. It still paints under the content layer, which comes later.
    */
   @media (forced-colors: active) {
     [data-rk-shape] {
       forced-color-adjust: none;
       --rk-ink-colour: CanvasText;
+      position: relative;
     }
   }
 
