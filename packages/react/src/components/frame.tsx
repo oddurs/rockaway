@@ -11,7 +11,7 @@
  * The title is the frame's accessible name, taken from the string rather than
  * from the glyphs around it: a reader hears "tokens, group", not `┌ tokens ─┐`.
  */
-import type { BorderSetName, Size } from '@rockaway/grid';
+import { type BorderSetName, type Size, stringWidth } from '@rockaway/grid';
 import { type ReactNode, useMemo } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
@@ -91,9 +91,21 @@ export function Frame({
     return (size: Size) => frameBuffer(size, options, glyphs);
   }, [title, titleAlign, border, key, dividerBorder, glyphs]);
 
+  // A frame the page sizes is drawn at its smallest until it has measured,
+  // and stretched to fit (Screen): the title in its edge, and room for its
+  // dividers. A page with no script then shows the frame at its true size.
+  const smallest = useMemo(
+    () => ({
+      width: title === undefined ? 3 : stringWidth(title) + 6,
+      height: key === '' ? 3 : Math.max(3, ...key.split(',').map((y) => Number(y) + 2)),
+    }),
+    [title, key],
+  );
+
   const name = label ?? title;
   return (
     <Screen
+      fallback={smallest}
       {...screen}
       draw={draw}
       className={cx('rk-frame-box', className)}

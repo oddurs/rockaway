@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { unified } from '@astrojs/markdown-remark';
+import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import type { ViteUserConfig } from 'astro';
 import { defineConfig } from 'astro/config';
@@ -50,7 +51,7 @@ export default defineConfig({
   site: process.env.SITE_URL ?? 'https://oddurs.github.io',
   base: normaliseBase(process.env.SITE_BASE),
   output: 'static',
-  integrations: [react()],
+  integrations: [react(), mdx()],
   devToolbar: { enabled: false },
   markdown: {
     // Highlighted at build time, in the ANSI 16 through the `syntax.*`
@@ -59,7 +60,7 @@ export default defineConfig({
     shikiConfig: { theme: ansiTheme, transformers: [roleClasses] },
     processor: unified({
       rehypePlugins: [
-        rehypeRepositoryLinks,
+        [rehypeRepositoryLinks, { base: normaliseBase(process.env.SITE_BASE) }],
         rehypeScrollable,
         // Columns are sized from the text before its box characters become cells.
         rehypeTableColumns,
@@ -72,5 +73,15 @@ export default defineConfig({
   },
   vite: {
     plugins: [publishedPackagesOnly()],
+    build: {
+      rolldownOptions: {
+        // MDX pages carry Astro's own `'use astro:head-inject'`, which the
+        // bundler warns it may not keep. Astro handles it; the warning is noise.
+        onLog(level, log, handler) {
+          if (log.code === 'MODULE_LEVEL_DIRECTIVE') return;
+          handler(level, log);
+        },
+      },
+    },
   },
 });
