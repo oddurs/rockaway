@@ -11,6 +11,7 @@ export * from './entries/badge.ts';
 export * from './entries/button.ts';
 export * from './entries/callout.ts';
 export * from './entries/checkbox.ts';
+export * from './entries/combobox.ts';
 export * from './entries/divider.ts';
 export * from './entries/field.ts';
 export * from './entries/fieldset.ts';

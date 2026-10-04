@@ -390,6 +390,130 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "ComboBox": {
+    "file": "combobox.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The field's name, in the label column."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | ((item: T) => ReactNode)",
+        "required": false,
+        "description": "The options: `ComboBoxItem`s, or a function of each of `items`."
+      },
+      {
+        "name": "items",
+        "type": "Iterable<T>",
+        "required": false,
+        "description": "The items to render with a function child. The combobox filters them as you type."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The box's width in cells, its delimiters and its button included.",
+        "default": "24"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": "What the box says while nothing is typed."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help under the box, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
+        "required": false,
+        "description": "Words for the error under the box; the combobox's own validation's when not given."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the popover takes before its rows scroll.",
+        "default": "8"
+      },
+      {
+        "name": "empty",
+        "type": "string",
+        "required": false,
+        "description": "What the popover says when nothing matches.",
+        "default": "NO_MATCHES"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit< AriaComboBoxProps<T>, 'children' | 'className' | 'style' | 'items' | 'defaultItems' | 'allowsEmptyCollection' >"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "ComboBoxItem": {
+    "file": "combobox.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The option's words."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
   "Description": {
     "file": "field.tsx",
     "props": [

@@ -57,6 +57,14 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
 const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => ReactElement>> = {
   Badge: (props) => createElement(rockaway.Badge, props, 'passing'),
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
+  ComboBox: (props) =>
+    createElement(
+      rockaway.ComboBox,
+      { label: 'Author', ...props },
+      // The option's words are required, and createElement's types cannot see them in its third argument.
+      // biome-ignore lint/correctness/noChildrenProp: as above
+      createElement(rockaway.ComboBoxItem, { id: 'ada', children: 'Ada Lovelace' }),
+    ),
   Callout: (props) =>
     createElement(rockaway.Callout, props, createElement('p', null, 'Mind the gap.')),
   Checkbox: (props) =>
