@@ -19,6 +19,7 @@
  * Its shape (panes, segments, keys) is `src/lib/shell.ts`, which the script
  * reads too, so the two cannot disagree.
  */
+import { Button } from '@rockaway/react/button';
 import { KeyHint } from '@rockaway/react/key-hint';
 import { KeymapHelp } from '@rockaway/react/keymap';
 import { LinkTree } from '@rockaway/react/link-tree';
@@ -114,6 +115,26 @@ export function Shell({
           {trail.join(' / ')}
         </StatusSegment>
         <StatusMessage />
+        <StatusSegment {...segment('copy')} label="Copy">
+          <Button
+            delimiters="none"
+            keys="y"
+            platform="other"
+            aria-label="Copy the screen as text"
+            data-site-copy="text"
+          >
+            copy
+          </Button>{' '}
+          <Button
+            delimiters="none"
+            keys="shift+y"
+            platform="other"
+            aria-label="Copy the screen as ANSI, for a terminal"
+            data-site-copy="ANSI"
+          >
+            ansi
+          </Button>
+        </StatusSegment>
         <StatusSegment {...segment('keys')}>
           <span data-site-when="page">
             <KeyHint keys="?" platform="other">

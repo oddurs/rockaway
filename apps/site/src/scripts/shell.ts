@@ -9,7 +9,9 @@
  * What it reads from the page it reads from `src/lib/shell.ts`, the same shape
  * the server rendered from.
  */
+import { screenAnsi, screenText } from '@rockaway/react/copy';
 import { cellsIn, fitStatusBar, measureCell, relayoutPanes } from '@rockaway/react/dom';
+import { keyShortcut } from '@rockaway/react/key-hint';
 import { attachKeymap, detectPlatform, KeymapEngine } from '@rockaway/react/keymap';
 import {
   type Action,
@@ -140,6 +142,61 @@ if (shell && panes && bar && main && page && help) {
     { passive: true },
   );
 
+  // ── Copying (0105) ─────────────────────────────────────────────────────
+
+  /**
+   * The screen a copy takes: the one you last pointed at or moved into (a
+   * snapshot, an example), or the whole page. The status bar is where the
+   * copy is pressed, so going there forgets nothing.
+   */
+  let pointed: HTMLElement | undefined;
+  const follows = (event: Event): void => {
+    const el = event.target instanceof Element ? event.target : null;
+    if (el?.closest('.rk-statusbar')) return;
+    // A click on the page focuses the page, after the pointer has already
+    // said what was clicked: that focus says nothing new.
+    if (event.type === 'focusin' && el?.getAttribute('tabindex') === '-1') return;
+    const screen = el?.closest<HTMLElement>('figure[role="img"], .rk-screen');
+    // The shell's own screens are the page, which is what it copies anyway.
+    pointed = screen && screen.parentElement !== shell ? screen : undefined;
+  };
+  document.addEventListener('focusin', follows);
+  document.addEventListener('pointerdown', follows);
+
+  /** What a screen is called in the message that says it was copied. */
+  const nameOf = (screen: HTMLElement | undefined): string => {
+    if (screen === undefined) return 'the page';
+    const label = screen.getAttribute('aria-label');
+    if (screen.matches('figure') && label) return `“${label.replace(/, as text$/, '')}”`;
+    if (screen.closest('astro-island[component-export="Example"]')) return 'the example';
+    return label ? `“${label}”` : 'the screen';
+  };
+
+  const copy = (as: 'text' | 'ANSI'): void => {
+    const screen = pointed?.isConnected ? pointed : undefined;
+    const from = screen ?? shell;
+    const text = screenText(from);
+    const lines = text.split('\n');
+    const cols = Math.max(0, ...lines.map((line) => [...line].length));
+    const what = `${nameOf(screen)} as ${as}, ${lines.length} rows of ${cols} cells`;
+    if (!navigator.clipboard) {
+      say(`Could not copy ${what}: this page cannot reach the clipboard.`);
+      return;
+    }
+    navigator.clipboard.writeText(as === 'text' ? text : screenAnsi(from)).then(
+      () => say(`Copied ${what}.${as === 'ANSI' ? ' Paste it into a terminal.' : ''}`),
+      () => say(`Could not copy ${what}: the browser did not allow it.`),
+    );
+  };
+  for (const button of bar.querySelectorAll<HTMLElement>('[data-site-copy]')) {
+    const as = button.dataset.siteCopy === 'ANSI' ? 'ANSI' : 'text';
+    button.addEventListener('click', () => copy(as));
+    // Button announces its chord from an effect, which a server never runs:
+    // say it here, as Button would, for the reader's keyboard.
+    const shortcut = keyShortcut(as === 'ANSI' ? 'shift+y' : 'y', detectPlatform(navigator));
+    if (shortcut) button.setAttribute('aria-keyshortcuts', shortcut);
+  }
+
   // ── The keys ───────────────────────────────────────────────────────────
 
   const by = (rows: number) => () => main.scrollBy({ top: rows * row() });
@@ -176,6 +233,8 @@ if (shell && panes && bar && main && page && help) {
     bottom: () => main.scrollTo({ top: main.scrollHeight }),
     help: () => showHelp(!helping),
     back: () => showHelp(false),
+    'copy-text': () => copy('text'),
+    'copy-ansi': () => copy('ANSI'),
   };
 
   const bindingFor = (binding: ShellBinding) => ({
@@ -193,6 +252,16 @@ if (shell && panes && bar && main && page && help) {
   let back: (() => void) | undefined;
   const bound: readonly ShellBinding[] = JSON.parse(help.dataset.siteBindings ?? '[]');
   for (const binding of bound) engine.register(scope, bindingFor(binding));
+  // Space and Enter on a button or a link are that control's: a server-rendered
+  // control has no React Aria to claim them, so they are kept from the keymap
+  // here, before it hears them, and the browser presses or follows as usual.
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== ' ' && event.key !== 'Enter') return;
+    const at = event.target instanceof Element ? event.target : null;
+    if (at?.closest('button, a[href], summary, [role="button"], input, select, textarea')) {
+      event.stopImmediatePropagation();
+    }
+  });
   attachKeymap(engine, document);
 
   // A page's own script can say something on the message line too.
