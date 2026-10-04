@@ -372,12 +372,21 @@ function Surface({
     return () => observer.disconnect();
   }, []);
 
-  // The content's scroll, in rows, for the thumb in the frame's edge.
+  // The content's scroll, in rows, for the thumb in the frame's edge. A scroll
+  // position is kept in pixels, so when the cell changes (a new density) the
+  // browser leaves it, or clamps it, on a fraction of the new row. Whenever
+  // the body is resized or a context changes, the content is put back on the
+  // nearest whole row; a reader's own scrolling is never fought.
   useIsomorphicLayoutEffect(() => {
     const el = body.current;
     if (!el) return;
-    const read = (): void => {
+    const read = (snap: boolean): void => {
       const row = measureCell(el).height;
+      if (!(row > 0)) return;
+      if (snap) {
+        const whole = Math.round(el.scrollTop / row) * row;
+        if (Math.abs(whole - el.scrollTop) > 0.5) el.scrollTop = whole;
+      }
       const total = Math.round(el.scrollHeight / row);
       const visible = Math.round(el.clientHeight / row);
       const offset = Math.round(el.scrollTop / row);
@@ -387,13 +396,20 @@ function Surface({
           : { total, visible, offset },
       );
     };
-    read();
-    el.addEventListener('scroll', read, { passive: true });
-    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(read);
+    const scrolled = (): void => read(false);
+    const settled = (): void => read(true);
+    read(true);
+    el.addEventListener('scroll', scrolled, { passive: true });
+    const observer =
+      typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(settled);
     observer?.observe(el);
+    // The cell can change without the body changing size, when the rows it
+    // shows are held by `maxRows`: the context attributes say when.
+    const unobserve = observeContexts(settled);
     return () => {
-      el.removeEventListener('scroll', read);
+      el.removeEventListener('scroll', scrolled);
       observer?.disconnect();
+      unobserve();
     };
   }, []);
 

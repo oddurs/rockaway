@@ -24,13 +24,19 @@
  * show (0207). It names itself `note` with its title, so the tone is heard in
  * words; the frame and the mark are chrome.
  */
-import type { Size } from '@rockaway/grid';
+import { type Size, stringWidth } from '@rockaway/grid';
 import { type CSSProperties, type ReactNode, useMemo } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { type PainterName, Screen } from '../screen.tsx';
 import type { VariantProps } from '../variants.ts';
-import { type CalloutTone, calloutBuffer, calloutTitle, calloutVariants } from './callout.pure.ts';
+import {
+  type CalloutTone,
+  calloutBuffer,
+  calloutChrome,
+  calloutTitle,
+  calloutVariants,
+} from './callout.pure.ts';
 
 export interface CalloutProps extends VariantProps<typeof calloutVariants> {
   readonly children?: ReactNode;
@@ -42,6 +48,14 @@ export interface CalloutProps extends VariantProps<typeof calloutVariants> {
   readonly painter?: PainterName;
   readonly className?: string;
   readonly style?: CSSProperties;
+}
+
+/**
+ * The smallest box a title of this many cells fits in the top edge of: the
+ * corners, a cell of air either side of the words, and two of line.
+ */
+function smallestBox(title: number): Size {
+  return { width: title + 6, height: 3 };
 }
 
 /** Content starts inside the border and a cell of air across; the border's row is the only one above and below. */
@@ -62,12 +76,18 @@ export function Callout({
     () => (size: Size) => calloutBuffer(size, { tone: chosen.tone, title: words }, glyphs),
     [chosen.tone, words, glyphs],
   );
+  // Its height follows its prose, which only the page knows. Before it has
+  // measured, it is drawn at its smallest and stretched to fit (Screen), so a
+  // page with no script shows it at its true size.
+  const heading = calloutChrome({ tone: chosen.tone, title: words }, glyphs).heading;
+  const fallback = useMemo(() => smallestBox(stringWidth(heading)), [heading]);
   return (
     <Screen
       draw={draw}
       {...(painter === undefined ? {} : { painter })}
       className={cx('rk-callout', className)}
       contentInset={INSET}
+      fallback={fallback}
       role="note"
       aria-label={words}
       {...calloutVariants.dataAttributes(chosen)}
