@@ -3,12 +3,8 @@ import { glyphsFor } from '@rockaway/tokens';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import {
-  Button,
-  type ButtonTextOptions,
-  buttonBuffer,
-  buttonVariants,
-} from '../src/components/button.tsx';
+import { buttonBuffer, buttonVariants } from '../src/components/button.pure.ts';
+import { Button, type ButtonTextOptions } from '../src/components/button.tsx';
 
 const text = (label: string, options: ButtonTextOptions = {}): string =>
   toText(buttonBuffer(label, options), { trimEnd: false });
