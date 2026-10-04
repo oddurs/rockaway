@@ -248,6 +248,7 @@ const chromiumProjects = [
     test: {
       name: CLASSIC_SCROLLBARS,
       setupFiles,
+      testTimeout,
       browser: browser({}, 'srgb', true),
     },
   },
