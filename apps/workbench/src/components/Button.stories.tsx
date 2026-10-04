@@ -9,6 +9,7 @@ import {
 } from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { type ReactNode, useRef, useState } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
 import { settled } from '../settled.ts';
 
@@ -397,5 +398,46 @@ export const StatesEverywhere: Story = {
       await waitFor(() => expect(button.dataset.pressed).toBeUndefined());
       await userEvent.unhover(button);
     }
+  },
+};
+
+/** An app holding a Button by its ref, both kinds: an object and a callback. */
+function Refs(): ReactNode {
+  const object = useRef<HTMLButtonElement>(null);
+  const [called, setCalled] = useState('none');
+  return (
+    <Frame title="refs" cols={COLS} rows={4}>
+      <div style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+        <Button ref={object} keys="mod+s" platform="other">
+          Save
+        </Button>
+        <Button ref={(el) => setCalled(el === null ? 'none' : el.tagName.toLowerCase())}>
+          Cancel
+        </Button>
+        <Button onPress={() => object.current?.focus()}>Focus save</Button>
+      </div>
+      <p data-testid="called" style={{ margin: 0 }}>
+        {called}
+      </p>
+    </Frame>
+  );
+}
+
+/**
+ * A caller's ref reaches the button element, an object or a callback,
+ * alongside Button's own (cairn 0224): the app focuses Save through its ref,
+ * and Button still sets `aria-keyshortcuts` through the one it keeps.
+ */
+export const Refs_: Story = {
+  name: 'Held by a ref',
+  render: () => <Refs />,
+  play: async ({ canvas }) => {
+    await settled();
+    const save = canvas.getByRole('button', { name: 'Save' });
+    expect(canvas.getByTestId('called')).toHaveTextContent('button');
+    await userEvent.click(canvas.getByRole('button', { name: 'Focus save' }));
+    await waitFor(() => expect(save).toHaveFocus());
+    // Button's own ref is still in use: it is what sets the shortcut.
+    expect(save).toHaveAttribute('aria-keyshortcuts', keyShortcut('mod+s', 'other'));
   },
 };

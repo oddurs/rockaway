@@ -88,4 +88,15 @@
     background: var(--rk-bg-danger-solid);
     color: var(--rk-fg-on-danger);
   }
+
+  /* Reversed words are drawn in a ground colour, which under forced colors is
+   * the canvas the browser paints behind text unless told not to. So whatever
+   * this stylesheet reverses opts out of the adjustment (0181), and keeps the
+   * reader's colours through the tokens it reads. */
+  @media (forced-colors: active) {
+    .rk-button[data-variant="fill"],
+    .rk-button[data-pressed] {
+      forced-color-adjust: none;
+    }
+  }
 }

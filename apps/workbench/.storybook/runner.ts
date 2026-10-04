@@ -35,6 +35,8 @@ export interface Runner {
    * cannot show what happens then.
    */
   readonly type: (keys: string) => Promise<void>;
+  /** Emulates the reader's `prefers-contrast` (cairn 0065); `no-preference` gives it back. */
+  readonly contrast: (preference: 'more' | 'no-preference') => Promise<void>;
 }
 
 let current: Runner | undefined;

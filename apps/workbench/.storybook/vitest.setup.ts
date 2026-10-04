@@ -8,6 +8,7 @@ declare module 'vitest/browser' {
     printToPdf: (html: string) => Promise<{ fills: number }>;
     readWithoutScripts: (html: string) => Promise<{ rows: string[]; shapes: number; ran: boolean }>;
     recordKnown: (use: KnownUse) => Promise<void>;
+    emulateContrast: (contrast: 'more' | 'no-preference') => Promise<void>;
   }
 }
 
@@ -28,4 +29,5 @@ setRunner({
   record: (use) => commands.recordKnown(use),
   // The provider's keyboard: trusted events, as a reader's keys are.
   type: (keys) => userEvent.keyboard(keys),
+  contrast: (preference) => commands.emulateContrast(preference),
 });
