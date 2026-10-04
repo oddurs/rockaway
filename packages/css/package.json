@@ -8,7 +8,10 @@
     "*.css"
   ],
   "exports": {
-    ".": "./src/index.css",
+    ".": {
+      "types": "./src/index.d.css.ts",
+      "default": "./src/index.css"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -31,6 +34,7 @@
   "devDependencies": {
     "@rockaway/grid": "workspace:*",
     "@types/node": "26.6.2",
+    "postcss": "8.5.28",
     "vite": "8.3.0",
     "vitest": "4.1.11"
   }

@@ -168,11 +168,14 @@ font. Here that means:
   one cell tall and as many cells wide as it holds. Nothing painted takes its
   height from the font, so a background fills its cell and reverse video is a
   solid block.
-- **Box drawing and block elements are geometry, in the engine.**
+- **Box drawing, block elements and braille are geometry, in the engine.**
   `packages/grid/src/shape.ts` describes every glyph the junction table can
-  produce, and every block element, as rectangles and arcs measured from the
-  cell's own edges and centre. Pure data: a stylesheet or a canvas could read
-  it.
+  produce, every block element and all 256 braille patterns, as rectangles and
+  arcs measured from the cell's own edges and centre. Pure data: a stylesheet
+  or a canvas could read it. Braille is drawn for the same reason the rest is:
+  many monospace fonts, the site's among them, have none (`0166`), and a
+  spinner should not fall back to another face. Its 256 patterns share one rule
+  with a layer for each dot, raised by the cell's `data-rk-dots`.
 - **A stylesheet generated from it draws them.** `packages/css/src/shapes.css`
   is written from those shapes at build time and committed; a test fails if it
   is stale. A cell holding `┬` says so — `data-rk-shape="box-0111"`, its
@@ -493,7 +496,11 @@ cairn carries these as acceptance criteria, and the `component` template in
 2. **Both painters render it identically,** measured in cells.
 3. **Chrome is `aria-hidden`;** the accessible name never contains a glyph.
 4. **Behaviour comes from the behaviour layer.** No hand-rolled focus or
-   keyboard logic.
+   keyboard logic. React Aria handles the keys inside a component; the
+   keymap (`0141`) is the one handler for the page's own, so a shortcut is
+   bound with `useKeymap` and never with a listener of a component's: one
+   place decides which scope a key belongs to, keeps plain keys out of text
+   fields, finds conflicts, and lists every shortcut in the help screen.
 5. **Styled from `data-*` state and semantic tokens only.** A component that
    needs a reference token is a missing semantic.
 6. **Ships a text snapshot,** which is its documentation as much as its test.
