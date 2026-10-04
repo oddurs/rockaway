@@ -97,8 +97,15 @@ export const Focus: Story = {
     // Keyboard focus rings: 2px solid, offset 2px.
     await userEvent.tab();
     await expect(document.activeElement).toBe(button);
-    // Computed style objects are live, so read the values out now.
-    const ring = { ...getComputedStyle(button) } as CSSStyleDeclaration;
+    // Computed style objects are live, so read the values out now: by name,
+    // because only Chromium makes them own properties a spread would copy.
+    const live = getComputedStyle(button);
+    const ring = {
+      outlineStyle: live.outlineStyle,
+      outlineWidth: live.outlineWidth,
+      outlineOffset: live.outlineOffset,
+      outlineColor: live.outlineColor,
+    };
     await expect(ring.outlineStyle).toBe('solid');
     await expect(ring.outlineWidth).toBe('2px');
     await expect(ring.outlineOffset).toBe('2px');

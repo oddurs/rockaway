@@ -292,6 +292,15 @@ async function checkCell(
   return { failures, ran };
 }
 
+/** Whether a known failure's platforms include the one this browser runs on. */
+function onPlatform(entry: Known): boolean {
+  if (entry.platforms === undefined) return true;
+  const agent = typeof navigator === 'undefined' ? '' : navigator.userAgent;
+  return entry.platforms.some((platform) =>
+    platform === 'Mac' ? /Mac OS X|Macintosh/.test(agent) : agent.includes(platform),
+  );
+}
+
 function covers(
   entry: Known,
   storyId: string,
@@ -303,6 +312,7 @@ function covers(
   const checks: readonly Check[] = typeof entry.check === 'string' ? [entry.check] : entry.check;
   return (
     checks.includes(check) &&
+    onPlatform(entry) &&
     (entry.projects === undefined || (project !== undefined && entry.projects.includes(project))) &&
     (entry.stories === undefined || entry.stories.some((id) => storyId.startsWith(id))) &&
     (entry.densities === undefined || entry.densities.includes(density)) &&
@@ -425,7 +435,9 @@ export async function expectKnown(id: string, assertion: () => unknown): Promise
   if (!entry) throw new Error(`no known failure named ${id} with check 'play' in known.ts`);
   const run = runner();
   const covered =
-    run !== undefined && (entry.projects === undefined || entry.projects.includes(run.project));
+    run !== undefined &&
+    onPlatform(entry) &&
+    (entry.projects === undefined || entry.projects.includes(run.project));
   try {
     await assertion();
     if (covered) await run.record({ inPlay: [id], used: [] });

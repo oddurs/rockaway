@@ -118,9 +118,12 @@ const CLASSIC_SCROLLBARS = 'classic-scrollbars';
  *   continuity at one device pixel already runs in all three engines.
  *
  * And stories tagged `print` stay out of Firefox and WebKit: Playwright prints
- * to PDF only in Chromium. That is a capability an engine lacks; a defect in
- * one engine is a known failure instead (`.storybook/known.ts`), printed in
- * every run until it is fixed.
+ * to PDF only in Chromium. Stories tagged `native-scrollbars` stay out of
+ * Firefox, where Playwright gives every box `scrollbar-width: none` (measured
+ * on a plain `overflow: auto` box), so a native bar never appears to be
+ * caught. Those are capabilities a runner lacks; a defect in one engine is a
+ * known failure instead (`.storybook/known.ts`), printed in every run until
+ * it is fixed.
  *
  * `ENGINES` picks which of the three run, so CI can give Firefox and WebKit a
  * job of their own beside Chromium's. Unset, all three run.
@@ -256,7 +259,20 @@ const chromiumProjects = [
 
 /** Firefox and WebKit: every story, but the ones only Chromium can run. */
 const engineProjects = others.map((engine) => ({
-  plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3, 'print'] } })],
+  plugins: [
+    storybookTest({
+      configDir,
+      tags: {
+        exclude: [
+          FORCED_COLORS,
+          P3,
+          'print',
+          // Playwright's Firefox gives every box `scrollbar-width: none`.
+          ...(engine === 'firefox' ? ['native-scrollbars'] : []),
+        ],
+      },
+    }),
+  ],
   test: {
     name: engine,
     setupFiles,

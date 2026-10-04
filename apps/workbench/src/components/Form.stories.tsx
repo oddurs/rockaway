@@ -28,6 +28,7 @@ import {
   type TextFieldProps,
 } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { expectKnown } from '../../.storybook/matrix.ts';
 import { measured } from '../settled.ts';
 
 /*
@@ -374,12 +375,15 @@ export const LabelWidth: Story = {
     await measured(document.body);
     const frame = canvas.getByRole('group', { name: 'commit' });
     const cell = Number.parseFloat(getComputedStyle(frame).getPropertyValue('--rk-cell-width'));
-    for (const name of ['Branch', 'Commit message']) {
-      const input = canvas.getByRole('textbox', { name }).getBoundingClientRect();
-      const origin = frame.getBoundingClientRect();
-      // Border, pad, eleven cells of label column, then the delimiter.
-      expect(Math.round((input.left - origin.left) / cell)).toBe(2 + 11 + 1);
-    }
+    // Not yet in WebKit: printed as a known failure there (cairn 0124).
+    await expectKnown('webkit-form-at-sixty', () => {
+      for (const name of ['Branch', 'Commit message']) {
+        const input = canvas.getByRole('textbox', { name }).getBoundingClientRect();
+        const origin = frame.getBoundingClientRect();
+        // Border, pad, eleven cells of label column, then the delimiter.
+        expect(Math.round((input.left - origin.left) / cell)).toBe(2 + 11 + 1);
+      }
+    });
   },
 };
 
