@@ -83,7 +83,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "keys",
         "type": "string",
         "required": false,
-        "description": "The chord that fires it: `mod+s`. It draws the hint beside the label and announces the shortcut, which is how a TUI teaches itself (cairn 0099)."
+        "description": "The chord that fires it: `mod+s`. It draws the hint beside the label and announces the shortcut, which is how a TUI teaches itself (cairn 0099). Inside a `Keymap` it also binds it: the chord presses the button, and the help screen lists it under the button's label (cairn 0225). Outside one, the app listens for the chord itself."
       },
       {
         "name": "platform",
