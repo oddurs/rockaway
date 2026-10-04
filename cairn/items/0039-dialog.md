@@ -3,15 +3,15 @@ id: 39
 uid: f3445f26-c9ae-4de5-a110-eb7203bef5de
 title: Dialog
 type: component
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 128
 - 131
 created: 2026-09-22
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p1
 layer: components
 effort: m

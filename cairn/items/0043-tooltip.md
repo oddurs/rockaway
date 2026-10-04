@@ -3,14 +3,14 @@ id: 43
 uid: 97c2c8e2-ca0c-402e-90d2-774c5627aed6
 title: Tooltip
 type: component
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 34
 created: 2026-09-22
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p1
 layer: components
 effort: s
