@@ -3,14 +3,14 @@ id: 124
 uid: e7288c0c-adba-45d8-9122-a4536b049934
 title: Run the story tests in Firefox and WebKit as well as Chromium
 type: chore
-status: doing
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 13
 created: 2026-10-03
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p1
 layer: tooling
 effort: m
@@ -26,9 +26,9 @@ Firefox and Safari in numbers.
 ## Acceptance criteria
 
 - [x] The workbench Vitest config has Chromium, Firefox and WebKit projects, and forced colors is tested in every engine that implements it, with the reason for the others written next to it
-- [ ] CI installs all three browsers and runs every story in each, on every pull request
+- [x] CI installs all three browsers and runs every story in each, on every pull request
 - [x] Any engine difference that needs a tolerance or a skip is recorded here with a measurement, not hidden in a config
-- [ ] CI wall time before and after is recorded here; if it doubles, Firefox and WebKit move to pushes to main and this item says so
+- [x] CI wall time before and after is recorded here; if it doubles, Firefox and WebKit move to pushes to main and this item says so
 
 ## 2026-10-03
 
@@ -69,3 +69,11 @@ First CI run of the engines job (run 37170346623) failed 8 stories, all from fil
 ## 2026-10-03
 
 The second CI run passed all 462 engine stories and failed only the stale-entry reporter: webkit-mac-screen-corner was in play on Linux, because Playwright's WebKit reports a Macintosh user agent on every platform. The platform now comes from Node (process.platform), provided to the browser like the plan.
+
+## 2026-10-03
+
+CI times. Before (main, runs 37171080651 and 37170628378): 5m13s and 4m50s of wall time, the check job about 4.5 to 5.5 minutes. After (PR 162, run 37171407796): 5m27s of wall time; the Chromium job 4m25s and the new Firefox and WebKit job 5m24s, side by side. The engines add about 15 to 35 seconds to the wall clock, nowhere near double, so Firefox and WebKit stay on every pull request. That run passed all 462 stories in both engines.
+
+## Result
+
+Every story runs in Chromium, Firefox and WebKit on every pull request, Firefox and WebKit as a parallel job adding about 30s of wall time; forced colours in Chromium and Firefox; engine defects declared as known failures, scoped by project and platform
