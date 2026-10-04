@@ -11,7 +11,7 @@ import {
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { settled } from '../settled.ts';
 
 const FILES = [
@@ -405,6 +405,46 @@ export const Hovered: Story = {
     expect(getComputedStyle(label).textDecorationLine).toBe('underline');
     expect(option.getBoundingClientRect()).toEqual(before);
     await userEvent.unhover(option);
+  },
+};
+
+/**
+ * At dense the line box is shorter than the font: its ascent and descent run
+ * past a 16px row. A row clips what it holds, so that overflow is not more
+ * list to scroll, and a list moved by the keyboard stops on whole rows (0211).
+ * Without the clip, a list of three rows in three had one pixel to scroll, and
+ * bringing the last row into view moved every row a pixel off the grid.
+ */
+export const DenseKeyboard: Story = {
+  name: 'Dense, moved by the keyboard',
+  render: () => (
+    <div data-density="dense" style={{ display: 'flex', gap: 'var(--rk-x-4)' }}>
+      <Framed name="fits" width={20} rows={3}>
+        <Files label="Fits" rows={3} files={FILES.slice(0, 3)} />
+      </Framed>
+      <Framed name="scrolls" width={20} rows={3}>
+        <Files label="Scrolls" rows={3} files={FILES} />
+      </Framed>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    for (const name of ['Fits', 'Scrolls']) {
+      const list = canvas.getByRole('listbox', { name });
+      list.focus();
+      for (let i = 0; i < 4; i++) await userEvent.keyboard('{ArrowDown}');
+      await settled();
+      const cell = Number.parseFloat(getComputedStyle(list).getPropertyValue('--rk-cell-height'));
+      expect(cell).toBe(16);
+      // Nothing but whole rows to scroll...
+      expect((list.scrollHeight - list.clientHeight) % cell, name).toBe(0);
+      // ...so the list stops on one, and every row is on the grid.
+      expect(list.scrollTop % cell, name).toBe(0);
+      const top = list.getBoundingClientRect().top;
+      for (const option of within(list).getAllByRole('option')) {
+        expect(Math.abs((option.getBoundingClientRect().top - top) % cell), name).toBe(0);
+      }
+    }
   },
 };
 
