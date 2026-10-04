@@ -222,12 +222,16 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       const slug = component.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
       await reader.goto(`${origin}${base}components/${slug}/`);
       // Each snapshot is painted, and copies as the text it was drawn from.
+      // A theme's own drawings are on the page too, hidden: only what is
+      // shown is read (0171).
       const painted = await reader.evaluate(() =>
-        [...document.querySelectorAll('figure[role="img"] [data-rk-painted]')].map((layer) =>
-          [...layer.querySelectorAll('.rk-row')]
-            .map((row) => row.textContent?.trimEnd())
-            .join('\n'),
-        ),
+        [...document.querySelectorAll('figure[role="img"] [data-rk-painted]')]
+          .filter((layer) => layer.checkVisibility())
+          .map((layer) =>
+            [...layer.querySelectorAll('.rk-row')]
+              .map((row) => row.textContent?.trimEnd())
+              .join('\n'),
+          ),
       );
       const trimmed = (text: string) =>
         text
@@ -235,6 +239,44 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
           .map((line) => line.trimEnd())
           .join('\n');
       expect(painted, component.name).toEqual(component.snapshots.map((s) => trimmed(s.text)));
+    }
+    await context.close();
+  });
+
+  test('shows each snapshot as the reader’s theme draws it, with no script (0171)', async () => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const reader = await context.newPage();
+    type Drawn = { name: string; snapshots: { text: string; themes?: Record<string, string> }[] };
+    const trimmed = (text: string) =>
+      text
+        .split('\n')
+        .map((line) => line.trimEnd())
+        .join('\n');
+    const themed = (components as Drawn[]).filter((c) => c.snapshots.some((s) => s.themes));
+    expect(themed.length).toBeGreaterThan(0);
+    for (const component of themed) {
+      const slug = component.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      await reader.goto(`${origin}${base}components/${slug}/`);
+      const themes = [
+        ...new Set(component.snapshots.flatMap((s) => Object.keys(s.themes ?? {}))),
+        'nord',
+      ];
+      for (const theme of themes) {
+        // What the switcher (0148) will do: name the theme on the root.
+        const painted = await reader.evaluate((name) => {
+          document.documentElement.setAttribute('data-rk-theme', name);
+          return [...document.querySelectorAll('figure[role="img"] [data-rk-painted]')]
+            .filter((layer) => layer.checkVisibility())
+            .map((layer) =>
+              [...layer.querySelectorAll('.rk-row')]
+                .map((row) => row.textContent?.trimEnd())
+                .join('\n'),
+            );
+        }, theme);
+        expect(painted, `${component.name} in ${theme}`).toEqual(
+          component.snapshots.map((s) => trimmed(s.themes?.[theme] ?? s.text)),
+        );
+      }
     }
     await context.close();
   });
