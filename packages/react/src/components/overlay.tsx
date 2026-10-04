@@ -58,9 +58,10 @@ import {
 import { measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { Screen } from '../screen.tsx';
+import { type PainterName, Screen } from '../screen.tsx';
 import {
   backdropBuffer,
+  type OverlayDivider,
   type OverlayKind,
   type OverlayScroll,
   overlayBuffer,
@@ -85,15 +86,64 @@ const CONTEXTS = [
 /** A modal or popover narrower than this, in cells, is a full-width sheet. */
 const SHEET_BELOW = 60;
 
-/** The nearest value of every context attribute above `el`, as attributes to set. */
-function contextsOf(el: Element | null | undefined): Record<string, string> {
-  const found: Record<string, string> = {};
-  if (!el) return found;
+/** Where an overlay was opened: the contexts it carries, and the painter. */
+interface Origin {
+  /** The nearest value of every context attribute, as attributes to set. */
+  readonly contexts: Readonly<Record<string, string>>;
+  /** The painter of the screen it was opened from, so it is drawn the same way. */
+  readonly painter: PainterName | undefined;
+}
+
+function originOf(el: Element | null | undefined): Origin {
+  const contexts: Record<string, string> = {};
+  if (!el) return { contexts, painter: undefined };
   for (const attribute of CONTEXTS) {
     const value = el.closest(`[${attribute}]`)?.getAttribute(attribute);
-    if (value !== null && value !== undefined) found[attribute] = value;
+    if (value !== null && value !== undefined) contexts[attribute] = value;
   }
-  return found;
+  const painter = el.closest('[data-rk-painter]')?.getAttribute('data-rk-painter');
+  return { contexts, painter: painter === 'rule' || painter === 'glyph' ? painter : undefined };
+}
+
+function sameOrigin(a: Origin, b: Origin): boolean {
+  const keys = Object.keys(a.contexts);
+  return (
+    a.painter === b.painter &&
+    keys.length === Object.keys(b.contexts).length &&
+    keys.every((key) => a.contexts[key] === b.contexts[key])
+  );
+}
+
+/**
+ * Calls `changed` whenever a context or a painter changes anywhere in the
+ * document: a density switched at the root while an overlay is open moves
+ * its trigger's screen and changes the cell it lands on.
+ */
+function observeContexts(changed: () => void): () => void {
+  if (typeof MutationObserver === 'undefined') return () => {};
+  const observer = new MutationObserver(changed);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    subtree: true,
+    attributeFilter: [...CONTEXTS, 'data-rk-painter'],
+  });
+  return () => observer.disconnect();
+}
+
+/** The origin of an overlay opened from `anchor`, kept current while it is open. */
+function useOrigin(anchor: () => Element | null | undefined): Origin {
+  const [origin, setOrigin] = useState<Origin>(() =>
+    typeof document === 'undefined' ? { contexts: {}, painter: undefined } : originOf(anchor()),
+  );
+  useIsomorphicLayoutEffect(() => {
+    const read = (): void => {
+      const next = originOf(anchor());
+      setOrigin((was) => (sameOrigin(was, next) ? was : next));
+    };
+    read();
+    return observeContexts(read);
+  }, [anchor]);
+  return origin;
 }
 
 // ---------------------------------------------------------------------------
@@ -148,8 +198,11 @@ function gridOf(el: Element | null | undefined): Grid {
 
 /**
  * Move `surface` onto the cell grid of the screen `anchor` is in, wherever
- * React Aria put it, and keep it there as React Aria moves it. A translate,
- * so React Aria's own measurements of the element it positions are untouched.
+ * React Aria put it, and keep it there as React Aria moves it. A relative
+ * offset on the surface, inside the element React Aria positions, so React
+ * Aria's own measurements of that element are untouched. Not a translate: a
+ * transformed layer is shifted after its backgrounds are snapped to pixels,
+ * and a translate of a fraction of a pixel parts the strokes of the frame.
  */
 function useCellSnap(
   surface: RefObject<HTMLElement | null>,
@@ -176,7 +229,8 @@ function useCellSnap(
       const next = { x: x - rawX, y: y - rawY };
       if (Math.abs(next.x - shift.x) < 0.01 && Math.abs(next.y - shift.y) < 0.01) return;
       shift = next;
-      el.style.translate = `${next.x}px ${next.y}px`;
+      el.style.left = `${next.x}px`;
+      el.style.top = `${next.y}px`;
     };
     snap();
     // React Aria moves the element it positions by rewriting its style, on
@@ -186,11 +240,17 @@ function useCellSnap(
     if (placed) mutations.observe(placed, { attributes: true, attributeFilter: ['style'] });
     const resizes = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(snap);
     resizes?.observe(el);
+    // The trigger's screen can move, or change its cell, without the surface
+    // changing size: a density switched at the root, say.
+    const screen = anchor()?.closest('.rk-screen');
+    if (screen) resizes?.observe(screen);
+    const unobserve = observeContexts(snap);
     window.addEventListener('resize', snap);
     window.addEventListener('scroll', snap, true);
     return () => {
       mutations.disconnect();
       resizes?.disconnect();
+      unobserve();
       window.removeEventListener('resize', snap);
       window.removeEventListener('scroll', snap, true);
     };
@@ -217,18 +277,63 @@ function useSheet(el: () => Element | null | undefined): boolean {
   return sheet;
 }
 
+/** Cells between an overlay's frame and its content. */
+export interface OverlayPadding {
+  readonly x: number;
+  readonly y: number;
+}
+
+/** One cell either side, none above or below: the content's first row is the frame's second. */
+const PADDING: OverlayPadding = { x: 1, y: 0 };
+
+/** What every overlay's surface takes, whichever React Aria part it is in. */
+export interface OverlaySurfaceOptions {
+  /** The most rows the surface may take before its content scrolls. */
+  readonly maxRows?: number;
+  /**
+   * The fewest columns the surface may be, its frame's two included: a
+   * number, or `'trigger'` for as wide as its trigger, in whole cells (a
+   * select's list). A sheet is as wide as the viewport whatever this says.
+   */
+  readonly minCols?: number | 'trigger';
+  /**
+   * Cells between the frame and the content, `{ x: 1, y: 0 }` by default. A
+   * menu takes `{ x: 0, y: 0 }`, so a highlighted row runs from side to side.
+   */
+  readonly padding?: OverlayPadding;
+  /**
+   * Rules across the surface, at rows of the content: `row: 0` is a rule on
+   * the content's first row, drawn in the frame and joining its sides. They
+   * move with the content as it scrolls, and are not drawn while scrolled out
+   * of sight. The content leaves those rows empty: a menu's separator, or
+   * the row a section's heading is set into.
+   */
+  readonly dividers?: readonly OverlayDivider[];
+  /**
+   * The painter, `glyph` or `rule`. By default, the painter of the screen the
+   * overlay was opened from, so a popover from a ruled frame is ruled too.
+   */
+  readonly painter?: PainterName;
+}
+
+/** The surface options as a component passes them on: each given or `undefined`. */
+type Passed<T> = { readonly [K in keyof T]?: T[K] | undefined };
+
 /** The framed screen an overlay's content sits in, on the grid. */
 function Surface({
   kind,
   anchor,
   sheet,
   maxRows,
+  minCols,
+  padding = PADDING,
+  dividers,
+  painter,
   children,
-}: {
+}: Passed<OverlaySurfaceOptions> & {
   readonly kind: OverlayKind;
   readonly anchor: () => Element | null | undefined;
   readonly sheet: boolean;
-  readonly maxRows: number | undefined;
   readonly children: ReactNode;
 }): ReactNode {
   const glyphs = useGlyphs();
@@ -280,18 +385,53 @@ function Surface({
     };
   }, []);
 
+  const padX = Math.max(0, Math.floor(padding.x));
+  const padY = Math.max(0, Math.floor(padding.y));
   const draw = useMemo(
-    () => (size: Size) =>
-      overlayBuffer(size, { kind, ...(scroll === undefined ? {} : { scroll }) }, glyphs),
-    [kind, scroll, glyphs],
+    () => (size: Size) => {
+      // A divider is at a row of the content; the frame's row is past the top
+      // edge and the padding, less what has scrolled by. Out of sight, it is
+      // not drawn.
+      const offset = scroll?.offset ?? 0;
+      const visible = scroll?.visible ?? Number.POSITIVE_INFINITY;
+      const rules = (dividers ?? [])
+        .filter((d) => d.row >= offset && d.row < offset + visible)
+        .map((d) => ({ ...d, row: 1 + padY + d.row - offset }));
+      return overlayBuffer(
+        size,
+        {
+          kind,
+          ...(scroll === undefined ? {} : { scroll }),
+          ...(rules.length === 0 ? {} : { dividers: rules }),
+        },
+        glyphs,
+      );
+    },
+    [kind, scroll, glyphs, dividers, padY],
   );
   const style = {
     ...(maxRows === undefined ? {} : { '--rk-overlay-max-rows': Math.max(1, Math.floor(maxRows)) }),
     ...(fit === undefined ? {} : { '--rk-overlay-fit-rows': fit }),
+    ...(typeof minCols === 'number'
+      ? { '--rk-overlay-min-cols': Math.max(0, Math.floor(minCols)) }
+      : {}),
   } as CSSProperties;
   return (
-    <div ref={host} className={cx('rk-overlay', sheet && 'rk-overlay-sheet')} style={style}>
-      <Screen draw={draw} contentInset={{ x: 2, y: 1 }} fallback={{ width: 2, height: 2 }}>
+    <div
+      ref={host}
+      className={cx(
+        'rk-overlay',
+        sheet && 'rk-overlay-sheet',
+        minCols === 'trigger' && 'rk-overlay-min-trigger',
+      )}
+      style={style}
+    >
+      <Screen
+        draw={draw}
+        contentInset={{ x: 1 + padX, y: 1 + padY }}
+        fallback={{ width: 2, height: 2 }}
+        {...(painter === undefined ? {} : { painter })}
+      >
         <div ref={body} className="rk-scroll rk-overlay-body">
           {children}
         </div>
@@ -305,12 +445,11 @@ function Surface({
 
 export interface OverlayPopoverProps
   extends Omit<
-    PopoverProps,
-    'children' | 'className' | 'style' | 'offset' | 'UNSTABLE_portalContainer'
-  > {
+      PopoverProps,
+      'children' | 'className' | 'style' | 'offset' | 'UNSTABLE_portalContainer'
+    >,
+    OverlaySurfaceOptions {
   readonly children?: ReactNode;
-  /** The most rows the surface may take before its content scrolls. */
-  readonly maxRows?: number;
   readonly className?: string;
 }
 
@@ -323,6 +462,10 @@ export interface OverlayPopoverProps
 export function OverlayPopover({
   children,
   maxRows,
+  minCols,
+  padding,
+  dividers,
+  painter,
   className,
   placement = 'bottom start',
   ...aria
@@ -332,7 +475,8 @@ export function OverlayPopover({
   const triggerRef = aria.triggerRef ?? context?.triggerRef;
   const anchor = useCallback(() => triggerRef?.current, [triggerRef]);
   const sheet = useSheet(anchor);
-  const contexts = contextsOf(triggerRef?.current);
+  const origin = useOrigin(anchor);
+  const contexts = origin.contexts;
   return (
     <Popover
       {...aria}
@@ -343,7 +487,16 @@ export function OverlayPopover({
       className={cx('rk-overlay-popover', sheet && 'rk-overlay-popover-sheet', className)}
       {...(container === null ? {} : { UNSTABLE_portalContainer: container })}
     >
-      <Surface kind="popover" anchor={anchor} sheet={sheet} maxRows={maxRows}>
+      <Surface
+        kind="popover"
+        anchor={anchor}
+        sheet={sheet}
+        maxRows={maxRows}
+        minCols={minCols}
+        padding={padding}
+        dividers={dividers}
+        painter={painter ?? origin.painter}
+      >
         {children}
       </Surface>
     </Popover>
@@ -354,18 +507,26 @@ export function OverlayPopover({
 // Modal
 
 export interface OverlayModalProps
-  extends Omit<ModalOverlayProps, 'children' | 'className' | 'style' | 'UNSTABLE_portalContainer'> {
+  extends Omit<ModalOverlayProps, 'children' | 'className' | 'style' | 'UNSTABLE_portalContainer'>,
+    Omit<OverlaySurfaceOptions, 'minCols'> {
   readonly children?: ReactNode;
-  /** The most rows the surface may take before its content scrolls. */
-  readonly maxRows?: number;
+  /** The fewest columns the surface may be, its frame's two included. */
+  readonly minCols?: number;
   readonly className?: string;
 }
 
 /** The backdrop: a screen of shade over the viewport's whole cells. */
-function Backdrop(): ReactNode {
+function Backdrop({ painter }: { readonly painter: PainterName | undefined }): ReactNode {
   const glyphs = useGlyphs();
   const draw = useCallback((size: Size) => backdropBuffer(size, glyphs), [glyphs]);
-  return <Screen draw={draw} className="rk-overlay-scrim" aria-hidden="true" />;
+  return (
+    <Screen
+      draw={draw}
+      className="rk-overlay-scrim"
+      aria-hidden="true"
+      {...(painter === undefined ? {} : { painter })}
+    />
+  );
 }
 
 /**
@@ -379,6 +540,10 @@ function Backdrop(): ReactNode {
 export function OverlayModal({
   children,
   maxRows,
+  minCols,
+  padding,
+  dividers,
+  painter,
   className,
   ...aria
 }: OverlayModalProps): ReactNode {
@@ -393,7 +558,9 @@ export function OverlayModal({
   }
   const anchor = useCallback(() => trigger?.current ?? opener.current, [trigger]);
   const sheet = useSheet(anchor);
-  const contexts = contextsOf(anchor());
+  const origin = useOrigin(anchor);
+  const contexts = origin.contexts;
+  const painted = painter ?? origin.painter;
   return (
     <ModalOverlay
       {...aria}
@@ -401,9 +568,18 @@ export function OverlayModal({
       className={cx('rk-overlay-backdrop', sheet && 'rk-overlay-backdrop-sheet', className)}
       {...(container === null ? {} : { UNSTABLE_portalContainer: container })}
     >
-      <Backdrop />
+      <Backdrop painter={painted} />
       <Modal className="rk-overlay-modal">
-        <Surface kind="modal" anchor={anchor} sheet={sheet} maxRows={maxRows}>
+        <Surface
+          kind="modal"
+          anchor={anchor}
+          sheet={sheet}
+          maxRows={maxRows}
+          minCols={minCols}
+          padding={padding}
+          dividers={dividers}
+          painter={painted}
+        >
           {children}
         </Surface>
       </Modal>

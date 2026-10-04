@@ -1,5 +1,5 @@
 import { Attr, hasAttr, toText } from '@rockaway/grid';
-import { glyphsFor } from '@rockaway/tokens';
+import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
@@ -39,6 +39,43 @@ describe('overlayBuffer', () => {
     // Nothing to scroll: the edge is a plain line.
     expect(toText(overlayBuffer(size, { scroll: { total: 4, visible: 4, offset: 0 } }))).toBe(
       toText(overlayBuffer(size)),
+    );
+  });
+
+  test('a divider is a light rule joining the sides as tees, a title set into it', () => {
+    const size = { width: 14, height: 6 };
+    // On the frame's own edge, or outside it, a divider is dropped.
+    const dividers = [{ row: 2 }, { row: 3, title: 'Files' }, { row: 0 }, { row: 5 }, { row: 9 }];
+    const at = (kind: 'popover' | 'modal', glyphs = themeGlyphs.default) =>
+      toText(overlayBuffer(size, { kind, dividers }, glyphs));
+    expect(
+      `\n${at('popover')}\n${at('modal')}\n${at('popover', glyphsFor({ borderSet: 'ascii' }))}`,
+    ).toMatchInlineSnapshot(`
+      "
+      ┏━━━━━━━━━━━━┓
+      ┃            ┃
+      ┠────────────┨
+      ┠ Files ─────┨
+      ┃            ┃
+      ┗━━━━━━━━━━━━┛
+      ╔════════════╗
+      ║            ║
+      ╟────────────╢
+      ╟ Files ─────╢
+      ║            ║
+      ╚════════════╝
+      +------------+
+      |            |
+      +------------+
+      + Files -----+
+      |            |
+      +------------+"
+    `);
+  });
+
+  test("its lines are border.default, as a frame's are: raised by weight, not colour", () => {
+    expect(overlayBuffer({ width: 4, height: 3 }).at({ x: 0, y: 0 })?.style.fg).toBe(
+      'border.default',
     );
   });
 

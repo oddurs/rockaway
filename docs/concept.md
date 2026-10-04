@@ -427,11 +427,14 @@ outside. The grid owns four things React Aria does not know about.
   the screen its trigger is in. A popover sits on the row next to its
   trigger, starting in its column, with no gap; it flips and shifts as React
   Aria decides, and lands on cells wherever it ends up. A modal is centred on
-  the same grid.
+  the same grid. The move is a laid-out offset, never a transform: a layer
+  translated by a fraction of a pixel is snapped after it moves, and its
+  frame's strokes part.
 - **Contexts across the portal.** Overlays open into one `OverlayLayer`,
   inside whatever carries the app's theme, and each copies its trigger's
-  nearest theme, mode, density, motion and conformance onto itself. A
-  popover opened from a touch-density pane is drawn at touch density.
+  nearest theme, mode, density, motion and conformance onto itself, and its
+  screen's painter, and keeps them current while it is open. A popover
+  opened from a touch-density pane is drawn at touch density.
 - **Elevation without shadows** (`0075`). A popover is framed heavy, a modal
   double, one weight above the page, and a modal fills the viewport behind it
   with the theme's light shade, drawn by the cell renderer on the page's

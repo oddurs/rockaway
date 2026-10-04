@@ -88,3 +88,7 @@ Elevation by weight (0075): popover heavy, modal double, ASCII bold (0183). Back
 ## 2026-10-03
 
 screenshot() composes .rk-overlay-layer children over the screen (overlays: false to opt out); checkContinuity hides the overlay layer while reading a page's layers, and hides everything else in the layer while reading an overlay's own, so a dialog is not a break in the frame beneath it.
+
+## 2026-10-03
+
+Review fixes before Popover builds on it: (1) the snap is a laid-out relative offset, not a translate; a sub-pixel translate parted the frame's strokes beside a trigger at a fractional pixel (found by overlays; story 'Beside a trigger off the pixel grid' fails continuity with translate). (2) minCols: number | 'trigger' (CSS round(up) of --trigger-width less 1/32px). (3) The painter crosses the portal from the trigger's screen; painter prop overrides. Also: padding (default {x:1,y:0}) and dividers at content rows, shifted by scroll, for Menu; frame lines in border.default like Frame (fg.default was an oversight); contexts and painter kept current while open via a document MutationObserver, and the snap re-runs on context changes and the trigger screen's resize. Per-density placement of an open popover still waits on 0199 (a cols/rows screen keeps its first cell).

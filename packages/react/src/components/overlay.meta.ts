@@ -51,7 +51,7 @@ export const overlayMeta: ComponentMetaInput = defineMeta({
       className: 'rk-overlay',
       chrome: false,
       description:
-        'A screen of its own, as tall as its content in whole rows, moved onto the grid with a translate.',
+        'A screen of its own, as tall as its content in whole rows, moved onto the grid with a relative offset.',
     },
     {
       kind: 'element',
