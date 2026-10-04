@@ -1,5 +1,23 @@
 # Contributing to rockaway
 
+Thank you for wanting to. A few things first:
+
+- **Found a bug?** Open an issue with the bug template: what happens, what
+  should, and the smallest code that shows it.
+- **Want a component?** Check the [roadmap](ROADMAP.md) first. Many are already
+  planned as cairn items. If yours is not there, open a component request.
+- **Want to write code?** Planned work lives in [`cairn/items`](cairn/items),
+  not in issues (see below). `cairn next` lists what is ready. Say on an issue
+  or a draft pull request which item you are taking, so nobody else starts it.
+- **Found a vulnerability?** Report it privately, as [SECURITY.md](SECURITY.md)
+  says.
+
+Everyone taking part is expected to follow the [code of conduct](CODE_OF_CONDUCT.md).
+
+Before writing a component, read [the concept](docs/concept.md). Its ten
+rules at the end are the contract every component is held to, and the pull
+request template asks you to tick them.
+
 ## Setup
 
 Node 24 (see `.nvmrc`) and pnpm 12.
@@ -48,6 +66,8 @@ the decision first, in its own pull request, with the reasoning.
 
 ## Adding a component
 
+Until `docs/component-recipe.md` (cairn 0134) is written, this section is the
+recipe, and Button and List are its worked examples.
 A component adds one file, and one line to each barrel, and touches no other line:
 
 - `packages/react/src/entries/<name>.ts`: `export { … } from '../components/<name>.tsx';`,
@@ -221,16 +241,22 @@ pnpm changeset --empty   # then write the reason in its body
 
 An empty changeset with no reason in it does not pass.
 
-Semver is strict:
+Every package is below 1.0, and versions follow pre-1.0 semver (cairn 0172):
 
-- **Major**: something a user relies on is removed or renamed, or behaves
-  differently with the same input. That covers an export, a prop, a token, a
-  CSS class or `data-*` attribute a stylesheet can select, an export path, or a
-  default. A removed or renamed semantic token is major.
+- **Breaking — minor, and it says so.** Something a user relies on is
+  removed or renamed, or behaves differently with the same input: an export,
+  a prop, a token, a CSS class or `data-*` attribute a stylesheet can select,
+  an export path, or a default. A removed or renamed semantic token counts.
+  Below 1.0 this is a **minor**, and the changeset's first line begins
+  `Breaking:` and says what a user has to change. CI refuses a major changeset
+  for a package below 1.0, and a `Breaking:` changeset marked patch.
 - **Minor**: something is added and nothing existing changes, such as a
   component, a prop, an export, a token or a theme. A changed semantic token
   value is minor.
 - **Patch**: a fix that makes the package do what it already said it did.
+
+Pin a 0.x release with `~` (`~0.1.0`): a minor can break. 1.0 will be a
+decision of its own, and from then on a breaking change is a major.
 
 ## Commits and pull requests
 

@@ -170,6 +170,100 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono"
     ]
   },
+  "Cell": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The value. Text and numbers are cut and aligned in cells; anything else is clipped at the rule."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaCellProps, 'children' | 'className' | 'textValue'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-y-1"
+    ]
+  },
+  "Column": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The header's words."
+      },
+      {
+        "name": "width",
+        "type": "ColumnWidth",
+        "required": false,
+        "description": "Content cells (`12`), a share of the room left (`'1fr'`), or its widest value (`'auto'`).",
+        "default": "'auto'"
+      },
+      {
+        "name": "minWidth",
+        "type": "number",
+        "required": false,
+        "description": "The fewest content cells a share column shrinks to."
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'end'",
+        "required": false,
+        "description": "`end` for numbers: they right-align on a cell boundary.",
+        "default": "'start'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaColumnProps, 'children' | 'className' | 'width' | 'minWidth' | 'textValue'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-y-1"
+    ]
+  },
   "Description": {
     "file": "field.tsx",
     "props": [
@@ -538,6 +632,64 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-x-1"
     ]
   },
+  "Keymap": {
+    "file": "keymap.tsx",
+    "props": [
+      {
+        "name": "modal",
+        "type": "boolean",
+        "required": false,
+        "description": "A scope that hides every binding outside it while it is mounted: a dialog's, so the page behind it does not answer the keys.",
+        "default": "false"
+      },
+      {
+        "name": "timeout",
+        "type": "number",
+        "required": false,
+        "description": "At the root: how long the second key of a sequence may take, in milliseconds."
+      },
+      {
+        "name": "onConflict",
+        "type": "(conflict: KeymapConflict) => void",
+        "required": false,
+        "description": "At the root: told of each conflict once. A console warning unless given."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-x-2"
+    ]
+  },
+  "KeymapHelp": {
+    "file": "keymap.tsx",
+    "props": [
+      {
+        "name": "platform",
+        "type": "Platform | 'auto'",
+        "required": false,
+        "description": "Which keyboard to draw the chords for. The reader's by default.",
+        "default": "'auto'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-x-2"
+    ]
+  },
   "Label": {
     "file": "field.tsx",
     "props": [
@@ -678,6 +830,37 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted"
     ]
   },
+  "Row": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaRowProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-y-1"
+    ]
+  },
   "Tab": {
     "file": "tabs.tsx",
     "props": [
@@ -713,6 +896,135 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled",
       "--rk-fg-muted",
       "--rk-font-family-mono"
+    ]
+  },
+  "Table": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the frame's top edge; the table's accessible name unless `aria-label` says otherwise."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The room the table has, in cells, its frame included. Measured from its container when not given. A table whose columns do not fit scrolls."
+      },
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "A TableHeader and a TableBody."
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTableProps, 'className' | 'style' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-y-1"
+    ]
+  },
+  "TableBody": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "empty",
+        "type": "string",
+        "required": false,
+        "description": "What an empty table says, in its first row. `renderEmptyState` replaces it.",
+        "default": "'Nothing here.'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTableBodyProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-y-1"
+    ]
+  },
+  "TableHeader": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTableHeaderProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-y-1"
     ]
   },
   "TabList": {

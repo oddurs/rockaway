@@ -155,7 +155,7 @@ function pieces(shape: Shape, m: Metrics): Set<Side>[] {
   return out;
 }
 
-const boxes = [...shapes.values()].filter((s) => s.kind !== 'block');
+const boxes = [...shapes.values()].filter((s) => s.kind === 'box' || s.kind === 'arc');
 const weightsOf = (s: Shape) => {
   const table = s.kind === 'arc' ? arcTable : junctionTable;
   const key = [...table].find(([, ch]) => ch === s.ch)?.[0] ?? 0;
@@ -169,7 +169,7 @@ describe('shapes', () => {
     for (let code = 0x2580; code <= 0x259f; code++) {
       expect(shapeOf(String.fromCodePoint(code))?.kind).toBe('block');
     }
-    expect(shapes.size).toBe(junctionTable.size + arcTable.size + 32);
+    expect(shapes.size).toBe(junctionTable.size + arcTable.size + 32 + 256);
   });
 
   test('letters, and ASCII borders, are left to the font', () => {
@@ -252,5 +252,50 @@ describe('shapes', () => {
     for (const ch of ['█', '░', '▀', '▁', '─', '━', '═']) expect(shapeOf(ch)?.spans, ch).toBe(true);
     for (const ch of ['▏', '▌', '▚', '┌', '│', '╭', '╶'])
       expect(shapeOf(ch)?.spans, ch).toBe(false);
+  });
+});
+
+describe('braille (0166)', () => {
+  const pattern = (dots: number[]) =>
+    String.fromCodePoint(0x2800 + dots.reduce((n, dot) => n | (1 << (dot - 1)), 0));
+
+  test('all 256 patterns are shapes, named by code point, with their dots', () => {
+    for (let code = 0x2800; code <= 0x28ff; code++) {
+      const s = shapeOf(String.fromCodePoint(code));
+      expect(s?.kind).toBe('braille');
+      expect(s?.key).toBe(`braille-${code.toString(16)}`);
+      expect(s?.marks).toHaveLength(s?.dots.length ?? -1);
+    }
+    expect(shapeOf('⠀')?.dots).toEqual([]);
+    expect(shapeOf('⣿')?.dots).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    expect(shapeOf(pattern([1, 4, 7]))?.dots).toEqual([1, 4, 7]);
+  });
+
+  test('a dot is a square in its own quarter of the cell, and never touches an edge', () => {
+    for (const m of CELLS) {
+      const full = shapeOf('⣿') as Shape;
+      const boxes = full.marks.map((mark) => [
+        resolve(mark.x0, m.width, m),
+        resolve(mark.y0, m.height, m),
+        resolve(mark.x1, m.width, m),
+        resolve(mark.y1, m.height, m),
+      ]);
+      for (const [x0, y0, x1, y1] of boxes as [number, number, number, number][]) {
+        expect(x1 - x0).toBeCloseTo(y1 - y0, 9);
+        expect(x0).toBeGreaterThan(0);
+        expect(y0).toBeGreaterThan(0);
+        expect(x1).toBeLessThan(m.width);
+        expect(y1).toBeLessThan(m.height);
+      }
+      // No two dots overlap: eight separate pieces of ink.
+      expect(pieces(full, m)).toHaveLength(8);
+      expect(full.reach).toEqual({ north: false, east: false, south: false, west: false });
+    }
+  });
+
+  test('the spinner is drawn by the cell, every frame', () => {
+    for (const ch of ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']) {
+      expect(shapeOf(ch)?.kind, ch).toBe('braille');
+    }
   });
 });

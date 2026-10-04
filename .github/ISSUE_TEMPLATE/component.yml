@@ -1,0 +1,38 @@
+name: Component request
+description: A component rockaway does not have yet
+labels: [component-request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every component is held to the same ten rules (the end of [docs/concept.md](https://github.com/oddurs/rockaway/blob/main/docs/concept.md)): sized in whole cells, drawn by the frame engine, operable by keyboard alone, and readable without colour. Check the [roadmap](https://github.com/oddurs/rockaway/blob/main/ROADMAP.md) first, because many components are already planned there as cairn items.
+  - type: input
+    id: name
+    attributes:
+      label: Component
+      placeholder: Tabs, Table, CommandPalette…
+    validations:
+      required: true
+  - type: textarea
+    id: job
+    attributes:
+      label: What it is for
+      description: The job it does on a screen, and what you reach for today instead.
+    validations:
+      required: true
+  - type: textarea
+    id: terminal
+    attributes:
+      label: How a terminal does it
+      description: A TUI that already has one (lazygit, k9s, htop, vim…), and what it draws. A sketch in box-drawing characters is ideal.
+      render: text
+  - type: textarea
+    id: states
+    attributes:
+      label: States and keyboard
+      description: The states it has (selected, expanded, disabled…) and the keys that move through it. The state vocabulary in docs/concept.md says how each state is drawn.
+  - type: textarea
+    id: grid
+    attributes:
+      label: Where the grid might push back
+      description: Anything that seems hard to do in whole cells, or without colour, or without a native control.

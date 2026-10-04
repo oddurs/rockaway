@@ -8,8 +8,7 @@
  *
  * Selected is reverse video and bold (0118): the tab's own figure and ground
  * swapped. In forced colors that pair is the reader's text and canvas, and
- * `forced-colors.css` takes the selected tab off the backplate with every
- * other reversed element (0181).
+ * the selected tab opts out of the backplate below (0181, 0202).
  * Unselected tabs are muted; hovering underlines the label; a disabled tab is
  * dim. Focus is the ring, which costs no cell.
  */
@@ -78,5 +77,15 @@
     block-size: calc(var(--rk-tabs-panel-rows) * var(--rk-cell-height));
     overflow: clip;
     overflow-clip-margin: calc(var(--rk-cell-height) / 2);
+  }
+
+  /* Reversed words are drawn in a ground colour, which under forced colors is
+   * the canvas the browser paints behind text unless told not to. So the
+   * selected tab opts out of the adjustment (0181), and keeps the reader's
+   * colours through the tokens it reads. */
+  @media (forced-colors: active) {
+    .rk-tab[data-selected] {
+      forced-color-adjust: none;
+    }
   }
 }
