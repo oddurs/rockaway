@@ -73,6 +73,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  Meter: (props) =>
+    createElement(rockaway.Meter, { label: 'cpu', value: 42, warning: 70, ...props }),
+  ProgressBar: (props) =>
+    createElement(rockaway.ProgressBar, { label: 'Installing', value: 62, ...props }),
+  Sparkline: (props) =>
+    createElement(rockaway.Sparkline, { label: 'Load', values: [1, 3, 2, 4], ...props }),
+  Spinner: (props) => createElement(rockaway.Spinner, { label: 'Indexing', ...props }),
   Tree: (props) =>
     createElement(
       rockaway.Tree,

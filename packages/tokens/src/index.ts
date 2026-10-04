@@ -56,6 +56,7 @@ export {
   type Delimiters,
   delimiterNames,
   delimiters,
+  fills,
   type Glyphs,
   glyphs,
   glyphsFor,

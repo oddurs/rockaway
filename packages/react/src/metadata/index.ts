@@ -22,6 +22,12 @@ import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
+import {
+  meterMeta,
+  progressBarMeta,
+  sparklineMeta,
+  spinnerMeta,
+} from '../components/progress.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
@@ -64,6 +70,10 @@ const sources: readonly ComponentMetaInput[] = [
   keymapMeta,
   linkMeta,
   listMeta,
+  meterMeta,
+  progressBarMeta,
+  sparklineMeta,
+  spinnerMeta,
   tableMeta,
   treeMeta,
 ];

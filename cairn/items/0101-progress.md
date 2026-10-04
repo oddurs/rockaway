@@ -3,8 +3,10 @@ id: 101
 uid: d98b4d5a-3c78-44cc-82af-92bd2e826c5a
 title: Progress
 type: component
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 117
 - 118

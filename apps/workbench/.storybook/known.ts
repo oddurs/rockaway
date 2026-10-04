@@ -57,4 +57,14 @@ export const known: readonly Known[] = [
       'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented. A permanent entry, never a silent pass',
     ticket: '0197: the default density meets AA; dense is the documented opt-in that does not',
   },
+  {
+    id: 'braille-edge-spill',
+    check: 'continuity',
+    rule: 'leak',
+    element: /rk-sparkline/,
+    present: '.rk-sparkline [data-rk-dots]',
+    reason:
+      "a braille dot in a neighbour's right column, on a fractional cell edge, is antialiased into the edge pixel this cell shares with it, and the leak rule reads only the cell's own outermost line, with no slack",
+    ticket: '0229: loosen the continuity leak rule by the reach rule’s slack (#151)',
+  },
 ];
