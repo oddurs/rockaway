@@ -21,6 +21,11 @@
       "types": "./dist/copy/index.d.ts",
       "default": "./dist/copy/index.js"
     },
+    "./dom": {
+      "@rockaway/source": "./src/dom.ts",
+      "types": "./dist/dom/index.d.ts",
+      "default": "./dist/dom/index.js"
+    },
     "./testing": {
       "@rockaway/source": "./src/testing/index.ts",
       "types": "./dist/testing/index.d.ts",
@@ -92,6 +97,10 @@
       "./copy": {
         "types": "./dist/copy/index.d.ts",
         "default": "./dist/copy/index.js"
+      },
+      "./dom": {
+        "types": "./dist/dom/index.d.ts",
+        "default": "./dist/dom/index.js"
       },
       "./testing": {
         "types": "./dist/testing/index.d.ts",

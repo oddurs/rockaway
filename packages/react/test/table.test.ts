@@ -1,13 +1,8 @@
 import { stringWidth, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import {
-  type ColumnShape,
-  fitCell,
-  type TableText,
-  tableBuffer,
-  tableLayout,
-} from '../src/components/table.tsx';
+import { fitCell, tableBuffer, tableLayout } from '../src/components/table.pure.ts';
+import type { ColumnShape, TableText } from '../src/components/table.tsx';
 
 const COLUMNS: TableText['columns'] = [
   { header: 'Name', sortable: true, sort: 'ascending' },

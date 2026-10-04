@@ -16,13 +16,6 @@ export interface NavNode {
   readonly children?: readonly NavNode[];
 }
 
-/** A section a `g` sequence jumps to: `g` then `key`. */
-export interface Jump {
-  readonly key: string;
-  readonly title: string;
-  readonly href: string;
-}
-
 export interface SitePages {
   readonly foundations: readonly { readonly id: string; readonly title: string }[];
   readonly components: readonly { readonly slug: string; readonly name: string }[];
@@ -54,17 +47,6 @@ export function siteNav({ foundations, components }: SitePages): readonly NavNod
         href: href(`components/${c.slug}/`),
       })),
     },
-  ];
-}
-
-/** `g` then a letter. Each is also a row of the tree, so each is a link too. */
-export function siteJumps(): readonly Jump[] {
-  return [
-    { key: 'h', title: 'Home', href: href('') },
-    { key: 's', title: 'Getting started', href: href('getting-started/') },
-    { key: 'd', title: 'The concept', href: href('concept/') },
-    { key: 'f', title: 'Foundations', href: href('foundations/') },
-    { key: 'c', title: 'Components', href: href('components/') },
   ];
 }
 

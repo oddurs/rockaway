@@ -13,6 +13,7 @@ import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { gzipSync } from 'node:zlib';
 import { frameBuffer } from '@rockaway/react';
 import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import { Terminal } from '@xterm/headless';
@@ -605,7 +606,10 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
           ]),
         ),
       }));
-      const jumps = help.rows.filter(([keys]) => /^G [A-Z]$/.test(keys ?? '') && keys !== 'G G');
+      // As KeyHint draws them, `g h` or `G H`, whichever its letter case is.
+      const jumps = help.rows.filter(
+        ([keys]) => /^g [a-z]$/i.test(keys ?? '') && keys?.toLowerCase() !== 'g g',
+      );
       expect(jumps.map(([, to]) => to)).toEqual([
         'Home',
         'Getting started',
@@ -616,7 +620,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       for (const [, to] of jumps) expect(help.links[to as string], to).toBeDefined();
       expect(help.rows.map(([, does]) => does)).toContain('Down a line');
       await reader.keyboard.press('Escape');
-      expect(await reader.locator('.rk-keymap-help').count()).toBe(0);
+      await expect.poll(() => reader.locator('[data-site-help]').isHidden()).toBe(true);
 
       await reader.keyboard.press('g');
       await reader.keyboard.press('c');
@@ -630,7 +634,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
         reader.evaluate(() =>
           [...document.querySelectorAll<HTMLElement>('.rk-statusbar .rk-status-segment')]
             .filter((s) => s.style.visibility !== 'hidden')
-            .map((s) => s.textContent?.trim()),
+            .map((s) => s.innerText.trim()),
         );
       await reader.waitForFunction(() =>
         [...document.querySelectorAll<HTMLElement>('.rk-statusbar .rk-status-segment')].every(
@@ -658,7 +662,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       );
       expect(
         await reader.evaluate(
-          () => document.querySelector('aside [aria-current="page"]')?.textContent,
+          () => document.querySelector('aside [aria-current="location"]')?.textContent,
         ),
       ).toBe('Density is the row');
 
@@ -699,6 +703,29 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       expect(found.scrolls).toBe(true);
       expect(found.links).toBeGreaterThan(5);
       await close();
+    });
+
+    test('runs on the system’s own halves, in a few kilobytes of script and no React', async () => {
+      const context = await browser.newContext();
+      const reader = await context.newPage();
+      const scripts: string[] = [];
+      reader.on('response', (response) => {
+        if (response.request().resourceType() === 'script') scripts.push(response.url());
+      });
+      await reader.goto(`${origin}${base}concept/`);
+      await reader.waitForFunction(hydrated);
+      const bytes = scripts.reduce((sum, url) => {
+        const file = path.join(out, decodeURIComponent(new URL(url).pathname.slice(base.length)));
+        return sum + gzipSync(readFileSync(file), { level: 9 }).length;
+      }, 0);
+      // The shell is laid out, keyed and followed by the system's pure and DOM
+      // halves (0104): no React reaches a page of prose.
+      expect(
+        scripts.some((url) => /react-dom|client\./.test(url)),
+        scripts.join('\n'),
+      ).toBe(false);
+      expect(bytes).toBeLessThan(40_000);
+      await context.close();
     });
 
     test('every kind of page in it passes axe, conformance and continuity', async () => {
