@@ -2,4 +2,4 @@
 '@rockaway/react': patch
 ---
 
-`keymapHelpBuffer` now lives in the keymap's pure half, so a server component can call it and gets the function itself, not a client reference, as it already could with `frameBuffer` and the other buffer functions. Its export from `@rockaway/react` and `@rockaway/react/keymap` is unchanged.
+`keymapHelpBuffer`, `tableBuffer` and `tableLayout` now live in their components' pure halves, so a server component can call them and gets the functions themselves, not client references, as it already could with `frameBuffer` and the other buffer functions. Their exports from `@rockaway/react`, `@rockaway/react/keymap` and `@rockaway/react/table` are unchanged.
