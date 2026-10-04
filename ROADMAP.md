@@ -158,7 +158,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0216`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0216-keep-a-focused-tab-in-view-under-manual-activation.md) Keep a focused tab in view under manual activation <sup>bug · components · p2</sup>
 - [ ] [`0217`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0217-scroll-codeblock-vertically-with-a-drawn-scrollbar.md) Scroll CodeBlock vertically with a drawn scrollbar <sup>feature · components · p2</sup>
 - [ ] [`0220`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0220-check-the-page-chrome-for-native-scrollbars-too.md) Check the page chrome for native scrollbars too <sup>chore · tooling · p3</sup>
-- [ ] [`0226`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0226-draw-the-focus-ring-for-controls-whose-focus-is-on-a-hidden-input.md) Draw the focus ring for controls whose focus is on a hidden input <sup>feature · css · p2</sup>
 - [ ] [`0227`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0227-render-painted-cells-through-one-shared-component.md) Render painted cells through one shared component <sup>chore · components · p3</sup>
 - [ ] [`0228`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0228-re-check-cellsin-s-snap-at-the-new-line-boxes.md) Re-check cellsIn's snap at the new line boxes <sup>chore · grid · p2</sup>
 - [ ] [`0229`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0229-loosen-the-continuity-leak-rule-by-the-reach-rule-s-slack.md) Loosen the continuity leak rule by the reach rule's slack <sup>bug · tooling · p2</sup>
@@ -201,6 +200,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0208`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0208-hide-every-native-scrollbar-show-position-in-cells-and-check-it-after-every-story.md) Hide every native scrollbar, show position in cells, and check it after every story <sup>bug · css · p0</sup>
 - [ ] [`0212`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0212-round-the-cell-to-the-engine-s-layout-unit.md) Round the cell to the engine's layout unit <sup>bug · grid · p1</sup>
 - [ ] [`0214`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0214-corners-meet-under-forced-colours-in-firefox.md) Corners meet under forced colours in Firefox <sup>bug · css · p2</sup>
+- [ ] [`0226`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0226-draw-the-focus-ring-for-controls-whose-focus-is-on-a-hidden-input.md) Draw the focus ring for controls whose focus is on a hidden input <sup>feature · css · p2</sup>
 
 ### done
 
