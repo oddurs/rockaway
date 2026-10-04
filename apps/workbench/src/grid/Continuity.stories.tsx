@@ -549,6 +549,90 @@ export const SubPixel: Story = {
   },
 };
 
+/** Every braille pattern, 32 to a row. */
+const brailles = (): Buffer =>
+  fromText(
+    Array.from({ length: 8 }, (_, row) =>
+      Array.from({ length: 32 }, (_, col) => String.fromCodePoint(0x2800 + row * 32 + col)).join(
+        '',
+      ),
+    ).join('\n'),
+  );
+
+/**
+ * Braille is drawn by the cell, like blocks (cairn 0166): all 256 patterns, at
+ * every density, read back pixel by pixel — each of a cell's eight dot places
+ * is inked exactly when the pattern raises that dot. The character itself is
+ * transparent, so no font, with braille or without, draws any of it.
+ */
+export const Braille: Story = {
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
+      {DENSITIES.map((density) => (
+        <div key={density} data-density={density}>
+          <Screen data-testid={`braille ${density}`} draw={brailles} cols={32} rows={8} />
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    for (const density of DENSITIES) {
+      const layer = canvas
+        .getByTestId(`braille ${density}`)
+        .querySelector<HTMLElement>('[data-rk-painted]') as HTMLElement;
+      const png = await run.capture(layer);
+      const blob =
+        typeof png === 'string'
+          ? new Blob([Uint8Array.from(atob(png), (c) => c.charCodeAt(0))], { type: 'image/png' })
+          : png;
+      const bitmap = await createImageBitmap(blob);
+      const canvasEl = new OffscreenCanvas(bitmap.width, bitmap.height);
+      const ctx = canvasEl.getContext('2d') as OffscreenCanvasRenderingContext2D;
+      ctx.drawImage(bitmap, 0, 0);
+      const { data, width } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+      const frame = layer.getBoundingClientRect();
+      const dpr = devicePixelRatio;
+      const ox = Math.floor(frame.left + 1e-3);
+      const oy = Math.floor(frame.top + 1e-3);
+      const at = (x: number, y: number): number => {
+        const i = (Math.floor((y - oy) * dpr) * width + Math.floor((x - ox) * dpr)) * 4;
+        return (data[i] ?? 0) + (data[i + 1] ?? 0) + (data[i + 2] ?? 0);
+      };
+      const ground = at(frame.left + 1, frame.top + 1);
+      const wrong: string[] = [];
+      for (const cell of layer.querySelectorAll<HTMLElement>('[data-rk-shape^="braille-"]')) {
+        expect(getComputedStyle(cell).webkitTextFillColor).toBe('rgba(0, 0, 0, 0)');
+        const pattern = (cell.textContent?.codePointAt(0) ?? 0) - 0x2800;
+        const box = cell.getBoundingClientRect();
+        // Dots 1 2 3 7 down the left, 4 5 6 8 down the right.
+        const places: [number, number][] = [
+          [0, 0],
+          [0, 1],
+          [0, 2],
+          [1, 0],
+          [1, 1],
+          [1, 2],
+          [0, 3],
+          [1, 3],
+        ];
+        places.forEach(([col, row], bit) => {
+          const x = box.left + box.width * (0.25 + col / 2);
+          const y = box.top + box.height * (0.125 + row / 4);
+          const inked = Math.abs(at(x, y) - ground) > 96;
+          if (inked !== ((pattern & (1 << bit)) !== 0)) {
+            wrong.push(`${cell.textContent} dot ${bit + 1}`);
+          }
+        });
+      }
+      expect(wrong, density).toEqual([]);
+      expect(layer.querySelectorAll('[data-rk-shape^="braille-"]')).toHaveLength(256);
+    }
+  },
+};
+
 /**
  * A column lands on the same pixel in every row, however its row splits into
  * runs: forty runs of one cell and one run of forty put the rule after them in
