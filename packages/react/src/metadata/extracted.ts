@@ -39,10 +39,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<DialogProps, 'variant' | 'actions' | 'isDismissable'>"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-x-1"
     ]
@@ -204,10 +206,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "VariantProps<typeof calloutVariants>"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono"
     ]
   },
@@ -385,10 +389,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Pick< OverlayModalProps, 'isOpen' | 'defaultOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled' >"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-x-1"
     ]
@@ -431,10 +437,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'role' | 'children'>"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono"
     ]
   },
@@ -518,6 +526,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "VariantProps<typeof fieldFrameVariants>"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
@@ -527,6 +536,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono"
     ]
   },
@@ -580,6 +590,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
@@ -589,6 +600,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono"
     ]
   },
@@ -682,10 +694,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono"
     ]
   },
@@ -946,11 +960,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono"
     ]
   },
@@ -979,11 +995,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<OverlaySurfaceOptions, 'minCols'>"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono"
     ]
   },
@@ -1047,11 +1065,47 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'UNSTABLE_portalContainer' >"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono"
+    ]
+  },
+  "OverlayTooltip": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "The painter. By default, the painter of the screen its trigger is in."
+      }
+    ],
+    "inherits": [
+      "Omit< TooltipProps, | 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'containerPadding' | 'UNSTABLE_portalContainer' >"
+    ],
+    "tokens": [
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono"
     ]
   },
@@ -1214,6 +1268,26 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-glyph-mark-overflow-start",
       "--rk-y-1"
     ]
+  },
+  "Tooltip": {
+    "file": "tooltip.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The hint: a few words, wrapping at 36 cells."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<OverlayTooltipProps, 'children' | 'className'>"
+    ],
+    "tokens": []
   },
   "Tree": {
     "file": "tree.tsx",

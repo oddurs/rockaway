@@ -1,0 +1,12 @@
+/*
+ * Tooltip (cairn 0043).
+ *
+ * The overlay contract draws it and puts it on the grid (0128): one row of
+ * reverse video, or a frame when it wraps, its words wrapping at 36 cells.
+ * A word longer than that breaks rather than push the tooltip past 40.
+ */
+@layer rk.components {
+  .rk-tooltip .rk-overlay-body {
+    overflow-wrap: anywhere;
+  }
+}

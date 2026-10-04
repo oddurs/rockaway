@@ -105,7 +105,28 @@
     outline: none;
   }
 
-  .rk-overlay-popover {
+  .rk-overlay-popover,
+  .rk-overlay-tooltip-root {
     outline: none;
+  }
+
+  /*
+   * A tooltip's words wrap at 36 cells: with a cell of reverse video either
+   * side, or a border and a cell of air, it is at most 40 cells wide.
+   */
+  .rk-overlay-tooltip .rk-overlay-body {
+    max-inline-size: calc(36 * var(--rk-cell-width));
+  }
+
+  /*
+   * One row: the buffer paints the reverse video, and the words take its
+   * figure. The ground under the cells is the same, so a fraction of a cell
+   * at the edge is not a seam; under forced colors the pair is the reader's
+   * text and canvas swapped, which the backplate would otherwise undo.
+   */
+  .rk-overlay-row > .rk-screen {
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
+    forced-color-adjust: none;
   }
 }
