@@ -142,12 +142,6 @@
     min-block-size: 0;
   }
 
-  /* The cells of the stretching row are as tall as it is: a side's line runs
-   * the whole way down. */
-  .rk-frame[data-rk-elastic] > .rk-row[data-rk-stretch] > .rk-run {
-    block-size: auto;
-  }
-
   .rk-frame[data-rk-elastic] .rk-run {
     flex: none;
   }
@@ -155,6 +149,12 @@
   .rk-frame[data-rk-elastic] .rk-run[data-rk-stretch] {
     flex: 1 1 auto;
     min-inline-size: 0;
+  }
+
+  /* The cells of the stretching row are as tall as it is: a side's line runs
+   * the whole way down. */
+  .rk-frame[data-rk-elastic] > .rk-row[data-rk-stretch] > .rk-run {
+    block-size: auto;
   }
 
   /* The content layer sits over the chrome, but only where it has something
