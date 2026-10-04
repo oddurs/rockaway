@@ -21,6 +21,13 @@
     cursor: pointer;
   }
 
+  /* A link with no words beside it is a target of its own, and takes the
+   * line box: a whole cell tall at every density, 44px at touch (0244). In a
+   * sentence it stays inline, so it wraps with the words around it. */
+  .rk-link[data-rk-alone] {
+    display: inline-block;
+  }
+
   /*
    * The cursor mark's cell is the one before the link, which the layout leaves
    * blank in every state. Out of flow, so it costs the link nothing; placed at
