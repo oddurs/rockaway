@@ -3,7 +3,7 @@ id: 216
 uid: 2392dd7e-b684-40eb-95dc-d581ac975222
 title: Keep a focused tab in view under manual activation
 type: bug
-status: done
+status: review
 milestone: primitives
 assignee: Oddur Sigurdsson
 depends_on:

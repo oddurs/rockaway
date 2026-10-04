@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 48% · 48 of 101 done · due 2027-01-31
+`#####·····` 47% · 47 of 101 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -168,6 +168,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0208`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0208-hide-every-native-scrollbar-show-position-in-cells-and-check-it-after-every-story.md) Hide every native scrollbar, show position in cells, and check it after every story <sup>bug · css · p0</sup>
 - [ ] [`0212`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0212-round-the-cell-to-the-engine-s-layout-unit.md) Round the cell to the engine's layout unit <sup>bug · grid · p1</sup>
 - [ ] [`0214`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0214-corners-meet-under-forced-colours-in-firefox.md) Corners meet under forced colours in Firefox <sup>bug · css · p2</sup>
+- [ ] [`0216`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0216-keep-a-focused-tab-in-view-under-manual-activation.md) Keep a focused tab in view under manual activation <sup>bug · components · p2</sup>
 
 ### done
 
@@ -218,7 +219,6 @@ The component contract, proven on a first set of components.
 - [x] [`0209`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0209-link-hover-is-bold-never-a-double-underline.md) Link hover is bold, never a double underline <sup>bug · css · p1</sup>
 - [x] [`0210`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0210-make-the-continuity-stories-readable.md) Make the continuity stories readable <sup>chore · tooling · p1</sup>
 - [x] [`0215`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0215-decide-what-a-solid-control-draws-when-the-system-colour-pair-is-weak.md) Decide what a solid control draws when the system colour pair is weak <sup>decision · css · p2</sup>
-- [x] [`0216`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0216-keep-a-focused-tab-in-view-under-manual-activation.md) Keep a focused tab in view under manual activation <sup>bug · components · p2</sup>
 
 ## retheme — Tokens on the grid
 
