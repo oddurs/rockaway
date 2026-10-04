@@ -9,7 +9,7 @@
  * coordinate moving.
  *
  * State is never only a colour: pressed reverses the video, hover underlines,
- * disabled dims. That is what keeps the control legible in forced colors, in
+ * disabled dims, and a disabled fill dims its reversal. That is what keeps the control legible in forced colors, in
  * greyscale, and to a reader who cannot tell the accent from the ground.
  *
  * The delimiters take their colour from one custom property, set on the button
@@ -76,6 +76,17 @@
     color: var(--rk-fg-default);
   }
 
+  /* A disabled fill is still reversed, so it is still the primary, but dim:
+   * the block is the disabled colour and the words the page's. A terminal
+   * dims the figure, and reverse video has made the figure the ground. It
+   * does not depend on hue: in greyscale the block is a light grey beside the
+   * enabled one's black, and in forced colors it is GrayText, the reader's
+   * own colour for what cannot be used, where an enabled fill is CanvasText. */
+  .rk-button[data-variant="fill"][data-disabled] {
+    background: var(--rk-fg-disabled);
+    color: var(--rk-bg-page);
+  }
+
   .rk-button[data-variant="danger"] {
     --rk-button-end: var(--rk-border-danger);
 
@@ -95,6 +106,7 @@
    * reader's colours through the tokens it reads. */
   @media (forced-colors: active) {
     .rk-button[data-variant="fill"],
+    .rk-button[data-variant="fill"][data-disabled],
     .rk-button[data-pressed] {
       forced-color-adjust: none;
     }
