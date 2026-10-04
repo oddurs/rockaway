@@ -945,13 +945,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-attribute-bold",
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Table": {
@@ -1111,13 +1116,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-attribute-bold",
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "TabPanel": {
@@ -1136,13 +1146,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-attribute-bold",
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Tabs": {
@@ -1180,13 +1195,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-attribute-bold",
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Tree": {
