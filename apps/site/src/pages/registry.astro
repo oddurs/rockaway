@@ -41,7 +41,13 @@ import { entries, installLine } from '../lib/registry-site.ts';
           />
           <article class="rk-prose">
             <p>
-              {files.map((f) => <code>{f.name}</code>)}, from{' '}
+              {files.map((f, i) => (
+                <>
+                  {i === 0 ? '' : ', '}
+                  <code>{f.name}</code>
+                </>
+              ))}
+              , from{' '}
               <a href={href(`r/${item.name}.json`)}><code>r/{item.name}.json</code></a>
             </p>
           </article>
