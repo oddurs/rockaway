@@ -96,6 +96,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       null,
       createElement(rockaway.OverlayPopover, { isOpen: false, ...props }, 'inside'),
     ),
+  // Closed, as OverlayPopover's is: on a server an open one renders nothing anyway.
+  Popover: (props) =>
+    createElement(
+      rockaway.OverlayLayer,
+      null,
+      createElement(rockaway.Popover, { isOpen: false, ...props }, 'inside'),
+    ),
   List: (props) =>
     createElement(
       rockaway.List,

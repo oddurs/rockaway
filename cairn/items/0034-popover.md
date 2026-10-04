@@ -3,8 +3,10 @@ id: 34
 uid: 7b8c9403-b317-424a-9871-6c665fdf99d8
 title: Popover
 type: component
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 128
 created: 2026-09-22
@@ -68,3 +70,19 @@ dismiss. The frame is `aria-hidden`.
 ## 2026-10-03
 
 Rewritten by the program plan: the pre-pivot template text is replaced with how this works on the grid, the criteria are one list (the template, plus the contracts from the plan, plus this item's own), and the dependencies point at the contracts it is built on.
+
+## 2026-10-03
+
+Claimed past the 0128 dependency on purpose: 0128 is in review as #149, and this branch is stacked on feat/overlay-contract by the CTO's routing, so it lands after it.
+
+## 2026-10-03
+
+Popover is OverlayPopover with a popover's promises: minCols (default 'trigger') and no pixel props. The trigger width is React Aria's --trigger-width, rounded up to whole cells in the surface screen's own measured cell, less half a pixel first: a Button on the grid measures 183.047px for 19 cells of 9.633px, because layout rounds each part to 1/64px, and a plain round(up) cost it a whole cell.
+
+## 2026-10-03
+
+data-placement and data-trigger are React Aria's, on the popover element. data-placement is the physical side React Aria reports (top, bottom, left, right), not start/end as the item first said; nothing styles on it, and the metadata test would refuse a selector on an attribute that is neither a state nor a variant.
+
+## 2026-10-03
+
+Found in #149: useCellSnap's translate leaves a sub-pixel transform whenever React Aria's whole-pixel left/top is off the cell grid, and a transformed layer is not pixel-snapped, so the frame's strokes break (checkContinuity: gap between ┏ and ━). Side placements show it. Setting position: relative; left/top instead passes at the identical final position. Reported to fields for #149; the End and Start stories fail until it lands.

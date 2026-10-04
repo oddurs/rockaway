@@ -23,6 +23,7 @@ import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
+import { popoverMeta } from '../components/popover.meta.ts';
 import { selectMeta } from '../components/select.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
@@ -66,6 +67,7 @@ const sources: readonly ComponentMetaInput[] = [
   linkMeta,
   listMeta,
   overlayMeta,
+  popoverMeta,
   selectMeta,
   treeMeta,
 ];

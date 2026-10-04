@@ -819,6 +819,24 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono"
     ]
   },
+  "Popover": {
+    "file": "popover.tsx",
+    "props": [
+      {
+        "name": "minCols",
+        "type": "number | 'trigger'",
+        "required": false,
+        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width, rounded up to whole cells, or a count. `0` lets it be as narrow as what it holds.",
+        "default": "'trigger'"
+      }
+    ],
+    "inherits": [
+      "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
+    ],
+    "tokens": [
+      "--rk-cell-width"
+    ]
+  },
   "Select": {
     "file": "select.tsx",
     "props": [

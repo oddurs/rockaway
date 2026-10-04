@@ -40,7 +40,7 @@ import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { Description, FieldError, type FieldErrorProps, fieldClass, Label } from './field.tsx';
 import { listMarks } from './list.pure.ts';
-import { OverlayPopover } from './overlay.tsx';
+import { Popover } from './popover.tsx';
 import { selectTrigger } from './select.pure.ts';
 
 /** What a select is showing, in the vocabulary's words (0118). */
@@ -148,11 +148,12 @@ export function Select<T extends object>({
           </AriaSelectButton>
           {description === undefined ? null : <Description>{description}</Description>}
           <FieldError>{errorMessage}</FieldError>
-          <OverlayPopover maxRows={maxRows} className="rk-select-popover">
+          {/* At least as wide as the trigger: Popover's own minCols, not a width set here. */}
+          <Popover maxRows={maxRows} className="rk-select-popover">
             <ListBox className="rk-select-list" {...(items === undefined ? {} : { items })}>
               {children}
             </ListBox>
-          </OverlayPopover>
+          </Popover>
         </>
       )}
     </AriaSelect>

@@ -48,26 +48,26 @@ submission and autofill working.
 
 ## Acceptance criteria
 
-- [ ] Built on the behaviour layer; no hand-rolled focus or keyboard logic
-- [ ] Styled from `data-*` state and semantic tokens only
-- [ ] Stories cover every state, and run as Vitest browser tests
-- [ ] axe passes; keyboard walkthrough recorded in the story
-- [ ] Light, dark and forced-colors verified
-- [ ] Metadata written: props, anatomy, when to use, when not to
-- [ ] Sized in cells, and drawn by the frame engine: no box characters written by hand
+- [x] Built on the behaviour layer; no hand-rolled focus or keyboard logic
+- [x] Styled from `data-*` state and semantic tokens only
+- [x] Stories cover every state, and run as Vitest browser tests
+- [x] axe passes; keyboard walkthrough recorded in the story
+- [x] Light, dark and forced-colors verified
+- [x] Metadata written: props, anatomy, when to use, when not to
+- [x] Sized in cells, and drawn by the frame engine: no box characters written by hand
 - [ ] Both painters render it identically, measured in cells
-- [ ] Frame glyphs are `aria-hidden`; the accessible name never contains one
-- [ ] Ships a text snapshot, which is its documentation as much as its test
-- [ ] Operable by keyboard alone, and usable with a finger at touch density
-- [ ] State reads without colour: an attribute or a mark carries it too
-- [ ] Conforms at `strict`, or declares its exception with a reason
-- [ ] Draws every state from the state vocabulary (0118), and no state changes its size in cells
-- [ ] Reads its glyphs from the theme (0119): no box-drawing, block or mark literal in its source
-- [ ] Rendered by the cell renderer (0117): continuity passes at all four densities
-- [ ] One export line in `packages/react/src/index.ts` and one import line in `packages/css/src/index.css`, as 0122 sets out
-- [ ] Type-ahead selects with the popover closed, in a keyboard story
-- [ ] The popover's rows line up with the trigger's value cell
-- [ ] Works inside a Form (0127) with native validation and submission
+- [x] Frame glyphs are `aria-hidden`; the accessible name never contains one
+- [x] Ships a text snapshot, which is its documentation as much as its test
+- [x] Operable by keyboard alone, and usable with a finger at touch density
+- [x] State reads without colour: an attribute or a mark carries it too
+- [x] Conforms at `strict`, or declares its exception with a reason
+- [x] Draws every state from the state vocabulary (0118), and no state changes its size in cells
+- [x] Reads its glyphs from the theme (0119): no box-drawing, block or mark literal in its source
+- [x] Rendered by the cell renderer (0117): continuity passes at all four densities
+- [x] One export line in `packages/react/src/index.ts` and one import line in `packages/css/src/index.css`, as 0122 sets out
+- [x] Type-ahead selects with the popover closed, in a keyboard story
+- [x] The popover's rows line up with the trigger's value cell
+- [x] Works inside a Form (0127) with native validation and submission
 
 ## 2026-10-03
 
@@ -80,3 +80,7 @@ Built on the overlay contract (#149) with OverlayPopover standing in for Popover
 ## 2026-10-03
 
 The visible value is aria-hidden and cut/padded to its cells; a VisuallyHidden copy gives the reader the whole value, so the name never holds the ellipsis (checkField caught 'Choose…'). The placeholder is React Aria's data-placeholder on SelectValue, not hand-set; the state vocabulary's placeholder row gains [data-placeholder] beside :placeholder-shown. The open mark is its own span in fg.default: in the delimiters' border.control colour it was 4.48:1 on bg.surface and failed axe.
+
+## 2026-10-03
+
+Now on Popover (feat/popover, 6d2fdec): one import swapped, and an 'At least as wide as its trigger' story asserts the 30-cell popover under a 30-cell trigger with narrower options, from Popover's minCols; Select sets no width. Criterion 8 (both painters) left open: Select's own cells draw nothing painted, but Popover always paints glyph even when opened from a rule-painted screen, a #149 issue fields is fixing; once that lands a Painters story can hold both.

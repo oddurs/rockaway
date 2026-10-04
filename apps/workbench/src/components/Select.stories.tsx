@@ -193,6 +193,52 @@ export const Open: Story = {
 };
 
 /**
+ * A popover at least as wide as its trigger, when its options are narrower:
+ * Popover's minCols, rounded to whole cells, with Select setting no width.
+ */
+export const AsWideAsTrigger: Story = {
+  name: 'At least as wide as its trigger',
+  render: () => (
+    <Frame title="wide" cols={WIDE} rows={10}>
+      <Form>
+        <Themes defaultSelectedKey="ink" cols={30} defaultOpen />
+      </Form>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const frame = canvas.getByRole('group', { name: 'wide' });
+    await waitFor(() => expect(document.querySelector('[role="listbox"]')).not.toBeNull());
+    await waitFor(() => expect(option('ink').dataset.focused).toBe('true'));
+    await measured(document.body);
+    const surface = document.querySelector('.rk-overlay') as HTMLElement;
+    const trigger = triggerOf(frame);
+    const cell = Number.parseFloat(getComputedStyle(frame).getPropertyValue('--rk-cell-width'));
+    expect(Math.round(surface.getBoundingClientRect().width / cell)).toBe(30);
+    expect(Math.round(trigger.getBoundingClientRect().width / cell)).toBe(30);
+    expect(inside(frame)).toBe(
+      toText(
+        formBuffer(
+          [
+            {
+              label: 'Theme',
+              control: selectBuffer({
+                cols: 30,
+                options: options(),
+                value: 'ink',
+                open: true,
+                cursor: 'ink',
+              }),
+            },
+          ],
+          { width: WIDE - 4 },
+        ),
+      ),
+    );
+  },
+};
+
+/**
  * Keyboard walkthrough: Tab reaches the trigger; type-ahead selects with the
  * popover closed; Space opens it with the cursor on the value; the arrows
  * move, skipping a disabled option; Enter chooses and closes, returning focus
