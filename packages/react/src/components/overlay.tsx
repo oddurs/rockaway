@@ -55,6 +55,7 @@ import {
   type PopoverProps,
   useSlottedContext,
 } from 'react-aria-components';
+import { setAnchor } from '../anchor.ts';
 import { measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
@@ -350,6 +351,14 @@ function Surface({
   const [scroll, setScroll] = useState<OverlayScroll | undefined>(undefined);
   const [fit, setFit] = useState<number | undefined>(undefined);
   useCellSnap(host, anchor, sheet);
+
+  // Say which grid the surface was moved onto, so conformance can hold it there.
+  useIsomorphicLayoutEffect(() => {
+    const el = host.current;
+    if (!el) return;
+    setAnchor(el, anchor);
+    return () => setAnchor(el, undefined);
+  }, [anchor]);
 
   // React Aria gives a popover the most height it has room for, in pixels;
   // the surface takes the whole rows of it, its border's two included, and
