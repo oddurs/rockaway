@@ -5,8 +5,13 @@ Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
   foreground: #d8dee9 -> #e5ebf6
   blue: #81a1c1 -> #90b1d1
   red: #bf616a -> #f49098
-  bright-red: #bf616a -> #e17f87
+  bright-red: #bf616a -> #ffd5d7
   magenta: #b48ead -> #c9a2c2
+  bright-blue: #81a1c1 -> #b9dbfc
+  bright-cyan: #8fbcbb -> #b6e5e3
+  bright-green: #a3be8c -> #c7e3b0
+  bright-yellow: #ebcb8b -> #fddd9c
+  bright-magenta: #b48ead -> #f4cbec
 
 MIT licence. Copyright (c) 2016-present Sven Greb.
 
@@ -158,11 +163,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.882353</real>
+		<real>1.000000</real>
 		<key>Green Component</key>
-		<real>0.498039</real>
+		<real>0.835294</real>
 		<key>Blue Component</key>
-		<real>0.529412</real>
+		<real>0.843137</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -171,11 +176,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.639216</real>
+		<real>0.780392</real>
 		<key>Green Component</key>
-		<real>0.745098</real>
+		<real>0.890196</real>
 		<key>Blue Component</key>
-		<real>0.549020</real>
+		<real>0.690196</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -184,11 +189,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.921569</real>
+		<real>0.992157</real>
 		<key>Green Component</key>
-		<real>0.796078</real>
+		<real>0.866667</real>
 		<key>Blue Component</key>
-		<real>0.545098</real>
+		<real>0.611765</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -197,11 +202,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.505882</real>
+		<real>0.725490</real>
 		<key>Green Component</key>
-		<real>0.631373</real>
+		<real>0.858824</real>
 		<key>Blue Component</key>
-		<real>0.756863</real>
+		<real>0.988235</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -210,11 +215,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.705882</real>
+		<real>0.956863</real>
 		<key>Green Component</key>
-		<real>0.556863</real>
+		<real>0.796078</real>
 		<key>Blue Component</key>
-		<real>0.678431</real>
+		<real>0.925490</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -223,11 +228,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.560784</real>
+		<real>0.713725</real>
 		<key>Green Component</key>
-		<real>0.737255</real>
+		<real>0.898039</real>
 		<key>Blue Component</key>
-		<real>0.733333</real>
+		<real>0.890196</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>

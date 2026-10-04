@@ -100,6 +100,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "style",
         "type": "React.CSSProperties",
         "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement>",
+        "required": false,
+        "description": "The button element, for an app that focuses it or a Keymap binding that presses it (cairn 0224). An object or a callback; Button keeps its own beside it."
       }
     ],
     "inherits": [
@@ -167,7 +173,115 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Cell": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The value. Text and numbers are cut and aligned in cells; anything else is clipped at the rule."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaCellProps, 'children' | 'className' | 'textValue'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Column": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The header's words."
+      },
+      {
+        "name": "width",
+        "type": "ColumnWidth",
+        "required": false,
+        "description": "Content cells (`12`), a share of the room left (`'1fr'`), or its widest value (`'auto'`).",
+        "default": "'auto'"
+      },
+      {
+        "name": "minWidth",
+        "type": "number",
+        "required": false,
+        "description": "The fewest content cells a share column shrinks to."
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'end'",
+        "required": false,
+        "description": "`end` for numbers: they right-align on a cell boundary.",
+        "default": "'start'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaColumnProps, 'children' | 'className' | 'width' | 'minWidth' | 'textValue'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Description": {
@@ -232,11 +346,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'role' | 'children'>"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "FieldError": {
@@ -319,7 +438,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "VariantProps<typeof fieldFrameVariants>"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-border-default",
@@ -328,7 +446,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Fieldset": {
@@ -381,7 +505,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-border-default",
@@ -390,7 +513,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Form": {
@@ -483,11 +612,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "KeyHint": {
@@ -711,7 +845,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted"
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "ListItem": {
@@ -733,7 +873,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted"
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "OverlayLayer": {
@@ -752,7 +898,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "OverlayModal": {
@@ -785,7 +937,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "OverlayPopover": {
@@ -830,10 +988,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "className",
         "type": "string",
         "required": false
+      },
+      {
+        "name": "shift",
+        "type": "OverlayShift",
+        "required": false,
+        "description": "An offset in whole cells, `{ main: 0, cross: 0 }` by default. A submenu takes `{ main: 1, cross: -1 }`: beside its parent's frame, its first item level with the item that opened it. Not applied to a sheet."
       }
     ],
     "inherits": [
-      "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'UNSTABLE_portalContainer' >"
+      "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'UNSTABLE_portalContainer' >"
     ],
     "tokens": [
       "--rk-bg-page",
@@ -841,7 +1005,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Popover": {
@@ -859,6 +1029,41 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
     ],
     "tokens": []
+  },
+  "Row": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaRowProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
   },
   "Select": {
     "file": "select.tsx",
@@ -960,6 +1165,147 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted"
     ]
   },
+  "Table": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the frame's top edge; the table's accessible name unless `aria-label` says otherwise."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The room the table has, in cells, its frame included. Measured from its container when not given. A table whose columns do not fit scrolls."
+      },
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "A TableHeader and a TableBody."
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTableProps, 'className' | 'style' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "TableBody": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "empty",
+        "type": "string",
+        "required": false,
+        "description": "What an empty table says, in its first row. `renderEmptyState` replaces it.",
+        "default": "'Nothing here.'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTableBodyProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "TableHeader": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTableHeaderProps<T>, 'className'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Tree": {
     "file": "tree.tsx",
     "props": [
@@ -991,7 +1337,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted"
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "TreeItem": {
@@ -1031,7 +1383,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted"
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   }
 };

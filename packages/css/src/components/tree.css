@@ -72,8 +72,28 @@
     color: inherit;
   }
 
+  /* In forced colors a shape the cell draws is inked in the reader's text
+   * colour, which in a selected row is the ground the row is reversed onto.
+   * There the guides take the reversed figure, the canvas, and stay visible
+   * (0181). */
+  @media (forced-colors: active) {
+    .rk-tree-item[data-selected] .rk-tree-guides [data-rk-shape] {
+      --rk-ink-colour: Canvas;
+    }
+  }
+
   .rk-tree-item[data-disabled] {
     color: var(--rk-fg-disabled);
     cursor: default;
+  }
+
+  /* Reversed words are drawn in a ground colour, which under forced colors is
+   * the canvas the browser paints behind text unless told not to. So whatever
+   * this stylesheet reverses opts out of the adjustment (0181), and keeps the
+   * reader's colours through the tokens it reads. */
+  @media (forced-colors: active) {
+    .rk-tree-item[data-selected] {
+      forced-color-adjust: none;
+    }
   }
 }

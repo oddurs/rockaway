@@ -168,11 +168,14 @@ font. Here that means:
   one cell tall and as many cells wide as it holds. Nothing painted takes its
   height from the font, so a background fills its cell and reverse video is a
   solid block.
-- **Box drawing and block elements are geometry, in the engine.**
+- **Box drawing, block elements and braille are geometry, in the engine.**
   `packages/grid/src/shape.ts` describes every glyph the junction table can
-  produce, and every block element, as rectangles and arcs measured from the
-  cell's own edges and centre. Pure data: a stylesheet or a canvas could read
-  it.
+  produce, every block element and all 256 braille patterns, as rectangles and
+  arcs measured from the cell's own edges and centre. Pure data: a stylesheet
+  or a canvas could read it. Braille is drawn for the same reason the rest is:
+  many monospace fonts, the site's among them, have none (`0166`), and a
+  spinner should not fall back to another face. Its 256 patterns share one rule
+  with a layer for each dot, raised by the cell's `data-rk-dots`.
 - **A stylesheet generated from it draws them.** `packages/css/src/shapes.css`
   is written from those shapes at build time and committed; a test fails if it
   is stale. A cell holding `┬` says so — `data-rk-shape="box-0111"`, its
@@ -344,6 +347,15 @@ already curate, and already have opinions about. Sixteen colours is also a real
 constraint on component design — state cannot be carried by hue alone, which is
 why attributes (bold, dim, reverse, underline) and marks carry it too, and why
 the system passes forced-colors mode without special-casing.
+
+The same constraint shapes how it answers `prefers-contrast: more` (`0065`).
+A pixel system would ship a third palette; a terminal has sixteen colours and
+its attributes. So increased contrast re-reads the one palette: muted text
+becomes the foreground, coloured text takes the bright slot (as a terminal's
+bold does), a fill becomes reverse video, lines get a step heavier and the
+focus ring thicker, and disabled is struck through so it never rests on
+dimness alone. Text is held to 7:1 there, by the same gate, and not a cell
+moves.
 
 ## 9. States are one vocabulary
 
