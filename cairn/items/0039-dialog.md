@@ -91,3 +91,7 @@ Criterion 18: the story 'Densities and widths' opens the dialog from a touch pan
 ## 2026-10-03
 
 Took the overlays engineer's OverlayModal opener fix (from feat/command-palette 0dcf787) into this PR: the opener was read once at first render, so a modal mounted closed (a controlled Dialog, the palette) kept body as its anchor, with the root's density and the glyph painter. It now re-reads document.activeElement on each opening. Story 'Controlled, opened later' opens it from a touch pane and from a ruled frame; it fails without the fix.
+
+## Result
+
+Dialog and AlertDialog in @rockaway/react: React Aria's Dialog in OverlayModal, title in the double frame's top edge and aria-label, actions row bottom right, children/actions may be functions of close, padding and dividers pass through to the surface, isDismissable for the backdrop. AlertDialog: role alertdialog, caution mark, safe action autofocused, backdrop never dismisses. A modal re-reads its opener each time it opens.

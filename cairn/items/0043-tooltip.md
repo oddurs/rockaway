@@ -72,3 +72,7 @@ Rewritten by the program plan: the pre-pivot template text is replaced with how 
 ## 2026-10-03
 
 Built on a third kind in the overlay contract, OverlayTooltip (React Aria's Tooltip with offset 0 and containerPadding 0, contexts and painter across the portal, snapped to the trigger's screen, never a sheet). The surface is one row of reverse video (Attr.reverse in the buffer; the screen's ground bg.inverse and its words fg.on-inverse, forced-color-adjust none so the swap survives forced colors) when its words fit, and framed heavy when they wrap. The words wrap at 36 cells in both shapes, so the shape never changes what it holds and the tooltip is at most 40 cells. Placement is React Aria's (top, centred); data-placement is React Aria's; open is presence, as a closed tooltip renders nothing, so there is no data-open. The metadata fixture renders it closed: a server renders no tooltip, so role=tooltip is asserted by the stories, not the metadata check. Depends on 0034 (Popover) on paper only: it uses the contract, not Popover.
+
+## Result
+
+Tooltip in @rockaway/react, on OverlayTooltip: put it in React Aria's TooltipTrigger; one row of reverse video, or framed heavy when its words wrap at 36 cells, at most 40 wide, never a sheet; placement top, centred, on whole cells; never shown on touch.
