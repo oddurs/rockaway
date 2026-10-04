@@ -116,7 +116,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 46% · 59 of 128 done · due 2027-01-31
+`#####·····` 47% · 60 of 128 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -175,7 +175,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0250`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0250-draw-a-scrolling-pane-s-position-in-its-border.md) Draw a scrolling Pane's position in its border <sup>feature · components · p3</sup>
 - [ ] [`0257`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0257-line-a-form-up-at-exactly-the-sixty-cell-threshold-in-every-engine.md) Line a form up at exactly the sixty-cell threshold in every engine <sup>bug · css · p2</sup>
 - [ ] [`0259`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0259-draw-site-navigation-as-a-static-tree-of-links.md) Draw site navigation as a static tree of links <sup>component · components · p2</sup>
-- [ ] [`0260`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0260-name-the-new-checks-in-the-component-recipe.md) Name the new checks in the component recipe <sup>docs · docs · p3</sup>
 - [ ] [`0261`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0261-read-a-screen-without-changing-the-document.md) Read a screen without changing the document <sup>bug · tooling · p1</sup>
 - [ ] [`0264`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0264-judge-an-inset-mark-against-its-own-geometry-in-the-leak-rule.md) Judge an inset mark against its own geometry in the leak rule <sup>bug · grid · p2</sup>
 - [ ] [`0265`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0265-settle-one-layout-tolerance-in-cellsin.md) Settle one layout tolerance in cellsIn <sup>chore · grid · p2</sup>
@@ -261,6 +260,7 @@ The component contract, proven on a first set of components.
 - [x] [`0236`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0236-ink-shapes-inside-a-reversed-element-in-the-reversed-figure-under-forced-colours.md) Ink shapes inside a reversed element in the reversed figure under forced colours <sup>bug · css · p2</sup>
 - [x] [`0238`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0238-size-a-server-rendered-screen-from-its-content-not-screen-s-fallback.md) Size a server-rendered screen from its content, not Screen's fallback <sup>bug · components · p1</sup>
 - [x] [`0240`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0240-make-keyhint-phrasing-content-so-it-can-sit-inside-a-paragraph.md) Make KeyHint phrasing content, so it can sit inside a paragraph <sup>bug · components · p2</sup>
+- [x] [`0260`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0260-name-the-new-checks-in-the-component-recipe.md) Name the new checks in the component recipe <sup>docs · docs · p3</sup>
 - [x] [`0266`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0266-announce-a-server-rendered-button-s-chord.md) Announce a server-rendered Button's chord <sup>bug · components · p2</sup>
 
 ## retheme — Tokens on the grid
@@ -330,7 +330,7 @@ A website built out of the system it documents, which is the only honest way
 
 ## v0.1 — v0.1 — first release
 
-`##········` 20% · 3 of 15 done · due 2027-03-21
+`###·······` 27% · 4 of 15 done · due 2027-03-21
 
 Something another project can install and build on.
 
@@ -346,7 +346,6 @@ Something another project can install and build on.
 ### ready
 
 - [ ] [`0251`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0251-give-the-classic-scrollbars-project-the-shared-test-timeout.md) Give the classic-scrollbars project the shared test timeout <sup>chore · tooling · p2</sup>
-- [ ] [`0252`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0252-check-the-three-component-rules-that-only-review-holds-today.md) Check the three component rules that only review holds today <sup>chore · tooling · p2</sup>
 - [ ] [`0253`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0253-fit-the-zoom-continuity-dense-story-inside-ci-s-time.md) Fit the zoom Continuity Dense story inside CI's time <sup>chore · tooling · p1</sup>
 
 ### in review
@@ -360,6 +359,7 @@ Something another project can install and build on.
 - [x] [`0162`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0162-require-a-changeset-for-every-package-change-and-back-fill-the-missing-ones.md) Require a changeset for every package change, and back-fill the missing ones <sup>chore · distribution · p1</sup>
 - [x] [`0172`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0172-decide-whether-the-first-release-is-0-1-0-or-1-0-0.md) Decide whether the first release is 0.1.0 or 1.0.0 <sup>decision · distribution · p2</sup>
 - [x] [`0173`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0173-check-package-json-changes-for-a-changeset-when-they-reach-users.md) Check package.json changes for a changeset when they reach users <sup>chore · distribution · p3</sup>
+- [x] [`0252`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0252-check-the-three-component-rules-that-only-review-holds-today.md) Check the three component rules that only review holds today <sup>chore · tooling · p2</sup>
 
 ## later — Later
 
