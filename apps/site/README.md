@@ -73,11 +73,44 @@ production, and reads the screen back as text against the fence marked
 `quickstart="screen"`. It needs the network, so it is not part of `pnpm
 check`; CI runs it (0155).
 
+## The registry
+
+Compositions a team is expected to change are copied in, not installed
+(cairn 0011): `src/registry/<name>/` holds each item's source, and
+`src/registry/items.ts` its title, description and the component the
+registry page draws. The build serves each as `/r/<name>.json` in shadcn's
+format, generated from the source by `src/lib/registry.ts`, with an index at
+`/r/registry.json`, and `/registry/` draws every item with the line that
+copies it in.
+
+An item imports only from `@rockaway/*`, React, and its own files, never from
+another item, so copying one never brings another; the build fails if one
+does, and `test/registry.test.ts` says which. `pnpm --filter site quickstart
+registry` copies every item into a new Vite app with shadcn's CLI and checks
+that it draws what the registry page draws.
+
 ## The base path
 
 GitHub Pages serves the site at `oddurs.github.io/rockaway/`, so that is the
 default. `SITE_BASE=/` builds it for a domain root, and `SITE_URL` sets the
 origin. Link inside the site with `href()` from `src/lib/paths.ts`.
+
+## For agents
+
+The site serves itself as text for coding agents (0048), all of it generated
+at build from `@rockaway/react/meta.json` and `docs/` by `src/lib/llms.ts`,
+none of it written by hand:
+
+| Path | What |
+| --- | --- |
+| `/llms.txt` | What rockaway is, and a link to every twin below, in [llmstxt.org](https://llmstxt.org)'s shape. |
+| `/llms-full.txt` | Every twin, in one file. |
+| `/components/<name>.md` | A component's twin: everything its metadata says, snapshots as text. |
+| `/<doc>.md` | A document from `docs/`, its relative links sent to GitHub. |
+| `/meta.json` | The metadata itself. |
+
+A component added to the metadata is listed and twinned on the next build;
+`test/llms.test.ts` checks every twin against the metadata it came from.
 
 ## The font
 
