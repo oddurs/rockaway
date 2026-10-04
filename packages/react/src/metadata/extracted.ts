@@ -354,7 +354,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "copyable",
         "type": "boolean",
         "required": false,
-        "description": "A copy button in the top edge. On by default.",
+        "description": "A copy button in the top edge. On by default; a block with no frame has none.",
         "default": "true"
       },
       {

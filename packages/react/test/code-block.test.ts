@@ -56,6 +56,32 @@ describe('codeBlockText', () => {
     expect(rows[1]?.endsWith('│')).toBe(true);
   });
 
+  test('with no frame, the code alone: no edge, no title, no copy button', () => {
+    expect(
+      toText(codeBlockText(CODE, { cols: 52, title: 'panel.tsx', copyable: true, frame: false }), {
+        trimEnd: false,
+      }),
+    ).toMatchInlineSnapshot(`
+      " import { Frame } from '@rockaway/react';           
+                                                          
+       export const panel = <Frame title="tokens" />;     "
+    `);
+    expect(layoutCodeBlock(52, 3, { copyable: true, frame: false })).toEqual({
+      codeX: 0,
+      codeCols: 52,
+    });
+  });
+
+  test('with no frame, the line numbers keep their rule, run to the top and the bottom', () => {
+    expect(
+      toText(codeBlockText(CODE, { cols: 52, lineNumbers: true, frame: false })),
+    ).toMatchInlineSnapshot(`
+      "1 │ import { Frame } from '@rockaway/react';
+      2 │
+      3 │ export const panel = <Frame title="tokens" />;"
+    `);
+  });
+
   test('without room for the copy button, there is none', () => {
     expect(layoutCodeBlock(12, 3, { copyable: true }).copyX).toBeUndefined();
     expect(layoutCodeBlock(40, 3, { copyable: true }).copyX).toBe(30);

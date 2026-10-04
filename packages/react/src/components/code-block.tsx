@@ -77,7 +77,7 @@ export interface CodeBlockProps
   readonly tokens?: readonly CodeLine[];
   /** The language, for a reader, and the title when there is none. */
   readonly lang?: string;
-  /** A copy button in the top edge. On by default. */
+  /** A copy button in the top edge. On by default; a block with no frame has none. */
   readonly copyable?: boolean;
   /** The block's accessible name, when the title is not the right one. */
   readonly label?: string;
@@ -147,6 +147,7 @@ export function CodeBlock({
   lineNumbers,
   copyable = true,
   border,
+  frame = true,
   label,
   className,
   ...screen
@@ -158,8 +159,9 @@ export function CodeBlock({
   const options: CodeBlockOptions = {
     ...(shown === undefined ? {} : { title: shown }),
     ...(lineNumbers === undefined ? {} : { lineNumbers }),
-    copyable,
+    copyable: copyable && frame,
     ...(border === undefined ? {} : { border }),
+    ...(frame ? {} : { frame }),
   };
   const key = JSON.stringify(options);
   // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on the options' contents.
@@ -174,7 +176,7 @@ export function CodeBlock({
   return (
     <Screen
       {...screen}
-      rows={lines.length + 2}
+      rows={lines.length + (frame ? 2 : 0)}
       draw={draw}
       className={cx('rk-code', className)}
       role="group"
@@ -184,6 +186,7 @@ export function CodeBlock({
         const layout = layoutCodeBlock(size.width, lines.length, options);
         const style = {
           '--rk-code-x': layout.codeX,
+          '--rk-code-y': frame ? 1 : 0,
           '--rk-code-cols': layout.codeCols,
           '--rk-code-rows': lines.length,
           '--rk-code-longest': longest,

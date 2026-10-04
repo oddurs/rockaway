@@ -15,7 +15,7 @@
   .rk-code-text {
     position: absolute;
     box-sizing: border-box;
-    inset-block-start: var(--rk-cell-height);
+    inset-block-start: calc(var(--rk-code-y, 1) * var(--rk-cell-height));
     inset-inline-start: calc(var(--rk-code-x) * var(--rk-cell-width));
     inline-size: calc(var(--rk-code-cols) * var(--rk-cell-width));
     block-size: calc(var(--rk-code-rows) * var(--rk-cell-height));

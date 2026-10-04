@@ -7,6 +7,7 @@
  */
 import {
   Attr,
+  addEdges,
   type BorderSetName,
   Buffer,
   borderSets,
@@ -62,6 +63,13 @@ export interface CodeBlockOptions {
   readonly copyable?: boolean;
   /** Which border set draws the frame; the theme's when not given. */
   readonly border?: BorderSetName;
+  /**
+   * The frame around the code, with the title and the copy button in its top
+   * edge. On by default. Off, the block is the code alone, a row a line, for
+   * a place that already frames it, such as a pane: no title, no copy button,
+   * and the line numbers behind their rule if asked for.
+   */
+  readonly frame?: boolean;
 }
 
 /** Where the parts of a block `width` cells wide go, for `lines` lines of code. */
@@ -71,6 +79,11 @@ export function layoutCodeBlock(
   options: CodeBlockOptions = {},
 ): CodeBlockLayout {
   const digits = String(Math.max(1, lines)).length;
+  if (options.frame === false) {
+    // `12 │`: the numbers, a space, the rule; no border either side.
+    const codeX = options.lineNumbers ? digits + 2 : 0;
+    return { codeX, codeCols: Math.max(0, width - codeX) };
+  }
   // `│ 12 │`: the border, a space, the numbers, a space, the rule.
   const gutter = options.lineNumbers ? digits + 3 : 0;
   const codeX = gutter + 1;
@@ -93,11 +106,28 @@ export function codeBlockBuffer(
   options: CodeBlockOptions = {},
   glyphs: Glyphs = themeGlyphs.default,
 ): Buffer {
-  const lines = Math.max(0, size.height - 2);
+  const lines = Math.max(0, size.height - (options.frame === false ? 0 : 2));
   const layout = layoutCodeBlock(size.width, lines, options);
   const border = options.border ?? glyphs.borderSet;
   const set = borderSets[border];
   const ellipsis = set.ascii ? marks.ascii.ellipsis : glyphs.mark.ellipsis;
+  if (options.frame === false) {
+    // The code alone: the numbers and their rule, if asked for, and nothing else.
+    return Buffer.create(size).draw((draft) => {
+      if (!options.lineNumbers || size.height < 1) return;
+      const rule = layout.codeX - 1;
+      drawRule(draft, rect(rule, 0, 1, size.height), { orientation: 'vertical', border }, glyphs);
+      // Run it to the block's top and bottom edge rather than stop half a cell
+      // short: whatever holds the block is above and below it.
+      const draw = { set, style: LINE };
+      addEdges(draft, { x: rule, y: 0 }, { north: set.weight }, draw);
+      addEdges(draft, { x: rule, y: size.height - 1 }, { south: set.weight }, draw);
+      const digits = rule - 1;
+      for (let n = 1; n <= size.height; n++) {
+        drawText(draft, { x: 0, y: n - 1 }, String(n).padStart(digits), { style: NUMBER });
+      }
+    });
+  }
   return Buffer.create(size).draw((draft) => {
     if (size.width < 2 || size.height < 2) return;
     drawBox(draft, rect(0, 0, size.width, size.height), { set, style: LINE });
@@ -140,14 +170,15 @@ export function codeBlockText(
   glyphs: Glyphs = themeGlyphs.default,
 ): Buffer {
   const lines = code.split('\n');
-  const size = { width: options.cols, height: lines.length + 2 };
+  const framed = options.frame !== false;
+  const size = { width: options.cols, height: lines.length + (framed ? 2 : 0) };
   const layout = layoutCodeBlock(size.width, lines.length, options);
   const chrome = codeBlockBuffer(size, options, glyphs);
   const [open, close] = glyphs.delimiter.control;
   return Buffer.create(size).draw((draft) => {
     copyInto(draft, chrome, 0, 0);
     lines.forEach((line, y) => {
-      drawText(draft, { x: layout.codeX + 1, y: y + 1 }, line, {
+      drawText(draft, { x: layout.codeX + 1, y: y + (framed ? 1 : 0) }, line, {
         maxWidth: Math.max(0, layout.codeCols - 2),
       });
     });

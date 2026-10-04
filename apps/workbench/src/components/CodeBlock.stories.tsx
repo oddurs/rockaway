@@ -4,6 +4,7 @@ import {
   type CodeLine,
   CodeSnapshot,
   codeBlockText,
+  Frame,
   frameBuffer,
   OverlayModal,
   type PainterName,
@@ -127,6 +128,32 @@ export const LineNumbers: Story = {
     );
     // The numbers are chrome: not in the code, so a copy of a selection is the code alone.
     expect(block.querySelector('code')?.textContent).toBe(CODE);
+  },
+};
+
+/**
+ * With no frame, for a place that frames it already (from the tokens team's
+ * client, where a block sat in a pane): the code alone, a row a line, with
+ * its numbers behind a rule that runs top to bottom, inside the frame around
+ * it rather than a frame within a frame.
+ */
+export const Frameless: Story = {
+  name: 'No frame of its own',
+  args: { code: CODE },
+  render: () => (
+    <Frame title="pane" cols={56} rows={6} pad={0}>
+      <CodeBlock code={CODE} lineNumbers frame={false} label="panel.tsx" cols={54} />
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const block = canvas.getByRole('group', { name: 'panel.tsx' });
+    expect(screenshot(block, { legend: false })).toBe(
+      toText(codeBlockText(CODE, { cols: 54, lineNumbers: true, frame: false })),
+    );
+    expect(block.querySelector('code')?.textContent).toBe(CODE);
+    // No copy button: it lives in a frame's top edge, and there is none.
+    expect(block.querySelector('.rk-code-copy')).toBeNull();
   },
 };
 

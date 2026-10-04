@@ -10,7 +10,7 @@ depends_on:
 - 118
 - 129
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-04
 closed_at: 2026-10-03
 priority: p1
 layer: components
@@ -119,3 +119,7 @@ CodeBlock and CodeSnapshot. Code is real text in a painted frame with a title, a
 ## 2026-10-03
 
 At the site lead's request, codeRuns moved out of the 'use client' component into @rockaway/grid as shapeRuns, so the site's Node build can import it without a component module. CodeBlock calls it, and the code-block entry no longer exports a copy of its own.
+
+## 2026-10-04
+
+From the tokens team's client: a sticky overflow mark painted over an open modal's backdrop. Fixed by making every screen, and every region with overflow marks, a stacking context (isolation: isolate); 'Under a dialog' compares the block's place captured with and without the block, under the backdrop. Also added frame={false}: the code alone, for a block inside a pane, numbers behind a rule run edge to edge, no title or copy button.
