@@ -137,6 +137,16 @@ const checks: [string, unknown, unknown][] = [
       .row(0),
     '┌ a ───┬ b ────┐',
   ],
+  [
+    'statusBarBuffer',
+    pure
+      .statusBarBuffer(16, [
+        { text: 'NORMAL', variant: 'mode' },
+        { text: '1:1', align: 'end' },
+      ])
+      .row(0),
+    ' NORMAL     1:1 ',
+  ],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)

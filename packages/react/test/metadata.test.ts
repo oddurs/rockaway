@@ -77,6 +77,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       { cols: 30, rows: 5, ...props },
       createElement(rockaway.Pane, { title: 'files', size: 12 }, 'a.ts'),
       createElement(rockaway.Pane, { title: 'diff' }, '+1 -1'),
+  // The variant is a segment's, so the props given go to the segment.
+  StatusBar: (props) =>
+    createElement(
+      rockaway.StatusBar,
+      { cols: 30 },
+      createElement(rockaway.StatusSegment, { variant: 'mode', ...props }, 'NORMAL'),
+      createElement(rockaway.StatusMessage, null, 'Copied'),
     ),
   Tree: (props) =>
     createElement(
@@ -647,6 +654,18 @@ describe('the snapshots, as the site draws them', () => {
       │          │                                 │                │                │
       └──────────┴─────────────────────────────────┴────────────────┴────────────────┘
       10 + 33 + 16 + 16 cells of content"
+  test('StatusBar', () => {
+    expect(snapshots(byName('StatusBar'))).toMatchInlineSnapshot(`
+      "── Start, centre and end
+       NORMAL          centre            12:4 
+      ── Cut by priority
+       NORMAL  src/components/status-bar.tsx                                                          12:4  ? help  : command 
+       NORMAL  src/components/status-bar.tsx                  12:4  ? help  : command 
+       NORMAL  src/components/status-bar.tsx  12:4  ? help  : co… 
+       NORMAL  src/components/status-b…  12:4 
+       NORMAL  src…  12:4 
+      ── Under an ASCII theme
+       NORMAL  src/component~  12:4 "
     `);
   });
 

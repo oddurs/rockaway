@@ -130,7 +130,8 @@
     .rk-button[data-variant="fill"],
     .rk-button[data-pressed],
     .rk-link[data-pressed],
-    .rk-list-item[data-selected] {
+    .rk-list-item[data-selected],
+    .rk-status-segment[data-variant="mode"] {
       forced-color-adjust: none;
     }
   }

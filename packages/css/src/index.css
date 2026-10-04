@@ -37,4 +37,5 @@
 @import "./components/link.css";
 @import "./components/list.css";
 @import "./components/panes.css";
+@import "./components/status-bar.css";
 @import "./components/tree.css";
