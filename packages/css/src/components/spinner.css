@@ -9,6 +9,12 @@
     white-space: pre;
   }
 
+  .rk-spinner-frame,
+  .rk-spinner-frame > .rk-row {
+    display: inline-block;
+    vertical-align: top;
+  }
+
   .rk-spinner-frame {
     color: var(--rk-fg-accent);
   }

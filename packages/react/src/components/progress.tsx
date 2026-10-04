@@ -14,24 +14,32 @@ import type { CSSProperties, ReactNode } from 'react';
 import { ProgressBar as AriaProgressBar, Label } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { Part } from '../paint/runs.tsx';
+import type { StrokeStyle } from '../paint/cells.ts';
+import { PaintedRow } from '../paint/runs.tsx';
 import { useTick } from '../tick.ts';
 import { barCells, fractionOf, indeterminateCells, percentText } from './progress.pure.ts';
 
 /** An indeterminate bar: the only part of a progress bar that ticks. */
-function Busy({ cols }: { readonly cols: number }): ReactNode {
+function Busy({
+  cols,
+  painter,
+}: {
+  readonly cols: number;
+  readonly painter: StrokeStyle;
+}): ReactNode {
   const glyphs = useGlyphs();
   const frame = useTick('progress');
   const { before, block, after } = indeterminateCells(frame, cols, glyphs);
   // At rest, and under reduced motion, the whole bar is the shade: busy.
-  if (block === '') return <Part className="rk-progress-busy" text={before} />;
-  return (
-    <>
-      <Part className="rk-progress-track" text={before} />
-      <Part className="rk-progress-fill" text={block} />
-      <Part className="rk-progress-track" text={after} />
-    </>
-  );
+  const segments =
+    block === ''
+      ? [{ text: before, className: 'rk-progress-busy' }]
+      : [
+          { text: before, className: 'rk-progress-track' },
+          { text: block, className: 'rk-progress-fill' },
+          { text: after, className: 'rk-progress-track' },
+        ];
+  return <PaintedRow className="rk-progress-bar" painter={painter} segments={segments} />;
 }
 
 export interface ProgressBarProps {
@@ -47,6 +55,12 @@ export interface ProgressBarProps {
   readonly 'aria-label'?: string;
   /** The bar's width in cells, not counting the label or the value. */
   readonly cols?: number;
+  /**
+   * How the cell draws its strokes: \`glyph\`, weighted like the type, or
+   * \`rule\`, hairlines. Blocks and dots look the same in both; it is here so
+   * a bar matches the screen it sits in.
+   */
+  readonly painter?: StrokeStyle;
   readonly className?: string;
   readonly style?: CSSProperties;
 }
@@ -63,6 +77,7 @@ export function ProgressBar({
   label,
   'aria-label': ariaLabel,
   cols = 20,
+  painter = 'glyph',
   className,
   style,
 }: ProgressBarProps): ReactNode {
@@ -87,16 +102,18 @@ export function ProgressBar({
           </Label>{' '}
         </>
       )}
-      <span className="rk-progress-bar" aria-hidden="true" data-rk-painted="glyph">
-        {busy ? (
-          <Busy cols={cols} />
-        ) : (
-          <>
-            <Part className="rk-progress-fill" text={fill} />
-            <Part className="rk-progress-track" text={track} />
-          </>
-        )}
-      </span>
+      {busy ? (
+        <Busy cols={cols} painter={painter} />
+      ) : (
+        <PaintedRow
+          className="rk-progress-bar"
+          painter={painter}
+          segments={[
+            { text: fill, className: 'rk-progress-fill' },
+            { text: track, className: 'rk-progress-track' },
+          ]}
+        />
+      )}
       <span className="rk-progress-value" aria-hidden="true">
         {` ${busy ? glyphs.mark.blank.repeat(4) : percentText(fraction)}`}
       </span>

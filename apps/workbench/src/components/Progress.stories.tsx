@@ -11,9 +11,12 @@ import {
   sparklineBuffer,
   sparklineSummary,
 } from '@rockaway/react';
+import type { StrokeStyle } from '@rockaway/react/paint';
+import { expectContinuity } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { runner } from '../../.storybook/runner.ts';
 import { settled } from '../settled.ts';
 
 /**
@@ -63,6 +66,7 @@ const all = (root: HTMLElement, selector: string): HTMLElement[] => [
 
 /** Determinate bars: each a row of whole cells, the text its snapshot draws. */
 export const Bars: Story = {
+  globals: { conformance: 'strict' },
   beforeEach: motion('reduced'),
   render: () => (
     <Frame title="install" cols={40} rows={VALUES.length + 2}>
@@ -152,6 +156,7 @@ const METERS = [
 
 /** Meters against thresholds: the tone in colour, and as a mark in its own cell. */
 export const Meters: Story = {
+  globals: { conformance: 'strict' },
   beforeEach: motion('reduced'),
   render: () => (
     <Frame title="cpu" cols={40} rows={METERS.length + 3}>
@@ -205,6 +210,7 @@ export const Greyscale: Story = {
 
 /** Sparklines in braille, one row and three, and in bars. */
 export const Sparklines: Story = {
+  globals: { conformance: 'strict' },
   beforeEach: motion('reduced'),
   render: () => (
     <Frame title="load" cols={40} rows={8}>
@@ -251,8 +257,9 @@ export const Spinning: Story = {
   ),
   play: async ({ canvas, canvasElement }) => {
     expect(canvas.getByRole('status')).toHaveTextContent('Indexing');
-    const frame = canvasElement.querySelector('.rk-spinner-frame') as HTMLElement;
-    expect(frame.getAttribute('aria-hidden')).toBe('true');
+    const layer = canvasElement.querySelector('.rk-spinner-frame') as HTMLElement;
+    expect(layer.getAttribute('aria-hidden')).toBe('true');
+    const frame = layer.querySelector('.rk-run') as HTMLElement;
     expect(frame.dataset.rkDots).toBeTruthy();
     const first = frame.textContent;
     await waitFor(() => expect(frame.textContent).not.toBe(first), { timeout: 1000 });
@@ -261,6 +268,7 @@ export const Spinning: Story = {
 
 /** Under reduced motion the spinner keeps its first frame. */
 export const SpinnerReduced: Story = {
+  globals: { conformance: 'strict' },
   name: 'Spinner, reduced motion',
   beforeEach: motion('reduced'),
   render: () => (
@@ -397,3 +405,100 @@ export const Zoomed: Story = {
     </Frame>
   ),
 };
+
+/** One of each, as the continuity and painter stories draw them: four painted layers. */
+function Each({ painter }: { readonly painter: StrokeStyle }) {
+  return (
+    <>
+      <div>
+        <ProgressBar label="Installing" value={62} cols={COLS} painter={painter} />
+      </div>
+      <div>
+        <Meter label="cpu" value={76} warning={70} danger={90} cols={COLS} painter={painter} />
+      </div>
+      <div>
+        <Sparkline label="Load" values={LOAD} cols={16} rows={2} painter={painter} />
+      </div>
+      <Spinner label="Indexing" painter={painter} />
+    </>
+  );
+}
+
+const PAINTERS: readonly StrokeStyle[] = ['glyph', 'rule'];
+
+/**
+ * Both painters, side by side (0101 criterion 8): the same cells, the same
+ * text and the same widths. Blocks and braille have no strokes for a painter
+ * to weigh, so nothing differs but the attribute.
+ */
+export const Painters: Story = {
+  globals: { conformance: 'strict' },
+  beforeEach: motion('reduced'),
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+      {PAINTERS.map((painter) => (
+        <div key={painter} data-testid={painter}>
+          <Frame title={painter} cols={40} rows={7}>
+            <Each painter={painter} />
+          </Frame>
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const read = (painter: StrokeStyle) => {
+      const root = canvas.getByTestId(painter);
+      // The four, not the frame around them.
+      const layers = all(root, '.rk-content [data-rk-painted]');
+      expect(layers.every((layer) => layer.dataset.rkPainted === painter)).toBe(true);
+      return layers.map((layer) => ({
+        text: layer.textContent,
+        cells: Math.round(layer.getBoundingClientRect().width / cellWidth(layer)),
+        shapes: all(layer, '[data-rk-shape]').map((run) => run.dataset.rkShape),
+      }));
+    };
+    const glyph = read('glyph');
+    expect(glyph).toHaveLength(4);
+    expect(read('rule')).toEqual(glyph);
+  },
+};
+
+const DENSITIES = ['dense', 'normal', 'airy', 'touch'] as const;
+
+/**
+ * Continuity at one density and painter (0101 criterion 16): four painted
+ * layers, a bar, a meter, a two-row sparkline and a spinner, each cell read
+ * back pixel by pixel. The screen is drawn inside the density, so it measures
+ * that cell from the first frame.
+ */
+const continuity = (density: (typeof DENSITIES)[number], painter: StrokeStyle): Story => ({
+  name: `Continuity, ${density}, ${painter} painter`,
+  // The play function runs the check itself and asserts what it covered.
+  parameters: { continuity: false },
+  beforeEach: motion('reduced'),
+  render: () => (
+    <div data-density={density}>
+      <Frame title={density} cols={40} rows={7}>
+        <Each painter={painter} />
+      </Frame>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const run = runner();
+    if (!run) return;
+    await settled();
+    const report = await expectContinuity(canvasElement, { capture: run.capture });
+    // The frame and the four, every one looked at.
+    expect(report.layers).toBe(5);
+  },
+});
+
+export const ContinuityDenseGlyph: Story = continuity('dense', 'glyph');
+export const ContinuityDenseRule: Story = continuity('dense', 'rule');
+export const ContinuityNormalGlyph: Story = continuity('normal', 'glyph');
+export const ContinuityNormalRule: Story = continuity('normal', 'rule');
+export const ContinuityAiryGlyph: Story = continuity('airy', 'glyph');
+export const ContinuityAiryRule: Story = continuity('airy', 'rule');
+export const ContinuityTouchGlyph: Story = continuity('touch', 'glyph');
+export const ContinuityTouchRule: Story = continuity('touch', 'rule');

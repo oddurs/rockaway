@@ -9,7 +9,8 @@ import type { CSSProperties, JSX, ReactElement, ReactNode } from 'react';
 import { Meter as AriaMeter, Label } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { Part } from '../paint/runs.tsx';
+import type { StrokeStyle } from '../paint/cells.ts';
+import { PaintedRow } from '../paint/runs.tsx';
 import type { VariantProps, VariantValue } from '../variants.ts';
 import {
   barCells,
@@ -64,6 +65,12 @@ export interface MeterProps extends VariantProps<typeof meterVariants> {
   readonly valueLabel?: string;
   /** The bar's width in cells. */
   readonly cols?: number;
+  /**
+   * How the cell draws its strokes: \`glyph\`, weighted like the type, or
+   * \`rule\`, hairlines. Blocks and dots look the same in both; it is here so
+   * a bar matches the screen it sits in.
+   */
+  readonly painter?: StrokeStyle;
   readonly className?: string;
   readonly style?: CSSProperties;
 }
@@ -83,6 +90,7 @@ export function Meter({
   'aria-label': ariaLabel,
   valueLabel,
   cols = 20,
+  painter = 'glyph',
   className,
   style,
 }: MeterProps): ReactNode {
@@ -114,10 +122,14 @@ export function Meter({
           </Label>{' '}
         </>
       )}
-      <span className="rk-progress-bar" aria-hidden="true" data-rk-painted="glyph">
-        <Part className="rk-progress-fill" text={fill} />
-        <Part className="rk-progress-track" text={track} />
-      </span>
+      <PaintedRow
+        className="rk-progress-bar"
+        painter={painter}
+        segments={[
+          { text: fill, className: 'rk-progress-fill' },
+          { text: track, className: 'rk-progress-track' },
+        ]}
+      />
       <span className="rk-meter-mark" aria-hidden="true">
         {meterMark(tone, glyphs)}
       </span>

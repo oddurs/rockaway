@@ -8,6 +8,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
+import type { StrokeStyle } from '../paint/cells.ts';
 import { Runs } from '../paint/runs.tsx';
 import { type SparklineKind, sparklineBuffer, sparklineSummary } from './progress.pure.ts';
 
@@ -31,6 +32,12 @@ export interface SparklineProps {
    * An ASCII theme has no braille, and draws bars.
    */
   readonly kind?: SparklineKind;
+  /**
+   * How the cell draws its strokes: \`glyph\`, weighted like the type, or
+   * \`rule\`, hairlines. Blocks and dots look the same in both; it is here so
+   * a bar matches the screen it sits in.
+   */
+  readonly painter?: StrokeStyle;
   readonly className?: string;
   readonly style?: CSSProperties;
 }
@@ -47,6 +54,7 @@ export function Sparkline({
   min,
   max,
   kind = 'braille',
+  painter = 'glyph',
   className,
   style,
 }: SparklineProps): ReactNode {
@@ -67,7 +75,7 @@ export function Sparkline({
       role="img"
       aria-label={sparklineSummary(label, values)}
       className={cx('rk-sparkline', className)}
-      data-rk-painted="glyph"
+      data-rk-painted={painter}
       {...(style === undefined ? {} : { style })}
     >
       {Array.from({ length: buffer.height }, (_, y) => (

@@ -9,13 +9,19 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { shapeAttributes } from '../paint/cells.ts';
+import { type StrokeStyle, shapeAttributes } from '../paint/cells.ts';
 import { useTick } from '../tick.ts';
 import { spinnerFrame } from './progress.pure.ts';
 
 export interface SpinnerProps {
   /** What is happening, shown after the frame and announced: `Indexing`. */
   readonly label: string;
+  /**
+   * How the cell draws its strokes: \`glyph\`, weighted like the type, or
+   * \`rule\`, hairlines. Blocks and dots look the same in both; it is here so
+   * a bar matches the screen it sits in.
+   */
+  readonly painter?: StrokeStyle;
   readonly className?: string;
   readonly style?: CSSProperties;
 }
@@ -25,18 +31,22 @@ export interface SpinnerProps {
  * the spinner tick, then a cell and the label. A `status`, so the label is
  * announced; the frame never is.
  */
-export function Spinner({ label, className, style }: SpinnerProps): ReactNode {
+export function Spinner({ label, painter = 'glyph', className, style }: SpinnerProps): ReactNode {
   const glyphs = useGlyphs();
   const frame = spinnerFrame(useTick('spinner', glyphs.spinner.length), glyphs);
   return (
     <span
       role="status"
       className={cx('rk-spinner', className)}
-      data-rk-painted="glyph"
       {...(style === undefined ? {} : { style })}
     >
-      <span className="rk-spinner-frame rk-run" aria-hidden="true" {...shapeAttributes(frame)}>
-        {frame}
+      {/* A painted layer of one cell, so it is drawn and checked as any other. */}
+      <span className="rk-spinner-frame" aria-hidden="true" data-rk-painted={painter}>
+        <span className="rk-row">
+          <span className="rk-run" {...shapeAttributes(frame)}>
+            {frame}
+          </span>
+        </span>
       </span>
       <span className="rk-spinner-label">{` ${label}`}</span>
     </span>

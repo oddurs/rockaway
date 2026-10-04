@@ -22,14 +22,11 @@
     color: var(--rk-fg-default);
   }
 
-  .rk-progress-bar {
-    display: inline-flex;
+  /* A painted layer of one row; each run is its own cells, coloured by its part. */
+  .rk-progress-bar,
+  .rk-progress-bar > .rk-row {
+    display: inline-block;
     vertical-align: top;
-  }
-
-  .rk-progress-fill,
-  .rk-progress-track {
-    display: inline-flex;
   }
 
   .rk-progress-fill {
@@ -46,7 +43,6 @@
 
   /* Busy: the medium shade across, which is a texture and not an amount. */
   .rk-progress-busy {
-    display: inline-flex;
     color: var(--rk-fg-accent);
   }
 }

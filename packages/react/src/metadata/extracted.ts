@@ -946,6 +946,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "default": "20"
       },
       {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -1021,6 +1028,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "The bar's width in cells, not counting the label or the value.",
         "default": "20"
+      },
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "default": "'glyph'"
       },
       {
         "name": "className",
@@ -1132,6 +1146,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "default": "'braille'"
       },
       {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -1163,6 +1184,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "string",
         "required": true,
         "description": "What is happening, shown after the frame and announced: `Indexing`."
+      },
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "default": "'glyph'"
       },
       {
         "name": "className",

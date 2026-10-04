@@ -1,26 +1,31 @@
 /**
  * Cells for chrome that is a few elements rather than a painted screen: a
- * bar's fill, a sparkline's rows (cairn 0101). The cell renderer's own runs,
- * each a whole number of cells, with a shape drawn by the cell and braille
- * with its dots. When the shared painted-cells component (0227) lands, these
- * become it.
+ * bar, a sparkline's rows, a spinner's frame (cairn 0101). The cell
+ * renderer's own markup, a painted layer of `.rk-row`s of `.rk-run`s, each
+ * run a whole number of cells, with a shape drawn by the cell and braille
+ * with its dots, so the continuity check reads it as it reads a screen. When
+ * the shared painted-cells component (0227) lands, these become it.
  */
 import { Buffer, drawText } from '@rockaway/grid';
 import type { CSSProperties, ReactNode } from 'react';
-import { rowRuns, shapeAttributes } from './cells.ts';
+import { rowRuns, type StrokeStyle, shapeAttributes } from './cells.ts';
 
 /**
- * One row of a buffer as the cell renderer's runs: a shape is drawn by the
- * cell, braille with its dots, and letters are the font's.
+ * One row of a buffer as runs, from column `start`, each run carrying
+ * `className` as well as `rk-run`.
  */
 export function Runs({
   buffer,
   y = 0,
+  start = 0,
+  className,
 }: {
   readonly buffer: Buffer;
   readonly y?: number;
+  readonly start?: number;
+  readonly className?: string;
 }): ReactNode {
-  let col = 0;
+  let col = start;
   return rowRuns(buffer, y).map((run) => {
     const at = col;
     col += run.cells;
@@ -31,7 +36,7 @@ export function Runs({
     return (
       <span
         key={at}
-        className="rk-run"
+        className={className === undefined ? 'rk-run' : `rk-run ${className}`}
         {...shaped}
         style={{ '--rk-col': at, '--rk-run': run.cells } as CSSProperties}
       >
@@ -41,25 +46,51 @@ export function Runs({
   });
 }
 
-/** A string as one row of cells, for `Runs`. */
+/** A string as one row of cells. */
 export function line(text: string): Buffer {
   return Buffer.create({ width: [...text].length, height: 1 }).draw((draft) => {
     drawText(draft, { x: 0, y: 0 }, text);
   });
 }
 
-/** A part of a bar, painted, in its own colour. */
-export function Part({
-  text,
-  className,
-}: {
+/** Some cells of a row, and the class that colours them. */
+export interface Segment {
   readonly text: string;
   readonly className: string;
+}
+
+/**
+ * One row of painted cells, the segments in order and the columns counted
+ * across them all: a bar's fill then its track. Hidden from readers, who get
+ * the component's value instead.
+ */
+export function PaintedRow({
+  segments,
+  painter = 'glyph',
+  className,
+}: {
+  readonly segments: readonly Segment[];
+  readonly painter?: StrokeStyle;
+  readonly className: string;
 }): ReactNode {
-  if (text === '') return null;
+  let col = 0;
   return (
-    <span className={className}>
-      <Runs buffer={line(text)} />
+    <span className={className} aria-hidden="true" data-rk-painted={painter}>
+      <span className="rk-row">
+        {segments.map((segment) => {
+          if (segment.text === '') return null;
+          const start = col;
+          col += [...segment.text].length;
+          return (
+            <Runs
+              key={start}
+              buffer={line(segment.text)}
+              start={start}
+              className={segment.className}
+            />
+          );
+        })}
+      </span>
     </span>
   );
 }
