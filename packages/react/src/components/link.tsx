@@ -72,7 +72,8 @@ export function Link({
               <span aria-hidden="true" className="rk-link-external">
                 {mark.external}
               </span>
-              <VisuallyHidden>{` ${newTabLabel}`}</VisuallyHidden>
+              {/* A span: a link sits in a sentence, where a div ends the paragraph. */}
+              <VisuallyHidden elementType="span">{` ${newTabLabel}`}</VisuallyHidden>
             </>
           ) : null}
         </>
