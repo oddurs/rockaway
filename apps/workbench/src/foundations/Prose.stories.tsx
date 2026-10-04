@@ -1,12 +1,16 @@
 import { measureCell } from '@rockaway/react';
-import { expectConformance } from '@rockaway/react/testing';
+import {
+  checkContinuity,
+  expectConformance,
+  formatContinuity,
+  proseShapes,
+} from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { marked } from 'marked';
 import { useMemo } from 'react';
 import { expect } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import fixture from './prose.fixture.md?raw';
-import { checkLine, proseLines } from './prose-lines.ts';
 
 /**
  * Prose (cairn 0143): a Markdown fixture with every element in it, rendered to
@@ -234,8 +238,11 @@ export const Dark: Story = { globals: { mode: 'dark' } };
 
 /**
  * Every line, in pixels, at every density; the zoom project runs it again at
- * 2x. A screenshot a line, because a screenshot of the whole fixture is blank
- * below the fold.
+ * 2x. The rules are drawn on pseudo-elements, which hold no character for the
+ * continuity check to find, so they are passed to it as shapes drawn outside
+ * a painted layer (0177), and read cell by cell as a painted `═`, `─` or `│`
+ * is: each reaches the edges it should, and joins its neighbour. A screenshot
+ * a shape, because a screenshot of the whole fixture is blank below the fold.
  */
 async function linesRunEndToEnd(
   screen: HTMLElement,
@@ -253,12 +260,14 @@ async function linesRunEndToEnd(
       await frame();
       measure(screen);
       await frame();
-      const cell = cellOf(screen);
-      for (const line of proseLines(screen)) {
-        const found = await checkLine(line, cell, run.capture);
-        problems.push(...found.map((p) => `${density}: ${p}`));
-        checked += 1;
-      }
+      const shapes = proseShapes(screen);
+      const report = await checkContinuity(screen, { capture: run.capture, shapes });
+      if (report.breaks.length > 0) problems.push(`${density}: ${formatContinuity(report)}`);
+      // Every rule was looked at, and none of it was scrolled out of sight.
+      await expect(report.outside).toBe(shapes.length);
+      await expect(report.unseen).toBe(0);
+      await expect(report.shapes).toBeGreaterThan(shapes.length);
+      checked += report.outside;
     }
   } finally {
     if (was === undefined) delete root.dataset.density;
@@ -266,8 +275,11 @@ async function linesRunEndToEnd(
     await frame();
     measure(screen);
   }
-  // h1, four h2s, the table's header, the hr and the quote, at four densities.
-  await expect(checked).toBe(8 * densities.length);
+  // h1, four h2s, each of the table's header cells, the hr and the quote, at
+  // every density.
+  const headers = screen.querySelectorAll('.rk-prose thead th').length;
+  await expect(headers).toBeGreaterThan(1);
+  await expect(checked).toBe((7 + headers) * densities.length);
   await expect(problems).toEqual([]);
 }
 
@@ -297,8 +309,8 @@ export const ForcedColors: Story = {
   play: async ({ canvas }) => {
     await expect(matchMedia('(forced-colors: active)').matches).toBe(true);
     const screen = canvas.getByTestId('prose');
-    for (const line of proseLines(screen)) {
-      const style = getComputedStyle(line.ink.element, line.ink.pseudo);
+    for (const shape of proseShapes(screen)) {
+      const style = getComputedStyle(shape.element, shape.pseudo ?? null);
       await expect(style.getPropertyValue('forced-color-adjust')).toBe('none');
       await expect(style.backgroundImage).not.toBe('none');
     }
