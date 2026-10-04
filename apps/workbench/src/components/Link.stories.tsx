@@ -3,6 +3,7 @@ import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useState } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
+import { press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -184,25 +185,25 @@ export const Keyboard: Story = {
     const about = canvas.getByRole('link', { name: 'about' });
     const before = guide.getBoundingClientRect();
 
-    await userEvent.tab();
+    await tab();
     expect(home).toHaveFocus();
     // Focus is only ever shown to the keyboard, as the ring, which costs no cell.
     expect(home.dataset.focusVisible).toBe('true');
     expect(getComputedStyle(home).outlineStyle).toBe('solid');
 
-    await userEvent.tab();
+    await tab();
     expect(guide).toHaveFocus();
     expect(guide.getBoundingClientRect().width).toBe(before.width);
     expect(guide.getBoundingClientRect().left).toBe(before.left);
 
     // The disabled link is not in the tab order.
-    await userEvent.tab();
+    await tab();
     expect(about).toHaveFocus();
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(guide).toHaveFocus();
 
     // Enter follows it.
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(args.onPress).toHaveBeenCalledTimes(1));
     const nav = canvas.getByRole('navigation', { name: 'Pages' });
     expect(nav.dataset.followed).toBe('#keyboard-guide');
@@ -598,7 +599,7 @@ export const ClientRouter: Story = {
     // The keyboard goes through the router too.
     const changelog = canvas.getByRole('link', { name: 'changelog' });
     changelog.focus();
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(canvas.getByTestId('path')).toHaveTextContent('at /changelog'));
     expect(window.location.href).toBe(before);
   },

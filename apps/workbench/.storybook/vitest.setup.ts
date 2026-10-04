@@ -29,5 +29,6 @@ setRunner({
   record: (use) => commands.recordKnown(use),
   // The provider's keyboard: trusted events, as a reader's keys are.
   type: (keys) => userEvent.keyboard(keys),
+  click: (element) => userEvent.click(element),
   contrast: (preference) => commands.emulateContrast(preference),
 });

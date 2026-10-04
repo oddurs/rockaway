@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { RouterProvider } from 'react-aria-components';
 import { expect, fn, userEvent, waitFor } from 'storybook/test';
+import { press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -162,27 +163,27 @@ export const Keyboard: Story = {
         .map((row) => row.querySelector('.rk-tree-label')?.textContent ?? '')
         .join();
 
-    await userEvent.tab();
+    await tab();
     await waitFor(() => expect(focused()).toBe('src'));
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() => expect(focused()).toBe('components'));
     expect(cursorOn()).toBe('components');
 
     // Right expands, and the rows under it come into the tree.
-    await userEvent.keyboard('{ArrowRight}');
+    await press('{ArrowRight}');
     await waitFor(() =>
       expect(canvas.getByRole('row', { name: 'components' })).toHaveAttribute(
         'aria-expanded',
         'true',
       ),
     );
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() => expect(focused()).toBe('button.tsx'));
 
     // Left goes to the parent; left again collapses it.
-    await userEvent.keyboard('{ArrowLeft}');
+    await press('{ArrowLeft}');
     await waitFor(() => expect(focused()).toBe('components'));
-    await userEvent.keyboard('{ArrowLeft}');
+    await press('{ArrowLeft}');
     await waitFor(() =>
       expect(canvas.getByRole('row', { name: 'components' })).toHaveAttribute(
         'aria-expanded',
@@ -190,18 +191,18 @@ export const Keyboard: Story = {
       ),
     );
 
-    await userEvent.keyboard('{End}');
+    await press('{End}');
     await waitFor(() => expect(focused()).toBe('README.md'));
-    await userEvent.keyboard('{Home}');
+    await press('{Home}');
     await waitFor(() => expect(focused()).toBe('src'));
 
     // Type-ahead finds a row by its title.
-    await userEvent.keyboard('ind');
+    await press('ind');
     await waitFor(() => expect(focused()).toBe('index.ts'));
 
     // Enter selects: reverse video, and the cursor still in its own cell. (A
     // space straight after type-ahead would be read as part of the search.)
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     const index = canvas.getByRole('row', { name: 'index.ts' });
     await waitFor(() => expect(index).toHaveAttribute('aria-selected', 'true'));
     expect(getComputedStyle(index).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
@@ -286,12 +287,12 @@ export const Links: Story = {
     // A press on a link row follows it, and so does Enter.
     await userEvent.click(canvas.getByRole('row', { name: 'Concept' }));
     await waitFor(() => expect(followed()).toEqual(['#concept']));
-    await userEvent.keyboard('{Home}');
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{Home}');
+    await press('{ArrowDown}');
     await waitFor(() =>
       expect(canvas.getByRole('row', { name: 'Install' })).toHaveAttribute('data-focused', 'true'),
     );
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(followed()).toEqual(['#concept', '#install']));
   },
 };

@@ -5,6 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useState } from 'react';
 import { Dialog, DialogTrigger, Heading, Menu, MenuItem, MenuTrigger } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { press } from '../keys.ts';
 import { measured } from '../settled.ts';
 
 /*
@@ -414,9 +415,9 @@ export const Dismiss: Story = {
 
     // Popover: Enter opens it, Escape closes it, focus returns.
     open('Popover').focus();
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(dialog('Popover')).not.toBeNull());
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(dialog('Popover')).toBeNull(), CLOSE);
     expect(open('Popover')).toHaveFocus();
 
@@ -432,7 +433,7 @@ export const Dismiss: Story = {
     const scrim = document.querySelector('.rk-overlay-scrim') as HTMLElement;
     await userEvent.click(scrim, { skipHover: true });
     expect(dialog('Fixed')).not.toBeNull();
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(dialog('Fixed')).toBeNull(), CLOSE);
     expect(open('Fixed')).toHaveFocus();
 
@@ -484,7 +485,7 @@ export const Nested: Story = {
       return button as HTMLElement;
     });
     actions.focus();
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(document.querySelector('[role="menu"]')).not.toBeNull());
     // Three surfaces' worth of layer: backdrop and dialog, then the menu above them.
     const [dialogSurface, menuSurface] = surfaces();
@@ -495,12 +496,12 @@ export const Nested: Story = {
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
 
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(document.querySelector('[role="menu"]')).toBeNull());
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
     expect(actions).toHaveFocus();
 
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
     expect(settings).toHaveFocus();
   },

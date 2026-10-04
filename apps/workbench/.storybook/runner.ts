@@ -35,6 +35,13 @@ export interface Runner {
    * cannot show what happens then.
    */
   readonly type: (keys: string) => Promise<void>;
+  /**
+   * Clicks as a reader does, with the browser's own pointer. Use it with
+   * `type`: after Storybook's synthetic click, the browser's real keys did not
+   * type into the field it focused (the Keymap story, found moving the
+   * walkthroughs onto real keys).
+   */
+  readonly click: (element: Element) => Promise<void>;
   /** Emulates the reader's `prefers-contrast` (cairn 0065); `no-preference` gives it back. */
   readonly contrast: (preference: 'more' | 'no-preference') => Promise<void>;
 }

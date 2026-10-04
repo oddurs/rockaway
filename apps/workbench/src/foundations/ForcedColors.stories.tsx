@@ -4,6 +4,7 @@ import { expectContinuity } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
+import { tab } from '../keys.ts';
 import { text } from '../text.ts';
 
 /**
@@ -379,7 +380,7 @@ export const FilledFocus: Story = {
   play: async ({ canvas }) => {
     await expect(matchMedia('(forced-colors: active)').matches).toBe(true);
     const button = canvas.getByRole('button', { name: 'Publish' });
-    await userEvent.tab();
+    await tab();
     await expect(button).toHaveFocus();
     await expect(button.matches(':focus-visible')).toBe(true);
     await expect(inkAndGround(button)).toEqual([computed('Canvas'), computed('CanvasText')]);

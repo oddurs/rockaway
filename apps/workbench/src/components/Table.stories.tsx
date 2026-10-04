@@ -21,6 +21,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useMemo, useState } from 'react';
 import type { SortDescriptor } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { press, tab } from '../keys.ts';
 import { measured, settled } from '../settled.ts';
 
 const meta = {
@@ -234,7 +235,7 @@ export const Keyboard: Story = {
     const rows = sortBy('name');
     const multi = { width: 44, selectionMode: 'multiple' } as const;
 
-    await userEvent.tab();
+    await tab();
     const first = rowOf(cellNamed(canvasElement, 'LICENSE'));
     await waitFor(() => expect(first).toHaveFocus());
     expect(screenshot(screen, { legend: false })).toBe(
@@ -242,8 +243,8 @@ export const Keyboard: Story = {
     );
 
     // Down moves the cursor; Space selects the row it is on.
-    await userEvent.keyboard('{ArrowDown}');
-    await userEvent.keyboard(' ');
+    await press('{ArrowDown}');
+    await press(' ');
     const readme = rowOf(cellNamed(canvasElement, 'README.md'));
     expect(readme).toHaveAttribute('aria-selected', 'true');
     expect(screenshot(screen, { legend: false })).toBe(
@@ -256,22 +257,22 @@ export const Keyboard: Story = {
     expect(getComputedStyle(cell).backgroundColor).toBe(resolved('--rk-bg-inverse', cell));
 
     // Right moves into the row's cells; the focused cell has the ring.
-    await userEvent.keyboard('{ArrowRight}');
+    await press('{ArrowRight}');
     expect(cell).toHaveFocus();
     expect(getComputedStyle(cell).outlineStyle).toBe('solid');
-    await userEvent.keyboard('{ArrowRight}');
+    await press('{ArrowRight}');
     expect(cellNamed(canvasElement, '340')).toHaveFocus();
-    await userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
+    await press('{ArrowLeft}{ArrowLeft}');
 
     // Up to the first row, and up again to the headers: Enter sorts.
-    await userEvent.keyboard('{ArrowUp}{ArrowUp}');
+    await press('{ArrowUp}{ArrowUp}');
     const name = canvas.getByRole('columnheader', { name: 'Name' });
     await waitFor(() => expect(name).toHaveFocus());
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(name).toHaveAttribute('aria-sort', 'descending'));
 
     // Tab leaves the grid, one stop.
-    await userEvent.tab();
+    await tab();
     expect(canvas.getByRole('button', { name: 'after' })).toHaveFocus();
     expect(box(screen)).toEqual(before);
   },
