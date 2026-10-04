@@ -28,7 +28,8 @@
  * The weight is the buffer's, because a heavier line is a different glyph;
  * the colour is the stylesheet's, from the `data-*` attributes React Aria's
  * `Group` writes on the frame. Under the `ascii` border set there is no
- * heavier line to draw, and the colour and the field's error carry it.
+ * heavier line to draw, so the frame's `+-|` go bold instead: the font draws
+ * ASCII, and bold is the weight it has (0183).
  *
  * `FieldFrame` is the part a framed control is drawn in. `Fieldset` is a
  * `FieldFrame` that is a group, named by its legend.

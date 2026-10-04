@@ -13,6 +13,10 @@
  * is measured, the cell is `1ch` by `1lh` — the font's own cell, which is what
  * the measurement will find — so a screen with a fixed size in cells does not
  * change size when it hydrates.
+ *
+ * A screen that fills a box with CSS `resize` shares its last cell with the
+ * browser's resize grip, which some engines draw over the box's corner: size
+ * such a box some other way, or a cell larger than the screen.
  */
 import type { Buffer, Size } from '@rockaway/grid';
 import {
