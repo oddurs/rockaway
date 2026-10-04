@@ -72,20 +72,22 @@ export const keyHintMeta: ComponentMetaInput = defineMeta({
     {
       title: 'One chord, each keyboard',
       description: 'An Apple keyboard, any other, and terminal notation.',
-      text: [
-        hint('mod+s', 'save', 'apple'),
-        hint('mod+s', 'save', 'other'),
-        hint('mod+s', 'save', 'other', 'terminal'),
-      ].join('\n'),
+      draw: (glyphs) =>
+        [
+          hint('mod+s', 'save', 'apple', 'platform', glyphs),
+          hint('mod+s', 'save', 'other', 'platform', glyphs),
+          hint('mod+s', 'save', 'other', 'terminal', glyphs),
+        ].join('\n'),
     },
     {
       title: 'A status bar',
-      text: [
-        hint('up', 'move', 'other'),
-        hint('enter', 'open', 'other'),
-        hint('esc', 'close', 'other'),
-        hint('ctrl+shift+k', 'delete', 'other'),
-      ].join('  '),
+      draw: (glyphs) =>
+        [
+          hint('up', 'move', 'other', 'platform', glyphs),
+          hint('enter', 'open', 'other', 'platform', glyphs),
+          hint('esc', 'close', 'other', 'platform', glyphs),
+          hint('ctrl+shift+k', 'delete', 'other', 'platform', glyphs),
+        ].join('  '),
     },
     {
       title: 'Under an ASCII theme',
