@@ -1,4 +1,4 @@
-import { toText } from '@rockaway/grid';
+import { fromText, toText } from '@rockaway/grid';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
@@ -69,5 +69,13 @@ describe('a screen rendered on a server (0126)', () => {
     );
     expect(html).toContain('class="rk-list-scrollbar"');
     expect(rows(html)).toEqual(['█', '░']);
+  });
+
+  test('renders braille with its dots, so the first paint draws it too (0166)', () => {
+    const html = renderToString(
+      createElement(Screen, { cols: 2, rows: 1, draw: () => fromText('⠋⣿') }),
+    );
+    expect(html).toContain('data-rk-shape="braille-280b" data-rk-dots="1 2 4"');
+    expect(html).toContain('data-rk-dots="1 2 3 4 5 6 7 8"');
   });
 });
