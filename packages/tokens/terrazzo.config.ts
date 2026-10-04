@@ -9,7 +9,7 @@ import { themeNames } from './src/themes.ts';
 /** Where to write; the staleness check points this at a temporary directory. */
 const out = process.env.RK_TOKENS_OUT ?? import.meta.dirname;
 
-const defaults = { theme: 'default', mode: 'light', density: 'normal' };
+const defaults = { theme: 'default', mode: 'light', contrast: 'standard', density: 'normal' };
 
 /** What a theme sets: raw colours for both modes, its type, its glyphs, its conformance (0052). */
 const themeTokens = ['palette.**', 'font.**', 'glyph.**', 'conformance'];
@@ -21,6 +21,17 @@ const themeTokens = ['palette.**', 'font.**', 'glyph.**', 'conformance'];
  * against the island's own colours (0015).
  */
 const paletteAliases = ['ansi.**', 'bg.**', 'fg.**', 'border.**', 'syntax.**', 'attribute.dim'];
+
+/**
+ * What increased contrast changes (0065): the semantic tier, re-read from the
+ * same palette, the line weights and the focus ring. A theme island and a
+ * `standard` island inside a `more` one re-declare the standard reading.
+ */
+const contrastTokens = [...paletteAliases.filter((t) => t !== 'ansi.**'), 'stroke.**', 'focus.**'];
+
+/** Every element that sets the reading for its subtree. */
+const MORE = "[data-rk-contrast='more']";
+const STANDARD = "[data-rk-contrast='standard']";
 
 /** Tokens that change with density. */
 const densityTokens = ['cell.**', 'space.**', 'row.**', 'size.**'];
@@ -72,11 +83,28 @@ const config: ConfigInit = defineConfig({
           input: defaults,
           prepare: (contents) => layer(rule(':root', `color-scheme: light dark;\n    ${contents}`)),
         },
-        // A theme island re-declares the aliases, so they read its palette.
+        // A theme island re-declares the aliases, so they read its palette;
+        // so does an island that asks for the standard contrast back (0065).
         {
           input: defaults,
-          include: paletteAliases,
-          prepare: (contents) => layer(rule('[data-rk-theme]', contents)),
+          include: [...paletteAliases, 'stroke.**', 'focus.**'],
+          prepare: (contents) => layer(rule(`[data-rk-theme],\n  ${STANDARD}`, contents)),
+        },
+        // Increased contrast, asked for on an element, and re-declared on
+        // every theme island inside it (0065).
+        {
+          input: { ...defaults, contrast: 'more' },
+          include: contrastTokens,
+          prepare: (contents) => layer(rule(`${MORE},\n  ${MORE} [data-rk-theme]`, contents)),
+        },
+        // Increased contrast from the reader's system, unless the page says
+        // standard: on the root, and on every theme island not inside a
+        // standard one.
+        {
+          input: { ...defaults, contrast: 'more' },
+          include: contrastTokens,
+          prepare: (contents) =>
+            `@layer rk.tokens {\n  @media (prefers-contrast: more) {\n    :root:not(${STANDARD}),\n    :root:not(${STANDARD}) [data-rk-theme]:not(${STANDARD}, ${STANDARD} *) {\n      ${contents}\n    }\n  }\n}`,
         },
         // The default theme as an island of its own, for inside another theme.
         {

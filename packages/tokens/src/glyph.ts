@@ -344,8 +344,23 @@ export const strokeWeights = {
   rule: { light: 1, heavy: 2, gap: 1 },
 } as const;
 
-export function strokes(): Group {
-  const { glyph, rule } = strokeWeights;
+/**
+ * Increased contrast (cairn 0065): every line a step heavier, light and heavy
+ * still apart so a focused frame still reads as heavier than a resting one.
+ * Only the ink thickens; a line still sits in the middle of its cell.
+ */
+export const moreContrastStrokeWeights = {
+  glyph: { light: 0.12, heavy: 0.22, gap: 0.12 },
+  rule: { light: 2, heavy: 3, gap: 1 },
+} as const;
+
+export type StrokeWeights = {
+  readonly glyph: { readonly light: number; readonly heavy: number; readonly gap: number };
+  readonly rule: { readonly light: number; readonly heavy: number; readonly gap: number };
+};
+
+export function strokes(weights: StrokeWeights = strokeWeights): Group {
+  const { glyph, rule } = weights;
   return {
     stroke: {
       $description:

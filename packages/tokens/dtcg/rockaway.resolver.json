@@ -88,6 +88,22 @@
       },
       "default": "light"
     },
+    "contrast": {
+      "description": "Contrast (cairn 0065): `more` is what prefers-contrast: more asks for. Re-reads the semantic tier from the same palette, and thickens lines and the focus ring.",
+      "contexts": {
+        "standard": [
+          {
+            "$ref": "contrast.standard.tokens.json"
+          }
+        ],
+        "more": [
+          {
+            "$ref": "contrast.more.tokens.json"
+          }
+        ]
+      },
+      "default": "standard"
+    },
     "density": {
       "description": "Density: the line box. Overrides cell.*, space.*, row.* and size.* only.",
       "contexts": {
@@ -124,6 +140,9 @@
     },
     {
       "$ref": "#/modifiers/mode"
+    },
+    {
+      "$ref": "#/modifiers/contrast"
     },
     {
       "$ref": "#/modifiers/density"
