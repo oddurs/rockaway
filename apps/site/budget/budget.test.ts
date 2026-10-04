@@ -67,6 +67,14 @@ const known: readonly Known[] = [
     ticket: 'give the landing page an h1 (proposed in the 0109 report)',
   },
   {
+    id: 'registry-pre-focus',
+    check: 'axe',
+    finding: /^\/registry\/ (light|dark): scrollable-region-focusable/,
+    reason:
+      "the registry page's install lines are `<pre>` written straight into the page, so they scroll across without the tab stop the Markdown pipeline gives a prose `pre`: a keyboard cannot scroll them",
+    ticket: "give the registry page's scrolling code a tab stop (proposed in the 0109 report)",
+  },
+  {
     id: 'concept-empty-header',
     check: 'axe',
     finding: /^\/concept\/ (light|dark): empty-table-header/,
