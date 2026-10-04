@@ -3,8 +3,10 @@ id: 171
 uid: 630abf97-8506-45f4-80cc-111863b55bd1
 title: Draw each component's snapshot in every theme on the site
 type: feature
-status: backlog
+status: doing
 milestone: site
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 47
 - 147
