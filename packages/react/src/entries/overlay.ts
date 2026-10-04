@@ -17,5 +17,6 @@ export {
   type OverlayPadding,
   OverlayPopover,
   type OverlayPopoverProps,
+  type OverlayShift,
   type OverlaySurfaceOptions,
 } from '../components/overlay.tsx';

@@ -13,7 +13,7 @@ describe('src/shapes.css', () => {
 
   test('draws every shape the engine knows, one layer per mark', () => {
     const css = stylesheet();
-    for (const shape of shapes.values()) {
+    for (const shape of [...shapes.values()].filter((s) => s.kind !== 'braille')) {
       const after = css.split(`[data-rk-shape="${shape.key}"]`)[1] ?? '';
       const block = after.slice(after.indexOf('{') + 1).split('}')[0] ?? '';
       expect(block, shape.ch).not.toBe('');
@@ -34,5 +34,16 @@ describe('src/shapes.css', () => {
     expect(await readFile(path.join(src, 'index.css'), 'utf8')).toContain(
       '@import "./shapes.css";',
     );
+  });
+
+  test('draws braille from one rule with a layer a dot, raised by data-rk-dots (0166)', () => {
+    const css = stylesheet();
+    const shared = css.split('[data-rk-shape^="braille-"] {')[1]?.split('}')[0] ?? '';
+    for (let dot = 1; dot <= 8; dot++) {
+      expect(shared).toContain(`--rk-dot-${dot}: none;`);
+      expect(shared).toContain(`var(--rk-dot-${dot})`);
+      expect(css).toContain(`[data-rk-dots~="${dot}"] {\n    --rk-dot-${dot}: var(--rk-ink);`);
+    }
+    expect(css).not.toContain('[data-rk-shape="braille-');
   });
 });
