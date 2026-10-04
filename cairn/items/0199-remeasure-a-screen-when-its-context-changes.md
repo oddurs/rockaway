@@ -49,3 +49,7 @@ Screen observes a 1ch x 1lh probe and remeasures on any context change; screen-r
 ## 2026-10-03
 
 CI's first full run with the probe found what stale screens had hidden: (1) at touch, a 22-row frame is 968px and the Storybook plugin sets every story's frame to 1200 x 900, so its screenshot was cut off and the bottom rows read as gaps; the capture now grows the frame to hold the element, inside a page made 1600 x 2400 so Vitest does not scale it. (2) A link standing alone in a frame is an 18px inline box at touch, not the 44px line box: known entry standalone-link-touch, ticket proposed. (3) Frame's variant stories passed 30s on CI with every screen read at every density: testTimeout is 60s. Locally on macOS only, Fieldset's Painters story leaks ink above its top-left corner at dense; Linux CI does not see it, so it is reported rather than declared (an entry would be stale on CI).
+
+## 2026-10-03
+
+Correction to the earlier note: growing the frame inside the capture changed the page under a check that had already measured it, and Prose's own lines check broke at airy and touch. The frame is now tall from the start instead: preview parameters give the Storybook plugin a 1200 x 2300 test frame per story, inside a 1600 x 2400 page, and the capture is a plain screenshot again. A screen taller than 2300px would still be cut off; nothing in the workbench is.

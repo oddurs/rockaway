@@ -43,8 +43,8 @@ type Screen = 'srgb' | 'display-p3-d65';
  * The page is bigger than the frame a story runs in. Vitest scales the frame
  * down to fit the page otherwise, and then a screenshot is not the pixels the
  * story drew — which the continuity check would rightly refuse. It is tall,
- * too: a screen at touch can run past the frame, and the capture grows the
- * frame to hold it (`vitest.setup.ts`), which has to stay inside the page.
+ * too: the frame is 1200 by 2300 (`preview.tsx`), so a screen at touch fits
+ * in it, and the page has to hold the frame without scaling it.
  */
 const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = false) => ({
   enabled: true as const,

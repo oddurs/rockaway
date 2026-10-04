@@ -101,6 +101,22 @@ const preview: Preview = {
   decorators: [withContexts],
   parameters: {
     layout: 'centered',
+    // The frame a story runs in under Vitest. The Storybook plugin makes it
+    // 1200 by 900 unless told otherwise, and a screenshot stops at its edge:
+    // at touch, twenty-two rows of 44px are 968, and the rows past the edge
+    // read as lines that stop short (cairn 0199). Tall from the start, so no
+    // story is resized in the middle of being checked. The page around it is
+    // taller still (`vitest.config.ts`), so the frame is never scaled.
+    viewport: {
+      options: {
+        'rk-test-frame': {
+          name: 'Test frame (1200 × 2300)',
+          styles: { width: '1200px', height: '2300px' },
+          type: 'desktop',
+        },
+      },
+      defaultViewport: 'rk-test-frame',
+    },
     // Every story is an accessibility test: a violation fails the run.
     a11y: { test: 'error' },
   },
