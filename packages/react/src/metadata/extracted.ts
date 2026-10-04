@@ -223,67 +223,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Column": {
-    "file": "table.tsx",
-    "props": [
-      {
-        "name": "children",
-        "type": "string",
-        "required": true,
-        "description": "The header's words."
-      },
-      {
-        "name": "width",
-        "type": "ColumnWidth",
-        "required": false,
-        "description": "Content cells (`12`), a share of the room left (`'1fr'`), or its widest value (`'auto'`).",
-        "default": "'auto'"
-      },
-      {
-        "name": "minWidth",
-        "type": "number",
-        "required": false,
-        "description": "The fewest content cells a share column shrinks to."
-      },
-      {
-        "name": "align",
-        "type": "'start' | 'end'",
-        "required": false,
-        "description": "`end` for numbers: they right-align on a cell boundary.",
-        "default": "'start'"
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      }
-    ],
-    "inherits": [
-      "Omit<AriaColumnProps, 'children' | 'className' | 'width' | 'minWidth' | 'textValue'>"
-    ],
-    "tokens": [
-      "--rk-attribute-underline-offset",
-      "--rk-bg-inverse",
-      "--rk-bg-page",
-      "--rk-bg-subtle",
-      "--rk-border-default",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-fg-muted",
-      "--rk-fg-on-inverse",
-      "--rk-font-family-mono",
-      "--rk-glyph-mark-overflow-end",
-      "--rk-glyph-mark-overflow-start",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
-  },
   "Checkbox": {
     "file": "checkbox.tsx",
     "props": [
@@ -388,6 +327,67 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled",
       "--rk-focus-offset",
       "--rk-focus-width"
+    ]
+  },
+  "Column": {
+    "file": "table.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The header's words."
+      },
+      {
+        "name": "width",
+        "type": "ColumnWidth",
+        "required": false,
+        "description": "Content cells (`12`), a share of the room left (`'1fr'`), or its widest value (`'auto'`).",
+        "default": "'auto'"
+      },
+      {
+        "name": "minWidth",
+        "type": "number",
+        "required": false,
+        "description": "The fewest content cells a share column shrinks to."
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'end'",
+        "required": false,
+        "description": "`end` for numbers: they right-align on a cell boundary.",
+        "default": "'start'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaColumnProps, 'children' | 'className' | 'width' | 'minWidth' | 'textValue'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-border-default",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Description": {
