@@ -1,5 +1,7 @@
 # Tokyo Night Night (dark), from https://github.com/folke/tokyonight.nvim
-# Unchanged by @rockaway/tokens: it passes the contrast gate as it is.
+# Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
+#   bright-blue: #8db0ff -> #95b8ff
+#   bright-red: #ff899d -> #ffa2b2
 #
 # Apache-2.0 licence. Copyright Folke Lemaitre.
 #
@@ -230,10 +232,10 @@ white = "#a9b1d6"
 
 [colors.bright]
 black = "#414868"
-red = "#ff899d"
+red = "#ffa2b2"
 green = "#9fe044"
 yellow = "#faba4a"
-blue = "#8db0ff"
+blue = "#95b8ff"
 magenta = "#c7a9ff"
 cyan = "#a4daff"
 white = "#c0caf5"
