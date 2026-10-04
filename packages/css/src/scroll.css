@@ -42,8 +42,10 @@
    * so its marks can be pinned (sticky) to whichever edge of the view they
    * belong to: the outermost cell at each side. A scroll-state query shows
    * each mark only while there is more past its edge, over `--rk-scroll-ground`
-   * so it hides the character under it. Where the query is not supported, no
-   * mark is drawn, and the region still scrolls.
+   * so it hides the character under it. Where the query is not supported, a
+   * small script (`watchOverflowMarks`) writes the same state as `data-rk-more`
+   * and the marks are shown from that (0218); with no script either, no mark
+   * is drawn, and the region still scrolls.
    *
    * The content is one element, `pre > code` or a table in a wrapper, and any
    * room at the sides is the content's padding rather than the region's: a
@@ -103,5 +105,16 @@
     .rk-prose :where(pre)::after {
       visibility: visible;
     }
+  }
+
+  /* The same state, written by the script where the query is missing. */
+  .rk-scroll-marks[data-rk-more~="start"]::before,
+  .rk-prose :where(pre)[data-rk-more~="start"]::before {
+    visibility: visible;
+  }
+
+  .rk-scroll-marks[data-rk-more~="end"]::after,
+  .rk-prose :where(pre)[data-rk-more~="end"]::after {
+    visibility: visible;
   }
 }

@@ -1,5 +1,7 @@
 # Catppuccin Mocha (dark), from https://github.com/catppuccin/ghostty
-# Unchanged by @rockaway/tokens: it passes the contrast gate as it is.
+# Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
+#   bright-blue: #89b4fa -> #95c1ff
+#   bright-red: #f38ba8 -> #ffa7c2
 #
 # MIT licence. Copyright (c) 2021 Catppuccin.
 #
@@ -50,10 +52,10 @@ white = "#a6adc8"
 
 [colors.bright]
 black = "#585b70"
-red = "#f38ba8"
+red = "#ffa7c2"
 green = "#a6e3a1"
 yellow = "#f9e2af"
-blue = "#89b4fa"
+blue = "#95c1ff"
 magenta = "#f5c2e7"
 cyan = "#94e2d5"
 white = "#bac2de"

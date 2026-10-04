@@ -20,11 +20,11 @@ for (const name of await readdir(dir))
 const results = checkContrast(files);
 const pad = (s: string, n: number) => s.padEnd(n);
 console.log(
-  `${pad('theme', 13)}${pad('mode', 6)}${pad('foreground', 20)}${pad('background', 24)}${pad('WCAG', 9)}${pad('min', 6)}${pad('margin', 8)}${pad('worst in', 17)}APCA Lc`,
+  `${pad('theme', 13)}${pad('mode', 6)}${pad('contrast', 10)}${pad('foreground', 20)}${pad('background', 24)}${pad('WCAG', 9)}${pad('min', 6)}${pad('margin', 8)}${pad('worst in', 17)}APCA Lc`,
 );
 for (const r of results) {
   console.log(
-    `${pad(r.theme, 13)}${pad(r.mode, 6)}${pad(r.fg, 20)}${pad(r.bg, 24)}${pad(`${r.ratio.toFixed(2)}:1`, 9)}${pad(String(r.min), 6)}${pad(`${r.margin >= 0 ? '+' : ''}${r.margin.toFixed(2)}`, 8)}${pad(r.view, 17)}${r.apca.toFixed(1).padStart(6)}${r.pass ? '' : '  FAIL'}`,
+    `${pad(r.theme, 13)}${pad(r.mode, 6)}${pad(r.contrast, 10)}${pad(r.fg, 20)}${pad(r.bg, 24)}${pad(`${r.ratio.toFixed(2)}:1`, 9)}${pad(String(r.min), 6)}${pad(`${r.margin >= 0 ? '+' : ''}${r.margin.toFixed(2)}`, 8)}${pad(r.view, 17)}${r.apca.toFixed(1).padStart(6)}${r.pass ? '' : '  FAIL'}`,
   );
 }
 const failures = results.filter((r) => !r.pass);
