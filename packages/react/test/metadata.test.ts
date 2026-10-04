@@ -88,6 +88,23 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       createElement(rockaway.ListItem, { id: 'a' }, 'a.ts'),
       createElement(rockaway.ListItem, { id: 'b' }, 'b.ts'),
     ),
+  Table: (props) =>
+    createElement(
+      rockaway.Table,
+      { 'aria-label': 'files', ...props },
+      createElement(
+        rockaway.TableHeader,
+        null,
+        // A column's words are required, and createElement's types cannot see them in its third argument.
+        // biome-ignore lint/correctness/noChildrenProp: as above
+        createElement(rockaway.Column, { id: 'name', isRowHeader: true, children: 'Name' }),
+      ),
+      createElement(
+        rockaway.TableBody,
+        null,
+        createElement(rockaway.Row, { id: 'a' }, createElement(rockaway.Cell, null, 'a.ts')),
+      ),
+    ),
 };
 
 /** A role a part may have without writing it, because its element implies it. */
@@ -578,6 +595,35 @@ describe('the snapshots, as the site draws them', () => {
       Shift+Up select
       S-Up select"
     `);
+  });
+
+  test('Table', () => {
+    expect(snapshots(byName('Table'))).toMatchInlineSnapshot(`
+      "── Three column kinds
+      ┌ files ───────┬────────┬──────────────────┐
+      │ Name        ▴│   Size │ Modified         │
+      ├──────────────┼────────┼──────────────────┤
+      │ LICENSE      │   1071 │ 2026-07-04       │
+      │▸README.md    │    340 │ 2026-09-12       │
+      │ package.json │     88 │ 2026-08-30       │
+      │ src/index.ts │   1204 │ 2026-10-01       │
+      └──────────────┴────────┴──────────────────┘
+      ── Multi-select
+      ┌───────────────┬────────┬─────────────────┐
+      │  Name        ▴│   Size │ Modified        │
+      ├───────────────┼────────┼─────────────────┤
+      │  LICENSE      │   1071 │ 2026-07-04      │
+      │▸✓README.md    │    340 │ 2026-09-12      │
+      │  package.json │     88 │ 2026-08-30      │
+      │ ✓src/index.ts │   1204 │ 2026-10-01      │
+      └───────────────┴────────┴─────────────────┘
+      ── Empty
+      ┌──────┬────────┬──────────────────────────┐
+      │ Name▴│   Size │ Modified                 │
+      ├──────┴────────┴──────────────────────────┤
+      │ Nothing here.                            │
+      └──────────────────────────────────────────┘"
+      `);
   });
 
   test('Keymap', () => {
