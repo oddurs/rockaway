@@ -112,7 +112,14 @@ test('get_component says which components there are when asked for one that is n
 describe('get_tokens', () => {
   test('answers every token with a custom property, in the default context', async () => {
     const { context, tokens } = await firstJson('get_tokens');
-    expect(context).toEqual({ theme: 'default', mode: 'light', density: 'normal' });
+    // Every modifier the resolver declares, at its default: theme, mode, contrast, density.
+    const resolver = tokenFile('rockaway.resolver.json') as {
+      modifiers: Record<string, { default: string }>;
+    };
+    expect(context).toEqual(
+      Object.fromEntries(Object.entries(resolver.modifiers).map(([n, m]) => [n, m.default])),
+    );
+    expect(Object.keys(context)).toEqual(expect.arrayContaining(['theme', 'mode', 'density']));
     expect(tokens.map((t: { path: string }) => t.path).sort()).toEqual(Object.keys(vars).sort());
     for (const token of tokens) {
       expect(`var(${token.name})`).toBe(vars[token.path as keyof typeof vars]);
