@@ -20,6 +20,8 @@ after them. `<name>` is kebab-case (`key-hint`); `<Name>` is the export.
 | `packages/react/src/components/<name>.pure.ts` | The pure half: variants, chrome, the buffer function. No React, no `'use client'`. |
 | `packages/react/src/components/<name>.tsx` | The component, with `'use client'` on its first line. |
 | `packages/react/src/components/<name>.meta.ts` | Its metadata: what it is for, its anatomy, states, keys and snapshots. |
+| `packages/react/src/components/<name>.fixture.ts` | The component rendered once, as small as it can be: `metadata.test.ts`'s evidence for its roles and attributes. |
+| `packages/react/src/components/<name>.snapshots.txt` | Its metadata's snapshots as the site draws them, written by `metadata.test.ts` (`vitest -u`) and checked by it after. |
 | `packages/react/src/entries/<name>.ts` | `@rockaway/react/<name>`, and the one list of what it makes public. |
 | `packages/css/src/components/<name>.css` | Its stylesheet, inside `@layer rk.components`. |
 | `packages/react/test/<name>.test.ts` | The buffer function, in Node, with inline text snapshots. |
@@ -28,7 +30,7 @@ after them. `<name>` is kebab-case (`key-hint`); `<Name>` is the export.
 
 ### The lines
 
-Each barrel gets one line, and the metadata list gets one entry:
+Each barrel gets one line:
 
 ```ts
 // packages/react/src/entries/button.ts
@@ -54,11 +56,10 @@ export * from './entries/button.ts';
 @import "./components/button.css";
 ```
 
-```ts
-// packages/react/src/metadata/index.ts
-import { buttonMeta } from '../components/button.meta.ts';
-// …and buttonMeta in the `sources` list.
-```
+The metadata has no list to add to: `pnpm --filter @rockaway/react metadata`
+writes the registry, `src/metadata/components.ts`, from every `*.meta.ts`
+beside a component. It is generated, so on a merge conflict take either side
+and run it again; `metadata.test.ts` fails while it is stale (0262).
 
 The entry names the component's public values and types. Anything else its
 files export, for tests or for the metadata, stays private. The build, the
