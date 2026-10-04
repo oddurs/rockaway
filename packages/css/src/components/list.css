@@ -106,6 +106,8 @@
   @media (forced-colors: active) {
     .rk-list-item[data-selected] {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }

@@ -144,8 +144,16 @@ function checkOne(field: HTMLElement, glyphs: Glyphs): FieldProblem[] {
     controls.some(
       (c) => c.getAttribute('aria-required') === 'true' || (c as HTMLInputElement).required,
     );
-  if (label && !edge) {
-    const mark = label.querySelector('.rk-label-mark');
+  // A field inside another (a checkbox in a group) leaves the mark to the
+  // group: its legend says the group is required, once.
+  const grouped = (field.parentElement?.closest('.rk-field') ?? null) !== null;
+  // The mark's cell: the label's, or, for a control that carries its own
+  // words (a checkbox), the one after those words.
+  const ownMark = label
+    ? null
+    : ([...field.querySelectorAll('.rk-label-mark')].find((el) => own(field, el)) ?? null);
+  if ((label && !edge) || (ownMark && !grouped)) {
+    const mark = label ? label.querySelector('.rk-label-mark') : ownMark;
     if (!mark) {
       problems.push('its label has no cell for the required mark');
     } else {
@@ -155,7 +163,9 @@ function checkOne(field: HTMLElement, glyphs: Glyphs): FieldProblem[] {
       }
       if (required && !drawn) {
         problems.push(
-          'it is required and its label draws no mark: pass the field’s isRequired to Label',
+          label
+            ? 'it is required and its label draws no mark: pass the field’s isRequired to Label'
+            : 'it is required and draws no mark after its words',
         );
       }
       if (!required && drawn) {

@@ -975,6 +975,9 @@
       "cursor": {
         "$value": "▸"
       },
+      "prompt": {
+        "$value": "›"
+      },
       "expanded": {
         "$value": "▾"
       },
