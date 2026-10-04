@@ -39,6 +39,11 @@
             "$ref": "theme.phosphor.tokens.json"
           }
         ],
+        "ascii": [
+          {
+            "$ref": "theme.ascii.tokens.json"
+          }
+        ],
         "catppuccin": [
           {
             "$ref": "theme.catppuccin.tokens.json"

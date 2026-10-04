@@ -14,6 +14,10 @@ ink
 phosphor
   light cyan: #007b81 → #007279 (for fg.info on bg.page)
   light green: #008130 → #007f2f (for fg.success on bg.success.subtle)
+ascii
+  light blue: #0074a3 → #00719f (for fg.accent on bg.accent.subtle)
+  light cyan: #007b81 → #007279 (for fg.info on bg.page)
+  light green: #008130 → #007f2f (for fg.success on bg.success.subtle)
 catppuccin
   light foreground: #4c4f69 → #3b3d56 (for fg.default on bg.surface)
   light muted: #797c91 → #575a6d (for fg.muted on bg.page)
