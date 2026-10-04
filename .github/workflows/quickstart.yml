@@ -1,0 +1,64 @@
+name: Quickstart
+
+# The getting-started guide, followed from a clean install the way a stranger
+# follows it (cairn 0155): pack the four packages, scaffold a new app outside
+# the workspace with the framework's own starter, install the tarballs, write
+# in the guide's code verbatim (extracted from docs/getting-started.md, never
+# copied by hand), build it, and read the screen back as text in a browser.
+#
+# Its own workflow, so it runs beside CI rather than after it, and only when
+# what it proves can have changed: the packages, the guide, or the script.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
+      - 'docs/getting-started.md'
+      - 'apps/site/scripts/quickstart.ts'
+      - '.github/workflows/quickstart.yml'
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'docs/getting-started.md'
+      - 'apps/site/scripts/quickstart.ts'
+      - '.github/workflows/quickstart.yml'
+
+concurrency:
+  group: quickstart-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quickstart:
+    name: Quickstart in ${{ matrix.app }}
+    runs-on: ubuntu-latest
+    strategy:
+      # One framework failing says nothing about the other.
+      fail-fast: false
+      matrix:
+        # Vite + React, and Next.js's app router importing from a server
+        # component. Each app is its own job, so they run side by side.
+        app: [vite, next]
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # What gets packed is what gets published: the packages' dist.
+      - name: Build packages
+        run: pnpm -r --filter './packages/*' build
+
+      - name: Install Chromium
+        run: pnpm --filter site exec playwright install --with-deps chromium
+
+      - name: Follow the guide in ${{ matrix.app }}
+        run: pnpm --filter site quickstart ${{ matrix.app }}

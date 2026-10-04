@@ -34,3 +34,7 @@ first time a stranger tries it.
 ## 2026-10-03
 
 Claimed past 0107: the guide and its quickstart fences are on main (#113); 0107 stays open only for its link to the component recipe, which 0155 does not need.
+
+## 2026-10-03
+
+Locally, from a clean temporary directory: Vite (create-vite 9.2.1, react-ts) builds and its screen matches the guide's in 18s; Next.js (create-next-app 16.3.8, app router, the page a server component importing Frame and Button) in 60s, both with a warm npm cache. The script on main failed before it reached the screen: the testing entry it loads into the page now imports @rockaway/tokens as well as @rockaway/grid, and its little server rewrote only grid's bare import; it now rewrites any of the four packages'. The job is a workflow of its own, a matrix of vite and next, so the two run side by side and beside CI, and only on pushes and pull requests that touch packages/, the guide, the script or the workflow.
