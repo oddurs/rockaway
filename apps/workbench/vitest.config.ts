@@ -9,6 +9,7 @@ import {
   printToPdf,
   readWithoutScripts,
   recordKnown,
+  watchdog,
 } from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
 import { known } from './.storybook/known.ts';
@@ -68,7 +69,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = fa
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown },
+  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown, watchdog },
 });
 
 /**
