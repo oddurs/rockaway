@@ -1,0 +1,32 @@
+/*
+ * KeymapHelp (cairn 0141).
+ *
+ * Every active shortcut in two columns of cells: the keys, as wide as the
+ * widest chord, two cells of air, and what they do. Each row is one
+ * binding; a description too long for its column wraps under itself.
+ */
+@layer rk.components {
+  .rk-keymap-help {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: var(--rk-x-2);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* A row groups its term and description for the reader; the grid places them. */
+  .rk-keymap-help-row {
+    display: contents;
+  }
+
+  .rk-keymap-help-keys,
+  .rk-keymap-help-description {
+    margin: 0;
+  }
+
+  .rk-keymap-help-description {
+    color: var(--rk-fg-default);
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
