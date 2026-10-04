@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 45% · 45 of 101 done · due 2027-01-31
+`#####·····` 46% · 46 of 101 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -144,7 +144,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0185`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0185-check-0072-s-type-rule-in-conformance.md) Check 0072's type rule in conformance <sup>feature · tooling · p2</sup>
 - [ ] [`0186`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0186-make-the-full-workbench-run-hold-up-under-load.md) Make the full workbench run hold up under load <sup>chore · tooling · p2</sup>
 - [ ] [`0189`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0189-speak-meta-not-command-off-apple-keyboards.md) Speak Meta, not Command, off Apple keyboards <sup>bug · components · p3</sup>
-- [ ] [`0190`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0190-show-attributes-of-real-elements-in-screenshot-s-legend.md) Show attributes of real elements in screenshot()'s legend <sup>feature · tooling · p3</sup>
 - [ ] [`0191`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0191-report-an-off-grid-box-inside-nested-screens-once.md) Report an off-grid box inside nested screens once <sup>bug · tooling · p3</sup>
 - [ ] [`0192`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0192-tighten-what-the-metadata-extractor-credits-to-a-component.md) Tighten what the metadata extractor credits to a component <sup>bug · tooling · p3</sup>
 - [ ] [`0193`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0193-rename-screen-s-chrome-layer-from-rk-frame-to-rk-chrome.md) Rename Screen's chrome layer from rk-frame to rk-chrome <sup>chore · components · p3</sup>
@@ -210,6 +209,7 @@ The component contract, proven on a first set of components.
 - [x] [`0178`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0178-make-border-default-a-boundary-you-can-see-3-1-against-every-ground.md) Make border.default a boundary you can see: 3:1 against every ground <sup>bug · tokens · p0</sup>
 - [x] [`0181`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0181-make-reverse-video-survive-forced-colors-everywhere.md) Make reverse video survive forced colors everywhere <sup>bug · css · p1</sup>
 - [x] [`0184`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0184-selected-and-disabled-rows-trap-the-first-arrow-key.md) Selected-and-disabled rows trap the first arrow key <sup>bug · components · p2</sup>
+- [x] [`0190`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0190-show-attributes-of-real-elements-in-screenshot-s-legend.md) Show attributes of real elements in screenshot()'s legend <sup>feature · tooling · p3</sup>
 - [x] [`0197`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0197-meet-wcag-2-2-aa-target-size-at-the-default-density-and-44px-at-touch.md) Meet WCAG 2.2 AA target size at the default density, and 44px at touch <sup>decision · tokens · p0</sup>
 - [x] [`0198`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0198-set-the-density-line-boxes-to-meet-aa-at-normal-and-44px-at-touch.md) Set the density line boxes to meet AA at normal and 44px at touch <sup>bug · tokens · p0</sup>
 - [x] [`0200`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0200-clear-a-control-s-background-in-the-reset.md) Clear a control's background in the reset <sup>bug · css · p1</sup>
@@ -239,7 +239,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`###·······` 24% · 6 of 25 done · due 2027-02-21
+`###·······` 28% · 7 of 25 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -247,7 +247,6 @@ A website built out of the system it documents, which is the only honest way
 
 - [ ] [`0104`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0104-build-the-site-shell-as-a-tui.md) Build the site shell as a TUI <sup>feature · site · p0</sup>
 - [ ] [`0105`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0105-make-every-screen-copyable-as-text-and-as-ansi.md) Make every screen copyable as text and as ANSI <sup>feature · site · p1</sup>
-- [ ] [`0106`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0106-write-the-foundations-pages.md) Write the foundations pages <sup>docs · docs · p0</sup>
 - [ ] [`0108`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0108-build-the-landing-page.md) Build the landing page <sup>feature · site · p0</sup>
 - [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0113`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p1</sup>
@@ -272,6 +271,7 @@ A website built out of the system it documents, which is the only honest way
 
 - [x] [`0077`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0077-build-the-site-as-the-system-statically-on-pages.md) Build the site as the system, statically, on Pages <sup>decision · site · p0</sup>
 - [x] [`0103`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0103-scaffold-the-site-astro-islands-static-pages.md) Scaffold the site: Astro, islands, static, Pages <sup>chore · tooling · p0</sup>
+- [x] [`0106`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0106-write-the-foundations-pages.md) Write the foundations pages <sup>docs · docs · p0</sup>
 - [x] [`0143`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0143-set-prose-on-the-grid-headings-lists-quotes-code-and-tables-from-markdown.md) Set prose on the grid: headings, lists, quotes, code and tables from Markdown <sup>feature · css · p0</sup>
 - [x] [`0144`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0144-highlight-code-in-the-ansi-16.md) Highlight code in the ANSI 16 <sup>feature · tokens · p1</sup>
 - [x] [`0170`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0170-typecheck-astro-files.md) Typecheck .astro files <sup>chore · tooling · p2</sup>
@@ -291,9 +291,12 @@ Something another project can install and build on.
 - [ ] [`0153`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0153-decide-what-is-public-api-and-what-counts-as-a-breaking-change.md) Decide what is public API, and what counts as a breaking change <sup>decision · distribution · p0</sup>
 - [ ] [`0154`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0154-claim-the-rockaway-npm-scope-and-set-up-trusted-publishing.md) Claim the @rockaway npm scope and set up trusted publishing <sup>chore · distribution · p0 · needs-owner</sup>
 - [ ] [`0155`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0155-prove-the-quickstart-from-a-clean-install-in-ci.md) Prove the quickstart from a clean install in CI <sup>chore · tooling · p0</sup>
-- [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
 - [ ] [`0157`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0157-walk-every-component-with-voiceover-and-nvda-and-record-what-is-heard.md) Walk every component with VoiceOver and NVDA, and record what is heard <sup>chore · components · p1 · needs-owner</sup>
 - [ ] [`0158`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0158-launch-tag-0-1-0-publish-and-post-show-hn.md) Launch: tag 0.1.0, publish, and post Show HN <sup>chore · distribution · p1 · needs-owner</sup>
+
+### in review
+
+- [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
 
 ### done
 
