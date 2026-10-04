@@ -31,26 +31,15 @@
  * so pressing it expands the row and never follows its link. Guides and marks
  * are `aria-hidden`; the level, the expanded state and the position in the set
  * are the treegrid's to announce.
- *
- * `NavigationTree` is the same rows for a site's navigation (cairn 0104): each
- * label is a real link, so a row opens in a new tab and works with no script,
- * and the page you are on is the selected row, in reverse video and
- * `aria-current`. Its keyboard is React Aria's NavigationTree.
  */
 import type { Buffer } from '@rockaway/grid';
 import { type CSSProperties, createContext, type ReactNode, useContext } from 'react';
 import {
-  Link as AriaLink,
-  NavigationTree as AriaNavigationTree,
-  NavigationTreeItem as AriaNavigationTreeItem,
-  type NavigationTreeItemProps as AriaNavigationTreeItemProps,
-  type NavigationTreeProps as AriaNavigationTreeProps,
   Tree as AriaTree,
   TreeItem as AriaTreeItem,
   type TreeItemProps as AriaTreeItemProps,
   type TreeProps as AriaTreeProps,
   Button,
-  NavigationTreeItemContent,
   TreeItemContent,
   type TreeItemContentRenderProps,
 } from 'react-aria-components';
@@ -87,7 +76,7 @@ export function Tree<T extends object>({
 }
 
 /** A row's place in the collection: its level, and which of it and its ancestors are last. */
-function lineageOf(render: RowRender): TreeLineage {
+function lineageOf(render: TreeItemContentRenderProps): TreeLineage {
   const { collection } = render.state;
   const isLast = (key: unknown): boolean => {
     let node = collection.getItem(key as never);
@@ -143,61 +132,6 @@ export interface TreeItemProps<T extends object>
   readonly className?: string;
 }
 
-/** What a row needs from React Aria to draw itself, from either tree. */
-type RowRender = Pick<
-  TreeItemContentRenderProps,
-  'id' | 'level' | 'state' | 'hasChildItems' | 'isExpanded' | 'isSelected' | 'selectionMode'
->;
-
-/**
- * A row's cells, in order: cursor, check, guides, expand, air, label. Shared
- * by both trees, so a navigation row is a file row whose label is a link.
- */
-function Row({
-  render,
-  cursor: isCursor,
-  label,
-}: {
-  readonly render: RowRender;
-  readonly cursor: boolean;
-  readonly label: ReactNode;
-}): ReactNode {
-  const glyphs = useGlyphs();
-  const lineage = lineageOf(render);
-  const leaf = !render.hasChildItems;
-  const multiple = render.selectionMode === 'multiple';
-  const [cursor, check] = treeMarks(
-    { cursor: isCursor, selected: render.isSelected },
-    multiple,
-    glyphs,
-  );
-  const mark = treeExpandMark(!leaf, render.isExpanded, glyphs);
-  return (
-    <>
-      <span aria-hidden="true" className="rk-tree-mark rk-tree-cursor">
-        {cursor}
-      </span>
-      {check === undefined ? null : (
-        <span aria-hidden="true" className="rk-tree-mark rk-tree-check">
-          {check}
-        </span>
-      )}
-      <Guides buffer={treeGuides(lineage, leaf, glyphs)} />
-      {mark !== undefined ? (
-        // React Aria's chevron: it expands and collapses, and never
-        // follows the row's link. Its name comes from React Aria.
-        <Button slot="chevron" className="rk-tree-mark rk-tree-chevron">
-          <span aria-hidden="true">{mark}</span>
-        </Button>
-      ) : lineage.level <= 1 ? (
-        <span aria-hidden="true" className="rk-tree-mark" />
-      ) : null}
-      <span aria-hidden="true" className="rk-tree-mark" />
-      {label}
-    </>
-  );
-}
-
 /**
  * A row, and the rows under it. React Aria draws rows from its collection, not
  * from this component, so everything that reads the row's place does it inside
@@ -210,6 +144,7 @@ export function TreeItem<T extends object>({
   className,
   ...item
 }: TreeItemProps<T>): ReactNode {
+  const glyphs = useGlyphs();
   return (
     <AriaTreeItem
       {...item}
@@ -217,85 +152,43 @@ export function TreeItem<T extends object>({
       className={cx('rk-tree-item', className)}
     >
       <TreeItemContent>
-        {(render) => (
-          <Row
-            render={render}
-            cursor={render.isFocused}
-            label={<span className="rk-tree-label">{title}</span>}
-          />
-        )}
+        {(render) => {
+          const lineage = lineageOf(render);
+          const leaf = !render.hasChildItems;
+          const multiple = render.selectionMode === 'multiple';
+          const [cursor, check] = treeMarks(
+            { cursor: render.isFocused, selected: render.isSelected },
+            multiple,
+            glyphs,
+          );
+          const mark = treeExpandMark(!leaf, render.isExpanded, glyphs);
+          return (
+            <>
+              <span aria-hidden="true" className="rk-tree-mark rk-tree-cursor">
+                {cursor}
+              </span>
+              {check === undefined ? null : (
+                <span aria-hidden="true" className="rk-tree-mark rk-tree-check">
+                  {check}
+                </span>
+              )}
+              <Guides buffer={treeGuides(lineage, leaf, glyphs)} />
+              {mark !== undefined ? (
+                // React Aria's chevron: it expands and collapses, and never
+                // follows the row's link. Its name comes from React Aria.
+                <Button slot="chevron" className="rk-tree-mark rk-tree-chevron">
+                  <span aria-hidden="true">{mark}</span>
+                </Button>
+              ) : lineage.level <= 1 ? (
+                <span aria-hidden="true" className="rk-tree-mark" />
+              ) : null}
+              <span aria-hidden="true" className="rk-tree-mark" />
+              <span className="rk-tree-label">{title}</span>
+            </>
+          );
+        }}
       </TreeItemContent>
       {children}
     </AriaTreeItem>
-  );
-}
-
-export interface NavigationTreeProps<T extends object>
-  extends Omit<AriaNavigationTreeProps<T>, 'className' | 'style' | 'selectedRoute'> {
-  /** The page you are on, as the `href` of its row: drawn in reverse video, and `aria-current`. */
-  readonly current?: string;
-  /** How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in. */
-  readonly painter?: StrokeStyle;
-  readonly className?: string;
-  readonly style?: CSSProperties;
-}
-
-/**
- * A site's navigation: the same rows as `Tree`, whose labels are links. Each
- * label is an `a` with its `href`, so a row opens in a new tab, copies as a
- * link and works before any script has run. The keyboard is React Aria's
- * NavigationTree: Tab into the tree, and arrows between its links.
- */
-export function NavigationTree<T extends object>({
-  current,
-  painter = 'glyph',
-  className,
-  style,
-  ...tree
-}: NavigationTreeProps<T>): ReactNode {
-  return (
-    <Strokes.Provider value={painter}>
-      <AriaNavigationTree
-        {...tree}
-        selectedRoute={current ?? null}
-        className={cx('rk-tree', className)}
-        {...(style === undefined ? {} : { style })}
-      />
-    </Strokes.Provider>
-  );
-}
-
-export interface NavigationTreeItemProps<T extends object>
-  extends Omit<AriaNavigationTreeItemProps<T>, 'className' | 'children' | 'textValue' | 'style'> {
-  /** The row's label, the link's text, and what type-ahead matches. */
-  readonly title: string;
-  /** Where the row goes. */
-  readonly href: string;
-  /** The rows under this one. A row with children carries the expand mark. */
-  readonly children?: ReactNode;
-  readonly className?: string;
-}
-
-/** A row of a `NavigationTree`: its label a link to `href`, and the rows under it. */
-export function NavigationTreeItem<T extends object>({
-  title,
-  children,
-  className,
-  ...item
-}: NavigationTreeItemProps<T>): ReactNode {
-  return (
-    <AriaNavigationTreeItem {...item} textValue={title} className={cx('rk-tree-item', className)}>
-      <NavigationTreeItemContent>
-        {(render) => (
-          <Row
-            render={render}
-            // Focus rests on the row's link rather than the row: either is the cursor.
-            cursor={render.isFocused || render.isFocusVisible}
-            label={<AriaLink className="rk-tree-label">{title}</AriaLink>}
-          />
-        )}
-      </NavigationTreeItemContent>
-      {children}
-    </AriaNavigationTreeItem>
   );
 }

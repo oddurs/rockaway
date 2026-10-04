@@ -2,4 +2,7 @@ blank_issues_enabled: false
 contact_links:
   - name: Roadmap
     url: https://github.com/oddurs/rockaway/blob/main/ROADMAP.md
-    about: Planned work is tracked as cairn items in the repository, not as issues.
+    about: Planned work is tracked as cairn items in the repository, not as issues. Check here before asking for a component.
+  - name: Report a security vulnerability
+    url: https://github.com/oddurs/rockaway/security/advisories/new
+    about: Privately, please, not in a public issue. See SECURITY.md.

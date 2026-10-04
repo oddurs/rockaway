@@ -8,7 +8,7 @@ import {
   KeymapEngine,
   type KeyStroke,
   keymapHelpBuffer,
-} from '../src/components/keymap.tsx';
+} from '../src/components/keymap.pure.ts';
 
 /** A keystroke as the DOM would report it. */
 function stroke(key: string, held: Partial<Omit<KeyStroke, 'key'>> = {}): KeyStroke {

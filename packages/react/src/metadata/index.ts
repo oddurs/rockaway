@@ -21,6 +21,7 @@ import { frameMeta } from '../components/frame.meta.ts';
 import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
+import { linkTreeMeta } from '../components/link-tree.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
 import { panesMeta } from '../components/panes.meta.ts';
 import { statusBarMeta } from '../components/status-bar.meta.ts';
@@ -65,6 +66,7 @@ const sources: readonly ComponentMetaInput[] = [
   keyHintMeta,
   keymapMeta,
   linkMeta,
+  linkTreeMeta,
   listMeta,
   panesMeta,
   statusBarMeta,
