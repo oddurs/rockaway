@@ -21,7 +21,15 @@
  * `data-focus-visible` and `data-disabled`, and the CSS reads nothing else:
  * there is no state in here that is not in the DOM.
  */
-import { type ReactNode, type Ref, type RefCallback, useCallback, useEffect, useRef } from 'react';
+import {
+  type JSX,
+  type ReactElement,
+  type ReactNode,
+  type Ref,
+  type RefCallback,
+  useCallback,
+  useRef,
+} from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
@@ -110,9 +118,6 @@ export function Button({
   ref,
   ...aria
 }: ButtonProps): ReactNode {
-  // React Aria filters the DOM props it forwards down to the labelling set, so
-  // `aria-keyshortcuts` never reaches the element through props. It is the right
-  // attribute for a chord, so it goes on afterwards, by hand.
   const host = useRef<HTMLButtonElement>(null);
   // The caller's ref as well as Button's own: spreading props first and then
   // setting `ref={host}` used to drop the caller's on the floor.
@@ -121,12 +126,17 @@ export function Button({
   // is told Meta+S, never Control+S (cairn 0132).
   const keyboard = usePlatform(platform);
   const shortcut = keys === undefined ? undefined : keyShortcut(keys, keyboard);
-  useEffect(() => {
-    const el = host.current;
-    if (!el) return;
-    if (shortcut === undefined) el.removeAttribute('aria-keyshortcuts');
-    else el.setAttribute('aria-keyshortcuts', shortcut);
-  }, [shortcut]);
+  // React Aria filters the DOM props it forwards down to the labelling set, so
+  // `aria-keyshortcuts` never reaches the element through props. Its `render`
+  // prop draws the button element itself, so the attribute goes on there, in
+  // the render: on the server too, where an effect would never run, and a page
+  // that is never hydrated still announces its chords.
+  const render = useCallback(
+    (props: JSX.IntrinsicElements['button']): ReactElement => (
+      <button {...props} aria-keyshortcuts={shortcut} />
+    ),
+    [shortcut],
+  );
   // Inside a Keymap, `keys` is bound as well as described: one spec for the
   // hint, the announcement and the binding. The binding presses the button,
   // so a disabled one is not bound, and the help screen names it by its label.
@@ -143,6 +153,7 @@ export function Button({
     <AriaButton
       {...aria}
       ref={refs}
+      render={render}
       className={cx('rk-button', className)}
       {...buttonVariants.dataAttributes(chosen)}
     >
