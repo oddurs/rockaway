@@ -635,6 +635,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       reader.on('console', (message) => {
         if (message.type() === 'error') errors.push(message.text());
       });
+      const shipped = scriptsOf(reader);
       await reader.goto(`${origin}${base}examples/git-client/`);
       if (density) {
         await reader.evaluate((d) => {
@@ -644,6 +645,11 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       await reader.waitForSelector('astro-island:not([ssr])');
       const narrow = width < 600;
       const at = `${width}px${density ? `, ${density}` : ''}`;
+      // The app is React: what prose is held to finds it here, so it is not vacuous there.
+      expect(
+        (await shipped()).some(({ text }) => REACT.test(text)),
+        at,
+      ).toBe(true);
 
       // Under 60 cells it is tabs, one pane at a time; over, every pane at once.
       if (narrow) await reader.getByRole('tab', { name: 'Files' }).waitFor();
