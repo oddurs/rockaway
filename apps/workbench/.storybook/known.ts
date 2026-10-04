@@ -71,7 +71,6 @@ export const known: readonly Known[] = [
     element: /./,
     reason:
       "a region's overflow marks are shown by `@container scroll-state(scrollable: …)`, which only Chromium implements: in Firefox and WebKit a table or a code block that scrolls across never shows the mark that says there is more (measured: the end mark's visibility stays hidden)",
-    ticket:
-      'show overflow marks where scroll-state queries are missing (proposed in the 0124 report)',
+    ticket: '0218: show overflow marks where scroll-state queries are missing',
   },
 ];
