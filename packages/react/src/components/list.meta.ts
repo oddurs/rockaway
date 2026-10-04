@@ -166,6 +166,6 @@ export const listMeta: ComponentMetaInput = defineMeta({
     },
   ],
   knownIssues: [
-    "Under NODE_ENV=test, React Aria's virtualiser reads process.env.VIRT_ON (react-stately 3.50.0, Virtualizer.mjs line 144), and a browser has no process, so List throws in a real-browser test run. Before the tests, give the page one: globalThis.process ??= { env: { VIRT_ON: '1' } }. Under jsdom, set VIRT_ON=1 instead, or the virtualiser renders every row.",
+    "Under NODE_ENV=test, React Aria's virtualiser reads process.env.VIRT_ON (react-stately 3.50.0, Virtualizer.mjs line 144 and Rect.mjs line 61), and a browser has no process, so List throws when its tests run in a real browser. Before the tests, give the page one: globalThis.process ??= { env: { VIRT_ON: '1' } }. Under jsdom nothing is needed: there the virtualiser renders every row on purpose, since jsdom has no layout. Reporting it upstream is cairn 0239.",
   ],
 });
