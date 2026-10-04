@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 Tokyo Night Night (dark), from https://github.com/folke/tokyonight.nvim
-Unchanged by @rockaway/tokens: it passes the contrast gate as it is.
+Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
+  bright-blue: #8db0ff -> #95b8ff
+  bright-red: #ff899d -> #ffa2b2
 
 Apache-2.0 licence. Copyright Folke Lemaitre.
 
@@ -335,9 +337,9 @@ Apache-2.0 licence. Copyright Folke Lemaitre.
 		<key>Red Component</key>
 		<real>1.000000</real>
 		<key>Green Component</key>
-		<real>0.537255</real>
+		<real>0.635294</real>
 		<key>Blue Component</key>
-		<real>0.615686</real>
+		<real>0.698039</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -372,9 +374,9 @@ Apache-2.0 licence. Copyright Folke Lemaitre.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.552941</real>
+		<real>0.584314</real>
 		<key>Green Component</key>
-		<real>0.690196</real>
+		<real>0.721569</real>
 		<key>Blue Component</key>
 		<real>1.000000</real>
 		<key>Alpha Component</key>
