@@ -78,6 +78,8 @@
   @media (forced-colors: active) {
     .rk-link[data-pressed] {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }
