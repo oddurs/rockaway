@@ -108,6 +108,9 @@ export const Bars: Story = {
  * the progress tick. No value is announced.
  */
 export const Indeterminate: Story = {
+  // It moves, so a screenshot can catch it between two frames: its cells are
+  // read back at rest, in the reduced-motion story, and the continuity stories.
+  parameters: { continuity: false },
   beforeEach: motion('full'),
   render: () => (
     <Frame title="resolving" cols={40} rows={3}>
@@ -249,6 +252,9 @@ export const Sparklines: Story = {
 
 /** A spinner on the tick: its label is what a reader hears, and the frame moves. */
 export const Spinning: Story = {
+  // It moves, so a screenshot can catch it between two frames: its cells are
+  // read back at rest, in the reduced-motion story, and the continuity stories.
+  parameters: { continuity: false },
   beforeEach: motion('full'),
   render: () => (
     <Frame title="indexing" cols={30} rows={3}>
