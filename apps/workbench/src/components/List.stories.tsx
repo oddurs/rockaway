@@ -726,7 +726,7 @@ async function rest(box: HTMLElement): Promise<number> {
 
 /**
  * A short list turned by the wheel, at every density (0115): a wheel notch and
- * a trackpad's small step each come to rest on a whole row. Snapping is
+ * a trackpad's step of less than a row each come to rest on a whole row. Snapping is
  * "proximity" so that a virtualised jump is not pulled back to the rendered
  * rows; with rows one cell apart, every position is near one, so a short list
  * snaps as it did under "mandatory". Only the test runner has a real wheel.
@@ -747,19 +747,24 @@ export const Wheel: Story = {
     await settled();
     const run = runner();
     if (!run) return;
-    for (const density of DENSITIES) {
-      const frame = canvas.getByRole('group', { name: `wheel, ${density}` });
-      const cell = cellOf(frame);
-      const box = canvas.getByRole('listbox', { name: `Files, ${density}` });
-      const selector = `[role="listbox"][aria-label="Files, ${density}"]`;
-      for (const delta of [100, Math.round(cell.height * 1.4), Math.round(cell.height * 0.6)]) {
-        box.scrollTop = 0;
-        await rest(box);
-        await run.wheel(selector, delta);
-        const top = await rest(box);
-        expect(top, `${density}, a wheel of ${delta}px`).toBeGreaterThan(0);
+    const lists = DENSITIES.map((density) => ({
+      density,
+      cell: cellOf(canvas.getByRole('group', { name: `wheel, ${density}` })),
+      box: canvas.getByRole('listbox', { name: `Files, ${density}` }),
+      selector: `[role="listbox"][aria-label="Files, ${density}"]`,
+    }));
+    // A notch, then a trackpad's step of less than a row. Each list is turned
+    // in turn and left to come to rest on its own, so they all settle at once.
+    for (const step of [() => 100, (cell: number) => Math.round(cell * 0.6)]) {
+      for (const { box } of lists) box.scrollTop = 0;
+      await Promise.all(lists.map(({ box }) => rest(box)));
+      for (const { cell, selector } of lists) await run.wheel(selector, step(cell.height));
+      const tops = await Promise.all(lists.map(({ box }) => rest(box)));
+      lists.forEach(({ density, cell }, i) => {
+        const top = tops[i] ?? 0;
+        expect(top, `${density}, a wheel of ${step(cell.height)}px`).toBeGreaterThan(0);
         wholeCells(top, cell.height);
-      }
+      });
     }
   },
 };
