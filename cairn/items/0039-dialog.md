@@ -67,7 +67,7 @@ scroll.
 - [x] Reads its glyphs from the theme (0119): no box-drawing, block or mark literal in its source
 - [x] Rendered by the cell renderer (0117): continuity passes at all four densities
 - [x] One export line in `packages/react/src/index.ts` and one import line in `packages/css/src/index.css`, as 0122 sets out
-- [ ] Centred on whole cells at every density and every width from 40 to 120 cells, checked by conformance
+- [x] Centred on whole cells at every density and every width from 40 to 120 cells, checked by conformance
 - [x] Becomes a bottom sheet under 60 cells and at touch density, in a story at each
 - [x] A text snapshot shows the dialog over its backdrop (through 0128's composed `screenshot()`)
 - [x] An AlertDialog focuses its safe action first
@@ -83,3 +83,7 @@ Built on OverlayModal (0128). Title is set into the frame's top edge (a title op
 ## 2026-10-03
 
 Criterion 18 left unticked: centring is asserted at 40, 59, 60 and 120 cells at normal density, and the conformance walk checks the open dialog at every density at the default width; every density at every width is not checked. Site page waits for #158.
+
+## 2026-10-03
+
+Criterion 18: the story 'Densities and widths' opens the dialog from a touch pane and a dense pane at 40 and 120 cells and runs conformance on it in each, with the sheet or the centring asserted on whole cells. react-aria-components re-exports neither FocusScope nor useFocusManager, so focus stays as React Aria puts it (agreed with the CTO).

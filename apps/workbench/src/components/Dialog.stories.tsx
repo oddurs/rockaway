@@ -1,5 +1,5 @@
 import { AlertDialog, Button, Dialog, Frame, type PainterName } from '@rockaway/react';
-import { screenshot } from '@rockaway/react/testing';
+import { expectConformance, screenshot } from '@rockaway/react/testing';
 import { themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
@@ -248,6 +248,73 @@ export const Widths: Story = {
             expect(Number.isInteger(x)).toBe(true);
           }
         });
+      }
+    } finally {
+      await run.viewport();
+    }
+  },
+};
+
+/**
+ * Conformance at the densities furthest from the default, at both ends of the
+ * widths: opened from a touch pane and from a dense one, at 40 cells and at
+ * 120. Each pane is at its density from the start, so its screens measured in
+ * it. At 40 cells both are sheets; at 120 the dense one is centred on whole
+ * cells, and the touch one is still a sheet.
+ */
+export const DensitiesAndWidths: Story = {
+  name: 'Densities and widths',
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--rk-x-2)', alignItems: 'start' }}>
+      <div data-density="touch">
+        <Rename />
+      </div>
+      <div data-density="dense">
+        <Rename />
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const run = runner();
+    if (!run) return;
+    await measured(document.body);
+    const [touch, dense] = [...canvasElement.querySelectorAll<HTMLElement>('.rk-button')];
+    if (!touch || !dense) throw new Error('no triggers');
+    const cell = gridOf(dense).width;
+    try {
+      for (const cols of [40, 120]) {
+        await run.viewport({ width: Math.ceil(cols * cell), height: 700 });
+        await measured(document.body);
+        for (const [density, trigger] of [
+          ['touch', touch],
+          ['dense', dense],
+        ] as const) {
+          await userEvent.click(trigger);
+          await waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull());
+          await measured(document.body);
+          const sheet = density === 'touch' || cols < 60;
+          await waitFor(() => {
+            const el = surface();
+            expect(el.closest('[data-density]')?.getAttribute('data-density')).toBe(density);
+            expect(el.classList.contains('rk-overlay-sheet')).toBe(sheet);
+            const grid = gridOf(trigger);
+            const box = el.getBoundingClientRect();
+            if (sheet) {
+              expect(cells(box.width, grid.width)).toBe(Math.floor(window.innerWidth / grid.width));
+            } else {
+              cells(box.left - grid.left, grid.width);
+              cells(box.top - grid.top, grid.height);
+              const left = box.left / grid.width;
+              const right = (window.innerWidth - box.right) / grid.width;
+              expect(Math.abs(left - right)).toBeLessThanOrEqual(1);
+            }
+          });
+          expectConformance(surface());
+          await userEvent.keyboard('{Escape}');
+          await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull(), {
+            timeout: 5000,
+          });
+        }
       }
     } finally {
       await run.viewport();
