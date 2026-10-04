@@ -54,6 +54,39 @@ function serve(dir: string, base: string): Promise<Server> {
   return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)));
 }
 
+/**
+ * Wait until the page has stopped moving, as the workbench's `measured()`
+ * does (cairn 0164): the face the page is set in loaded, then every screen
+ * measured and drawn at its own size.
+ *
+ * Not the painted frame's arrival: the server sends the chrome (0126), drawn
+ * at its smallest and stretched to fit until the screen has measured (0238),
+ * so `.rk-frame` is there before any script runs. A screen has measured when
+ * its cell is written in pixels rather than `1ch`, and its columns fill its
+ * box. On a slow CI runner that is well after the page loads; reading the
+ * columns before it got the smallest frame's 14.
+ */
+async function settled(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const { font } = getComputedStyle(document.documentElement);
+    if (font !== '') await document.fonts.load(font);
+    await document.fonts.ready;
+  });
+  await page.waitForFunction(() => {
+    const screens = [...document.querySelectorAll<HTMLElement>('.rk-screen')];
+    return (
+      screens.length > 0 &&
+      screens.every((screen) => {
+        const written = getComputedStyle(screen).getPropertyValue('--rk-cell-width').trim();
+        if (!written.endsWith('px')) return false;
+        const cell = Number.parseFloat(written);
+        const cols = Number(screen.dataset.rkCols);
+        return Math.abs(screen.getBoundingClientRect().width - cols * cell) < cell;
+      })
+    );
+  });
+}
+
 let browser: Browser;
 beforeAll(async () => {
   browser = await chromium.launch();
@@ -96,8 +129,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     });
     page.on('pageerror', (error) => failures.push(`page: ${error.message}`));
     await page.goto(`${origin}${base}`);
-    await page.waitForSelector('.rk-frame[data-rk-painted]');
-    await page.evaluate(() => document.fonts.ready);
+    await settled(page);
   });
 
   afterAll(async () => {
