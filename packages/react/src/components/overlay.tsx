@@ -50,6 +50,7 @@ import {
   Modal,
   ModalOverlay,
   type ModalOverlayProps,
+  OverlayTriggerStateContext,
   Popover,
   PopoverContext,
   type PopoverProps,
@@ -601,13 +602,23 @@ export function OverlayModal({
   const container = useContext(LayerContext);
   // A modal has no anchor of its own, but it was opened from somewhere: the
   // trigger a DialogTrigger names, or else the element that had focus when it
-  // opened, read once.
+  // opened, read each time it opens. A modal mounted closed, as a command
+  // palette is with the page, would otherwise be anchored for good to
+  // whatever had focus when the page loaded.
   const trigger = useSlottedContext(PopoverContext)?.triggerRef;
+  const state = useContext(OverlayTriggerStateContext);
+  const open = aria.isOpen ?? state?.isOpen ?? aria.defaultOpen ?? false;
   const opener = useRef<Element | null>(null);
-  if (opener.current === null && typeof document !== 'undefined') {
+  const wasOpen = useRef(false);
+  const openings = useRef(0);
+  if (open && !wasOpen.current && typeof document !== 'undefined') {
     opener.current = document.activeElement;
+    openings.current += 1;
   }
-  const anchor = useCallback(() => trigger?.current ?? opener.current, [trigger]);
+  wasOpen.current = open;
+  const opening = openings.current;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a new opening is a new anchor
+  const anchor = useCallback(() => trigger?.current ?? opener.current, [trigger, opening]);
   const sheet = useSheet(anchor);
   const origin = useOrigin(anchor);
   const contexts = origin.contexts;

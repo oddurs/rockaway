@@ -2,7 +2,7 @@ import { AlertDialog, Button, Dialog, Frame, type PainterName } from '@rockaway/
 import { expectConformance, screenshot } from '@rockaway/react/testing';
 import { themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { DialogTrigger } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
@@ -350,6 +350,71 @@ export const Sections: Story = {
     const grid = gridOf(surface().querySelector('.rk-screen') as Element);
     const first = canvas.getByText('Open recent').getBoundingClientRect();
     expect(first.left - grid.left).toBeCloseTo(grid.width, 1);
+  },
+};
+
+/**
+ * A controlled dialog, mounted closed with the page and opened later by
+ * whatever had focus: its button in a touch pane, or in a ruled frame. Each
+ * time it opens it takes the context and the painter of what opened it, not
+ * of what had focus when the page loaded.
+ */
+function Controlled(): ReactNode {
+  const [opener, setOpener] = useState<string | null>(null);
+  return (
+    <div style={{ display: 'flex', gap: 'var(--rk-x-2)', alignItems: 'start' }}>
+      <div data-density="touch">
+        <Frame title="touch" cols={24} rows={6}>
+          <Button onPress={() => setOpener('touch')}>From touch</Button>
+        </Frame>
+      </div>
+      <Frame title="ruled" painter="rule" cols={24} rows={6}>
+        <Button onPress={() => setOpener('ruled')}>From ruled</Button>
+      </Frame>
+      <Dialog
+        title="Controlled"
+        isOpen={opener !== null}
+        onOpenChange={(open) => {
+          if (!open) setOpener(null);
+        }}
+      >
+        <p style={{ margin: 0 }}>Opened from {opener}.</p>
+      </Dialog>
+    </div>
+  );
+}
+
+export const OpenedLater: Story = {
+  name: 'Controlled, opened later',
+  render: () => <Controlled />,
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const open = async (name: string) => {
+      await userEvent.click(canvas.getByRole('button', { name }));
+      await waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull());
+      await measured(document.body);
+    };
+    const close = async () => {
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull(), {
+        timeout: 5000,
+      });
+    };
+
+    await open('From touch');
+    await waitFor(() => {
+      expect(surface().closest('[data-density]')?.getAttribute('data-density')).toBe('touch');
+      expect(surface().classList.contains('rk-overlay-sheet')).toBe(true);
+    });
+    await close();
+
+    await open('From ruled');
+    await waitFor(() => {
+      const screen = surface().querySelector('.rk-screen') as HTMLElement;
+      expect(screen.dataset.rkPainter).toBe('rule');
+      expect(surface().closest('[data-density]')?.getAttribute('data-density')).not.toBe('touch');
+    });
+    await close();
   },
 };
 

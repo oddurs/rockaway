@@ -87,3 +87,7 @@ Criterion 18 left unticked: centring is asserted at 40, 59, 60 and 120 cells at 
 ## 2026-10-03
 
 Criterion 18: the story 'Densities and widths' opens the dialog from a touch pane and a dense pane at 40 and 120 cells and runs conformance on it in each, with the sheet or the centring asserted on whole cells. react-aria-components re-exports neither FocusScope nor useFocusManager, so focus stays as React Aria puts it (agreed with the CTO).
+
+## 2026-10-03
+
+Took the overlays engineer's OverlayModal opener fix (from feat/command-palette 0dcf787) into this PR: the opener was read once at first render, so a modal mounted closed (a controlled Dialog, the palette) kept body as its anchor, with the root's density and the glyph painter. It now re-reads document.activeElement on each opening. Story 'Controlled, opened later' opens it from a touch pane and from a ruled frame; it fails without the fix.
