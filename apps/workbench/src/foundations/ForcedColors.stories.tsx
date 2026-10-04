@@ -185,10 +185,29 @@ function reversed(): Buffer {
   });
 }
 
+/** A box, a rule and a block drawn by the engine in reverse video: shapes the cell draws, reversed. */
+function reversedBox(): Buffer {
+  return Buffer.create({ width: 8, height: 3 }).draw((draft) => {
+    const style = { attrs: Attr.reverse };
+    drawText(draft, { x: 1, y: 0 }, '\u250c\u2500\u2500\u2510', { style });
+    drawText(draft, { x: 1, y: 1 }, '\u2502\u2588\u2588\u2502', { style });
+    drawText(draft, { x: 1, y: 2 }, '\u2514\u2500\u2500\u2518', { style });
+  });
+}
+
 /** The colour and ground an element is drawn in, as computed colours. */
 function inkAndGround(el: Element): [string, string] {
   const style = getComputedStyle(el);
   return [style.color, style.backgroundColor];
+}
+
+/** The ground an element sits on: its own background, or the nearest one behind it. */
+function groundOf(el: Element): string {
+  for (let at: Element | null = el; at; at = at.parentElement) {
+    const ground = getComputedStyle(at).backgroundColor;
+    if (ground !== 'rgba(0, 0, 0, 0)' && ground !== 'transparent') return ground;
+  }
+  return computed('Canvas');
 }
 
 /** A computed `rgb(…)` colour as its three channels. */
@@ -257,6 +276,11 @@ async function expectReversed(
  * backplate the browser paints behind text. A filled button, a pressed one, a
  * pressed link, a selected row and a painted reverse run are each checked
  * here, in computed styles and in pixels.
+ *
+ * So is every shape the cell draws on a reversed ground: a tree row's guides,
+ * a box drawn in reverse video. Under forced colors a shape is inked in the
+ * reader's text colour, which in reverse video is the ground, so it vanished
+ * unless it took the reversed figure instead (screen.css).
  */
 export const ReverseVideo: Story = {
   name: 'Reverse video',
@@ -269,6 +293,7 @@ export const ReverseVideo: Story = {
         <Link href="#reverse">a link</Link>
       </div>
       <Screen data-testid="painted" draw={reversed} cols={8} rows={1} />
+      <Screen data-testid="box" draw={reversedBox} cols={8} rows={3} />
       <div style={{ inlineSize: '20ch' }}>
         <List aria-label="Files" rows={2} selectionMode="single" defaultSelectedKeys={['b']}>
           <ListItem id="a">a.ts</ListItem>
@@ -350,16 +375,30 @@ export const ReverseVideo: Story = {
     });
     await expect(inkAndGround(branch)).toEqual(swapped);
     await expectReversed(part(branch, '.rk-tree-label'));
-    // The guides are shapes the cell draws, inked in the reversed figure. A
-    // cell holding one line is mostly ground, and its edges leak about 4% of
-    // canvas-coloured pixels even when the line is invisible; a visible line
-    // shows as 8% or more.
-    for (const shape of branch.querySelectorAll<HTMLElement>('.rk-tree-guides [data-rk-shape]')) {
-      await expectReversed(shape, 'CanvasText', 0.06);
-    }
-    await expect(branch.querySelectorAll('.rk-tree-guides [data-rk-shape]').length).toBeGreaterThan(
-      0,
+
+    // Every shape the cell draws on a reversed ground, whatever reversed it,
+    // is inked in the reversed figure, the canvas. A cell holding one line
+    // leaks about 4% of canvas-coloured pixels at its edges even when the
+    // line is invisible; a visible line shows as 8% or more, and a block all
+    // of it.
+    const box = await waitFor(() => {
+      const found = [...canvas.getByTestId('box').querySelectorAll<HTMLElement>('[data-rk-shape]')];
+      // A run of one shape is one element: three to a row.
+      if (found.length < 9) throw new Error('the reversed box is not painted yet');
+      return found;
+    });
+    const guides = [...branch.querySelectorAll<HTMLElement>('.rk-tree-guides [data-rk-shape]')];
+    await expect(guides.length).toBeGreaterThan(0);
+    const onReversed = [...canvasElement.querySelectorAll<HTMLElement>('[data-rk-shape]')].filter(
+      (shape) => groundOf(shape) === computed('CanvasText'),
     );
+    // The check finds them: the guides and the box are all on a reversed ground.
+    for (const shape of [...guides, ...box]) await expect(onReversed).toContain(shape);
+    for (const shape of onReversed) {
+      const seen = await share(shape, 'CanvasText');
+      if (!seen) break;
+      await expect(seen.canvas, shape.dataset.rkShape).toBeGreaterThan(0.06);
+    }
   },
 };
 

@@ -1,6 +1,6 @@
-import { Frame, GlyphProvider, Tree, TreeItem } from '@rockaway/react';
+import { Frame, GlyphProvider, Tree, TreeItem, treeBuffer } from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
-import { glyphsFor } from '@rockaway/tokens';
+import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { RouterProvider } from 'react-aria-components';
@@ -297,11 +297,10 @@ export const Links: Story = {
   },
 };
 
-/** A long title is cut with the ellipsis where the tree ends, and the guides are whole. */
-export const LongLabels: Story = {
-  name: 'Long labels',
-  render: () => (
-    <Framed title="long" rows={6}>
+/** A tree with one title too long for its frame. */
+function Long({ title }: { title: string }): ReactNode {
+  return (
+    <Framed title={title} rows={6}>
       <Tree aria-label="Long" defaultExpandedKeys={['src']}>
         <TreeItem id="src" title="src">
           <TreeItem id="a" title="a-component-with-a-very-long-name.tsx" />
@@ -309,16 +308,71 @@ export const LongLabels: Story = {
         </TreeItem>
       </Tree>
     </Framed>
+  );
+}
+
+const LONG = 'a-component-with-a-very-long-name.tsx';
+
+/**
+ * Cut where the tree ends, in the theme's ellipsis, in the label's last cell
+ * (0231): what `treeBuffer` draws, and never the font's own `…` from CSS. The
+ * whole title is still the text, so it is found, copied and announced.
+ */
+async function expectCut(frame: HTMLElement, ellipsis: string): Promise<void> {
+  await settled();
+  const label = [...frame.querySelectorAll<HTMLElement>('.rk-tree-label')].find(
+    (el) => el.textContent === LONG,
+  ) as HTMLElement;
+  await waitFor(() => expect(label).toHaveAttribute('data-rk-cut'));
+  expect(getComputedStyle(label.firstElementChild as HTMLElement).textOverflow).toBe('clip');
+  expect(getComputedStyle(label, '::after').content).toBe(`"${ellipsis}"`);
+  const rows = rowsOf(frame);
+  // The cut fills the row to the frame: the clipped title, then the mark.
+  const cut = rows[1] ?? '';
+  expect(cut, rows.join('\n')).toContain('a-component-with');
+  expect(cut.endsWith(ellipsis), rows.join('\n')).toBe(true);
+  expect(rows[2]?.endsWith(' b.ts')).toBe(true);
+  // Cell for cell what the buffer function draws at the tree's width.
+  const tree = frame.querySelector<HTMLElement>('.rk-tree') as HTMLElement;
+  const cell = Number.parseFloat(getComputedStyle(tree).getPropertyValue('--rk-cell-width'));
+  const width = Math.round(tree.getBoundingClientRect().width / cell);
+  const glyphs = ellipsis === '~' ? glyphsFor({ borderSet: 'ascii' }) : themeGlyphs.default;
+  const model = treeBuffer(
+    {
+      rows: [
+        { label: 'src', level: 1, last: [], branch: true, expanded: true },
+        { label: LONG, level: 2, last: [false] },
+        { label: 'b.ts', level: 2, last: [true] },
+      ],
+      width,
+    },
+    glyphs,
+  );
+  expect(cut.slice(0, width).trimEnd()).toBe(model.row(1).trimEnd());
+}
+
+export const LongLabels: Story = {
+  name: 'Long labels',
+  render: () => <Long title="long" />,
+  play: async ({ canvas }) => {
+    // The row is named by the whole title.
+    expect(canvas.getByRole('row', { name: LONG })).toBeTruthy();
+    await expectCut(canvas.getByRole('group', { name: 'long' }), '…');
+  },
+};
+
+/** Under an ASCII theme the cut is the theme's `~`: no `…` reaches the page. */
+export const LongLabelsAscii: Story = {
+  name: 'Long labels, ASCII theme',
+  render: () => (
+    <GlyphProvider glyphs={glyphsFor({ borderSet: 'ascii' })}>
+      <Long title="long ascii" />
+    </GlyphProvider>
   ),
   play: async ({ canvas }) => {
-    await settled();
-    const row = canvas.getByRole('row', { name: 'a-component-with-a-very-long-name.tsx' });
-    const label = row.querySelector('.rk-tree-label') as HTMLElement;
-    expect(label.scrollWidth).toBeGreaterThan(label.clientWidth);
-    expect(getComputedStyle(label).textOverflow).toBe('ellipsis');
-    const rows = rowsOf(canvas.getByRole('group', { name: 'long' }));
-    expect(rows[1]?.startsWith(' ├── a-component')).toBe(true);
-    expect(rows[2]).toBe(' └── b.ts');
+    const frame = canvas.getByRole('group', { name: 'long ascii' });
+    await expectCut(frame, '~');
+    expect(screenshot(frame, { legend: false })).not.toContain('…');
   },
 };
 
