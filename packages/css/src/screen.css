@@ -25,6 +25,12 @@
      */
     --rk-layout-unit: 0.015625px;
     position: relative;
+    /*
+     * A screen is a stacking context of its own: what it lifts over its own
+     * layers (an overflow mark, a callout's frame) stays inside it, and never
+     * paints over an overlay's backdrop that comes after it on the page.
+     */
+    isolation: isolate;
     font-family: var(--rk-font-family-mono);
     /* Chrome is drawn in the cells it was drawn in: never collapse, never wrap. */
     white-space: pre;

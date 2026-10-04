@@ -5,6 +5,7 @@ import {
   CodeSnapshot,
   codeBlockText,
   frameBuffer,
+  OverlayModal,
   type PainterName,
   Screen,
   snapshotBuffer,
@@ -16,6 +17,7 @@ import {
   screenshot,
 } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Dialog, DialogTrigger, Heading } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { cellsOf, cellsOfBuffer } from '../cells.ts';
@@ -205,6 +207,59 @@ export const LongLines: Story = {
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(
       document.documentElement.clientWidth,
     );
+  },
+};
+
+/**
+ * Under an open dialog (found in the tokens team's version-control client):
+ * the overflow marks are lifted over the code, and only over the code. The
+ * scroll region and the screen are each a stacking context, so the modal's
+ * backdrop, which comes after them on the page, covers the marks as it covers
+ * the rest.
+ */
+export const UnderADialog: Story = {
+  name: 'Under a dialog',
+  args: { code: CODE },
+  render: () => (
+    <div>
+      <div data-testid="place" style={{ inlineSize: 'fit-content' }}>
+        <CodeBlock code={`const long = '${'x'.repeat(90)}';`} title="long.ts" cols={40} />
+      </div>
+      <DialogTrigger defaultOpen>
+        <span />
+        <OverlayModal>
+          <Dialog>
+            <Heading slot="title" style={{ margin: 0 }}>
+              Push to main?
+            </Heading>
+          </Dialog>
+        </OverlayModal>
+      </DialogTrigger>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const run = runner();
+    if (!run) return;
+    const place = canvas.getByTestId('place');
+    const block = place.firstElementChild as HTMLElement;
+    const pre = block.querySelector('pre') as HTMLElement;
+    if (CSS.supports('container-type', 'scroll-state')) {
+      await waitFor(() => expect(getComputedStyle(pre, '::after').visibility).toBe('visible'));
+    }
+    await waitFor(() => expect(document.querySelector('.rk-overlay-backdrop')).not.toBeNull());
+    // The block's place, as the page shows it with the dialog open, and again
+    // with the block hidden: the backdrop covers all of it, marks included,
+    // so the two are the same pixels.
+    const bytes = async (): Promise<string> => {
+      const shot = await run.capture(place);
+      return typeof shot === 'string' ? shot : new Uint8Array(await shot.arrayBuffer()).join();
+    };
+    const shown = await bytes();
+    block.style.visibility = 'hidden';
+    const hidden = await bytes();
+    block.style.visibility = '';
+    expect(shown === hidden).toBe(true);
   },
 };
 
