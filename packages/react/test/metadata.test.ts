@@ -14,7 +14,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import { createElement, Fragment, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import { type Analysis, analyse, packageRoot, render } from '../scripts/extract.ts';
+import { type Analysis, analyse, owns, packageRoot, render } from '../scripts/extract.ts';
 import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
@@ -45,6 +45,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
   KeymapEngine:
     "Keymap's engine as a class, for a page with no React (cairn 0237). It draws nothing, and is documented with Keymap.",
+  RouterProvider:
+    "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
   Chrome:
     "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
@@ -59,6 +61,17 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
   Callout: (props) =>
     createElement(rockaway.Callout, props, createElement('p', null, 'Mind the gap.')),
+  Checkbox: (props) =>
+    createElement(
+      Fragment,
+      null,
+      createElement(rockaway.Checkbox, props, 'Sign commits'),
+      createElement(
+        rockaway.CheckboxGroup,
+        { label: 'Branches' },
+        createElement(rockaway.Checkbox, { value: 'main' }, 'main'),
+      ),
+    ),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
   // Both parts of the module: the variant is FieldFrame's, and Fieldset is always a group.
   Fieldset: (props) =>
@@ -73,6 +86,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  TextField: (props) => createElement(rockaway.TextField, { label: 'Name', ...props }),
   Tree: (props) =>
     createElement(
       rockaway.Tree,
@@ -82,6 +96,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
         { id: 'src', title: 'src' },
         createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
       ),
+    ),
+  // Closed: a popover has no trigger here, and on a server an open one renders nothing anyway.
+  OverlayPopover: (props) =>
+    createElement(
+      rockaway.OverlayLayer,
+      null,
+      createElement(rockaway.OverlayPopover, { isOpen: false, ...props }, 'inside'),
     ),
   List: (props) =>
     createElement(
@@ -410,6 +431,36 @@ describe('the checks fail when the metadata is wrong', () => {
 });
 
 describe('what is extracted', () => {
+  test("a rule is credited only when every hook in it is the component's (0192)", () => {
+    const frame = {
+      classes: new Set(['rk-screen', 'rk-frame', 'rk-content', 'rk-frame-box']),
+      attributes: new Set(['data-rk-painted', 'data-rk-shape']),
+    };
+    const divider = {
+      classes: new Set(['rk-screen', 'rk-frame', 'rk-divider']),
+      attributes: frame.attributes,
+    };
+    // Another component's class in the selector: not this one's rule.
+    expect(owns('.rk-callout > .rk-content', frame)).toBe(false);
+    expect(owns('.rk-frame-box > .rk-frame', divider)).toBe(false);
+    expect(owns('.rk-frame-box > .rk-frame', frame)).toBe(true);
+    // The painter's hooks name no class, and are the painted component's.
+    expect(owns('[data-rk-painted="rule"]', frame)).toBe(true);
+    expect(owns('[data-rk-painted] [data-rk-shape="box-0110"]', frame)).toBe(true);
+    // A state or a variant says when a rule applies, not whose it is.
+    expect(owns('.rk-frame[data-hovered]', frame)).toBe(true);
+    expect(owns('[data-hovered]', frame)).toBe(false);
+    expect(owns(':focus-visible', frame)).toBe(false);
+  });
+
+  test("a painted component lists its stroke tokens, and not a neighbour's ground", () => {
+    const { tokens } = byName('Frame');
+    expect(tokens).toContain('--rk-stroke-glyph-light');
+    expect(tokens).toContain('--rk-stroke-rule-light');
+    // `.rk-callout > .rk-content` is Callout's, though Frame writes rk-content.
+    expect(tokens).not.toContain('--rk-bg-surface');
+  });
+
   test('tokens come from the stylesheets and the focus ring, and a local property is not one', () => {
     const { tokens } = byName('Button');
     expect(tokens).toContain('--rk-border-control');
@@ -633,16 +684,16 @@ describe('the snapshots, as the site draws them', () => {
       "── Help, on any keyboard but Apple’s
       Ctrl+K  Open the palette
       /       Search
-      G H     Go home
-      J       Next row
-      K       Previous row
+      g h     Go home
+      j       Next row
+      k       Previous row
       ?       Show this help
       ── Help, on an Apple keyboard
       ⌘K   Open the palette
       /    Search
-      G H  Go home
-      J    Next row
-      K    Previous row
+      g h  Go home
+      j    Next row
+      k    Previous row
       ?    Show this help"
     `);
   });

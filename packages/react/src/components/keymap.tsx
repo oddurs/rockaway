@@ -138,8 +138,26 @@ export interface UseKeymapOptions {
 export function useKeymap(bindings: readonly Binding[], options: UseKeymapOptions = {}): void {
   const context = useContext(KeymapContext);
   if (context === null) throw new Error('useKeymap needs a <Keymap> around it.');
-  const { engine, scope } = context;
-  const enabled = options.enabled ?? true;
+  useBindings(context, bindings, options);
+}
+
+/**
+ * `useKeymap` where a Keymap is optional: inside one, the bindings are bound;
+ * outside, nothing happens. For a component that binds its own shortcut when
+ * the page has a keymap, as Button does with `keys` (cairn 0225).
+ */
+export function useKeymapIfAny(bindings: readonly Binding[], options: UseKeymapOptions = {}): void {
+  useBindings(useContext(KeymapContext), bindings, options);
+}
+
+function useBindings(
+  context: Context | null,
+  bindings: readonly Binding[],
+  options: UseKeymapOptions,
+): void {
+  const engine = context?.engine;
+  const scope = context?.scope;
+  const enabled = (options.enabled ?? true) && context !== null;
   const platform = usePlatform();
   const latest = useRef(bindings);
   latest.current = bindings;
@@ -147,7 +165,7 @@ export function useKeymap(bindings: readonly Binding[], options: UseKeymapOption
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: bound again when the signature changes, and actions read the latest bindings
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !engine || !scope) return;
     const undo = latest.current.map((binding, i) =>
       engine.register(scope, {
         keys: binding.keys,

@@ -71,6 +71,7 @@ import { cellsIn, measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { type PainterName, Screen } from '../screen.tsx';
+import { watchOverflowMarks } from '../scroll.ts';
 import {
   EMPTY,
   fitCell,
@@ -276,6 +277,14 @@ export function Table({
   );
   const rows = measured?.rows ?? 0;
   const size = { width: layout.width, height: tableHeight(rows) };
+
+  // Its overflow marks, where the stylesheet cannot show them itself (0218).
+  const overflows = layout.overflows;
+  useEffect(() => {
+    const region = host.current;
+    if (!overflows || !region) return;
+    return watchOverflowMarks(region);
+  }, [overflows]);
 
   const draw = useMemo(
     () => (at: Size) =>
