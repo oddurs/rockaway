@@ -127,6 +127,13 @@
   .rk-overlay-row > .rk-screen {
     background: var(--rk-bg-inverse);
     color: var(--rk-fg-on-inverse);
-    forced-color-adjust: none;
+  }
+
+  /* Its words are drawn in a ground colour, which the forced-colors backplate
+   * would paint over (0201). */
+  @media (forced-colors: active) {
+    .rk-overlay-row > .rk-screen {
+      forced-color-adjust: none;
+    }
   }
 }
