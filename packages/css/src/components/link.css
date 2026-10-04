@@ -70,4 +70,14 @@
 
     cursor: default;
   }
+
+  /* Reversed words are drawn in a ground colour, which under forced colors is
+   * the canvas the browser paints behind text unless told not to. So whatever
+   * this stylesheet reverses opts out of the adjustment (0181), and keeps the
+   * reader's colours through the tokens it reads. */
+  @media (forced-colors: active) {
+    .rk-link[data-pressed] {
+      forced-color-adjust: none;
+    }
+  }
 }

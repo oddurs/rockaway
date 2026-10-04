@@ -41,12 +41,29 @@ describe('a chord, three ways', () => {
     expect(SPECS.map((spec) => spokenKeys(spec, 'apple')).join('\n')).toMatchInlineSnapshot(`
       "Command S
       Control Shift K
-      Alt X
-      Alt Shift Command P
+      Option X
+      Option Shift Command P
       Escape
       Command Enter
       Shift Up arrow
       Shift Enter"
+    `);
+  });
+
+  test('what a reader hears off an Apple keyboard: the words on its keys, Meta for meta', () => {
+    expect(
+      [...SPECS, 'meta+k', 'cmd+shift+p'].map((spec) => spokenKeys(spec, 'other')).join('\n'),
+    ).toMatchInlineSnapshot(`
+      "Control S
+      Control Shift K
+      Alt X
+      Control Alt Shift P
+      Escape
+      Control Enter
+      Shift Up arrow
+      Shift Enter
+      Meta K
+      Shift Meta P"
     `);
   });
 
