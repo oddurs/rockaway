@@ -9,16 +9,18 @@
  * made: React Aria's `Popover` places it, moves focus in and back, and
  * dismisses it on Escape and on a press outside; the contract puts it on
  * the cell grid of its trigger's screen, framed heavy, carrying the
- * trigger's contexts across the portal. What Popover adds:
+ * trigger's contexts and painter across the portal. What Popover adds:
  *
  *   - **Never narrower than its trigger**, in whole cells, by default, so a
- *     Select's list is at least as wide as the Select. `minCols` changes it.
+ *     Select's list is at least as wide as the Select without asking.
+ *     `minCols` changes it; the contract does the measuring.
  *   - **Only cells.** React Aria's props in pixels (`offset`, `crossOffset`,
  *     `containerPadding`, `maxHeight`) are not offered: a popover sits on the
  *     next row with no gap, and is as tall as `maxRows` allows.
  *
  * React Aria makes the popover a `dialog` unless a Dialog is nested in it,
- * and writes `data-placement` and `data-trigger` on it.
+ * and writes `data-placement` and `data-trigger` on it. Its frame, padding,
+ * dividers and painter are the contract's, and pass straight through.
  */
 import type { ReactNode } from 'react';
 import { cx } from '../cx.ts';
@@ -31,8 +33,10 @@ export interface PopoverProps
   > {
   /**
    * The fewest cells across the popover takes, its frame included:
-   * `'trigger'` for its trigger's width, rounded up to whole cells, or a
-   * count. `0` lets it be as narrow as what it holds.
+   * `'trigger'` for its trigger's width in whole cells, or a count. `0` lets
+   * it be as narrow as what it holds.
+   *
+   * @default 'trigger'
    */
   readonly minCols?: number | 'trigger';
 }
@@ -44,10 +48,7 @@ export function Popover({
   ...overlay
 }: PopoverProps): ReactNode {
   return (
-    <OverlayPopover
-      {...overlay}
-      className={cx('rk-popover', minCols === 'trigger' && 'rk-popover-trigger-width', className)}
-    >
+    <OverlayPopover {...overlay} minCols={minCols} className={cx('rk-popover', className)}>
       {children}
     </OverlayPopover>
   );

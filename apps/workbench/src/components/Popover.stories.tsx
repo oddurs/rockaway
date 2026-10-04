@@ -101,6 +101,14 @@ function Filter(props: Omit<PopoverProps, 'children'>): ReactNode {
   );
 }
 
+/** The filter's frame as text, heavy, 23 cells by 4: the same under either painter. */
+const FILTER_FRAME = [
+  `┏${'━'.repeat(21)}┓`,
+  `┃${' '.repeat(21)}┃`,
+  `┃${' '.repeat(21)}┃`,
+  `┗${'━'.repeat(21)}┛`,
+];
+
 /**
  * Under its trigger: on the next row, from the trigger's first column, with
  * no gap, framed heavy. React Aria makes it a dialog, because nothing inside
@@ -127,8 +135,7 @@ export const Default: Story = {
     // The border, a cell of air, `[ Open ] [ Merged ]`, a cell of air, the
     // border; the border, two rows, the border.
     expect(place).toEqual({ x: button.x, y: button.y + 1, width: 23, height: 4 });
-    expect(edges(surface)[0]).toMatch(/^┏━+┓$/);
-    expect(edges(surface).at(-1)).toMatch(/^┗━+┛$/);
+    expect(edges(surface)).toEqual(FILTER_FRAME);
     expect(popover.dataset.placement).toBe('bottom');
     expect(popover.dataset.trigger).toBe('DialogTrigger');
     expect(popover.getAttribute('role')).toBe('dialog');
@@ -137,6 +144,31 @@ export const Default: Story = {
     expect(surface.querySelector('.rk-frame')?.getAttribute('aria-hidden')).toBe('true');
     expect(within(popover).getByRole('button', { name: 'Open' })).toBeVisible();
     expect(within(popover).getByRole('button', { name: 'Merged' })).toBeVisible();
+  },
+};
+
+/**
+ * Held to `strict`: every box in the page and in the popover in whole cells,
+ * and drawn by the glyph painter, which the popover takes from its trigger's
+ * screen.
+ */
+export const Strict: Story = {
+  name: 'At strict',
+  globals: { conformance: 'strict' },
+  render: () => (
+    <Frame title="strict" cols={48} rows={10}>
+      <DialogTrigger defaultOpen>
+        <Button>Filter</Button>
+        <Filter />
+      </DialogTrigger>
+    </Frame>
+  ),
+  play: async () => {
+    await measured(document.body);
+    const { popover } = await opened();
+    expect(popover.closest('[data-rk-conformance]')?.getAttribute('data-rk-conformance')).toBe(
+      'strict',
+    );
   },
 };
 
@@ -186,6 +218,50 @@ export const ContentWidth: Story = {
     const { surface } = await opened();
     // Two cells of inset either side of `[ main ]`.
     expect(placeOf(surface, trigger).width).toBe(4 + '[ main ]'.length);
+  },
+};
+
+/** A count: `minCols={30}` is thirty cells across, its frame included, whatever the trigger. */
+export const MinCols: Story = {
+  name: 'At least a count of cells',
+  render: () => <Wide minCols={30} />,
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const trigger = canvas.getByRole('button', { name: 'Choose a branch' });
+    const { surface } = await opened();
+    expect(placeOf(surface, trigger).width).toBe(30);
+  },
+};
+
+/**
+ * Both painters: a popover opened from a ruled screen is ruled too, and lands
+ * in the same cells, with the same text, as one opened from a glyph screen
+ * (the story "Under its trigger").
+ */
+export const Painter: Story = {
+  name: 'Rule painter',
+  render: () => (
+    <Frame title="pulls" painter="rule" cols={48} rows={10}>
+      <DialogTrigger defaultOpen>
+        <Button>Filter</Button>
+        <Filter />
+      </DialogTrigger>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const trigger = canvas.getByRole('button', { name: 'Filter' });
+    const { surface } = await opened();
+    const screen = surface.querySelector('.rk-screen') as HTMLElement;
+    expect(screen.dataset.rkPainter).toBe('rule');
+    const button = placeOf(trigger, trigger);
+    expect(placeOf(surface, trigger)).toEqual({
+      x: button.x,
+      y: button.y + 1,
+      width: 23,
+      height: 4,
+    });
+    expect(edges(surface)).toEqual(FILTER_FRAME);
   },
 };
 
