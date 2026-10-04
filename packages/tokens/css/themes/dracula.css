@@ -156,11 +156,11 @@
     --rk-palette-dark-border-strong: oklch(70.1% 0.0136 277.5);
     --rk-palette-dark-border-subtle: oklch(35.7% 0.0207 277.5);
     --rk-palette-dark-bright-black: oklch(56% 0.0803 270.1);
-    --rk-palette-dark-bright-blue: oklch(81.1% 0.1221 307);
+    --rk-palette-dark-bright-blue: oklch(86.06% 0.0953 312);
     --rk-palette-dark-bright-cyan: oklch(94.3% 0.087 195.8);
     --rk-palette-dark-bright-green: oklch(89.39% 0.1948 150);
-    --rk-palette-dark-bright-magenta: oklch(79.89% 0.1595 339);
-    --rk-palette-dark-bright-red: oklch(71.6% 0.1776 22.6);
+    --rk-palette-dark-bright-magenta: oklch(88.12% 0.0967 332.8);
+    --rk-palette-dark-bright-red: oklch(88.82% 0.0587 23.38);
     --rk-palette-dark-bright-white: oklch(100% 0 0);
     --rk-palette-dark-bright-yellow: oklch(98% 0.1114 108.3);
     --rk-palette-dark-cursor: oklch(97.7% 0.0079 106.5);
@@ -190,11 +190,11 @@
     --rk-palette-light-border-strong: oklch(70.1% 0.0136 277.5);
     --rk-palette-light-border-subtle: oklch(35.7% 0.0207 277.5);
     --rk-palette-light-bright-black: oklch(56% 0.0803 270.1);
-    --rk-palette-light-bright-blue: oklch(81.1% 0.1221 307);
+    --rk-palette-light-bright-blue: oklch(86.06% 0.0953 312);
     --rk-palette-light-bright-cyan: oklch(94.3% 0.087 195.8);
     --rk-palette-light-bright-green: oklch(89.39% 0.1948 150);
-    --rk-palette-light-bright-magenta: oklch(79.89% 0.1595 339);
-    --rk-palette-light-bright-red: oklch(71.6% 0.1776 22.6);
+    --rk-palette-light-bright-magenta: oklch(88.12% 0.0967 332.8);
+    --rk-palette-light-bright-red: oklch(88.82% 0.0587 23.38);
     --rk-palette-light-bright-white: oklch(100% 0 0);
     --rk-palette-light-bright-yellow: oklch(98% 0.1114 108.3);
     --rk-palette-light-cursor: oklch(97.7% 0.0079 106.5);
@@ -222,12 +222,16 @@
 @media (color-gamut: p3) {
   @layer rk.tokens {
     [data-rk-theme='dracula'] {
+      --rk-palette-dark-bright-blue: oklch(86.04% 0.1048 311.6);
       --rk-palette-dark-bright-green: oklch(89.4% 0.1948 150);
-      --rk-palette-dark-bright-magenta: oklch(79.9% 0.1595 339);
+      --rk-palette-dark-bright-magenta: oklch(88.2% 0.1259 334.1);
+      --rk-palette-dark-bright-red: oklch(88.9% 0.0755 23.42);
       --rk-palette-dark-magenta: oklch(75.5% 0.1831 346.8);
       --rk-palette-dark-red: oklch(77.78% 0.1669 24.48);
+      --rk-palette-light-bright-blue: oklch(86.04% 0.1048 311.6);
       --rk-palette-light-bright-green: oklch(89.4% 0.1948 150);
-      --rk-palette-light-bright-magenta: oklch(79.9% 0.1595 339);
+      --rk-palette-light-bright-magenta: oklch(88.2% 0.1259 334.1);
+      --rk-palette-light-bright-red: oklch(88.9% 0.0755 23.42);
       --rk-palette-light-magenta: oklch(75.5% 0.1831 346.8);
       --rk-palette-light-red: oklch(77.78% 0.1669 24.48);
     }
@@ -237,12 +241,16 @@
 @media (color-gamut: rec2020) {
   @layer rk.tokens {
     [data-rk-theme='dracula'] {
+      --rk-palette-dark-bright-blue: oklch(86.19% 0.1063 311.9);
       --rk-palette-dark-bright-green: oklch(89.4% 0.1948 150);
-      --rk-palette-dark-bright-magenta: oklch(79.9% 0.1595 339);
+      --rk-palette-dark-bright-magenta: oklch(89.14% 0.1564 338.1);
+      --rk-palette-dark-bright-red: oklch(88.98% 0.1122 23.6);
       --rk-palette-dark-magenta: oklch(75.5% 0.1831 346.8);
       --rk-palette-dark-red: oklch(79.2% 0.2063 24.4);
+      --rk-palette-light-bright-blue: oklch(86.19% 0.1063 311.9);
       --rk-palette-light-bright-green: oklch(89.4% 0.1948 150);
-      --rk-palette-light-bright-magenta: oklch(79.9% 0.1595 339);
+      --rk-palette-light-bright-magenta: oklch(89.14% 0.1564 338.1);
+      --rk-palette-light-bright-red: oklch(88.98% 0.1122 23.6);
       --rk-palette-light-magenta: oklch(75.5% 0.1831 346.8);
       --rk-palette-light-red: oklch(79.2% 0.2063 24.4);
     }
