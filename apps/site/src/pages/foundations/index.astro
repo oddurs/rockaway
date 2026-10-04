@@ -5,15 +5,13 @@
  */
 import { getCollection } from 'astro:content';
 import Prose from '../../layouts/Prose.astro';
+import { fixed } from '../../lib/pages.ts';
 import { href } from '../../lib/paths.ts';
 
 const pages = (await getCollection('foundations')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Prose
-  title="Foundations — rockaway"
-  description="What every rockaway component stands on: the grid, strictness, glyphs, colour, the themes, the tokens and accessibility."
->
+<Prose title={fixed.foundations.title} description={fixed.foundations.description}>
   <h1>Foundations</h1>
   <p>
     What every component stands on. Each page is drawn by the system it describes: the frames are

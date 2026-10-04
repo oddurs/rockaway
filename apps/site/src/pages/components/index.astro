@@ -4,13 +4,11 @@
  */
 import Prose from '../../layouts/Prose.astro';
 import { components, inline, slugOf } from '../../lib/components.ts';
+import { fixed } from '../../lib/pages.ts';
 import { href } from '../../lib/paths.ts';
 ---
 
-<Prose
-  title="Components — rockaway"
-  description="Every component in @rockaway/react, each with its snapshot, a live example, its props, states, keyboard map and tokens, generated from its metadata."
->
+<Prose title={fixed.components.title} description={fixed.components.description}>
   <h1>Components</h1>
   <p>
     Every component in <code>@rockaway/react</code>. Each page is generated from what the component

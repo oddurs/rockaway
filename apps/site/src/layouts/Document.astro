@@ -24,6 +24,8 @@ import tokyoNight from '@rockaway/tokens/themes/tokyo-night.css?url';
 import fontUrl from '../fonts/jetbrains-mono.woff2?url';
 import { fontFaces } from '../lib/font.ts';
 import { prePaint } from '../lib/look.ts';
+import { cardPath } from '../lib/pages.ts';
+import { href } from '../lib/paths.ts';
 import '../styles/site.css';
 
 interface Props {
@@ -32,6 +34,12 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+// Where the page is, for the canonical link and its card (0150). The card is
+// named by the page's path under the base.
+const site = Astro.site ?? new URL('https://oddurs.github.io');
+const canonical = new URL(Astro.url.pathname, site).href;
+const under = Astro.url.pathname.slice(import.meta.env.BASE_URL.length);
+const card = new URL(href(cardPath(under)), site).href;
 // Every theme but the default is a stylesheet of its own, loaded only when
 // it is the reader's choice (0148).
 const themes = {
@@ -61,6 +69,23 @@ const themes = {
     <style is:inline set:html={fontFaces(fontUrl)}></style>
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={href('favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={href('favicon.png')} type="image/png" sizes="180x180" />
+    <link rel="apple-touch-icon" href={href('favicon.png')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="rockaway" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={card} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${title}: the page's title in a frame, drawn on the character grid.`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={card} />
   </head>
   <body>
     <slot />

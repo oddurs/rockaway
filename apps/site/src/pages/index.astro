@@ -14,6 +14,7 @@ import { Button, Frame, Screen } from '@rockaway/react';
 import Source from '../components/Source.astro';
 import Prose from '../layouts/Prose.astro';
 import { drawing, SERVER_SIZE } from '../lib/drawing.ts';
+import { fixed } from '../lib/pages.ts';
 import { href } from '../lib/paths.ts';
 
 const app = `import { Button, Frame } from '@rockaway/react';
@@ -30,11 +31,7 @@ export function App() {
 const first = drawing(SERVER_SIZE, { boxes: [], weight: 'light' });
 ---
 
-<Prose
-  title="rockaway — a TUI design system for the web"
-  description="A design system for terminal interfaces on the web. Every box is drawn on a grid of character cells, and every page is still a web page."
-  name="home"
->
+<Prose title={fixed.home.title} description={fixed.home.description} name="home">
   <h1>rockaway</h1>
   <p>
     <strong>A design system for terminal interfaces on the web.</strong> Every box is drawn on a

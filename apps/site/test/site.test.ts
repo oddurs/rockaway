@@ -8,7 +8,7 @@
  * does not change width when the font arrives.
  */
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
@@ -1210,6 +1210,120 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       await tab.goto(`${origin}${base}foundations/grid/`);
       expect(await tab.evaluate(() => getComputedStyle(document.body).lineHeight)).toBe('44px');
       await phone.close();
+    });
+  });
+
+  describe('titles, cards and the rest (0150)', () => {
+    /** Every built page, with what its head says. */
+    const heads = () => {
+      type Head = Record<
+        | 'title'
+        | 'description'
+        | 'canonical'
+        | 'ogTitle'
+        | 'ogDescription'
+        | 'ogImage'
+        | 'ogUrl'
+        | 'twitterCard'
+        | 'twitterImage',
+        string
+      >;
+      const pages: { file: string; head: Head }[] = [];
+      const walk = (dir: string) => {
+        for (const name of readdirSync(dir)) {
+          const file = path.join(dir, name);
+          if (statSync(file).isDirectory()) walk(file);
+          else if (name.endsWith('.html')) {
+            const html = readFileSync(file, 'utf8');
+            const read = (pattern: RegExp) => pattern.exec(html)?.[1] ?? '';
+            pages.push({
+              file: path.relative(out, file),
+              head: {
+                title: read(/<title>([^<]*)<\/title>/),
+                description: read(/<meta name="description" content="([^"]*)"/),
+                canonical: read(/<link rel="canonical" href="([^"]*)"/),
+                ogTitle: read(/<meta property="og:title" content="([^"]*)"/),
+                ogDescription: read(/<meta property="og:description" content="([^"]*)"/),
+                ogImage: read(/<meta property="og:image" content="([^"]*)"/),
+                ogUrl: read(/<meta property="og:url" content="([^"]*)"/),
+                twitterCard: read(/<meta name="twitter:card" content="([^"]*)"/),
+                twitterImage: read(/<meta name="twitter:image" content="([^"]*)"/),
+              },
+            });
+          }
+        }
+      };
+      walk(out);
+      return pages;
+    };
+
+    /** A PNG's size, from its header. */
+    const pngSize = (file: string) => {
+      const bytes = readFileSync(file);
+      return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+    };
+
+    test('gives every page its own title and description, a canonical address, and Open Graph and Twitter tags', () => {
+      const pages = heads();
+      expect(pages.length).toBeGreaterThan(20);
+      const titles = pages.map((p) => p.head.title);
+      const descriptions = pages.map((p) => p.head.description);
+      expect(new Set(titles).size, titles.join('\n')).toBe(pages.length);
+      expect(new Set(descriptions).size).toBe(pages.length);
+      for (const { file, head } of pages) {
+        for (const [tag, value] of Object.entries(head))
+          expect(value, `${file} ${tag}`).not.toBe('');
+        expect(head.ogTitle, file).toBe(head.title);
+        expect(head.ogDescription, file).toBe(head.description);
+        expect(head.ogUrl, file).toBe(head.canonical);
+        expect(head.twitterCard, file).toBe('summary_large_image');
+        expect(head.twitterImage, file).toBe(head.ogImage);
+        expect(new URL(head.canonical).pathname.startsWith(base), file).toBe(true);
+      }
+    });
+
+    test('draws each page a card, 1200 by 630, at the address its page names', () => {
+      for (const { file, head } of heads()) {
+        const card = path.join(out, new URL(head.ogImage).pathname.slice(base.length));
+        expect(statSync(card, { throwIfNoEntry: false })?.isFile(), `${file}: ${card}`).toBe(true);
+        expect(pngSize(card), file).toEqual({ width: 1200, height: 630 });
+      }
+    });
+
+    test('lists every page in a sitemap that robots.txt names, and has a 404 that is a screen', async () => {
+      const sitemap = readFileSync(path.join(out, 'sitemap.xml'), 'utf8');
+      const listed = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+      const pages = heads().filter((p) => !p.file.startsWith('404'));
+      expect(new Set(listed)).toEqual(new Set(pages.map((p) => p.head.canonical)));
+      expect(readFileSync(path.join(out, 'robots.txt'), 'utf8')).toContain(
+        `Sitemap: ${new URL(`${base}sitemap.xml`, 'https://oddurs.github.io').href}`,
+      );
+
+      const reader = await browser.newPage();
+      await reader.goto(`${origin}${base}404.html`);
+      await reader.waitForFunction(hydrated);
+      const found = await reader.evaluate(() => ({
+        h1: document.querySelector('article h1')?.textContent,
+        screen: document.querySelector('article .rk-screen .rk-frame')?.textContent ?? '',
+        home: [...document.querySelectorAll<HTMLAnchorElement>('article a')].map((a) =>
+          a.getAttribute('href'),
+        ),
+        map: document.querySelectorAll('nav a[href]').length,
+      }));
+      expect(found.h1).toBe('Not here');
+      expect(found.screen).toContain('404');
+      expect(found.home).toContain(base);
+      expect(found.map).toBeGreaterThan(5);
+      await reader.close();
+    });
+
+    test('has a favicon drawn from the grid, in SVG with a PNG beside it', () => {
+      const svg = readFileSync(path.join(out, 'favicon.svg'), 'utf8');
+      // Lines from the shapes, not letters: no font is needed to draw it.
+      expect(svg).toMatch(/^<svg /);
+      expect(svg).toContain('<rect ');
+      expect(svg).not.toContain('<text');
+      expect(pngSize(path.join(out, 'favicon.png'))).toEqual({ width: 180, height: 180 });
     });
   });
 });
