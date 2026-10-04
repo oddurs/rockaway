@@ -37,4 +37,11 @@ export const items: readonly ItemSource[] = [
       'A tree of files in a pane, with the keys that move through it: the left pane of a git client or an editor.',
     component: 'FileBrowser',
   },
+  {
+    name: 'settings',
+    title: 'Settings',
+    description:
+      'A settings page: every field component in framed sections, validation from the server, and a delete that asks for the account’s name. Its theme, mode and density apply live to itself.',
+    component: 'Settings',
+  },
 ];
