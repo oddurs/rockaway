@@ -95,7 +95,10 @@ export function startingBoxes({ width, height }: Size): Box[] {
   ];
 }
 
-/** The weights, as a label set into the bottom edge of the right pane: on one row, or not at all. */
+/**
+ * The weights, as a label set into the bottom edge of the right pane: on one
+ * row, in fewer words where the edge is short, or not at all.
+ */
 function weightsLabel(room: number): string | undefined {
   const long = '1 light  2 heavy  3 double';
   if (room >= long.length + 4) return long;
@@ -111,9 +114,11 @@ export function drawing(size: Size, state: DrawingState): Buffer {
     // The only words are labels set into edges: a box drawn across one takes
     // the cells it needs and the label gives them back, so nothing a reader
     // draws can land on text (0175).
-    const weights = weightsLabel(width - split);
+    // The edge it sits in stops a cell short of the corner, so the label
+    // keeps a stroke after its words, as every titled edge does: `─ 3 double ─┘`.
+    const weights = weightsLabel(width - split - 1);
     if (weights) {
-      drawLabel(draft, rect(split, height - 1, width - split, 1), weights, {
+      drawLabel(draft, rect(split, height - 1, width - split - 1, 1), weights, {
         set: setOf('light'),
         align: 'end',
         style: { fg: 'fg.muted', attrs: Attr.none },
