@@ -521,12 +521,21 @@ export async function checkContinuity(
 const UNMARKED = 'data-rk-continuity-unmarked';
 
 /**
- * A screenshot of the chrome alone. A screen's content layer sits over its
+ * A screenshot of this chrome alone. A screen's content layer sits over its
  * chrome on purpose — a button may stand on a rule — and what it covers is the
  * page's business; whether the lines meet is the painter's. So do a scrolling
  * region's overflow marks, each covering the cell at its edge (0208). The
  * content is made transparent and the marks hidden for the moment of the
  * screenshot, which moves nothing and takes focus from nothing.
+ *
+ * So is every other painted layer on the page. A letter is as tall as the
+ * font says, not as the cell (0116): at dense, where the line box is the font
+ * size, a descender in one screen's title reaches into the row below it, and
+ * when another screen starts on that row, as a fieldset in a frame does, the
+ * screenshot of its corner holds the other screen's `g` (0245). That ink is
+ * not this layer's, and is not read as this layer's. Neither layer is moved,
+ * and the ground a cell is compared with is read from its own ancestors,
+ * which this leaves alone.
  */
 async function chromeOnly(
   layer: HTMLElement,
@@ -538,8 +547,12 @@ async function chromeOnly(
   const content = [
     ...(layer.closest('.rk-screen')?.querySelectorAll<HTMLElement>(':scope > .rk-content') ?? []),
   ].filter((el) => !el.contains(layer));
-  const before = content.map((el) => el.style.opacity);
-  for (const el of content) el.style.opacity = '0';
+  const others = [...layer.ownerDocument.querySelectorAll<HTMLElement>('[data-rk-painted]')].filter(
+    (el) => el !== layer && !el.contains(layer) && !layer.contains(el),
+  );
+  const hidden = [...content, ...others];
+  const before = hidden.map((el) => el.style.opacity);
+  for (const el of hidden) el.style.opacity = '0';
   const doc = layer.ownerDocument;
   const regions: HTMLElement[] = [];
   for (let el = layer.parentElement; el; el = el.parentElement) {
@@ -552,7 +565,7 @@ async function chromeOnly(
   try {
     return await capture(target);
   } finally {
-    content.forEach((el, i) => {
+    hidden.forEach((el, i) => {
       el.style.opacity = before[i] ?? '';
     });
     for (const el of regions) el.removeAttribute(UNMARKED);
