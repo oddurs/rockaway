@@ -2,15 +2,17 @@
 # Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
 #   foreground: #4c4f69 -> #3b3d56
 #   blue: #1e66f5 -> #0b55e4
-#   bright-blue: #1e66f5 -> #1b63f2
+#   bright-blue: #1e66f5 -> #0032c1
 #   cyan: #179299 -> #006f76
-#   bright-cyan: #179299 -> #007a81
+#   bright-cyan: #179299 -> #004e54
 #   green: #40a02b -> #017500
-#   bright-green: #40a02b -> #187f00
+#   bright-green: #40a02b -> #005200
 #   yellow: #df8e1d -> #965300
-#   bright-yellow: #df8e1d -> #a35c00
+#   bright-yellow: #df8e1d -> #6e3a00
 #   red: #d20f39 -> #c70030
 #   magenta: #ea76cb -> #a6378c
+#   bright-red: #d20f39 -> #840017
+#   bright-magenta: #ea76cb -> #840e6d
 #
 # MIT licence. Copyright (c) 2021 Catppuccin.
 #
@@ -46,12 +48,12 @@ palette = 5=#a6378c
 palette = 6=#006f76
 palette = 7=#acb0be
 palette = 8=#6c6f85
-palette = 9=#d20f39
-palette = 10=#187f00
-palette = 11=#a35c00
-palette = 12=#1b63f2
-palette = 13=#ea76cb
-palette = 14=#007a81
+palette = 9=#840017
+palette = 10=#005200
+palette = 11=#6e3a00
+palette = 12=#0032c1
+palette = 13=#840e6d
+palette = 14=#004e54
 palette = 15=#bcc0cc
 background = #eff1f5
 foreground = #3b3d56

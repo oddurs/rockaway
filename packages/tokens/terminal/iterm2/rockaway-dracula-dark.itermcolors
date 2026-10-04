@@ -3,6 +3,9 @@
 Dracula (dark), from https://github.com/dracula/ghostty
 Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
   red: #ff5555 -> #ff948d
+  bright-blue: #d6acff -> #e6c0ff
+  bright-red: #ff6e6e -> #ffccc8
+  bright-magenta: #ff92df -> #ffc1f4
 
 MIT licence. Copyright (c) 2023 Dracula Theme.
 
@@ -156,9 +159,9 @@ SOFTWARE.
 		<key>Red Component</key>
 		<real>1.000000</real>
 		<key>Green Component</key>
-		<real>0.431373</real>
+		<real>0.800000</real>
 		<key>Blue Component</key>
-		<real>0.431373</real>
+		<real>0.784314</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -193,9 +196,9 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.839216</real>
+		<real>0.901961</real>
 		<key>Green Component</key>
-		<real>0.674510</real>
+		<real>0.752941</real>
 		<key>Blue Component</key>
 		<real>1.000000</real>
 		<key>Alpha Component</key>
@@ -208,9 +211,9 @@ SOFTWARE.
 		<key>Red Component</key>
 		<real>1.000000</real>
 		<key>Green Component</key>
-		<real>0.572549</real>
+		<real>0.756863</real>
 		<key>Blue Component</key>
-		<real>0.874510</real>
+		<real>0.956863</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>

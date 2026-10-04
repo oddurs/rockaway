@@ -111,14 +111,20 @@ const filled = ({ width, height }: Size): Buffer =>
     });
   });
 
-function Matrix({ density }: { density: Density }) {
+function Matrix({
+  density,
+  painters = PAINTERS,
+}: {
+  density: Density;
+  painters?: readonly PainterName[];
+}) {
   return (
     <div
       data-density={density}
       data-testid={density}
       style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}
     >
-      {PAINTERS.map((painter) => (
+      {painters.map((painter) => (
         <div
           key={painter}
           style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)', alignItems: 'start' }}
@@ -180,9 +186,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Nine screens a painter, two painters: the check has to have looked at all of them. */
-const matrix = (density: Density): Story => ({
-  args: { density },
+/**
+ * Nine screens, at one density with one painter: the check has to have looked
+ * at all of them. One story a painter, so each does half the work of both and
+ * runs well inside the zoom browser's time on CI (a story of both took 31s
+ * there, against a 30s limit).
+ */
+const matrix = (density: Density, painter: PainterName): Story => ({
+  args: { density, painters: [painter] },
   play: async ({ canvasElement }) => {
     // Every frame is wide enough for its title, so each one reads whole: a
     // reader is told what each frame is, not shown an ellipsis.
@@ -191,34 +202,36 @@ const matrix = (density: Density): Story => ({
       ['mixed', 'mixed'],
       ['heavy rules', 'weights'],
     ];
-    for (const painter of PAINTERS) {
-      for (const [id, name] of titled) {
-        const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${id}"]`);
-        const top = screen?.querySelector('.rk-row')?.textContent ?? '';
-        expect(top.split(' ')[1], `${id}: ${top}`).toBe(name);
-      }
-      // And every row of blocks says what it is.
-      const blocks = canvasElement.querySelector(`[data-testid="${density} ${painter} blocks"]`);
-      const rows = [...(blocks?.querySelectorAll('.rk-row') ?? [])].map((r) => r.textContent ?? '');
-      expect(rows.map((r) => r.slice(0, NAMES).trim())).toEqual(BLOCKS.map(([label]) => label));
+    for (const [id, name] of titled) {
+      const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${id}"]`);
+      const top = screen?.querySelector('.rk-row')?.textContent ?? '';
+      expect(top.split(' ')[1], `${id}: ${top}`).toBe(name);
     }
+    // And every row of blocks says what it is.
+    const blocks = canvasElement.querySelector(`[data-testid="${density} ${painter} blocks"]`);
+    const rows = [...(blocks?.querySelectorAll('.rk-row') ?? [])].map((r) => r.textContent ?? '');
+    expect(rows.map((r) => r.slice(0, NAMES).trim())).toEqual(BLOCKS.map(([label]) => label));
     const run = runner();
     if (!run) return;
     const report = await expectContinuity(canvasElement, { capture: run.capture });
     // Not a vacuous pass: every screen was looked at, and lines were compared
     // across a great many shared edges.
-    expect(report.layers).toBe(18);
-    expect(report.shapes).toBeGreaterThan(600);
-    expect(report.joins).toBeGreaterThan(500);
-    // Reverse video and a filled run, three and one rows, in each painter.
-    expect(report.fills).toBe(8);
+    expect(report.layers).toBe(9);
+    expect(report.shapes).toBeGreaterThan(300);
+    expect(report.joins).toBeGreaterThan(250);
+    // Reverse video and a filled run, three and one rows.
+    expect(report.fills).toBe(4);
   },
 });
 
-export const Dense: Story = matrix('dense');
-export const Normal: Story = matrix('normal');
-export const Airy: Story = matrix('airy');
-export const Touch: Story = matrix('touch');
+export const DenseGlyph: Story = matrix('dense', 'glyph');
+export const DenseRule: Story = matrix('dense', 'rule');
+export const NormalGlyph: Story = matrix('normal', 'glyph');
+export const NormalRule: Story = matrix('normal', 'rule');
+export const AiryGlyph: Story = matrix('airy', 'glyph');
+export const AiryRule: Story = matrix('airy', 'rule');
+export const TouchGlyph: Story = matrix('touch', 'glyph');
+export const TouchRule: Story = matrix('touch', 'rule');
 
 /**
  * The check can fail, and here is what it fails on: the same frame with its
@@ -407,6 +420,90 @@ export const SubPixel: Story = {
     const report = await expectContinuity(canvasElement, { capture: run.capture });
     expect(report.layers).toBe(27);
     expect(report.joins).toBeGreaterThan(900);
+  },
+};
+
+/** Every braille pattern, 32 to a row. */
+const brailles = (): Buffer =>
+  fromText(
+    Array.from({ length: 8 }, (_, row) =>
+      Array.from({ length: 32 }, (_, col) => String.fromCodePoint(0x2800 + row * 32 + col)).join(
+        '',
+      ),
+    ).join('\n'),
+  );
+
+/**
+ * Braille is drawn by the cell, like blocks (cairn 0166): all 256 patterns, at
+ * every density, read back pixel by pixel — each of a cell's eight dot places
+ * is inked exactly when the pattern raises that dot. The character itself is
+ * transparent, so no font, with braille or without, draws any of it.
+ */
+export const Braille: Story = {
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
+      {DENSITIES.map((density) => (
+        <div key={density} data-density={density}>
+          <Screen data-testid={`braille ${density}`} draw={brailles} cols={32} rows={8} />
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    for (const density of DENSITIES) {
+      const layer = canvas
+        .getByTestId(`braille ${density}`)
+        .querySelector<HTMLElement>('[data-rk-painted]') as HTMLElement;
+      const png = await run.capture(layer);
+      const blob =
+        typeof png === 'string'
+          ? new Blob([Uint8Array.from(atob(png), (c) => c.charCodeAt(0))], { type: 'image/png' })
+          : png;
+      const bitmap = await createImageBitmap(blob);
+      const canvasEl = new OffscreenCanvas(bitmap.width, bitmap.height);
+      const ctx = canvasEl.getContext('2d') as OffscreenCanvasRenderingContext2D;
+      ctx.drawImage(bitmap, 0, 0);
+      const { data, width } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+      const frame = layer.getBoundingClientRect();
+      const dpr = devicePixelRatio;
+      const ox = Math.floor(frame.left + 1e-3);
+      const oy = Math.floor(frame.top + 1e-3);
+      const at = (x: number, y: number): number => {
+        const i = (Math.floor((y - oy) * dpr) * width + Math.floor((x - ox) * dpr)) * 4;
+        return (data[i] ?? 0) + (data[i + 1] ?? 0) + (data[i + 2] ?? 0);
+      };
+      const ground = at(frame.left + 1, frame.top + 1);
+      const wrong: string[] = [];
+      for (const cell of layer.querySelectorAll<HTMLElement>('[data-rk-shape^="braille-"]')) {
+        expect(getComputedStyle(cell).webkitTextFillColor).toBe('rgba(0, 0, 0, 0)');
+        const pattern = (cell.textContent?.codePointAt(0) ?? 0) - 0x2800;
+        const box = cell.getBoundingClientRect();
+        // Dots 1 2 3 7 down the left, 4 5 6 8 down the right.
+        const places: [number, number][] = [
+          [0, 0],
+          [0, 1],
+          [0, 2],
+          [1, 0],
+          [1, 1],
+          [1, 2],
+          [0, 3],
+          [1, 3],
+        ];
+        places.forEach(([col, row], bit) => {
+          const x = box.left + box.width * (0.25 + col / 2);
+          const y = box.top + box.height * (0.125 + row / 4);
+          const inked = Math.abs(at(x, y) - ground) > 96;
+          if (inked !== ((pattern & (1 << bit)) !== 0)) {
+            wrong.push(`${cell.textContent} dot ${bit + 1}`);
+          }
+        });
+      }
+      expect(wrong, density).toEqual([]);
+      expect(layer.querySelectorAll('[data-rk-shape^="braille-"]')).toHaveLength(256);
+    }
   },
 };
 

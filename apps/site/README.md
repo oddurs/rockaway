@@ -26,6 +26,9 @@ a packaging bug, and it is fixed in the package.
 | `src/pages/` | One file per route. Pages compose; they bring no CSS of their own. |
 | `src/layouts/Document.astro` | The one `<html>`: head order, the font, the stylesheet. |
 | `src/islands/` | Compositions of the system's components that the site hydrates. A single component is hydrated from its own entry, `@rockaway/react/<component>`, never from the package's index: an island keeps every export of the module it comes from, and the index would ship the whole package for one box. |
+| `src/content/foundations/`, `src/pages/foundations/` | The foundations (0106), in MDX: prose, with examples the engine draws at build time (`src/lib/foundations.ts`) and tables read from the tokens (`src/lib/tokens.ts`). |
+| `src/components/` | Build-time pieces for MDX: `Painted` (a buffer as the painter's own markup, no JavaScript), `Table` (data set as prose, columns sized in cells), `ThemeCard`. Never a component the system should have. |
+| `src/pages/terminal/` | Every theme's terminal files, served from what `@rockaway/tokens` ships. |
 | `src/lib/` | Logic, in TypeScript. Astro frontmatter is not typechecked, so keep it thin. |
 | `src/styles/site.css` | The system's CSS as a consumer imports it, and page layout. |
 | `src/fonts/` | The one font, its metrics and its licence. |
@@ -69,6 +72,22 @@ tarballs, writes in every fence marked `quickstart="vite"` or
 production, and reads the screen back as text against the fence marked
 `quickstart="screen"`. It needs the network, so it is not part of `pnpm
 check`; CI runs it (0155).
+
+## The registry
+
+Compositions a team is expected to change are copied in, not installed
+(cairn 0011): `src/registry/<name>/` holds each item's source, and
+`src/registry/items.ts` its title, description and the component the
+registry page draws. The build serves each as `/r/<name>.json` in shadcn's
+format, generated from the source by `src/lib/registry.ts`, with an index at
+`/r/registry.json`, and `/registry/` draws every item with the line that
+copies it in.
+
+An item imports only from `@rockaway/*`, React, and its own files, never from
+another item, so copying one never brings another; the build fails if one
+does, and `test/registry.test.ts` says which. `pnpm --filter site quickstart
+registry` copies every item into a new Vite app with shadcn's CLI and checks
+that it draws what the registry page draws.
 
 ## The base path
 

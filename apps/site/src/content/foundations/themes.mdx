@@ -1,0 +1,37 @@
+---
+title: Themes
+description: Every theme that ships, in each mode it declares, drawn in its own border set and colours, with its files for Ghostty, kitty, Alacritty and iTerm2.
+order: 5
+---
+
+import '@rockaway/tokens/themes/ice.css';
+import '@rockaway/tokens/themes/ink.css';
+import '@rockaway/tokens/themes/phosphor.css';
+import '@rockaway/tokens/themes/catppuccin.css';
+import '@rockaway/tokens/themes/dracula.css';
+import '@rockaway/tokens/themes/nord.css';
+import '@rockaway/tokens/themes/solarized.css';
+import '@rockaway/tokens/themes/tokyo-night.css';
+import { themeContexts } from '@rockaway/tokens';
+import ThemeCard from '../../components/ThemeCard.astro';
+
+# Themes
+
+Every theme is a context: an attribute on any element, which nests in any
+other. Each one below is the real thing, an island of `data-rk-theme` in each
+mode the theme declares, with a screen drawn in its border set and its sixteen
+colours in a row.
+
+```html
+<aside data-rk-theme="nord">…</aside>
+```
+
+The default theme is in `tokens.css`. Every other is a stylesheet of its own,
+imported after it, and its border set and marks come from `themeGlyphs` through
+`GlyphProvider`, because chrome is drawn in JavaScript. A theme with one mode,
+like Dracula, pins it.
+
+Every theme is also a set of terminal files, so the palette you read the
+documentation in is the palette you can put in your terminal.
+
+{themeContexts.map((theme) => <ThemeCard theme={theme} />)}

@@ -3,6 +3,17 @@
 **A TUI design system for the web.** Everything sits on a character grid: one
 cell wide, one row tall, no halves.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/screen-dark.png">
+  <img alt="A rockaway screen: a file tree in one frame, and a commit pane in another with a list of changed files, a passing-checks badge and Commit, Amend and Discard buttons, above a row of key hints. Every line and box sits on a monospace character grid." src="docs/assets/screen-light.png">
+</picture>
+
+<sub>A real screen, captured from the workbench: Frame, Tree, List, Badge, Button
+and KeyHint at the default density.</sub>
+
+**[The site](https://oddurs.github.io/rockaway/)** · [The concept](docs/concept.md) ·
+[What is public](docs/public-api.md) · [Roadmap](ROADMAP.md)
+
 Terminals have been doing a lot with a little for fifty years. The constraint
 is the point — a grid you cannot fall off, screens you can diff as text, and a
 palette your reader already has. rockaway takes that model seriously on the
@@ -13,8 +24,55 @@ reader.
 as data, two layers, four painters over one geometry, and the rules that follow.
 
 > [!NOTE]
-> Pre-release: nothing is published yet. The token pipeline and the CSS layers
-> are built; the frame engine is next. The [roadmap](ROADMAP.md) is the truth.
+> **Pre-release.** Nothing is on npm yet; the first release will be 0.1.0. The
+> engine, the four painters, the tokens with nine themes, the CSS and eleven
+> components are built and tested: Frame, Divider, Button, Link, KeyHint,
+> Badge, Callout, List, Tree, and the field and fieldset that forms are built
+> from. Below 1.0 a minor version can break, and says so in its changelog.
+> The [roadmap](ROADMAP.md) is the truth.
+
+## Getting started
+
+Once 0.1.0 is published:
+
+```sh
+npm install @rockaway/react @rockaway/css @rockaway/tokens
+```
+
+React 19 is a peer dependency. Import the CSS once, the contract first and the
+tokens after it:
+
+```css
+@import '@rockaway/css';
+@import '@rockaway/tokens/tokens.css';
+```
+
+Then compose:
+
+```tsx
+import { Button, Frame, List, ListItem } from '@rockaway/react';
+
+export function Commit() {
+  return (
+    <Frame title="commit" cols={40} rows={8}>
+      <List aria-label="Changed files" rows={3} selectionMode="single">
+        <ListItem id="list">src/components/list.tsx</ListItem>
+        <ListItem id="cells">src/paint/cells.ts</ListItem>
+        <ListItem id="test">test/list.test.ts</ListItem>
+      </List>
+      <Button variant="fill" onPress={() => console.log('commit')}>
+        Commit
+      </Button>
+    </Frame>
+  );
+}
+```
+
+The frame measures its cell from the font, so any monospace font works.
+Switch the context on any element: `data-theme="dark"` for the mode,
+`data-density="touch"` for the line box, and `data-rk-theme="dracula"` for a
+theme, with that theme's stylesheet imported after the tokens. The
+getting-started guide on the site goes further.
 
 ## What it is
 
@@ -103,8 +161,11 @@ with [cairn](https://github.com/oddurs/cairn): `cairn next` shows what is ready.
 Architecture decisions are items too, with their context and consequences —
 start with [why it is a TUI system](cairn/items), items 0070 to 0077.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) to get started, and the
+[code of conduct](CODE_OF_CONDUCT.md). Report a vulnerability privately, as
+[SECURITY.md](SECURITY.md) says.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). The imported terminal themes keep their own licences, which sit
+beside them in [`packages/tokens/themes/terminal`](packages/tokens/themes/terminal).

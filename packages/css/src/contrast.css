@@ -1,0 +1,26 @@
+/*
+ * Increased contrast (cairn 0065). The tokens do most of it: under
+ * `prefers-contrast: more`, or `data-rk-contrast="more"` on any element, the
+ * semantic tier is re-read from the same palette (muted text is the
+ * foreground, colour takes the bright slot, a fill is reverse video), every
+ * line is a step heavier and the focus ring is thicker.
+ *
+ * What is left is disabled. Disabled text is dim, and a reader who asked for
+ * more contrast should not have to tell dim from not-dim. So here a disabled
+ * control is struck through as well, which is an attribute a terminal has and
+ * costs no cell. It sits in `rk.utilities`, after the components, so a
+ * component's own text decoration (a link's underline) cannot take it away.
+ */
+@layer rk.utilities {
+  [data-rk-contrast="more"] [data-disabled]:not([data-rk-contrast="standard"] *),
+  [data-rk-contrast="more"][data-disabled] {
+    text-decoration-line: line-through;
+  }
+
+  @media (prefers-contrast: more) {
+    :root:not([data-rk-contrast="standard"])
+      [data-disabled]:not([data-rk-contrast="standard"], [data-rk-contrast="standard"] *) {
+      text-decoration-line: line-through;
+    }
+  }
+}
