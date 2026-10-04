@@ -187,7 +187,13 @@ if (shell && panes && bar && main && page && help) {
     // A click on the page focuses the page, after the pointer has already
     // said what was clicked: that focus says nothing new.
     if (event.type === 'focusin' && el?.getAttribute('tabindex') === '-1') return;
-    const screen = el?.closest<HTMLElement>('figure[role="img"], .rk-screen');
+    // Nor does a click in an example that focuses the box it scrolls in.
+    if (event.type === 'focusin' && pointed && el?.contains(pointed)) return;
+    const SCREEN = 'figure[role="img"], .rk-screen';
+    // Tabbing to the box an example scrolls in is moving into the example.
+    const screen =
+      el?.closest<HTMLElement>(SCREEN) ??
+      (el?.matches('.rk-scroll-marks') ? el.querySelector<HTMLElement>(SCREEN) : null);
     // The shell's own screens are the page, which is what it copies anyway.
     pointed = screen && screen.parentElement !== shell ? screen : undefined;
   };
