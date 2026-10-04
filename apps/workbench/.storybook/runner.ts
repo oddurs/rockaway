@@ -28,6 +28,8 @@ export interface Runner {
   readonly plan: Plan;
   /** Tells the run which known failures a story put in play and used, so a stale one fails it. */
   readonly record: (use: KnownUse) => Promise<void>;
+  /** Emulates the reader's `prefers-contrast` (cairn 0065); `no-preference` gives it back. */
+  readonly contrast: (preference: 'more' | 'no-preference') => Promise<void>;
 }
 
 let current: Runner | undefined;

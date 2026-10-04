@@ -12,14 +12,15 @@
 /*
  * The remapping sits in `rk.base`, not `rk.tokens`: both would otherwise be
  * the same layer as the generated token file, where the winner would depend on
- * import order. It is made on every theme island as well as the root, because
- * an island re-declares the palette and its aliases (cairn 0052), and would
- * otherwise put the theme's colours back inside it.
+ * import order. It is made on every theme and contrast island as well as the
+ * root, because an island re-declares the palette's aliases (cairn 0052,
+ * 0065), and would otherwise put the theme's colours back inside it.
  */
 @layer rk.base {
   @media (forced-colors: active) {
     :root,
-    [data-rk-theme] {
+    [data-rk-theme],
+    [data-rk-contrast] {
       /* The palette first: everything else aliases it (0089). */
       --rk-ansi-background: Canvas;
       --rk-ansi-surface: Canvas;
