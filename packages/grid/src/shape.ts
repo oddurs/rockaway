@@ -34,6 +34,12 @@ export interface Terms {
    * the cell's edge and meets its neighbour the way a straight line does.
    */
   readonly radius?: number;
+  /**
+   * Multiples of a braille dot's side: a quarter of the cell's width or an
+   * eighth of its height, whichever is smaller, so a dot is square and eight
+   * of them fit (cairn 0166).
+   */
+  readonly dot?: number;
 }
 
 /**
@@ -74,13 +80,19 @@ export type Mark = RectMark | ArcMark;
 
 export interface Shape {
   readonly ch: string;
-  readonly kind: 'box' | 'arc' | 'block';
+  readonly kind: 'box' | 'arc' | 'block' | 'braille';
   /**
    * A stable name for the shape: `box-0110` is a box glyph by its weights,
    * north, east, south, west; `arc-0110` the rounded corner with those edges;
-   * `block-2588` a block element by its code point.
+   * `block-2588` a block element by its code point; `braille-2847` a braille
+   * pattern by its code point.
    */
   readonly key: string;
+  /**
+   * A braille pattern's raised dots, by their Unicode numbers: dots 1 2 3 7
+   * down the left, 4 5 6 8 down the right. Empty for every other shape.
+   */
+  readonly dots: readonly number[];
   readonly marks: readonly Mark[];
   /** Which edges of the cell the ink touches. */
   readonly reach: Readonly<Record<Side, boolean>>;
@@ -103,16 +115,18 @@ export interface Metrics {
 /** A measure in pixels (or whatever unit the metrics are in), along an axis `extent` long. */
 export function resolve(m: Measure, extent: number, metrics: Metrics): number {
   const radius = Math.min(metrics.width, metrics.height) / 2 - metrics.light;
+  const dot = Math.min(metrics.width / 4, metrics.height / 8);
   return (
     m.cell * extent +
     (m.light ?? 0) * metrics.light +
     (m.heavy ?? 0) * metrics.heavy +
     (m.gap ?? 0) * metrics.gap +
-    (m.radius ?? 0) * radius
+    (m.radius ?? 0) * radius +
+    (m.dot ?? 0) * dot
   );
 }
 
-const TERMS = ['light', 'heavy', 'gap', 'radius'] as const;
+const TERMS = ['light', 'heavy', 'gap', 'radius', 'dot'] as const;
 
 function terms(source: Readonly<Record<string, number | undefined>>): Terms {
   const out: Record<string, number> = {};
@@ -356,6 +370,45 @@ const BLOCKS: readonly (readonly [ch: string, boxes: readonly Box[], alpha?: num
   ['▟', [QUADRANT.ur, QUADRANT.ll, QUADRANT.lr]],
 ];
 
+/**
+ * Braille (cairn 0166): eight dots in two columns of four. Unicode numbers them
+ * down the left, then the right, then the bottom pair, which came later — so
+ * bit `n` of the code point's offset from U+2800 is dot `n + 1`, and this is
+ * where each dot sits, as a column and a row.
+ */
+const BRAILLE_DOTS: readonly (readonly [col: number, row: number])[] = [
+  [0, 0],
+  [0, 1],
+  [0, 2],
+  [1, 0],
+  [1, 1],
+  [1, 2],
+  [0, 3],
+  [1, 3],
+];
+
+/**
+ * The marks for a braille pattern: a square dot, one braille dot wide, centred
+ * in each quarter of the cell across and each eighth down. Dots never reach an
+ * edge, so a run of braille reads as dots, not as a line.
+ */
+export function brailleMarks(pattern: number): RectMark[] {
+  const marks: RectMark[] = [];
+  BRAILLE_DOTS.forEach(([col, row], bit) => {
+    if ((pattern & (1 << bit)) === 0) return;
+    const x = 0.25 + col / 2;
+    const y = 0.125 + row / 4;
+    marks.push(
+      rect(at(x, { dot: -0.5 }), at(y, { dot: -0.5 }), at(x, { dot: 0.5 }), at(y, { dot: 0.5 })),
+    );
+  });
+  return marks;
+}
+
+/** The dot numbers a pattern raises, 1 to 8. */
+const dotsOf = (pattern: number): number[] =>
+  BRAILLE_DOTS.flatMap((_, bit) => ((pattern & (1 << bit)) === 0 ? [] : [bit + 1]));
+
 /** A cell to measure against when working out which edges a shape reaches. */
 const PROBE: Metrics = { width: 10, height: 20, light: 1, heavy: 2, gap: 1 };
 
@@ -379,11 +432,18 @@ function reachOf(marks: readonly Mark[]): Record<Side, boolean> {
 const isWhole = (m: Measure, cell: number): boolean =>
   m.cell === cell && TERMS.every((name) => (m[name] ?? 0) === 0);
 
-function shape(ch: string, kind: Shape['kind'], key: string, marks: readonly Mark[]): Shape {
+function shape(
+  ch: string,
+  kind: Shape['kind'],
+  key: string,
+  marks: readonly Mark[],
+  dots: readonly number[] = [],
+): Shape {
   return {
     ch,
     kind,
     key,
+    dots,
     marks,
     reach: reachOf(marks),
     spans: marks.every((m) => m.kind === 'rect' && isWhole(m.x0, 0) && isWhole(m.x1, 1)),
@@ -406,6 +466,11 @@ function build(): ReadonlyMap<string, Shape> {
     const marks = boxes.map(([x0, y0, x1, y1]) => rect(at(x0), at(y0), at(x1), at(y1), alpha));
     const code = (ch.codePointAt(0) ?? 0).toString(16);
     out.set(ch, shape(ch, 'block', `block-${code}`, marks));
+  }
+  for (let pattern = 0; pattern < 256; pattern++) {
+    const ch = String.fromCodePoint(0x2800 + pattern);
+    const key = `braille-${(0x2800 + pattern).toString(16)}`;
+    out.set(ch, shape(ch, 'braille', key, brailleMarks(pattern), dotsOf(pattern)));
   }
   return out;
 }

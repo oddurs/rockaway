@@ -96,6 +96,8 @@ export interface RunMarkup {
   readonly shape?: string;
   /** `data-attrs`: bold, dim, reverse, underline. */
   readonly attrs?: string;
+  /** `data-rk-dots`: the dots a braille cell raises; one rule draws them all (0166). */
+  readonly dots?: string;
 }
 
 /** A run that starts at column `col`, as markup. */
@@ -113,10 +115,12 @@ export function runMarkup(run: Run, col: number): RunMarkup {
     .filter(([bit]) => (run.style.attrs & bit) !== 0)
     .map(([, name]) => name)
     .join(' ');
+  const dots = (shapeOf(run.text)?.dots ?? []).join(' ');
   return {
     style,
     ...(run.shape ? { shape: run.shape } : {}),
     ...(attrs ? { attrs } : {}),
+    ...(dots ? { dots } : {}),
   };
 }
 
@@ -130,6 +134,21 @@ export function rowsOf(buffer: Buffer): { readonly run: Run; readonly col: numbe
       return at;
     });
   });
+}
+
+/**
+ * The data attributes that make one character a cell the cell draws, for
+ * chrome that is a single element rather than a painted screen: a spinner's
+ * frame, a mark. Give the element the `rk-run` class too, so it is a whole
+ * cell. Empty for a letter, which the font draws (cairn 0166).
+ */
+export function shapeAttributes(ch: string): Record<string, string> {
+  const shape = shapeOf(ch);
+  if (!shape) return {};
+  return {
+    'data-rk-shape': shape.key,
+    ...(shape.dots.length > 0 ? { 'data-rk-dots': shape.dots.join(' ') } : {}),
+  };
 }
 
 /** Paint `buffer` into `target`, replacing what was there, with strokes of this style. */
@@ -157,6 +176,7 @@ export function paintCells(
       }
       if (markup.shape) el.dataset.rkShape = markup.shape;
       if (markup.attrs) el.dataset.attrs = markup.attrs;
+      if (markup.dots) el.dataset.rkDots = markup.dots;
       el.textContent = run.text;
       row.append(el);
     }

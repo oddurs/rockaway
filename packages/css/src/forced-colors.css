@@ -127,16 +127,18 @@
  * Its colours are still the reader's, because every token it reads is a
  * system colour here.
  *
- * Button's rules are here rather than in button.css so that Button's own
- * polish (0131) can move them without this fix waiting on it.
+ * A component's stylesheet opts out what it reverses itself (Button, Link,
+ * List and Tree do, 0202). This holds what the base reverses: painted cells in
+ * reverse video, and a filled thing's focus.
+ *
+ * A test (test/reverse-opt-out.test.ts) finds every rule that draws words in
+ * a ground colour and fails if nothing here, or a forced-colors block of its
+ * own, opts it out (0201).
  */
 @layer rk.base {
   @media (forced-colors: active) {
     [data-attrs~="reverse"],
-    .rk-button[data-variant="fill"],
-    .rk-button[data-pressed],
-    .rk-link[data-pressed],
-    .rk-list-item[data-selected] {
+    [data-rk-fill]:focus-visible {
       forced-color-adjust: none;
     }
   }

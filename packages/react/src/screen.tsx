@@ -27,7 +27,7 @@ import {
   useState,
 } from 'react';
 import { type CellMetrics, cellsIn, measureCell } from './cell-metrics.ts';
-import { chromeRows } from './paint/chrome.tsx';
+import { chromeRows, type Stretch } from './paint/chrome.tsx';
 
 export type PainterName = 'glyph' | 'rule';
 
@@ -45,7 +45,12 @@ export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
   /** Fix the size in cells instead of measuring the container. */
   cols?: number;
   rows?: number;
-  /** The size to draw before the first measurement, and on a server. */
+  /**
+   * The size to draw before the first measurement, and on a server. Until a
+   * measured axis is measured, the chrome stretches along it to fill the box
+   * the page gives the screen, so make the fallback the smallest the chrome
+   * can be: a page with no script then shows the frame at its true size.
+   */
   fallback?: Size;
   /**
    * Inset the content layer by this many cells, so real elements start inside
@@ -131,9 +136,24 @@ export function Screen({
   }, [remeasure]);
 
   const buffer = useMemo(() => draw(size), [draw, size]);
+  // Until it is measured, a screen whose size the page decides cannot know how
+  // many cells it has: on a server, with no script, and in the first client
+  // render. It draws the fallback and stretches it to the box, along the axes
+  // it will measure, so the frame is the box's size from the first paint and
+  // measuring it changes nothing anyone can see.
+  const stretch: Stretch | undefined = useMemo(() => {
+    if (measured !== undefined) return undefined;
+    const across = cols === undefined && buffer.width >= 3;
+    const down = rows === undefined && buffer.height >= 3;
+    if (!across && !down) return undefined;
+    return {
+      ...(down ? { row: buffer.height - 2 } : {}),
+      ...(across ? { col: buffer.width - 2 } : {}),
+    };
+  }, [measured, cols, rows, buffer]);
   // Built once per buffer: a re-render that only measured the cell leaves the
   // chrome's nodes alone.
-  const chrome = useMemo(() => chromeRows(buffer), [buffer]);
+  const chrome = useMemo(() => chromeRows(buffer, stretch), [buffer, stretch]);
 
   const vars = {
     '--rk-cell-width': cell ? `${cell.width}px` : '1ch',
@@ -157,7 +177,12 @@ export function Screen({
       style={{ ...vars, ...style }}
       {...rest}
     >
-      <div className="rk-frame" aria-hidden="true" data-rk-painted={painter}>
+      <div
+        className="rk-frame"
+        aria-hidden="true"
+        data-rk-painted={painter}
+        data-rk-elastic={stretch === undefined ? undefined : ''}
+      >
         {chrome}
       </div>
       {children === undefined ? null : (
