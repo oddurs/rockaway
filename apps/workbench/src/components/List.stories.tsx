@@ -534,18 +534,23 @@ export const Empty: Story = {
 };
 
 /**
- * Every density, under both painters: a row is one cell tall wherever it is,
+ * Every density, under one painter: a row is one cell tall wherever it is,
  * the list is a whole number of rows, and the scrollbar's blocks fill their
- * cells (the continuity check runs after this story). Every state at each:
- * a selection and a disabled row hold still, and hover and the cursor are
+ * cells (the continuity check runs after the story). Every state at each: a
+ * selection and a disabled row hold still, and hover and the cursor are
  * brought into each list in turn.
+ *
+ * One story per painter. Both painters' eight lists in one story took past
+ * CI's thirty seconds: the check after it reads every list's pixels in
+ * several cells of the matrix, and the play function hovers and clicks in
+ * each.
  */
-export const Densities: Story = {
-  render: () => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: 'var(--rk-x-2)' }}>
-      {DENSITIES.flatMap((density) =>
-        PAINTERS.map((painter) => (
-          <div key={`${density}-${painter}`} data-density={density}>
+function densities(painter: (typeof PAINTERS)[number]): Story {
+  return {
+    render: () => (
+      <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: 'var(--rk-x-2)' }}>
+        {DENSITIES.map((density) => (
+          <div key={density} data-density={density}>
             <Framed name={`${density}, ${painter}`} width={18} rows={4} painter={painter}>
               <Files
                 label={`Files, ${density}, ${painter}`}
@@ -556,14 +561,12 @@ export const Densities: Story = {
               />
             </Framed>
           </div>
-        )),
-      )}
-    </div>
-  ),
-  play: async ({ canvas }) => {
-    await settled();
-    for (const density of DENSITIES) {
-      for (const painter of PAINTERS) {
+        ))}
+      </div>
+    ),
+    play: async ({ canvas }) => {
+      await settled();
+      for (const density of DENSITIES) {
         const frame = canvas.getByRole('group', { name: `${density}, ${painter}` });
         const cell = cellOf(frame);
         const list = frame.querySelector('.rk-list') as HTMLElement;
@@ -603,9 +606,12 @@ export const Densities: Story = {
           ),
         );
       }
-    }
-  },
-};
+    },
+  };
+}
+
+export const Densities: Story = { ...densities('glyph'), name: 'Densities, glyph' };
+export const DensitiesRule: Story = { ...densities('rule'), name: 'Densities, rule' };
 
 /** The glyph and rule painters draw the same list, cell for cell: single, multiple and empty. */
 export const Painters: Story = {

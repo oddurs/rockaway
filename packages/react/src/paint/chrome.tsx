@@ -49,6 +49,7 @@ export function chromeRows(buffer: Buffer, stretch: Stretch = {}): ReactNode[] {
             style={markup.style as CSSProperties}
             data-rk-shape={markup.shape}
             data-attrs={markup.attrs}
+            data-rk-dots={markup.dots}
             data-rk-stretch={stretches ? '' : undefined}
           >
             {run.text}

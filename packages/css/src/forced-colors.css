@@ -129,14 +129,20 @@
  *
  * Button's rules are here rather than in button.css so that Button's own
  * polish (0131) can move them without this fix waiting on it.
+ *
+ * A test (test/reverse-opt-out.test.ts) finds every rule that draws words in
+ * a ground colour and fails if nothing here, or a forced-colors block of its
+ * own, opts it out (0201).
  */
 @layer rk.base {
   @media (forced-colors: active) {
     [data-attrs~="reverse"],
+    [data-rk-fill]:focus-visible,
     .rk-button[data-variant="fill"],
     .rk-button[data-pressed],
     .rk-link[data-pressed],
-    .rk-list-item[data-selected] {
+    .rk-list-item[data-selected],
+    .rk-tree-item[data-selected] {
       forced-color-adjust: none;
     }
   }
