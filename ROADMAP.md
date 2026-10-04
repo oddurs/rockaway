@@ -116,7 +116,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 47% · 60 of 128 done · due 2027-01-31
+`#####·····` 48% · 61 of 128 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -161,7 +161,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0228`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0228-re-check-cellsin-s-snap-at-the-new-line-boxes.md) Re-check cellsIn's snap at the new line boxes <sup>chore · grid · p2</sup>
 - [ ] [`0229`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0229-loosen-the-continuity-leak-rule-by-the-reach-rule-s-slack.md) Loosen the continuity leak rule by the reach rule's slack <sup>bug · tooling · p2</sup>
 - [ ] [`0230`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0230-clip-checkcontinuity-to-what-a-scroll-region-shows.md) Clip checkContinuity to what a scroll region shows <sup>feature · tooling · p2</sup>
-- [ ] [`0231`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0231-use-the-theme-s-ellipsis-in-the-dom.md) Use the theme's ellipsis in the DOM <sup>feature · components · p3</sup>
 - [ ] [`0232`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0232-render-a-table-header-in-one-pass.md) Render a table header in one pass <sup>chore · components · p3</sup>
 
 ### ready
@@ -257,6 +256,7 @@ The component contract, proven on a first set of components.
 - [x] [`0215`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0215-decide-what-a-solid-control-draws-when-the-system-colour-pair-is-weak.md) Decide what a solid control draws when the system colour pair is weak <sup>decision · css · p2</sup>
 - [x] [`0224`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0224-button-forwards-a-ref.md) Button forwards a ref <sup>bug · components · p2</sup>
 - [x] [`0225`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0225-bind-button-s-keys-through-the-keymap-when-one-is-present.md) Bind Button's keys through the Keymap when one is present <sup>feature · components · p2</sup>
+- [x] [`0231`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0231-use-the-theme-s-ellipsis-in-the-dom.md) Use the theme's ellipsis in the DOM <sup>feature · components · p3</sup>
 - [x] [`0236`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0236-ink-shapes-inside-a-reversed-element-in-the-reversed-figure-under-forced-colours.md) Ink shapes inside a reversed element in the reversed figure under forced colours <sup>bug · css · p2</sup>
 - [x] [`0238`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0238-size-a-server-rendered-screen-from-its-content-not-screen-s-fallback.md) Size a server-rendered screen from its content, not Screen's fallback <sup>bug · components · p1</sup>
 - [x] [`0240`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0240-make-keyhint-phrasing-content-so-it-can-sit-inside-a-paragraph.md) Make KeyHint phrasing content, so it can sit inside a paragraph <sup>bug · components · p2</sup>
