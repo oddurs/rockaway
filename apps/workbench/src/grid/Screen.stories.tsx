@@ -1,5 +1,12 @@
 import { Buffer, contentArea, drawBox, drawText, rect, type Size } from '@rockaway/grid';
-import { Frame, frameBuffer, renderScreenToText, Screen } from '@rockaway/react';
+import {
+  CELL_GRACE,
+  cellsIn,
+  Frame,
+  frameBuffer,
+  renderScreenToText,
+  Screen,
+} from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
@@ -56,7 +63,12 @@ export const MeasuresItsContainer: Story = {
     // The cell is the font's, not a number anyone picked.
     const cell = Number.parseFloat(getComputedStyle(screen).getPropertyValue('--rk-cell-width'));
     expect(cell).toBeGreaterThan(4);
-    expect(cols).toBe(Math.floor(host.getBoundingClientRect().width / cell));
+    // The whole cells in the box, with a sixteenth of a cell's grace (0228): a
+    // box that short of n cells is n, drawn a sliver past its edge, which cuts
+    // no line, since lines are drawn through a cell's middle.
+    const width = host.getBoundingClientRect().width;
+    expect(cols).toBe(cellsIn(width, cell));
+    expect(cols * cell - width).toBeLessThanOrEqual(cell * CELL_GRACE);
   },
 };
 

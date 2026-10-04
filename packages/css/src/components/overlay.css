@@ -53,10 +53,12 @@
     white-space: normal;
   }
 
-  /* Under 60 cells, or at touch density: as wide as the viewport, in whole cells. */
+  /* Under 60 cells, or at touch density: as wide as the viewport, in whole
+   * cells, with the sixteenth of a cell's grace every cell count takes (0228):
+   * a viewport a hair under n cells is n, in every engine. */
   .rk-overlay-sheet {
     display: block;
-    inline-size: round(down, 100vw, var(--rk-cell-width));
+    inline-size: round(down, calc(100vw + var(--rk-cell-width) / 16), var(--rk-cell-width));
   }
 
   /*
