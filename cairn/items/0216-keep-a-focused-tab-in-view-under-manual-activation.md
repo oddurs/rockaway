@@ -10,7 +10,6 @@ depends_on:
 - 40
 created: 2026-10-03
 updated: 2026-10-03
-closed_at: 2026-10-03
 priority: p2
 layer: components
 effort: s
