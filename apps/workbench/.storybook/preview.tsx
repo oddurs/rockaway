@@ -1,4 +1,4 @@
-import { GlyphProvider } from '@rockaway/react';
+import { GlyphProvider, OverlayLayer } from '@rockaway/react';
 import { expectField, expectNoNativeScrollbars } from '@rockaway/react/testing';
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import { afterEach as axe } from '@storybook/addon-a11y/preview';
@@ -11,6 +11,7 @@ import '@rockaway/tokens/tokens.css';
 import '@rockaway/tokens/themes/ice.css';
 import '@rockaway/tokens/themes/ink.css';
 import '@rockaway/tokens/themes/phosphor.css';
+import '@rockaway/tokens/themes/ascii.css';
 import '@rockaway/tokens/themes/catppuccin.css';
 import '@rockaway/tokens/themes/dracula.css';
 import '@rockaway/tokens/themes/nord.css';
@@ -39,7 +40,10 @@ const withContexts: Decorator = (Story, { globals }) => {
   });
   return (
     <GlyphProvider glyphs={themeGlyphs[theme]}>
-      <Story />
+      {/* Overlays open into the canvas, so every check after a story sees them (cairn 0128). */}
+      <OverlayLayer>
+        <Story />
+      </OverlayLayer>
     </GlyphProvider>
   );
 };

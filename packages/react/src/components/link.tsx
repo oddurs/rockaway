@@ -27,6 +27,16 @@
  * `data-focus-visible`, `data-current` and `data-disabled`, renders a disabled
  * link as a `span` with `role="link"`, and hands navigation to a
  * `RouterProvider` when there is one.
+ *
+ * Client-side routing (cairn 0168): wrap the app in `RouterProvider`, from
+ * here, with the router's `navigate` (and `useHref`, for a base path):
+ *
+ *   import { Link, RouterProvider } from '@rockaway/react';
+ *   const navigate = useNavigate();
+ *   <RouterProvider navigate={navigate} useHref={useHref}>…</RouterProvider>
+ *
+ * Every Link inside then navigates through the router, and a modified click
+ * (a new tab, a download) is still the browser's.
  */
 import type { CSSProperties, ReactNode } from 'react';
 import {
@@ -34,6 +44,16 @@ import {
   type LinkProps as AriaLinkProps,
   VisuallyHidden,
 } from 'react-aria-components';
+
+/**
+ * React Aria's `RouterProvider`, the one Link reads. It is re-exported, rather
+ * than left to be imported from `react-aria-components`, because it only works
+ * as the same module instance Link was built against: an app with its own
+ * copy of `react-aria-components` (or, under pnpm, none it can import) would
+ * provide a router no Link can see.
+ */
+export { RouterProvider } from 'react-aria-components';
+
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 
