@@ -11,20 +11,7 @@
  * variant helpers and buffer functions. In a React Server Component graph
  * their exports are client references, so read `meta.json` there instead.
  */
-import { badgeMeta } from '../components/badge.meta.ts';
-import { buttonMeta } from '../components/button.meta.ts';
-import { calloutMeta } from '../components/callout.meta.ts';
-import { dividerMeta } from '../components/divider.meta.ts';
-import { formMeta } from '../components/field.meta.ts';
-import { fieldsetMeta } from '../components/fieldset.meta.ts';
-import { frameMeta } from '../components/frame.meta.ts';
-import { keyHintMeta } from '../components/key-hint.meta.ts';
-import { keymapMeta } from '../components/keymap.meta.ts';
-import { linkMeta } from '../components/link.meta.ts';
-import { listMeta } from '../components/list.meta.ts';
-import { overlayMeta } from '../components/overlay.meta.ts';
-import { tableMeta } from '../components/table.meta.ts';
-import { treeMeta } from '../components/tree.meta.ts';
+import { registry } from './components.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
   AnatomyPart,
@@ -51,24 +38,6 @@ export type {
   VariantMeta,
 } from './schema.ts';
 export { type StateName, type StateRow, stateVocabulary } from './states.ts';
-
-/** Every component's metadata, as written beside it. In name order. */
-const sources: readonly ComponentMetaInput[] = [
-  badgeMeta,
-  buttonMeta,
-  calloutMeta,
-  dividerMeta,
-  fieldsetMeta,
-  formMeta,
-  frameMeta,
-  keyHintMeta,
-  keymapMeta,
-  linkMeta,
-  listMeta,
-  overlayMeta,
-  tableMeta,
-  treeMeta,
-];
 
 /** A variant prop's type is its values, and its default the helper's. */
 function withVariant(prop: PropMeta, variants: readonly VariantMeta[]): PropMeta {
@@ -138,8 +107,13 @@ function assemble(input: ComponentMetaInput): ComponentMeta {
   };
 }
 
-/** Every component in `@rockaway/react`, published. */
-export const components: readonly ComponentMeta[] = sources.map(assemble);
+/**
+ * Every component in `@rockaway/react`, published, in name order. The
+ * registry is generated from the `*.meta.ts` files, in file order.
+ */
+export const components: readonly ComponentMeta[] = registry
+  .map(({ meta }) => assemble(meta))
+  .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
 
 /** The whole of `meta.json`. */
 export const metadata: MetadataDocument = {

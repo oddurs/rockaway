@@ -34,6 +34,15 @@ phosphor
   light bright-green: #00671d → #005e17 (for fg.success on bg.page, in more contrast)
   light bright-yellow: #6e4c00 → #6a4900 (for fg.warning on bg.warning.subtle, in more contrast)
   light bright-red: #94221f → #92201e (for fg.danger on bg.danger.subtle, in more contrast)
+ascii
+  light blue: #0074a3 → #00719f (for fg.accent on bg.accent.subtle)
+  light cyan: #007b81 → #007279 (for fg.info on bg.page)
+  light green: #008130 → #007f2f (for fg.success on bg.success.subtle)
+  light bright-blue: #005c83 → #005176 (for fg.accent on bg.page, in more contrast)
+  light bright-cyan: #006167 → #005257 (for fg.info on bg.page, in more contrast)
+  light bright-green: #00671d → #005e17 (for fg.success on bg.page, in more contrast)
+  light bright-yellow: #6e4c00 → #6a4900 (for fg.warning on bg.warning.subtle, in more contrast)
+  light bright-red: #94221f → #92201e (for fg.danger on bg.danger.subtle, in more contrast)
 catppuccin
   light foreground: #4c4f69 → #3b3d56 (for fg.default on bg.surface)
   light muted: #797c91 → #575a6d (for fg.muted on bg.page)
