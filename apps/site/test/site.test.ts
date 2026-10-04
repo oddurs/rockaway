@@ -725,6 +725,120 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     }
   });
 
+  test('the system monitor works by keyboard alone, and its rows hold still on the tick (0151)', async () => {
+    for (const { width, density } of [
+      { width: 1200, density: undefined },
+      { width: 420, density: undefined },
+      { width: 420, density: 'touch' },
+    ]) {
+      const reader = await browser.newPage({ viewport: { width, height: 1000 } });
+      const errors: string[] = [];
+      reader.on('pageerror', (error) => errors.push(error.message));
+      reader.on('console', (message) => {
+        if (message.type() === 'error') errors.push(message.text());
+      });
+      await reader.goto(`${origin}${base}examples/top/`);
+      if (density) {
+        await reader.evaluate((d) => {
+          document.documentElement.dataset.density = d;
+        }, density);
+      }
+      await reader.waitForSelector('astro-island:not([ssr])');
+      const narrow = width < 600;
+      const at = `${width}px${density ? `, ${density}` : ''}`;
+      const rows = reader.locator('[role="row"][data-key]');
+      const keys = () => rows.evaluateAll((all) => all.map((r) => r.getAttribute('data-key')));
+      const values = () => rows.evaluateAll((all) => all.map((r) => r.textContent));
+
+      // Over 60 cells every column; under, PID, NAME and CPU% and the rest behind Enter.
+      // It lays out once it has measured its cells, a moment after it hydrates.
+      await expect
+        .poll(() => reader.getByRole('columnheader').count(), { message: at })
+        .toBe(narrow ? 3 : 6);
+      const overflow = await reader.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow, at).toBe(0);
+
+      // On the tick the values change and the rows do not move.
+      const order = await keys();
+      const before = await values();
+      await reader.waitForFunction(
+        (was) =>
+          [...document.querySelectorAll('[role="row"][data-key]')].some(
+            (r, i) => r.textContent !== was[i],
+          ),
+        before,
+      );
+      await expect(keys(), at).resolves.toEqual(order);
+
+      // `p` pauses it, and `r` takes one step.
+      await rows.first().focus();
+      await reader.keyboard.press('p');
+      await reader.getByText('paused', { exact: true }).waitFor();
+      const paused = await values();
+      await reader.waitForTimeout(1200);
+      await expect(values(), at).resolves.toEqual(paused);
+      await reader.keyboard.press('r');
+      await expect.poll(values, { timeout: 2000 }).not.toEqual(paused);
+
+      // Enter shows what the table has no room for.
+      const pid = String(order[0]);
+      await reader.keyboard.press('Enter');
+      const details = reader.getByRole('dialog');
+      await details.waitFor();
+      await expect(details.textContent(), at).resolves.toContain(`PID: ${pid}`);
+      await expect(details.textContent(), at).resolves.toContain('Memory:');
+      await reader.keyboard.press('Escape');
+      await details.waitFor({ state: 'detached' });
+
+      // `k` asks first; Kill takes the process away, and focus stays in the table.
+      await rows.first().focus();
+      await reader.keyboard.press('k');
+      const ask = reader.getByRole('alertdialog');
+      await ask.waitFor();
+      const kill = ask.getByRole('button', { name: 'Kill' });
+      for (let i = 0; i < 4 && !(await kill.evaluate((el) => el === document.activeElement)); i++) {
+        await reader.keyboard.press('Tab');
+      }
+      await reader.keyboard.press('Enter');
+      await ask.waitFor({ state: 'detached' });
+      await reader.getByRole('status').getByText(`Killed ${pid}`).waitFor();
+      await expect(keys(), at).resolves.not.toContain(pid);
+      await expect(
+        reader.evaluate(() => document.activeElement?.getAttribute('role')),
+        at,
+      ).resolves.toBe('row');
+
+      // `/` goes to the filter; a name narrows the table.
+      await reader.keyboard.press('/');
+      await reader.keyboard.type('postgres');
+      await expect.poll(() => rows.count(), { timeout: 2000 }).toBe(2);
+
+      // `?` lists the keys, generated from the bindings.
+      await rows.first().focus();
+      await reader.keyboard.press('Shift+Slash');
+      const help = reader.getByRole('dialog', { name: 'Keys' });
+      await help.waitFor();
+      await expect(help.textContent()).resolves.toContain('Sort again, by the values now');
+      await reader.keyboard.press('Escape');
+
+      expect(errors, at).toEqual([]);
+      await reader.close();
+    }
+
+    // Under reduced motion it holds still, complete, until it is asked to step.
+    const still = await browser.newPage({ reducedMotion: 'reduce' });
+    await still.goto(`${origin}${base}examples/top/`);
+    await still.waitForSelector('astro-island:not([ssr])');
+    await still.getByText('still', { exact: true }).waitFor();
+    const rows = still.locator('[role="row"][data-key]');
+    const first = await rows.evaluateAll((all) => all.map((r) => r.textContent));
+    await still.waitForTimeout(1500);
+    await expect(rows.evaluateAll((all) => all.map((r) => r.textContent))).resolves.toEqual(first);
+    await still.close();
+  }, 60_000);
+
   test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
     // The page's own script, and a highlighter if one shipped, would load here.
     const live = await browser.newPage();

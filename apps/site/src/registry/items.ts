@@ -55,6 +55,14 @@ export const items: readonly ItemSource[] = [
     example: true,
   },
   {
+    name: 'top',
+    title: 'System monitor',
+    description:
+      'A system monitor on a tick: a meter per core and for memory, the load as sparklines, and the processes in a table that keeps its order while its values change. Under 60 cells, one meter of each and three columns.',
+    component: 'SystemMonitor',
+    example: true,
+  },
+  {
     name: 'settings',
     title: 'Settings',
     description:
