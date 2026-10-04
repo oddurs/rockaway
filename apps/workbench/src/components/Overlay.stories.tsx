@@ -592,7 +592,9 @@ export const ForcedColors: Story = {
 
 /**
  * A minimum width: as wide as the trigger, in whole cells (a select's list),
- * or a number of columns, the frame's two included.
+ * or a number of columns, the frame's two included. A trigger a few
+ * hundredths of a pixel over its cells, as a select's five runs came out on
+ * CI, takes those cells and not one more (0228).
  */
 export const MinCols: Story = {
   name: 'Minimum width',
@@ -604,6 +606,14 @@ export const MinCols: Story = {
           <OverlayPopover minCols="trigger">
             <Dialog aria-label="Trigger wide">
               <p style={{ margin: 0 }}>one</p>
+            </Dialog>
+          </OverlayPopover>
+        </DialogTrigger>
+        <DialogTrigger defaultOpen>
+          <Button style={{ inlineSize: 'calc(var(--rk-cell-width) * 12 + 0.04px)' }}>Hair</Button>
+          <OverlayPopover minCols="trigger">
+            <Dialog aria-label="Hair over">
+              <p style={{ margin: 0 }}>three</p>
             </Dialog>
           </OverlayPopover>
         </DialogTrigger>
@@ -622,11 +632,13 @@ export const MinCols: Story = {
     await measured(document.body);
     const wide = canvas.getByRole('button', { name: 'A wide trigger of a button' });
     const open = canvas.getByRole('button', { name: 'Open' });
-    const [first, second] = surfaces();
-    if (!first || !second) throw new Error('no popovers');
+    const hair = canvas.getByRole('button', { name: 'Hair' });
+    const [first, third, second] = surfaces();
+    if (!first || !second || !third) throw new Error('no popovers');
     const [, , triggerWidth] = placeOf(wide, wide);
     expect(placeOf(first, wide)[2]).toBe(triggerWidth);
     expect(edgeOf(first)).toBe(`┏${'━'.repeat(triggerWidth - 2)}┓`);
+    expect(placeOf(third, hair)[2]).toBe(12);
     expect(placeOf(second, open)[2]).toBe(24);
   },
 };

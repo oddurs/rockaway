@@ -55,7 +55,7 @@ import {
   type PopoverProps,
   useSlottedContext,
 } from 'react-aria-components';
-import { measureCell } from '../cell-metrics.ts';
+import { cellsCovering, measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { type PainterName, Screen } from '../screen.tsx';
@@ -349,7 +349,28 @@ function Surface({
   const body = useRef<HTMLDivElement>(null);
   const [scroll, setScroll] = useState<OverlayScroll | undefined>(undefined);
   const [fit, setFit] = useState<number | undefined>(undefined);
+  const [triggerCols, setTriggerCols] = useState<number | undefined>(undefined);
   useCellSnap(host, anchor, sheet);
+
+  // As wide as the trigger, in whole cells: the cells that cover its width,
+  // with the grace every cell count takes (0228). A trigger laid out as
+  // thirty cells measures a hair either side of them, by as many layout units
+  // as it has boxes, and is thirty cells, not thirty-one.
+  useIsomorphicLayoutEffect(() => {
+    if (minCols !== 'trigger') return;
+    const trigger = anchor();
+    const surface = host.current;
+    if (!trigger || !surface) return;
+    const read = (): void => {
+      const cols = cellsCovering(trigger.getBoundingClientRect().width, measureCell(surface).width);
+      setTriggerCols((was) => (was === cols ? was : cols));
+    };
+    read();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(read);
+    observer.observe(trigger);
+    return () => observer.disconnect();
+  }, [minCols, anchor]);
 
   // React Aria gives a popover the most height it has room for, in pixels;
   // the surface takes the whole rows of it, its border's two included, and
@@ -438,18 +459,12 @@ function Surface({
     ...(fit === undefined ? {} : { '--rk-overlay-fit-rows': fit }),
     ...(typeof minCols === 'number'
       ? { '--rk-overlay-min-cols': Math.max(0, Math.floor(minCols)) }
-      : {}),
+      : minCols === 'trigger' && triggerCols !== undefined
+        ? { '--rk-overlay-min-cols': triggerCols }
+        : {}),
   } as CSSProperties;
   return (
-    <div
-      ref={host}
-      className={cx(
-        'rk-overlay',
-        sheet && 'rk-overlay-sheet',
-        minCols === 'trigger' && 'rk-overlay-min-trigger',
-      )}
-      style={style}
-    >
+    <div ref={host} className={cx('rk-overlay', sheet && 'rk-overlay-sheet')} style={style}>
       <Screen
         draw={draw}
         contentInset={{ x: 1 + padX, y: 1 + padY }}

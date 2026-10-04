@@ -49,16 +49,35 @@ export function measureCell(el: HTMLElement): CellMetrics {
 }
 
 /**
- * Layout snaps every box to 1/64px, and the cell is the font's true advance,
- * so a box exactly n cells wide can lay out a hair under n cells: 51 cells of
- * 9.6328125px is 491.273px, laid out as 491.266px. A box within a snap or two
- * of a whole cell is that cell. No more than that: a box any shorter really is
- * short, and n cells drawn in it would be cut off at its edge.
+ * How far a length laid out as whole cells can be from them (cairn 0228): a
+ * sixteenth of a cell. Layout rounds every box edge to the engine's unit
+ * (1/64px; 1/60px in Gecko), and the cell is the font's true advance, so a
+ * box of n cells measures a hair either side of n. Boxes laid end to end add
+ * their errors: a select's trigger, five runs in a row, came out a few
+ * hundredths of a pixel over thirty cells. So the grace is not a pixel count,
+ * which some number of boxes always beats, but a fraction of the cell: a
+ * sixteenth is over thirty layout units at any reading size, and a length
+ * that far from whole cells is a cell's worth wrong in no engine.
+ *
+ * The cost is at the other end: a box a sixteenth of a cell short of n cells
+ * is drawn as n, a sliver past its edge, rather than as n - 1 with a cell
+ * missing at the side. The stylesheets use the same sixteenth wherever they
+ * round to cells (field, fieldset and table).
  */
-const SNAP = 1 / 32;
+export const CELL_GRACE: number = 1 / 16;
 
 /** How many whole cells fit. Never negative, never fractional. */
 export function cellsIn(pixels: number, cell: number): number {
   if (!Number.isFinite(pixels) || !Number.isFinite(cell) || cell <= 0) return 0;
-  return Math.max(0, Math.floor((pixels + SNAP) / cell));
+  return Math.max(0, Math.floor(pixels / cell + CELL_GRACE));
+}
+
+/**
+ * How many whole cells it takes to cover a length: the dual of `cellsIn`, for
+ * a surface at least as wide as something else, as a select's list is as
+ * wide as its trigger. A length a sixteenth of a cell over n cells is n.
+ */
+export function cellsCovering(pixels: number, cell: number): number {
+  if (!Number.isFinite(pixels) || !Number.isFinite(cell) || cell <= 0) return 0;
+  return Math.max(0, Math.ceil(pixels / cell - CELL_GRACE));
 }
