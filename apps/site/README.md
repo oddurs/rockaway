@@ -79,6 +79,14 @@ GitHub Pages serves the site at `oddurs.github.io/rockaway/`, so that is the
 default. `SITE_BASE=/` builds it for a domain root, and `SITE_URL` sets the
 origin. Link inside the site with `href()` from `src/lib/paths.ts`.
 
+## Deploying
+
+`.github/workflows/pages.yml` builds the site on every push to `main`, checks
+that every internal link and asset resolves under the base
+(`pnpm --filter site check:links`), and deploys it to GitHub Pages. If the
+build or the check fails, nothing is uploaded and the last good deploy stays
+up. Pull requests get the built site as an artifact from CI instead.
+
 ## The font
 
 JetBrains Mono (OFL 1.1, `src/fonts/OFL.txt`): the one face, subset to 18 kB

@@ -239,7 +239,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`###·······` 28% · 7 of 25 done · due 2027-02-21
+`####······` 32% · 8 of 25 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -250,8 +250,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0108`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0108-build-the-landing-page.md) Build the landing page <sup>feature · site · p0</sup>
 - [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0113`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p1</sup>
-- [ ] [`0145`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0145-enable-github-pages-for-the-repository.md) Enable GitHub Pages for the repository <sup>chore · tooling · p0 · needs-owner</sup>
-- [ ] [`0146`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0146-deploy-the-site-to-github-pages-on-every-push-to-main.md) Deploy the site to GitHub Pages on every push to main <sup>chore · tooling · p0</sup>
 - [ ] [`0147`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0147-document-every-component-on-its-own-page-generated-from-its-metadata.md) Document every component on its own page, generated from its metadata <sup>feature · site · p0</sup>
 - [ ] [`0148`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0148-switch-theme-mode-and-density-on-the-site-and-remember-the-choice-without-a-flash.md) Switch theme, mode and density on the site, and remember the choice without a flash <sup>feature · site · p0</sup>
 - [ ] [`0149`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0149-index-every-page-for-the-command-palette-at-build-time.md) Index every page for the command palette at build time <sup>feature · site · p1</sup>
@@ -262,6 +260,10 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0177`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0177-let-checkcontinuity-check-shapes-drawn-outside-a-painted-layer.md) Let checkContinuity check shapes drawn outside a painted layer <sup>feature · tooling · p2</sup>
 - [ ] [`0218`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0218-show-overflow-marks-where-scroll-state-queries-are-missing.md) Show overflow marks where scroll-state queries are missing <sup>feature · css · p2</sup>
 - [ ] [`0219`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0219-prove-the-static-callout-in-the-workbench.md) Prove the static callout in the workbench <sup>chore · tooling · p2</sup>
+
+### in progress
+
+- [ ] [`0146`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0146-deploy-the-site-to-github-pages-on-every-push-to-main.md) Deploy the site to GitHub Pages on every push to main <sup>chore · tooling · p0</sup>
 
 ### in review
 
@@ -274,6 +276,7 @@ A website built out of the system it documents, which is the only honest way
 - [x] [`0106`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0106-write-the-foundations-pages.md) Write the foundations pages <sup>docs · docs · p0</sup>
 - [x] [`0143`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0143-set-prose-on-the-grid-headings-lists-quotes-code-and-tables-from-markdown.md) Set prose on the grid: headings, lists, quotes, code and tables from Markdown <sup>feature · css · p0</sup>
 - [x] [`0144`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0144-highlight-code-in-the-ansi-16.md) Highlight code in the ANSI 16 <sup>feature · tokens · p1</sup>
+- [x] [`0145`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0145-enable-github-pages-for-the-repository.md) Enable GitHub Pages for the repository <sup>chore · tooling · p0 · needs-owner</sup>
 - [x] [`0170`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0170-typecheck-astro-files.md) Typecheck .astro files <sup>chore · tooling · p2</sup>
 - [x] [`0188`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0188-export-the-fitted-imported-themes-back-to-terminal-files.md) Export the fitted imported themes back to terminal files <sup>feature · tokens · p2</sup>
 
