@@ -922,6 +922,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "The accessible name, when the title is not the right one to say."
       },
       {
+        "name": "landmark",
+        "type": "boolean",
+        "required": false,
+        "description": "Whether a named pane is a region landmark. True by default. False makes it a plain container with no name, its title still drawn in its top edge: for a pane whose content is a landmark of its own, a `nav`, `main` or `aside`, which should stay at the top of a reader's list of landmarks."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -935,11 +941,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Panes": {
@@ -974,11 +985,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Row": {
