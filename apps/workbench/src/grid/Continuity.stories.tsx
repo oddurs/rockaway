@@ -269,6 +269,105 @@ export const FontDrawn: Story = {
 };
 
 /**
+ * A light stroke, read across in device pixels: how many lines of pixels it
+ * covers, and how fully. A stroke is crisp when every pixel it touches is
+ * wholly ink, and the same stroke in every engine covers the same number.
+ */
+async function strokeProfile(
+  el: HTMLElement,
+  capture: (el: HTMLElement) => Promise<string | Blob>,
+  across: 'x' | 'y',
+): Promise<number[]> {
+  const png = await capture(el);
+  const blob =
+    typeof png === 'string'
+      ? new Blob([Uint8Array.from(atob(png), (c) => c.charCodeAt(0))], { type: 'image/png' })
+      : png;
+  const bitmap = await createImageBitmap(blob);
+  const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+  const ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+  ctx.drawImage(bitmap, 0, 0);
+  const { data, width, height } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+  const lum = (i: number) => ((data[i] ?? 0) + (data[i + 1] ?? 0) + (data[i + 2] ?? 0)) / 3;
+  // The ground is the corner; coverage is how far each pixel along the
+  // middle of the cell is from it towards the ink.
+  const ground = lum(0);
+  const out: number[] = [];
+  if (across === 'x') {
+    const y = Math.floor(height / 2);
+    for (let x = 0; x < width; x++) out.push(lum((y * width + x) * 4));
+  } else {
+    const x = Math.floor(width / 2);
+    for (let y = 0; y < height; y++) out.push(lum((y * width + x) * 4));
+  }
+  // The ink is the run's own colour, resolved through a canvas.
+  const probe = new OffscreenCanvas(1, 1).getContext('2d') as OffscreenCanvasRenderingContext2D;
+  probe.fillStyle = getComputedStyle(el).color;
+  probe.fillRect(0, 0, 1, 1);
+  const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
+  const ink = ((r ?? 0) + (g ?? 0) + (b ?? 0)) / 3;
+  return out.map((v) => Math.round(((ground - v) / Math.max(1, ground - ink)) * 100) / 100);
+}
+
+export const StrokeWidth: Story = {
+  name: 'A stroke is whole device pixels',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)' }}>
+      {[15.3, 16, 16.4, 17].flatMap((size) =>
+        [0, 0.41].map((shift) => (
+          <div
+            key={`${size} ${shift}`}
+            data-testid={`stroke ${size} ${shift}`}
+            style={{
+              fontSize: `${size}px`,
+              paddingInlineStart: `${shift}px`,
+              paddingBlockStart: `${shift}px`,
+              display: 'flex',
+              gap: 'var(--rk-x-2)',
+            }}
+          >
+            {/* Each alone and apart, so no neighbour's ink is in its screenshot. */}
+            <Screen draw={() => fromText('│')} cols={1} rows={1} />
+            <Screen draw={() => fromText('─')} cols={1} rows={1} />
+          </div>
+        )),
+      )}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    const report: string[] = [];
+    for (const size of [15.3, 16, 16.4, 17]) {
+      for (const shift of [0, 0.41]) {
+        const here = canvas.getByTestId(`stroke ${size} ${shift}`);
+        const [v, h] = [...here.querySelectorAll<HTMLElement>('[data-rk-shape]')];
+        const vertical = await strokeProfile(v as HTMLElement, run.capture, 'x');
+        const horizontal = await strokeProfile(h as HTMLElement, run.capture, 'y');
+        const lines = (p: number[]) => p.filter((c) => c > 0.1);
+        // The stroke's own width, resolved to pixels through a probe.
+        const probe = document.createElement('span');
+        probe.style.cssText = 'position:absolute; inline-size:var(--rk-stroke-light)';
+        (v as HTMLElement).append(probe);
+        const stroke = probe.getBoundingClientRect().width;
+        probe.remove();
+        const want = Math.round(stroke * devicePixelRatio);
+        report.push(
+          `${size}px +${shift}: stroke ${stroke}px; │ ${JSON.stringify(lines(vertical))}; ─ ${JSON.stringify(lines(horizontal))}`,
+        );
+        // Whole pixels, the same count across and down, every one wholly ink.
+        expect(Number.isInteger(stroke), `${size}px: ${stroke}px`).toBe(true);
+        expect(lines(vertical).length, `│ at ${size}px +${shift}`).toBe(want);
+        expect(lines(horizontal).length, `─ at ${size}px +${shift}`).toBe(want);
+        expect(Math.min(...lines(vertical), ...lines(horizontal))).toBeGreaterThan(0.9);
+      }
+    }
+    console.info(`strokes at ${devicePixelRatio}x\n${report.join('\n')}`);
+  },
+};
+
+/**
  * One cell, measured. The ink of a vertical line runs the full height of its
  * cell at every density: no gap to the next row and no overlap into it.
  */
