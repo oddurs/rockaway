@@ -69,6 +69,8 @@ export function Tree<T extends object>({
       <AriaTree
         {...tree}
         className={cx('rk-tree', className)}
+        // A pane, to the conformance levels: whole cells even at `loose` (0182).
+        data-rk-pane=""
         {...(style === undefined ? {} : { style })}
       />
     </Strokes.Provider>

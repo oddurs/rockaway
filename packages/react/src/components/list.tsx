@@ -189,7 +189,12 @@ export function List<T extends object>({
 
   return (
     <RowCount.Provider value={report}>
-      <div className={cx('rk-list', className)} style={{ '--rk-list-rows': rows } as CSSProperties}>
+      <div
+        className={cx('rk-list', className)}
+        style={{ '--rk-list-rows': rows } as CSSProperties}
+        // A pane, to the conformance levels: whole cells even at `loose` (0182).
+        data-rk-pane=""
+      >
         <ListBox
           {...list}
           ref={box}

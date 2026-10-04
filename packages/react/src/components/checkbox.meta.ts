@@ -117,4 +117,11 @@ export const checkboxMeta: ComponentMetaInput = defineMeta({
       ].join('\n'),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: row('', {}),
+    // The default variant, with words like these.
+    default: row('Sign commits', {}),
+  },
 });

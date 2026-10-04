@@ -57,7 +57,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-fg-success",
       "--rk-fg-warning"
-    ]
+    ],
+    "marks": [],
+    "level": "standard"
   },
   "Button": {
     "file": "button.tsx",
@@ -126,7 +128,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-on-danger",
       "--rk-fg-on-inverse",
       "--rk-size-control-md"
-    ]
+    ],
+    "marks": [
+      "control"
+    ],
+    "level": "standard"
   },
   "Callout": {
     "file": "callout.tsx",
@@ -180,7 +186,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "strict"
   },
   "Cell": {
     "file": "table.tsx",
@@ -221,7 +231,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "Checkbox": {
     "file": "checkbox.tsx",
@@ -272,7 +286,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled",
       "--rk-focus-offset",
       "--rk-focus-width"
-    ]
+    ],
+    "marks": [
+      "control"
+    ],
+    "level": "strict"
   },
   "CheckboxGroup": {
     "file": "checkbox.tsx",
@@ -327,7 +345,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled",
       "--rk-focus-offset",
       "--rk-focus-width"
-    ]
+    ],
+    "marks": [
+      "control"
+    ],
+    "level": "standard"
   },
   "Column": {
     "file": "table.tsx",
@@ -388,7 +410,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "Description": {
     "file": "field.tsx",
@@ -412,7 +438,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-y-1"
-    ]
+    ],
+    "marks": [],
+    "level": "standard"
   },
   "Divider": {
     "file": "divider.tsx",
@@ -462,7 +490,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [],
+    "level": "standard"
   },
   "FieldError": {
     "file": "field.tsx",
@@ -486,7 +516,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-y-1"
-    ]
+    ],
+    "marks": [],
+    "level": "standard"
   },
   "FieldFrame": {
     "file": "fieldset.tsx",
@@ -559,7 +591,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "Fieldset": {
     "file": "fieldset.tsx",
@@ -626,7 +662,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "Form": {
     "file": "field.tsx",
@@ -661,7 +701,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-y-1"
-    ]
+    ],
+    "marks": [],
+    "level": "standard"
   },
   "Frame": {
     "file": "frame.tsx",
@@ -728,7 +770,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "strict"
   },
   "KeyHint": {
     "file": "key-hint.tsx",
@@ -776,7 +822,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-muted",
       "--rk-x-1"
-    ]
+    ],
+    "marks": [],
+    "level": "standard"
   },
   "Keymap": {
     "file": "keymap.tsx",
@@ -811,7 +859,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
-    ]
+    ],
+    "marks": [],
+    "level": "standard"
   },
   "KeymapHelp": {
     "file": "keymap.tsx",
@@ -834,7 +884,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
-    ]
+    ],
+    "marks": []
   },
   "Label": {
     "file": "field.tsx",
@@ -870,7 +921,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-y-1"
-    ]
+    ],
+    "marks": [],
+    "level": "standard"
   },
   "Link": {
     "file": "link.tsx",
@@ -910,7 +963,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-fg-disabled"
-    ]
+    ],
+    "marks": [
+      "control"
+    ],
+    "level": "standard"
   },
   "List": {
     "file": "list.tsx",
@@ -958,7 +1015,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "ListItem": {
     "file": "list.tsx",
@@ -986,7 +1047,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "OverlayLayer": {
     "file": "overlay.tsx",
@@ -1011,6 +1076,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
+    ],
+    "marks": [
+      "pane"
     ]
   },
   "OverlayModal": {
@@ -1050,7 +1118,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "OverlayPopover": {
     "file": "overlay.tsx",
@@ -1118,7 +1190,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "Row": {
     "file": "table.tsx",
@@ -1153,7 +1229,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "Table": {
     "file": "table.tsx",
@@ -1217,7 +1297,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "strict"
   },
   "TableBody": {
     "file": "table.tsx",
@@ -1259,7 +1343,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "TableHeader": {
     "file": "table.tsx",
@@ -1294,7 +1382,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "Tree": {
     "file": "tree.tsx",
@@ -1334,7 +1426,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "strict"
   },
   "TreeItem": {
     "file": "tree.tsx",
@@ -1380,7 +1476,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   }
 };
 

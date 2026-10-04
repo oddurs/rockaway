@@ -98,4 +98,11 @@ export const keyHintMeta: ComponentMetaInput = defineMeta({
       ].join('\n'),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: formatKeys('a', 'other', 'platform', defaultGlyphs),
+    // The default variant, with words like these.
+    default: hint('mod+s', 'save', 'other'),
+  },
 });

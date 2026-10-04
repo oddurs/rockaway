@@ -151,4 +151,13 @@ export const formMeta: ComponentMetaInput = defineMeta({
       text: toText(formBuffer(FIELDS, { width: 40 })),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(formBuffer([{ label: '', control: line(' ') }], { width: 1 }), {
+      trimEnd: false,
+    }),
+    // The default variant, with words like these.
+    default: toText(formBuffer(FIELDS, { width: 64 }), { trimEnd: false }),
+  },
 });

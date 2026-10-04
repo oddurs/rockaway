@@ -72,6 +72,12 @@ describe.each(metadata.components.map((c) => [c.name, c] as const))('%s', (_, co
     for (const state of component.states) expect(twin).toContain(`| \`${state.state}\` |`);
     for (const binding of component.accessibility.keyboard) expect(twin).toContain(binding.action);
     for (const token of component.tokens) expect(twin).toContain(`\`${token}\``);
+    // Its size and level (0167), and what the levels see it as (0182).
+    const { min, default: usual } = component.grid.size;
+    expect(twin).toContain(`- Size: ${min.width} × ${min.height} cells at its smallest, `);
+    expect(twin).toContain(`${usual.width} × ${usual.height} as drawn by default.`);
+    expect(twin).toContain(`- Holds \`${component.grid.level}\`: `);
+    for (const mark of component.grid.is) expect(twin).toContain(`it is a ${mark}`);
   });
 
   test('links the components it names to their twins', () => {

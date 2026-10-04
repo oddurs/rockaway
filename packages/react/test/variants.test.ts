@@ -131,10 +131,10 @@ describe('Button, on the helper', () => {
       render({ variant: 'danger', delimiters: ['<', '>'] }),
     ];
     expect(rows.join('\n')).toMatchInlineSnapshot(`
-      "<button data-variant="default" class="rk-button" data-rac="" data-react-aria-pressable="true">[ Go ]</button>
-      <button data-variant="fill" class="rk-button" data-rac="" data-react-aria-pressable="true">[ Go ]</button>
-      <button data-variant="default" class="rk-button" data-rac="" data-react-aria-pressable="true">Go</button>
-      <button data-variant="danger" class="rk-button" data-rac="" data-react-aria-pressable="true">&lt;!Go &gt;</button>"
+      "<button data-rk-control="" data-variant="default" class="rk-button" data-rac="" data-react-aria-pressable="true">[ Go ]</button>
+      <button data-rk-control="" data-variant="fill" class="rk-button" data-rac="" data-react-aria-pressable="true">[ Go ]</button>
+      <button data-rk-control="" data-variant="default" class="rk-button" data-rac="" data-react-aria-pressable="true">Go</button>
+      <button data-rk-control="" data-variant="danger" class="rk-button" data-rac="" data-react-aria-pressable="true">&lt;!Go &gt;</button>"
     `);
   });
 });

@@ -1,5 +1,5 @@
 import { Buffer, drawBox, rect, type Size } from '@rockaway/grid';
-import { Screen } from '@rockaway/react';
+import { Badge, Button, Checkbox, Frame, List, ListItem, Screen } from '@rockaway/react';
 import {
   type ConformanceLevel,
   type ConformanceReport,
@@ -378,6 +378,121 @@ export const Loose: Story = {
   play: async ({ canvas }) => {
     const { screen } = await screenOf(canvas);
     expect(expectConformance(screen).levels).toEqual(['loose']);
+  },
+};
+
+/**
+ * Real components, held to each level (0182). A control marks itself
+ * `data-rk-control` and a pane `data-rk-pane`, so the levels' rules reach the
+ * components themselves and not only the test boxes above: a button's label
+ * may sit half a cell in at `standard`, and a list holds whole cells at
+ * `loose`. These stories are also what the metadata reads a component's level
+ * from (0167): a component in the passing `strict` one has been held to it.
+ */
+function RealPage({ nudge = false }: { nudge?: boolean }) {
+  return (
+    <div data-testid="host">
+      <Frame title="settings" cols={36} rows={10} className={nudge ? 'rk-real-nudge' : undefined}>
+        <div>
+          <Button>Save</Button>
+        </div>
+        <div>
+          <Checkbox>Sign commits</Checkbox>
+        </div>
+        <div>
+          <Badge tone="success">passing</Badge>
+        </div>
+        <div style={{ inlineSize: cells(20) }}>
+          <List aria-label="Files" rows={3}>
+            <ListItem id="a">a.ts</ListItem>
+            <ListItem id="b">b.ts</ListItem>
+          </List>
+        </div>
+      </Frame>
+      {nudge ? (
+        // Half a cell in, without changing any box's size. After the frame, which `screenOf` finds first.
+        <style>
+          {
+            '.rk-real-nudge .rk-button-label { position: relative; left: calc(var(--rk-cell-width) / 2); }'
+          }
+        </style>
+      ) : null}
+    </div>
+  );
+}
+
+export const RealStrict: Story = {
+  name: 'Real components: strict',
+  globals: { conformance: 'strict' },
+  render: () => <RealPage />,
+  play: async ({ canvas }) => {
+    const { screen } = await screenOf(canvas);
+    expect(expectConformance(screen).levels).toEqual(['strict']);
+    // Each carries the mark the levels read.
+    expect(screen.matches('[data-rk-pane]')).toBe(true);
+    expect(canvas.getByRole('button', { name: 'Save' }).matches('[data-rk-control]')).toBe(true);
+    expect(screen.querySelector('.rk-checkbox-row')?.matches('[data-rk-control]')).toBe(true);
+    expect(screen.querySelector('.rk-list')?.matches('[data-rk-pane]')).toBe(true);
+    expect(screen.querySelector('.rk-badge')?.matches('[data-rk-control], [data-rk-pane]')).toBe(
+      false,
+    );
+  },
+};
+
+export const RealStandard: Story = {
+  name: 'Real components: standard',
+  globals: { conformance: 'standard' },
+  render: () => <RealPage nudge />,
+  play: async ({ canvas }) => {
+    const { screen, at } = await screenOf(canvas);
+    // Half a cell in is allowed inside a button, which is a control...
+    expect(expectConformance(screen).levels).toEqual(['standard']);
+    expect(at('strict').violations).toContainEqual(
+      expect.objectContaining({ what: 'x', element: 'span.rk-button-label', step: 1 }),
+    );
+    // ...and not inside a badge, which is not.
+    const mark = screen.querySelector<HTMLElement>('.rk-badge-mark') as HTMLElement;
+    mark.style.position = 'relative';
+    mark.style.left = cells(0.5);
+    try {
+      expect(at('standard').violations).toContainEqual(
+        expect.objectContaining({ what: 'x', element: 'span.rk-badge-mark', step: 1 }),
+      );
+    } finally {
+      mark.style.removeProperty('position');
+      mark.style.removeProperty('left');
+    }
+  },
+};
+
+export const RealLoose: Story = {
+  name: 'Real components: loose',
+  globals: { conformance: 'loose' },
+  render: () => <RealPage />,
+  play: async ({ canvas }) => {
+    const { screen, at } = await screenOf(canvas);
+    expect(expectConformance(screen).levels).toEqual(['loose']);
+    // Inside a pane is the app's business at `loose`: a box of any size passes.
+    const free = document.createElement('div');
+    free.style.width = '37.5px';
+    free.style.height = '13px';
+    screen.querySelector('.rk-content')?.append(free);
+    try {
+      expect(at('loose').violations).toEqual([]);
+      expect(at('standard').violations.length).toBeGreaterThan(0);
+    } finally {
+      free.remove();
+    }
+    // A pane is still whole cells: the list's own box, off the grid, fails.
+    const list = screen.querySelector<HTMLElement>('.rk-list') as HTMLElement;
+    list.style.width = `calc(${cells(20)} + 3px)`;
+    try {
+      expect(at('loose').violations).toContainEqual(
+        expect.objectContaining({ what: 'width', element: 'div.rk-list', level: 'loose' }),
+      );
+    } finally {
+      list.style.removeProperty('width');
+    }
   },
 };
 

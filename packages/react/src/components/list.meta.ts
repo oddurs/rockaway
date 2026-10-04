@@ -168,4 +168,11 @@ export const listMeta: ComponentMetaInput = defineMeta({
       text: toText(listBuffer({ rows: [], width: 18, visible: 3 }), { trimEnd: false }),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(listBuffer({ rows: [{ label: '' }], width: 2, visible: 1 }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(listBuffer({ rows: files({}), width: 18, visible: 5 }), { trimEnd: false }),
+  },
 });

@@ -8,21 +8,31 @@
  * reading its stylesheets and its source and by rendering it on the server —
  * and that nothing exported from the package goes without metadata.
  */
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 import { createElement, Fragment, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import { type Analysis, analyse, owns, packageRoot, render } from '../scripts/extract.ts';
+import {
+  type Analysis,
+  analyse,
+  levelsFromStories,
+  owns,
+  packageRoot,
+  render,
+} from '../scripts/extract.ts';
 import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
 import schema from '../src/metadata/meta.schema.json' with { type: 'json' };
 import type {
   Accessibility,
+  CellSize,
   ComponentMeta,
   ElementPart,
+  GridMeta,
   ImportedPart,
   KeyBinding,
   PropMeta,
@@ -478,6 +488,91 @@ describe('what is extracted', () => {
   });
 });
 
+/**
+ * Components that are neither a control nor a pane, and why (0182). Every
+ * other component marks itself one or the other, so a new component cannot
+ * go unseen by the levels without being listed here.
+ */
+const NEITHER: Readonly<Record<string, string>> = {
+  Badge: 'A label in a line of text: nothing to press, nothing it holds.',
+  Divider: 'A rule between panes, one row or one column: not a pane itself.',
+  Form: 'Lays out fields in rows and a column of labels; each control is its own.',
+  KeyHint: 'Words in a line of text, or inside a control that is marked itself.',
+  Keymap: 'Binds keys; its help screen is drawn inside whatever pane shows it.',
+};
+
+describe('how it sits on the grid (0167, 0182)', () => {
+  test('every component is a control, a pane, or listed as neither with its reason', () => {
+    const unclassified = components
+      .filter((meta) => meta.grid.is.length === 0 && NEITHER[meta.name] === undefined)
+      .map((meta) => meta.name);
+    expect(unclassified).toEqual([]);
+    // And a listed one that has since been marked comes off the list.
+    const stale = components
+      .filter((meta) => meta.grid.is.length > 0 && NEITHER[meta.name] !== undefined)
+      .map((meta) => meta.name);
+    expect(stale).toEqual([]);
+  });
+
+  test('read from the attributes the source writes', () => {
+    expect(byName('Button').grid.is).toEqual(['control']);
+    expect(byName('Checkbox').grid.is).toEqual(['control']);
+    expect(byName('Frame').grid.is).toEqual(['pane']);
+    expect(byName('List').grid.is).toEqual(['pane']);
+    expect(byName('Badge').grid.is).toEqual([]);
+    // And it is on the element: the attribute is what the levels read.
+    const html = renderToStaticMarkup(createElement(rockaway.Button, null, 'Save'));
+    expect(html).toContain('data-rk-control=""');
+  });
+
+  test('its smallest size is no larger than its default', () => {
+    for (const meta of components) {
+      const { min, default: usual } = meta.grid.size;
+      expect(min.width, meta.name).toBeLessThanOrEqual(usual.width);
+      expect(min.height, meta.name).toBeLessThanOrEqual(usual.height);
+    }
+    expect(byName('Frame').grid.size.min).toEqual({ width: 3, height: 3 });
+    expect(byName('Button').grid.size).toEqual({
+      min: { width: 4, height: 1 },
+      default: { width: 11, height: 1 },
+    });
+  });
+
+  test('the level is the strictest a story renders it at, with the check on', () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'rockaway-levels-'));
+    try {
+      writeFileSync(
+        path.join(dir, 'A.stories.tsx'),
+        `
+          const meta = { title: 'A', component: Aye, globals: { conformance: 'loose' } } satisfies Meta;
+          export default meta;
+          // No render of its own: the meta's component, at the meta's level.
+          export const Plain: Story = {};
+          export const Strict: Story = { globals: { conformance: 'strict' }, render: () => <Bee /> };
+          // The check is off, so it proves nothing.
+          export const Off: Story = {
+            globals: { conformance: 'strict' },
+            parameters: { conformance: false },
+            render: () => <Sea />,
+          };
+          export const Standard: Story = { globals: { conformance: 'standard' }, render: () => <Sea><Div /></Sea> };
+        `,
+      );
+      const held = levelsFromStories(new Set(['Aye', 'Bee', 'Sea']), dir);
+      expect(Object.fromEntries(held)).toEqual({ Aye: 'loose', Bee: 'strict', Sea: 'standard' });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test('read from the workbench', () => {
+    // Table, Tree, Callout and Checkbox each have a story at strict.
+    for (const name of ['Table', 'Tree', 'Callout', 'Checkbox']) {
+      expect(byName(name).grid.level, name).toBe('strict');
+    }
+  });
+});
+
 describe('the snapshots, as the site draws them', () => {
   test('Button', () => {
     expect(snapshots(byName('Button'))).toMatchInlineSnapshot(`
@@ -758,6 +853,8 @@ const schemaMatchesTypes: readonly true[] = [
   true satisfies Same<keyof Accessibility, Keys<'accessibility'>>,
   true satisfies Same<keyof KeyBinding, Keys<'keyBinding'>>,
   true satisfies Same<keyof Snapshot, Keys<'snapshot'>>,
+  true satisfies Same<keyof GridMeta, Keys<'grid'>>,
+  true satisfies Same<keyof CellSize, Keys<'cellSize'>>,
 ];
 test('the schema and the types agree', () => {
   expect(schemaMatchesTypes.every(Boolean)).toBe(true);

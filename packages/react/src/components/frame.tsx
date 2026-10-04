@@ -107,6 +107,8 @@ export function Frame({
     <Screen
       fallback={smallest}
       {...screen}
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
       draw={draw}
       className={cx('rk-frame-box', className)}
       contentInset={insetOf(pad)}

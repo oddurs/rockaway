@@ -9,9 +9,21 @@
       "additionalProperties": false,
       "required": ["$schema", "states", "components"],
       "properties": {
-        "$schema": { "type": "string" },
-        "states": { "type": "array", "items": { "$ref": "#/$defs/stateRow" } },
-        "components": { "type": "array", "items": { "$ref": "#/$defs/component" } }
+        "$schema": {
+          "type": "string"
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/stateRow"
+          }
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/component"
+          }
+        }
       }
     },
     "stateRow": {
@@ -19,11 +31,21 @@
       "additionalProperties": false,
       "required": ["name", "selectors", "drawnAs", "withoutColour", "global"],
       "properties": {
-        "name": { "$ref": "#/$defs/stateName" },
-        "selectors": { "$ref": "#/$defs/selectors" },
-        "drawnAs": { "$ref": "#/$defs/text" },
-        "withoutColour": { "$ref": "#/$defs/text" },
-        "global": { "type": "boolean" }
+        "name": {
+          "$ref": "#/$defs/stateName"
+        },
+        "selectors": {
+          "$ref": "#/$defs/selectors"
+        },
+        "drawnAs": {
+          "$ref": "#/$defs/text"
+        },
+        "withoutColour": {
+          "$ref": "#/$defs/text"
+        },
+        "global": {
+          "type": "boolean"
+        }
       }
     },
     "component": {
@@ -41,13 +63,26 @@
         "states",
         "accessibility",
         "tokens",
-        "snapshots"
+        "snapshots",
+        "grid"
       ],
       "properties": {
-        "name": { "$ref": "#/$defs/componentName" },
-        "summary": { "$ref": "#/$defs/text" },
-        "description": { "$ref": "#/$defs/text" },
-        "whenToUse": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } },
+        "name": {
+          "$ref": "#/$defs/componentName"
+        },
+        "summary": {
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "whenToUse": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
         "whenNotToUse": {
           "type": "array",
           "minItems": 1,
@@ -56,8 +91,12 @@
             "additionalProperties": false,
             "required": ["text"],
             "properties": {
-              "text": { "$ref": "#/$defs/text" },
-              "instead": { "$ref": "#/$defs/componentName" }
+              "text": {
+                "$ref": "#/$defs/text"
+              },
+              "instead": {
+                "$ref": "#/$defs/componentName"
+              }
             }
           }
         },
@@ -68,8 +107,12 @@
             "additionalProperties": false,
             "required": ["name", "why"],
             "properties": {
-              "name": { "$ref": "#/$defs/componentName" },
-              "why": { "$ref": "#/$defs/text" }
+              "name": {
+                "$ref": "#/$defs/componentName"
+              },
+              "why": {
+                "$ref": "#/$defs/text"
+              }
             }
           }
         },
@@ -77,18 +120,49 @@
           "type": "array",
           "minItems": 1,
           "items": {
-            "oneOf": [{ "$ref": "#/$defs/importedPart" }, { "$ref": "#/$defs/elementPart" }]
+            "oneOf": [
+              {
+                "$ref": "#/$defs/importedPart"
+              },
+              {
+                "$ref": "#/$defs/elementPart"
+              }
+            ]
           }
         },
-        "variants": { "type": "array", "items": { "$ref": "#/$defs/variant" } },
-        "states": { "type": "array", "items": { "$ref": "#/$defs/state" } },
-        "accessibility": { "$ref": "#/$defs/accessibility" },
+        "variants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/variant"
+          }
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/state"
+          }
+        },
+        "accessibility": {
+          "$ref": "#/$defs/accessibility"
+        },
         "tokens": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^--rk-[a-z0-9]+(-[a-z0-9]+)*$" }
+          "items": {
+            "type": "string",
+            "pattern": "^--rk-[a-z0-9]+(-[a-z0-9]+)*$"
+          }
         },
-        "snapshots": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/snapshot" } }
+        "snapshots": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/snapshot"
+          }
+        },
+        "grid": {
+          "$ref": "#/$defs/grid"
+        }
       }
     },
     "importedPart": {
@@ -96,12 +170,32 @@
       "additionalProperties": false,
       "required": ["kind", "name", "description", "props", "inherits"],
       "properties": {
-        "kind": { "const": "import" },
-        "name": { "$ref": "#/$defs/componentName" },
-        "description": { "$ref": "#/$defs/text" },
-        "role": { "type": "string", "pattern": "^[a-z]+$" },
-        "props": { "type": "array", "items": { "$ref": "#/$defs/prop" } },
-        "inherits": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+        "kind": {
+          "const": "import"
+        },
+        "name": {
+          "$ref": "#/$defs/componentName"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "role": {
+          "type": "string",
+          "pattern": "^[a-z]+$"
+        },
+        "props": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/prop"
+          }
+        },
+        "inherits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     },
     "elementPart": {
@@ -109,11 +203,23 @@
       "additionalProperties": false,
       "required": ["kind", "name", "description", "className", "chrome"],
       "properties": {
-        "kind": { "const": "element" },
-        "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
-        "description": { "$ref": "#/$defs/text" },
-        "className": { "type": "string", "pattern": "^rk-[a-z0-9]+(-[a-z0-9]+)*$" },
-        "chrome": { "type": "boolean" }
+        "kind": {
+          "const": "element"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "className": {
+          "type": "string",
+          "pattern": "^rk-[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "chrome": {
+          "type": "boolean"
+        }
       }
     },
     "prop": {
@@ -121,11 +227,23 @@
       "additionalProperties": false,
       "required": ["name", "type", "required"],
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "type": { "type": "string", "minLength": 1 },
-        "required": { "type": "boolean" },
-        "default": { "type": "string" },
-        "description": { "$ref": "#/$defs/text" }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "default": {
+          "type": "string"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        }
       }
     },
     "variant": {
@@ -133,10 +251,20 @@
       "additionalProperties": false,
       "required": ["name", "attribute", "description", "default", "values"],
       "properties": {
-        "name": { "type": "string", "pattern": "^[a-z][a-z0-9]*$" },
-        "attribute": { "type": "string", "pattern": "^data-[a-z][a-z0-9]*$" },
-        "description": { "$ref": "#/$defs/text" },
-        "default": { "type": "string" },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9]*$"
+        },
+        "attribute": {
+          "type": "string",
+          "pattern": "^data-[a-z][a-z0-9]*$"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "default": {
+          "type": "string"
+        },
         "values": {
           "type": "array",
           "minItems": 1,
@@ -145,8 +273,13 @@
             "additionalProperties": false,
             "required": ["value", "description"],
             "properties": {
-              "value": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
-              "description": { "$ref": "#/$defs/text" }
+              "value": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "description": {
+                "$ref": "#/$defs/text"
+              }
             }
           }
         }
@@ -157,12 +290,25 @@
       "additionalProperties": false,
       "required": ["state", "part", "selectors", "drawnAs", "withoutColour"],
       "properties": {
-        "state": { "$ref": "#/$defs/stateName" },
-        "part": { "type": "string", "minLength": 1 },
-        "selectors": { "$ref": "#/$defs/selectors" },
-        "drawnAs": { "$ref": "#/$defs/text" },
-        "withoutColour": { "$ref": "#/$defs/text" },
-        "note": { "$ref": "#/$defs/text" }
+        "state": {
+          "$ref": "#/$defs/stateName"
+        },
+        "part": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selectors": {
+          "$ref": "#/$defs/selectors"
+        },
+        "drawnAs": {
+          "$ref": "#/$defs/text"
+        },
+        "withoutColour": {
+          "$ref": "#/$defs/text"
+        },
+        "note": {
+          "$ref": "#/$defs/text"
+        }
       }
     },
     "accessibility": {
@@ -170,11 +316,27 @@
       "additionalProperties": false,
       "required": ["name", "keyboard", "typeAhead", "announces", "notes"],
       "properties": {
-        "name": { "$ref": "#/$defs/text" },
-        "keyboard": { "type": "array", "items": { "$ref": "#/$defs/keyBinding" } },
-        "typeAhead": { "type": "boolean" },
-        "announces": { "$ref": "#/$defs/text" },
-        "notes": { "type": "array", "items": { "$ref": "#/$defs/text" } }
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "keyboard": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/keyBinding"
+          }
+        },
+        "typeAhead": {
+          "type": "boolean"
+        },
+        "announces": {
+          "$ref": "#/$defs/text"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        }
       }
     },
     "keyBinding": {
@@ -185,9 +347,14 @@
         "keys": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string", "pattern": "^[a-z0-9]+(\\+[a-z0-9]+)*$" }
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(\\+[a-z0-9]+)*$"
+          }
         },
-        "action": { "$ref": "#/$defs/text" }
+        "action": {
+          "$ref": "#/$defs/text"
+        }
       }
     },
     "snapshot": {
@@ -195,9 +362,16 @@
       "additionalProperties": false,
       "required": ["title", "text"],
       "properties": {
-        "title": { "$ref": "#/$defs/text" },
-        "description": { "$ref": "#/$defs/text" },
-        "text": { "type": "string", "minLength": 1 }
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "stateName": {
@@ -219,8 +393,67 @@
         "placeholder"
       ]
     },
-    "selectors": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
-    "componentName": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
-    "text": { "type": "string", "minLength": 1 }
+    "selectors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "componentName": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Za-z0-9]*$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cellSize": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "grid": {
+      "type": "object",
+      "description": "How the component sits on the grid, read from its code and its stories (0167, 0182).",
+      "additionalProperties": false,
+      "required": ["is", "level", "size"],
+      "properties": {
+        "is": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["control", "pane"]
+          }
+        },
+        "level": {
+          "enum": ["strict", "standard", "loose"]
+        },
+        "size": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "default"],
+          "properties": {
+            "min": {
+              "$ref": "#/$defs/cellSize"
+            },
+            "default": {
+              "$ref": "#/$defs/cellSize"
+            }
+          }
+        }
+      }
+    }
   }
 }

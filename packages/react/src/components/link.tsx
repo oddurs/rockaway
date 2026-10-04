@@ -79,7 +79,12 @@ export function Link({
   const { mark } = useGlyphs();
   const newTab = aria.target === '_blank';
   return (
-    <AriaLink {...aria} className={cx('rk-link', className)}>
+    <AriaLink
+      {...aria}
+      className={cx('rk-link', className)}
+      // A control, to the conformance levels: half a cell inside it at `standard` (0182).
+      data-rk-control=""
+    >
       {({ isCurrent }) => (
         <>
           {/* The cell before the link, which the cursor mark borrows. */}

@@ -86,4 +86,11 @@ export const keymapMeta: ComponentMetaInput = defineMeta({
       text: toText(keymapHelpBuffer(BINDINGS, 'apple')),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(keymapHelpBuffer([{ keys: 'a', description: '' }], 'other'), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(keymapHelpBuffer(BINDINGS, 'other'), { trimEnd: false }),
+  },
 });

@@ -580,6 +580,8 @@ export function Table({
   return (
     <div
       ref={host}
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
       className={cx(
         'rk-table',
         layout.overflows && 'rk-scroll rk-scroll-marks rk-table-scrolls',

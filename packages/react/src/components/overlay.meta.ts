@@ -106,4 +106,11 @@ export const overlayMeta: ComponentMetaInput = defineMeta({
       text: toText(backdropBuffer({ width: 16, height: 2 })),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(overlayBuffer({ width: 2, height: 2 }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(overlayBuffer({ width: 16, height: 4 }), { trimEnd: false }),
+  },
 });

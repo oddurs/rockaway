@@ -137,6 +137,28 @@ function anatomyPart(part: AnatomyPart): string[] {
   return lines;
 }
 
+/** What the levels see a component as, in words (0182). */
+const AS: Readonly<Record<string, string>> = {
+  control: 'a control: half a cell is allowed inside it at `standard`',
+  pane: 'a pane: it holds whole cells even at `loose`',
+};
+
+/** Its size in cells and the level it holds (0167), and what the levels see it as. */
+function onTheGrid(component: ComponentMeta): string[] {
+  const { is, level, size } = component.grid;
+  const cells = ({ width, height }: { width: number; height: number }) => `${width} × ${height}`;
+  return [
+    '## On the grid',
+    '',
+    `- Size: ${cells(size.min)} cells at its smallest, ${cells(size.default)} as drawn by default.`,
+    `- Holds \`${level}\`: the strictest level a story renders it at with the conformance check on.`,
+    is.length === 0
+      ? '- To the conformance levels it is neither a control nor a pane.'
+      : `- To the conformance levels it is ${is.map((mark) => AS[mark]).join(', and ')}.`,
+    '',
+  ];
+}
+
 /**
  * A component's twin: everything its metadata says, as Markdown, with its
  * snapshots as text blocks. Links to other components go to their twins.
@@ -175,6 +197,8 @@ export function componentMarkdown(component: ComponentMeta, locate: Locate): str
       '',
     );
   }
+
+  lines.push(...onTheGrid(component));
 
   lines.push('## Anatomy', '');
   for (const part of component.anatomy) lines.push(...anatomyPart(part));

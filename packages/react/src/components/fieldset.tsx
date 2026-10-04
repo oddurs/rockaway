@@ -203,6 +203,8 @@ function FrameScreen({
       draw={draw}
       contentInset={inset}
       fallback={fallback}
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
       {...(painter === undefined ? {} : { painter })}
     >
       {children}
