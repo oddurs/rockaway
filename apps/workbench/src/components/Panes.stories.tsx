@@ -148,7 +148,8 @@ export const Default: Story = {
       ]);
     });
 
-    // And the page reads back as the borders with the content laid over them.
+    // And the page reads back as the borders with the content laid over them,
+    // the link underlined where it sits (the legend, since 0190).
     expect(screenshot(screen)).toBe(
       [
         '┌ files ───────────┬ diff ────────────────────────────┬ details ───────────┐',
@@ -163,6 +164,9 @@ export const Default: Story = {
         '│                  │                                  │                    │',
         '│                  │                                  │                    │',
         '└──────────────────┴──────────────────────────────────┴────────────────────┘',
+        '',
+        '— attributes —',
+        'underline  21,8  ce9af26',
       ].join('\n'),
     );
   },
