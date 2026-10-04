@@ -15,4 +15,5 @@ export {
   type DialogClose,
   type DialogContent,
   type DialogProps,
+  DialogTrigger,
 } from '../components/dialog.tsx';

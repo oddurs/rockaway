@@ -1,9 +1,16 @@
-import { AlertDialog, Button, Dialog, Frame, type PainterName } from '@rockaway/react';
+import {
+  AlertDialog,
+  Button,
+  Dialog,
+  DialogTrigger,
+  Frame,
+  type PainterName,
+} from '@rockaway/react';
 import { expectConformance, screenshot } from '@rockaway/react/testing';
 import { themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useState } from 'react';
-import { DialogTrigger } from 'react-aria-components';
+
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { measured } from '../settled.ts';

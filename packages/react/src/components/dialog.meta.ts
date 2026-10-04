@@ -38,7 +38,7 @@ export const dialogMeta: ComponentMetaInput = defineMeta({
       name: 'Dialog',
       role: 'dialog',
       description:
-        "React Aria's Dialog in an OverlayModal, named by its title. Put it in React Aria's DialogTrigger with its button, or control it with isOpen.",
+        "React Aria's Dialog in an OverlayModal, named by its title. Put it in DialogTrigger, re-exported here from React Aria, with its button, or control it with isOpen.",
     },
     {
       kind: 'import',

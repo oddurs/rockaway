@@ -34,6 +34,17 @@ import { Button } from './button.tsx';
 import { type DialogVariant, dialogHeading, dialogVariants } from './dialog.pure.ts';
 import { OverlayModal, type OverlayModalProps } from './overlay.tsx';
 
+/**
+ * React Aria's `DialogTrigger`, the one Dialog and OverlayPopover read: it
+ * pairs a button with the dialog or popover it opens. It is re-exported,
+ * rather than left for the app to import from React Aria, for the reason Link
+ * re-exports `RouterProvider` (0168): a second copy of React Aria in a bundle
+ * would be a second context, which the overlay would never see. And so code
+ * copied from the registry, which may import only `@rockaway/*` and React, can
+ * write a dialog the usual way.
+ */
+export { DialogTrigger } from 'react-aria-components';
+
 /** Closes the dialog: what a function child or action row is handed. */
 export type DialogClose = () => void;
 
@@ -130,9 +141,9 @@ export function openDialogBody(props: {
 }
 
 /**
- * A modal dialog. Put it in React Aria's `DialogTrigger` with the button that
- * opens it, or control it with `isOpen`. Escape closes it; a press on the
- * backdrop closes it only when `isDismissable`.
+ * A modal dialog. Put it in `DialogTrigger` (React Aria's, re-exported here)
+ * with the button that opens it, or control it with `isOpen`. Escape closes
+ * it; a press on the backdrop closes it only when `isDismissable`.
  */
 export function Dialog({
   title,
