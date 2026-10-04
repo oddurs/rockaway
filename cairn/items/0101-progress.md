@@ -3,7 +3,7 @@ id: 101
 uid: d98b4d5a-3c78-44cc-82af-92bd2e826c5a
 title: Progress
 type: component
-status: doing
+status: review
 milestone: primitives
 assignee: Oddur Sigurdsson
 claimed: 2026-10-03
@@ -47,29 +47,29 @@ last, minimum, maximum).
 
 ## Acceptance criteria
 
-- [ ] Built on the behaviour layer; no hand-rolled focus or keyboard logic
-- [ ] Styled from `data-*` state and semantic tokens only
-- [ ] Stories cover every state, and run as Vitest browser tests
-- [ ] axe passes; keyboard walkthrough recorded in the story
-- [ ] Light, dark and forced-colors verified
-- [ ] Metadata written: props, anatomy, when to use, when not to
-- [ ] Sized in cells, and drawn by the frame engine: no box characters written by hand
+- [x] Built on the behaviour layer; no hand-rolled focus or keyboard logic
+- [x] Styled from `data-*` state and semantic tokens only
+- [x] Stories cover every state, and run as Vitest browser tests
+- [x] axe passes; keyboard walkthrough recorded in the story
+- [x] Light, dark and forced-colors verified
+- [x] Metadata written: props, anatomy, when to use, when not to
+- [x] Sized in cells, and drawn by the frame engine: no box characters written by hand
 - [ ] Both painters render it identically, measured in cells
-- [ ] Frame glyphs are `aria-hidden`; the accessible name never contains one
-- [ ] Ships a text snapshot, which is its documentation as much as its test
-- [ ] Operable by keyboard alone, and usable with a finger at touch density
-- [ ] State reads without colour: an attribute or a mark carries it too
+- [x] Frame glyphs are `aria-hidden`; the accessible name never contains one
+- [x] Ships a text snapshot, which is its documentation as much as its test
+- [x] Operable by keyboard alone, and usable with a finger at touch density
+- [x] State reads without colour: an attribute or a mark carries it too
 - [ ] Conforms at `strict`, or declares its exception with a reason
-- [ ] Draws every state from the state vocabulary (0118), and no state changes its size in cells
-- [ ] Reads its glyphs from the theme (0119): no box-drawing, block or mark literal in its source
+- [x] Draws every state from the state vocabulary (0118), and no state changes its size in cells
+- [x] Reads its glyphs from the theme (0119): no box-drawing, block or mark literal in its source
 - [ ] Rendered by the cell renderer (0117): continuity passes at all four densities
-- [ ] One export line in `packages/react/src/index.ts` and one import line in `packages/css/src/index.css`, as 0122 sets out
-- [ ] Block glyphs for progress, braille frames for the spinner, block eighths for the sparkline
-- [ ] Frames advance on a tick from the motion tokens (0120), and stop entirely on reduced motion
-- [ ] Determinate and indeterminate both announce correctly
-- [ ] Partial blocks are drawn by the cell renderer (0117), so a bar is one solid run at every density
+- [x] One export line in `packages/react/src/index.ts` and one import line in `packages/css/src/index.css`, as 0122 sets out
+- [x] Block glyphs for progress, braille frames for the spinner, block eighths for the sparkline
+- [x] Frames advance on a tick from the motion tokens (0120), and stop entirely on reduced motion
+- [x] Determinate and indeterminate both announce correctly
+- [x] Partial blocks are drawn by the cell renderer (0117), so a bar is one solid run at every density
 - [ ] Button's `isPending` shows the spinner in its reserved cell (with Button's polish, 0131)
-- [ ] The spinner is a component drawn through `shapeAttributes` (0166), not only a story
+- [x] The spinner is a component drawn through `shapeAttributes` (0166), not only a story
 
 ## 2026-10-03
 

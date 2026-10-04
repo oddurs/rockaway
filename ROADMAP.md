@@ -112,7 +112,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 42% · 50 of 120 done · due 2027-01-31
+`#####·····` 43% · 51 of 120 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -141,7 +141,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
 - [ ] [`0138`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0138-codeblock.md) CodeBlock <sup>component · components · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
-- [ ] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
 - [ ] [`0167`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0167-add-size-in-cells-and-conformance-level-to-component-metadata.md) Add size in cells and conformance level to component metadata <sup>feature · docs · p1</sup>
 - [ ] [`0169`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0169-give-inline-controls-a-full-cell-hit-area-and-ground.md) Give inline controls a full-cell hit area and ground <sup>feature · css · p3</sup>
 - [ ] [`0179`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0179-namespace-every-context-attribute-as-data-rk.md) Namespace every context attribute as data-rk-* <sup>decision · css · p1</sup>
@@ -183,12 +182,12 @@ The component contract, proven on a first set of components.
 
 ### in progress
 
-- [ ] [`0101`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0101-progress.md) Progress <sup>component · components · p1</sup>
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 
 ### in review
 
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
+- [ ] [`0101`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0101-progress.md) Progress <sup>component · components · p1</sup>
 - [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
 - [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 - [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
@@ -229,6 +228,7 @@ The component contract, proven on a first set of components.
 - [x] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
 - [x] [`0140`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0140-callout.md) Callout <sup>component · components · p2</sup>
 - [x] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
+- [x] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 - [x] [`0165`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0165-ship-one-entry-point-per-component-so-an-islands-site-does-not-hydrate-the-whole-package.md) Ship one entry point per component, so an islands site does not hydrate the whole package <sup>feature · distribution · p1</sup>
 - [x] [`0166`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0166-draw-braille-from-the-cell-like-blocks.md) Draw braille from the cell, like blocks <sup>feature · grid · p2</sup>
