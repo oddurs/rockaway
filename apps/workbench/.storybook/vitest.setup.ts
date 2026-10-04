@@ -1,5 +1,5 @@
 import { inject } from 'vitest';
-import { commands, page } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
 
@@ -29,5 +29,7 @@ setRunner({
   record: (use) => commands.recordKnown(use),
   // The frame's own size is the project's, in vitest.config.ts.
   viewport: (size) => page.viewport(size?.width ?? 1200, size?.height ?? 900),
+  // The provider's keyboard: trusted events, as a reader's keys are.
+  type: (keys) => userEvent.keyboard(keys),
   contrast: (preference) => commands.emulateContrast(preference),
 });

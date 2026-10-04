@@ -31,6 +31,7 @@
 @import "./components/badge.css";
 @import "./components/button.css";
 @import "./components/callout.css";
+@import "./components/checkbox.css";
 @import "./components/dialog.css";
 @import "./components/field.css";
 @import "./components/fieldset.css";
@@ -40,5 +41,6 @@
 @import "./components/list.css";
 @import "./components/overlay.css";
 @import "./components/table.css";
+@import "./components/text-field.css";
 @import "./components/tooltip.css";
 @import "./components/tree.css";
