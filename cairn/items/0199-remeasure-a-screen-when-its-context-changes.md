@@ -53,3 +53,7 @@ CI's first full run with the probe found what stale screens had hidden: (1) at t
 ## 2026-10-03
 
 Correction to the earlier note: growing the frame inside the capture changed the page under a check that had already measured it, and Prose's own lines check broke at airy and touch. The frame is now tall from the start instead: preview parameters give the Storybook plugin a 1200 x 2300 test frame per story, inside a 1600 x 2400 page, and the capture is a plain screenshot again. A screen taller than 2300px would still be cut off; nothing in the workbench is.
+
+## 2026-10-03
+
+After #156 (0238) put server-rendered screens that never hydrate into ServerSize stories, the remeasure check read their cell, 1lh, as 1px and called them stale in 8 cells. An unmeasured screen keeps its cell in 1ch and 1lh, which are the line box it sits in whatever the context, so it cannot be stale: the check now judges only a cell written in pixels, a measurement. Not weakened for real screens: with the probe disabled, the check still reports a hydrated Divider keeping a 24px cell in a 16px line box.
