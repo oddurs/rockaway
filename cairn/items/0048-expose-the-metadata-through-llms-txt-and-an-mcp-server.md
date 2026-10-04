@@ -3,7 +3,7 @@ id: 48
 uid: 87656858-a060-47ec-898c-bd1c37b7521a
 title: Expose the metadata through llms.txt and an MCP server
 type: feature
-status: review
+status: doing
 milestone: v0.1
 assignee: Oddur Sigurdsson
 claimed: 2026-10-03
