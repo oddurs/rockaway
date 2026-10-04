@@ -164,18 +164,20 @@ export const Meters: Story = {
   render: () => (
     <Frame title="cpu" cols={40} rows={METERS.length + 3}>
       {METERS.map(([label, value]) => (
-        <div key={label}>
-          <Meter label={label} value={value} warning={70} danger={90} cols={COLS} />
-        </div>
+        <Meter key={label} label={label} value={value} warning={70} danger={90} cols={COLS} />
       ))}
-      <div>
-        <Meter label="mem  " value={11.2} maxValue={16} valueLabel="11.2/16G" cols={COLS} />
-      </div>
+      <Meter label="mem  " value={11.2} maxValue={16} valueLabel="11.2/16G" cols={COLS} />
     </Frame>
   ),
   play: async ({ canvas, canvasElement }) => {
     const meters = all(canvasElement, '.rk-meter');
     expect(meters.map((m) => m.dataset.tone)).toEqual(['success', 'warning', 'danger', 'neutral']);
+    // Each a line of its own, with no wrapper: one row down each time.
+    const tops = meters.map((m) => m.getBoundingClientRect().top);
+    const [first = 0, second = 0] = tops;
+    const row = second - first;
+    expect(row).toBeGreaterThan(0);
+    for (const [i, top] of tops.entries()) expect(top - first).toBeCloseTo(row * i, 0);
     METERS.forEach(([label, value], i) => {
       expect(meters[i]?.textContent).toBe(
         meterBuffer({ label, value, warning: 70, danger: 90, cols: COLS }).row(0),
@@ -198,9 +200,7 @@ export const Greyscale: Story = {
     <div style={{ filter: 'grayscale(1)' }}>
       <Frame title="greyscale" cols={40} rows={METERS.length + 2}>
         {METERS.map(([label, value]) => (
-          <div key={label}>
-            <Meter label={label} value={value} warning={70} danger={90} cols={COLS} />
-          </div>
+          <Meter key={label} label={label} value={value} warning={70} danger={90} cols={COLS} />
         ))}
       </Frame>
     </div>

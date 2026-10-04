@@ -11,6 +11,9 @@ Add `ProgressBar`, `Meter`, `Sparkline` and `Spinner`, each one row of whole cel
 - **`Sparkline`**: a series in braille dots or the theme's bars, newest at the right. A reader hears it summarised in words.
 - **`Spinner`**: the theme's frames on the spinner tick, then its label, announced as a status.
 
-All four are on React Aria where it has a part for them. None moves under reduced motion. No state is a colour alone, and no value changes a component's size.
+All four are on React Aria where it has a part for them. None moves under reduced motion. No state is a colour alone, and no value changes a component's size. A meter is a line of its own, so meters stack without a wrapper.
+
+- **`ticks.refresh`**: a new tick for live data, read again every second. It is data, not motion, so under reduced motion it keeps counting at `reducedTicks.refresh`, every five seconds, while every other tick stops on its first frame. `useTick('refresh')` follows it.
+- **`useReducedMotion()`**: whether the reader asked for less motion, from the system setting or `data-motion` on the root. These are the signals `useTick` and the base CSS read.
 
 The tokens gain `fill`, eight steps across a cell: `▏` to `█`, and `-`, `=`, `#` in ASCII. A bar's leading edge is drawn from it.

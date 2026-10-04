@@ -1157,6 +1157,12 @@
   inherits: true;
 }
 
+@property --rk-motion-tick-reduced-refresh {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 5000ms;
+}
+
 @property --rk-motion-tick-blink {
   syntax: '<time>';
   inherits: true;
@@ -1167,6 +1173,12 @@
   syntax: '<time>';
   inherits: true;
   initial-value: 100ms;
+}
+
+@property --rk-motion-tick-refresh {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 1000ms;
 }
 
 @property --rk-motion-tick-spinner {
@@ -2257,6 +2269,8 @@
     --rk-glyph-spinner-10: "⠏";
     --rk-motion-tick-blink: 500ms;
     --rk-motion-tick-progress: 100ms;
+    --rk-motion-tick-reduced-refresh: 5000ms;
+    --rk-motion-tick-refresh: 1000ms;
     --rk-motion-tick-spinner: 80ms;
     --rk-palette-dark-active: oklch(29.5% 0.006 262);
     --rk-palette-dark-background: oklch(16.5% 0.0048 262);

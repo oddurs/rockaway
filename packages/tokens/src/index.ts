@@ -89,7 +89,7 @@ export {
   type ThemeInputs,
   type TypePairing,
 } from './inputs.ts';
-export { motion, type TickName, tickNames, ticks } from './motion.ts';
+export { motion, reducedTicks, type TickName, tickNames, ticks } from './motion.ts';
 export { type TokenName, vars } from './names.ts';
 export { minimumIn, type Pair, pairs } from './pairs.ts';
 export { resolveTree, resolveValue } from './resolve.ts';

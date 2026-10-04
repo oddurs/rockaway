@@ -77,7 +77,7 @@ export interface MeterProps extends VariantProps<typeof meterVariants> {
 
 /**
  * A level, as one row: the label, the bar, a mark cell that carries the tone
- * without colour, and the value.
+ * without colour, and the value. A line of its own, so meters stack.
  */
 export function Meter({
   value,

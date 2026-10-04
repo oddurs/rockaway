@@ -121,7 +121,7 @@ export const progressBarMeta: ComponentMetaInput = defineMeta({
 export const meterMeta: ComponentMetaInput = defineMeta({
   name: 'Meter',
   summary: 'A level against its thresholds, with a mark when it is past one.',
-  description: `ProgressBar's static sibling: the same bar, for a level that goes up and down rather than a task that finishes. Given \`warning\` and \`danger\` thresholds, past one the fill takes fg.warning or fg.danger, and the cell after the bar draws the theme's \`${mark.danger}\` or \`${mark.cross}\`, so the tone reads without colour. Give \`danger\` below \`warning\` for a meter where low is bad. On React Aria's Meter.`,
+  description: `ProgressBar's static sibling: the same bar, for a level that goes up and down rather than a task that finishes. Given \`warning\` and \`danger\` thresholds, past one the fill takes fg.warning or fg.danger, and the cell after the bar draws the theme's \`${mark.danger}\` or \`${mark.cross}\`, so the tone reads without colour. Give \`danger\` below \`warning\` for a meter where low is bad. A meter is a line of its own, so meters one after another stack, a core or a kind of memory each. On React Aria's Meter.`,
   whenToUse: [
     'For a level with a range: memory, disk, CPU, a battery.',
     'Beside other meters, where the thresholds let a reader scan for trouble.',
