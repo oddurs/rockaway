@@ -238,6 +238,33 @@ export const AsWideAsTrigger: Story = {
   },
 };
 
+/** Open in a screen painted with the given painter: the popover follows it across the portal. */
+function painted(painter: 'glyph' | 'rule'): Story {
+  return {
+    render: () => (
+      <Frame title={painter} painter={painter} cols={WIDE} rows={10}>
+        <Form>
+          <Themes defaultSelectedKey="phosphor" defaultOpen />
+        </Form>
+      </Frame>
+    ),
+    play: async ({ canvas }) => {
+      await measured(document.body);
+      const frame = canvas.getByRole('group', { name: painter });
+      await waitFor(() => expect(option('phosphor').dataset.focused).toBe('true'));
+      await measured(document.body);
+      // The same cells and the same text under either painter: only the strokes differ.
+      expect(inside(frame)).toBe(model({ value: 'phosphor', open: true, cursor: 'phosphor' }));
+      const surface = document.querySelector('.rk-overlay [data-rk-painted]') as HTMLElement;
+      expect(surface.dataset.rkPainted).toBe(painter);
+    },
+  };
+}
+
+/** Both painters, one story each: the trigger and the open popover land in the same cells. */
+export const PainterGlyph: Story = { ...painted('glyph'), name: 'Painted, glyph' };
+export const PainterRule: Story = { ...painted('rule'), name: 'Painted, rule' };
+
 /**
  * Keyboard walkthrough: Tab reaches the trigger; type-ahead selects with the
  * popover closed; Space opens it with the cursor on the value; the arrows

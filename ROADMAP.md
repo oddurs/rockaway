@@ -103,7 +103,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`####······` 39% · 39 of 101 done · due 2027-01-31
+`####······` 40% · 40 of 101 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -163,12 +163,11 @@ The component contract, proven on a first set of components.
 
 ### in progress
 
-- [ ] [`0034`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0034-popover.md) Popover <sup>component · components · p0</sup>
-- [ ] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 
 ### in review
 
+- [ ] [`0034`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0034-popover.md) Popover <sup>component · components · p0</sup>
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
 - [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
 - [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
@@ -182,6 +181,7 @@ The component contract, proven on a first set of components.
 
 - [x] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p0</sup>
 - [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
+- [x] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [x] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
 - [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
 - [x] [`0096`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0096-frame.md) Frame <sup>component · components · p0</sup>

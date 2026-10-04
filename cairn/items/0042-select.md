@@ -3,16 +3,16 @@ id: 42
 uid: 570abc45-84f2-4acc-8874-7c47bb60ab01
 title: Select
 type: component
-status: doing
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 34
 - 127
 - 133
 created: 2026-09-22
 updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p1
 layer: components
 effort: m
@@ -55,7 +55,7 @@ submission and autofill working.
 - [x] Light, dark and forced-colors verified
 - [x] Metadata written: props, anatomy, when to use, when not to
 - [x] Sized in cells, and drawn by the frame engine: no box characters written by hand
-- [ ] Both painters render it identically, measured in cells
+- [x] Both painters render it identically, measured in cells
 - [x] Frame glyphs are `aria-hidden`; the accessible name never contains one
 - [x] Ships a text snapshot, which is its documentation as much as its test
 - [x] Operable by keyboard alone, and usable with a finger at touch density
@@ -84,3 +84,11 @@ The visible value is aria-hidden and cut/padded to its cells; a VisuallyHidden c
 ## 2026-10-03
 
 Now on Popover (feat/popover, 6d2fdec): one import swapped, and an 'At least as wide as its trigger' story asserts the 30-cell popover under a 30-cell trigger with narrower options, from Popover's minCols; Select sets no width. Criterion 8 (both painters) left open: Select's own cells draw nothing painted, but Popover always paints glyph even when opened from a rule-painted screen, a #149 issue fields is fixing; once that lands a Painters story can hold both.
+
+## 2026-10-03
+
+Criterion 8 met after merging feat/popover at c72523e (with #149's update): the painter now crosses the portal, and 'Painted, glyph' and 'Painted, rule' each hold the open select to the same model, the popover's layer painted with the screen's painter. popover.css is gone from feat/popover, so the union-merged CSS index line for it is dropped here.
+
+## Result
+
+Select is a field: label column, a trigger exactly cols wide ([ value ▾], value in the third cell), description and error under it. It opens Popover on the row under the trigger, at least as wide as it (minCols), its rows List's (cursor, reverse, check) starting in the value's column. The value is drawn cut and read whole; placeholder via React Aria's data-placeholder, now in the state vocabulary. Type-ahead closed, native validation and submission through the hidden select; both painters, every density, dark, forced colors, strict.
