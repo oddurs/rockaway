@@ -89,7 +89,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 - [ ] [`0246`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0246-remeasure-a-screen-given-explicit-cols-and-rows-when-its-context-changes.md) Remeasure a screen given explicit cols and rows when its context changes <sup>bug · grid · p2</sup>
 
-### in progress
+### in review
 
 - [ ] [`0245`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0245-stop-fieldset-s-frame-leaking-above-its-corner-at-dense-on-macos.md) Stop Fieldset's frame leaking above its corner at dense on macOS <sup>bug · grid · p3</sup>
 
