@@ -43,7 +43,9 @@ const swatches = ansiSlots
       style="background: var(--rk-bg-page); color: var(--rk-fg-default); padding: var(--rk-y-1) var(--rk-x-2)"
     >
       <Painted text={themeSample(theme)} label={`${theme.title}, ${mode}: a frame in its border set`} />
-      <div data-rk-painted="glyph" aria-hidden="true" class="rk-row" set:html={swatches} />
+      <div class="rk-scroll-marks" tabindex="0" role="region" aria-label={`${theme.title}, ${mode}: its sixteen colours`}>
+        <div data-rk-painted="glyph" aria-hidden="true" class="rk-row" set:html={swatches} />
+      </div>
     </figure>
   ))
 }

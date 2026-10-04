@@ -76,10 +76,12 @@ const first = drawing(SERVER_SIZE, { boxes: [], weight: 'light' });
   <h2>Ten lines</h2>
   <Source code={app} lang="tsx" />
   <p>Which draws this, rendered by the component on the server:</p>
-  <Frame title="hello" cols={32} rows={5}>
-    <p>A screen, in cells.</p>
-    <Button>Continue</Button>
-  </Frame>
+  <div class="rk-scroll-marks" tabindex="0" role="region" aria-label="What it draws">
+    <Frame title="hello" cols={32} rows={5}>
+      <p>A screen, in cells.</p>
+      <Button>Continue</Button>
+    </Frame>
+  </div>
   <Source code="npm install @rockaway/react @rockaway/css @rockaway/tokens" lang="sh" />
   <p>
     <strong>Not on npm yet.</strong> The first release, 0.1.0, is being made; until then <a

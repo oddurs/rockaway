@@ -1326,4 +1326,65 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       expect(pngSize(path.join(out, 'favicon.png'))).toEqual({ width: 180, height: 180 });
     });
   });
+
+  describe('the whole site, as a first visitor meets it (0152)', () => {
+    /** Every built page's address, under the base. */
+    const everyPage = () => {
+      const found: string[] = [];
+      const walk = (dir: string) => {
+        for (const name of readdirSync(dir)) {
+          const file = path.join(dir, name);
+          if (statSync(file).isDirectory()) walk(file);
+          else if (name === 'index.html') {
+            const rel = path.relative(out, dir);
+            found.push(rel === '' ? '' : `${rel}/`);
+          }
+        }
+      };
+      walk(out);
+      return found.sort();
+    };
+
+    test.runIf(base === '/rockaway/')(
+      'fits every page into 320 pixels, which is also 1280 at 400%: nothing clipped, nothing scrolling across but what scrolls on purpose',
+      async () => {
+        const context = await browser.newContext({ viewport: { width: 320, height: 640 } });
+        const reader = await context.newPage();
+        const problems: string[] = [];
+        for (const p of everyPage()) {
+          await reader.goto(`${origin}${base}${p}`);
+          await reader.waitForFunction(hydrated);
+          const found = await reader.evaluate(() => {
+            const across = (el: Element) => /auto|scroll/.test(getComputedStyle(el).overflowX);
+            const main = document.getElementById('content') as HTMLElement;
+            const right = main.getBoundingClientRect().right;
+            const wide: string[] = [];
+            for (const el of main.querySelectorAll('*')) {
+              const r = el.getBoundingClientRect();
+              if (r.width === 0 || r.right <= right + 1 || across(el)) continue;
+              let at = el.parentElement;
+              while (at && at !== main && !across(at)) at = at.parentElement;
+              if (at === main || at === null) {
+                wide.push(`${el.tagName.toLowerCase()}.${[...el.classList].join('.')}`);
+              }
+            }
+            return {
+              overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+              wide: [...new Set(wide)].slice(0, 4),
+              stacked:
+                document.querySelector<HTMLElement>('.site-shell > .rk-panes')?.dataset.direction,
+            };
+          });
+          if (found.overflow > 0)
+            problems.push(`${p}: the page scrolls across by ${found.overflow}px`);
+          if (found.wide.length > 0)
+            problems.push(`${p}: clipped by the pane: ${found.wide.join(', ')}`);
+          if (found.stacked !== 'column') problems.push(`${p}: the panes did not stack`);
+        }
+        expect(problems).toEqual([]);
+        await context.close();
+      },
+      120_000,
+    );
+  });
 });

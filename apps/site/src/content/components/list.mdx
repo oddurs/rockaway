@@ -6,6 +6,8 @@ import { Example } from '../../islands/examples/list.tsx';
 import source from '../../islands/examples/list.tsx?raw';
 import Source from '../../components/Source.astro';
 
-<Example client:load />
+<div class="rk-scroll-marks" tabindex="0" role="region" aria-label="Example">
+  <Example client:load />
+</div>
 
 <Source code={source} lang="tsx" />

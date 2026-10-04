@@ -9,13 +9,13 @@ import Prose from '../layouts/Prose.astro';
 import { fixed } from '../lib/pages.ts';
 import { href } from '../lib/paths.ts';
 
-// As wide as a phone has room for, like the landing page's drawing.
-const COLS = 34;
+// As wide as the page has room for on the narrowest phone, 320 pixels.
+const COLS = 26;
 const ROWS = 5;
 const screen = Buffer.create({ width: COLS, height: ROWS }).draw((draft) => {
   drawBox(draft, rect(0, 0, COLS, ROWS), { title: '404', titleStyle: { attrs: Attr.bold } });
-  drawText(draft, { x: 2, y: 1 }, 'No page at this address.');
-  drawText(draft, { x: 2, y: 3 }, 'g h  home     ?  keys', {
+  drawText(draft, { x: 2, y: 1 }, 'No page here.');
+  drawText(draft, { x: 2, y: 3 }, 'g h  home    ?  keys', {
     style: { fg: 'fg.muted', attrs: Attr.none },
   });
 });
