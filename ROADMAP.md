@@ -112,7 +112,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 43% · 52 of 120 done · due 2027-01-31
+`#####·····` 44% · 53 of 120 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -131,13 +131,11 @@ The component contract, proven on a first set of components.
 - [ ] [`0044`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p1</sup>
 - [ ] [`0055`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0055-combobox.md) Combobox <sup>component · components · p2</sup>
 - [ ] [`0064`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0064-build-the-kitchen-sink-screen-every-component-with-the-theme-inputs-as-controls.md) Build the kitchen-sink screen: every component, with the theme inputs as controls <sup>feature · docs · p1</sup>
-- [ ] [`0065`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0065-answer-prefers-contrast-with-attributes-not-a-third-palette.md) Answer prefers-contrast with attributes, not a third palette <sup>feature · tokens · p2</sup>
 - [ ] [`0098`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0098-statusbar.md) StatusBar <sup>component · components · p0</sup>
 - [ ] [`0101`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0101-progress.md) Progress <sup>component · components · p1</sup>
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
 - [ ] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p2</sup>
 - [ ] [`0124`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0124-run-the-story-tests-in-firefox-and-webkit-as-well-as-chromium.md) Run the story tests in Firefox and WebKit as well as Chromium <sup>chore · tooling · p1</sup>
-- [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
 - [ ] [`0134`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0134-write-the-component-recipe-the-files-the-export-lines-the-checklist.md) Write the component recipe: the files, the export lines, the checklist <sup>docs · docs · p1</sup>
 - [ ] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
 - [ ] [`0138`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0138-codeblock.md) CodeBlock <sup>component · components · p1</sup>
@@ -188,6 +186,7 @@ The component contract, proven on a first set of components.
 
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
 - [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
+- [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
 - [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 - [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
 - [ ] [`0164`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0164-make-hover-and-pointer-stories-reliable-in-ci.md) Make hover and pointer stories reliable in CI <sup>chore · tooling · p1</sup>
@@ -202,6 +201,7 @@ The component contract, proven on a first set of components.
 - [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
 - [x] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
 - [x] [`0057`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0057-table.md) Table <sup>component · components · p1</sup>
+- [x] [`0065`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0065-answer-prefers-contrast-with-attributes-not-a-third-palette.md) Answer prefers-contrast with attributes, not a third palette <sup>feature · tokens · p2</sup>
 - [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
 - [x] [`0096`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0096-frame.md) Frame <sup>component · components · p0</sup>
 - [x] [`0097`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0097-divider.md) Divider <sup>component · components · p1</sup>
@@ -270,7 +270,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`###·······` 27% · 7 of 26 done · due 2027-02-21
+`####······` 31% · 8 of 26 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -291,7 +291,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0152`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0152-review-the-site-end-to-end-phone-zoom-keyboard-screen-reader-slow-network.md) Review the site end to end: phone, zoom, keyboard, screen reader, slow network <sup>chore · site · p0</sup>
 - [ ] [`0171`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0171-draw-each-component-s-snapshot-in-every-theme-on-the-site.md) Draw each component's snapshot in every theme on the site <sup>feature · site · p3</sup>
 - [ ] [`0177`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0177-let-checkcontinuity-check-shapes-drawn-outside-a-painted-layer.md) Let checkContinuity check shapes drawn outside a painted layer <sup>feature · tooling · p2</sup>
-- [ ] [`0218`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0218-show-overflow-marks-where-scroll-state-queries-are-missing.md) Show overflow marks where scroll-state queries are missing <sup>feature · css · p2</sup>
 - [ ] [`0219`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0219-prove-the-static-callout-in-the-workbench.md) Prove the static callout in the workbench <sup>chore · tooling · p2</sup>
 
 ### ready
@@ -311,6 +310,7 @@ A website built out of the system it documents, which is the only honest way
 - [x] [`0144`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0144-highlight-code-in-the-ansi-16.md) Highlight code in the ANSI 16 <sup>feature · tokens · p1</sup>
 - [x] [`0170`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0170-typecheck-astro-files.md) Typecheck .astro files <sup>chore · tooling · p2</sup>
 - [x] [`0188`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0188-export-the-fitted-imported-themes-back-to-terminal-files.md) Export the fitted imported themes back to terminal files <sup>feature · tokens · p2</sup>
+- [x] [`0218`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0218-show-overflow-marks-where-scroll-state-queries-are-missing.md) Show overflow marks where scroll-state queries are missing <sup>feature · css · p2</sup>
 
 ## v0.1 — v0.1 — first release
 
@@ -321,8 +321,6 @@ Something another project can install and build on.
 ### backlog
 
 - [ ] [`0045`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0045-publish-the-four-packages-to-npm-with-changesets-and-provenance.md) Publish the four packages to npm with Changesets and provenance <sup>feature · distribution · p0</sup>
-- [ ] [`0046`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0046-serve-compositions-from-a-copy-in-registry.md) Serve compositions from a copy-in registry <sup>feature · distribution · p1</sup>
-- [ ] [`0048`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
 - [ ] [`0153`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0153-decide-what-is-public-api-and-what-counts-as-a-breaking-change.md) Decide what is public API, and what counts as a breaking change <sup>decision · distribution · p0</sup>
 - [ ] [`0154`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0154-claim-the-rockaway-npm-scope-and-set-up-trusted-publishing.md) Claim the @rockaway npm scope and set up trusted publishing <sup>chore · distribution · p0 · needs-owner</sup>
 - [ ] [`0155`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0155-prove-the-quickstart-from-a-clean-install-in-ci.md) Prove the quickstart from a clean install in CI <sup>chore · tooling · p0</sup>
@@ -337,6 +335,8 @@ Something another project can install and build on.
 
 ### in review
 
+- [ ] [`0046`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0046-serve-compositions-from-a-copy-in-registry.md) Serve compositions from a copy-in registry <sup>feature · distribution · p1</sup>
+- [ ] [`0048`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
 - [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
 
 ### done
