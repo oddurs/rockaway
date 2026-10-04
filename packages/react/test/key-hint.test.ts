@@ -269,3 +269,15 @@ describe('usePlatform', () => {
     expect(html).toContain('Control S');
   });
 });
+
+describe('in a sentence', () => {
+  // A div inside a paragraph closes the paragraph when the page is parsed, so a
+  // server-rendered hint in prose became a different tree from the one React
+  // hydrates (React error 418) and, with no script, a broken one.
+  test('is phrasing content all the way down, so a paragraph can hold it', () => {
+    const html = renderToString(
+      createElement('p', null, createElement(KeyHint, { keys: 'mod+s' }, 'save')),
+    );
+    expect(html.slice('<p>'.length)).not.toMatch(/<(div|p)\b/);
+  });
+});

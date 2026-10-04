@@ -51,7 +51,11 @@ export function KeyHint({
     <span className={cx('rk-keyhint', className)} {...(decorative ? { 'aria-hidden': true } : {})}>
       <kbd className="rk-keyhint-keys">
         <span aria-hidden="true">{formatKeys(keys, resolved, notation, glyphs)}</span>
-        {decorative ? null : <VisuallyHidden>{spokenKeys(keys, resolved)}</VisuallyHidden>}
+        {/* A span, as everything here is: a hint sits in a sentence, and a div
+            inside a paragraph closes the paragraph when the page is parsed. */}
+        {decorative ? null : (
+          <VisuallyHidden elementType="span">{spokenKeys(keys, resolved)}</VisuallyHidden>
+        )}
       </kbd>
       {children === undefined ? null : <span className="rk-keyhint-label">{children}</span>}
     </span>

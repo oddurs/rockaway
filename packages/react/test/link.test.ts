@@ -1,8 +1,10 @@
 import { Attr, type Buffer, hasAttr, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
+import { createElement } from 'react';
+import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { linkBuffer } from '../src/components/link.pure.ts';
-import type { LinkState } from '../src/components/link.tsx';
+import { Link, type LinkState } from '../src/components/link.tsx';
 
 const STATES: ReadonlyArray<readonly [string, LinkState]> = [
   ['rest', {}],
@@ -97,5 +99,17 @@ describe('linkBuffer', () => {
 
   test('a wide label is measured in cells, not characters', () => {
     expect(linkBuffer('文档', {}).width).toBe(5);
+  });
+});
+
+describe('in a sentence', () => {
+  // A link is inline: a div in it would close the paragraph around it when the
+  // page is parsed, and the page React hydrates would not be the one it made.
+  test('says it opens a new tab in phrasing content, so a paragraph can hold it', () => {
+    const html = renderToString(
+      createElement('p', null, createElement(Link, { href: '#x', target: '_blank' }, 'docs')),
+    );
+    expect(html).toContain('opens in a new tab');
+    expect(html.slice('<p>'.length)).not.toMatch(/<(div|p)\b/);
   });
 });
