@@ -28,6 +28,12 @@ export interface Runner {
   readonly plan: Plan;
   /** Tells the run which known failures a story put in play and used, so a stale one fails it. */
   readonly record: (use: KnownUse) => Promise<void>;
+  /**
+   * Resizes the frame the story runs in, in CSS pixels; with no size, back to
+   * the project's own. A story that resizes puts it back before it ends, so
+   * the checks after it read the page at the size every story is read at.
+   */
+  readonly viewport: (size?: { readonly width: number; readonly height: number }) => Promise<void>;
 }
 
 let current: Runner | undefined;

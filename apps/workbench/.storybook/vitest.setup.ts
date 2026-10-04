@@ -26,4 +26,6 @@ setRunner({
   // Each project says what it walks; see `vitest.config.ts`.
   plan: inject('plan'),
   record: (use) => commands.recordKnown(use),
+  // The frame's own size is the project's, in vitest.config.ts.
+  viewport: (size) => page.viewport(size?.width ?? 1200, size?.height ?? 900),
 });

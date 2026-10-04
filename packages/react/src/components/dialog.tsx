@@ -24,20 +24,22 @@
  * makes the page behind inert and stops it scrolling. Nothing here handles a
  * key. There is no motion, so `data-entering` and `data-exiting` are not used.
  */
-import { type ReactNode, useEffect, useRef } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import { Dialog as AriaDialog } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import type { PainterName } from '../screen.tsx';
 import type { VariantProps } from '../variants.ts';
 import { Button } from './button.tsx';
-import { dialogHeading, dialogVariants } from './dialog.pure.ts';
+import { type DialogVariant, dialogHeading, dialogVariants } from './dialog.pure.ts';
 import { OverlayModal, type OverlayModalProps } from './overlay.tsx';
 
 /** Closes the dialog: what a function child or action row is handed. */
 export type DialogClose = () => void;
 
-type Content = ReactNode | ((close: DialogClose) => ReactNode);
+/** What a dialog holds: elements, or a function of `close` that returns them. */
+export type DialogContent = ReactNode | ((close: DialogClose) => ReactNode);
+type Content = DialogContent;
 
 export interface DialogProps
   extends VariantProps<typeof dialogVariants>,
@@ -47,10 +49,12 @@ export interface DialogProps
     > {
   /** The words in the top edge, and what a reader hears the dialog called. */
   readonly title: string;
+  /** `alert` for a destructive confirmation: `role="alertdialog"` and the caution mark. */
+  readonly variant?: DialogVariant;
   /** The content, or a function of `close` that returns it. */
-  readonly children?: Content;
+  readonly children?: DialogContent;
   /** The action row at the bottom right: Buttons, or a function of `close` that returns them. */
-  readonly actions?: Content;
+  readonly actions?: DialogContent;
   /** The most rows the dialog may take before its content scrolls. */
   readonly maxRows?: number;
   /** The fewest columns the dialog may be, its frame's two included. */
@@ -63,17 +67,12 @@ export interface DialogProps
 const render = (content: Content, close: DialogClose): ReactNode =>
   typeof content === 'function' ? content(close) : content;
 
-/** The first element in `root` a reader can tab to. */
-function firstTabbable(root: HTMLElement): HTMLElement | null {
-  return root.querySelector<HTMLElement>(
-    'input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
-  );
-}
-
 /**
- * The body of the dialog: React Aria's `Dialog`, named by the title, with
- * focus put on its first focusable element when it opens, unless something
- * in it has asked for focus already (an alert's safe action does).
+ * The body of the dialog: React Aria's `Dialog`, named by the title. React
+ * Aria puts focus on the dialog itself when it opens, so a reader hears its
+ * name and what it says, and Tab goes on to its first control; a control
+ * that should start with focus asks for it with `autoFocus`, as an alert's
+ * safe action does.
  */
 function Body({
   title,
@@ -82,25 +81,12 @@ function Body({
   actions,
 }: {
   readonly title: string;
-  readonly variant: 'default' | 'alert';
+  readonly variant: DialogVariant;
   readonly children: Content | undefined;
   readonly actions: Content | undefined;
 }): ReactNode {
-  const ref = useRef<HTMLElement>(null);
-  // An effect, not a layout effect: it runs after a descendant's `autoFocus`
-  // and React Aria's own, so it only moves focus React Aria put on the dialog
-  // itself, to where the reader can use it.
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const active = document.activeElement;
-    if (active !== el && el.contains(active)) return;
-    const first = firstTabbable(el);
-    if (first) first.focus();
-  }, []);
   return (
     <AriaDialog
-      ref={ref}
       role={variant === 'alert' ? 'alertdialog' : 'dialog'}
       aria-label={title}
       className="rk-dialog"
@@ -117,6 +103,23 @@ function Body({
         </>
       )}
     </AriaDialog>
+  );
+}
+
+/**
+ * The body of an open dialog without its overlay, as an element. Exported from
+ * this module and not the package: an overlay renders nothing on a server, so
+ * the metadata check renders this, as the evidence for the dialog's roles and
+ * its variant attribute.
+ */
+export function openDialogBody(props: {
+  readonly title: string;
+  readonly variant: DialogVariant;
+}): ReactElement {
+  return (
+    <Body title={props.title} variant={props.variant} actions={undefined}>
+      {undefined}
+    </Body>
   );
 }
 

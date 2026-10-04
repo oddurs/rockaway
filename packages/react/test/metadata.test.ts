@@ -15,6 +15,7 @@ import { createElement, Fragment, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { type Analysis, analyse, packageRoot, render } from '../scripts/extract.ts';
+import { openDialogBody } from '../src/components/dialog.tsx';
 import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
@@ -81,12 +82,20 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
         createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
       ),
     ),
-  // Closed: a dialog has no trigger here, and on a server an open one renders nothing anyway.
+  // Open. An overlay renders nothing on a server, so the dialog's body is
+  // rendered as its modal holds it, a dialog and an alert, beside the
+  // component itself.
   Dialog: (props) =>
     createElement(
-      rockaway.OverlayLayer,
+      Fragment,
       null,
-      createElement(rockaway.Dialog, { title: 'Rename', isOpen: false, ...props }, 'inside'),
+      createElement(
+        rockaway.OverlayLayer,
+        null,
+        createElement(rockaway.Dialog, { title: 'Rename', isOpen: true, ...props }, 'inside'),
+      ),
+      openDialogBody({ title: 'Rename', variant: 'default', ...props }),
+      openDialogBody({ title: 'Discard?', variant: 'alert' }),
     ),
   // Closed: a popover has no trigger here, and on a server an open one renders nothing anyway.
   OverlayPopover: (props) =>

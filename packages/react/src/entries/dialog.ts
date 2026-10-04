@@ -13,5 +13,6 @@ export {
   type AlertDialogProps,
   Dialog,
   type DialogClose,
+  type DialogContent,
   type DialogProps,
 } from '../components/dialog.tsx';

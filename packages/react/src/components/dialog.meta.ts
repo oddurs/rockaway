@@ -19,7 +19,7 @@ export const dialogMeta: ComponentMetaInput = defineMeta({
   whenNotToUse: [
     {
       text: 'For information the reader can glance at and leave, anchored to what it is about.',
-      instead: 'Popover',
+      instead: 'OverlayPopover',
     },
     { text: 'For a note that is part of the text.', instead: 'Callout' },
     { text: 'For long content that deserves a page of its own: link to the page instead.' },
@@ -53,7 +53,7 @@ export const dialogMeta: ComponentMetaInput = defineMeta({
       className: 'rk-frame',
       chrome: true,
       description:
-        "The modal's double line, the title set into its top edge, the alert's caution mark before it. aria-hidden.",
+        "The modal's double line, the title set into its top edge, the alert's caution mark before it, over the overlay contract's backdrop of shade. aria-hidden.",
     },
     {
       kind: 'element',
@@ -68,13 +68,6 @@ export const dialogMeta: ComponentMetaInput = defineMeta({
       className: 'rk-dialog-actions',
       chrome: false,
       description: 'The action row, at the bottom right, a blank row under the content.',
-    },
-    {
-      kind: 'element',
-      name: 'backdrop',
-      className: 'rk-overlay-scrim',
-      chrome: true,
-      description: "The theme's light shade over the viewport's whole cells, aria-hidden.",
     },
   ],
   variants: describeVariants(dialogVariants, {
@@ -97,7 +90,7 @@ export const dialogMeta: ComponentMetaInput = defineMeta({
     typeAhead: false,
     announces: '"Discard changes?, dialog", then the focused control.',
     notes: [
-      'Focus starts on the first focusable element; in an AlertDialog, on the safe action.',
+      'Focus starts on the dialog itself, so its name and content are heard first, and Tab goes to its first control; autoFocus on a control starts there instead. In an AlertDialog it starts on the safe action.',
       'The page behind is inert and does not scroll, through React Aria.',
       'A press on the backdrop closes it only when isDismissable; never an AlertDialog.',
       'There is no motion: data-entering and data-exiting are not used.',

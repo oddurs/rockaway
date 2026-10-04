@@ -339,14 +339,20 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "The words in the top edge, and what a reader hears the dialog called."
       },
       {
+        "name": "variant",
+        "type": "DialogVariant",
+        "required": false,
+        "description": "`alert` for a destructive confirmation: `role=\"alertdialog\"` and the caution mark."
+      },
+      {
         "name": "children",
-        "type": "Content",
+        "type": "DialogContent",
         "required": false,
         "description": "The content, or a function of `close` that returns it."
       },
       {
         "name": "actions",
-        "type": "Content",
+        "type": "DialogContent",
         "required": false,
         "description": "The action row at the bottom right: Buttons, or a function of `close` that returns them."
       },
