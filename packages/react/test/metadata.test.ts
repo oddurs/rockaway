@@ -522,10 +522,18 @@ describe('how it sits on the grid (0167, 0182)', () => {
             render: () => <Sea />,
           };
           export const Standard: Story = { globals: { conformance: 'standard' }, render: () => <Sea><Div /></Sea> };
+          // Through a wrapper the file defines: what the wrapper renders.
+          function Page() { return <Frame><Dee /></Frame>; }
+          export const Wrapped: Story = { globals: { conformance: 'strict' }, render: () => <Page /> };
         `,
       );
-      const held = levelsFromStories(new Set(['Aye', 'Bee', 'Sea']), dir);
-      expect(Object.fromEntries(held)).toEqual({ Aye: 'loose', Bee: 'strict', Sea: 'standard' });
+      const held = levelsFromStories(new Set(['Aye', 'Bee', 'Sea', 'Dee']), dir);
+      expect(Object.fromEntries(held)).toEqual({
+        Aye: 'loose',
+        Bee: 'strict',
+        Sea: 'standard',
+        Dee: 'strict',
+      });
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

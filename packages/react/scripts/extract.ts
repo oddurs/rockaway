@@ -567,13 +567,55 @@ function conformanceOf(object: AstNode | undefined): {
   };
 }
 
-/** The components a piece of a story file renders, by their JSX names. */
-function rendered(node: AstNode | undefined, components: ReadonlySet<string>): Set<string> {
+/**
+ * The components a piece of a story file renders, by their JSX names,
+ * following a component the file defines itself (`<RealPage />`) into its body.
+ */
+function rendered(
+  node: AstNode | undefined,
+  components: ReadonlySet<string>,
+  locals: ReadonlyMap<string, AstNode> = new Map(),
+  seen: Set<string> = new Set(),
+): Set<string> {
   const found = new Set<string>();
   for (const at of walk(node)) {
     if (at.type !== 'JSXOpeningElement') continue;
     const name = (at.name as { type: string; name?: string }).name;
-    if (name !== undefined && components.has(name)) found.add(name);
+    if (name === undefined) continue;
+    if (components.has(name)) found.add(name);
+    const local = locals.get(name);
+    if (local !== undefined && !seen.has(name)) {
+      seen.add(name);
+      for (const inner of rendered(local, components, locals, seen)) found.add(inner);
+    }
+  }
+  return found;
+}
+
+/** The functions a story file defines at its top level, by name: its own wrappers. */
+function localFunctions(parsed: Parsed): Map<string, AstNode> {
+  const found = new Map<string, AstNode>();
+  for (const statement of parsed.body) {
+    const declaration =
+      statement.type === 'ExportNamedDeclaration'
+        ? (statement.declaration as AstNode | null)
+        : statement;
+    if (declaration?.type === 'FunctionDeclaration') {
+      const name = (declaration.id as { name?: string } | null)?.name;
+      if (name !== undefined) found.set(name, declaration);
+    }
+    if (declaration?.type === 'VariableDeclaration') {
+      for (const d of declaration.declarations as AstNode[]) {
+        const init = d.init as AstNode | undefined;
+        const name = (d.id as { name?: string }).name;
+        if (
+          name !== undefined &&
+          (init?.type === 'ArrowFunctionExpression' || init?.type === 'FunctionExpression')
+        ) {
+          found.set(name, init);
+        }
+      }
+    }
   }
   return found;
 }
@@ -616,16 +658,19 @@ export function levelsFromStories(
     const meta = declarators.find((d) => !d.exported && d.name === 'meta')?.init;
     const metaCheck = conformanceOf(meta);
     const metaComponent = (property(meta, 'component') as { name?: string } | undefined)?.name;
-    const metaRenders = rendered(property(meta, 'render'), components);
+    const locals = localFunctions(parsed);
+    const metaRenders = rendered(property(meta, 'render'), components, locals);
     for (const story of declarators) {
       if (!story.exported || story.init?.type !== 'ObjectExpression') continue;
       const own = conformanceOf(story.init);
       if (own.off ?? metaCheck.off ?? false) continue;
       const level = own.level ?? metaCheck.level ?? 'standard';
-      let shown = rendered(story.init, components);
+      let shown = rendered(story.init, components, locals);
       if (shown.size === 0) shown = metaRenders;
-      if (shown.size === 0 && metaComponent !== undefined && components.has(metaComponent)) {
-        shown = new Set([metaComponent]);
+      if (shown.size === 0 && metaComponent !== undefined) {
+        shown = components.has(metaComponent)
+          ? new Set([metaComponent])
+          : rendered(locals.get(metaComponent), components, locals);
       }
       for (const name of shown) {
         const before = held.get(name);

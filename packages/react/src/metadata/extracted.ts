@@ -59,7 +59,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-warning"
     ],
     "marks": [],
-    "level": "standard"
+    "level": "strict"
   },
   "Button": {
     "file": "button.tsx",
@@ -132,7 +132,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "control"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "Callout": {
     "file": "callout.tsx",
@@ -235,7 +235,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "Checkbox": {
     "file": "checkbox.tsx",
@@ -414,7 +414,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "Description": {
     "file": "field.tsx",
@@ -885,7 +885,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-x-2"
     ],
-    "marks": []
+    "marks": [],
+    "level": "standard"
   },
   "Label": {
     "file": "field.tsx",
@@ -1019,7 +1020,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "ListItem": {
     "file": "list.tsx",
@@ -1051,7 +1052,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "OverlayLayer": {
     "file": "overlay.tsx",
@@ -1233,7 +1234,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "Table": {
     "file": "table.tsx",
@@ -1347,7 +1348,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "TableHeader": {
     "file": "table.tsx",
@@ -1386,7 +1387,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "TextField": {
     "file": "text-field.tsx",
@@ -1569,7 +1570,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   }
 };
 
