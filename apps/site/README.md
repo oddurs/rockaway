@@ -59,6 +59,13 @@ Every page is a screen (0104), built only from `@rockaway/react`:
   is also a row of the map, so every route is an ordinary link.
 - **The URL is the state.** The map's current row is the path. The section
   you scroll to is written to the fragment, and a fragment opens there.
+- **Copying** (0105): `y` copies the screen you are on as text, and `Y` as
+  ANSI for a terminal, with the status bar's two buttons doing the same. The
+  screen is the one you last pointed at or moved into, a snapshot or an
+  example, or else the whole page, panes and status bar and all. The message
+  line says what was copied and how big it is. The reading is the system's,
+  `@rockaway/react/copy`; a terminal draws the ANSI the same, which the site
+  test proves with a headless terminal.
 
 With no script there is no window to measure, so `site.css` turns the shell
 into a document (`@media (scripting: none)`): the map, the page and the

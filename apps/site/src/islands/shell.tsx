@@ -17,6 +17,8 @@
  * the outline is the first to go when there is no room for it.
  */
 import { cellsIn, measureCell } from '@rockaway/react';
+import { Button } from '@rockaway/react/button';
+import { screenAnsi, screenText } from '@rockaway/react/copy';
 import { KeyHint } from '@rockaway/react/key-hint';
 import { Keymap, KeymapHelp, useKeymap } from '@rockaway/react/keymap';
 import { Pane, Panes } from '@rockaway/react/panes';
@@ -179,6 +181,7 @@ function Status({
   headings,
   help,
   message,
+  copy,
 }: {
   readonly store: PlaceStore;
   readonly trail: readonly string[];
@@ -186,6 +189,7 @@ function Status({
   readonly headings: readonly Heading[];
   readonly help: boolean;
   readonly message: { readonly id: number; readonly text: string } | undefined;
+  readonly copy: (as: CopyAs) => void;
 }): ReactNode {
   const place = useSyncExternalStore(store.subscribe, store.get, () => SERVER_PLACE);
   const section = headings.find((h) => h.id === place.section)?.text;
@@ -201,6 +205,24 @@ function Status({
       <StatusMessage {...(message === undefined ? {} : { id: message.id })}>
         {message?.text}
       </StatusMessage>
+      <StatusSegment align="end" priority={0} label="Copy">
+        <Button
+          delimiters="none"
+          keys="y"
+          aria-label="Copy the screen as text"
+          onPress={() => copy('text')}
+        >
+          copy
+        </Button>{' '}
+        <Button
+          delimiters="none"
+          keys="shift+y"
+          aria-label="Copy the screen as ANSI, for a terminal"
+          onPress={() => copy('ANSI')}
+        >
+          ansi
+        </Button>
+      </StatusSegment>
       <StatusSegment align="end" priority={2}>
         {help ? <KeyHint keys="esc">back</KeyHint> : <KeyHint keys="?">keys</KeyHint>}
       </StatusSegment>
@@ -211,17 +233,91 @@ function Status({
   );
 }
 
+type CopyAs = 'text' | 'ANSI';
+
+/**
+ * The screen a copy takes: the one you last pointed at or moved into (a
+ * snapshot, an example), or the whole page. The status bar is where the copy
+ * is pressed, so going there forgets nothing.
+ */
+const SCREEN = 'figure[role="img"], .rk-screen';
+
+function screenUnder(el: Element | null, shell: HTMLElement): HTMLElement | undefined {
+  const screen = el?.closest<HTMLElement>(SCREEN);
+  // The shell's own screens are the page, which is what it copies anyway.
+  if (!screen || screen.parentElement === shell) return undefined;
+  return screen;
+}
+
+/** What a screen is called in the message that says it was copied. */
+function nameOf(screen: HTMLElement | undefined): string {
+  if (screen === undefined) return 'the page';
+  const label = screen.getAttribute('aria-label');
+  if (screen.matches('figure') && label) return `“${label.replace(/, as text$/, '')}”`;
+  if (screen.closest('astro-island[component-export="Example"]')) return 'the example';
+  return label ? `“${label}”` : 'the screen';
+}
+
+/** Copies the screen you are on, and says what it copied in the status bar. */
+function useCopy(
+  shell: RefObject<HTMLElement | null>,
+  say: (text: string) => void,
+): (as: CopyAs) => void {
+  const target = useRef<HTMLElement | undefined>(undefined);
+  useEffect(() => {
+    const host = shell.current;
+    if (!host) return;
+    const follow = (event: Event): void => {
+      const el = event.target instanceof Element ? event.target : null;
+      if (el?.closest('.rk-statusbar')) return;
+      // A click on a pane's page focuses the page, after the pointer has
+      // already said what was clicked: that focus says nothing new.
+      if (event.type === 'focusin' && el?.getAttribute('tabindex') === '-1') return;
+      target.current = screenUnder(el, host);
+    };
+    document.addEventListener('focusin', follow);
+    document.addEventListener('pointerdown', follow);
+    return () => {
+      document.removeEventListener('focusin', follow);
+      document.removeEventListener('pointerdown', follow);
+    };
+  }, [shell]);
+  return useCallback(
+    (as: CopyAs) => {
+      const host = shell.current;
+      const screen = target.current?.isConnected ? target.current : undefined;
+      const from = screen ?? host;
+      if (!from) return;
+      const text = as === 'text' ? screenText(from) : screenAnsi(from);
+      const lines = screenText(from).split('\n');
+      const cols = Math.max(0, ...lines.map((line) => [...line].length));
+      const what = `${nameOf(screen)} as ${as}, ${lines.length} rows of ${cols} cells`;
+      if (!navigator.clipboard) {
+        say(`Could not copy ${what}: this page cannot reach the clipboard.`);
+        return;
+      }
+      navigator.clipboard.writeText(text).then(
+        () => say(`Copied ${what}.${as === 'ANSI' ? ' Paste it into a terminal.' : ''}`),
+        () => say(`Could not copy ${what}: the browser did not allow it.`),
+      );
+    },
+    [shell, say],
+  );
+}
+
 /** The page's keys, bound once for the whole page. */
 function Keys({
   scroller,
   jumps,
   help,
   setHelp,
+  copy,
 }: {
   readonly scroller: RefObject<HTMLElement | null>;
   readonly jumps: readonly Jump[];
   readonly help: boolean;
   readonly setHelp: (open: boolean) => void;
+  readonly copy: (as: CopyAs) => void;
 }): ReactNode {
   const by = useCallback(
     (rows: (el: HTMLElement) => number) => () => {
@@ -258,6 +354,12 @@ function Keys({
       description: jump.title,
       action: () => window.location.assign(jump.href),
     })),
+    { keys: 'y', description: 'Copy the screen as text', action: () => copy('text') },
+    {
+      keys: 'shift+y',
+      description: 'Copy the screen as ANSI, for a terminal',
+      action: () => copy('ANSI'),
+    },
     { keys: '?', description: 'These keys', action: () => setHelp(!help) },
   ]);
   useKeymap([{ keys: 'esc', description: 'Back to the page', action: () => setHelp(false) }], {
@@ -291,6 +393,11 @@ export function Shell({
     }));
   }, []);
   const place = useSyncExternalStore(store.subscribe, store.get, () => SERVER_PLACE);
+  const say = useCallback(
+    (text: string) => setMessage((was) => ({ id: (was?.id ?? 0) + 1, text })),
+    [],
+  );
+  const copy = useCopy(host, say);
 
   // The shell is live: the panes are laid out at the screen's real size.
   useIsomorphicLayoutEffect(() => {
@@ -358,7 +465,7 @@ export function Shell({
 
   return (
     <Keymap>
-      <Keys scroller={scroller} jumps={jumps} help={help} setHelp={setHelp} />
+      <Keys scroller={scroller} jumps={jumps} help={help} setHelp={setHelp} copy={copy} />
       <div ref={host} className="site-shell">
         <Panes direction={stacked ? 'column' : 'row'} fallback={{ width: 120, height: 40 }}>
           <Pane
@@ -423,6 +530,7 @@ export function Shell({
           headings={headings}
           help={help}
           message={message}
+          copy={copy}
         />
       </div>
     </Keymap>

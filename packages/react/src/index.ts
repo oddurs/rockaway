@@ -6,6 +6,7 @@
 // .gitattributes joins lines that parallel branches add, and test/barrels.test.ts fails if a
 // component is missing, has no entry, or is listed twice.
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
+export { readScreen, screenAnsi, screenPalette, screenText } from './copy.ts';
 export { cx } from './cx.ts';
 export * from './entries/badge.ts';
 export * from './entries/button.ts';

@@ -15,6 +15,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { frameBuffer } from '@rockaway/react';
 import meta from '@rockaway/react/meta.json' with { type: 'json' };
+import { Terminal } from '@xterm/headless';
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { checkPage, servePackageFile } from './checks.ts';
@@ -716,5 +717,146 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
         await close();
       }
     }, 120_000);
+  });
+
+  describe('copying a screen (0105)', () => {
+    /** A reader whose clipboard the test can read back. */
+    const reader = async (path: string) => {
+      const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+      await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin });
+      const tab = await context.newPage();
+      await tab.goto(`${origin}${base}${path}`);
+      await tab.waitForFunction(hydrated);
+      await tab.evaluate(() => document.fonts.ready);
+      const clipboard = () => tab.evaluate(() => navigator.clipboard.readText());
+      const said = () =>
+        tab.locator('.rk-statusbar [role="status"]').textContent({ timeout: 2000 });
+      return { tab, clipboard, said, close: () => context.close() };
+    };
+
+    /** What a terminal shows for some ANSI: its rows, and the cells to look at. */
+    const terminal = async (ansi: string, cols: number, rows: number) => {
+      const term = new Terminal({ cols, rows, convertEol: true, allowProposedApi: true });
+      await new Promise<void>((resolve) => term.write(ansi, resolve));
+      const buffer = term.buffer.active;
+      const lines = Array.from({ length: rows }, (_, y) =>
+        (buffer.getLine(y)?.translateToString(true) ?? '').replace(/\s+$/, ''),
+      );
+      return { lines, cell: (x: number, y: number) => buffer.getLine(y)?.getCell(x), term };
+    };
+
+    test('copies the page as text, the screen as it is drawn, and says so', async () => {
+      const { tab, clipboard, said, close } = await reader('components/badge/');
+      await tab.keyboard.press('y');
+      await expect.poll(said).toMatch(/^Copied the page as text, \d+ rows of \d+ cells\.$/);
+      const lines = (await clipboard()).split('\n');
+      const cols = Number((await said())?.match(/of (\d+) cells/)?.[1]);
+      expect(lines[0]).toMatch(/^┌ rockaway ─+┬ Badge ─+┬ on this page ─+┐$/);
+      expect([...(lines[0] ?? '')].length).toBe(cols);
+      expect(lines.some((line) => /^└─+┴─+┴─+┘$/.test(line))).toBe(true);
+      expect(lines.some((line) => line.includes('│ ├── Badge'))).toBe(true);
+      expect(lines.at(-1)).toMatch(/^ COMPONENTS {2}Components \/ Badge .*Top$/);
+      await close();
+    });
+
+    test('copies the screen you point at: a snapshot, whole, and a live example', async () => {
+      const { tab, clipboard, said, close } = await reader('components/tree/');
+      const tree = (components as { name: string; snapshots: { text: string }[] }[]).find(
+        (c) => c.name === 'Tree',
+      );
+      await tab.locator('figure[role="img"]').first().click();
+      await tab.keyboard.press('y');
+      await expect.poll(said).toMatch(/^Copied “Tree, A file tree” as text/);
+      const trim = (text: string) =>
+        text
+          .split('\n')
+          .map((l) => l.trimEnd())
+          .join('\n')
+          .replace(/\n+$/, '');
+      expect(await clipboard()).toBe(trim(tree?.snapshots[0]?.text ?? ''));
+
+      // A screen in an example: the Frame's own, chrome and words.
+      await tab.goto(`${origin}${base}components/frame/`);
+      await tab.waitForFunction(hydrated);
+      await tab.locator('astro-island[component-export="Example"] .rk-screen').click();
+      await tab.keyboard.press('y');
+      await expect.poll(said).toMatch(/^Copied the example as text, 5 rows of 32 cells\.$/);
+      const frame = (await clipboard()).split('\n');
+      expect(frame[0]).toMatch(/^┌ tokens ─+┐$/);
+      expect(frame.join('\n')).toContain('fg.default');
+      await close();
+    });
+
+    test('copies as ANSI that a terminal draws the same, in the theme’s sixteen', async () => {
+      const { tab, clipboard, said, close } = await reader('components/badge/');
+      await tab.keyboard.press('y');
+      await expect.poll(said).toMatch(/as text/);
+      const text = (await clipboard()).split('\n');
+      await tab.keyboard.press('Shift+Y');
+      await expect.poll(said).toMatch(/as ANSI, .* Paste it into a terminal\.$/);
+      const ansi = await clipboard();
+      const cols = Math.max(...text.map((l) => [...l].length));
+      const { lines, cell } = await terminal(ansi, cols, text.length);
+      // Character for character, what the page shows. The status bar's
+      // message is the one thing that has changed: it says the first copy.
+      const status = text.length - 1;
+      expect(lines.slice(0, status)).toEqual(text.slice(0, status).map((l) => l.trimEnd()));
+      expect(lines[status]).toMatch(
+        /^ COMPONENTS {2}Components \/ Badge {2}Copied the page as text/,
+      );
+      // The mode is reverse video, as a terminal says it.
+      expect(cell(2, status)?.isInverse()).toBeTruthy();
+      // The success mark is the theme's green: slot 2 of the sixteen, which
+      // the reader's own terminal theme colours.
+      const y = text.findIndex((l) => l.includes('✓ passing on main'));
+      const x = [...(text[y] ?? '')].indexOf('✓');
+      expect(cell(x, y)?.isFgPalette()).toBeTruthy();
+      expect(cell(x, y)?.getFgColor()).toBe(2);
+      await close();
+    });
+
+    test('copies every snapshot on every component page as the text it was drawn from (0147)', async () => {
+      const { tab, clipboard, said, close } = await reader('components/');
+      const trim = (text: string) =>
+        text
+          .split('\n')
+          .map((l) => l.trimEnd())
+          .join('\n')
+          .replace(/\n+$/, '');
+      let copies = 0;
+      for (const component of components as { name: string; snapshots: { text: string }[] }[]) {
+        const slug = component.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+        await tab.goto(`${origin}${base}components/${slug}/`);
+        await tab.waitForFunction(hydrated);
+        const figures = tab.locator('figure[role="img"]');
+        for (const [i, snapshot] of component.snapshots.entries()) {
+          await figures.nth(i).focus();
+          await tab.keyboard.press('y');
+          copies += 1;
+          await expect.poll(said, { message: component.name }).toMatch(/^Copied “.*” as text/);
+          // Emptied after each copy, so a copy that did not happen cannot pass.
+          await expect.poll(clipboard, { message: `${component.name} ${i}` }).not.toBe('');
+          expect(await clipboard(), `${component.name} ${i}`).toBe(trim(snapshot.text));
+          await tab.evaluate(() => navigator.clipboard.writeText(''));
+        }
+      }
+      expect(copies).toBeGreaterThan(components.length);
+      await close();
+    }, 120_000);
+
+    test('has buttons for both, reached by the keyboard, that say what they copied', async () => {
+      const { tab, said, close } = await reader('concept/');
+      const text = tab.getByRole('button', { name: 'Copy the screen as text' });
+      const ansi = tab.getByRole('button', { name: 'Copy the screen as ANSI, for a terminal' });
+      await expect.poll(() => text.getAttribute('aria-keyshortcuts')).toBe('y');
+      await expect.poll(() => ansi.getAttribute('aria-keyshortcuts')).toBe('Shift+y');
+      await text.focus();
+      await tab.keyboard.press('Enter');
+      await expect.poll(said).toMatch(/^Copied the page as text/);
+      await ansi.focus();
+      await tab.keyboard.press('Space');
+      await expect.poll(said).toMatch(/^Copied the page as ANSI/);
+      await close();
+    });
   });
 });

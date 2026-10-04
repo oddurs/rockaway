@@ -181,6 +181,9 @@ importers:
       '@types/react-dom':
         specifier: 19.3.0
         version: 19.3.0(@types/react@19.3.0)
+      '@xterm/headless':
+        specifier: 6.0.0
+        version: 6.0.0
       axe-core:
         specifier: 4.13.0
         version: 4.13.0
@@ -2076,6 +2079,9 @@ packages:
 
   '@webcontainer/env@1.1.1':
     resolution: {integrity: sha512-6aN99yL695Hi9SuIk1oC88l9o0gmxL1nGWWQ/kNy81HigJ0FoaoTXpytCj6ItzgyCEwA9kF1wixsTuv5cjsgng==}
+
+  '@xterm/headless@6.0.0':
+    resolution: {integrity: sha512-5Yj1QINYCyzrZtf8OFIHi47iQtI+0qYFPHmouEfG8dHNxbZ9Tb9YGSuLcsEwj9Z+OL75GJqPyJbyoFer80a2Hw==}
 
   '@yuku-codegen/binding-android-arm64@0.10.2':
     resolution: {integrity: sha512-Oc2KInVkPfUjEB4PeV6X0NvIoyYTzDe/WmqFrTwBqKs6YKnz4A7XwWQvJTb7M0rLz9a6WgpUUiiS5QKaCi4O/g==}
@@ -6106,6 +6112,8 @@ snapshots:
   '@vscode/l10n@0.0.18': {}
 
   '@webcontainer/env@1.1.1': {}
+
+  '@xterm/headless@6.0.0': {}
 
   '@yuku-codegen/binding-android-arm64@0.10.2':
     optional: true
