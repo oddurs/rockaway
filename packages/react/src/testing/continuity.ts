@@ -517,12 +517,16 @@ export async function checkContinuity(
   return { layers: layers.length, shapes, joins, fills, unseen, breaks };
 }
 
+/** Marks a region whose overflow marks are hidden for a screenshot. */
+const UNMARKED = 'data-rk-continuity-unmarked';
+
 /**
  * A screenshot of the chrome alone. A screen's content layer sits over its
  * chrome on purpose — a button may stand on a rule — and what it covers is the
- * page's business; whether the lines meet is the painter's. The content is made
- * transparent for the moment of the screenshot, which moves nothing and takes
- * focus from nothing.
+ * page's business; whether the lines meet is the painter's. So do a scrolling
+ * region's overflow marks, each covering the cell at its edge (0208). The
+ * content is made transparent and the marks hidden for the moment of the
+ * screenshot, which moves nothing and takes focus from nothing.
  */
 async function chromeOnly(
   layer: HTMLElement,
@@ -536,12 +540,23 @@ async function chromeOnly(
   ].filter((el) => !el.contains(layer));
   const before = content.map((el) => el.style.opacity);
   for (const el of content) el.style.opacity = '0';
+  const doc = layer.ownerDocument;
+  const regions: HTMLElement[] = [];
+  for (let el = layer.parentElement; el; el = el.parentElement) {
+    if (el.matches('.rk-scroll-marks, .rk-prose pre')) regions.push(el);
+  }
+  const hide = doc.createElement('style');
+  hide.textContent = `[${UNMARKED}]::before, [${UNMARKED}]::after { visibility: hidden !important; }`;
+  if (regions.length > 0) doc.head.append(hide);
+  for (const el of regions) el.setAttribute(UNMARKED, '');
   try {
     return await capture(target);
   } finally {
     content.forEach((el, i) => {
       el.style.opacity = before[i] ?? '';
     });
+    for (const el of regions) el.removeAttribute(UNMARKED);
+    hide.remove();
   }
 }
 

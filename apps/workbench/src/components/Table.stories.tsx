@@ -467,12 +467,21 @@ export const Scrolls: Story = {
       });
     }
     // Scrolled, its lines still meet where they can be seen, and the cells
-    // scrolled out of the region are counted rather than read as gaps.
+    // scrolled out of the region are counted rather than read as gaps. Half
+    // way into a cell, with snapping off, so the start mark lies across one:
+    // the mark is laid over the chrome, as content is, and is not a gap in it.
     const run = runner();
     if (run) {
-      const report = await expectContinuity(region, { capture: run.capture });
-      expect(report.shapes).toBeGreaterThan(20);
-      expect(report.unseen).toBeGreaterThan(0);
+      region.style.scrollSnapType = 'none';
+      region.scrollTo({ left: cell * 3.5 });
+      await waitFor(() => expect(getComputedStyle(region, '::before').visibility).toBe('visible'));
+      try {
+        const report = await expectContinuity(region, { capture: run.capture });
+        expect(report.shapes).toBeGreaterThan(20);
+        expect(report.unseen).toBeGreaterThan(0);
+      } finally {
+        region.style.scrollSnapType = '';
+      }
     }
     region.scrollTo({ left: 0 });
   },
