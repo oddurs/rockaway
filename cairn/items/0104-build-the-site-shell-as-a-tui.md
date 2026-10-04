@@ -43,3 +43,7 @@ The palette's `⌘K` and `/` live in 0149, so the shell does not wait for 0102.
 ## 2026-10-03
 
 Rewritten by the program plan: the pre-pivot template text is replaced with how this works on the grid, the criteria are one list (the template, plus the contracts from the plan, plus this item's own), and the dependencies point at the contracts it is built on.
+
+## 2026-10-03
+
+Paused 2026-10-03 at WIP commit on feat/site-shell (pushed, no PR; it carries Panes #101 and StatusBar #102 merged locally until they land). Built: NavigationTree/NavigationTreeItem grown into the system's Tree (labels are real links, current page is the selected row), the shell island (Panes: map, page, outline; StatusBar; Keymap with j/k/arrows/space/gg/G/g-letter/?/esc), outline read from rendered HTML, a scripting:none document fallback, hide-until-measured with a 3s reveal. Open: site.test.ts conformance fails on component pages now that prose sits inside the panes' screen (prose table columns read 0.3 cells off the screen's grid); shell tests not yet written; no changeset yet for the Tree addition.
