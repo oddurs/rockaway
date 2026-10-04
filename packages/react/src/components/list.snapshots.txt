@@ -1,0 +1,21 @@
+── Single select
+▸src/index.ts    █
+ src/buffer.ts   █
+ src/junction.ts █
+ src/layout.ts   █
+ README.md       █
+── Multi-select
+  src/index.ts   █
+ ✓src/buffer.ts  █
+▸✓src/junction.ts█
+  src/layout.ts  █
+  README.md      █
+── Scrolled
+ line 8 of a ░
+ line 9 of a ░
+ line 10 of a░
+ line 11 of a█
+── Empty
+ Nothing here.   █
+                 █
+                 █
