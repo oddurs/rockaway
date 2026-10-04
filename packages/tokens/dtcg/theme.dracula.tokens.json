@@ -1,5 +1,5 @@
 {
-  "$description": "Dracula (cairn 0052). Imported from https://github.com/dracula/ghostty under MIT (Copyright (c) 2023 Dracula Theme). Fitted to the contrast gate: dark muted: #b5b5ac → #b8b8af (for fg.muted on bg.active); dark red: #ff5555 → #ff948d (for fg.danger on bg.surface); dark border: #7d7f89 → #81838e (for border.default on bg.subtle).",
+  "$description": "Dracula (cairn 0052). Imported from https://github.com/dracula/ghostty under MIT (Copyright (c) 2023 Dracula Theme). Fitted to the contrast gate: dark muted: #b5b5ac → #b8b8af (for fg.muted on bg.active); dark red: #ff5555 → #ff948d (for fg.danger on bg.surface); dark border: #7d7f89 → #81838e (for border.default on bg.subtle); dark bright-blue: #d6acff → #e6c0ff (for fg.accent on bg.surface, in more contrast); dark bright-red: #ff6e6e → #ffccc8 (for fg.danger on bg.page, in more contrast); dark bright-magenta: #ff92df → #ffc1f4 (for syntax.keyword on bg.surface, in more contrast).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "imported",
@@ -107,7 +107,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.716,
+            0.901,
             0.1776,
             22.6
           ]
@@ -137,7 +137,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.811,
+            0.866,
             0.1221,
             307
           ]
@@ -147,7 +147,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.799,
+            0.894,
             0.1595,
             339
           ]
@@ -450,7 +450,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.716,
+            0.901,
             0.1776,
             22.6
           ]
@@ -480,7 +480,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.811,
+            0.866,
             0.1221,
             307
           ]
@@ -490,7 +490,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.799,
+            0.894,
             0.1595,
             339
           ]
