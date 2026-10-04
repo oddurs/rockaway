@@ -389,6 +389,11 @@ is not on a grid. A test fails any rule keyed on a state that sets a size.
 `danger` is a variant, not a state: `fg.danger` plus `!` in the reserved mark
 cell. Messages, such as an error under a field, are content and may add rows.
 
+**Heavy under ASCII is bold** (decision `0183`). An ASCII theme has no heavier
+line than `+-|`, and its lines are letters the font draws. So a frame that goes
+heavy, for focus or for invalid, keeps its characters and draws them bold: the
+weight a font has. The colour and the error's mark still say the rest.
+
 The cursor and the selection are two signals, and List is where they meet: in
 a multi-select list the keyboard's row and the chosen rows are told apart in
 text, in greyscale and in forced colors.
