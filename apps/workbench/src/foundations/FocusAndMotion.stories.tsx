@@ -1,4 +1,4 @@
-import { useGlyphs, useTick } from '@rockaway/react';
+import { shapeAttributes, useGlyphs, useTick } from '@rockaway/react';
 import { themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor } from 'storybook/test';
@@ -14,7 +14,13 @@ function Spinner({ label }: { label: string }) {
   const frame = useTick('spinner', spinner.length);
   return (
     <span role="status">
-      <span aria-hidden="true" data-testid="spinner">
+      {/* Drawn by the cell, not the font, so it needs no font with braille (0166). */}
+      <span
+        aria-hidden="true"
+        data-testid="spinner"
+        className="rk-run"
+        {...shapeAttributes(spinner[frame] ?? '')}
+      >
         {spinner[frame]}
       </span>{' '}
       {label}

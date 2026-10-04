@@ -2,13 +2,8 @@ import { glyphsFor } from '@rockaway/tokens';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import {
-  formatKeys,
-  KeyHint,
-  keyShortcut,
-  parseKeys,
-  spokenKeys,
-} from '../src/components/key-hint.tsx';
+import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.pure.ts';
+import { KeyHint } from '../src/components/key-hint.tsx';
 import { detectPlatform } from '../src/platform.ts';
 
 const SPECS = [
@@ -46,12 +41,29 @@ describe('a chord, three ways', () => {
     expect(SPECS.map((spec) => spokenKeys(spec, 'apple')).join('\n')).toMatchInlineSnapshot(`
       "Command S
       Control Shift K
-      Alt X
-      Alt Shift Command P
+      Option X
+      Option Shift Command P
       Escape
       Command Enter
       Shift Up arrow
       Shift Enter"
+    `);
+  });
+
+  test('what a reader hears off an Apple keyboard: the words on its keys, Meta for meta', () => {
+    expect(
+      [...SPECS, 'meta+k', 'cmd+shift+p'].map((spec) => spokenKeys(spec, 'other')).join('\n'),
+    ).toMatchInlineSnapshot(`
+      "Control S
+      Control Shift K
+      Alt X
+      Control Alt Shift P
+      Escape
+      Control Enter
+      Shift Up arrow
+      Shift Enter
+      Meta K
+      Shift Meta P"
     `);
   });
 

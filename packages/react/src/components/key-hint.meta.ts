@@ -1,7 +1,8 @@
 import { type Glyphs, glyphsFor } from '@rockaway/tokens';
 import { defaultGlyphs } from '../glyphs.tsx';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { formatKeys, type KeyNotation, type Platform } from './key-hint.tsx';
+import { formatKeys } from './key-hint.pure.ts';
+import type { KeyNotation, Platform } from './key-hint.tsx';
 
 const ascii = glyphsFor({ borderSet: 'ascii' });
 
@@ -61,7 +62,8 @@ export const keyHintMeta: ComponentMetaInput = defineMeta({
     name: 'None of its own: it is text, not a control. A reader hears the spoken chord and the action.',
     keyboard: [],
     typeAhead: false,
-    announces: '"Command S save".',
+    announces:
+      '"Command S save" on an Apple keyboard, "Control S save" on any other. Off an Apple keyboard the meta key is "Meta"; on one, Alt is "Option".',
     notes: [
       '`decorative` hides the whole hint, for use inside a control that carries aria-keyshortcuts instead.',
       "The keyboard comes from usePlatform(), which Button shares, so a chord is drawn and announced for the same keyboard. The server renders the neutral form, hydration agrees with it, and the reader's keyboard follows on the next render.",
