@@ -88,12 +88,13 @@
     color: inherit;
   }
 
-  /* Reverse video under forced colours: out of the backplate, which would
-   * hide canvas-coloured words (0181). Every colour it reads is still a
-   * system colour there. */
+  /* In forced colors a shape the cell draws is inked in the reader's text
+   * colour, which in a selected row is the ground the row is reversed onto.
+   * There the guides take the reversed figure, the canvas, and stay visible
+   * (0181). */
   @media (forced-colors: active) {
-    .rk-tree-item:is([data-selected], [data-current]) {
-      forced-color-adjust: none;
+    .rk-tree-item:is([data-selected], [data-current]) .rk-tree-guides [data-rk-shape] {
+      --rk-ink-colour: Canvas;
     }
   }
 
