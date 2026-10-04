@@ -175,6 +175,39 @@ export const Manual: Story = {
   },
 };
 
+/**
+ * Manual activation with too many tabs for the edge (0216): the arrows move
+ * focus without selecting, and the focused tab is brought into view, not the
+ * selected one, so the ring is never on a tab that is not there. When focus
+ * leaves the list, the window goes back to the selected tab.
+ */
+export const ManualOverflow: Story = {
+  name: 'Manual, overflowing',
+  render: () => <Views labels={MANY} cols={28} manual />,
+  play: async ({ canvas }) => {
+    await settled();
+    const screen = screenOf(canvas.getByRole('tablist', { name: 'View' }));
+    const top = () => screenshot(screen, { legend: false }).split('\n')[0];
+    const expected = (i: number) =>
+      toText(tabsText({ width: 28, height: 5 }, MANY, i)).split('\n')[0];
+    await userEvent.tab();
+    const files = canvas.getByRole('tab', { name: 'files' });
+    expect(document.activeElement).toBe(files);
+    for (let i = 1; i < MANY.length; i++) {
+      await userEvent.keyboard('{ArrowRight}');
+      const tab = canvas.getByRole('tab', { name: MANY[i] as string });
+      expect(document.activeElement).toBe(tab);
+      expect(tab.getAttribute('aria-selected')).toBe('false');
+      await waitFor(() => expect(top(), MANY[i]).toBe(expected(i)));
+      expect(tab.getBoundingClientRect().width).toBeGreaterThan(0);
+    }
+    expect(files.getAttribute('aria-selected')).toBe('true');
+    // Out of the list, the selected tab is what the edge shows again.
+    await userEvent.tab();
+    await waitFor(() => expect(top()).toBe(expected(0)));
+  },
+};
+
 /** Both painters draw the same frame, gaps and all, in the same cells. */
 export const Painters: Story = {
   render: () => (

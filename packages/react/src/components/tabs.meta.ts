@@ -9,7 +9,7 @@ export const tabsMeta: ComponentMetaInput = defineMeta({
   name: 'Tabs',
   summary: 'Views that share one place, switched by tabs set into the top edge of their frame.',
   description:
-    "The tab list is drawn into the top edge of the panel's frame, so tabs and panel are one box. Each tab is React Aria's, laid over a gap the frame leaves in its edge, with a cell of line between two tabs. The selected tab is reverse video and bold; the rest are muted. When the tabs do not fit the edge they scroll by whole tabs, with the theme's overflow marks at the ends, and the selected tab is always shown.",
+    "The tab list is drawn into the top edge of the panel's frame, so tabs and panel are one box. Each tab is React Aria's, laid over a gap the frame leaves in its edge, with a cell of line between two tabs. The selected tab is reverse video and bold; the rest are muted. When the tabs do not fit the edge they scroll by whole tabs, with the theme's overflow marks at the ends, and the focused tab is always shown, or the selected one when focus is elsewhere.",
   whenToUse: [
     'To switch between views of one thing that share a place: files, log, diff.',
     'When only one view is needed at a time, and the reader chooses which.',
