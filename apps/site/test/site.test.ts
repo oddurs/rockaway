@@ -256,8 +256,8 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       islands: document.querySelectorAll('figure[data-rk-theme]').length,
       files: [...document.querySelectorAll<HTMLAnchorElement>('a[download]')].map((a) => a.href),
     }));
-    expect(themes.islands).toBe(16);
-    expect(themes.files).toHaveLength(16 * 4);
+    expect(themes.islands).toBe(18);
+    expect(themes.files).toHaveLength(18 * 4);
     const file = await phone.request.get(themes.files[0] ?? '');
     expect(file.ok()).toBe(true);
     expect((await file.text()).length).toBeGreaterThan(100);
