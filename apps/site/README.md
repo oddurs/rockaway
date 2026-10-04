@@ -38,9 +38,14 @@ a packaging bug, and it is fixed in the package.
 | `src/layouts/Prose.astro` | Every page: its content set by `<article class="rk-prose">`, inside the shell. It renders the page first so the outline can be read from it (`src/lib/outline.ts`). |
 | `src/islands/shell.tsx`, `src/lib/nav.ts` | The shell (0104): the site as a TUI. See below. |
 
-Theme, mode and density (0148) will be applied by an inline script at the
-top of the head, before the stylesheet, so the first frame is already the
-reader's choice.
+Theme, mode and density (0148) are the reader's: `t`, `m` and `d` (or the
+status bar's buttons) move through the shipped themes, light, dark or the
+system's, and the five densities. The choice is three context attributes on
+`<html>`, kept in `localStorage`, and the inline script at the top of the
+head (`src/lib/look.ts`) sets them, and writes the chosen theme's stylesheet
+into the head, before the first frame, so there is never a frame in the wrong
+look. With no script there is no choice: the page follows the system's mode
+and pointer.
 
 ## The shell
 

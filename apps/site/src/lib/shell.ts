@@ -47,6 +47,7 @@ export function shellSplit({ stacked, title, outline }: ShellShape): SplitSpec {
 export const STATUS_SEGMENTS = [
   { name: 'mode', priority: 4 },
   { name: 'where', priority: 1 },
+  { name: 'look', priority: -1, align: 'end' },
   { name: 'copy', priority: 0, align: 'end' },
   { name: 'keys', priority: 2, align: 'end' },
   { name: 'position', priority: 3, align: 'end' },
@@ -64,6 +65,10 @@ export type Action =
   | 'back'
   | 'copy-text'
   | 'copy-ansi'
+  | 'theme'
+  | 'theme-back'
+  | 'mode'
+  | 'density'
   | `go:${string}`;
 
 export interface ShellBinding {
@@ -102,6 +107,10 @@ export function shellBindings(nav: readonly NavNode[]): readonly ShellBinding[] 
       description: 'Copy the screen as ANSI, for a terminal',
       action: 'copy-ansi',
     },
+    { keys: 't', description: 'The next theme', action: 'theme' },
+    { keys: 'shift+t', description: 'The theme before', action: 'theme-back' },
+    { keys: 'm', description: 'Light, dark, or as the system says', action: 'mode' },
+    { keys: 'd', description: 'The next density', action: 'density' },
     { keys: '?', description: 'These keys', action: 'help' },
   ];
 }

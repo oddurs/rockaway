@@ -1053,4 +1053,146 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       await close();
     });
   });
+
+  describe('the look: theme, mode and density (0148)', () => {
+    const look = async (
+      options: { script?: boolean; scheme?: 'light' | 'dark'; stored?: object } = {},
+    ) => {
+      const context = await browser.newContext({
+        viewport: { width: 1280, height: 800 },
+        javaScriptEnabled: options.script ?? true,
+        ...(options.scheme ? { colorScheme: options.scheme } : {}),
+      });
+      if (options.stored) {
+        await context.addInitScript((stored) => {
+          localStorage.setItem('rockaway:look', stored);
+        }, JSON.stringify(options.stored));
+      }
+      // What the first frame is drawn in: read in the frame before the first paint.
+      await context.addInitScript(() => {
+        requestAnimationFrame(() => {
+          const root = document.documentElement;
+          (window as unknown as { first: object }).first = {
+            ground: getComputedStyle(document.body).backgroundColor,
+            theme: root.dataset.rkTheme ?? 'default',
+            mode: root.dataset.theme ?? 'system',
+            density: root.dataset.density ?? 'automatic',
+            row: getComputedStyle(document.body).lineHeight,
+          };
+        });
+      });
+      const reader = await context.newPage();
+      await reader.goto(`${origin}${base}foundations/grid/`);
+      if (options.script ?? true) await reader.waitForFunction(hydrated);
+      return { reader, close: () => context.close() };
+    };
+    const now = () => {
+      const root = document.documentElement;
+      return {
+        ground: getComputedStyle(document.body).backgroundColor,
+        theme: root.dataset.rkTheme ?? 'default',
+        mode: root.dataset.theme ?? 'system',
+        density: root.dataset.density ?? 'automatic',
+        row: getComputedStyle(document.body).lineHeight,
+      };
+    };
+
+    test('switches from the status bar and the keys, says so, and remembers it', async () => {
+      const { reader, close } = await look({ scheme: 'light' });
+      const said = () => reader.locator('.rk-statusbar [role="status"]').textContent();
+      await reader.keyboard.press('m');
+      await reader.keyboard.press('m');
+      await expect.poll(said).toBe('Mode: dark.');
+      await reader.getByRole('button', { name: /^Theme: / }).click();
+      await expect.poll(said).toBe('Theme: ice.');
+      await reader.keyboard.press('d');
+      await expect.poll(said).toBe('Density: dense.');
+      const chosen = await reader.evaluate(now);
+      expect(chosen).toMatchObject({ theme: 'ice', mode: 'dark', density: 'dense', row: '16px' });
+      expect(await reader.getByRole('button', { name: 'Theme: ice' }).count()).toBe(1);
+      expect(
+        JSON.parse((await reader.evaluate(() => localStorage.getItem('rockaway:look'))) ?? '{}'),
+      ).toEqual({ theme: 'ice', mode: 'dark', density: 'dense' });
+      // Every one of them, round: the theme list is the shipped themes.
+      for (let i = 0; i < 9; i++) await reader.keyboard.press('t');
+      await expect.poll(said).toBe('Theme: ice.');
+      await close();
+    });
+
+    test('draws the first frame in the reader’s look, with no flash', async () => {
+      const stored = { theme: 'phosphor', mode: 'dark', density: 'touch' };
+      const { reader, close } = await look({ scheme: 'light', stored });
+      const [first, final] = await Promise.all([
+        reader.evaluate(() => (window as unknown as { first: object }).first),
+        reader.evaluate(now),
+      ]);
+      expect(first).toEqual(final);
+      expect(final).toMatchObject({
+        theme: 'phosphor',
+        mode: 'dark',
+        density: 'touch',
+        row: '44px',
+      });
+      // And it is not what the system would have drawn.
+      const { reader: plain, close: done } = await look({ scheme: 'light' });
+      expect((await plain.evaluate(now)).ground).not.toBe(final.ground);
+      await done();
+      await close();
+    });
+
+    test('changes no geometry but the cell in any look: conformance holds in each', async () => {
+      const looks = [
+        { theme: 'ink', mode: 'dark', density: 'dense' },
+        { theme: 'phosphor', mode: 'light', density: 'touch' },
+        { theme: 'catppuccin', mode: 'dark', density: 'airy' },
+        { theme: 'default', mode: 'light', density: 'normal' },
+      ];
+      for (const stored of looks) {
+        const { reader, close } = await look({ stored });
+        const report = await checkPage(reader);
+        const at = JSON.stringify(stored);
+        // Dense is the documented opt-in that does not meet WCAG 2.5.8: one-row
+        // targets 16px tall (0197). The site offers it, and the run says so.
+        const dense = stored.density === 'dense';
+        expect(
+          report.axe.filter((v) => !(dense && v.startsWith('target-size'))),
+          at,
+        ).toEqual([]);
+        if (dense)
+          expect(
+            report.axe.some((v) => v.startsWith('target-size')),
+            at,
+          ).toBe(true);
+        expect(report.offGrid, `${at}\n${report.conformance}`).toBe(0);
+        expect(report.breaks, `${at}\n${report.continuity}`).toBe(0);
+        await close();
+      }
+    }, 120_000);
+
+    test('with no script, follows the system and shows no switcher', async () => {
+      const dark = await look({ script: false, scheme: 'dark' });
+      const light = await look({ script: false, scheme: 'light' });
+      const [d, l] = [await dark.reader.evaluate(now), await light.reader.evaluate(now)];
+      expect(d.ground).not.toBe(l.ground);
+      expect(
+        await dark.reader.evaluate(
+          () =>
+            getComputedStyle(document.querySelector('.rk-statusbar') as Element).display === 'none',
+        ),
+      ).toBe(true);
+      await dark.close();
+      await light.close();
+      // A coarse pointer, and no choice made: the touch density, 44px rows.
+      const phone = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        javaScriptEnabled: false,
+        hasTouch: true,
+        isMobile: true,
+      });
+      const tab = await phone.newPage();
+      await tab.goto(`${origin}${base}foundations/grid/`);
+      expect(await tab.evaluate(() => getComputedStyle(document.body).lineHeight)).toBe('44px');
+      await phone.close();
+    });
+  });
 });

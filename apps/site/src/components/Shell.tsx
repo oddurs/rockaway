@@ -26,6 +26,7 @@ import { LinkTree } from '@rockaway/react/link-tree';
 import { Pane, Panes } from '@rockaway/react/panes';
 import { StatusBar, StatusMessage, StatusSegment } from '@rockaway/react/status-bar';
 import type { ReactNode } from 'react';
+import { DEFAULT_LOOK } from '../lib/look.ts';
 import type { NavNode } from '../lib/nav.ts';
 import type { Heading } from '../lib/outline.ts';
 import {
@@ -115,6 +116,29 @@ export function Shell({
           {trail.join(' / ')}
         </StatusSegment>
         <StatusMessage />
+        <StatusSegment {...segment('look')} label="Look">
+          {/* The reader's theme, mode and density (0148): a press or its key moves to the next. */}
+          <Button
+            delimiters="none"
+            aria-label={`Theme: ${DEFAULT_LOOK.theme}`}
+            data-site-look="theme"
+          >
+            <KeyHint keys="t" notation="terminal" decorative />{' '}
+            <span data-site-look-value>{DEFAULT_LOOK.theme}</span>
+          </Button>{' '}
+          <Button delimiters="none" aria-label={`Mode: ${DEFAULT_LOOK.mode}`} data-site-look="mode">
+            <KeyHint keys="m" notation="terminal" decorative />{' '}
+            <span data-site-look-value>{DEFAULT_LOOK.mode}</span>
+          </Button>{' '}
+          <Button
+            delimiters="none"
+            aria-label={`Density: ${DEFAULT_LOOK.density}`}
+            data-site-look="density"
+          >
+            <KeyHint keys="d" notation="terminal" decorative />{' '}
+            <span data-site-look-value>{DEFAULT_LOOK.density}</span>
+          </Button>
+        </StatusSegment>
         <StatusSegment {...segment('copy')} label="Copy">
           {/* Terminal notation, as a TUI writes it: `y`, and `Y` for Shift. */}
           <Button delimiters="none" aria-label="Copy the screen as text" data-site-copy="text">
