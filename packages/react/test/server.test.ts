@@ -4,7 +4,9 @@ import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { frameBuffer } from '../src/components/frame.pure.ts';
 import { Frame } from '../src/components/frame.tsx';
+import { KeyHint } from '../src/components/key-hint.tsx';
 import { List, ListItem } from '../src/components/list.tsx';
+import { StatusBar, StatusMessage, StatusSegment } from '../src/components/status-bar.tsx';
 import { Screen } from '../src/screen.tsx';
 
 /** The text of each painted row in some markup, entities decoded. */
@@ -77,5 +79,45 @@ describe('a screen rendered on a server (0126)', () => {
     );
     expect(html).toContain('data-rk-shape="braille-280b" data-rk-dots="1 2 4"');
     expect(html).toContain('data-rk-dots="1 2 3 4 5 6 7 8"');
+  });
+
+  test('sends a status bar’s words, placed, so a page with no script shows them', () => {
+    const html = renderToString(
+      createElement(
+        StatusBar,
+        { cols: 40 },
+        createElement(StatusSegment, { variant: 'mode' }, 'NORMAL'),
+        createElement(StatusSegment, null, 'src/list.tsx'),
+        createElement(StatusSegment, { align: 'end' }, 12, ':', 4),
+        createElement(StatusSegment, { align: 'end' }, createElement(KeyHint, { keys: 'mod+s' })),
+        createElement(StatusMessage, null, 'Saved'),
+      ),
+    );
+    // Each segment's markup runs to the next segment, or to the end.
+    const segments = html.split('<span class="rk-status-segment"').slice(1);
+    const text = (segment: string): string =>
+      segment.replace(/<[^>]+>/g, '').replace(/^[^>]*>/, '');
+    const style = (segment: string): string => /^[^>]*style="([^"]*)"/.exec(segment)?.[1] ?? '';
+    const byText = (words: string) => segments.find((segment) => text(segment) === words);
+    // Text is placed at its own width, padded a cell either side, and shown.
+    for (const [words, x, cols] of [
+      ['NORMAL', 0, 8],
+      ['src/list.tsx', 8, 14],
+      ['12:4', 34, 6],
+    ] as const) {
+      const segment = byText(words);
+      expect(segment, words).toBeDefined();
+      if (!segment) continue;
+      expect(style(segment), words).toContain(`--rk-status-x:${x}`);
+      expect(style(segment), words).toContain(`--rk-status-cols:${cols}`);
+      expect(style(segment), words).not.toContain('visibility');
+    }
+    // A segment whose width only the page knows waits for it, hidden.
+    const hint = segments.find((segment) => segment.includes('rk-keyhint'));
+    expect(hint).toBeDefined();
+    expect(style(hint ?? '')).toBe('visibility:hidden');
+    // The message has not arrived until the page runs: an empty live region.
+    expect(html).toMatch(/role="status"/);
+    expect(html).not.toContain('Saved');
   });
 });

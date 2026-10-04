@@ -13,14 +13,18 @@
  * never wraps, so the bar is one row at every width.
  *
  * Segments are measured in cells from the page, because their content is
- * whatever the caller puts there: text, a KeyHint, a count.
+ * whatever the caller puts there: text, a KeyHint, a count. Before that, and
+ * on a server, a segment whose content is text is placed at the text's width,
+ * which is known without a page, so a bar sent with no script still shows its
+ * words. Only a segment whose width cannot be known until it is laid out
+ * waits, hidden, for the measure.
  *
  * The message slot is a polite `role="status"` region that is always present,
  * so a message is announced once when it arrives. It shows for a few seconds
  * and is replaced, not stacked, by the next. Segments are not live: a cursor
  * position that changes on every key is not read on every key.
  */
-import type { Size } from '@rockaway/grid';
+import { type Size, stringWidth } from '@rockaway/grid';
 import {
   Children,
   type CSSProperties,
@@ -103,6 +107,47 @@ function isElementOf<P>(node: ReactNode, type: (props: P) => ReactNode): node is
 
 const MESSAGE_PRIORITY = 100;
 
+/**
+ * A segment's width in cells when its content is text, which is known without
+ * laying it out; undefined for anything else, which only the page can measure.
+ */
+function textCells(children: ReactNode): number | undefined {
+  const items = Children.toArray(children);
+  if (!items.every((item) => typeof item === 'string' || typeof item === 'number')) {
+    return undefined;
+  }
+  return stringWidth(items.join(''));
+}
+
+/**
+ * Fit only the parts whose width is known; the others are left unplaced, and
+ * hidden until they are measured.
+ */
+function fitKnown(
+  width: number,
+  parts: readonly Part[],
+  cells: readonly (number | undefined)[],
+): (StatusPlacement | undefined)[] {
+  const known = parts.flatMap((part, i) => {
+    const n = cells[i];
+    return n === undefined ? [] : [{ part, i, cells: n }];
+  });
+  const placed = fitStatus(
+    width,
+    known.map(({ part, cells }) => ({
+      cells,
+      priority: part.props.priority ?? (part.kind === 'message' ? MESSAGE_PRIORITY : 0),
+      align: part.props.align ?? 'start',
+      keep: part.kind === 'message',
+    })),
+  );
+  const out: (StatusPlacement | undefined)[] = parts.map(() => undefined);
+  known.forEach(({ i }, k) => {
+    out[i] = placed[k];
+  });
+  return out;
+}
+
 /** Runs before paint in a browser, and not at all on a server. */
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 const DURATION = 4000;
@@ -165,6 +210,11 @@ export function StatusBar({
   );
 
   const draw = useMemo(() => groundBuffer, []);
+  // Until the page has measured: text at its own width, and nothing else. A
+  // message has not arrived yet on the first render, so it is no cells.
+  const guessed = parts.map((part) =>
+    part.kind === 'message' ? 0 : textCells(part.props.children),
+  );
 
   return (
     <Screen
@@ -176,24 +226,17 @@ export function StatusBar({
       aria-label={label}
     >
       {(size: Size) => {
-        const placed =
-          cells === undefined || cells.length !== parts.length
-            ? undefined
-            : fitStatus(
-                size.width,
-                parts.map((part, i) => ({
-                  cells: cells[i] as number,
-                  priority: part.props.priority ?? (part.kind === 'message' ? MESSAGE_PRIORITY : 0),
-                  align: part.props.align ?? 'start',
-                  keep: part.kind === 'message',
-                })),
-              );
+        const placed = fitKnown(
+          size.width,
+          parts,
+          cells !== undefined && cells.length === parts.length ? cells : guessed,
+        );
         return parts.map((part, i) => (
           <Segment
             // biome-ignore lint/suspicious/noArrayIndexKey: segments are positional.
             key={i}
             part={part}
-            placed={placed?.[i]}
+            placed={placed[i]}
             ellipsis={glyphs.mark.ellipsis}
             measured={register(i)}
           />
@@ -214,7 +257,8 @@ function Segment({
   readonly ellipsis: string;
   readonly measured: (el: HTMLElement | null) => void;
 }): ReactNode {
-  // Laid out before it is placed, and placed before the browser paints, so an
+  // Text is placed from the first render, on a server too. Anything else is
+  // laid out before it is placed, and placed before the browser paints, so an
   // unplaced segment is never seen.
   const style = (
     placed === undefined
