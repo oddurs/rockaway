@@ -30,6 +30,14 @@
     background: var(--rk-bg-surface);
   }
 
+  /* The content's ground runs out to the frame's edge, and the content comes
+   * after the frame, so the frame is lifted over it or the ground hides it.
+   * It takes no pointer, so a link inside is still a link. */
+  .rk-callout > .rk-frame {
+    z-index: 1;
+    pointer-events: none;
+  }
+
   /*
    * The static callout: the same chrome for a page that runs no script, as
    * the site's Markdown sets `> [!NOTE]`. The cell draws the lines, as it does
