@@ -4,16 +4,17 @@ Tokyo Night Day (light), from https://github.com/folke/tokyonight.nvim
 Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
   foreground: #3760bf -> #0f318c
   blue: #2e7de9 -> #0056be
-  bright-blue: #358aff -> #005fd0
+  bright-blue: #358aff -> #0033a3
   cyan: #007197 -> #005f84
-  bright-cyan: #007ea8 -> #006c95
+  bright-cyan: #007ea8 -> #003f5e
   green: #587539 -> #456125
-  bright-green: #5c8524 -> #476f00
+  bright-green: #5c8524 -> #244400
   yellow: #8c6c3e -> #735425
-  bright-yellow: #a27629 -> #865c00
+  bright-yellow: #a27629 -> #5a3600
   red: #f52a65 -> #b2003d
-  bright-red: #ff4774 -> #c8004a
+  bright-red: #ff4774 -> #790026
   magenta: #9854f1 -> #7b30ce
+  bright-magenta: #a463ff -> #5e00ab
 
 Apache-2.0 licence. Copyright Folke Lemaitre.
 
@@ -345,11 +346,11 @@ Apache-2.0 licence. Copyright Folke Lemaitre.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.784314</real>
+		<real>0.474510</real>
 		<key>Green Component</key>
 		<real>0.000000</real>
 		<key>Blue Component</key>
-		<real>0.290196</real>
+		<real>0.149020</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -358,9 +359,9 @@ Apache-2.0 licence. Copyright Folke Lemaitre.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.278431</real>
+		<real>0.141176</real>
 		<key>Green Component</key>
-		<real>0.435294</real>
+		<real>0.266667</real>
 		<key>Blue Component</key>
 		<real>0.000000</real>
 		<key>Alpha Component</key>
@@ -371,9 +372,9 @@ Apache-2.0 licence. Copyright Folke Lemaitre.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.525490</real>
+		<real>0.352941</real>
 		<key>Green Component</key>
-		<real>0.360784</real>
+		<real>0.211765</real>
 		<key>Blue Component</key>
 		<real>0.000000</real>
 		<key>Alpha Component</key>
@@ -386,9 +387,9 @@ Apache-2.0 licence. Copyright Folke Lemaitre.
 		<key>Red Component</key>
 		<real>0.000000</real>
 		<key>Green Component</key>
-		<real>0.372549</real>
+		<real>0.200000</real>
 		<key>Blue Component</key>
-		<real>0.815686</real>
+		<real>0.639216</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -397,11 +398,11 @@ Apache-2.0 licence. Copyright Folke Lemaitre.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.643137</real>
+		<real>0.368627</real>
 		<key>Green Component</key>
-		<real>0.388235</real>
+		<real>0.000000</real>
 		<key>Blue Component</key>
-		<real>1.000000</real>
+		<real>0.670588</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -412,9 +413,9 @@ Apache-2.0 licence. Copyright Folke Lemaitre.
 		<key>Red Component</key>
 		<real>0.000000</real>
 		<key>Green Component</key>
-		<real>0.423529</real>
+		<real>0.247059</real>
 		<key>Blue Component</key>
-		<real>0.584314</real>
+		<real>0.368627</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>

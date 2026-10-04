@@ -111,14 +111,20 @@ const filled = ({ width, height }: Size): Buffer =>
     });
   });
 
-function Matrix({ density }: { density: Density }) {
+function Matrix({
+  density,
+  painters = PAINTERS,
+}: {
+  density: Density;
+  painters?: readonly PainterName[];
+}) {
   return (
     <div
       data-density={density}
       data-testid={density}
       style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}
     >
-      {PAINTERS.map((painter) => (
+      {painters.map((painter) => (
         <div
           key={painter}
           style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)', alignItems: 'start' }}
@@ -180,9 +186,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Nine screens a painter, two painters: the check has to have looked at all of them. */
-const matrix = (density: Density): Story => ({
-  args: { density },
+/**
+ * Nine screens, at one density with one painter: the check has to have looked
+ * at all of them. One story a painter, so each does half the work of both and
+ * runs well inside the zoom browser's time on CI (a story of both took 31s
+ * there, against a 30s limit).
+ */
+const matrix = (density: Density, painter: PainterName): Story => ({
+  args: { density, painters: [painter] },
   play: async ({ canvasElement }) => {
     // Every frame is wide enough for its title, so each one reads whole: a
     // reader is told what each frame is, not shown an ellipsis.
@@ -191,34 +202,36 @@ const matrix = (density: Density): Story => ({
       ['mixed', 'mixed'],
       ['heavy rules', 'weights'],
     ];
-    for (const painter of PAINTERS) {
-      for (const [id, name] of titled) {
-        const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${id}"]`);
-        const top = screen?.querySelector('.rk-row')?.textContent ?? '';
-        expect(top.split(' ')[1], `${id}: ${top}`).toBe(name);
-      }
-      // And every row of blocks says what it is.
-      const blocks = canvasElement.querySelector(`[data-testid="${density} ${painter} blocks"]`);
-      const rows = [...(blocks?.querySelectorAll('.rk-row') ?? [])].map((r) => r.textContent ?? '');
-      expect(rows.map((r) => r.slice(0, NAMES).trim())).toEqual(BLOCKS.map(([label]) => label));
+    for (const [id, name] of titled) {
+      const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${id}"]`);
+      const top = screen?.querySelector('.rk-row')?.textContent ?? '';
+      expect(top.split(' ')[1], `${id}: ${top}`).toBe(name);
     }
+    // And every row of blocks says what it is.
+    const blocks = canvasElement.querySelector(`[data-testid="${density} ${painter} blocks"]`);
+    const rows = [...(blocks?.querySelectorAll('.rk-row') ?? [])].map((r) => r.textContent ?? '');
+    expect(rows.map((r) => r.slice(0, NAMES).trim())).toEqual(BLOCKS.map(([label]) => label));
     const run = runner();
     if (!run) return;
     const report = await expectContinuity(canvasElement, { capture: run.capture });
     // Not a vacuous pass: every screen was looked at, and lines were compared
     // across a great many shared edges.
-    expect(report.layers).toBe(18);
-    expect(report.shapes).toBeGreaterThan(600);
-    expect(report.joins).toBeGreaterThan(500);
-    // Reverse video and a filled run, three and one rows, in each painter.
-    expect(report.fills).toBe(8);
+    expect(report.layers).toBe(9);
+    expect(report.shapes).toBeGreaterThan(300);
+    expect(report.joins).toBeGreaterThan(250);
+    // Reverse video and a filled run, three and one rows.
+    expect(report.fills).toBe(4);
   },
 });
 
-export const Dense: Story = matrix('dense');
-export const Normal: Story = matrix('normal');
-export const Airy: Story = matrix('airy');
-export const Touch: Story = matrix('touch');
+export const DenseGlyph: Story = matrix('dense', 'glyph');
+export const DenseRule: Story = matrix('dense', 'rule');
+export const NormalGlyph: Story = matrix('normal', 'glyph');
+export const NormalRule: Story = matrix('normal', 'rule');
+export const AiryGlyph: Story = matrix('airy', 'glyph');
+export const AiryRule: Story = matrix('airy', 'rule');
+export const TouchGlyph: Story = matrix('touch', 'glyph');
+export const TouchRule: Story = matrix('touch', 'rule');
 
 /**
  * The check can fail, and here is what it fails on: the same frame with its
@@ -407,6 +420,37 @@ export const SubPixel: Story = {
     const report = await expectContinuity(canvasElement, { capture: run.capture });
     expect(report.layers).toBe(27);
     expect(report.joins).toBeGreaterThan(900);
+  },
+};
+
+/**
+ * Two screens that overlap by half a row, so each one's lines cross the
+ * other's edge: the upper frame's bottom line runs along the lower frame's
+ * top edge, and the lower frame's top line along the upper's bottom. Each
+ * layer is read alone, with the other's ink hidden, so neither is charged
+ * with a leak that is the other's (0245). A title's descender at dense, on
+ * a font whose descent is deeper than the line box, reaches into the screen
+ * below it the same way; this is that, on any font.
+ */
+export const Overlapping: Story = {
+  name: 'Overlapping screens',
+  args: { density: 'normal' },
+  render: () => (
+    <div data-testid="overlapping" style={{ display: 'grid' }}>
+      <Screen draw={junctions('single')} cols={JUNCTION.cols} rows={JUNCTION.rows} />
+      <Screen
+        draw={junctions('single', 'single', 'below')}
+        cols={JUNCTION.cols}
+        rows={JUNCTION.rows}
+        style={{ marginBlockStart: 'calc(var(--rk-cell-height) / -2)' }}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const run = runner();
+    if (!run) return;
+    const report = await expectContinuity(canvasElement, { capture: run.capture });
+    expect(report.layers).toBe(2);
   },
 };
 

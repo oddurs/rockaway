@@ -13,7 +13,16 @@
  * text and compares it with the fence marked `quickstart="screen"`. If the
  * guide and the packages disagree, this fails.
  *
- * It needs the network: the starters and the frameworks come from npm.
+ * `registry` does the same for the copy-in registry (cairn 0046): it serves the
+ * built site's `/r/`, scaffolds a Vite app, and copies every item in with
+ * shadcn's own CLI, as the registry page tells a reader to. The app renders
+ * each item, is built for production, and every screen it draws is read back
+ * as text and compared with the same item drawn on the built site's registry
+ * page. Until there is a release (0045), the items' dependency on
+ * `@rockaway/react` is served pointing at the packed tarball; nothing else
+ * about them changes.
+ *
+ * It needs the network: the starters, the frameworks and shadcn come from npm.
  */
 import { type ChildProcess, execFileSync, spawn } from 'node:child_process';
 import {
@@ -29,6 +38,8 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { chromium } from 'playwright';
+import { DEFAULT_BASE } from '../src/lib/paths.ts';
+import { items } from '../src/registry/items.ts';
 
 const root = path.resolve(import.meta.dirname, '../../..');
 export const guide: string = path.join(root, 'docs', 'getting-started.md');
@@ -36,6 +47,7 @@ export const guide: string = path.join(root, 'docs', 'getting-started.md');
 /** The starters, pinned, so a release of either cannot change what this proves. */
 const CREATE_VITE = 'create-vite@9.2.1';
 const CREATE_NEXT = 'create-next-app@16.3.8';
+const SHADCN = 'shadcn@4.21.1';
 
 export type App = 'vite' | 'next';
 
@@ -77,6 +89,22 @@ function run(command: string, args: string[], cwd: string): void {
   execFileSync(command, args, { cwd, stdio: 'inherit', env: { ...process.env, CI: '1' } });
 }
 
+/** `run`, without blocking: for a command that talks to a server this process is serving. */
+function runAsync(command: string, args: string[], cwd: string): Promise<void> {
+  console.log(`\n$ ${command} ${args.join(' ')}   (in ${path.basename(cwd)})`);
+  const child = spawn(command, args, {
+    cwd,
+    stdio: ['ignore', 'inherit', 'inherit'],
+    env: { ...process.env, CI: '1' },
+  });
+  return new Promise((resolve, reject) => {
+    child.on('error', reject);
+    child.on('exit', (code) =>
+      code === 0 ? resolve() : reject(new Error(`${command} ${args[0]} exited with ${code}`)),
+    );
+  });
+}
+
 /** `pnpm pack` each package, which applies publishConfig as publishing would. */
 function pack(into: string): string[] {
   mkdirSync(into, { recursive: true });
@@ -91,9 +119,8 @@ function pack(into: string): string[] {
     .map((f) => path.join(into, f));
 }
 
-function scaffold(app: App, work: string, tarballs: string[]): string {
+function scaffold(app: App, work: string, tarballs: string[], name = `${app}-app`): string {
   // Named relative to where the starter runs, as a person would type it.
-  const name = `${app}-app`;
   const dir = path.join(work, name);
   if (app === 'vite') {
     run('npx', ['--yes', CREATE_VITE, name, '--template', 'react-ts', '--no-interactive'], work);
@@ -131,8 +158,8 @@ const types: Record<string, string> = {
 /**
  * Serves a directory, plus the installed packages under `/node_modules/`, so
  * the check can load `@rockaway/react/testing` from what the app installed.
- * The bare imports those modules make of the other packages are pointed at
- * the installed ones: a browser resolves no bare specifier by itself.
+ * The bare imports those modules make, of the engine and the tokens, are
+ * pointed at the installed packages.
  */
 function serve(dir: string, app: string): Promise<Server> {
   const server = createServer((request, response) => {
@@ -146,9 +173,8 @@ function serve(dir: string, app: string): Promise<Server> {
         body = body
           .toString('utf8')
           .replace(
-            /from (['"])@rockaway\/(grid|tokens|css|react)\1/g,
-            (_, quote: string, name: string) =>
-              `from ${quote}/node_modules/@rockaway/${name}/dist/index.js${quote}`,
+            /from (['"])@rockaway\/(grid|tokens)\1/g,
+            'from $1/node_modules/@rockaway/$2/dist/index.js$1',
           );
       }
       response.writeHead(200, {
@@ -201,6 +227,166 @@ async function readScreen(url: string, modules: string): Promise<string> {
   }
 }
 
+/**
+ * Every screen on a page that is not inside another, read back as text, once
+ * `count` frames have painted.
+ */
+async function readScreens(url: string, modules: string, count: number): Promise<string[]> {
+  const browser = await chromium.launch();
+  try {
+    const page = await browser.newPage();
+    const errors: string[] = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    page.on('console', (m) => {
+      if (m.type() === 'error') errors.push(m.text());
+    });
+    await page.goto(url);
+    await page.waitForFunction(
+      (n) => document.querySelectorAll('.rk-frame[data-rk-painted]').length >= n,
+      count,
+    );
+    const texts = await page.evaluate(async (from) => {
+      const { screenshot } = await import(
+        `${from}/node_modules/@rockaway/react/dist/testing/index.js`
+      );
+      return [...document.querySelectorAll<HTMLElement>('.rk-screen')]
+        .filter((screen) => !screen.parentElement?.closest('.rk-screen'))
+        .map((screen) => screenshot(screen, { legend: false }) as string);
+    }, modules);
+    if (errors.length > 0) throw new Error(`the page threw:\n  ${errors.join('\n  ')}`);
+    return texts;
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Serves the built site under its base, with each registry item's
+ * dependencies on the packages pointed at the packed tarballs, which is the
+ * one thing a release (0045) will make unnecessary.
+ */
+function serveSite(dist: string, tarballs: string[]): Promise<Server> {
+  const tarball = (pkg: string) =>
+    tarballs.find((t) => path.basename(t).startsWith(`${pkg.replace('@', '').replace('/', '-')}-`));
+  const server = createServer((request, response) => {
+    const url = new URL(request.url ?? '/', 'http://localhost');
+    if (!url.pathname.startsWith(DEFAULT_BASE)) {
+      response.writeHead(404).end();
+      return;
+    }
+    let file = path.join(dist, decodeURIComponent(url.pathname.slice(DEFAULT_BASE.length)));
+    try {
+      if (statSync(file).isDirectory()) file = path.join(file, 'index.html');
+      let body: string | Buffer = readFileSync(file);
+      if (/\/r\/[^/]+\.json$/.test(url.pathname)) {
+        const item = JSON.parse(body.toString('utf8'));
+        if (Array.isArray(item.dependencies)) {
+          item.dependencies = item.dependencies.map((dep: string) => {
+            const packed = tarball(dep);
+            return packed ? `${dep}@file:${packed}` : dep;
+          });
+        }
+        body = JSON.stringify(item);
+      }
+      response.writeHead(200, {
+        'content-type': types[path.extname(file)] ?? 'application/octet-stream',
+      });
+      response.end(body);
+    } catch {
+      response.writeHead(404).end();
+    }
+  });
+  return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)));
+}
+
+/** shadcn's config for an app that has no Tailwind: where copied code goes, and nothing else. */
+const COMPONENTS_JSON = {
+  $schema: 'https://ui.shadcn.com/schema.json',
+  style: 'new-york',
+  rsc: false,
+  tsx: true,
+  tailwind: { config: '', css: 'src/index.css', baseColor: 'neutral', cssVariables: false },
+  aliases: {
+    components: 'src/components',
+    ui: 'src/components/ui',
+    utils: 'src/lib/utils',
+    lib: 'src/lib',
+    hooks: 'src/hooks',
+  },
+};
+
+/**
+ * The registry, as a reader uses it: `shadcn add` for every item into a new
+ * Vite app, which then draws each one exactly as the registry page does.
+ */
+async function proveRegistry(work: string, tarballs: string[], guideText: string): Promise<void> {
+  const dist = path.join(root, 'apps', 'site', 'dist');
+  if (!statSync(path.join(dist, 'r', 'registry.json'), { throwIfNoEntry: false })) {
+    throw new Error('the site is not built: run `pnpm build` first');
+  }
+  const dir = scaffold('vite', work, tarballs, 'registry-app');
+  writeFileSync(path.join(dir, 'components.json'), `${JSON.stringify(COMPONENTS_JSON, null, 2)}\n`);
+
+  const site = await serveSite(dist, tarballs);
+  let modules: Server | undefined;
+  let page: Server | undefined;
+  try {
+    const index = (await (
+      await fetch(`${address(site)}${DEFAULT_BASE}r/registry.json`)
+    ).json()) as {
+      items: { name: string }[];
+    };
+    for (const { name } of index.items) {
+      // shadcn fetches the item from the server in this process, so this must not block it.
+      await runAsync(
+        'npx',
+        ['--yes', SHADCN, 'add', `${address(site)}${DEFAULT_BASE}r/${name}.json`, '--yes'],
+        dir,
+      );
+    }
+
+    // The guide's entry, which imports the CSS once, and an App that draws every item.
+    const main = fromGuide(guideText).files.vite['src/main.tsx'];
+    if (!main) throw new Error('the guide has no src/main.tsx for vite');
+    writeFileSync(path.join(dir, 'src', 'main.tsx'), main);
+    const app = [
+      ...items.map((item) => `import { ${item.component} } from './components/${item.name}';`),
+      '',
+      'export function App() {',
+      '  return (',
+      '    <>',
+      ...items.map((item) => `      <${item.component} />`),
+      '    </>',
+      '  );',
+      '}',
+      '',
+    ].join('\n');
+    writeFileSync(path.join(dir, 'src', 'App.tsx'), app);
+    run('npm', ['run', 'build'], dir);
+
+    modules = await serve(dir, dir);
+    page = await serve(path.join(dir, 'dist'), dir);
+    const got = await readScreens(address(page), address(modules), items.length);
+    const want = await readScreens(
+      `${address(site)}${DEFAULT_BASE}registry/`,
+      address(modules),
+      items.length,
+    );
+    if (got.length !== items.length || got.join('\n\n') !== want.join('\n\n')) {
+      throw new Error(
+        `registry: the copied items do not draw what the registry page draws.\n\n` +
+          `site:\n${want.join('\n\n')}\n\napp:\n${got.join('\n\n')}`,
+      );
+    }
+    console.log(`\nregistry: ${items.length} items copied in, drawn as on the site\n`);
+    console.log(got.join('\n\n'));
+  } finally {
+    page?.close();
+    modules?.close();
+    site.close();
+  }
+}
+
 async function prove(app: App, work: string, tarballs: string[], guideText: string): Promise<void> {
   const { files, screen } = fromGuide(guideText);
   if (Object.keys(files[app]).length === 0) throw new Error(`the guide has no files for ${app}`);
@@ -240,10 +426,14 @@ async function prove(app: App, work: string, tarballs: string[], guideText: stri
 }
 
 if (process.argv[1] === import.meta.filename) {
-  const apps = (process.argv.slice(2).length ? process.argv.slice(2) : ['vite', 'next']) as App[];
+  const asked = process.argv.slice(2);
+  const runs = (asked.length ? asked : ['vite', 'next', 'registry']) as (App | 'registry')[];
   const work = mkdtempSync(path.join(tmpdir(), 'rockaway-quickstart-'));
   console.log(`working in ${work}`);
   const tarballs = pack(path.join(work, 'packages'));
   const text = readFileSync(guide, 'utf8');
-  for (const app of apps) await prove(app, work, tarballs, text);
+  for (const app of runs) {
+    if (app === 'registry') await proveRegistry(work, tarballs, text);
+    else await prove(app, work, tarballs, text);
+  }
 }

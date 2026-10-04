@@ -10,7 +10,7 @@ depends_on:
 - 107
 - 121
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-04
 closed_at: 2026-10-03
 priority: p0
 layer: tooling
@@ -46,3 +46,7 @@ First CI run (37171779282): Quickstart in vite 59s and Quickstart in next 1m23s,
 ## Result
 
 A Quickstart workflow packs the four packages, scaffolds Vite and Next.js apps outside the workspace, writes in the guide's code from its fences, builds them and reads the screen back; parallel jobs, on changes to packages/, the guide, the script or the workflow
+
+## 2026-10-04
+
+Merged main after #154 (0046): the registry's quickstart changes to the script had already made the same bare-import fix (for the engine and the tokens), so main's script stands. The registry proof joins the matrix as a third job (registry), which builds the site first because the proof serves its r/registry.json; it adds shadcn's CLI to a fresh Vite app and compares every item with the registry page. Locally 19s. The workflow also triggers on apps/site/src/registry/**.

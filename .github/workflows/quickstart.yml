@@ -15,12 +15,14 @@ on:
       - 'packages/**'
       - 'docs/getting-started.md'
       - 'apps/site/scripts/quickstart.ts'
+      - 'apps/site/src/registry/**'
       - '.github/workflows/quickstart.yml'
   pull_request:
     paths:
       - 'packages/**'
       - 'docs/getting-started.md'
       - 'apps/site/scripts/quickstart.ts'
+      - 'apps/site/src/registry/**'
       - '.github/workflows/quickstart.yml'
 
 concurrency:
@@ -38,9 +40,10 @@ jobs:
       # One framework failing says nothing about the other.
       fail-fast: false
       matrix:
-        # Vite + React, and Next.js's app router importing from a server
-        # component. Each app is its own job, so they run side by side.
-        app: [vite, next]
+        # Vite + React, Next.js's app router importing from a server
+        # component, and the copy-in registry (0046) added with shadcn's own
+        # CLI. Each is its own job, so they run side by side.
+        app: [vite, next, registry]
     steps:
       - uses: actions/checkout@v7
 
@@ -56,6 +59,13 @@ jobs:
       # What gets packed is what gets published: the packages' dist.
       - name: Build packages
         run: pnpm -r --filter './packages/*' build
+
+      # The registry is served from the built site, as a reader meets it.
+      - name: Build the site
+        if: matrix.app == 'registry'
+        run: pnpm --filter site build
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
 
       - name: Install Chromium
         run: pnpm --filter site exec playwright install --with-deps chromium

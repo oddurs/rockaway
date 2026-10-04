@@ -1,0 +1,25 @@
+── One row
+[Ada Lovelace    ]
+[your name       ]
+ Ada Lovelace     
+[a value far long›
+‹far longer than ›
+‹ger than its box]
+── Framed, and several rows
+┌ Repository* ─────┐
+│‹lue far longer t›│
+└──────────────────┘
+┌ Message ─────────┐
+│ seven eight nine░│
+│ ten eleven      █│
+│ twelve          █│
+└──────────────────┘
+── In a form
+Name    [Ada Lovelace        ]
+
+Email*  [ada@                ]
+        ✗ Enter an email address.
+
+        ┌ Repository ──────────┐
+        │ rockaway             │
+        └──────────────────────┘
