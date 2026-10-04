@@ -72,6 +72,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  LinkTree: (props) =>
+    createElement(rockaway.LinkTree, {
+      'aria-label': 'Site',
+      items: [{ title: 'Home', href: '/', children: [{ title: 'Grid', href: '/grid/' }] }],
+      current: '/grid/',
+      ...props,
+    }),
   Panes: (props) =>
     createElement(
       rockaway.Panes,
@@ -119,6 +126,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
 const IMPLICIT: Readonly<Record<string, RegExp>> = {
   button: /<button[\s>]/,
   link: /<a [^>]*href=/,
+  list: /<ul[\s>]/,
 };
 
 const FOCUSABLE = /<(?:button|input|select|textarea)[\s>]|<a [^>]*href=|tabindex="0"/;

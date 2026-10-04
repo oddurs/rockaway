@@ -196,6 +196,13 @@ const EMPTY: readonly ActiveBinding[] = [];
 export interface KeymapHelpProps {
   /** Which keyboard to draw the chords for. The reader's by default. */
   readonly platform?: Platform | 'auto';
+  /**
+   * The shortcuts to list, instead of the ones active where it is rendered.
+   * For a server, which runs no effects and so registers no bindings: a page
+   * that binds its keys without React renders its help from the same list it
+   * binds, and needs no `Keymap` around it.
+   */
+  readonly bindings?: readonly Pick<Binding, 'keys' | 'description'>[];
   readonly className?: string;
 }
 
@@ -204,13 +211,40 @@ export interface KeymapHelpProps {
  * in two columns of cells. Bind `?` to show it, and the help screen is the
  * keymap itself, never a list written beside it.
  */
-export function KeymapHelp({ platform = 'auto', className }: KeymapHelpProps): ReactNode {
-  const bindings = useActiveBindings();
+export function KeymapHelp({ platform = 'auto', bindings, className }: KeymapHelpProps): ReactNode {
+  return bindings === undefined ? (
+    <ActiveHelp platform={platform} className={className} />
+  ) : (
+    <HelpRows bindings={bindings} platform={platform} className={className} />
+  );
+}
+
+/** The help for whatever the keymap around it has bound. */
+function ActiveHelp({
+  platform,
+  className,
+}: {
+  readonly platform: Platform | 'auto';
+  readonly className: string | undefined;
+}): ReactNode {
+  return <HelpRows bindings={useActiveBindings()} platform={platform} className={className} />;
+}
+
+/** The rows: a KeyHint and what it does, one binding a row. */
+function HelpRows({
+  bindings,
+  platform,
+  className,
+}: {
+  readonly bindings: readonly Pick<Binding, 'keys' | 'description'>[];
+  readonly platform: Platform | 'auto';
+  readonly className: string | undefined;
+}): ReactNode {
   const keyboard = usePlatform(platform);
   return (
     <dl className={cx('rk-keymap-help', className)}>
       {bindings.map((binding) => (
-        <div key={binding.canonical} className="rk-keymap-help-row">
+        <div key={binding.keys} className="rk-keymap-help-row">
           <dt className="rk-keymap-help-keys">
             <KeyHint keys={binding.keys} platform={keyboard} />
           </dt>

@@ -9,10 +9,11 @@
  * island renders. Then the same HTML is the island's slot.
  */
 import { getCollection } from 'astro:content';
-import { Shell } from '../islands/shell.tsx';
+import { Shell } from '../components/Shell.tsx';
 import { components, slugOf } from '../lib/components.ts';
-import { modeOf, siteJumps, siteNav, trail } from '../lib/nav.ts';
+import { modeOf, siteNav, trail } from '../lib/nav.ts';
 import { outline } from '../lib/outline.ts';
+import { shellBindings } from '../lib/shell.ts';
 import Document from './Document.astro';
 
 interface Props {
@@ -39,15 +40,18 @@ const page = outline(await Astro.slots.render('default'));
 <Document title={title} description={description}>
   <a class="site-skip" href="#content">Skip to the page</a>
   <Shell
-    client:load
     nav={nav}
     current={current}
     trail={path.map((n) => n.title)}
     section={modeOf(path)}
     title={name}
     headings={page.headings}
-    jumps={siteJumps()}
+    bindings={shellBindings(nav)}
   >
     <article class="rk-prose" set:html={page.html} />
   </Shell>
 </Document>
+
+<script>
+  import '../scripts/shell.ts';
+</script>

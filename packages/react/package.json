@@ -16,6 +16,11 @@
       "types": "./dist/paint/index.d.ts",
       "default": "./dist/paint/index.js"
     },
+    "./dom": {
+      "@rockaway/source": "./src/dom.ts",
+      "types": "./dist/dom/index.d.ts",
+      "default": "./dist/dom/index.js"
+    },
     "./testing": {
       "@rockaway/source": "./src/testing/index.ts",
       "types": "./dist/testing/index.d.ts",
@@ -83,6 +88,10 @@
       "./paint": {
         "types": "./dist/paint/index.d.ts",
         "default": "./dist/paint/index.js"
+      },
+      "./dom": {
+        "types": "./dist/dom/index.d.ts",
+        "default": "./dist/dom/index.js"
       },
       "./testing": {
         "types": "./dist/testing/index.d.ts",

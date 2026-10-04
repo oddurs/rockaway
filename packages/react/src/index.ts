@@ -7,6 +7,7 @@
 // component is missing, has no entry, or is listed twice.
 export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
 export { cx } from './cx.ts';
+export { fitStatusBar, type Measured, measureScreen, relayoutPanes, type StatusSegmentFit } from './dom.ts';
 export * from './entries/badge.ts';
 export * from './entries/button.ts';
 export * from './entries/callout.ts';
@@ -17,6 +18,7 @@ export * from './entries/frame.ts';
 export * from './entries/key-hint.ts';
 export * from './entries/keymap.ts';
 export * from './entries/link.ts';
+export * from './entries/link-tree.ts';
 export * from './entries/list.ts';
 export * from './entries/panes.ts';
 export * from './entries/status-bar.ts';
