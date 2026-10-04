@@ -194,11 +194,13 @@ export function readScreen(target: HTMLElement): Buffer {
         (Number.parseInt(style.fontWeight, 10) >= 600 ? Attr.bold : Attr.none) |
         (style.textDecorationLine.includes('underline') ? Attr.underline : Attr.none),
     };
+    const cased = transform(style.textTransform);
     let offset = 0;
-    for (const cluster of graphemes(text)) {
+    for (const original of graphemes(text)) {
       range.setStart(node, offset);
-      range.setEnd(node, offset + cluster.length);
-      offset += cluster.length;
+      range.setEnd(node, offset + original.length);
+      offset += original.length;
+      const cluster = cased(original);
       const width = clusterWidth(cluster);
       if (width === 0 || cluster.trim() === '') continue;
       const rect = range.getClientRects()[0];
@@ -209,6 +211,33 @@ export function readScreen(target: HTMLElement): Buffer {
       const line = cells[y] as Cell[];
       line[x] = { ch: cluster, style: cellStyle, width };
       if (width === 2 && x + 1 < cols) line[x + 1] = { ch: '', style: cellStyle, width: 0 };
+    }
+  }
+
+  // A list's markers are the browser's, not text in the page: each is
+  // written in the cells before its item's first line, where it is drawn.
+  for (const item of target.querySelectorAll<HTMLElement>('li')) {
+    const style = styleOf(item);
+    if (style.display !== 'list-item' || !shown(item)) continue;
+    const marker = markerOf(item, view);
+    if (marker === '') continue;
+    const r = item.getBoundingClientRect();
+    const clip = clipOf(item.parentElement);
+    const end = Math.round((r.left - originX) / cellWidth);
+    const y = Math.round((r.top - originY) / cellHeight);
+    if (y < clip.top || y >= clip.bottom) continue;
+    const colour = rgbOf(view?.getComputedStyle(item, '::marker').color ?? style.color, document);
+    const markerStyle: Style = {
+      ...(colour.alpha < 0.5 ? {} : { fg: key(colour.rgb) }),
+      attrs: Attr.none,
+    };
+    const line = cells[y] as Cell[];
+    let x = end - [...marker].length;
+    for (const cluster of graphemes(marker)) {
+      if (cluster.trim() !== '' && x >= clip.left && x < clip.right && line[x]?.ch === ' ') {
+        line[x] = { ch: cluster, style: markerStyle, width: 1 };
+      }
+      x += 1;
     }
   }
 
@@ -225,6 +254,35 @@ export function readScreen(target: HTMLElement): Buffer {
 
 /** The levels of each channel in a 256-colour terminal's colour cube. */
 const CUBE = [0, 95, 135, 175, 215, 255] as const;
+
+/** What `text-transform` does to the words, as the reader sees them. */
+function transform(value: string): (text: string) => string {
+  if (value === 'uppercase') return (t) => t.toUpperCase();
+  if (value === 'lowercase') return (t) => t.toLowerCase();
+  return (t) => t;
+}
+
+/**
+ * A list item's marker, as the reader sees it: the stylesheet's own string
+ * when it gives one (`"· "`), or the number of an ordered item (`3. `).
+ */
+function markerOf(item: HTMLElement, view: Window | null): string {
+  const content = view?.getComputedStyle(item, '::marker').content ?? 'normal';
+  const strings = [...content.matchAll(/"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1] ?? '');
+  if (strings.length > 0) return strings.join('');
+  if (content === 'none') return '';
+  const type = view?.getComputedStyle(item).listStyleType ?? 'disc';
+  const quoted = /^"(.*)"$/.exec(type);
+  if (quoted) return quoted[1] ?? '';
+  if (type === 'none') return '';
+  if (type === 'decimal') {
+    const list = item.parentElement;
+    const start = list instanceof HTMLOListElement ? list.start : 1;
+    const index = list ? [...list.children].filter((c) => c.tagName === 'LI').indexOf(item) : 0;
+    return `${start + index}. `;
+  }
+  return '• ';
+}
 
 /** The terminal's sixteen, by index: what a 16-colour terminal can be told. */
 const SIXTEEN: readonly string[] = ansiSlots;

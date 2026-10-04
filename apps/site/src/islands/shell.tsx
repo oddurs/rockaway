@@ -399,6 +399,15 @@ export function Shell({
   );
   const copy = useCopy(host, say);
 
+  // A page's own script can say something on the message line too.
+  useEffect(() => {
+    const listen = (event: Event): void => {
+      if (event instanceof CustomEvent && typeof event.detail === 'string') say(event.detail);
+    };
+    document.addEventListener('rk:say', listen);
+    return () => document.removeEventListener('rk:say', listen);
+  }, [say]);
+
   // The shell is live: the panes are laid out at the screen's real size.
   useIsomorphicLayoutEffect(() => {
     document.documentElement.dataset.rkShell = 'live';

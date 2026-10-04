@@ -1,22 +1,112 @@
 ---
 /**
- * The first page (cairn 0103): a Frame from the published `@rockaway/react`,
- * hydrated as an island, to prove the pipeline end to end. The landing page
- * proper is 0108. It comes from the component's own entry, so the island ships
- * a frame and not the package (cairn 0165).
+ * The landing page (cairn 0108): the page that gets posted, read on a phone,
+ * and judged in four seconds.
+ *
+ * The claim in a line, then a screen the engine draws, live, that a reader
+ * can draw on; the constraint in three rules; ten lines of code beside what
+ * they render; and where to go next. Everything on it is the system: the
+ * drawing is `@rockaway/grid`'s, painted by the cell renderer, and the frame
+ * under the code is `@rockaway/react`'s, rendered on the server. Both are
+ * there before any script runs; the script only lets you draw.
  */
-import { Frame } from '@rockaway/react/frame';
+import { Button, Frame, Screen } from '@rockaway/react';
+import Source from '../components/Source.astro';
 import Prose from '../layouts/Prose.astro';
+import { drawing, SERVER_SIZE } from '../lib/drawing.ts';
+import { href } from '../lib/paths.ts';
+
+const app = `import { Button, Frame } from '@rockaway/react';
+
+export function App() {
+  return (
+    <Frame title="hello" cols={32} rows={5}>
+      <p>A screen, in cells.</p>
+      <Button>Continue</Button>
+    </Frame>
+  );
+}`;
+
+const first = drawing(SERVER_SIZE, { boxes: [], weight: 'light' });
 ---
 
 <Prose
   title="rockaway — a TUI design system for the web"
-  description="A TUI design system for the web. Everything sits on a character grid: one cell wide, one row tall, no halves."
+  description="A design system for terminal interfaces on the web. Every box is drawn on a grid of character cells, and every page is still a web page."
   name="home"
 >
-  <Frame client:load title="rockaway" rows={5}>
-    <p>A TUI design system for the web.</p>
-    <p>Nothing is published yet.</p>
-    <p><a href="https://github.com/oddurs/rockaway">Source on GitHub</a></p>
+  <h1>rockaway</h1>
+  <p>
+    <strong>A design system for terminal interfaces on the web.</strong> Every box is drawn on a
+    grid of character cells by a small engine, and every page is still a web page: links, a
+    keyboard, a screen reader, a phone, and no JavaScript needed to read it. This site is built with
+    it.
+  </p>
+
+  <figure data-site-drawing aria-label="A drawing of boxes joined by the junction table">
+    <Screen
+      draw={() => first}
+      cols={SERVER_SIZE.width}
+      rows={SERVER_SIZE.height}
+      aria-label="Boxes joined by the junction table. Drag across it, or use the arrow keys and Enter, to draw another."
+    />
+  </figure>
+  <p>
+    That is drawn live. Drag across it to draw a box, or <kbd>Tab</kbd> to it and use the arrows
+    and <kbd>Enter</kbd>; <kbd>1</kbd>, <kbd>2</kbd> and <kbd>3</kbd> change the weight. However the
+    boxes cross, they meet in the right junction, because no character is stored, only edges.{' '}
+    <kbd>y</kbd> copies it as text and <kbd>Y</kbd> as ANSI, for your terminal.
+  </p>
+
+  <h2>Three rules</h2>
+  <ol>
+    <li>
+      <strong>Every size is a count of cells.</strong> One character across, one line down, and never
+      half of one. You write <code>cols={'{40}'}</code>, never pixels.
+    </li>
+    <li>
+      <strong>Every border is edges on a cell.</strong> The character is looked up from the edges
+      when the drawing is done, so two boxes cannot be joined wrong.
+    </li>
+    <li>
+      <strong>It is still the web.</strong> Real elements sit over the drawing, so it reads aloud,
+      links, zooms, takes a keyboard, and fits a phone forty cells wide.
+    </li>
+  </ol>
+
+  <h2>Ten lines</h2>
+  <Source code={app} lang="tsx" />
+  <p>Which draws this, rendered by the component on the server:</p>
+  <Frame title="hello" cols={32} rows={5}>
+    <p>A screen, in cells.</p>
+    <Button>Continue</Button>
   </Frame>
+  <Source code="npm install @rockaway/react @rockaway/css @rockaway/tokens" lang="sh" />
+  <p>
+    <strong>Not on npm yet.</strong> The first release, 0.1.0, is being made; until then <a
+      href={href('getting-started/')}>getting started</a
+    > says how to install it from the repository.
+  </p>
+
+  <h2>Read on</h2>
+  <ul>
+    <li><a href={href('getting-started/')}>Getting started</a>: install it and draw a screen.</li>
+    <li>
+      <a href={href('concept/')}>The concept</a>: how a terminal interface becomes a web page, and
+      the rules a component is held to.
+    </li>
+    <li>
+      <a href={href('foundations/')}>Foundations</a>: the grid, the glyphs, the colour and the
+      themes, each drawn by the system it describes.
+    </li>
+    <li>
+      <a href={href('components/')}>Components</a>: every one, with its snapshot, a live example
+      and its keyboard.
+    </li>
+    <li><a href="https://github.com/oddurs/rockaway">The source</a>, on GitHub.</li>
+  </ul>
 </Prose>
+
+<script>
+  import '../scripts/drawing.ts';
+</script>
