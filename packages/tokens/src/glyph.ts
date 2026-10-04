@@ -109,6 +109,38 @@ export function repertoireOf(set: BorderSetName): Repertoire {
   return set === 'ascii' ? 'ascii' : 'unicode';
 }
 
+/**
+ * Frames drawn heavier than the theme's own line, by why (cairn 0128, 0075).
+ * On a grid there is no shadow, so what stands out does so by weight:
+ *
+ *   emphasis   a frame in a state that asks for attention: a focused or
+ *              invalid field
+ *   raised     a frame above the page that the page still answers to: a
+ *              popover, a menu, a select's list
+ *   modal      a frame above everything, which must be answered first: a
+ *              dialog
+ *
+ * Each is a border set, so a theme can change it. ASCII has one weight of
+ * line, so there all three are `ascii`, and bold carries the difference.
+ */
+export const weightNames = ['emphasis', 'raised', 'modal'] as const;
+export type WeightName = (typeof weightNames)[number];
+export type FrameWeights = Readonly<Record<WeightName, BorderSetName>>;
+
+/** The weights a theme draws with unless it says otherwise. */
+export const frameWeights: Readonly<Record<Repertoire, FrameWeights>> = {
+  unicode: { emphasis: 'heavy', raised: 'heavy', modal: 'double' },
+  ascii: { emphasis: 'ascii', raised: 'ascii', modal: 'ascii' },
+};
+
+/** A theme's weights: its repertoire's, with any it sets itself. */
+export function weightsFor(theme: {
+  readonly borderSet: BorderSetName;
+  readonly weights?: Partial<FrameWeights> | undefined;
+}): FrameWeights {
+  return { ...frameWeights[repertoireOf(theme.borderSet)], ...theme.weights };
+}
+
 export const markNames = [
   'check',
   'cross',
@@ -302,6 +334,8 @@ export interface Glyphs {
   readonly borderSet: BorderSetName;
   /** That set's characters by slot, for anything drawing outside the engine. */
   readonly border: BorderGlyphs;
+  /** The sets a frame is drawn in when it is heavier than the rest: see `weightNames`. */
+  readonly weight: FrameWeights;
   readonly mark: Readonly<Record<MarkName, string>>;
   readonly block: Readonly<Record<BlockName, string>>;
   readonly bar: readonly string[];
@@ -312,11 +346,15 @@ export interface Glyphs {
 }
 
 /** The glyphs a theme draws with. Its CSS tokens are written from this too. */
-export function glyphsFor(theme: { readonly borderSet: BorderSetName }): Glyphs {
+export function glyphsFor(theme: {
+  readonly borderSet: BorderSetName;
+  readonly weights?: Partial<FrameWeights> | undefined;
+}): Glyphs {
   const r = repertoireOf(theme.borderSet);
   return {
     borderSet: theme.borderSet,
     border: borderSets[theme.borderSet],
+    weight: weightsFor(theme),
     mark: marks[r],
     block: blocks[r],
     bar: bars[r],
@@ -393,13 +431,13 @@ export function attributes(): Group {
  * The characters, as tokens a theme can swap. Written from `glyphsFor`, so the
  * CSS a page reads and the object a component draws with cannot disagree.
  */
-export function glyphs(set: BorderSetName): Group {
+export function glyphs(set: BorderSetName, weights?: Partial<FrameWeights>): Group {
   const text = (value: string): Group => ({ $value: value }) as unknown as Group;
   const table = <K extends string>(entries: Readonly<Record<K, string>>): Group =>
     Object.fromEntries(Object.entries<string>(entries).map(([slot, ch]) => [slot, text(ch)]));
   const sequence = (frames: readonly string[]): Group =>
     Object.fromEntries(frames.map((ch, i) => [String(i + 1), text(ch)]));
-  const resolved = glyphsFor({ borderSet: set });
+  const resolved = glyphsFor({ borderSet: set, weights });
 
   return {
     glyph: {
@@ -410,6 +448,15 @@ export function glyphs(set: BorderSetName): Group {
         $description: `The theme draws with the ${set} set; the others are here to be switched to.`,
         ...Object.fromEntries(borderSetNames.map((name) => [name, table(borderSets[name])])),
         current: table(resolved.border),
+        ...Object.fromEntries(
+          weightNames.map((name) => [
+            name,
+            {
+              $description: `A frame drawn ${name === 'emphasis' ? 'heavier for a state' : name === 'raised' ? 'above the page' : 'above everything'}: the ${resolved.weight[name]} set (cairn 0128).`,
+              ...table(borderSets[resolved.weight[name]]),
+            },
+          ]),
+        ),
       },
       mark: table(resolved.mark),
       block: table(resolved.block),

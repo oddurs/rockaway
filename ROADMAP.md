@@ -41,7 +41,7 @@ The decisions everything else inherits, and the repo that holds them.
 
 Design decisions as data, compiled to CSS custom properties.
 
-### ready
+### in review
 
 - [ ] [`0247`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0247-make-the-popover-and-modal-border-weights-theme-glyph-tokens.md) Make the popover and modal border weights theme glyph tokens <sup>feature · tokens · p3</sup>
 

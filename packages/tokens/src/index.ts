@@ -56,6 +56,8 @@ export {
   type Delimiters,
   delimiterNames,
   delimiters,
+  type FrameWeights,
+  frameWeights,
   type Glyphs,
   glyphs,
   glyphsFor,
@@ -70,6 +72,9 @@ export {
   spinnerFrames,
   strokes,
   strokeWeights,
+  type WeightName,
+  weightNames,
+  weightsFor,
 } from './glyph.ts';
 export {
   type BorderSetName,
