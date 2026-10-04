@@ -60,7 +60,7 @@ export const dividerMeta: ComponentMetaInput = defineMeta({
       title: 'Open and joined',
       description:
         'An open rule ends in half strokes; a joined one ends in tees, as if it met a border.',
-      text: [cells(20), cells(20, { ends: 'joined' })].join('\n'),
+      draw: (glyphs) => [cells(20, {}, glyphs), cells(20, { ends: 'joined' }, glyphs)].join('\n'),
     },
     {
       title: 'Every border set',
@@ -72,26 +72,29 @@ export const dividerMeta: ComponentMetaInput = defineMeta({
       title: 'Labelled',
       description:
         'At the start, the centre and the end, on an open rule and a joined one. An open rule keeps a whole cell of line between its end and the label. A label too long for the rule truncates.',
-      text: [
-        ...(['open', 'joined'] as const).flatMap((ends) =>
-          (['start', 'center', 'end'] as const).map((labelAlign) =>
-            cells(20, { label: 'files', labelAlign, ends }),
+      draw: (glyphs) =>
+        [
+          ...(['open', 'joined'] as const).flatMap((ends) =>
+            (['start', 'center', 'end'] as const).map((labelAlign) =>
+              cells(20, { label: 'files', labelAlign, ends }, glyphs),
+            ),
           ),
-        ),
-        cells(20, { label: 'a label far too long for it' }),
-      ].join('\n'),
+          cells(20, { label: 'a label far too long for it' }, glyphs),
+        ].join('\n'),
     },
     {
       title: 'Vertical',
       description: 'Open and joined, side by side.',
-      text: (['open', 'joined'] as const)
-        .map((ends) =>
-          toText(dividerBuffer({ width: 1, height: 5 }, { orientation: 'vertical', ends }), {
-            trimEnd: false,
-          }).split('\n'),
-        )
-        .reduce((a, b) => a.map((row, i) => `${row} ${b[i] ?? ''}`))
-        .join('\n'),
+      draw: (glyphs) =>
+        (['open', 'joined'] as const)
+          .map((ends) =>
+            toText(
+              dividerBuffer({ width: 1, height: 5 }, { orientation: 'vertical', ends }, glyphs),
+              { trimEnd: false },
+            ).split('\n'),
+          )
+          .reduce((a, b) => a.map((row, i) => `${row} ${b[i] ?? ''}`))
+          .join('\n'),
     },
     {
       title: 'Under an ASCII theme',

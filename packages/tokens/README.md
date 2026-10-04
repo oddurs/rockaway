@@ -48,6 +48,20 @@ it. Chrome is drawn in JavaScript, so pair the attribute with
 `<GlyphProvider glyphs={themeGlyphs.ink}>` from `@rockaway/react` for the
 theme's border set and marks.
 
+Text drawn in a theme's glyphs, like a component's snapshot, differs by
+theme, and no stylesheet can redraw it. Render each drawing and mark it with
+the themes it is for; `tokens.css` shows the one the nearest theme context
+names, with no script:
+
+```html
+<figure data-rk-theme-only="default ice dracula">┌ files ─┐ …</figure>
+<figure data-rk-theme-only="ink">╭ files ─╮ …</figure>
+<figure data-rk-theme-only="phosphor">╔ files ═╗ …</figure>
+```
+
+`default` is the page with no `data-rk-theme`. An element that names no
+theme in play is hidden, so list every theme across the set.
+
 Every theme passes the contrast gate (cairn 0022, 0163) in every mode it
 declares. A palette that does not pass is fitted: a failing colour moves in
 lightness, keeping its hue, until it does. `pnpm generate` prints every move,

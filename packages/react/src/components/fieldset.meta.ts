@@ -1,10 +1,11 @@
 import { toText } from '@rockaway/grid';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
 import { fieldFrameBuffer, fieldFrameVariants } from './fieldset.pure.ts';
 import type { FieldFrameState } from './fieldset.tsx';
 
-const frame = (state: Omit<FieldFrameState, 'label'>): string =>
-  toText(fieldFrameBuffer({ width: 24, height: 3 }, { label: 'Notify', ...state }), {
+const frame = (state: Omit<FieldFrameState, 'label'>, glyphs: Glyphs): string =>
+  toText(fieldFrameBuffer({ width: 24, height: 3 }, { label: 'Notify', ...state }, glyphs), {
     trimEnd: false,
   });
 
@@ -98,12 +99,13 @@ export const fieldsetMeta: ComponentMetaInput = defineMeta({
       title: 'Every state',
       description:
         'Required puts the mark after the legend; invalid and focus make the line heavy. None changes the size.',
-      text: [
-        frame({}),
-        frame({ required: true }),
-        frame({ invalid: true }),
-        frame({ focused: true }),
-      ].join('\n'),
+      draw: (glyphs) =>
+        [
+          frame({}, glyphs),
+          frame({ required: true }, glyphs),
+          frame({ invalid: true }, glyphs),
+          frame({ focused: true }, glyphs),
+        ].join('\n'),
     },
   ],
 });

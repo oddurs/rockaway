@@ -197,7 +197,14 @@
       "properties": {
         "title": { "$ref": "#/$defs/text" },
         "description": { "$ref": "#/$defs/text" },
-        "text": { "type": "string", "minLength": 1 }
+        "text": { "type": "string", "minLength": 1 },
+        "themes": {
+          "description": "The snapshot drawn with another theme's glyphs, by theme name, for each theme that draws it differently (cairn 0171).",
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[a-z][a-z0-9-]*$" },
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        }
       }
     },
     "stateName": {
