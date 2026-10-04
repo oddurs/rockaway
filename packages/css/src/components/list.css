@@ -41,6 +41,19 @@
     overflow-anchor: none;
   }
 
+  /* The virtualiser sizes its rows in whole pixels from the box's clientWidth,
+   * which rounds: a viewport 201.64px wide gets rows 202px wide, off the grid,
+   * and a fraction of a pixel to scroll across. Its sizes are inline styles,
+   * so only !important reaches them. The rows' heights and offsets are its
+   * own, and right: they are the measured cell. */
+  .rk-list-box > [role="presentation"] {
+    inline-size: auto !important;
+  }
+
+  .rk-list-box > [role="presentation"] > [role="presentation"] {
+    inline-size: 100% !important;
+  }
+
   .rk-list-scrollbar {
     color: var(--rk-fg-muted);
     /* The track is decoration; the rows carry the position for a reader. */
