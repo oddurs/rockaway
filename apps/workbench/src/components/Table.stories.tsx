@@ -15,12 +15,13 @@ import {
   type TableText,
   tableBuffer,
 } from '@rockaway/react';
-import { screenshot } from '@rockaway/react/testing';
+import { expectContinuity, screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useMemo, useState } from 'react';
 import type { SortDescriptor } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { runner } from '../../.storybook/runner.ts';
 import { measured, settled } from '../settled.ts';
 
 const meta = {
@@ -433,10 +434,6 @@ export const Empty: Story = {
 export const Scrolls: Story = {
   name: 'Wider than its room, scrolls across',
   tags: ['classic-scrollbars'],
-  // The cells scrolled out of the region cannot be photographed, so the
-  // continuity check would read them as gaps. Every other story checks the
-  // same table's lines whole.
-  parameters: { continuity: false },
   render: () => (
     <Frame title="narrow" cols={30} rows={11}>
       <Files cols={26} />
@@ -468,6 +465,14 @@ export const Scrolls: Story = {
         expect(region.scrollLeft).toBeGreaterThan(0);
         expect(whole(region.scrollLeft)).toBeLessThanOrEqual(1);
       });
+    }
+    // Scrolled, its lines still meet where they can be seen, and the cells
+    // scrolled out of the region are counted rather than read as gaps.
+    const run = runner();
+    if (run) {
+      const report = await expectContinuity(region, { capture: run.capture });
+      expect(report.shapes).toBeGreaterThan(20);
+      expect(report.unseen).toBeGreaterThan(0);
     }
     region.scrollTo({ left: 0 });
   },
