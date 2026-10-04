@@ -3,7 +3,8 @@
  *
  * React Aria places a popover in pixels and a modal in the middle of the
  * viewport; the component then moves the surface onto the cell grid with a
- * translate. Nothing here sets a position in pixels. The surface is a screen
+ * relative offset, laid out so its strokes are snapped to pixels after it,
+ * which a translate's are not. Nothing here sets a position in pixels. The surface is a screen
  * whose content is in flow, so it is as tall as what it holds and as wide,
  * in whole cells, and never taller than `--rk-overlay-max-rows`: past that its
  * content scrolls, with no native scrollbar (0207), and the frame's right edge
@@ -24,6 +25,7 @@
   /* As wide as what it holds: React Aria measures it whole and moves it to fit,
    * rather than the edge of the page squeezing it into wrapping. */
   .rk-overlay {
+    position: relative;
     display: inline-block;
     inline-size: max-content;
     color: var(--rk-fg-default);
@@ -32,6 +34,23 @@
   /* The screen grows with what it holds, as a field frame's does. */
   .rk-overlay > .rk-screen {
     background: var(--rk-bg-surface);
+    min-inline-size: max(
+      calc(var(--rk-overlay-min-cols, 0) * var(--rk-cell-width)),
+      var(--rk-overlay-min-trigger, 0px)
+    );
+  }
+
+  /*
+   * As wide as the trigger, in whole cells: React Aria sets --trigger-width on
+   * the popover. A trigger on the grid is a whole number of cells already; a
+   * thirty-second of a pixel over is measurement, not another cell.
+   */
+  .rk-overlay-min-trigger > .rk-screen {
+    --rk-overlay-min-trigger: round(
+      up,
+      max(0px, var(--trigger-width, 0px) - 1px / 32),
+      var(--rk-cell-width)
+    );
   }
 
   .rk-overlay > .rk-screen > .rk-content {

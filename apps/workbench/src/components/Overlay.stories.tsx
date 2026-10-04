@@ -262,6 +262,46 @@ export const Flip: Story = {
 };
 
 /**
+ * Beside its trigger, whose edge is on whole cells but a fraction of a pixel:
+ * the cell is not a whole number of pixels, so most columns are not. React
+ * Aria places the popover on whole pixels; the surface is moved the rest of
+ * the way onto the cells by a laid-out offset, so the frame's strokes still
+ * meet, which the continuity check after the story reads. A translate of a
+ * fraction of a pixel parted them.
+ */
+export const Beside: Story = {
+  name: 'Beside a trigger off the pixel grid',
+  render: () => (
+    <Frame title="beside" cols={64} rows={8}>
+      <div style={{ paddingInlineStart: 'calc(23 * var(--rk-cell-width))' }}>
+        <DialogTrigger defaultOpen>
+          <Button>Odd</Button>
+          <OverlayPopover placement="end top">
+            <Dialog aria-label="Beside">
+              <p style={{ margin: 0 }}>main</p>
+            </Dialog>
+          </OverlayPopover>
+        </DialogTrigger>
+      </div>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const trigger = canvas.getByRole('button', { name: 'Odd' });
+    const [surface] = surfaces();
+    if (!surface) throw new Error('no popover');
+    // The trigger's edge is not on the page's pixels.
+    const edge = trigger.getBoundingClientRect().right;
+    expect(Math.abs(edge - Math.round(edge))).toBeGreaterThan(1 / 32);
+    // The surface is on whole cells all the same: the cell after the
+    // trigger's last, on its row.
+    const [tx, ty, tw] = placeOf(trigger, trigger);
+    expect(placeOf(surface, trigger).slice(0, 2)).toEqual([tx + tw, ty]);
+    expect(getComputedStyle(surface).transform).toBe('none');
+  },
+};
+
+/**
  * Keyboard and pointer: Escape closes a popover and focus goes back to its
  * trigger; so does a press outside it. A modal closes on Escape, and on a
  * press on its backdrop only when it is dismissable.
@@ -483,5 +523,154 @@ export const ForcedColors: Story = {
     const [surface] = surfaces();
     if (!surface) throw new Error('no dialog');
     expect(edgeOf(surface)).toMatch(/^╔═+╗$/);
+  },
+};
+
+/**
+ * A minimum width: as wide as the trigger, in whole cells (a select's list),
+ * or a number of columns, the frame's two included.
+ */
+export const MinCols: Story = {
+  name: 'Minimum width',
+  render: () => (
+    <Frame title="min width" cols={60} rows={8}>
+      <div style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+        <DialogTrigger defaultOpen>
+          <Button>A wide trigger of a button</Button>
+          <OverlayPopover minCols="trigger">
+            <Dialog aria-label="Trigger wide">
+              <p style={{ margin: 0 }}>one</p>
+            </Dialog>
+          </OverlayPopover>
+        </DialogTrigger>
+        <DialogTrigger defaultOpen>
+          <Button>Open</Button>
+          <OverlayPopover minCols={24}>
+            <Dialog aria-label="Twenty-four">
+              <p style={{ margin: 0 }}>two</p>
+            </Dialog>
+          </OverlayPopover>
+        </DialogTrigger>
+      </div>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const wide = canvas.getByRole('button', { name: 'A wide trigger of a button' });
+    const open = canvas.getByRole('button', { name: 'Open' });
+    const [first, second] = surfaces();
+    if (!first || !second) throw new Error('no popovers');
+    const [, , triggerWidth] = placeOf(wide, wide);
+    expect(placeOf(first, wide)[2]).toBe(triggerWidth);
+    expect(edgeOf(first)).toBe(`┏${'━'.repeat(triggerWidth - 2)}┓`);
+    expect(placeOf(second, open)[2]).toBe(24);
+  },
+};
+
+/**
+ * A menu's surface: no padding, so a highlighted row runs from side to side,
+ * and dividers at rows of the content, joining the frame's sides as tees.
+ */
+export const MenuRows: Story = {
+  name: 'Padding and dividers',
+  render: () => (
+    <Frame title="menu" cols={60} rows={10}>
+      <DialogTrigger defaultOpen>
+        <Button>File</Button>
+        <OverlayPopover
+          padding={{ x: 0, y: 0 }}
+          dividers={[{ row: 2 }, { row: 3, title: 'Danger' }]}
+        >
+          <Dialog aria-label="File">
+            <p style={{ margin: 0 }}>Open</p>
+            <p style={{ margin: 0 }}>Save as</p>
+            <p style={{ margin: 0 }}>&nbsp;</p>
+            <p style={{ margin: 0 }}>&nbsp;</p>
+            <p style={{ margin: 0 }}>Delete forever</p>
+          </Dialog>
+        </OverlayPopover>
+      </DialogTrigger>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const trigger = canvas.getByRole('button', { name: 'File' });
+    const [surface] = surfaces();
+    if (!surface) throw new Error('no popover');
+    const rows = [...surface.querySelectorAll('.rk-frame .rk-row')].map((r) => r.textContent ?? '');
+    // The content right inside the frame: "Delete forever" and the two sides.
+    const width = 2 + 'Delete forever'.length;
+    expect(placeOf(surface, trigger)[2]).toBe(width);
+    expect(rows[3]).toBe(`┠${'─'.repeat(width - 2)}┨`);
+    expect(rows[4]).toMatch(/^┠ Danger ─+┨$/);
+    const first = canvas.getByText('Open').getBoundingClientRect();
+    const grid = gridOf(surface.querySelector('.rk-screen') as Element);
+    expect(first.left - grid.left).toBeCloseTo(grid.width, 1);
+    expect(first.top - grid.top).toBeCloseTo(grid.height, 1);
+  },
+};
+
+/** A popover opened from a ruled frame is ruled too: the painter crosses the portal. */
+export const Ruled: Story = {
+  name: 'Painter',
+  render: () => (
+    <Frame title="ruled" painter="rule" cols={40} rows={8}>
+      <Branches label="Ruled" />
+    </Frame>
+  ),
+  play: async () => {
+    await measured(document.body);
+    const [surface] = surfaces();
+    if (!surface) throw new Error('no popover');
+    expect(surface.querySelector('.rk-screen')?.getAttribute('data-rk-painter')).toBe('rule');
+  },
+};
+
+/**
+ * The root's density switched while a popover is open: the popover takes the
+ * new density across the portal at each one, and lands on whole cells of its
+ * trigger's screen, on the row under the trigger. Until a screen remeasures
+ * on a context change (0199) the page's screen keeps the cell it first
+ * measured, so the trigger's grid is read as that screen reports it.
+ */
+export const Densities: Story = {
+  render: () => (
+    <Frame title="densities" cols={40} rows={8}>
+      <Branches label="Dense" />
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const trigger = canvas.getByRole('button', { name: 'Dense' });
+    const root = document.documentElement;
+    const was = root.getAttribute('data-density');
+    /** The top-left corner of a box on the trigger's grid, in whole cells. */
+    const cornerOf = (el: Element): [number, number] => {
+      const grid = gridOf(trigger);
+      const box = el.getBoundingClientRect();
+      return [cells(box.left - grid.left, grid.width), cells(box.top - grid.top, grid.height)];
+    };
+    try {
+      for (const density of ['dense', 'airy', 'touch', 'normal']) {
+        root.setAttribute('data-density', density);
+        await measured(document.body);
+        const [surface] = surfaces();
+        if (!surface) throw new Error('no popover');
+        await waitFor(() =>
+          expect(surface.closest('[data-density]')?.getAttribute('data-density')).toBe(density),
+        );
+        // On whole cells of the trigger's screen, whatever cell it reports.
+        await waitFor(() => cornerOf(surface));
+      }
+      // Back at the density the screen measured in, on the row under the
+      // trigger, from its column. At every density once 0199 lands.
+      const [surface] = surfaces();
+      if (!surface) throw new Error('no popover');
+      const [col, row] = cornerOf(trigger);
+      await waitFor(() => expect(cornerOf(surface)).toEqual([col, row + 1]));
+    } finally {
+      if (was === null) root.removeAttribute('data-density');
+      else root.setAttribute('data-density', was);
+    }
   },
 };
