@@ -27,13 +27,13 @@
  * KeyHints and their descriptions, so the `?` screen is generated from the
  * bindings and can never disagree with them.
  *
- * The engine underneath is plain TypeScript with no DOM in it, tested in
- * Node; the components wire it to the document and to React.
+ * The engine underneath is plain TypeScript with no React in it, tested in
+ * Node, and exported from `@rockaway/react/keymap` for a page with no React
+ * at all: `attachKeymap` wires it to the document, as `Keymap` does here.
  */
 import {
   createContext,
   type ReactNode,
-  type RefObject,
   useContext,
   useEffect,
   useRef,
@@ -44,83 +44,23 @@ import { cx } from '../cx.ts';
 import { type Platform, usePlatform } from '../platform.ts';
 import { keyShortcut } from './key-hint.pure.ts';
 import { KeyHint } from './key-hint.tsx';
-import { KeymapEngine } from './keymap.pure.ts';
+import {
+  type ActiveBinding,
+  attachKeymap,
+  type Binding,
+  type KeymapConflict,
+  KeymapEngine,
+  type KeymapScope,
+} from './keymap.pure.ts';
 
-/** One shortcut: its keys, what it does, and what it says it does. */
-export interface Binding {
-  /** A KeyHint spec: `mod+k`, `?`, `esc`, or a sequence of chords, `g h`. */
-  readonly keys: string;
-  /** What it does, in a few words, for `KeymapHelp`. */
-  readonly description: string;
-  /**
-   * What happens. Given no action, a binding with a `target` presses it, so
-   * a shortcut for a button is the button's own press.
-   */
-  readonly action?: (event: KeyboardEvent) => void;
-  /**
-   * The element the shortcut belongs to. It takes `aria-keyshortcuts` while
-   * the binding is registered, so a reader is told the shortcut where it
-   * applies. A sequence has no `aria-keyshortcuts` form, and sets none.
-   */
-  readonly target?: RefObject<HTMLElement | null>;
-}
-
-/** What the engine needs from a key event: the DOM's, or a test's. */
-export interface KeyStroke {
-  readonly key: string;
-  readonly code?: string;
-  readonly ctrlKey: boolean;
-  readonly altKey: boolean;
-  readonly shiftKey: boolean;
-  readonly metaKey: boolean;
-}
-
-/** A conflict: two bindings that cannot both have their keys. */
-export interface KeymapConflict {
-  readonly keys: string;
-  readonly descriptions: readonly string[];
-  readonly reason: 'duplicate' | 'prefix';
-}
-
-/** A scope of bindings: the page's, a pane's, a dialog's. */
-export interface KeymapScope {
-  readonly parent: KeymapScope | undefined;
-  readonly modal: boolean;
-}
-
-/** A binding the keymap will act on, as `KeymapHelp` and the handler see it. */
-export interface ActiveBinding {
-  readonly keys: string;
-  readonly description: string;
-  /** The keys in one spelling, for comparing. */
-  readonly canonical: string;
-}
-
-export interface KeymapEngineOptions {
-  /** How long the second key of a sequence may take. A second unless told otherwise. */
-  readonly timeout?: number;
-  /** Told of every conflict, once each. */
-  readonly onConflict?: (conflict: KeymapConflict) => void;
-}
-
-/** Whether focus is somewhere a plain key is typing: a field that takes text. */
-function isEditable(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false;
-  if (target.isContentEditable) return true;
-  if (target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return true;
-  if (!(target instanceof HTMLInputElement)) return false;
-  return ![
-    'checkbox',
-    'radio',
-    'button',
-    'submit',
-    'reset',
-    'range',
-    'color',
-    'file',
-    'image',
-  ].includes(target.type);
-}
+export type {
+  ActiveBinding,
+  Binding,
+  KeymapConflict,
+  KeymapEngineOptions,
+  KeymapScope,
+  KeyStroke,
+} from './keymap.pure.ts';
 
 interface Context {
   readonly engine: KeymapEngine;
@@ -179,19 +119,7 @@ export function Keymap({ modal = false, timeout, onConflict, children }: KeymapP
     if (root) engine.setPlatform(platform);
   }, [engine, root, platform]);
 
-  useEffect(() => {
-    if (!root) return;
-    const listen = (event: KeyboardEvent): void => {
-      // A component that handled the key has said so; the page does not get it too.
-      if (event.defaultPrevented || event.isComposing) return;
-      if (engine.handle(event, isEditable(event.target))) event.preventDefault();
-    };
-    document.addEventListener('keydown', listen);
-    return () => {
-      document.removeEventListener('keydown', listen);
-      engine.reset();
-    };
-  }, [engine, root]);
+  useEffect(() => (root ? attachKeymap(engine, document) : undefined), [engine, root]);
 
   return <KeymapContext.Provider value={context}>{children}</KeymapContext.Provider>;
 }

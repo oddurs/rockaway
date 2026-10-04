@@ -21,3 +21,7 @@ switchBuffer, radioGroupBuffer, tableBuffer and keymapHelpBuffer still live in '
 ## 2026-10-03
 
 In #146: Keymap (engine and keymapHelpBuffer into keymap.pure.ts) and Table (layout, chrome, fitCell, marks, tableBuffer into table.pure.ts) are done, each exported from its entry's pure line and called on the server by the server-component check. Switch and Radio group follow as #114 and #123 land.
+
+## 2026-10-03
+
+Added at the CTO's request, names agreed with site: the keymap engine is exported for a page with no React. From @rockaway/react/keymap's pure half: KeymapEngine, attachKeymap (the document listener, now shared with Keymap), isEditable (duck-typed, no instanceof), chordMatches, and detectPlatform (split into platform.pure.ts). The engine's types moved into keymap.pure.ts, Binding.target is typed as { current }, and KeySpec/KeyNotation moved into key-hint.pure.ts, so the .d.ts files reference no React either. test/keymap-engine.test.ts mocks react, react-dom and react-aria-components to throw on import, then drives the engine end to end.

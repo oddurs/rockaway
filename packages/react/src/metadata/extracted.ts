@@ -600,7 +600,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       },
       {
         "name": "notation",
-        "type": "'platform' | 'terminal'",
+        "type": "KeyNotation",
         "required": false,
         "default": "'platform'"
       },

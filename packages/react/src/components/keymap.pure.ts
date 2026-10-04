@@ -1,24 +1,80 @@
 /**
- * `Keymap`: the pure half (cairn 0141, 0126).
+ * `Keymap`: the pure half (cairn 0141, 0126, 0237).
  *
- * The engine, which knows scopes, bindings and what a keystroke does, and
- * the help screen as cells. No React, no DOM and no client boundary, so a
- * server component, a static renderer or a test can call them; `keymap.tsx`
- * wires the engine to the document and imports both from here.
+ * The engine, which knows scopes, bindings and what a keystroke does; the
+ * listener that feeds it a document's keys; and the help screen as cells. No
+ * React and no client boundary, so a server component, a static renderer, a
+ * test, or a page with no React at all can use them. Only `attachKeymap` and
+ * `isEditable` touch the DOM, and only when they are called. `keymap.tsx`
+ * wires the engine to React and imports all of it from here.
  */
 import { Buffer, drawText, stringWidth } from '@rockaway/grid';
 import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
-import type { Platform } from '../platform.ts';
-import { formatKeys, parseKeys, stepsOf } from './key-hint.pure.ts';
-import type { KeySpec } from './key-hint.tsx';
-import type {
-  ActiveBinding,
-  Binding,
-  KeymapConflict,
-  KeymapEngineOptions,
-  KeymapScope,
-  KeyStroke,
-} from './keymap.tsx';
+import type { Platform } from '../platform.pure.ts';
+
+// The keyboard the engine is told about, so a page with no React detects it
+// the way `usePlatform` does, from the same entry as the engine.
+export { detectPlatform, type Platform, type PlatformHints } from '../platform.pure.ts';
+
+import { formatKeys, type KeySpec, parseKeys, stepsOf } from './key-hint.pure.ts';
+
+/** One shortcut: its keys, what it does, and what it says it does. */
+export interface Binding {
+  /** A KeyHint spec: `mod+k`, `?`, `esc`, or a sequence of chords, `g h`. */
+  readonly keys: string;
+  /** What it does, in a few words, for `KeymapHelp`. */
+  readonly description: string;
+  /**
+   * What happens. Given no action, a binding with a `target` presses it, so
+   * a shortcut for a button is the button's own press.
+   */
+  readonly action?: (event: KeyboardEvent) => void;
+  /**
+   * The element the shortcut belongs to: a React ref, or anything with a
+   * `current`. `useKeymap` puts `aria-keyshortcuts` on it while the binding
+   * is registered, so a reader is told the shortcut where it applies. A
+   * sequence has no `aria-keyshortcuts` form, and sets none.
+   */
+  readonly target?: { readonly current: HTMLElement | null };
+}
+
+/** What the engine needs from a key event: the DOM's, or a test's. */
+export interface KeyStroke {
+  readonly key: string;
+  readonly code?: string;
+  readonly ctrlKey: boolean;
+  readonly altKey: boolean;
+  readonly shiftKey: boolean;
+  readonly metaKey: boolean;
+}
+
+/** A conflict: two bindings that cannot both have their keys. */
+export interface KeymapConflict {
+  readonly keys: string;
+  readonly descriptions: readonly string[];
+  readonly reason: 'duplicate' | 'prefix';
+}
+
+/** A scope of bindings: the page's, a pane's, a dialog's. */
+export interface KeymapScope {
+  readonly parent: KeymapScope | undefined;
+  readonly modal: boolean;
+}
+
+/** A binding the keymap will act on, as `KeymapHelp` and the handler see it. */
+export interface ActiveBinding {
+  readonly keys: string;
+  readonly description: string;
+  /** The keys in one spelling, for comparing. */
+  readonly canonical: string;
+}
+
+export interface KeymapEngineOptions {
+  /** How long the second key of a sequence may take. A second unless told otherwise. */
+  readonly timeout?: number;
+  /** Told of every conflict, once each. */
+  readonly onConflict?: (conflict: KeymapConflict) => void;
+}
 
 /** How long the second key of a sequence may take, in milliseconds. */
 const SEQUENCE_TIMEOUT = 1000;
@@ -337,6 +393,61 @@ export class KeymapEngine {
       this.onConflict(conflict);
     }
   }
+}
+
+/** Input types whose keys are not typing: a plain key there is still a shortcut. */
+const NOT_TYPING = new Set([
+  'checkbox',
+  'radio',
+  'button',
+  'submit',
+  'reset',
+  'range',
+  'color',
+  'file',
+  'image',
+]);
+
+/**
+ * Whether focus is somewhere a plain key is typing: a field that takes text.
+ * Read by tag and property rather than by `instanceof`, so an element from
+ * another frame answers the same, and so is a test's stand-in.
+ */
+export function isEditable(target: EventTarget | null): boolean {
+  if (target === null || typeof target !== 'object' || !('tagName' in target)) return false;
+  const element = target as HTMLElement & { readonly type?: string };
+  if (element.isContentEditable) return true;
+  const tag = String(element.tagName).toUpperCase();
+  if (tag === 'TEXTAREA' || tag === 'SELECT') return true;
+  if (tag !== 'INPUT') return false;
+  return !NOT_TYPING.has(String(element.type ?? 'text').toLowerCase());
+}
+
+/** What `attachKeymap` listens on: a document, or any target of key events. */
+export interface KeyEventSource {
+  addEventListener(type: 'keydown', listener: (event: KeyboardEvent) => void): void;
+  removeEventListener(type: 'keydown', listener: (event: KeyboardEvent) => void): void;
+}
+
+/**
+ * Feeds a document's keys to an engine: the page-level listener, which
+ * `Keymap` uses and a page without React can call. A key a component has
+ * already handled (its default prevented) or one that is composing text never
+ * reaches it; a plain key in a field that takes text is typing; a key the
+ * keymap acts on has its default prevented. The function returned stops
+ * listening and forgets a sequence half typed.
+ */
+export function attachKeymap(engine: KeymapEngine, source: KeyEventSource): () => void {
+  const listen = (event: KeyboardEvent): void => {
+    // A component that handled the key has said so; the page does not get it too.
+    if (event.defaultPrevented || event.isComposing) return;
+    if (engine.handle(event, isEditable(event.target))) event.preventDefault();
+  };
+  source.addEventListener('keydown', listen);
+  return () => {
+    source.removeEventListener('keydown', listen);
+    engine.reset();
+  };
 }
 
 /** Cells between the keys and what they do. */
