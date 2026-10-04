@@ -12,6 +12,10 @@
  *    any mode island, inside it or around it, only sets `color-scheme`.
  * 3. The mode islands themselves, which set nothing but `color-scheme`.
  * 4. A theme with one mode pins it, on itself and on any mode island inside.
+ * 5. Every glyph is written as a CSS string. Glyphs are typed `fontFamily`
+ *    for Terrazzo, which leaves a one-character name bare (`-`, `x`) and does
+ *    not escape a backslash, so ASCII's spinner frame `\` came out as `"\";`,
+ *    a string that never closes, and took the rest of the sheet with it.
  */
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -44,12 +48,25 @@ const MODES = `
 }
 `;
 
+const GLYPH = /^(\s*--rk-glyph-[\w-]+): (.+);$/gm;
+
+/** A glyph's value as a CSS string, whatever Terrazzo wrote: quoted, bare or unescaped. */
+export function quoteGlyphs(css: string): string {
+  return css.replace(GLYPH, (_, name: string, value: string) => {
+    const raw =
+      value.length >= 2 && value.startsWith('"') && value.endsWith('"')
+        ? value.slice(1, -1)
+        : value;
+    return `${name}: "${raw.replaceAll('\\', '\\\\').replaceAll('"', '\\"')}";`;
+  });
+}
+
 /** The CSS for the tokens and every theme, finished. Pure, for the check. */
 export function finish(files: ReadonlyMap<string, string>): Map<string, string> {
   const out = new Map(files);
   const tokens = files.get('tokens.css');
   if (tokens === undefined) throw new Error('tokens.css was not built');
-  const finished = lightDark(repairRegistrations(tokens));
+  const finished = quoteGlyphs(lightDark(repairRegistrations(tokens)));
   if (/initial-value: [^\n]*var\(/.test(finished)) {
     throw new Error('a registration still carries a var() initial value');
   }
@@ -64,11 +81,12 @@ export function finish(files: ReadonlyMap<string, string>): Map<string, string> 
     const css = files.get(file);
     if (css === undefined) throw new Error(`${file} was not built`);
     const pinned = theme.modes.length === 1 ? theme.modes[0] : undefined;
+    const quoted = quoteGlyphs(css);
     out.set(
       file,
       pinned === undefined
-        ? css
-        : `${css.trimEnd()}
+        ? quoted
+        : `${quoted.trimEnd()}
 
 /* ${theme.title} has only a ${pinned} mode, so it pins it (cairn 0052). */
 @layer rk.tokens {

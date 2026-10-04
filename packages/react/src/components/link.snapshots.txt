@@ -1,0 +1,4 @@
+── In place, current, and opening a new tab
+rest      docs
+current  ▸docs
+new tab   docs↗
