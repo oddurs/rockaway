@@ -43,6 +43,10 @@
    */
   .rk-row {
     block-size: var(--rk-cell-height);
+    /* A row never wraps, wherever it is painted: in prose, which wraps, a
+     * row wider than the measure broke between its runs and drew the rest
+     * of itself a row down, over the next (found by the site's shell, 0104). */
+    white-space: pre;
   }
 
   /* Only Gecko knows `-moz-orient`, and only Gecko lays out in sixtieths. */

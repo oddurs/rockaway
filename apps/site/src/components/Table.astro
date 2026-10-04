@@ -5,6 +5,12 @@
  * Markdown pipeline sizes them. A cell is text, or code when its column says.
  * A cell may also carry a swatch: a run of block cells in a token's colour,
  * drawn by the cell like any other block.
+ *
+ * It is wrapped as the pipeline wraps a Markdown table, and the wrapper
+ * scrolls. That is what keeps its columns whole cells: a bare table is a
+ * block with an anonymous table inside it, and when the measure is narrower
+ * than its columns, that inner table shrinks them to fit, in fractions of a
+ * pixel, rather than scrolling (0104 found it in a pane narrower than 80).
  */
 import { shapeOf } from '@rockaway/grid';
 import { escapeHtml } from '../lib/html.ts';
@@ -56,7 +62,8 @@ const widths = columnCells([
 ]);
 ---
 
-<table tabindex="0">
+<div class="rk-scroll-marks" tabindex="0">
+<table>
   {caption && <caption>{caption}</caption>}
   {widths && <colgroup>{widths.map((w) => <col style={`--rk-cols: ${w}`} />)}</colgroup>}
   <thead>
@@ -89,3 +96,4 @@ const widths = columnCells([
     }
   </tbody>
 </table>
+</div>

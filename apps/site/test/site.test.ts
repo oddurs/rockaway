@@ -477,4 +477,244 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(available.length).toBeGreaterThan(0);
     expect(Math.abs(fallback - web), `fallback ${available[0]}`).toBeLessThan(0.5);
   });
+
+  describe('the shell (0104)', () => {
+    /** A page at a width in cells, with the shell laid out. */
+    const open = async (path: string, cols = 133, rows = 33, script = true) => {
+      // The cell is the font's 9.6px by a 24px row, so a window this many
+      // cells wide, give or take the rounding of the last one.
+      const context = await browser.newContext({
+        viewport: { width: Math.round(cols * 9.6) + 4, height: rows * 24 + 12 },
+        javaScriptEnabled: script,
+      });
+      const reader = await context.newPage();
+      await reader.goto(`${origin}${base}${path}`);
+      if (script) await reader.waitForFunction(hydrated);
+      await reader.evaluate(() => document.fonts.ready);
+      return { reader, close: () => context.close() };
+    };
+
+    /** The panes that are showing, by their landmark, and where they are. */
+    const panes = () =>
+      ['nav[aria-label="Site"]', 'main#content', 'aside[aria-label="On this page"]'].map((s) => {
+        const el = document.querySelector<HTMLElement>(s);
+        const pane = el?.closest<HTMLElement>('.rk-pane');
+        const box = el?.getBoundingClientRect();
+        return {
+          shown: el !== null && pane !== null && !pane?.hidden && (box?.width ?? 0) > 0,
+          x: box?.x ?? 0,
+          y: box?.y ?? 0,
+          bottom: box?.bottom ?? 0,
+        };
+      });
+
+    test('splits the screen into the map, the page and its outline, and stacks them at 40 cells', async () => {
+      const wide = await open('foundations/grid/', 133);
+      const [nav, main, aside] = await wide.reader.evaluate(panes);
+      expect([nav?.shown, main?.shown, aside?.shown]).toEqual([true, true, true]);
+      expect(nav?.x).toBeLessThan(main?.x ?? 0);
+      expect(main?.x).toBeLessThan(aside?.x ?? 0);
+      await wide.close();
+
+      // Under 80 cells the outline is the pane that goes.
+      const narrow = await open('foundations/grid/', 79);
+      const [, , gone] = await narrow.reader.evaluate(panes);
+      expect(gone?.shown).toBe(false);
+      await narrow.close();
+
+      // At 40, the map is over the page rather than beside it.
+      const phone = await open('foundations/grid/', 40);
+      const [top, page40] = await phone.reader.evaluate(panes);
+      expect(top?.shown && page40?.shown).toBe(true);
+      expect(top?.bottom).toBeLessThanOrEqual(page40?.y ?? 0);
+      expect(
+        await phone.reader.evaluate(
+          () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        ),
+      ).toBe(0);
+      await phone.close();
+    });
+
+    test('has its landmarks at the top, a skip link first, and the page you are on current', async () => {
+      const { reader, close } = await open('foundations/grid/');
+      const found = await reader.evaluate(() => {
+        // A section is a landmark only when it has a name: the shell's panes have none (0248).
+        const landmarks =
+          'nav, main, aside, header, footer, [role="region"], section[aria-label]:not([aria-label=""])';
+        const nested = [...document.querySelectorAll('nav, main, aside')].filter(
+          (el) => el.parentElement?.closest(landmarks) !== null,
+        );
+        return {
+          navs: document.querySelectorAll('nav').length,
+          mains: document.querySelectorAll('main').length,
+          asides: document.querySelectorAll('aside').length,
+          nested: nested.map((el) => el.tagName),
+          current: [...document.querySelectorAll('nav [aria-current="page"]')].map(
+            (a) => a.textContent,
+          ),
+        };
+      });
+      expect(found).toMatchObject({ navs: 1, mains: 1, asides: 1, nested: [] });
+      expect(found.current).toEqual(['The grid']);
+
+      await reader.keyboard.press('Tab');
+      const skip = await reader.evaluate(() => ({
+        text: document.activeElement?.textContent,
+        href: document.activeElement?.getAttribute('href'),
+      }));
+      expect(skip).toEqual({ text: 'Skip to the page', href: '#content' });
+      await reader.keyboard.press('Enter');
+      expect(await reader.evaluate(() => document.activeElement?.id)).toBe('content');
+      await close();
+    });
+
+    test('moves with j and k and the arrows, shows its keys on ?, and jumps on g', async () => {
+      const { reader, close } = await open('foundations/grid/');
+      const top = () => reader.evaluate(() => document.getElementById('content')?.scrollTop ?? 0);
+      const row = await reader.evaluate(() =>
+        Number.parseFloat(
+          getComputedStyle(document.querySelector('.rk-screen') as Element).getPropertyValue(
+            '--rk-cell-height',
+          ),
+        ),
+      );
+      await reader.keyboard.press('j');
+      await reader.keyboard.press('j');
+      expect(await top()).toBeCloseTo(2 * row, 0);
+      await reader.keyboard.press('k');
+      expect(await top()).toBeCloseTo(row, 0);
+      await reader.keyboard.press('ArrowDown');
+      expect(await top()).toBeCloseTo(2 * row, 0);
+      await reader.keyboard.press('ArrowUp');
+      await reader.keyboard.press('ArrowUp');
+      expect(await top()).toBe(0);
+
+      // The help screen is the keymap, and every jump on it is a row of the
+      // map: a link, which works without the keys.
+      await reader.keyboard.press('?');
+      const help = await reader.evaluate(() => ({
+        rows: [...document.querySelectorAll('.rk-keymap-help-row')].map((r) => [
+          r.querySelector('dt [aria-hidden="true"]')?.textContent ?? '',
+          r.querySelector('dd')?.textContent ?? '',
+        ]),
+        links: Object.fromEntries(
+          [...document.querySelectorAll<HTMLAnchorElement>('nav a[href]')].map((a) => [
+            a.textContent,
+            a.getAttribute('href'),
+          ]),
+        ),
+      }));
+      const jumps = help.rows.filter(([keys]) => /^G [A-Z]$/.test(keys ?? '') && keys !== 'G G');
+      expect(jumps.map(([, to]) => to)).toEqual([
+        'Home',
+        'Getting started',
+        'The concept',
+        'Foundations',
+        'Components',
+      ]);
+      for (const [, to] of jumps) expect(help.links[to as string], to).toBeDefined();
+      expect(help.rows.map(([, does]) => does)).toContain('Down a line');
+      await reader.keyboard.press('Escape');
+      expect(await reader.locator('.rk-keymap-help').count()).toBe(0);
+
+      await reader.keyboard.press('g');
+      await reader.keyboard.press('c');
+      await reader.waitForURL(`${origin}${base}components/`);
+      await close();
+    });
+
+    test('says where you are and what the keys do, and the address is the place', async () => {
+      const { reader, close } = await open('foundations/grid/');
+      const status = () =>
+        reader.evaluate(() =>
+          [...document.querySelectorAll<HTMLElement>('.rk-statusbar .rk-status-segment')]
+            .filter((s) => s.style.visibility !== 'hidden')
+            .map((s) => s.textContent?.trim()),
+        );
+      await reader.waitForFunction(() =>
+        [...document.querySelectorAll<HTMLElement>('.rk-statusbar .rk-status-segment')].every(
+          (s) => s.style.visibility !== 'hidden',
+        ),
+      );
+      const before = await status();
+      expect(before[0]).toBe('FOUNDATIONS');
+      expect(before).toContain('Foundations / The grid');
+      expect(before).toContain('Top');
+      expect(before.some((s) => s?.endsWith('keys'))).toBe(true);
+
+      // Scroll to a section: the bar names it, the outline marks it, and the
+      // address says it, so copying the address copies the place.
+      await reader.evaluate(() => {
+        const main = document.getElementById('content') as HTMLElement;
+        const heading = document.getElementById('density-is-the-row') as HTMLElement;
+        main.scrollTop += heading.getBoundingClientRect().top - main.getBoundingClientRect().top;
+      });
+      await reader.waitForFunction(() => location.hash === '#density-is-the-row');
+      await reader.waitForFunction(() =>
+        document
+          .querySelector('.rk-statusbar')
+          ?.textContent?.includes('Foundations / The grid / Density is the row'),
+      );
+      expect(
+        await reader.evaluate(
+          () => document.querySelector('aside [aria-current="page"]')?.textContent,
+        ),
+      ).toBe('Density is the row');
+
+      // And that address opens there.
+      const { reader: again, close: done } = await open('foundations/grid/#density-is-the-row');
+      const offset = await again.evaluate(() => {
+        const main = document.getElementById('content') as HTMLElement;
+        const heading = document.getElementById('density-is-the-row') as HTMLElement;
+        return heading.getBoundingClientRect().top - main.getBoundingClientRect().top;
+      });
+      expect(Math.abs(offset)).toBeLessThan(48);
+      await done();
+      await close();
+    });
+
+    test('is a plain document with no script: every pane in order, every link working', async () => {
+      const { reader, close } = await open('foundations/grid/', 40, 35, false);
+      const found = await reader.evaluate(() => {
+        const box = (s: string) => document.querySelector(s)?.getBoundingClientRect();
+        return {
+          nav: box('nav[aria-label="Site"]'),
+          main: box('main#content'),
+          frames: [
+            ...document.querySelectorAll<HTMLElement>('.site-shell > .rk-panes > .rk-frame'),
+          ].filter((f) => getComputedStyle(f).display !== 'none').length,
+          status: getComputedStyle(document.querySelector('.rk-statusbar') as Element).display,
+          overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          scrolls: document.documentElement.scrollHeight > document.documentElement.clientHeight,
+          links: document.querySelectorAll('nav a[href]').length,
+        };
+      });
+      expect(found.nav?.height).toBeGreaterThan(0);
+      expect(found.main?.y).toBeGreaterThan(found.nav?.y ?? 0);
+      expect(found.frames).toBe(0);
+      expect(found.status).toBe('none');
+      expect(found.overflow).toBe(0);
+      // The page scrolls as a page: nothing is clipped to a pane.
+      expect(found.scrolls).toBe(true);
+      expect(found.links).toBeGreaterThan(5);
+      await close();
+    });
+
+    test('every kind of page in it passes axe, conformance and continuity', async () => {
+      for (const path of [
+        '',
+        'concept/',
+        'getting-started/',
+        'foundations/',
+        'foundations/grid/',
+      ]) {
+        const { reader, close } = await open(path);
+        const report = await checkPage(reader);
+        expect(report.axe, path).toEqual([]);
+        expect(report.offGrid, `${path}\n${report.conformance}`).toBe(0);
+        expect(report.breaks, `${path}\n${report.continuity}`).toBe(0);
+        await close();
+      }
+    }, 120_000);
+  });
 });
