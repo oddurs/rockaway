@@ -38,6 +38,7 @@
 @import "./components/link.css";
 @import "./components/list.css";
 @import "./components/meter.css";
+@import "./components/overlay.css";
 @import "./components/progress.css";
 @import "./components/sparkline.css";
 @import "./components/spinner.css";
