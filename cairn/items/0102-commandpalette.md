@@ -3,8 +3,10 @@ id: 102
 uid: fca743a4-6962-4a12-83da-78de22777efc
 title: CommandPalette
 type: component
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 35
 - 39
@@ -73,3 +75,7 @@ changes.
 ## 2026-10-03
 
 Rewritten by the program plan: the pre-pivot template text is replaced with how this works on the grid, the criteria are one list (the template, plus the contracts from the plan, plus this item's own), and the dependencies point at the contracts it is built on.
+
+## 2026-10-03
+
+Pure half first, while Dialog (#169) and TextField (#117) land: fuzzyMatch (a subsequence ignoring case, every start of the first character tried, word starts and runs scored up, gaps down), matchCommands (sections kept; with a query, ranked within a section and sections by their best), paletteState (results, loading, empty, no-match) and commandPaletteBuffer, the modal frame with the input row, a rule, section titles set into the frame as Menu's are, matched graphemes underlined and in the accent. The results scroll on their own under a fixed input row, so their position is a List scrollbar column, not the frame edge, which would run past the input row. The prompt mark is glyphs.mark.prompt from tokens' #183; the cursor mark stands in until it lands.
