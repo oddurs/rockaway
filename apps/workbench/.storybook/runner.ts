@@ -26,6 +26,8 @@ export interface Runner {
   }>;
   /** Which densities and modes this project walks after every story, and what it checks in each (cairn 0125). */
   readonly plan: Plan;
+  /** The Vitest project this run is (`storybook`, `firefox`, `forced-colors-firefox` …). */
+  readonly project: string;
   /** Tells the run which known failures a story put in play and used, so a stale one fails it. */
   readonly record: (use: KnownUse) => Promise<void>;
 }

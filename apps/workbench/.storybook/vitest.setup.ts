@@ -14,6 +14,7 @@ declare module 'vitest/browser' {
 declare module 'vitest' {
   interface ProvidedContext {
     plan: Plan;
+    project: string;
   }
 }
 
@@ -25,5 +26,6 @@ setRunner({
   withoutScripts: (html) => commands.readWithoutScripts(html),
   // Each project says what it walks; see `vitest.config.ts`.
   plan: inject('plan'),
+  project: inject('project'),
   record: (use) => commands.recordKnown(use),
 });

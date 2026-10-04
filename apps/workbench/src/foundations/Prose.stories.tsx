@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { marked } from 'marked';
 import { useMemo } from 'react';
 import { expect } from 'storybook/test';
+import { expectKnown } from '../../.storybook/matrix.ts';
 import { runner } from '../../.storybook/runner.ts';
 import fixture from './prose.fixture.md?raw';
 import { checkLine, proseLines } from './prose-lines.ts';
@@ -163,7 +164,10 @@ export const FortyCells: Story = {
     // table scrolls in its wrapper, which can mark its edges.
     const article = screen.querySelector<HTMLElement>('.rk-prose');
     await expect(article?.scrollWidth).toBe(article?.clientWidth);
+    // An inline box cannot scroll. Its clientWidth is 0 in every engine, and
+    // Firefox also gives it a scrollWidth, so it is left out (cairn 0124).
     const scrolls = [...screen.querySelectorAll<HTMLElement>('*')]
+      .filter((el) => getComputedStyle(el).display !== 'inline')
       .filter((el) => el.scrollWidth > el.clientWidth + 1)
       .map((el) => (el.matches('.rk-scroll-marks') ? 'table' : el.tagName.toLowerCase()));
     await expect(new Set(scrolls)).toEqual(new Set(['pre', 'table']));
@@ -207,24 +211,27 @@ export const OverflowMarks: Story = {
         getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-end').trim(),
       );
 
-      // At the start: more to the end only.
-      await scrollTo(scroller, 0);
-      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
-        false,
-        true,
-      ]);
-      // Part way: more both ways.
-      await scrollTo(scroller, Math.round((scroller.scrollWidth - scroller.clientWidth) / 2));
-      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
-        true,
-        true,
-      ]);
-      // At the end: more to the start only.
-      await scrollTo(scroller, scroller.scrollWidth);
-      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
-        true,
-        false,
-      ]);
+      // Not yet in Firefox or WebKit: printed as a known failure there (cairn 0124).
+      await expectKnown('scroll-state-marks', async () => {
+        // At the start: more to the end only.
+        await scrollTo(scroller, 0);
+        await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+          false,
+          true,
+        ]);
+        // Part way: more both ways.
+        await scrollTo(scroller, Math.round((scroller.scrollWidth - scroller.clientWidth) / 2));
+        await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+          true,
+          true,
+        ]);
+        // At the end: more to the start only.
+        await scrollTo(scroller, scroller.scrollWidth);
+        await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+          true,
+          false,
+        ]);
+      });
       await scrollTo(scroller, 0);
     }
   },

@@ -21,6 +21,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useMemo, useState } from 'react';
 import type { SortDescriptor } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { expectKnown } from '../../.storybook/matrix.ts';
 import { measured, settled } from '../settled.ts';
 
 const meta = {
@@ -451,7 +452,10 @@ export const Scrolls: Story = {
     expect(region.scrollWidth).toBeGreaterThan(region.clientWidth);
     // More past the end, none before the start: the end's overflow mark shows.
     expect(region.classList).toContain('rk-scroll-marks');
-    await waitFor(() => expect(getComputedStyle(region, '::after').visibility).toBe('visible'));
+    // Not yet in Firefox or WebKit: printed as a known failure there (cairn 0124).
+    await expectKnown('scroll-state-marks', () =>
+      waitFor(() => expect(getComputedStyle(region, '::after').visibility).toBe('visible')),
+    );
     expect(getComputedStyle(region, '::before').visibility).toBe('hidden');
     // The columns are the ones it would have had with room: nothing is squeezed.
     expect(screenshot(screenOf(canvasElement), { legend: false })).toBe(model(sortBy('name')));

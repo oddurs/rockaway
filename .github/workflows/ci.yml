@@ -61,16 +61,49 @@ jobs:
       - name: Install Chromium
         run: pnpm --filter workbench exec playwright install --with-deps chromium
 
+      # Chromium's stories here; Firefox and WebKit run beside this job, in
+      # their own (cairn 0124).
       - name: Tests (tokens, stories in Vitest browser mode with axe, the built site)
         run: pnpm test
         env:
           ASTRO_TELEMETRY_DISABLED: '1'
+          ENGINES: chromium
 
       - name: Contrast report (every declared pair, both modes)
         run: pnpm --filter @rockaway/tokens contrast
 
       - name: Production build of the workbench (a minifier sees the CSS)
         run: pnpm --filter workbench build
+
+  # Every story again in Firefox and WebKit (cairn 0124): the cell is `1ch` by
+  # `1lh`, which is exactly where engines differ. A job of its own so it runs
+  # beside Chromium's rather than after it.
+  engines:
+    name: Stories in Firefox and WebKit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The workbench's config reads the contexts from @rockaway/tokens' dist.
+      - name: Build packages
+        run: pnpm -r --filter './packages/*' build
+
+      - name: Install Firefox and WebKit
+        run: pnpm --filter workbench exec playwright install --with-deps firefox webkit
+
+      - name: Stories in Firefox and WebKit
+        run: pnpm --filter workbench test
+        env:
+          ENGINES: firefox,webkit
 
   changeset:
     name: Changeset for every package change

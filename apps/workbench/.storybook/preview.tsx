@@ -101,8 +101,11 @@ const preview: Preview = {
   decorators: [withContexts],
   parameters: {
     layout: 'centered',
-    // Every story is an accessibility test: a violation fails the run.
-    a11y: { test: 'error' },
+    // Every story is an accessibility test: a violation fails the run. The
+    // walk after the story runs axe itself (`afterEach` below), in every mode,
+    // so the addon's own run is off and axe's failures meet the known ones
+    // like any other check's.
+    a11y: { test: 'off' },
   },
 };
 
@@ -137,11 +140,19 @@ export const afterEach = async (context: StoryContext): Promise<void> => {
     expectField(context.canvasElement, { glyphs: themeGlyphs[theme ?? 'default'] });
   }
   const run = runner();
+  const a11y = context.parameters.a11y as { disable?: boolean } | undefined;
   await walk(context.id, context.canvasElement, parameters, {
+    project: run?.project,
     capture: run?.capture,
     plan: run?.plan,
     record: run?.record,
-    axe: () => axe(context),
+    axe: async () => {
+      if (a11y?.disable) return;
+      await axe({
+        ...context,
+        parameters: { ...context.parameters, a11y: { ...a11y, test: 'error' } },
+      });
+    },
   });
 };
 

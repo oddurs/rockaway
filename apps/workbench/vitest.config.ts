@@ -43,29 +43,40 @@ type Screen = 'srgb' | 'display-p3-d65';
  * down to fit the page otherwise, and then a screenshot is not the pixels the
  * story drew — which the continuity check would rightly refuse.
  */
-const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = false) => ({
+const browser = (
+  context: Context = {},
+  screen: Screen = 'srgb',
+  scrollbars = false,
+  engine: 'chromium' | 'firefox' | 'webkit' = 'chromium',
+) => ({
   enabled: true as const,
   headless: true as const,
   viewport: { width: 1200, height: 900 },
   provider: playwright({
-    launchOptions: {
-      args: [
-        `--force-color-profile=${screen}`,
-        // Classic scrollbars, which take room from the box, where the platform has them.
-        ...(scrollbars ? ['--disable-features=OverlayScrollbar'] : []),
-      ],
-      // Playwright hides every scrollbar in headless Chromium, so a native bar
-      // measures 0px and nothing could ever see one take a cell's room.
-      ...(scrollbars ? { ignoreDefaultArgs: ['--hide-scrollbars'] } : {}),
-    },
+    // Only Chromium can be told what screen it is on, or made to show classic
+    // scrollbars.
+    ...(engine === 'chromium'
+      ? {
+          launchOptions: {
+            args: [
+              `--force-color-profile=${screen}`,
+              // Classic scrollbars, which take room from the box, where the platform has them.
+              ...(scrollbars ? ['--disable-features=OverlayScrollbar'] : []),
+            ],
+            // Playwright hides every scrollbar in headless Chromium, so a native bar
+            // measures 0px and nothing could ever see one take a cell's room.
+            ...(scrollbars ? { ignoreDefaultArgs: ['--hide-scrollbars'] } : {}),
+          },
+        }
+      : {}),
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
-  instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
+  instances: [{ browser: engine }] satisfies BrowserInstanceOption[],
   commands: { printToPdf, readWithoutScripts, recordKnown },
 });
 
 /**
- * Five browsers. Forced colors is a mode of the browser itself (cairn 0027), so
+ * Eight projects. Forced colors is a mode of the browser itself (cairn 0027), so
  * stories tagged `forced-colors` run in one launched with it active, and
  * nowhere else. A tag rather than a file name, so a component keeps its
  * forced-colors story beside its others.
@@ -91,6 +102,34 @@ const P3 = 'p3';
 const CLASSIC_SCROLLBARS = 'classic-scrollbars';
 
 /**
+ * Firefox and WebKit are the sixth and seventh (cairn 0124): every story again
+ * in each, because the cell is `1ch` by `1lh` and those are exactly the
+ * measurements engines disagree on. Forced colours runs in Firefox too, the
+ * eighth, which forces them for real (measured: author red on green computes
+ * to black on white, and background images go), but not in WebKit, which
+ * matches the media query under emulation and still paints the author's
+ * colours: Safari has no forced colours mode. Three projects stay Chromium's,
+ * each for a reason that is the browser's or the clock's:
+ *
+ * - p3: only Chromium can be told which screen it is on
+ *   (`--force-color-profile`), and the p3 project is that screen;
+ * - classic scrollbars: only Chromium's flags can turn overlay scrollbars off;
+ * - zoom: twice the device pixels is Chromium's here to keep the run short;
+ *   continuity at one device pixel already runs in all three engines.
+ *
+ * And stories tagged `print` stay out of Firefox and WebKit: Playwright prints
+ * to PDF only in Chromium. That is a capability an engine lacks; a defect in
+ * one engine is a known failure instead (`.storybook/known.ts`), printed in
+ * every run until it is fixed.
+ *
+ * `ENGINES` picks which of the three run, so CI can give Firefox and WebKit a
+ * job of their own beside Chromium's. Unset, all three run.
+ */
+const engines = (process.env.ENGINES ?? 'chromium,firefox,webkit').split(',');
+const others = (['firefox', 'webkit'] as const).filter((engine) => engines.includes(engine));
+const chromium = engines.includes('chromium');
+
+/**
  * What each project walks after every story (cairn 0125). Conformance and
  * target size are cheap, so they run in every cell a project walks; pixel
  * continuity and axe are not, so each runs only where its project exists to
@@ -109,6 +148,7 @@ const plans = {
   [P3]: { densities: [], modes, continuity: 'own', axe: true },
   zoom: { densities, modes: [], continuity: 'every', axe: false },
   [FORCED_COLORS]: { densities, modes: [], continuity: 'every', axe: false },
+  engine: { densities, modes: [], continuity: 'every', axe: false },
 } as const satisfies Record<string, Plan>;
 
 /**
@@ -152,68 +192,99 @@ const staleKnown = (): Reporter => {
   };
 };
 
-const config: ViteUserConfig = defineConfig({
+/** Chromium's projects: the geometry, a p3 screen, forced colors, zoom and classic scrollbars. */
+const chromiumProjects = [
+  {
+    plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
+    test: {
+      name: 'storybook',
+      setupFiles,
+      testTimeout,
+      provide: { plan: plans.storybook, project: 'storybook' },
+      browser: browser(),
+    },
+  },
+  {
+    plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS] } })],
+    test: {
+      name: P3,
+      setupFiles,
+      testTimeout,
+      provide: { plan: plans[P3], project: P3 },
+      browser: browser({}, 'display-p3-d65'),
+    },
+  },
+  {
+    plugins: [storybookTest({ configDir, tags: { include: [FORCED_COLORS] } })],
+    test: {
+      name: FORCED_COLORS,
+      setupFiles,
+      testTimeout,
+      provide: { plan: plans[FORCED_COLORS], project: FORCED_COLORS },
+      browser: browser({ forcedColors: 'active' }),
+    },
+  },
+  {
+    plugins: [
+      storybookTest({ configDir, tags: { include: [ZOOM], exclude: [FORCED_COLORS, P3] } }),
+    ],
+    test: {
+      name: ZOOM,
+      setupFiles,
+      testTimeout,
+      provide: { plan: plans.zoom, project: ZOOM },
+      browser: browser({ deviceScaleFactor: 2 }),
+    },
+  },
+  {
+    plugins: [
+      storybookTest({
+        configDir,
+        tags: { include: [CLASSIC_SCROLLBARS], exclude: [FORCED_COLORS, P3] },
+      }),
+    ],
+    // So a story can tell it is in the run that must show classic bars.
+    define: { 'import.meta.env.RK_SCROLLBARS': JSON.stringify('classic') },
+    test: {
+      name: CLASSIC_SCROLLBARS,
+      setupFiles,
+      browser: browser({}, 'srgb', true),
+    },
+  },
+];
+
+/** Firefox and WebKit: every story, but the ones only Chromium can run. */
+const engineProjects = others.map((engine) => ({
+  plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3, 'print'] } })],
   test: {
-    reporters: ['default', staleKnown()],
-    projects: [
-      {
-        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
-        test: {
-          name: 'storybook',
-          setupFiles,
-          testTimeout,
-          provide: { plan: plans.storybook },
-          browser: browser(),
-        },
-      },
-      {
-        plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS] } })],
-        test: {
-          name: P3,
-          setupFiles,
-          testTimeout,
-          provide: { plan: plans[P3] },
-          browser: browser({}, 'display-p3-d65'),
-        },
-      },
+    name: engine,
+    setupFiles,
+    testTimeout,
+    provide: { plan: plans.engine, project: engine },
+    browser: browser({}, 'srgb', false, engine),
+  },
+}));
+
+/** Forced colours again in Firefox, which implements them. */
+const firefoxForcedColors = others.includes('firefox')
+  ? [
       {
         plugins: [storybookTest({ configDir, tags: { include: [FORCED_COLORS] } })],
         test: {
-          name: FORCED_COLORS,
+          name: `${FORCED_COLORS}-firefox`,
           setupFiles,
           testTimeout,
-          provide: { plan: plans[FORCED_COLORS] },
-          browser: browser({ forcedColors: 'active' }),
+          provide: { plan: plans[FORCED_COLORS], project: `${FORCED_COLORS}-firefox` },
+          browser: browser({ forcedColors: 'active' }, 'srgb', false, 'firefox'),
         },
       },
-      {
-        plugins: [
-          storybookTest({ configDir, tags: { include: [ZOOM], exclude: [FORCED_COLORS, P3] } }),
-        ],
-        test: {
-          name: ZOOM,
-          setupFiles,
-          testTimeout,
-          provide: { plan: plans.zoom },
-          browser: browser({ deviceScaleFactor: 2 }),
-        },
-      },
-      {
-        plugins: [
-          storybookTest({
-            configDir,
-            tags: { include: [CLASSIC_SCROLLBARS], exclude: [FORCED_COLORS, P3] },
-          }),
-        ],
-        // So a story can tell it is in the run that must show classic bars.
-        define: { 'import.meta.env.RK_SCROLLBARS': JSON.stringify('classic') },
-        test: {
-          name: CLASSIC_SCROLLBARS,
-          setupFiles,
-          browser: browser({}, 'srgb', true),
-        },
-      },
-    ],
+    ]
+  : [];
+
+const config: ViteUserConfig = defineConfig({
+  test: {
+    reporters: ['default', staleKnown()],
+    projects: [...(chromium ? chromiumProjects : []), ...engineProjects, ...firefoxForcedColors],
   },
 });
 
