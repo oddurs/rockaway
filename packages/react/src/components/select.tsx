@@ -25,7 +25,7 @@
  * it, type-ahead selects even while it is closed, Escape closes it, and a
  * hidden native `select` keeps forms and autofill working.
  */
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import {
   Select as AriaSelect,
   Button as AriaSelectButton,
@@ -119,7 +119,10 @@ export function Select<T extends object>({
       {({ isRequired }) => (
         <>
           <Label isRequired={isRequired}>{label}</Label>
-          <AriaSelectButton className="rk-select-trigger">
+          <AriaSelectButton
+            className="rk-select-trigger"
+            style={{ '--rk-select-cols': cols } as CSSProperties}
+          >
             <SelectValue className="rk-select-value-slot">
               {({ selectedText, isPlaceholder }) => {
                 const text = isPlaceholder ? placeholder : (selectedText ?? '');

@@ -214,8 +214,10 @@ export const AsWideAsTrigger: Story = {
     const surface = document.querySelector('.rk-overlay') as HTMLElement;
     const trigger = triggerOf(frame);
     const cell = Number.parseFloat(getComputedStyle(frame).getPropertyValue('--rk-cell-width'));
+    // The trigger is thirty cells to within the engine's rounding, not a hair
+    // over, which the popover would round up to a thirty-first cell.
+    expect(Math.abs(trigger.getBoundingClientRect().width - 30 * cell)).toBeLessThan(1 / 32);
     expect(Math.round(surface.getBoundingClientRect().width / cell)).toBe(30);
-    expect(Math.round(trigger.getBoundingClientRect().width / cell)).toBe(30);
     expect(inside(frame)).toBe(
       toText(
         formBuffer(

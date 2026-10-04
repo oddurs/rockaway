@@ -4,7 +4,13 @@
  * A field (field.css places it): the trigger in the control column, one row,
  * exactly as wide as the cells it writes: the delimiter and a cell of air,
  * the value padded to its room, a cell of air, the open mark and the closing
- * delimiter. So nothing here sets a size, and no state changes one (0118).
+ * delimiter. No state changes its size (0118).
+ *
+ * Its width is also stated, as `cols` whole cells. The text inside is that
+ * wide already, but as five runs of text in a flex row, each laid out to the
+ * engine's own unit, it can come out a few hundredths of a pixel over; the
+ * popover rounds the trigger's width up to whole cells, and thirty cells and
+ * a hair is thirty-one. Stated, the box is the cells it holds.
  *
  * The popover's rows are List's, drawn by list.css: the cursor mark, and the
  * selected row in reverse with the check. This adds only that the list fills
@@ -15,6 +21,7 @@
     --rk-select-end: var(--rk-border-control);
 
     display: inline-flex;
+    inline-size: calc(var(--rk-select-cols) * var(--rk-cell-width));
     margin: 0;
     padding: 0;
     border: none;
