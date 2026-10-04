@@ -3,8 +3,10 @@ id: 245
 uid: 02d96055-1996-405e-bac7-bc614baadfb7
 title: Stop Fieldset's frame leaking above its corner at dense on macOS
 type: bug
-status: ready
+status: doing
 milestone: grid
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 created: 2026-10-03
 updated: 2026-10-03
 priority: p3
