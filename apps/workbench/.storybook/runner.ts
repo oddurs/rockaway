@@ -30,6 +30,13 @@ export interface Runner {
   readonly record: (use: KnownUse) => Promise<void>;
   /** The mouse wheel turned over the element the selector finds, by this many pixels down. */
   readonly wheel: (selector: string, deltaY: number) => Promise<void>;
+  /**
+   * Types as a reader does, through the browser itself: trusted key events,
+   * each listener called from an empty stack, so a microtask can run between
+   * one listener and the next. A synthetic event dispatched from a script
+   * cannot show what happens then.
+   */
+  readonly type: (keys: string) => Promise<void>;
   /** Emulates the reader's `prefers-contrast` (cairn 0065); `no-preference` gives it back. */
   readonly contrast: (preference: 'more' | 'no-preference') => Promise<void>;
 }

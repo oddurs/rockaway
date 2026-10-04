@@ -59,6 +59,17 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
   Callout: (props) =>
     createElement(rockaway.Callout, props, createElement('p', null, 'Mind the gap.')),
+  Checkbox: (props) =>
+    createElement(
+      Fragment,
+      null,
+      createElement(rockaway.Checkbox, props, 'Sign commits'),
+      createElement(
+        rockaway.CheckboxGroup,
+        { label: 'Branches' },
+        createElement(rockaway.Checkbox, { value: 'main' }, 'main'),
+      ),
+    ),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
   // Both parts of the module: the variant is FieldFrame's, and Fieldset is always a group.
   Fieldset: (props) =>
@@ -73,6 +84,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  TextField: (props) => createElement(rockaway.TextField, { label: 'Name', ...props }),
   Tree: (props) =>
     createElement(
       rockaway.Tree,
@@ -670,16 +682,16 @@ describe('the snapshots, as the site draws them', () => {
       "── Help, on any keyboard but Apple’s
       Ctrl+K  Open the palette
       /       Search
-      G H     Go home
-      J       Next row
-      K       Previous row
+      g h     Go home
+      j       Next row
+      k       Previous row
       ?       Show this help
       ── Help, on an Apple keyboard
       ⌘K   Open the palette
       /    Search
-      G H  Go home
-      J    Next row
-      K    Previous row
+      g h  Go home
+      j    Next row
+      k    Previous row
       ?    Show this help"
     `);
   });
