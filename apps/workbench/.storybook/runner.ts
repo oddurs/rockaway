@@ -34,6 +34,8 @@ export interface Runner {
    * the checks after it read the page at the size every story is read at.
    */
   readonly viewport: (size?: { readonly width: number; readonly height: number }) => Promise<void>;
+  /** Emulates the reader's `prefers-contrast` (cairn 0065); `no-preference` gives it back. */
+  readonly contrast: (preference: 'more' | 'no-preference') => Promise<void>;
 }
 
 let current: Runner | undefined;

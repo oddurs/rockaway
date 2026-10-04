@@ -348,6 +348,15 @@ constraint on component design — state cannot be carried by hue alone, which i
 why attributes (bold, dim, reverse, underline) and marks carry it too, and why
 the system passes forced-colors mode without special-casing.
 
+The same constraint shapes how it answers `prefers-contrast: more` (`0065`).
+A pixel system would ship a third palette; a terminal has sixteen colours and
+its attributes. So increased contrast re-reads the one palette: muted text
+becomes the foreground, coloured text takes the bright slot (as a terminal's
+bold does), a fill becomes reverse video, lines get a step heavier and the
+focus ring thicker, and disabled is struck through so it never rests on
+dimness alone. Text is held to 7:1 there, by the same gate, and not a cell
+moves.
+
 ## 9. States are one vocabulary
 
 Every state is drawn one way, in every component (decision `0118`), and a

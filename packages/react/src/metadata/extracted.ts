@@ -39,11 +39,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<DialogProps, 'variant' | 'actions' | 'isDismissable'>"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light",
       "--rk-x-1"
     ]
   },
@@ -141,6 +146,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "style",
         "type": "React.CSSProperties",
         "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement>",
+        "required": false,
+        "description": "The button element, for an app that focuses it or a Keymap binding that presses it (cairn 0224). An object or a callback; Button keeps its own beside it."
       }
     ],
     "inherits": [
@@ -399,11 +410,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Pick< OverlayModalProps, | 'isOpen' | 'defaultOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled' | 'padding' | 'dividers' >"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light",
       "--rk-x-1"
     ]
   },
