@@ -1,0 +1,44 @@
+/*
+ * Skip link (cairn 0249).
+ *
+ * Out of sight until it has focus, then a run of reversed cells at the top-left
+ * of the screen it is in: the label with a cell of air either side, one row
+ * tall. It is positioned, so it overlays that corner and moves nothing, and it
+ * is hidden by a clip rather than a size, so focus changes what is seen and
+ * not where anything is (0118). A clip also keeps it in the accessibility tree
+ * and in the tab order, where `display: none` would take it out of both.
+ *
+ * `:focus`, not `:focus-visible`: a skip link that has focus by any means, a
+ * script's included, has to be seen, or focus is somewhere no one can see.
+ */
+@layer rk.components {
+  .rk-skip-link {
+    position: absolute;
+    z-index: 1;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    block-size: var(--rk-cell-height);
+    padding-inline: var(--rk-cell-width);
+    white-space: pre;
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--rk-attribute-underline-thickness);
+    text-underline-offset: var(--rk-attribute-underline-offset);
+    clip-path: inset(50%);
+  }
+
+  .rk-skip-link:focus {
+    clip-path: none;
+  }
+
+  /* Reversed words are drawn in a ground colour, the canvas under forced
+   * colors, where the backplate behind them would erase them. So the link
+   * opts out (0181) and keeps the reader's text and canvas, swapped, through
+   * the tokens it reads. */
+  @media (forced-colors: active) {
+    .rk-skip-link {
+      forced-color-adjust: none;
+    }
+  }
+}

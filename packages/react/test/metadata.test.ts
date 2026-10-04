@@ -71,6 +71,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  SkipLink: (props) => createElement(rockaway.SkipLink, { target: 'main', ...props }),
   Tree: (props) =>
     createElement(
       rockaway.Tree,
@@ -677,6 +678,13 @@ describe('the snapshots, as the site draws them', () => {
        Nothing here.   █
                        █
                        █"
+    `);
+  });
+
+  test('SkipLink', () => {
+    expect(snapshots(byName('SkipLink'))).toMatchInlineSnapshot(`
+      "── Focused
+       Skip to content "
     `);
   });
 });

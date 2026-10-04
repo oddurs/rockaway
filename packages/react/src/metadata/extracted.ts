@@ -861,6 +861,35 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-y-1"
     ]
   },
+  "SkipLink": {
+    "file": "skip-link.tsx",
+    "props": [
+      {
+        "name": "target",
+        "type": "string",
+        "required": true,
+        "description": "The id of the element to jump to, without the `#`: usually the page's `main`."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "What it says. Default \"Skip to content\".",
+        "default": "'Skip to content'"
+      }
+    ],
+    "inherits": [
+      "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-attribute-underline-thickness",
+      "--rk-bg-inverse",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-on-inverse"
+    ]
+  },
   "Table": {
     "file": "table.tsx",
     "props": [
