@@ -113,7 +113,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 44% · 56 of 128 done · due 2027-01-31
+`#####·····` 45% · 57 of 128 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -180,7 +180,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0260`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0260-name-the-new-checks-in-the-component-recipe.md) Name the new checks in the component recipe <sup>docs · docs · p3</sup>
 - [ ] [`0261`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0261-read-a-screen-without-changing-the-document.md) Read a screen without changing the document <sup>bug · tooling · p1</sup>
 - [ ] [`0264`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0264-judge-an-inset-mark-against-its-own-geometry-in-the-leak-rule.md) Judge an inset mark against its own geometry in the leak rule <sup>bug · grid · p2</sup>
-- [ ] [`0265`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0265-settle-one-layout-tolerance-in-cellsin.md) Settle one layout tolerance in cellsIn <sup>chore · grid · p2</sup>
 - [ ] [`0268`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0268-read-what-a-pseudo-element-draws-when-copying-a-screen.md) Read what a pseudo-element draws when copying a screen <sup>feature · tooling · p3</sup>
 
 ### in progress
@@ -258,6 +257,7 @@ The component contract, proven on a first set of components.
 - [x] [`0225`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0225-bind-button-s-keys-through-the-keymap-when-one-is-present.md) Bind Button's keys through the Keymap when one is present <sup>feature · components · p2</sup>
 - [x] [`0228`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0228-re-check-cellsin-s-snap-at-the-new-line-boxes.md) Re-check cellsIn's snap at the new line boxes <sup>chore · grid · p2</sup>
 - [x] [`0238`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0238-size-a-server-rendered-screen-from-its-content-not-screen-s-fallback.md) Size a server-rendered screen from its content, not Screen's fallback <sup>bug · components · p1</sup>
+- [x] [`0265`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0265-settle-one-layout-tolerance-in-cellsin.md) Settle one layout tolerance in cellsIn <sup>chore · grid · p2</sup>
 - [x] [`0266`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0266-announce-a-server-rendered-button-s-chord.md) Announce a server-rendered Button's chord <sup>bug · components · p2</sup>
 
 ## retheme — Tokens on the grid
