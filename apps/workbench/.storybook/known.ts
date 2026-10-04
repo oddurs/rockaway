@@ -58,13 +58,14 @@ export const known: readonly Known[] = [
     ticket: '0197: the default density meets AA; dense is the documented opt-in that does not',
   },
   {
-    id: 'braille-edge-spill',
+    id: 'eighth-inset-spill',
     check: 'continuity',
     rule: 'leak',
-    element: /rk-sparkline/,
-    present: '.rk-sparkline [data-rk-dots]',
+    element: /rk-(sparkline|progress-bar|spinner-frame)/,
+    present: '.rk-sparkline, .rk-progress-bar, .rk-spinner-frame',
     reason:
-      "a braille dot in a neighbour's right column, on a fractional cell edge, is antialiased into the edge pixel this cell shares with it, and the leak rule reads only the cell's own outermost line, with no slack",
-    ticket: '0229: loosen the continuity leak rule by the reach rule’s slack (#151)',
+      "a mark an eighth of a cell in from an edge (a braille dot, the 7/8 block at a bar's leading edge) antialiases into the first whole pixel inside that edge when the cell starts at a fraction of a pixel, and the leak rule reads that pixel as a line on the edge",
+    ticket:
+      'follow-up to 0229: the leak rule should not read a shape’s own mark, inset by its geometry, as ink on the edge',
   },
 ];
