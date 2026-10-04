@@ -3,8 +3,10 @@ id: 108
 uid: 1ff38058-4629-4d78-87d5-62852fd128ac
 title: Build the landing page
 type: feature
-status: backlog
+status: doing
 milestone: site
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 104
 - 126
