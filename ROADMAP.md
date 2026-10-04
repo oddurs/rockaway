@@ -37,13 +37,14 @@ The decisions everything else inherits, and the repo that holds them.
 
 ## tokens — Token pipeline
 
-`##########` 93% · 13 of 14 done · due 2026-10-25
+`#########·` 87% · 13 of 15 done · due 2026-10-25
 
 Design decisions as data, compiled to CSS custom properties.
 
 ### ready
 
 - [ ] [`0247`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0247-make-the-popover-and-modal-border-weights-theme-glyph-tokens.md) Make the popover and modal border weights theme glyph tokens <sup>feature · tokens · p3</sup>
+- [ ] [`0262`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0262-ship-an-ascii-theme-preset.md) Ship an ASCII theme preset <sup>feature · tokens · p2</sup>
 
 ### done
 
@@ -112,7 +113,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 43% · 52 of 120 done · due 2027-01-31
+`#####·····` 41% · 52 of 128 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -178,6 +179,14 @@ The component contract, proven on a first set of components.
 - [ ] [`0248`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0248-let-a-pane-opt-out-of-being-a-region-landmark.md) Let a Pane opt out of being a region landmark <sup>feature · components · p3</sup>
 - [ ] [`0249`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0249-own-a-skip-link-in-the-system.md) Own a skip link in the system <sup>feature · components · p2</sup>
 - [ ] [`0250`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0250-draw-a-scrolling-pane-s-position-in-its-border.md) Draw a scrolling Pane's position in its border <sup>feature · components · p3</sup>
+- [ ] [`0257`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0257-line-a-form-up-at-exactly-the-sixty-cell-threshold-in-every-engine.md) Line a form up at exactly the sixty-cell threshold in every engine <sup>bug · css · p2</sup>
+- [ ] [`0259`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0259-draw-site-navigation-as-a-static-tree-of-links.md) Draw site navigation as a static tree of links <sup>component · components · p2</sup>
+- [ ] [`0260`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0260-name-the-new-checks-in-the-component-recipe.md) Name the new checks in the component recipe <sup>docs · docs · p3</sup>
+- [ ] [`0261`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0261-read-a-screen-without-changing-the-document.md) Read a screen without changing the document <sup>bug · tooling · p1</sup>
+- [ ] [`0264`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0264-judge-an-inset-mark-against-its-own-geometry-in-the-leak-rule.md) Judge an inset mark against its own geometry in the leak rule <sup>bug · grid · p2</sup>
+- [ ] [`0265`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0265-settle-one-layout-tolerance-in-cellsin.md) Settle one layout tolerance in cellsIn <sup>chore · grid · p2</sup>
+- [ ] [`0266`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0266-announce-a-server-rendered-button-s-chord.md) Announce a server-rendered Button's chord <sup>bug · components · p2</sup>
+- [ ] [`0268`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0268-read-what-a-pseudo-element-draws-when-copying-a-screen.md) Read what a pseudo-element draws when copying a screen <sup>feature · tooling · p3</sup>
 
 ### in progress
 
@@ -270,7 +279,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`####······` 31% · 8 of 26 done · due 2027-02-21
+`###·······` 27% · 8 of 30 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -296,6 +305,10 @@ A website built out of the system it documents, which is the only honest way
 ### ready
 
 - [ ] [`0241`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0241-read-the-site-s-base-from-the-astro-config-everywhere-including-under-test.md) Read the site's base from the Astro config everywhere, including under test <sup>chore · site · p3</sup>
+- [ ] [`0254`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0254-bring-the-first-page-under-100-kb-of-javascript.md) Bring the first page under 100 kB of JavaScript <sup>feature · site · p1</sup>
+- [ ] [`0255`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0255-give-the-landing-page-an-h1.md) Give the landing page an h1 <sup>bug · site · p2</sup>
+- [ ] [`0256`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0256-name-every-column-the-concept-tabulates.md) Name every column the concept tabulates <sup>docs · docs · p3</sup>
+- [ ] [`0258`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0258-run-the-site-s-chrome-on-the-system-s-pure-halves-not-react.md) Run the site's chrome on the system's pure halves, not React <sup>decision · site · p1</sup>
 
 ### in review
 
@@ -347,7 +360,7 @@ Something another project can install and build on.
 
 ## later — Later
 
-`··········` 0% · 0 of 17 done
+`··········` 0% · 0 of 19 done
 
 Worth doing, not yet worth scheduling.
 
@@ -373,4 +386,6 @@ Worth doing, not yet worth scheduling.
 ### ready
 
 - [ ] [`0239`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0239-report-react-stately-s-unguarded-process-read-under-node-env-test.md) Report react-stately's unguarded process read under NODE_ENV=test <sup>chore · components · p3</sup>
+- [ ] [`0263`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0263-repeat-the-paint-figures-in-firefox-webkit-and-on-a-low-end-phone.md) Repeat the paint figures in Firefox, WebKit and on a low-end phone <sup>chore · grid · p3</sup>
+- [ ] [`0267`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0267-share-overlay-row-measurement.md) Share overlay row measurement <sup>chore · components · p3</sup>
 
