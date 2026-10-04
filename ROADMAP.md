@@ -114,7 +114,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0036`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0036-checkbox.md) Checkbox <sup>component · components · p1</sup>
 - [ ] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
 - [ ] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
-- [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
 - [ ] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
 - [ ] [`0041`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0041-menu.md) Menu <sup>component · components · p1</sup>
 - [ ] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
@@ -158,6 +157,7 @@ The component contract, proven on a first set of components.
 
 ### in progress
 
+- [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 
 ### in review

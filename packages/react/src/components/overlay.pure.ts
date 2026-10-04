@@ -18,7 +18,7 @@ import {
   type Style,
 } from '@rockaway/grid';
 import type { Glyphs } from '@rockaway/tokens';
-import { themeGlyphs } from '@rockaway/tokens';
+import { marks, themeGlyphs } from '@rockaway/tokens';
 import { drawRule } from './divider.pure.ts';
 
 export type OverlayKind = 'popover' | 'modal';
@@ -50,6 +50,12 @@ export interface OverlayFrameOptions {
    * outside it, is dropped rather than clipped, so the seam stays sound.
    */
   readonly dividers?: readonly OverlayDivider[];
+  /**
+   * Words set into the top edge, `╔ Discard changes? ═══╗`, in the text
+   * colour, truncated with the theme's ellipsis. Chrome: the overlay's content
+   * names it to a reader.
+   */
+  readonly title?: string;
 }
 
 /**
@@ -59,6 +65,7 @@ export interface OverlayFrameOptions {
  */
 const LINE: Style = { fg: 'border.default', attrs: Attr.none };
 const ASCII_LINE: Style = { fg: 'border.default', attrs: Attr.bold };
+const TITLE: Style = { fg: 'fg.default', attrs: Attr.bold };
 
 /** The border set an overlay is framed in: heavier than the page, and heavier still for a modal. */
 function setOf(kind: OverlayKind, glyphs: Glyphs): BorderSetName {
@@ -84,6 +91,14 @@ export function overlayBuffer(
     drawBox(draft, rect(0, 0, size.width, size.height), {
       set: borderSets[set],
       style: set === 'ascii' ? ASCII_LINE : LINE,
+      ...(options.title === undefined || options.title === ''
+        ? {}
+        : {
+            title: options.title,
+            titleStyle: TITLE,
+            // A frame drawn in ASCII truncates in ASCII, whatever the theme.
+            ellipsis: set === 'ascii' ? marks.ascii.ellipsis : glyphs.mark.ellipsis,
+          }),
     });
     for (const divider of options.dividers ?? []) {
       const y = divider.row;

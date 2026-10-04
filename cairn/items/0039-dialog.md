@@ -3,8 +3,10 @@ id: 39
 uid: f3445f26-c9ae-4de5-a110-eb7203bef5de
 title: Dialog
 type: component
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 128
 - 131

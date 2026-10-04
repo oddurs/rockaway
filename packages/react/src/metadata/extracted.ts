@@ -6,6 +6,47 @@
 import type { ExtractedPart } from './schema.ts';
 
 export const extracted: { readonly [component: string]: ExtractedPart } = {
+  "AlertDialog": {
+    "file": "dialog.tsx",
+    "props": [
+      {
+        "name": "actionLabel",
+        "type": "string",
+        "required": true,
+        "description": "The destructive action's label: \"Discard\", \"Delete\"."
+      },
+      {
+        "name": "onAction",
+        "type": "() => void",
+        "required": false,
+        "description": "What the destructive action does. The dialog closes after it."
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "required": false,
+        "description": "The safe action's label, focused first. \"Cancel\" by default.",
+        "default": "'Cancel'"
+      },
+      {
+        "name": "onCancel",
+        "type": "() => void",
+        "required": false,
+        "description": "Called when the safe action is pressed. The dialog closes after it."
+      }
+    ],
+    "inherits": [
+      "Omit<DialogProps, 'variant' | 'actions' | 'isDismissable'>"
+    ],
+    "tokens": [
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-x-1"
+    ]
+  },
   "Badge": {
     "file": "badge.tsx",
     "props": [
@@ -286,6 +327,64 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-y-1"
+    ]
+  },
+  "Dialog": {
+    "file": "dialog.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "The words in the top edge, and what a reader hears the dialog called."
+      },
+      {
+        "name": "children",
+        "type": "Content",
+        "required": false,
+        "description": "The content, or a function of `close` that returns it."
+      },
+      {
+        "name": "actions",
+        "type": "Content",
+        "required": false,
+        "description": "The action row at the bottom right: Buttons, or a function of `close` that returns them."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the dialog may take before its content scrolls."
+      },
+      {
+        "name": "minCols",
+        "type": "number",
+        "required": false,
+        "description": "The fewest columns the dialog may be, its frame's two included."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "How the frame's lines are stroked. By default, as the screen it was opened from."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof dialogVariants>",
+      "Pick< OverlayModalProps, 'isOpen' | 'defaultOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled' >"
+    ],
+    "tokens": [
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-x-1"
     ]
   },
   "Divider": {
@@ -914,6 +1013,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "PainterName",
         "required": false,
         "description": "The painter, `glyph` or `rule`. By default, the painter of the screen the overlay was opened from, so a popover from a ruled frame is ruled too."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Words set into the frame's top edge. Chrome: name the content for a reader as well."
       },
       {
         "name": "children",

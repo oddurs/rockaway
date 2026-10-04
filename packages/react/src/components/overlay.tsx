@@ -322,6 +322,8 @@ export interface OverlaySurfaceOptions {
    * overlay was opened from, so a popover from a ruled frame is ruled too.
    */
   readonly painter?: PainterName;
+  /** Words set into the frame's top edge. Chrome: name the content for a reader as well. */
+  readonly title?: string;
 }
 
 /** The surface options as a component passes them on: each given or `undefined`. */
@@ -337,6 +339,7 @@ function Surface({
   padding = PADDING,
   dividers,
   painter,
+  title,
   children,
 }: Passed<OverlaySurfaceOptions> & {
   readonly kind: OverlayKind;
@@ -411,11 +414,12 @@ function Surface({
           kind,
           ...(scroll === undefined ? {} : { scroll }),
           ...(rules.length === 0 ? {} : { dividers: rules }),
+          ...(title === undefined ? {} : { title }),
         },
         glyphs,
       );
     },
-    [kind, scroll, glyphs, dividers, padY],
+    [kind, scroll, glyphs, dividers, padY, title],
   );
   const style = {
     ...(maxRows === undefined ? {} : { '--rk-overlay-max-rows': Math.max(1, Math.floor(maxRows)) }),
@@ -497,6 +501,7 @@ export function OverlayPopover({
   padding,
   dividers,
   painter,
+  title,
   className,
   shift,
   placement = 'bottom start',
@@ -540,6 +545,7 @@ export function OverlayPopover({
         padding={padding}
         dividers={dividers}
         painter={painter ?? origin.painter}
+        title={title}
       >
         {children}
       </Surface>
@@ -588,6 +594,7 @@ export function OverlayModal({
   padding,
   dividers,
   painter,
+  title,
   className,
   ...aria
 }: OverlayModalProps): ReactNode {
@@ -623,6 +630,7 @@ export function OverlayModal({
           padding={padding}
           dividers={dividers}
           painter={painted}
+          title={title}
         >
           {children}
         </Surface>

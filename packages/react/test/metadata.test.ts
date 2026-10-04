@@ -81,6 +81,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
         createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
       ),
     ),
+  // Closed: a dialog has no trigger here, and on a server an open one renders nothing anyway.
+  Dialog: (props) =>
+    createElement(
+      rockaway.OverlayLayer,
+      null,
+      createElement(rockaway.Dialog, { title: 'Rename', isOpen: false, ...props }, 'inside'),
+    ),
   // Closed: a popover has no trigger here, and on a server an open one renders nothing anyway.
   OverlayPopover: (props) =>
     createElement(
