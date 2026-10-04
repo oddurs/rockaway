@@ -68,20 +68,23 @@ export function outline(html: string): Outline {
   const taken = new Set<string>();
   for (const match of html.matchAll(/\sid="([^"]*)"/g)) taken.add(match[1] as string);
   const headings: Heading[] = [];
-  const out = html.replace(HEADING, (whole, level: string, attrs: string | undefined, inner: string) => {
-    const depth = Number(level) as 2 | 3;
-    const text = textOf(inner);
-    const existing = attrs?.match(ID)?.[1];
-    if (existing !== undefined) {
-      headings.push({ depth, id: existing, text });
-      return whole;
-    }
-    const base = slugify(text) || 'section';
-    let id = base;
-    for (let n = 1; taken.has(id); n++) id = `${base}-${n}`;
-    taken.add(id);
-    headings.push({ depth, id, text });
-    return `<h${level} id="${id}"${attrs ?? ''}>${inner}</h${level}>`;
-  });
+  const out = html.replace(
+    HEADING,
+    (whole, level: string, attrs: string | undefined, inner: string) => {
+      const depth = Number(level) as 2 | 3;
+      const text = textOf(inner);
+      const existing = attrs?.match(ID)?.[1];
+      if (existing !== undefined) {
+        headings.push({ depth, id: existing, text });
+        return whole;
+      }
+      const base = slugify(text) || 'section';
+      let id = base;
+      for (let n = 1; taken.has(id); n++) id = `${base}-${n}`;
+      taken.add(id);
+      headings.push({ depth, id, text });
+      return `<h${level} id="${id}"${attrs ?? ''}>${inner}</h${level}>`;
+    },
+  );
   return { html: out, headings };
 }

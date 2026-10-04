@@ -30,13 +30,13 @@ system's own components, because that is the whole argument.
 
 ## Acceptance criteria
 
-- [ ] Split panes (0136): navigation (a Tree, 0137), content, and a context pane that collapses under 80 cells; at 40 cells the panes stack
-- [ ] `j`/`k` and arrows move; `?` shows help generated from the keymap (0141); `g` then a letter jumps
-- [ ] Every keyboard route is also an ordinary link, so it is a website first and a TUI second
-- [ ] The status bar (0098) says where you are and what the keys do
-- [ ] Landmarks (`nav`, `main`, `complementary`) and a skip link, and the URL is the state: every pane's selection is linkable
-- [ ] Markdown content is set by the prose styles (0143) with no per-page CSS
-- [ ] No component that is not in `@rockaway/react`: if the site needs it, the system grows it
+- [x] Split panes (0136): navigation (a Tree, 0137), content, and a context pane that collapses under 80 cells; at 40 cells the panes stack
+- [x] `j`/`k` and arrows move; `?` shows help generated from the keymap (0141); `g` then a letter jumps
+- [x] Every keyboard route is also an ordinary link, so it is a website first and a TUI second
+- [x] The status bar (0098) says where you are and what the keys do
+- [x] Landmarks (`nav`, `main`, `complementary`) and a skip link, and the URL is the state: every pane's selection is linkable
+- [x] Markdown content is set by the prose styles (0143) with no per-page CSS
+- [x] No component that is not in `@rockaway/react`: if the site needs it, the system grows it
 
 The palette's `⌘K` and `/` live in 0149, so the shell does not wait for 0102.
 
@@ -47,3 +47,15 @@ Rewritten by the program plan: the pre-pivot template text is replaced with how 
 ## 2026-10-03
 
 Paused 2026-10-03 at WIP commit on feat/site-shell (pushed, no PR; it carries Panes #101 and StatusBar #102 merged locally until they land). Built: NavigationTree/NavigationTreeItem grown into the system's Tree (labels are real links, current page is the selected row), the shell island (Panes: map, page, outline; StatusBar; Keymap with j/k/arrows/space/gg/G/g-letter/?/esc), outline read from rendered HTML, a scripting:none document fallback, hide-until-measured with a 3s reveal. Open: site.test.ts conformance fails on component pages now that prose sits inside the panes' screen (prose table columns read 0.3 cells off the screen's grid); shell tests not yet written; no changeset yet for the Tree addition.
+
+## 2026-10-03
+
+Resumed and built out. Putting every page inside a screen holds the whole page to the grid, which found four things. (1) Table.astro emitted a bare table; in a pane narrower than its sized columns, the anonymous table inside a display:block table shrank them to fractional pixels (the 0.3-cell offset). It is now wrapped in .rk-scroll-marks, as the Markdown pipeline wraps tables. (2) A painted row wrapped in prose when wider than the measure: .rk-row is white-space: pre now (css patch), and Painted scrolls across in its own box. (3) List's empty mark cells had no height and sat half a row down: .rk-list-mark is a whole cell tall (css patch). (4) Form's sketch Input is the browser's width; its example is excused with data-rk-offgrid until Text field (0035). Continuity over a scrolled snapshot needs #151 (continuity in scrolled regions), merged locally like #101 and #102.
+
+## 2026-10-03
+
+Design: the context pane collapses below about 94 cells (nav 26, content at least 36, outline 28, and the borders), so it is certainly gone under 80, as the criterion asks, and the page keeps a readable measure in between. The panes stack below 64. The panes are unnamed sections (an empty label) so nav, main and aside stay top-level landmarks; 0248 lets a Pane opt out properly. The skip link is site CSS until 0249. A scrolling pane's position is in the status bar until 0250 puts it in the border. The Astro base read is 0241.
+
+## 2026-10-03
+
+Not yet a PR: it carries Panes (#101), StatusBar (#102) and continuity in scrolled regions (#151) merged locally. StatusBar's example shows no words without script (its segments are hidden until measured); reported to the CTO for #102. The no-JS example test fails on it until that is fixed.

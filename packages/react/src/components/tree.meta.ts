@@ -118,7 +118,7 @@ export const treeMeta: ComponentMetaInput = defineMeta({
     {
       state: 'current',
       part: 'NavigationTreeItem',
-      note: "Drawn as a selected row, reverse video, rather than with the cursor mark, which in a tree is the keyboard's. Its link is `aria-current=\"page\"`.",
+      note: 'Drawn as a selected row, reverse video, rather than with the cursor mark, which in a tree is the keyboard\'s. Its link is `aria-current="page"`.',
     },
     { state: 'disabled', part: 'TreeItem' },
   ],

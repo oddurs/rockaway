@@ -22,7 +22,8 @@ interface Props {
   name?: string;
 }
 
-const { title, description, name = title.split(' — ')[0] } = Astro.props;
+const { title, description } = Astro.props;
+const name = Astro.props.name ?? title.split(' — ')[0] ?? title;
 const foundations = (await getCollection('foundations'))
   .sort((a, b) => a.data.order - b.data.order)
   .map((p) => ({ id: p.id, title: p.data.title }));

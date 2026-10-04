@@ -35,12 +35,36 @@ a packaging bug, and it is fixed in the package.
 | `src/fonts/` | The one font, its metrics and its licence. |
 | `src/content.config.ts` | Content collections. `docs` is the repository's own `docs/`, so a document is written once for GitHub and the site. |
 | `src/pages/[doc].astro`, `src/lib/docs.ts` | One page per document in `docs/` (`concept.md` is `/concept/`), with its title and description. A document with no entry fails the build. |
-| `src/layouts/Prose.astro` | A page of Markdown: `<article class="rk-prose">`, and nothing else. |
+| `src/layouts/Prose.astro` | Every page: its content set by `<article class="rk-prose">`, inside the shell. It renders the page first so the outline can be read from it (`src/lib/outline.ts`). |
+| `src/islands/shell.tsx`, `src/lib/nav.ts` | The shell (0104): the site as a TUI. See below. |
 
-Component pages (0147) will read the components' metadata from
-`@rockaway/react` (0047); theme, mode and density (0148) are applied by an
-inline script at the top of the head, before the stylesheet, so the first
-frame is already the reader's choice.
+Theme, mode and density (0148) will be applied by an inline script at the
+top of the head, before the stylesheet, so the first frame is already the
+reader's choice.
+
+## The shell
+
+Every page is a screen (0104), built only from `@rockaway/react`:
+
+- **Panes** share their borders: the map of the site (a `NavigationTree`
+  whose rows are links), the page, and its outline (another, one row per
+  section). The outline goes first when there is no room; under 64 cells the
+  map stacks over the page.
+- **A status bar** says which part of the site you are in, where on the page
+  (the section at the top of the pane), how far down, and that `?` shows the
+  keys.
+- **The keymap** is the page's one key handler: `j`/`k` and the arrows move a
+  line, Space a screen, `g g` and `G` go to the ends, and `g` then a letter
+  jumps to a section. `?` shows them, generated from the bindings. Every jump
+  is also a row of the map, so every route is an ordinary link.
+- **The URL is the state.** The map's current row is the path. The section
+  you scroll to is written to the fragment, and a fragment opens there.
+
+With no script there is no window to measure, so `site.css` turns the shell
+into a document (`@media (scripting: none)`): the map, the page and the
+outline in order, and no chrome. With script, the shell is hidden until it has
+measured the window, so the first frame is the screen at its real size; if
+the script never arrives it shows anyway after three seconds.
 
 ## Markdown
 

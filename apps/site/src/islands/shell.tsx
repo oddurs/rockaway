@@ -158,7 +158,12 @@ function OutlineRows({ headings }: { readonly headings: readonly Heading[] }): R
     else sections.push({ heading, within: [] });
   }
   return sections.map(({ heading, within }) => (
-    <NavigationTreeItem key={heading.id} id={heading.id} title={heading.text} href={`#${heading.id}`}>
+    <NavigationTreeItem
+      key={heading.id}
+      id={heading.id}
+      title={heading.text}
+      href={`#${heading.id}`}
+    >
       {within.map((h) => (
         <NavigationTreeItem key={h.id} id={h.id} title={h.text} href={`#${h.id}`} />
       ))}
@@ -225,7 +230,8 @@ function Keys({
     },
     [scroller],
   );
-  const page = (el: HTMLElement): number => Math.max(1, Math.floor(el.clientHeight / rowOf(el)) - 2);
+  const page = (el: HTMLElement): number =>
+    Math.max(1, Math.floor(el.clientHeight / rowOf(el)) - 2);
   useKeymap([
     { keys: 'j', description: 'Down a line', action: by(() => 1) },
     { keys: 'k', description: 'Up a line', action: by(() => -1) },
@@ -294,6 +300,7 @@ export function Shell({
   // The map opens at the page you are on, in the middle of its pane if it
   // has to scroll, and without scrolling anything outside the pane.
   const map = useRef<HTMLElement>(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: again when the panes stack or unstack, which resizes the map's pane.
   useEffect(() => {
     const el = map.current;
     const row = el?.querySelector<HTMLElement>('[aria-current="page"]')?.closest('[role="row"]');
@@ -326,7 +333,9 @@ export function Shell({
     // panes have their real size, which moves everything from where the
     // server put it.
     frame = requestAnimationFrame(() => {
-      const target = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+      const target = location.hash
+        ? document.getElementById(decodeURIComponent(location.hash.slice(1)))
+        : null;
       target?.scrollIntoView({ block: 'start' });
       update();
     });
@@ -341,7 +350,10 @@ export function Shell({
     () => nav.filter((node) => node.children?.some((c) => c.href === current)).map((n) => n.id),
     [nav, current],
   );
-  const outlineExpanded = useMemo(() => headings.filter((h) => h.depth === 2).map((h) => h.id), [headings]);
+  const outlineExpanded = useMemo(
+    () => headings.filter((h) => h.depth === 2).map((h) => h.id),
+    [headings],
+  );
   const showOutline = !stacked && headings.length > 0;
 
   return (
@@ -349,22 +361,41 @@ export function Shell({
       <Keys scroller={scroller} jumps={jumps} help={help} setHelp={setHelp} />
       <div ref={host} className="site-shell">
         <Panes direction={stacked ? 'column' : 'row'} fallback={{ width: 120, height: 40 }}>
-          <Pane title="rockaway" label="" size={stacked ? 6 : 26} min={stacked ? 3 : 18} priority={2} pad={0}>
+          <Pane
+            title="rockaway"
+            label=""
+            size={stacked ? 6 : 26}
+            min={stacked ? 3 : 18}
+            priority={2}
+            pad={0}
+          >
             <nav aria-label="Site" className="rk-scroll site-scroll" ref={map}>
               <NavigationTree aria-label="Pages" current={current} defaultExpandedKeys={expanded}>
                 <MapRows nodes={nav} />
               </NavigationTree>
             </nav>
           </Pane>
-          <Pane title={help ? 'keys' : title} label="" size="1fr" min={stacked ? 6 : 36} priority={3} pad={0}>
-            <main id="content" tabIndex={-1} className="rk-scroll site-scroll site-page" ref={scroller}>
+          <Pane
+            title={help ? 'keys' : title}
+            label=""
+            size="1fr"
+            min={stacked ? 6 : 36}
+            priority={3}
+            pad={0}
+          >
+            <main
+              id="content"
+              tabIndex={-1}
+              className="rk-scroll site-scroll site-page"
+              ref={scroller}
+            >
               <div hidden={help}>{children}</div>
               {help ? (
                 <section aria-labelledby="site-keys" className="rk-prose">
                   <h1 id="site-keys">Keys</h1>
                   <p>
-                    Each of these is a shortcut for something on the screen: a scroll of this
-                    pane, or a row of the map, which is a link.
+                    Each of these is a shortcut for something on the screen: a scroll of this pane,
+                    or a row of the map, which is a link.
                   </p>
                   <KeymapHelp />
                 </section>
