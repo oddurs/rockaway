@@ -131,7 +131,8 @@ const types: Record<string, string> = {
 /**
  * Serves a directory, plus the installed packages under `/node_modules/`, so
  * the check can load `@rockaway/react/testing` from what the app installed.
- * The one bare import those modules make is pointed at the installed engine.
+ * The bare imports those modules make of the other packages are pointed at
+ * the installed ones: a browser resolves no bare specifier by itself.
  */
 function serve(dir: string, app: string): Promise<Server> {
   const server = createServer((request, response) => {
@@ -144,8 +145,11 @@ function serve(dir: string, app: string): Promise<Server> {
       if (fromModules && file.endsWith('.js')) {
         body = body
           .toString('utf8')
-          .replaceAll(`from '@rockaway/grid'`, `from '/node_modules/@rockaway/grid/dist/index.js'`)
-          .replaceAll(`from "@rockaway/grid"`, `from "/node_modules/@rockaway/grid/dist/index.js"`);
+          .replace(
+            /from (['"])@rockaway\/(grid|tokens|css|react)\1/g,
+            (_, quote: string, name: string) =>
+              `from ${quote}/node_modules/@rockaway/${name}/dist/index.js${quote}`,
+          );
       }
       response.writeHead(200, {
         'content-type': types[path.extname(file)] ?? 'application/octet-stream',
