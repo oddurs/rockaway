@@ -45,7 +45,13 @@ export interface DialogProps
   extends VariantProps<typeof dialogVariants>,
     Pick<
       OverlayModalProps,
-      'isOpen' | 'defaultOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled'
+      | 'isOpen'
+      | 'defaultOpen'
+      | 'onOpenChange'
+      | 'isDismissable'
+      | 'isKeyboardDismissDisabled'
+      | 'padding'
+      | 'dividers'
     > {
   /** The words in the top edge, and what a reader hears the dialog called. */
   readonly title: string;
@@ -136,6 +142,8 @@ export function Dialog({
   maxRows,
   minCols,
   painter,
+  padding,
+  dividers,
   className,
   ...modal
 }: DialogProps): ReactNode {
@@ -150,6 +158,8 @@ export function Dialog({
       {...(maxRows === undefined ? {} : { maxRows })}
       {...(minCols === undefined ? {} : { minCols })}
       {...(painter === undefined ? {} : { painter })}
+      {...(padding === undefined ? {} : { padding })}
+      {...(dividers === undefined ? {} : { dividers })}
     >
       <Body title={title} variant={chosen.variant} actions={actions}>
         {children}

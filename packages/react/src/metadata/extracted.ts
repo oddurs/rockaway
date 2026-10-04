@@ -382,7 +382,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [
       "VariantProps<typeof dialogVariants>",
-      "Pick< OverlayModalProps, 'isOpen' | 'defaultOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled' >"
+      "Pick< OverlayModalProps, | 'isOpen' | 'defaultOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled' | 'padding' | 'dividers' >"
     ],
     "tokens": [
       "--rk-bg-surface",

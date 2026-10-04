@@ -322,6 +322,37 @@ export const DensitiesAndWidths: Story = {
   },
 };
 
+/**
+ * Padding and dividers pass through to the surface, for what is built on a
+ * dialog, as the command palette is: rows from side to side, and a section's
+ * title set into a rule that joins the double frame.
+ */
+export const Sections: Story = {
+  render: () => (
+    <Frame title="palette" cols={40} rows={11}>
+      <DialogTrigger defaultOpen>
+        <Button>Commands</Button>
+        <Dialog title="Commands" padding={{ x: 0, y: 0 }} dividers={[{ row: 1, title: 'Files' }]}>
+          <p style={{ margin: 0 }}>Open recent</p>
+          <p style={{ margin: 0 }}>&nbsp;</p>
+          <p style={{ margin: 0 }}>Save all</p>
+        </Dialog>
+      </DialogTrigger>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    await waitFor(() => canvas.getByRole('dialog', { name: 'Commands' }));
+    const rows = rowsOf(surface());
+    expect(rows[0]).toMatch(/^╔ Commands ═+╗$/);
+    expect(rows[2]).toMatch(/^╟ Files ─+╢$/);
+    // No padding: the first row's words start right inside the frame.
+    const grid = gridOf(surface().querySelector('.rk-screen') as Element);
+    const first = canvas.getByText('Open recent').getBoundingClientRect();
+    expect(first.left - grid.left).toBeCloseTo(grid.width, 1);
+  },
+};
+
 /** At touch density a dialog is a sheet, whatever the width. */
 export const Touch: Story = {
   render: () => (
