@@ -123,6 +123,7 @@
     --rk-glyph-mark-external: "^";
     --rk-glyph-mark-overflow-end: ">";
     --rk-glyph-mark-overflow-start: "<";
+    --rk-glyph-mark-prompt: ">";
     --rk-glyph-mark-radio: "*";
     --rk-glyph-mark-radio-empty: "o";
     --rk-glyph-mark-required: "*";

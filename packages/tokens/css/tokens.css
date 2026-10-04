@@ -1032,6 +1032,11 @@
   inherits: true;
 }
 
+@property --rk-glyph-mark-prompt {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-radio {
   syntax: '*';
   inherits: true;
@@ -2162,6 +2167,7 @@
     --rk-glyph-mark-external: "↗";
     --rk-glyph-mark-overflow-end: "›";
     --rk-glyph-mark-overflow-start: "‹";
+    --rk-glyph-mark-prompt: "›";
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
@@ -2642,6 +2648,7 @@
     --rk-glyph-mark-external: "↗";
     --rk-glyph-mark-overflow-end: "›";
     --rk-glyph-mark-overflow-start: "‹";
+    --rk-glyph-mark-prompt: "›";
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
