@@ -1,6 +1,9 @@
 # Dracula (dark), from https://github.com/dracula/ghostty
 # Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
 #   red: #ff5555 -> #ff948d
+#   bright-blue: #d6acff -> #e6c0ff
+#   bright-red: #ff6e6e -> #ffccc8
+#   bright-magenta: #ff92df -> #ffc1f4
 #
 # MIT licence. Copyright (c) 2023 Dracula Theme.
 #
@@ -51,10 +54,10 @@ white = "#f8f8f2"
 
 [colors.bright]
 black = "#6272a4"
-red = "#ff6e6e"
+red = "#ffccc8"
 green = "#69ff94"
 yellow = "#ffffa5"
-blue = "#d6acff"
-magenta = "#ff92df"
+blue = "#e6c0ff"
+magenta = "#ffc1f4"
 cyan = "#a4ffff"
 white = "#ffffff"

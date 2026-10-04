@@ -14,15 +14,7 @@ import {
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useRef, useState } from 'react';
-import {
-  Button as AriaButton,
-  Dialog,
-  Heading,
-  Input,
-  Label,
-  Modal,
-  TextField,
-} from 'react-aria-components';
+import { Dialog, Heading, Input, Label, Modal, TextField } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { settled } from '../settled.ts';
 
@@ -280,10 +272,10 @@ function Announced(): ReactNode {
   useKeymap([{ keys: 'mod+s', description: 'Save', target: save }]);
   return (
     <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
-      {/* React Aria's own button: rockaway's Button keeps its ref to itself. */}
-      <AriaButton ref={save} className="rk-button" onPress={() => setSaved((n) => n + 1)}>
+      {/* Button passes its ref through (0224), so it can be a binding's target. */}
+      <Button ref={save} onPress={() => setSaved((n) => n + 1)}>
         Save
-      </AriaButton>
+      </Button>
       <p data-testid="saved" style={{ margin: 0 }}>{`saved ${saved}`}</p>
     </div>
   );
@@ -309,5 +301,80 @@ export const OnItsTarget: Story = {
     );
     await userEvent.keyboard(mod('s'));
     await waitFor(() => expect(text('saved')).toBe('saved 1'));
+  },
+};
+
+/** Buttons whose `keys` the page's keymap binds, and one outside any keymap. */
+function Bound(): ReactNode {
+  const [log, setLog] = useState<string[]>([]);
+  const did = (what: string) => () => setLog((l) => [...l, what]);
+  return (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)', justifyItems: 'start' }}>
+      <Keymap>
+        <div style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+          <Button keys="mod+s" onPress={did('saved')}>
+            Save
+          </Button>
+          <Button keys="mod+e" isDisabled onPress={did('exported')}>
+            Export
+          </Button>
+        </div>
+        <KeymapHelp />
+      </Keymap>
+      <p data-testid="log" style={{ margin: 0 }}>
+        {log.length === 0 ? 'nothing' : log.join(', ')}
+      </p>
+    </div>
+  );
+}
+
+/** The same Button with `keys`, with no keymap around it. */
+function Unbound(): ReactNode {
+  const [saved, setSaved] = useState(0);
+  return (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)', justifyItems: 'start' }}>
+      <Button keys="mod+s" onPress={() => setSaved((n) => n + 1)}>
+        Save
+      </Button>
+      <p data-testid="unbound" style={{ margin: 0 }}>{`saved ${saved}`}</p>
+    </div>
+  );
+}
+
+/**
+ * A Button's `keys`, inside a Keymap, is bound as well as drawn and announced
+ * (0225): the chord presses it, and the help screen lists it under its label.
+ * A disabled one is not bound. Outside a Keymap nothing changes: the chord is
+ * drawn and announced, and the app listens for it.
+ */
+export const ButtonKeys: Story = {
+  name: "A Button's keys, bound",
+  render: () => <Bound />,
+  play: async ({ canvas }) => {
+    await settled();
+    const save = canvas.getByRole('button', { name: 'Save' });
+    expect(save.getAttribute('aria-keyshortcuts')).toBe(keyShortcut('mod+s', keyboard()));
+    await userEvent.keyboard(mod('s'));
+    await waitFor(() => expect(text('log')).toBe('saved'));
+    // The disabled button's chord is not bound, and not listed.
+    await userEvent.keyboard(mod('e'));
+    expect(text('log')).toBe('saved');
+    const help = canvas.getByRole('definition');
+    expect(help).toHaveTextContent('Save');
+    expect(document.querySelectorAll('.rk-keymap-help dt')).toHaveLength(1);
+  },
+};
+
+export const ButtonKeysUnbound: Story = {
+  name: "A Button's keys, with no keymap",
+  render: () => <Unbound />,
+  play: async ({ canvas }) => {
+    await settled();
+    const save = canvas.getByRole('button', { name: 'Save' });
+    // Drawn and announced as ever...
+    expect(save.getAttribute('aria-keyshortcuts')).toBe(keyShortcut('mod+s', keyboard()));
+    // ...and not bound: with no keymap, the app listens for the chord.
+    await userEvent.keyboard(mod('s'));
+    expect(text('unbound')).toBe('saved 0');
   },
 };

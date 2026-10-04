@@ -83,7 +83,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "keys",
         "type": "string",
         "required": false,
-        "description": "The chord that fires it: `mod+s`. It draws the hint beside the label and announces the shortcut, which is how a TUI teaches itself (cairn 0099)."
+        "description": "The chord that fires it: `mod+s`. It draws the hint beside the label and announces the shortcut, which is how a TUI teaches itself (cairn 0099). Inside a `Keymap` it also binds it: the chord presses the button, and the help screen lists it under the button's label (cairn 0225). Outside one, the app listens for the chord itself."
       },
       {
         "name": "platform",
@@ -100,6 +100,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "style",
         "type": "React.CSSProperties",
         "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement>",
+        "required": false,
+        "description": "The button element, for an app that focuses it or a Keymap binding that presses it (cairn 0224). An object or a callback; Button keeps its own beside it."
       }
     ],
     "inherits": [
@@ -167,7 +173,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Cell": {
@@ -193,7 +205,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-bg-surface",
       "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -204,7 +215,118 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono",
       "--rk-glyph-mark-overflow-end",
       "--rk-glyph-mark-overflow-start",
-      "--rk-y-1"
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Checkbox": {
+    "file": "checkbox.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The words after the box: the checkbox's name."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help, dim, under the row."
+      },
+      {
+        "name": "errorMessage",
+        "type": "ReactNode | ((validation: ValidationResult) => ReactNode)",
+        "required": false,
+        "description": "Words for the error; the field's own validation messages when not given."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<CheckboxFieldProps, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-focus-offset",
+      "--rk-focus-width"
+    ]
+  },
+  "CheckboxGroup": {
+    "file": "checkbox.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Set into the frame's top edge, and the group's name."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The checkboxes, one row each."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "errorMessage",
+        "type": "ReactNode | ((validation: ValidationResult) => ReactNode)",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaCheckboxGroupProps, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-focus-offset",
+      "--rk-focus-width"
     ]
   },
   "Column": {
@@ -250,7 +372,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-bg-surface",
       "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -261,7 +382,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono",
       "--rk-glyph-mark-overflow-end",
       "--rk-glyph-mark-overflow-start",
-      "--rk-y-1"
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Description": {
@@ -326,11 +452,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'role' | 'children'>"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "FieldError": {
@@ -413,7 +544,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "VariantProps<typeof fieldFrameVariants>"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-border-default",
@@ -422,7 +552,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Fieldset": {
@@ -475,7 +611,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-border-default",
@@ -484,7 +619,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Form": {
@@ -577,11 +718,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
-      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "KeyHint": {
@@ -805,7 +951,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted"
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "ListItem": {
@@ -827,7 +979,145 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted"
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "OverlayLayer": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "OverlayModal": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "minCols",
+        "type": "number",
+        "required": false,
+        "description": "The fewest columns the surface may be, its frame's two included."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ModalOverlayProps, 'children' | 'className' | 'style' | 'UNSTABLE_portalContainer'>",
+      "Omit<OverlaySurfaceOptions, 'minCols'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "OverlayPopover": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the surface may take before its content scrolls."
+      },
+      {
+        "name": "minCols",
+        "type": "number | 'trigger'",
+        "required": false,
+        "description": "The fewest columns the surface may be, its frame's two included: a number, or `'trigger'` for as wide as its trigger, in whole cells (a select's list). A sheet is as wide as the viewport whatever this says."
+      },
+      {
+        "name": "padding",
+        "type": "OverlayPadding",
+        "required": false,
+        "description": "Cells between the frame and the content, `{ x: 1, y: 0 }` by default. A menu takes `{ x: 0, y: 0 }`, so a highlighted row runs from side to side."
+      },
+      {
+        "name": "dividers",
+        "type": "readonly OverlayDivider[]",
+        "required": false,
+        "description": "Rules across the surface, at rows of the content: `row: 0` is a rule on the content's first row, drawn in the frame and joining its sides. They move with the content as it scrolls, and are not drawn while scrolled out of sight. The content leaves those rows empty: a menu's separator, or the row a section's heading is set into."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "The painter, `glyph` or `rule`. By default, the painter of the screen the overlay was opened from, so a popover from a ruled frame is ruled too."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "shift",
+        "type": "OverlayShift",
+        "required": false,
+        "description": "An offset in whole cells, `{ main: 0, cross: 0 }` by default. A submenu takes `{ main: 1, cross: -1 }`: beside its parent's frame, its first item level with the item that opened it. Not applied to a sheet."
+      }
+    ],
+    "inherits": [
+      "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'UNSTABLE_portalContainer' >"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Radio": {
@@ -948,7 +1238,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-bg-surface",
       "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -959,7 +1248,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono",
       "--rk-glyph-mark-overflow-end",
       "--rk-glyph-mark-overflow-start",
-      "--rk-y-1"
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Table": {
@@ -1008,7 +1302,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-bg-surface",
       "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -1019,7 +1312,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono",
       "--rk-glyph-mark-overflow-end",
       "--rk-glyph-mark-overflow-start",
-      "--rk-y-1"
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "TableBody": {
@@ -1046,7 +1344,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-bg-surface",
       "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -1057,7 +1354,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono",
       "--rk-glyph-mark-overflow-end",
       "--rk-glyph-mark-overflow-start",
-      "--rk-y-1"
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "TableHeader": {
@@ -1077,7 +1379,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-bg-surface",
       "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -1088,7 +1389,97 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono",
       "--rk-glyph-mark-overflow-end",
       "--rk-glyph-mark-overflow-start",
-      "--rk-y-1"
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "TextField": {
+    "file": "text-field.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The field's name: inline before a `md` box, in the top edge of a framed one."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help, dim, under the box."
+      },
+      {
+        "name": "errorMessage",
+        "type": "ReactNode | ((validation: ValidationResult) => ReactNode)",
+        "required": false,
+        "description": "Words for the error; the field's own validation messages when not given."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The box's width, in cells: the text it shows at once.",
+        "default": "DEFAULT_COLS"
+      },
+      {
+        "name": "size",
+        "type": "TextFieldSize",
+        "required": false,
+        "description": "`md` is one row between the delimiters; `lg` is three, framed, the label in the edge."
+      },
+      {
+        "name": "multiline",
+        "type": "boolean",
+        "required": false,
+        "description": "Several rows, framed, scrolling by whole rows.",
+        "default": "false"
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "How many rows a `multiline` box shows.",
+        "default": "DEFAULT_ROWS"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof textFieldVariants>",
+      "Omit<AriaTextFieldProps, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Tree": {
@@ -1122,7 +1513,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted"
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "TreeItem": {
@@ -1162,7 +1559,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted"
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   }
 };

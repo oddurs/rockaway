@@ -14,6 +14,13 @@
  *
  * and the exceptions are listed below as a snapshot, so a new one is a change
  * a reviewer sees.
+ *
+ * A size can also change at one remove: a state rule sets a custom property,
+ * `--rk-x-pad`, and a base rule pads with `var(--rk-x-pad)`. So the check
+ * follows `var()` (cairn 0159). Every custom property a geometric declaration
+ * reads, in any component stylesheet, is geometric, and so is every one a
+ * geometric custom property is set from; a variant or state rule that sets
+ * one is held to the same rule, and declares its exception the same way.
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -42,11 +49,60 @@ function selectorOf(rule: Rule): string {
   return parts.join(' ');
 }
 
-/** Every geometric declaration under a non-sizing `data-*` key, declared or not. */
-function scan(css: string, file: string): Finding[] {
+/** The custom properties a value reads: `var(--a, var(--b))` reads both. */
+function reads(value: string): string[] {
+  return [...value.matchAll(/var\(\s*(--[\w-]+)/g)].map((match) => match[1] ?? '');
+}
+
+/**
+ * Every custom property that ends up in a size, padding, margin or inset:
+ * read by a geometric declaration, or set into one that is, however many
+ * steps away. Across every sheet given, because a property set in one
+ * stylesheet may be read in another.
+ */
+function geometricProperties(sheets: readonly string[]): Set<string> {
+  const geometric = new Set<string>();
+  const feeds = new Map<string, Set<string>>();
+  for (const css of sheets) {
+    postcss.parse(css).walkDecls((decl: Declaration) => {
+      if (GEOMETRY.test(decl.prop)) {
+        for (const name of reads(decl.value)) geometric.add(name);
+      } else if (decl.prop.startsWith('--')) {
+        for (const name of reads(decl.value)) {
+          const into = feeds.get(decl.prop) ?? new Set<string>();
+          into.add(name);
+          feeds.set(decl.prop, into);
+        }
+      }
+    });
+  }
+  // A property is geometric if a geometric one is set from it.
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const [property, from] of feeds) {
+      if (!geometric.has(property)) continue;
+      for (const name of from) {
+        if (!geometric.has(name)) {
+          geometric.add(name);
+          grew = true;
+        }
+      }
+    }
+  }
+  return geometric;
+}
+
+/**
+ * Every geometric declaration under a non-sizing `data-*` key, declared or
+ * not: a size, padding, margin or inset, or a custom property that one of
+ * those reads.
+ */
+function scan(css: string, file: string, geometric: ReadonlySet<string> = new Set()): Finding[] {
   const findings: Finding[] = [];
   postcss.parse(css, { from: file }).walkDecls((decl: Declaration) => {
-    if (!GEOMETRY.test(decl.prop) || decl.parent?.type !== 'rule') return;
+    const through = decl.prop.startsWith('--') && geometric.has(decl.prop);
+    if ((!GEOMETRY.test(decl.prop) && !through) || decl.parent?.type !== 'rule') return;
     const selector = selectorOf(decl.parent as Rule).replace(/\s+/g, ' ');
     const keys = [...selector.matchAll(/\[data-([a-z0-9-]+)/g)].map((match) => match[1] ?? '');
     if (!keys.some((key) => !SIZING.has(key))) return;
@@ -67,9 +123,9 @@ const components = path.join(
 const files = readdirSync(components)
   .filter((name) => name.endsWith('.css'))
   .sort();
-const findings = files.flatMap((name) =>
-  scan(readFileSync(path.join(components, name), 'utf8'), name),
-);
+const sheets = files.map((name) => readFileSync(path.join(components, name), 'utf8'));
+const geometric = geometricProperties(sheets);
+const findings = files.flatMap((name, i) => scan(sheets[i] ?? '', name, geometric));
 
 describe('variants and states do not change geometry', () => {
   test('reads every component stylesheet', () => {
@@ -103,11 +159,58 @@ describe('the check', () => {
     }`;
 
   test('fails on a variant, a state or a nested rule that changes geometry, and passes size', () => {
-    expect(scan(fixture, 'x.css')).toEqual([
+    expect(scan(fixture, 'x.css', geometricProperties([fixture]))).toEqual([
       { where: 'x.css: .rk-x[data-variant="loud"] { margin-inline }' },
       { where: 'x.css: .rk-x[data-pressed] .rk-x-label { inset-block-start }' },
       { where: 'x.css: .rk-x &[data-hovered] { width }' },
       { where: 'x.css: .rk-x[data-variant="quiet"] { padding }', reason: 'it says why' },
     ]);
+  });
+
+  const through = `
+    @layer rk.components {
+      .rk-y {
+        --rk-y-gap: var(--rk-y-pad);
+        padding-inline: var(--rk-y-pad);
+        margin-block: var(--rk-y-gap, 0);
+        color: var(--rk-y-ink);
+      }
+      .rk-y[data-pressed] { --rk-y-pad: var(--rk-x-2); }
+      .rk-y[data-selected] { --rk-y-ink: var(--rk-fg-accent); }
+      .rk-y[data-size="lg"] { --rk-y-pad: var(--rk-x-3); }
+      .rk-y[data-variant="wide"] {
+        /* geometry exception: wide is wider on purpose */
+        --rk-y-gap: var(--rk-y-1);
+      }
+    }
+    .rk-z[data-hovered] { --rk-y-pad: 0; }`;
+
+  test('follows custom properties: a state that pads through one fails, a colour does not', () => {
+    const props = geometricProperties([through]);
+    // The tokens they are set from are geometric too, and the ink is not.
+    expect([...props].sort()).toEqual([
+      '--rk-x-2',
+      '--rk-x-3',
+      '--rk-y-1',
+      '--rk-y-gap',
+      '--rk-y-pad',
+    ]);
+    expect(scan(through, 'y.css', props)).toEqual([
+      { where: 'y.css: .rk-y[data-pressed] { --rk-y-pad }' },
+      {
+        where: 'y.css: .rk-y[data-variant="wide"] { --rk-y-gap }',
+        reason: 'wide is wider on purpose',
+      },
+      { where: 'y.css: .rk-z[data-hovered] { --rk-y-pad }' },
+    ]);
+  });
+
+  test('follows a property set in one stylesheet and read in another', () => {
+    const base = '.rk-a { padding: var(--rk-a-pad); }';
+    const state = '.rk-a[data-focused] { --rk-a-pad: var(--rk-x-1); }';
+    expect(scan(state, 'state.css', geometricProperties([base, state]))).toEqual([
+      { where: 'state.css: .rk-a[data-focused] { --rk-a-pad }' },
+    ]);
+    expect(scan(state, 'state.css', geometricProperties([state]))).toEqual([]);
   });
 });
