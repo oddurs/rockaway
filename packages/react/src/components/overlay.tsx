@@ -187,9 +187,17 @@ function gridOf(el: Element | null | undefined): Grid {
   if (screen) {
     const box = screen.getBoundingClientRect();
     const style = getComputedStyle(screen);
-    const width = Number.parseFloat(style.getPropertyValue('--rk-cell-width'));
-    const height = Number.parseFloat(style.getPropertyValue('--rk-cell-height'));
+    // Measured, the cell is in pixels. Before that it is `1ch` by `1lh`,
+    // which is not a number of pixels: the screen's own cell is measured.
+    const px = (name: string): number => {
+      const value = style.getPropertyValue(name).trim();
+      return value.endsWith('px') ? Number.parseFloat(value) : Number.NaN;
+    };
+    const width = px('--rk-cell-width');
+    const height = px('--rk-cell-height');
     if (width > 0 && height > 0) return { left: box.left, top: box.top, width, height };
+    const cell = measureCell(screen);
+    return { left: box.left, top: box.top, width: cell.width, height: cell.height };
   }
   // Not in a screen: the root grid, from the viewport's corner, in the font's cell.
   const cell = measureCell((el as HTMLElement | null) ?? document.body);
@@ -443,14 +451,37 @@ function Surface({
 // ---------------------------------------------------------------------------
 // Popover
 
+/**
+ * How far a popover is moved from where it would sit against its trigger, in
+ * cells of the trigger's screen: `main` away from the trigger, along the axis
+ * it is placed on, and `cross` along its edge. It mirrors when React Aria
+ * flips the placement, as React Aria's own offsets do.
+ */
+export interface OverlayShift {
+  readonly main?: number;
+  readonly cross?: number;
+}
+
 export interface OverlayPopoverProps
   extends Omit<
       PopoverProps,
-      'children' | 'className' | 'style' | 'offset' | 'UNSTABLE_portalContainer'
+      'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'UNSTABLE_portalContainer'
     >,
     OverlaySurfaceOptions {
   readonly children?: ReactNode;
   readonly className?: string;
+  /**
+   * An offset in whole cells, `{ main: 0, cross: 0 }` by default. A submenu
+   * takes `{ main: 1, cross: -1 }`: beside its parent's frame, its first item
+   * level with the item that opened it. Not applied to a sheet.
+   */
+  readonly shift?: OverlayShift;
+}
+
+/** Whether a placement puts the popover beside its trigger rather than above or below it. */
+function beside(placement: string): boolean {
+  const side = placement.split(' ')[0];
+  return side === 'left' || side === 'right' || side === 'start' || side === 'end';
 }
 
 /**
@@ -467,6 +498,7 @@ export function OverlayPopover({
   dividers,
   painter,
   className,
+  shift,
   placement = 'bottom start',
   ...aria
 }: OverlayPopoverProps): ReactNode {
@@ -477,12 +509,24 @@ export function OverlayPopover({
   const sheet = useSheet(anchor);
   const origin = useOrigin(anchor);
   const contexts = origin.contexts;
+  // The shift in pixels of the trigger's cell, which React Aria offsets by
+  // exactly, so the snap after it has nothing to round. Read at render: a
+  // change of context re-renders through the origin, and the cell with it.
+  let offset = 0;
+  let crossOffset = 0;
+  if (!sheet && shift && typeof window !== 'undefined') {
+    const grid = gridOf(anchor());
+    const across = beside(placement);
+    offset = (shift.main ?? 0) * (across ? grid.width : grid.height);
+    crossOffset = (shift.cross ?? 0) * (across ? grid.height : grid.width);
+  }
   return (
     <Popover
       {...aria}
       {...contexts}
       placement={sheet ? 'bottom start' : placement}
-      offset={0}
+      offset={offset}
+      crossOffset={crossOffset}
       containerPadding={0}
       className={cx('rk-overlay-popover', sheet && 'rk-overlay-popover-sheet', className)}
       {...(container === null ? {} : { UNSTABLE_portalContainer: container })}
