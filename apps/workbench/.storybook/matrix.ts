@@ -8,7 +8,7 @@ import {
 } from '@rockaway/react/testing';
 import type { Density, Mode } from '@rockaway/tokens';
 import { type Contexts, densityOf, readContexts, setContexts } from './contexts.ts';
-import { type Check, type Known, known } from './known.ts';
+import { type Check, type Known, known, type Platform } from './known.ts';
 import { runner } from './runner.ts';
 
 /**
@@ -94,6 +94,8 @@ export interface KnownUse {
 export interface Walk {
   /** The Vitest project, for known failures that belong to one engine or mode of it. */
   readonly project?: string | undefined;
+  /** The platform the run is on, for known failures confined to one. */
+  readonly platform?: Platform | undefined;
   readonly capture?: Capture | undefined;
   readonly plan?: Plan | undefined;
   /** Runs axe on the story as it is now, throwing on a violation. */
@@ -292,12 +294,10 @@ async function checkCell(
   return { failures, ran };
 }
 
-/** Whether a known failure's platforms include the one this browser runs on. */
-function onPlatform(entry: Known): boolean {
-  if (entry.platforms === undefined) return true;
-  const agent = typeof navigator === 'undefined' ? '' : navigator.userAgent;
-  return entry.platforms.some((platform) =>
-    platform === 'Mac' ? /Mac OS X|Macintosh/.test(agent) : agent.includes(platform),
+/** Whether a known failure's platforms include the one this run is on (`undefined`: unknown, so any). */
+function onPlatform(entry: Known, platform: Platform | undefined): boolean {
+  return (
+    entry.platforms === undefined || platform === undefined || entry.platforms.includes(platform)
   );
 }
 
@@ -307,12 +307,13 @@ function covers(
   cell: Cell,
   check: Check,
   project: string | undefined,
+  platform: Platform | undefined,
   density: Density = cell.density,
 ): boolean {
   const checks: readonly Check[] = typeof entry.check === 'string' ? [entry.check] : entry.check;
   return (
     checks.includes(check) &&
-    onPlatform(entry) &&
+    onPlatform(entry, platform) &&
     (entry.projects === undefined || (project !== undefined && entry.projects.includes(project))) &&
     (entry.stories === undefined || entry.stories.some((id) => storyId.startsWith(id))) &&
     (entry.densities === undefined || entry.densities.includes(density)) &&
@@ -331,7 +332,7 @@ export async function walk(
   storyId: string,
   canvas: HTMLElement,
   parameters: Parameters,
-  { project, capture, plan, axe, record }: Walk,
+  { project, platform, capture, plan, axe, record }: Walk,
 ): Promise<void> {
   const root = document.documentElement;
   const own = ownCell(root);
@@ -347,7 +348,7 @@ export async function walk(
     for (const check of ran) {
       for (const entry of known) {
         const here = entry.present === undefined || canvas.querySelector(entry.present);
-        if (covers(entry, storyId, cell, check, project) && here) {
+        if (covers(entry, storyId, cell, check, project, platform) && here) {
           inPlay.add(entry.id);
         }
       }
@@ -356,7 +357,8 @@ export async function walk(
     for (const failure of failures) {
       const entry = known.find(
         (k) =>
-          covers(k, storyId, cell, failure.check, project, failure.density) && excuses(k, failure),
+          covers(k, storyId, cell, failure.check, project, platform, failure.density) &&
+          excuses(k, failure),
       );
       if (!entry) {
         fresh.push(failure.text);
@@ -436,7 +438,7 @@ export async function expectKnown(id: string, assertion: () => unknown): Promise
   const run = runner();
   const covered =
     run !== undefined &&
-    onPlatform(entry) &&
+    onPlatform(entry, run.platform) &&
     (entry.projects === undefined || entry.projects.includes(run.project));
   try {
     await assertion();

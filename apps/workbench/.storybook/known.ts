@@ -12,7 +12,7 @@ import type { Density, Mode } from '@rockaway/tokens';
  * something it is about (`present`) is on the page there; an entry that was
  * in play somewhere in a run and covered nothing is stale.
  */
-/** A platform a known failure is confined to, as the browser's user agent names it. */
+/** A platform a known failure is confined to. */
 export type Platform = 'Linux' | 'Mac';
 
 export type Check = 'remeasure' | 'conformance' | 'targets' | 'continuity' | 'axe' | 'play';
@@ -34,7 +34,7 @@ export interface Known {
   /** Only in these Vitest projects (`firefox`, `forced-colors-firefox`). Default: every one. */
   readonly projects?: readonly string[];
   /**
-   * Only on these platforms, read from the browser's user agent: a failure
+   * Only on these platforms, as Node reports the one the run is on: a failure
    * that depends on the platform's fonts is seen on one and not another, and
    * would read as stale where it is not. Default: every one.
    */

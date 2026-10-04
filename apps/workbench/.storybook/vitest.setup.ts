@@ -1,5 +1,6 @@
 import { inject } from 'vitest';
 import { commands, page } from 'vitest/browser';
+import type { Platform } from './known.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
 
@@ -15,6 +16,7 @@ declare module 'vitest' {
   interface ProvidedContext {
     plan: Plan;
     project: string;
+    platform: Platform;
   }
 }
 
@@ -27,5 +29,6 @@ setRunner({
   // Each project says what it walks; see `vitest.config.ts`.
   plan: inject('plan'),
   project: inject('project'),
+  platform: inject('platform'),
   record: (use) => commands.recordKnown(use),
 });

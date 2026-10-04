@@ -143,6 +143,7 @@ export const afterEach = async (context: StoryContext): Promise<void> => {
   const a11y = context.parameters.a11y as { disable?: boolean } | undefined;
   await walk(context.id, context.canvasElement, parameters, {
     project: run?.project,
+    platform: run?.platform,
     capture: run?.capture,
     plan: run?.plan,
     record: run?.record,

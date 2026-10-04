@@ -65,3 +65,7 @@ Two new Firefox/WebKit findings, from stories added since: (1) scroll-state-mark
 ## 2026-10-03
 
 First CI run of the engines job (run 37170346623) failed 8 stories, all from files added to main after the local checks. Two were test artifacts, fixed in the stories: FocusAndMotion copied a computed style with a spread, which copies values only in Chromium (Firefox and WebKit keep them as prototype getters); and Scrollbars' 'The check' cannot catch a native bar in Firefox, where Playwright gives every box scrollbar-width: none (measured on a plain overflow: auto box), so it is tagged native-scrollbars and left out of Firefox, like print. Three are real and declared: webkit-form-at-sixty (a form exactly 60 cells wide stacks in WebKit: the form and a 60ch box in it both measure 593.4375px, yet the width < 60ch query matches); firefox-linux-screen-corner (Screen's container stories break at the bottom-right corner in Firefox on Linux, whole on macOS); and webkit-mac-screen-corner (the same corner leaks in WebKit on macOS, clean on Linux). Known entries can now be confined to a platform, read from the user agent, so a font-dependent failure does not read as stale where it does not happen.
+
+## 2026-10-03
+
+The second CI run passed all 462 engine stories and failed only the stale-entry reporter: webkit-mac-screen-corner was in play on Linux, because Playwright's WebKit reports a Macintosh user agent on every platform. The platform now comes from Node (process.platform), provided to the browser like the plan.

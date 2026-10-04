@@ -5,10 +5,18 @@ import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
 import { knownLedger, printToPdf, readWithoutScripts, recordKnown } from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
+import type { Platform } from './.storybook/known.ts';
 import { known } from './.storybook/known.ts';
 import type { Plan } from './.storybook/matrix.ts';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
+
+/**
+ * The platform the browsers run on, for known failures confined to one.
+ * From Node, because a browser's user agent is not to be trusted with it:
+ * Playwright's WebKit says Macintosh on every platform.
+ */
+const platform: Platform = process.platform === 'darwin' ? 'Mac' : 'Linux';
 
 /** Gives every story what only the runner can do: a real screenshot, and a real print. */
 const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
@@ -203,7 +211,7 @@ const chromiumProjects = [
       name: 'storybook',
       setupFiles,
       testTimeout,
-      provide: { plan: plans.storybook, project: 'storybook' },
+      provide: { platform, plan: plans.storybook, project: 'storybook' },
       browser: browser(),
     },
   },
@@ -213,7 +221,7 @@ const chromiumProjects = [
       name: P3,
       setupFiles,
       testTimeout,
-      provide: { plan: plans[P3], project: P3 },
+      provide: { platform, plan: plans[P3], project: P3 },
       browser: browser({}, 'display-p3-d65'),
     },
   },
@@ -223,7 +231,7 @@ const chromiumProjects = [
       name: FORCED_COLORS,
       setupFiles,
       testTimeout,
-      provide: { plan: plans[FORCED_COLORS], project: FORCED_COLORS },
+      provide: { platform, plan: plans[FORCED_COLORS], project: FORCED_COLORS },
       browser: browser({ forcedColors: 'active' }),
     },
   },
@@ -235,7 +243,7 @@ const chromiumProjects = [
       name: ZOOM,
       setupFiles,
       testTimeout,
-      provide: { plan: plans.zoom, project: ZOOM },
+      provide: { platform, plan: plans.zoom, project: ZOOM },
       browser: browser({ deviceScaleFactor: 2 }),
     },
   },
@@ -277,7 +285,7 @@ const engineProjects = others.map((engine) => ({
     name: engine,
     setupFiles,
     testTimeout,
-    provide: { plan: plans.engine, project: engine },
+    provide: { platform, plan: plans.engine, project: engine },
     browser: browser({}, 'srgb', false, engine),
   },
 }));
@@ -291,7 +299,7 @@ const firefoxForcedColors = others.includes('firefox')
           name: `${FORCED_COLORS}-firefox`,
           setupFiles,
           testTimeout,
-          provide: { plan: plans[FORCED_COLORS], project: `${FORCED_COLORS}-firefox` },
+          provide: { platform, plan: plans[FORCED_COLORS], project: `${FORCED_COLORS}-firefox` },
           browser: browser({ forcedColors: 'active' }, 'srgb', false, 'firefox'),
         },
       },
