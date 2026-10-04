@@ -24,9 +24,15 @@ import { themeContexts, toHex } from '@rockaway/tokens';
 import { convert } from 'fontverter';
 import * as hb from 'harfbuzzjs';
 import sharp from 'sharp';
-// The site's own font file, inlined by the build so the card reads its bytes
-// wherever the build put this module.
-import fontData from '../fonts/jetbrains-mono.woff2?inline';
+// The site's own font file (src/fonts/jetbrains-mono.woff2): the build
+// inlines it (src/lib/card-font.ts) and a script reads it from disk, and
+// either hands its bytes to `useFont`.
+//
+// Drawing its outlines into an image is within its licence. JetBrains Mono is
+// under the SIL Open Font License 1.1 (src/fonts/OFL.txt), whose condition 5
+// keeps the font itself under the OFL but "does not apply to any document
+// created using the Font Software". A card or a favicon is such a document:
+// it carries the glyphs as drawn, not the font.
 
 /** A card is what Open Graph asks for: 1200 by 630. */
 export const CARD = { width: 1200, height: 630 } as const;
@@ -63,11 +69,19 @@ interface Fonts {
 }
 
 let fonts: Promise<Fonts> | undefined;
+let fontBytes: Uint8Array | undefined;
+
+/** The font file's bytes, before anything is drawn: WOFF2, as the site serves it. */
+export function useFont(bytes: Uint8Array): void {
+  fontBytes = bytes;
+  fonts = undefined;
+}
+
 function loadFonts(): Promise<Fonts> {
   fonts ??= (async () => {
+    if (!fontBytes) throw new Error('card.ts: call useFont with the font file first');
     // fontverter reads its input as a Node Buffer.
-    const woff2 = Buffer.from(fontData.slice(fontData.indexOf(',') + 1), 'base64');
-    const sfnt = await convert(woff2, 'sfnt');
+    const sfnt = await convert(Buffer.from(fontBytes), 'sfnt');
     const face = new hb.Face(new hb.Blob(sfnt));
     const regular = new hb.Font(face);
     const bold = new hb.Font(face);
@@ -172,6 +186,54 @@ export async function cardPng(page: CardPage, site: string): Promise<Uint8Array<
   const screen = await svgOf(cardBuffer(page, site), CELL, page.title);
   // The 12 rows are 600px of the 630: the ground fills the rest, top and bottom.
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${CARD.width}" height="${CARD.height}"><rect width="100%" height="100%" fill="${BACKGROUND}"/><g transform="translate(0 15)">${screen}</g></svg>`;
+  return new Uint8Array(await sharp(Buffer.from(svg)).png().toBuffer());
+}
+
+/** GitHub's social preview for a repository: 1280 by 640. */
+export const REPO_CARD = { width: 1280, height: 640 } as const;
+
+/**
+ * The repository's own card: what it is, in a line, and how to install it,
+ * in a frame on the same grid as every page's, 64 cells by 12 rows.
+ */
+export function repoCardBuffer(): Cells {
+  const cols = 64;
+  const rows = 12;
+  return Cells.create({ width: cols, height: rows }).draw((draft) => {
+    const line: Style = { fg: 'border.default', attrs: Attr.none };
+    drawBox(draft, rect(0, 0, cols, rows), {
+      title: 'rockaway',
+      style: line,
+      titleStyle: { fg: 'fg.accent', attrs: Attr.bold },
+    });
+    // The rule under the pitch, joined to the frame: `├──…──┤`.
+    drawBox(draft, rect(0, 0, cols, 7), { style: line });
+    drawText(draft, { x: 3, y: 2 }, 'A design system for terminal interfaces', {
+      style: { fg: 'fg.default', attrs: Attr.bold },
+    });
+    drawText(draft, { x: 3, y: 3 }, 'on the web.', {
+      style: { fg: 'fg.default', attrs: Attr.bold },
+    });
+    drawText(draft, { x: 3, y: 4 }, 'Every box on a grid of character cells.', {
+      style: { fg: 'fg.muted', attrs: Attr.none },
+    });
+    drawText(draft, { x: 3, y: 8 }, '$ npm i @rockaway/react @rockaway/css @rockaway/tokens', {
+      style: { fg: 'fg.default', attrs: Attr.none },
+    });
+    drawLabel(draft, rect(0, rows - 1, cols - 1, 1), 'github.com/oddurs/rockaway', {
+      align: 'end',
+      set: { name: 'single', weight: 1, rounded: false, ascii: false },
+      style: { fg: 'fg.muted', attrs: Attr.none },
+      lineStyle: line,
+    });
+  });
+}
+
+/** The repository's card as a PNG, 1280 by 640, for its social preview. */
+export async function repoCardPng(): Promise<Uint8Array<ArrayBuffer>> {
+  const screen = await svgOf(repoCardBuffer(), CELL, 'rockaway');
+  // 64 cells of 20px and 12 rows of 50px: 1280 by 600, with 20px of ground above and below.
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${REPO_CARD.width}" height="${REPO_CARD.height}"><rect width="100%" height="100%" fill="${BACKGROUND}"/><g transform="translate(0 20)">${screen}</g></svg>`;
   return new Uint8Array(await sharp(Buffer.from(svg)).png().toBuffer());
 }
 

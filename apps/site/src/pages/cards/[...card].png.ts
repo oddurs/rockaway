@@ -3,7 +3,7 @@
  * engine and painted to PNG at build time. See `src/lib/card.ts`.
  */
 import type { APIRoute, GetStaticPaths } from 'astro';
-import { cardPng } from '../../lib/card.ts';
+import { cardPng } from '../../lib/card-font.ts';
 import { allPages, cardPath, type Page } from '../../lib/pages.ts';
 
 export const getStaticPaths: GetStaticPaths = async () =>
