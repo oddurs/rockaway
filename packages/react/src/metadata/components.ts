@@ -17,6 +17,7 @@ import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
+import { radioGroupMeta } from '../components/radio-group.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
@@ -37,6 +38,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'link', meta: linkMeta },
   { file: 'list', meta: listMeta },
   { file: 'overlay', meta: overlayMeta },
+  { file: 'radio-group', meta: radioGroupMeta },
   { file: 'table', meta: tableMeta },
   { file: 'text-field', meta: textFieldMeta },
   { file: 'tree', meta: treeMeta },
