@@ -71,3 +71,7 @@ Proved itself on the merge: main brought Callout (#115), and the build failed wi
 ## 2026-10-03
 
 After merging main (#88 server-painted chrome, Tree, Keymap): Tree and Keymap have pages. Examples hydrate on load, not when visible, because an island with no box (Keymap's help, before it has bindings) is never seen and so never hydrates. Criterion 3 now holds: with JavaScript off, every example shows the same words as it does hydrated, and its chrome, painted on the server. Two allowed differences, both printed in the test: a measured screen is drawn at its fallback size on the server and fitted on the client (0126), so line lengths can differ; and Keymap's help lists shortcuts that only exist once script registers them. Found: Callout's server render uses Screen's 80x24 fallback, because its height is measured from its prose, so without JavaScript a one-line callout is drawn about twenty rows tall and shrinks on hydration. Reported to the CTO.
+
+## 2026-10-03
+
+Criterion 5 stays open: copying a page as text and as ANSI is 0105's button, which depends on the shell (0104) and the status bar (0098). Selection already copies every snapshot as its text.
