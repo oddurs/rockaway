@@ -43,7 +43,7 @@ const tokensCss = require.resolve('@rockaway/tokens/tokens.css');
 export interface Analysis extends ExtractedPart {
   /** Every `rk-*` class the component's sources write. */
   readonly classes: readonly string[];
-  /** Every selector, in full, of a rule that selects one of those classes. */
+  /** Every selector, in full, of a rule that is the component's own (see `owns`). */
   readonly selectors: readonly string[];
 }
 
@@ -380,8 +380,60 @@ function tokens(): ReadonlySet<string> {
   return names;
 }
 
-function selects(selector: string, className: string): boolean {
-  return new RegExp(`\\.${className}(?![a-z0-9-])`).test(selector);
+/**
+ * The data attributes a module writes: a JSX `data-*` prop, `el.dataset.rkShape`
+ * and a `'data-*'` string. The painters write their hooks this way
+ * (`data-rk-painted`, `data-rk-shape`), and the stylesheets select them.
+ */
+function attributesOf(parsed: Parsed): string[] {
+  const found = new Set<string>();
+  for (const node of walk(parsed.body)) {
+    if (node.type === 'JSXAttribute') {
+      const name = node.name as { type: string; name?: string };
+      if (name.type === 'JSXIdentifier' && name.name?.startsWith('data-')) found.add(name.name);
+    }
+    if (node.type === 'MemberExpression' && node.computed === false) {
+      const object = node.object as AstNode & { property?: { name?: string } };
+      const property = node.property as { name?: string };
+      if (
+        object.type === 'MemberExpression' &&
+        object.property?.name === 'dataset' &&
+        property.name
+      ) {
+        found.add(`data-${property.name.replace(/[A-Z]/g, (ch) => `-${ch.toLowerCase()}`)}`);
+      }
+    }
+    if (
+      node.type === 'Literal' &&
+      typeof node.value === 'string' &&
+      /^data-[a-z0-9-]+$/.test(node.value)
+    ) {
+      found.add(node.value);
+    }
+  }
+  return [...found];
+}
+
+/**
+ * Whether a rule is the component's own (0192). A selector says whose it is by
+ * its hooks: the `rk-*` classes and the `data-rk-*` attributes in it, which
+ * rockaway's own code writes. It is the component's when it has at least one
+ * hook and the component writes every one of them. So `.rk-frame-box >
+ * .rk-frame` is not Divider's, though Divider writes `rk-frame`, and
+ * `[data-rk-painted] [data-rk-shape]` is the painted components', though it
+ * names no class. React Aria's state attributes and the variants are not
+ * hooks: they say when a rule applies, not whose it is.
+ */
+export function owns(
+  selector: string,
+  hooks: { readonly classes: ReadonlySet<string>; readonly attributes: ReadonlySet<string> },
+): boolean {
+  const classes = [...selector.matchAll(/\.(rk-[a-z0-9]+(?:-[a-z0-9]+)*)/g)].map((m) => m[1] ?? '');
+  const attributes = [...selector.matchAll(/\[(data-rk-[a-z0-9-]+)/g)].map((m) => m[1] ?? '');
+  if (classes.length + attributes.length === 0) return false;
+  return (
+    classes.every((c) => hooks.classes.has(c)) && attributes.every((a) => hooks.attributes.has(a))
+  );
 }
 
 /** Every exported component in `src/components`, read from its source and its stylesheets. */
@@ -404,8 +456,12 @@ export function analyse(): Map<string, Analysis> {
     const classes = [
       ...new Set(strings.flatMap((s) => s.split(/\s+/)).filter((s) => CLASS.test(s))),
     ].sort();
+    const hooks = {
+      classes: new Set(classes),
+      attributes: new Set(sources.flatMap(attributesOf)),
+    };
     const rules = stylesheets().flatMap((sheet) =>
-      sheet.rules.filter((rule) => classes.some((c) => selects(rule.selector, c))),
+      sheet.rules.filter((rule) => owns(rule.selector, hooks)),
     );
     const known = tokens();
     const read = [
