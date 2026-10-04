@@ -18,12 +18,16 @@ function draw({ width, height }: Size): Buffer {
   });
 }
 
+/**
+ * A host the stories resize by setting its width, as the `width` control does.
+ * Not `resize: horizontal`: an engine that draws the native grip draws it over
+ * the host's corner, which is the screen's last cell, and the continuity check
+ * rightly reads a grip laid over `┘` as a broken line (WebKit on macOS,
+ * Firefox on Linux).
+ */
 function Resizable({ width }: { width: number }) {
   return (
-    <div
-      data-testid="host"
-      style={{ width, height: 120, resize: 'horizontal', overflow: 'hidden' }}
-    >
+    <div data-testid="host" style={{ width, height: 120, overflow: 'hidden' }}>
       <Screen draw={draw} style={{ width: '100%', height: '100%' }} />
     </div>
   );

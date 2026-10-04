@@ -3,10 +3,17 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
-import { knownLedger, printToPdf, readWithoutScripts, recordKnown } from './.storybook/commands.ts';
+import {
+  emulateContrast,
+  knownLedger,
+  printToPdf,
+  readWithoutScripts,
+  recordKnown,
+} from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
 import { known } from './.storybook/known.ts';
 import type { Plan } from './.storybook/matrix.ts';
+import { slowStories } from './.storybook/slow.ts';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
@@ -64,7 +71,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = fa
     contextOptions: { ...context, viewport: { width: 1600, height: 2400 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { printToPdf, readWithoutScripts, recordKnown },
+  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown },
 });
 
 /**
@@ -157,7 +164,7 @@ const staleKnown = (): Reporter => {
 
 const config: ViteUserConfig = defineConfig({
   test: {
-    reporters: ['default', staleKnown()],
+    reporters: ['default', staleKnown(), slowStories()],
     projects: [
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
