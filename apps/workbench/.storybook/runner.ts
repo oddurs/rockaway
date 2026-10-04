@@ -33,6 +33,13 @@ export interface Runner {
   readonly platform: Platform;
   /** Tells the run which known failures a story put in play and used, so a stale one fails it. */
   readonly record: (use: KnownUse) => Promise<void>;
+  /**
+   * Types as a reader does, through the browser itself: trusted key events,
+   * each listener called from an empty stack, so a microtask can run between
+   * one listener and the next. A synthetic event dispatched from a script
+   * cannot show what happens then.
+   */
+  readonly type: (keys: string) => Promise<void>;
   /** Emulates the reader's `prefers-contrast` (cairn 0065); `no-preference` gives it back. */
   readonly contrast: (preference: 'more' | 'no-preference') => Promise<void>;
 }

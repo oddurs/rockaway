@@ -1,5 +1,5 @@
 import { inject } from 'vitest';
-import { commands, page } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import type { Platform } from './known.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
@@ -32,5 +32,7 @@ setRunner({
   project: inject('project'),
   platform: inject('platform'),
   record: (use) => commands.recordKnown(use),
+  // The provider's keyboard: trusted events, as a reader's keys are.
+  type: (keys) => userEvent.keyboard(keys),
   contrast: (preference) => commands.emulateContrast(preference),
 });

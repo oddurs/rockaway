@@ -53,13 +53,27 @@ const TARGETS = '.rk-button, .rk-link, .rk-list-item, button, a[href], [role="op
 
 export const known: readonly Known[] = [
   {
-    id: 'screen-remeasure',
-    check: 'remeasure',
-    element: /rk-screen/,
-    present: '.rk-screen[data-rk-cols]',
+    id: 'standalone-link-touch',
+    check: 'targets',
+    rule: 'height',
+    densities: ['touch'],
+    element: /rk-link/,
+    present: '.rk-link',
     reason:
-      'Screen observes only its own box, which a screen sized in cells sizes from the cell it last measured, so a new density never reaches it; conformance and continuity cannot be read in a cell it has not caught up with',
-    ticket: 'Screen remeasures on a context change (the 1ch × 1lh probe, after #88)',
+      'a link that stands alone, not in a sentence, is an inline box as tall as the font (18px), not the 44px line box it sits in, so a finger gets an 18px target at touch; in a flex row the same link is a block and passes',
+    ticket: '0244: a link standing alone takes the line box as its target',
+  },
+  {
+    id: 'list-dense-offset',
+    check: 'conformance',
+    rule: 'y',
+    densities: ['dense'],
+    stories: ['components-list--disabled'],
+    element: /rk-list/,
+    present: '.rk-list-item',
+    reason:
+      "after keyboard navigation, a list's rows sit a pixel above the grid at dense: y = 15, 31 and 47px in 16px cells, so the list has scrolled by one pixel that a whole row would not",
+    ticket: '0211: list rows stay on the grid at dense after keyboard navigation',
   },
   {
     id: 'dense-one-row',

@@ -84,6 +84,9 @@ blocks, the spinner and the control delimiters. `glyphsFor(inputs)` resolves
 them, and `themeGlyphs` holds every preset's. A theme whose border set is
 `ascii` draws everything in ASCII — `>` for the cursor, `#` and `.` for a
 scrollbar — not just its boxes.
+The `ascii` preset is that theme: a neutral palette for any terminal that can
+be trusted with nothing past `~`, and the one to reach for when chrome has to
+survive a paste anywhere.
 
 The `--rk-glyph-*` properties are written from the same object, but components
 do not read them: chrome is drawn into a buffer in JavaScript, possibly on a
