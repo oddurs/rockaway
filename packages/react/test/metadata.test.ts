@@ -43,6 +43,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  RouterProvider:
+    "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
   Cells:
     "A painted layer: a buffer's cells as elements, which Screen's chrome, List's scrollbar and Tree's guides render. Part of the cell renderer, documented with the grid.",
 };
@@ -57,6 +59,17 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Button: (props) => createElement(rockaway.Button, props, 'Publish'),
   Callout: (props) =>
     createElement(rockaway.Callout, props, createElement('p', null, 'Mind the gap.')),
+  Checkbox: (props) =>
+    createElement(
+      Fragment,
+      null,
+      createElement(rockaway.Checkbox, props, 'Sign commits'),
+      createElement(
+        rockaway.CheckboxGroup,
+        { label: 'Branches' },
+        createElement(rockaway.Checkbox, { value: 'main' }, 'main'),
+      ),
+    ),
   Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
   // Both parts of the module: the variant is FieldFrame's, and Fieldset is always a group.
   Fieldset: (props) =>
@@ -71,6 +84,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  TextField: (props) => createElement(rockaway.TextField, { label: 'Name', ...props }),
   Tree: (props) =>
     createElement(
       rockaway.Tree,
@@ -80,6 +94,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
         { id: 'src', title: 'src' },
         createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
       ),
+    ),
+  // Closed: a popover has no trigger here, and on a server an open one renders nothing anyway.
+  OverlayPopover: (props) =>
+    createElement(
+      rockaway.OverlayLayer,
+      null,
+      createElement(rockaway.OverlayPopover, { isOpen: false, ...props }, 'inside'),
     ),
   List: (props) =>
     createElement(
@@ -661,16 +682,16 @@ describe('the snapshots, as the site draws them', () => {
       "── Help, on any keyboard but Apple’s
       Ctrl+K  Open the palette
       /       Search
-      G H     Go home
-      J       Next row
-      K       Previous row
+      g h     Go home
+      j       Next row
+      k       Previous row
       ?       Show this help
       ── Help, on an Apple keyboard
       ⌘K   Open the palette
       /    Search
-      G H  Go home
-      J    Next row
-      K    Previous row
+      g h  Go home
+      j    Next row
+      k    Previous row
       ?    Show this help"
     `);
   });
