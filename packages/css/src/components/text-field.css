@@ -1,0 +1,109 @@
+/*
+ * TextField (cairn 0035).
+ *
+ * The box is exactly `--rk-text-field-cols` cells of text, with a cell either
+ * side: the delimiters of a `md` box, the air inside a framed one, and in
+ * either the overflow marks when text is hidden that way. A framed box is the
+ * frame around those cells, so it is `cols + 4` wide. Nothing here depends on
+ * a state for its size.
+ *
+ * The input and the text area draw no box of their own: no border, no
+ * padding, no native scrollbar (0207). Their text sits on the cells.
+ */
+@layer rk.components {
+  .rk-text-field {
+    --rk-text-field-end: var(--rk-border-control);
+  }
+
+  .rk-text-field-box {
+    display: inline-flex;
+    align-items: start;
+    /* The row the box is in is the cell, whatever the font's own height. */
+    block-size: calc(var(--rk-cell-height) * var(--rk-text-field-rows, 1));
+  }
+
+  .rk-text-field-end {
+    flex: none;
+    inline-size: var(--rk-cell-width);
+    block-size: var(--rk-cell-height);
+    color: var(--rk-text-field-end);
+    white-space: pre;
+  }
+
+  .rk-text-field-input,
+  .rk-text-field-area {
+    box-sizing: border-box;
+    flex: none;
+    inline-size: calc(var(--rk-cell-width) * var(--rk-text-field-cols, 20));
+    margin: 0;
+    border: none;
+    padding: 0;
+    background: var(--rk-bg-subtle);
+    color: var(--rk-fg-default);
+    font: inherit;
+    line-height: var(--rk-cell-height);
+    outline-offset: 0;
+    /* No native scrollbar: the position is shown in cells (0207). */
+    scrollbar-width: none;
+  }
+
+  .rk-text-field-input::-webkit-scrollbar,
+  .rk-text-field-area::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rk-text-field-input {
+    block-size: var(--rk-cell-height);
+  }
+
+  .rk-text-field-area {
+    block-size: calc(var(--rk-cell-height) * var(--rk-text-field-rows, 3));
+    resize: none;
+    overflow: hidden auto;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  /* The caret is a cell where the browser can draw one. */
+  @supports (caret-shape: block) {
+    .rk-text-field-input,
+    .rk-text-field-area {
+      caret-shape: block;
+    }
+  }
+
+  .rk-text-field-scrollbar {
+    display: block;
+    flex: none;
+    inline-size: var(--rk-cell-width);
+    color: var(--rk-fg-muted);
+    user-select: none;
+  }
+
+  /* A framed box is as wide as its text and the cells around it, not its column. */
+  .rk-text-field-frame.rk-field-frame {
+    justify-self: start;
+    inline-size: calc(var(--rk-cell-width) * (var(--rk-text-field-cols, 20) + 4));
+  }
+
+  /* Invalid colours the delimiters; the error row and its mark say it in words. */
+  .rk-text-field[data-invalid] {
+    --rk-text-field-end: var(--rk-border-danger);
+  }
+
+  /* Read-only: the value alone, without the ground. */
+  .rk-text-field[data-readonly] .rk-text-field-input,
+  .rk-text-field[data-readonly] .rk-text-field-area {
+    background: none;
+  }
+
+  .rk-text-field[data-disabled] {
+    --rk-text-field-end: var(--rk-fg-disabled);
+  }
+
+  .rk-text-field[data-disabled] .rk-text-field-input,
+  .rk-text-field[data-disabled] .rk-text-field-area {
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+}
