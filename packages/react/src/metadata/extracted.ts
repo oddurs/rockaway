@@ -1194,7 +1194,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-attribute-underline-offset",
       "--rk-bg-inverse",
-      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-border-focus",
@@ -1205,7 +1204,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-on-inverse",
       "--rk-focus-offset",
       "--rk-focus-width",
-      "--rk-font-family-mono"
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Table": {
