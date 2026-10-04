@@ -6,18 +6,17 @@
  * a frame and not the package (cairn 0165).
  */
 import { Frame } from '@rockaway/react/frame';
-import Document from '../layouts/Document.astro';
+import Prose from '../layouts/Prose.astro';
 ---
 
-<Document
+<Prose
   title="rockaway — a TUI design system for the web"
   description="A TUI design system for the web. Everything sits on a character grid: one cell wide, one row tall, no halves."
+  name="home"
 >
-  <main>
-    <Frame client:load title="rockaway" rows={5}>
-      <p>A TUI design system for the web.</p>
-      <p>Nothing is published yet.</p>
-      <p><a href="https://github.com/oddurs/rockaway">Source on GitHub</a></p>
-    </Frame>
-  </main>
-</Document>
+  <Frame client:load title="rockaway" rows={5}>
+    <p>A TUI design system for the web.</p>
+    <p>Nothing is published yet.</p>
+    <p><a href="https://github.com/oddurs/rockaway">Source on GitHub</a></p>
+  </Frame>
+</Prose>

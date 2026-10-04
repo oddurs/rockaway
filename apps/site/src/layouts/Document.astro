@@ -30,6 +30,10 @@ const { title, description } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Script runs, so the shell will lay itself out (0104): it stays hidden until it has.
+      document.documentElement.dataset.rkScript = '';
+    </script>
     <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
     <style is:inline set:html={fontFaces(fontUrl)}></style>
     <title>{title}</title>

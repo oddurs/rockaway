@@ -736,6 +736,86 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted"
     ]
   },
+  "NavigationTree": {
+    "file": "tree.tsx",
+    "props": [
+      {
+        "name": "current",
+        "type": "string",
+        "required": false,
+        "description": "The page you are on, as the `href` of its row: drawn in reverse video, and `aria-current`."
+      },
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaNavigationTreeProps<T>, 'className' | 'style' | 'selectedRoute'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "NavigationTreeItem": {
+    "file": "tree.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "The row's label, the link's text, and what type-ahead matches."
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": true,
+        "description": "Where the row goes."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The rows under this one. A row with children carries the expand mark."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaNavigationTreeItemProps<T>, 'className' | 'children' | 'textValue' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
   "Pane": {
     "file": "panes.tsx",
     "props": [

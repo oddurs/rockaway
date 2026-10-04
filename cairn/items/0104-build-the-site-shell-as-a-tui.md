@@ -3,8 +3,10 @@ id: 104
 uid: 562ba731-e93f-474e-a13e-938b31be29ad
 title: Build the site shell as a TUI
 type: feature
-status: backlog
+status: doing
 milestone: site
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 98
 - 103

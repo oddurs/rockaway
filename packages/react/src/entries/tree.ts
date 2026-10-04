@@ -9,4 +9,13 @@ export {
   treeBuffer,
   treeGuides,
 } from '../components/tree.pure.ts';
-export { Tree, TreeItem, type TreeItemProps, type TreeProps } from '../components/tree.tsx';
+export {
+  NavigationTree,
+  NavigationTreeItem,
+  type NavigationTreeItemProps,
+  type NavigationTreeProps,
+  Tree,
+  TreeItem,
+  type TreeItemProps,
+  type TreeProps,
+} from '../components/tree.tsx';

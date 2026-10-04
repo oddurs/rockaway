@@ -20,7 +20,7 @@ export const treeMeta: ComponentMetaInput = defineMeta({
     "A file tree, or a site's navigation. Rows behave like List's: a cursor mark in a cell every row reserves, reverse video for selection, a check in a second reserved cell under multi-select, and type-ahead. Depth is drawn as tree guides, two cells a level, each row's a buffer of edges the junction table draws, so the guides join from row to row as the cell renderer strokes them. A row with children carries the expanded or collapsed mark in React Aria's chevron, which expands it and never follows a link. The keyboard is React Aria's Tree.",
   whenToUse: [
     'To show a hierarchy that is deeper than it is wide: files, sections, a table of contents.',
-    "As a site's navigation, with `href` on its items.",
+    "As a site's navigation, as `NavigationTree`: every label a real link, and the page you are on its selected row.",
   ],
   whenNotToUse: [
     { text: 'For a flat collection.', instead: 'List' },
@@ -43,6 +43,20 @@ export const treeMeta: ComponentMetaInput = defineMeta({
       role: 'row',
       description:
         'A row, given its label as `title`, and the rows under it as children. With `href` it is a link.',
+    },
+    {
+      kind: 'import',
+      name: 'NavigationTree',
+      role: 'treegrid',
+      description:
+        "React Aria's NavigationTree, drawn as Tree: the same rows, for a site's navigation. `current` is the `href` of the page you are on.",
+    },
+    {
+      kind: 'import',
+      name: 'NavigationTreeItem',
+      role: 'row',
+      description:
+        'A row whose label is an `a` to its `href`: it opens in a new tab, copies as a link, and works with no script.',
     },
     {
       kind: 'element',
@@ -101,6 +115,11 @@ export const treeMeta: ComponentMetaInput = defineMeta({
       part: 'TreeItem',
       note: 'In the expand cell, beside the label; a leaf below the top carries its guide through that cell instead.',
     },
+    {
+      state: 'current',
+      part: 'NavigationTreeItem',
+      note: "Drawn as a selected row, reverse video, rather than with the cursor mark, which in a tree is the keyboard's. Its link is `aria-current=\"page\"`.",
+    },
     { state: 'disabled', part: 'TreeItem' },
   ],
   accessibility: {
@@ -111,6 +130,7 @@ export const treeMeta: ComponentMetaInput = defineMeta({
       { keys: ['left'], action: 'Collapses the row, or moves to its parent.' },
       { keys: ['home', 'end'], action: 'Moves the cursor to the first or the last row.' },
       { keys: ['enter'], action: 'Follows a row that is a link; otherwise selects it.' },
+      { keys: ['tab'], action: "In a NavigationTree, moves into the tree's links and out again." },
       { keys: ['space'], action: 'Selects the row under the cursor.' },
     ],
     typeAhead: true,

@@ -1,22 +1,52 @@
 ---
 /**
- * A page of prose (cairn 0143). Markdown goes in the slot and `.rk-prose`
- * sets it; a page brings no styles of its own.
+ * A page of prose (cairn 0143), in the site's shell (cairn 0104). Markdown
+ * goes in the slot and `.rk-prose` sets it; a page brings no styles of its
+ * own.
+ *
+ * The page is rendered here first, as HTML, so its outline can be read from
+ * it: the shell's context pane and status bar need the sections before the
+ * island renders. Then the same HTML is the island's slot.
  */
+import { getCollection } from 'astro:content';
+import { Shell } from '../islands/shell.tsx';
+import { components, slugOf } from '../lib/components.ts';
+import { modeOf, siteJumps, siteNav, trail } from '../lib/nav.ts';
+import { outline } from '../lib/outline.ts';
 import Document from './Document.astro';
 
 interface Props {
   title: string;
   description: string;
+  /** What the content pane's border says. The title up to its dash by default. */
+  name?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, name = title.split(' — ')[0] } = Astro.props;
+const foundations = (await getCollection('foundations'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({ id: p.id, title: p.data.title }));
+const nav = siteNav({
+  foundations,
+  components: components.map((c) => ({ slug: slugOf(c.name), name: c.name })),
+});
+const current = Astro.url.pathname;
+const path = trail(nav, current);
+const page = outline(await Astro.slots.render('default'));
 ---
 
 <Document title={title} description={description}>
-  <main>
-    <article class="rk-prose">
-      <slot />
-    </article>
-  </main>
+  <a class="site-skip" href="#content">Skip to the page</a>
+  <Shell
+    client:load
+    nav={nav}
+    current={current}
+    trail={path.map((n) => n.title)}
+    section={modeOf(path)}
+    title={name}
+    headings={page.headings}
+    jumps={siteJumps()}
+  >
+    <article class="rk-prose" set:html={page.html} />
+  </Shell>
 </Document>

@@ -3,16 +3,108 @@
  * Pages and islands bring no CSS of their own; what the site needs, the
  * system grows. The font and its fallbacks are inlined by the document
  * (src/lib/font.ts), because their URL comes from the build.
+ *
+ * What is here is the shell's layout (cairn 0104): where the screen goes in
+ * the window, and which of its panes scroll. Nothing here draws.
  */
 @import "@rockaway/css";
 @import "@rockaway/tokens/tokens.css";
 
-/* The page is the outermost screen: a cell of margin, then the grid. */
-body {
-  padding: var(--rk-y-1) var(--rk-x-2);
+/* The page is a screen, the whole window: the panes, then the status bar. */
+.site-shell {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-content: start;
+  block-size: 100dvh;
+  /* One ground under every pane, the one a Tree and a List are drawn on. */
+  background: var(--rk-bg-surface);
 }
 
-/* Eighty columns, the width terminals have always been. */
-main {
-  max-inline-size: calc(80 * var(--rk-cell-width));
+/*
+ * The panes take every whole row of the window but the status bar's, so the
+ * bar sits right under them and what is left over, less than a row, is below.
+ */
+.site-shell > .rk-panes {
+  block-size: round(down, calc(100dvh - var(--rk-cell-height)), var(--rk-cell-height));
+}
+
+/*
+ * A pane that scrolls fills its pane and scrolls inside it, with no native
+ * bar (0207): the status bar says where you are instead.
+ */
+.site-scroll {
+  box-sizing: border-box;
+  block-size: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* The page is set a row down and two cells in from the pane's borders. */
+.site-page {
+  padding-block: var(--rk-cell-height);
+  padding-inline: calc(2 * var(--rk-cell-width));
+}
+
+.site-page:focus {
+  outline: none;
+}
+
+/* The skip link: off the screen until it has focus, then over the map's top row. */
+.site-skip {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  padding-inline: 1ch;
+  background: var(--rk-fg-default);
+  color: var(--rk-bg-page);
+  translate: 0 -100%;
+}
+
+.site-skip:focus {
+  translate: none;
+}
+
+/*
+ * With script, the shell is hidden until it has measured the window, so the
+ * first frame a reader sees is the screen at its real size, not the server's
+ * guess. If the script never arrives, it shows anyway after three seconds.
+ */
+@keyframes site-shell-reveal {
+  to {
+    visibility: visible;
+  }
+}
+
+[data-rk-script]:not([data-rk-shell]) .site-shell {
+  visibility: hidden;
+  animation: site-shell-reveal 0s 3s forwards;
+}
+
+/*
+ * With no script, there is no screen to measure, so the shell is a document:
+ * the map, the page and its outline one after another, every link in them
+ * working, and no chrome drawn at a size the window is not.
+ */
+@media (scripting: none) {
+  .site-shell,
+  .site-shell .rk-screen,
+  .site-shell .rk-content,
+  .site-shell .rk-pane,
+  .site-scroll {
+    display: block;
+    position: static;
+    inline-size: auto;
+    block-size: auto;
+    overflow: visible;
+  }
+
+  .site-shell .rk-pane {
+    padding: var(--rk-y-1) var(--rk-x-2);
+  }
+
+  .site-shell .rk-frame,
+  .site-shell .rk-statusbar {
+    display: none;
+  }
 }
