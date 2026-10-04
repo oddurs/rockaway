@@ -14,6 +14,7 @@
 import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
+import { checkboxMeta } from '../components/checkbox.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
 import { formMeta } from '../components/field.meta.ts';
 import { fieldsetMeta } from '../components/fieldset.meta.ts';
@@ -25,6 +26,7 @@ import { listMeta } from '../components/list.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
 import { statusBarMeta } from '../components/status-bar.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
+import { textFieldMeta } from '../components/text-field.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
@@ -58,6 +60,7 @@ const sources: readonly ComponentMetaInput[] = [
   badgeMeta,
   buttonMeta,
   calloutMeta,
+  checkboxMeta,
   dividerMeta,
   fieldsetMeta,
   formMeta,
@@ -69,6 +72,7 @@ const sources: readonly ComponentMetaInput[] = [
   overlayMeta,
   statusBarMeta,
   tableMeta,
+  textFieldMeta,
   treeMeta,
 ];
 
