@@ -9,6 +9,7 @@ import { describe, expect, test } from 'vitest';
 import {
   dependenciesOf,
   importsOf,
+  PACKAGES,
   packageOf,
   problems,
   registryIndex,
@@ -50,7 +51,8 @@ describe.each(items.map((item) => [item.name, item] as const))('%s', (name, item
     expect(json.$schema).toBe('https://ui.shadcn.com/schema/registry-item.json');
     expect(json.type).toBe('registry:block');
     expect(json.name).toBe(name);
-    expect(json.dependencies).toEqual(['@rockaway/react']);
+    expect(json.dependencies).toContain('@rockaway/react');
+    for (const dependency of json.dependencies) expect(PACKAGES).toContain(dependency);
     for (const file of files) {
       expect(json.files).toContainEqual({
         path: `registry/rockaway/${name}/${file.name}`,
