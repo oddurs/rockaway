@@ -43,8 +43,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
-  Chrome:
-    "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
+  Cells:
+    "A painted layer: a buffer's cells as elements, which Screen's chrome, List's scrollbar and Tree's guides render. Part of the cell renderer, documented with the grid.",
 };
 
 /**

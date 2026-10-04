@@ -11,4 +11,4 @@ export {
   type StrokeStyle,
   shapeAttributes,
 } from './cells.ts';
-export { Chrome, type ChromeProps, chromeRows } from './chrome.tsx';
+export { Cells, type CellsProps } from './render.tsx';

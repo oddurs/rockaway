@@ -53,7 +53,7 @@ import {
 import { measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { Chrome } from '../paint/chrome.tsx';
+import { Cells } from '../paint/render.tsx';
 import { EMPTY, listMarks, scrollbarBuffer } from './list.pure.ts';
 
 export interface ScrollbarState {
@@ -106,7 +106,7 @@ function Scrollbar({ state }: { state: ScrollbarState }): ReactNode {
   // Painted chrome, rendered rather than painted in an effect, so a server
   // sends it too (0126). A reader is told the list's position by the rows,
   // not by a column of blocks.
-  return <Chrome buffer={buffer} className="rk-list-scrollbar" />;
+  return <Cells buffer={buffer} className="rk-list-scrollbar" />;
 }
 
 /**
