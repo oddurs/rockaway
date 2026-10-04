@@ -114,6 +114,7 @@ export const markNames = [
   'cross',
   'bullet',
   'cursor',
+  'prompt',
   'expanded',
   'collapsed',
   'ellipsis',
@@ -137,7 +138,8 @@ export type MarkName = (typeof markNames)[number];
  * The marks a UI makes when it cannot use colour alone (cairn 0118). A
  * checkbox is `check`, `dash` or `blank` between the control delimiters; a
  * radio is `radio` or `radio-empty` on its own, so its empty state is still a
- * visible mark. Tree guides are not here: they are edges, and the junction
+ * visible mark. `prompt` starts an input row that takes a command, as a
+ * shell's does; it is not `overflow-end`, though in Unicode it is drawn alike. Tree guides are not here: they are edges, and the junction
  * table draws them.
  */
 export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string>>>> = {
@@ -146,6 +148,7 @@ export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string
     cross: '✗',
     bullet: '·',
     cursor: '▸',
+    prompt: '›',
     expanded: '▾',
     collapsed: '▸',
     ellipsis: '…',
@@ -168,6 +171,7 @@ export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string
     cross: 'X',
     bullet: '*',
     cursor: '>',
+    prompt: '>',
     expanded: 'v',
     collapsed: '>',
     ellipsis: '~',
