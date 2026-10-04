@@ -7,6 +7,7 @@ import { knownLedger, printToPdf, readWithoutScripts, recordKnown } from './.sto
 import { densities, modes } from './.storybook/contexts.ts';
 import { known } from './.storybook/known.ts';
 import type { Plan } from './.storybook/matrix.ts';
+import { slowStories } from './.storybook/slow.ts';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
@@ -154,7 +155,7 @@ const staleKnown = (): Reporter => {
 
 const config: ViteUserConfig = defineConfig({
   test: {
-    reporters: ['default', staleKnown()],
+    reporters: ['default', staleKnown(), slowStories()],
     projects: [
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
