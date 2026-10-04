@@ -13,6 +13,7 @@ import {
 import { densities, modes } from './.storybook/contexts.ts';
 import { known } from './.storybook/known.ts';
 import type { Plan } from './.storybook/matrix.ts';
+import { slowStories } from './.storybook/slow.ts';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
@@ -22,9 +23,10 @@ const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
 /**
  * A story is its play function and then the matrix after it: up to eight
  * cells, five of them with a screenshot read pixel by pixel (cairn 0125). The
- * default fifteen seconds was set for one cell.
+ * default fifteen seconds was set for one cell; a story full of frames, read at
+ * every density now that each screen follows its context, needs more on CI.
  */
-const testTimeout = 30_000;
+const testTimeout = 60_000;
 
 /**
  * Stories tagged `zoom` run again at 200%: the continuity matrix, prose, and
@@ -47,7 +49,9 @@ type Screen = 'srgb' | 'display-p3-d65';
 /**
  * The page is bigger than the frame a story runs in. Vitest scales the frame
  * down to fit the page otherwise, and then a screenshot is not the pixels the
- * story drew — which the continuity check would rightly refuse.
+ * story drew — which the continuity check would rightly refuse. It is tall,
+ * too: the frame is 1200 by 2300 (`preview.tsx`), so a screen at touch fits
+ * in it, and the page has to hold the frame without scaling it.
  */
 const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = false) => ({
   enabled: true as const,
@@ -64,7 +68,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = fa
       // measures 0px and nothing could ever see one take a cell's room.
       ...(scrollbars ? { ignoreDefaultArgs: ['--hide-scrollbars'] } : {}),
     },
-    contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
+    contextOptions: { ...context, viewport: { width: 1600, height: 2400 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
   commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown },
@@ -160,7 +164,7 @@ const staleKnown = (): Reporter => {
 
 const config: ViteUserConfig = defineConfig({
   test: {
-    reporters: ['default', staleKnown()],
+    reporters: ['default', staleKnown(), slowStories()],
     projects: [
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],

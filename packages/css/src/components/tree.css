@@ -94,16 +94,6 @@
     color: inherit;
   }
 
-  /* In forced colors a shape the cell draws is inked in the reader's text
-   * colour, which in a selected row is the ground the row is reversed onto.
-   * There the guides take the reversed figure, the canvas, and stay visible
-   * (0181). */
-  @media (forced-colors: active) {
-    .rk-tree-item[data-selected] .rk-tree-guides [data-rk-shape] {
-      --rk-ink-colour: Canvas;
-    }
-  }
-
   .rk-tree-item[data-disabled] {
     color: var(--rk-fg-disabled);
     cursor: default;
@@ -116,6 +106,8 @@
   @media (forced-colors: active) {
     .rk-tree-item[data-selected] {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }
