@@ -26,6 +26,9 @@ type Story = StoryObj<typeof meta>;
 
 const { block, mark } = themeGlyphs.default;
 
+/** How near a half cell the snap calls a tie, in cells. */
+const TIE = 0.01;
+
 /** A screen's cell and corner, read off the screen. */
 function gridOf(el: Element): { left: number; top: number; width: number; height: number } {
   const screen = el.closest('.rk-screen') ?? el;
@@ -241,12 +244,13 @@ export const Widths: Story = {
             expect(window.innerHeight - box.bottom).toBeLessThan(grid.height);
             expect(surface().classList.contains('rk-overlay-sheet')).toBe(true);
           } else {
-            // Centred: the whole cells either side differ by one at most. The
-            // viewport is not a whole number of cells, so its fraction is not
-            // counted, and a tie may go either way.
+            // Centred: snapping to the trigger's grid moves the dialog at most
+            // half a cell from the viewport's centre, and a tie is decided
+            // within a hundredth of a cell, so the cells either side differ by
+            // one at most, and that hundredth.
             const left = box.left / grid.width;
             const right = (window.innerWidth - box.right) / grid.width;
-            expect(Math.abs(Math.floor(left) - Math.floor(right))).toBeLessThanOrEqual(1);
+            expect(Math.abs(left - right)).toBeLessThanOrEqual(1 + 2 * TIE);
             expect(Number.isInteger(x)).toBe(true);
           }
         });
@@ -308,7 +312,7 @@ export const DensitiesAndWidths: Story = {
               cells(box.top - grid.top, grid.height);
               const left = box.left / grid.width;
               const right = (window.innerWidth - box.right) / grid.width;
-              expect(Math.abs(Math.floor(left) - Math.floor(right))).toBeLessThanOrEqual(1);
+              expect(Math.abs(left - right)).toBeLessThanOrEqual(1 + 2 * TIE);
             }
           });
           expectConformance(surface());
