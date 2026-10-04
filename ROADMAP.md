@@ -121,7 +121,6 @@ The component contract, proven on a first set of components.
 
 - [ ] [`0034`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0034-popover.md) Popover <sup>component · components · p0</sup>
 - [ ] [`0035`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0035-text-field.md) Text field <sup>component · components · p1</sup>
-- [ ] [`0036`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0036-checkbox.md) Checkbox <sup>component · components · p1</sup>
 - [ ] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
 - [ ] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
 - [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
@@ -190,6 +189,7 @@ The component contract, proven on a first set of components.
 
 ### in review
 
+- [ ] [`0036`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0036-checkbox.md) Checkbox <sup>component · components · p1</sup>
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
 - [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
 - [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
