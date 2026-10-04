@@ -1,0 +1,6 @@
+── Checked, unchecked, indeterminate
+[✓] Sign commits 
+[ ] Sign commits 
+[–] Sign commits 
+[✓] Sign commits*
+ ✓  Sign commits 

@@ -53,10 +53,15 @@
     white-space: normal;
   }
 
-  /* Under 60 cells, or at touch density: as wide as the viewport, in whole cells. */
+  /*
+   * Under 60 cells, or at touch density: as wide as the viewport, in whole
+   * cells. A thirty-second of a pixel over first, as `cellsIn` takes it: a
+   * viewport exactly n cells wide divides to a hair under n in an engine whose
+   * lengths are not the cell's multiples (Firefox's 1/60px), and lost a cell.
+   */
   .rk-overlay-sheet {
     display: block;
-    inline-size: round(down, 100vw, var(--rk-cell-width));
+    inline-size: round(down, 100vw + 1px / 32, var(--rk-cell-width));
   }
 
   /*

@@ -1,4 +1,11 @@
-import { Button, Frame, GlyphProvider, OverlayModal, OverlayPopover } from '@rockaway/react';
+import {
+  Button,
+  cellsIn,
+  Frame,
+  GlyphProvider,
+  OverlayModal,
+  OverlayPopover,
+} from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -165,8 +172,9 @@ export const DialogOpen: Story = {
     await waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull());
     // The page as text: the backdrop over everything, the dialog on top.
     const shade = (n: number): string => block.light.repeat(n);
+    // Centred in seven spare rows and eleven spare columns, a tie each way:
+    // a tie goes up and left, in every engine.
     expect(`\n${screenshot(frame, { legend: false })}`).toBe(`
-${shade(40)}
 ${shade(40)}
 ${shade(40)}
 ${shade(40)}
@@ -174,6 +182,7 @@ ${shade(5)}╔══════════════════════
 ${shade(5)}║ Discard changes?          ║${shade(6)}
 ${shade(5)}║ Three files will be lost. ║${shade(6)}
 ${shade(5)}╚═══════════════════════════╝${shade(6)}
+${shade(40)}
 ${shade(40)}
 ${shade(40)}
 ${shade(40)}`);
@@ -209,7 +218,8 @@ export const TouchPane: Story = {
     expect(gridOf(screen).height).toBe(gridOf(trigger).height);
     expect(gridOf(screen).height).toBeGreaterThan(gridOf(canvas.getByText('The page.')).height);
     // At touch density a popover is a sheet: the viewport's width, in whole cells.
-    expect(placeOf(surface, trigger)[2]).toBe(Math.floor(window.innerWidth / gridOf(screen).width));
+    // The viewport's whole cells, counted as the stylesheet counts them.
+    expect(placeOf(surface, trigger)[2]).toBe(cellsIn(window.innerWidth, gridOf(screen).width));
   },
 };
 
@@ -406,7 +416,10 @@ export const Dismiss: Story = {
   render: () => <Dismissal />,
   play: async ({ canvas }) => {
     await measured(document.body);
-    // A loaded runner can take more than waitFor's default second to settle a close.
+    // A loaded runner can take more than waitFor's default second to settle a
+    // close. Focus goes back a frame after the overlay unmounts (React Aria
+    // restores it in an animation frame), so focus is waited for as well:
+    // WebKit's frame came after the check often enough to make it flaky.
     const CLOSE = { timeout: 5000 };
     const open = (name: string) => canvas.getByRole('button', { name });
     const dialog = (name: string) =>
@@ -418,32 +431,40 @@ export const Dismiss: Story = {
     await waitFor(() => expect(dialog('Popover')).not.toBeNull());
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(dialog('Popover')).toBeNull(), CLOSE);
-    expect(open('Popover')).toHaveFocus();
+    await waitFor(() => expect(open('Popover')).toHaveFocus(), CLOSE);
 
-    // Popover: a press outside it closes it.
+    // Popover: a press outside it closes it. Outside is the frame's empty
+    // middle, a point the popover cannot cover in any engine's layout; the
+    // middle of the body, pressed before, landed on the popover in Firefox.
     await userEvent.click(open('Popover'));
     await waitFor(() => expect(dialog('Popover')).not.toBeNull());
-    await userEvent.click(document.body, { skipHover: true });
+    await userEvent.click(canvas.getByRole('group', { name: 'dismissal' }), { skipHover: true });
     await waitFor(() => expect(dialog('Popover')).toBeNull(), CLOSE);
 
+    // The modals are opened from the keyboard, so their trigger has focus to
+    // be given back: WebKit, like Safari, does not focus a button it presses.
+    const press = async (name: string): Promise<void> => {
+      open(name).focus();
+      await userEvent.keyboard('{Enter}');
+      await waitFor(() => expect(dialog(name)).not.toBeNull());
+    };
+
     // A modal that is not dismissable: the backdrop does nothing; Escape closes.
-    await userEvent.click(open('Fixed'));
-    await waitFor(() => expect(dialog('Fixed')).not.toBeNull());
+    await press('Fixed');
     const scrim = document.querySelector('.rk-overlay-scrim') as HTMLElement;
     await userEvent.click(scrim, { skipHover: true });
     expect(dialog('Fixed')).not.toBeNull();
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(dialog('Fixed')).toBeNull(), CLOSE);
-    expect(open('Fixed')).toHaveFocus();
+    await waitFor(() => expect(open('Fixed')).toHaveFocus(), CLOSE);
 
     // A dismissable modal: a press on the backdrop closes it.
-    await userEvent.click(open('Loose'));
-    await waitFor(() => expect(dialog('Loose')).not.toBeNull());
+    await press('Loose');
     await userEvent.click(document.querySelector('.rk-overlay-scrim') as HTMLElement, {
       skipHover: true,
     });
     await waitFor(() => expect(dialog('Loose')).toBeNull(), CLOSE);
-    expect(open('Loose')).toHaveFocus();
+    await waitFor(() => expect(open('Loose')).toHaveFocus(), CLOSE);
   },
 };
 
