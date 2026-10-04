@@ -1,8 +1,12 @@
 import { fileURLToPath } from 'node:url';
+import { unified } from '@astrojs/markdown-remark';
+import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import type { ViteUserConfig } from 'astro';
 import { defineConfig } from 'astro/config';
+import { ansiTheme, roleClasses } from './src/lib/highlight.ts';
 import {
+  rehypeCallouts,
   rehypeCellGlyphs,
   rehypeRepositoryLinks,
   rehypeScrollable,
@@ -47,21 +51,37 @@ export default defineConfig({
   site: process.env.SITE_URL ?? 'https://oddurs.github.io',
   base: normaliseBase(process.env.SITE_BASE),
   output: 'static',
-  integrations: [react()],
+  integrations: [react(), mdx()],
   devToolbar: { enabled: false },
   markdown: {
-    // No borrowed palette: code is highlighted in the ANSI 16 by 0144, and
-    // until then it is plain text on the grid.
-    syntaxHighlight: false,
-    rehypePlugins: [
-      rehypeRepositoryLinks,
-      rehypeScrollable,
-      // Columns are sized from the text before its box characters become cells.
-      rehypeTableColumns,
-      rehypeCellGlyphs,
-    ],
+    // Highlighted at build time, in the ANSI 16 through the `syntax.*`
+    // tokens: no borrowed palette, and no highlighter shipped (0144).
+    syntaxHighlight: 'shiki',
+    shikiConfig: { theme: ansiTheme, transformers: [roleClasses] },
+    processor: unified({
+      rehypePlugins: [
+        [rehypeRepositoryLinks, { base: normaliseBase(process.env.SITE_BASE) }],
+        rehypeScrollable,
+        // Columns are sized from the text before its box characters become cells.
+        rehypeTableColumns,
+        rehypeCellGlyphs,
+        // After the cell has taken its glyphs out of the text, so a callout's
+        // own edges are not taken out a second time.
+        rehypeCallouts,
+      ],
+    }),
   },
   vite: {
     plugins: [publishedPackagesOnly()],
+    build: {
+      rolldownOptions: {
+        // MDX pages carry Astro's own `'use astro:head-inject'`, which the
+        // bundler warns it may not keep. Astro handles it; the warning is noise.
+        onLog(level, log, handler) {
+          if (log.code === 'MODULE_LEVEL_DIRECTIVE') return;
+          handler(level, log);
+        },
+      },
+    },
   },
 });

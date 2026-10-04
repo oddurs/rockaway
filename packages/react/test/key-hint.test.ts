@@ -1,5 +1,10 @@
+import { glyphsFor } from '@rockaway/tokens';
+import { createElement } from 'react';
+import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.tsx';
+import { formatKeys, keyShortcut, parseKeys, spokenKeys } from '../src/components/key-hint.pure.ts';
+import { KeyHint } from '../src/components/key-hint.tsx';
+import { detectPlatform } from '../src/platform.ts';
 
 const SPECS = [
   'mod+s',
@@ -26,9 +31,9 @@ describe('a chord, three ways', () => {
       alt+x            ⌥X         Alt+X              M-X
       mod+shift+alt+p  ⌥⇧⌘P       Ctrl+Alt+Shift+P   ^M-P
       esc              Esc        Esc                Esc
-      mod+enter        ⌘↵         Ctrl+Enter         ^Enter
+      mod+enter        ⌘⏎         Ctrl+Enter         ^Enter
       shift+up         ⇧↑         Shift+↑            ⇧↑
-      shift+enter      ⇧↵         Shift+Enter        ⇧Enter"
+      shift+enter      ⇧⏎         Shift+Enter        ⇧Enter"
     `);
   });
 
@@ -106,5 +111,61 @@ describe('parseKeys', () => {
     expect(formatKeys('')).toBe('');
     expect(spokenKeys('')).toBe('');
     expect(parseKeys('+ +').key).toBe('');
+  });
+});
+
+describe('under an ascii theme', () => {
+  const ascii = glyphsFor({ borderSet: 'ascii' });
+
+  test('the legends are words, and an Apple chord is spelled out rather than stacked', () => {
+    const rows = SPECS.map((spec) => {
+      const apple = formatKeys(spec, 'apple', 'platform', ascii);
+      const other = formatKeys(spec, 'other', 'platform', ascii);
+      const terminal = formatKeys(spec, 'other', 'terminal', ascii);
+      return `${spec.padEnd(16)} ${apple.padEnd(20)} ${other.padEnd(18)} ${terminal}`;
+    });
+    expect(rows.join('\n')).toMatchInlineSnapshot(`
+      "mod+s            Cmd+S                Ctrl+S             ^S
+      ctrl+shift+k     Ctrl+Shift+K         Ctrl+Shift+K       ^K
+      alt+x            Opt+X                Alt+X              M-X
+      mod+shift+alt+p  Opt+Shift+Cmd+P      Ctrl+Alt+Shift+P   ^M-P
+      esc              Esc                  Esc                Esc
+      mod+enter        Cmd+Enter            Ctrl+Enter         ^Enter
+      shift+up         Shift+Up             Shift+Up           S-Up
+      shift+enter      Shift+Enter          Shift+Enter        S-Enter"
+    `);
+  });
+
+  test('nothing outside ASCII is left', () => {
+    for (const spec of [...SPECS, 'tab', 'space', 'backspace', 'pageup', 'home', 'left']) {
+      for (const platform of ['apple', 'other'] as const) {
+        for (const notation of ['platform', 'terminal'] as const) {
+          expect(formatKeys(spec, platform, notation, ascii)).toMatch(/^[\x20-\x7e]+$/);
+        }
+      }
+    }
+  });
+});
+
+describe('usePlatform', () => {
+  test('client hints first, then the user agent, and nothing known is not Apple', () => {
+    expect(detectPlatform({ userAgentData: { platform: 'macOS' }, userAgent: 'X11; Linux' })).toBe(
+      'apple',
+    );
+    expect(detectPlatform({ userAgentData: { platform: 'Windows' }, userAgent: 'Macintosh' })).toBe(
+      'other',
+    );
+    expect(detectPlatform({ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0)' })).toBe('apple');
+    expect(detectPlatform({ userAgentData: { platform: '' }, userAgent: 'Macintosh' })).toBe(
+      'apple',
+    );
+    expect(detectPlatform({ userAgent: 'Mozilla/5.0 (X11; Linux x86_64)' })).toBe('other');
+    expect(detectPlatform(undefined)).toBe('other');
+  });
+
+  test('the server draws the neutral keyboard, which hydration then agrees with', () => {
+    const html = renderToString(createElement(KeyHint, { keys: 'mod+s' }, 'save'));
+    expect(html).toContain('Ctrl+S');
+    expect(html).toContain('Control S');
   });
 });

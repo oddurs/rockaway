@@ -1,0 +1,89 @@
+/*
+ * Tree (cairn 0137).
+ *
+ * Rows of whole cells, like List's: the cursor's cell and, under
+ * multi-select, the check's, reserved in every state, then the guides, the
+ * expand cell, a cell of air and the label. The guides are painted chrome,
+ * runs the cell renderer strokes; each level is two of their cells, so a row
+ * is indented in whole cells and nothing here sets an indent.
+ *
+ * The cursor and the selection are separate signals (0118): the cursor is a
+ * mark, a selected row is reverse video. Neither adds a cell.
+ */
+@layer rk.components {
+  .rk-tree {
+    /* Whole cells across, so a row's ground ends on a cell. */
+    inline-size: round(down, 100%, var(--rk-cell-width));
+    background: var(--rk-bg-surface);
+    color: var(--rk-fg-default);
+    outline: none;
+  }
+
+  .rk-tree-item {
+    display: flex;
+    align-items: center;
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+    cursor: pointer;
+  }
+
+  /* The reserved cells: cursor, check, expand, air. */
+  .rk-tree-mark {
+    inline-size: var(--rk-cell-width);
+    block-size: var(--rk-cell-height);
+    flex: none;
+  }
+
+  /* React Aria's chevron, which is a button: a cell, and nothing of a button's own. */
+  .rk-tree-chevron {
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .rk-tree-guides {
+    display: inline-flex;
+    flex: none;
+    color: var(--rk-fg-muted);
+  }
+
+  .rk-tree-label {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rk-tree-item[data-hovered] .rk-tree-label {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* Selected: reverse video, as List draws it, the guides reversed with the
+   * row so the row is one bar. */
+  .rk-tree-item[data-selected] {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-surface);
+  }
+
+  .rk-tree-item[data-selected] .rk-tree-guides {
+    color: inherit;
+  }
+
+  /* In forced colors a shape the cell draws is inked in the reader's text
+   * colour, which in a selected row is the ground the row is reversed onto.
+   * There the guides take the reversed figure, the canvas, and stay visible
+   * (0181). */
+  @media (forced-colors: active) {
+    .rk-tree-item[data-selected] .rk-tree-guides [data-rk-shape] {
+      --rk-ink-colour: Canvas;
+    }
+  }
+
+  .rk-tree-item[data-disabled] {
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+}

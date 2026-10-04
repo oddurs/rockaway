@@ -13,11 +13,17 @@
  */
 import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
+import { calloutMeta } from '../components/callout.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
+import { formMeta } from '../components/field.meta.ts';
+import { fieldsetMeta } from '../components/fieldset.meta.ts';
 import { frameMeta } from '../components/frame.meta.ts';
 import { keyHintMeta } from '../components/key-hint.meta.ts';
+import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
+import { tableMeta } from '../components/table.meta.ts';
+import { treeMeta } from '../components/tree.meta.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
   AnatomyPart,
@@ -49,11 +55,17 @@ export { type StateName, type StateRow, stateVocabulary } from './states.ts';
 const sources: readonly ComponentMetaInput[] = [
   badgeMeta,
   buttonMeta,
+  calloutMeta,
   dividerMeta,
+  fieldsetMeta,
+  formMeta,
   frameMeta,
   keyHintMeta,
+  keymapMeta,
   linkMeta,
   listMeta,
+  tableMeta,
+  treeMeta,
 ];
 
 /** A variant prop's type is its values, and its default the helper's. */

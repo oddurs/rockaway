@@ -10,7 +10,9 @@
  * Given a buffer instead of an element, it is simply the buffer as text, so
  * the same helper works in Node and in a browser.
  */
+
 import { Buffer, clusterWidth, graphemes, toText } from '@rockaway/grid';
+import { cellOf } from './cell.ts';
 
 export interface ScreenshotOptions {
   /** List the cells carrying an attribute underneath the screen. Default true. */
@@ -37,9 +39,7 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
   if (target instanceof Buffer) return toText(target, { trimEnd: options.trimEnd ?? true });
 
   const screen = target.closest<HTMLElement>('.rk-screen') ?? target;
-  const style = screen.ownerDocument.defaultView?.getComputedStyle(screen);
-  const cellWidth = Number.parseFloat(style?.getPropertyValue('--rk-cell-width') ?? '');
-  const cellHeight = Number.parseFloat(style?.getPropertyValue('--rk-cell-height') ?? '');
+  const { width: cellWidth, height: cellHeight } = cellOf(screen);
   const box = screen.getBoundingClientRect();
 
   const cols = Number(screen.dataset.rkCols ?? Math.floor(box.width / cellWidth) ?? 0);
@@ -57,11 +57,6 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
   const at = (rect: DOMRect): { col: number; row: number } => ({
     col: Math.round((rect.left - box.left) / cellWidth),
     row: Math.round((rect.top - box.top) / cellHeight),
-  });
-
-  // The painted chrome, which is already cell-aligned row by row.
-  screen.querySelectorAll<HTMLElement>('.rk-frame .rk-row').forEach((row, index) => {
-    write(grid, 0, index, row.textContent ?? '');
   });
 
   // What a reader sees of an element: the screen, cut down by every ancestor
@@ -101,6 +96,18 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     return clip;
   };
 
+  // The painted chrome, which is already cell-aligned row by row. A screen
+  // inside this one — a fieldset in a form — paints its own, which is written
+  // where it sits and after the outer chrome, so it lies over it as it does on
+  // the page.
+  for (const layer of screen.querySelectorAll<HTMLElement>('.rk-frame')) {
+    const { col, row } = at(layer.getBoundingClientRect());
+    const clip = clipOf(layer.parentElement);
+    layer.querySelectorAll<HTMLElement>(':scope > .rk-row').forEach((line, index) => {
+      write(grid, col, row + index, line.textContent ?? '', clip);
+    });
+  }
+
   // Everything else: real elements, placed by where they actually are.
   const walker = screen.ownerDocument.createTreeWalker(screen, NodeFilter.SHOW_TEXT);
   const attributes: { text: string; attrs: string; col: number; row: number }[] = [];
@@ -112,12 +119,24 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
 
     const range = screen.ownerDocument.createRange();
     range.selectNodeContents(node);
-    const { col, row } = at(range.getBoundingClientRect());
     const clip = clipOf(parent);
-    if (row < clip.top || row >= clip.bottom) continue;
-    write(grid, col, row, text, clip);
+    const start = at(range.getBoundingClientRect());
+    if (range.getClientRects().length > 1) {
+      // Text that wraps is on several rows: each line of it is written where
+      // that line is, which only the line's own characters can say.
+      for (const line of linesOf(node, screen.ownerDocument)) {
+        const { col, row } = at(line.rect);
+        if (row >= clip.top && row < clip.bottom) write(grid, col, row, line.text, clip);
+      }
+    } else {
+      if (start.row < clip.top || start.row >= clip.bottom) continue;
+      write(grid, start.col, start.row, text, clip);
+    }
+    const { col, row } = start;
 
-    const attrs = parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs;
+    // A painted run says what it carries; a real element is read for it.
+    const attrs =
+      parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs ?? drawnWith(parent, screen);
     if (attrs) attributes.push({ text: text.trim(), attrs, col, row });
   }
 
@@ -133,6 +152,96 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     }
   }
   return lines.join('\n');
+}
+
+/**
+ * A wrapped text node, line by line: each line's text and where it starts.
+ * The spaces a line wraps at are dropped with it, as the browser drops them.
+ */
+function linesOf(node: Node, document: Document): { text: string; rect: DOMRect }[] {
+  const text = node.textContent ?? '';
+  const lines: { text: string; rect: DOMRect; top: number }[] = [];
+  const range = document.createRange();
+  let offset = 0;
+  for (const cluster of graphemes(text)) {
+    range.setStart(node, offset);
+    range.setEnd(node, offset + cluster.length);
+    offset += cluster.length;
+    const rect = range.getClientRects()[0];
+    if (rect === undefined || rect.width === 0) continue;
+    const line = lines.at(-1);
+    if (line !== undefined && Math.abs(line.top - rect.top) < rect.height / 2) {
+      lines[lines.length - 1] = { ...line, text: line.text + cluster };
+    } else {
+      lines.push({ text: cluster, rect, top: rect.top });
+    }
+  }
+  return lines.map(({ text: t, rect }) => ({ text: t.replace(/\s+$/, ''), rect }));
+}
+
+/**
+ * The attributes a real element's text is drawn with, named as a painted run
+ * names them (cairn 0190): `bold`, `reverse`, `underline`, in that order. Read
+ * from computed style, so a List row's reverse video and a Link's underline
+ * show in a text snapshot as a painted cell's do.
+ */
+function drawnWith(el: HTMLElement, screen: HTMLElement): string {
+  const view = el.ownerDocument.defaultView;
+  if (!view) return '';
+  const style = view.getComputedStyle(el);
+  const found: string[] = [];
+  const weight = (of: Element): number => Number(view.getComputedStyle(of).fontWeight);
+  if (weight(el) >= 600 && weight(screen) < 600) found.push('bold');
+  if (reversed(el, screen, style.color)) found.push('reverse');
+  if (underlined(el, screen)) found.push('underline');
+  return found.join(' ');
+}
+
+/** Whether a colour is drawn at all: not `transparent`, nor any colour at alpha 0. */
+function opaque(colour: string): boolean {
+  if (colour === 'transparent') return false;
+  const alpha = /rgba?\([^)]*,\s*([\d.]+)\s*\)/.exec(colour)?.[1];
+  return colour.startsWith('rgba') ? Number(alpha) > 0 : true;
+}
+
+/** The nearest element at or above `from` that paints a ground, and its colour. */
+function groundOf(from: Element | null): { el: Element; colour: string } | undefined {
+  for (let el = from; el; el = el.parentElement) {
+    const colour = el.ownerDocument.defaultView?.getComputedStyle(el).backgroundColor ?? '';
+    if (opaque(colour)) return { el, colour };
+  }
+  return undefined;
+}
+
+/**
+ * Reverse video, read from the colours: the words sit on a ground of their
+ * own, inside the screen, and are drawn in the colour of the ground beneath
+ * that one. A selected List row (its text in the list's ground, on the list's
+ * figure) is reversed; a tinted badge is not.
+ */
+function reversed(el: HTMLElement, screen: HTMLElement, ink: string): boolean {
+  const own = groundOf(el);
+  if (!own || own.el === screen || !screen.contains(own.el)) return false;
+  const beneath = groundOf(own.el.parentElement);
+  return beneath !== undefined && ink === beneath.colour && own.colour !== beneath.colour;
+}
+
+/**
+ * Whether the text is underlined. A decoration is drawn on the element that
+ * sets it and on its in-flow descendants, but not into an inline-block or a
+ * box out of flow, so the walk up stops at one.
+ */
+function underlined(el: HTMLElement, screen: HTMLElement): boolean {
+  const view = el.ownerDocument.defaultView;
+  for (let node: Element | null = el; node && view; node = node.parentElement) {
+    const style = view.getComputedStyle(node);
+    if (style.textDecorationLine.includes('underline')) return true;
+    if (node === screen) return false;
+    const atomic = /^inline-/.test(style.display);
+    const outOfFlow = style.float !== 'none' || /^(absolute|fixed)$/.test(style.position);
+    if (atomic || outOfFlow) return false;
+  }
+  return false;
 }
 
 function write(

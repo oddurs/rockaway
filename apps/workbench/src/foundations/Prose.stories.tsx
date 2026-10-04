@@ -17,13 +17,15 @@ import { checkLine, proseLines } from './prose-lines.ts';
  */
 function ProseOnTheGrid({ cols }: { cols?: number }) {
   // A box that scrolls has to be reachable by keyboard, so code and tables
-  // take a tab stop, as the site's pipeline gives them.
+  // take a tab stop, as the site's pipeline gives them. A table is wrapped,
+  // and the wrapper scrolls, so it can show its overflow marks (0208).
   const html = useMemo(
     () =>
       marked
         .parse(fixture, { async: false })
         .replaceAll('<pre>', '<pre tabindex="0">')
-        .replaceAll('<table>', '<table tabindex="0">'),
+        .replaceAll('<table>', '<div class="rk-scroll-marks" tabindex="0"><table>')
+        .replaceAll('</table>', '</table></div>'),
     [],
   );
   return (
@@ -41,7 +43,21 @@ function ProseOnTheGrid({ cols }: { cols?: number }) {
 const meta = {
   title: 'Foundations/Prose',
   component: ProseOnTheGrid,
-  parameters: { layout: 'padded' },
+  // The zoom browser runs every story here again, at 200%.
+  tags: ['zoom'],
+  parameters: {
+    layout: 'padded',
+    // The screen here is built by hand, and each play function measures its
+    // cell at every density itself, as Screen would. The matrix after the
+    // story only switches the root, so it would find the cell the play left
+    // behind (cairn 0125).
+    matrix: {
+      skip: (['dense', 'airy', 'touch'] as const).map((density) => ({
+        density,
+        reason: 'the play function walks the densities itself, measuring the hand-built screen',
+      })),
+    },
+  },
 } satisfies Meta<typeof ProseOnTheGrid>;
 
 export default meta;
@@ -94,7 +110,12 @@ async function conformsAtEveryDensity(screen: HTMLElement): Promise<void> {
   }
 }
 
+// The classic-scrollbars browser runs this again with scrollbars that take
+// room (0208), as it does the stories that scroll across. The line checks
+// below are left to the others: they read every line's pixels, and once more
+// in a fifth browser is time CI does not have.
 export const Fixture: Story = {
+  tags: ['classic-scrollbars'],
   play: async ({ canvas }) => {
     const screen = canvas.getByTestId('prose');
     await conformsAtEveryDensity(screen);
@@ -132,25 +153,94 @@ export const Fixture: Story = {
 
 export const FortyCells: Story = {
   name: 'At forty cells',
+  tags: ['classic-scrollbars'],
   args: { cols: 40 },
   play: async ({ canvas }) => {
     const screen = canvas.getByTestId('prose');
     await conformsAtEveryDensity(screen);
 
-    // Prose reflows; only code and tables scroll, inside their own boxes.
+    // Prose reflows; only code and tables scroll, inside their own boxes. A
+    // table scrolls in its wrapper, which can mark its edges.
     const article = screen.querySelector<HTMLElement>('.rk-prose');
     await expect(article?.scrollWidth).toBe(article?.clientWidth);
     const scrolls = [...screen.querySelectorAll<HTMLElement>('*')]
       .filter((el) => el.scrollWidth > el.clientWidth + 1)
-      .map((el) => el.tagName.toLowerCase());
+      .map((el) => (el.matches('.rk-scroll-marks') ? 'table' : el.tagName.toLowerCase()));
     await expect(new Set(scrolls)).toEqual(new Set(['pre', 'table']));
+  },
+};
+
+/** Whether a scroller's overflow mark at one edge is showing. */
+function markShows(scroller: Element, edge: '::before' | '::after'): boolean {
+  return getComputedStyle(scroller, edge).visibility === 'visible';
+}
+
+/** Scroll, then wait for the scroll-state query to catch up. */
+async function scrollTo(scroller: HTMLElement, left: number): Promise<void> {
+  scroller.scrollLeft = left;
+  for (let i = 0; i < 2; i++) await new Promise((done) => requestAnimationFrame(done));
+}
+
+/**
+ * Code and tables that scroll across hide the browser's scrollbar (0207) and
+ * mark each edge that has more past it, `‹` at the start and `›` at the end,
+ * the way `less -S` does (0208). The marks are the theme's, cover one cell at
+ * the edge, and are read as nothing.
+ */
+export const OverflowMarks: Story = {
+  name: 'Overflow marks',
+  tags: ['classic-scrollbars'],
+  args: { cols: 40 },
+  play: async ({ canvas }) => {
+    const screen = canvas.getByTestId('prose');
+    const pre = screen.querySelector<HTMLElement>('pre') as HTMLElement;
+    const table = screen.querySelector<HTMLElement>('.rk-scroll-marks') as HTMLElement;
+    await expect(table.querySelector('table')).not.toBeNull();
+
+    for (const scroller of [pre, table]) {
+      await expect(getComputedStyle(scroller).getPropertyValue('scrollbar-width')).toBe('none');
+      // The theme's marks, with no text for a reader.
+      await expect(getComputedStyle(scroller, '::before').content).toContain(
+        getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-start').trim(),
+      );
+      await expect(getComputedStyle(scroller, '::after').content).toContain(
+        getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-end').trim(),
+      );
+
+      // At the start: more to the end only.
+      await scrollTo(scroller, 0);
+      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+        false,
+        true,
+      ]);
+      // Part way: more both ways.
+      await scrollTo(scroller, Math.round((scroller.scrollWidth - scroller.clientWidth) / 2));
+      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+        true,
+        true,
+      ]);
+      // At the end: more to the start only.
+      await scrollTo(scroller, scroller.scrollWidth);
+      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
+        true,
+        false,
+      ]);
+      await scrollTo(scroller, 0);
+    }
   },
 };
 
 export const Dark: Story = { globals: { mode: 'dark' } };
 
-/** Every line, in pixels, at every density; the zoom project runs it again at 2x. */
-async function linesRunEndToEnd(screen: HTMLElement): Promise<void> {
+/**
+ * Every line, in pixels, at every density; the zoom project runs it again at
+ * 2x. A screenshot a line, because a screenshot of the whole fixture is blank
+ * below the fold.
+ */
+async function linesRunEndToEnd(
+  screen: HTMLElement,
+  densities: readonly (typeof DENSITIES)[number][] = DENSITIES,
+): Promise<void> {
   const run = runner();
   if (!run) return;
   const root = document.documentElement;
@@ -158,7 +248,7 @@ async function linesRunEndToEnd(screen: HTMLElement): Promise<void> {
   const problems: string[] = [];
   let checked = 0;
   try {
-    for (const density of DENSITIES) {
+    for (const density of densities) {
       root.dataset.density = density;
       await frame();
       measure(screen);
@@ -177,7 +267,7 @@ async function linesRunEndToEnd(screen: HTMLElement): Promise<void> {
     measure(screen);
   }
   // h1, four h2s, the table's header, the hr and the quote, at four densities.
-  await expect(checked).toBe(8 * DENSITIES.length);
+  await expect(checked).toBe(8 * densities.length);
   await expect(problems).toEqual([]);
 }
 
@@ -187,11 +277,12 @@ export const Lines: Story = {
   },
 };
 
+/** The geometry is the same in the dark; this is the ink against its ground. */
 export const LinesDark: Story = {
   name: 'Lines (dark)',
   globals: { mode: 'dark' },
   play: async ({ canvas }) => {
-    await linesRunEndToEnd(canvas.getByTestId('prose'));
+    await linesRunEndToEnd(canvas.getByTestId('prose'), ['normal']);
   },
 };
 
@@ -211,6 +302,6 @@ export const ForcedColors: Story = {
       await expect(style.getPropertyValue('forced-color-adjust')).toBe('none');
       await expect(style.backgroundImage).not.toBe('none');
     }
-    await linesRunEndToEnd(screen);
+    await linesRunEndToEnd(screen, ['normal']);
   },
 };

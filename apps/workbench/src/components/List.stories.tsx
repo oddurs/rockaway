@@ -12,6 +12,7 @@ import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { settled } from '../settled.ts';
 
 const FILES = [
   'src/index.ts',
@@ -34,6 +35,9 @@ const PAINTERS = ['glyph', 'rule'] as const;
 const meta = {
   title: 'Components/List',
   component: List,
+  // The classic-scrollbars browser runs every story here again, with native
+  // scrollbars that take room from their box (0207).
+  tags: ['classic-scrollbars'],
   parameters: { layout: 'centered' },
 } satisfies Meta<typeof List>;
 
@@ -121,12 +125,6 @@ function rowsOf(
     disabled: state.disabled?.includes(label) ?? false,
     cursor: state.cursor === label,
   }));
-}
-
-/** Wait for fonts and two frames, so every screen has measured its last cell. */
-async function settled(): Promise<void> {
-  await document.fonts.ready;
-  for (let i = 0; i < 2; i++) await new Promise((done) => requestAnimationFrame(done));
 }
 
 /** The cell a screen measured, read off it. */
@@ -346,7 +344,7 @@ export const Keyboard: Story = {
     const frame = canvas.getByRole('group', { name: 'keyboard' });
     const box = canvas.getByRole('listbox', { name: 'Files' });
     const cursorOn = (): string =>
-      box.querySelector('[data-focused="true"] .rk-list-label')?.textContent ?? '(none)';
+      box.querySelector('[role="option"][data-focused] .rk-list-label')?.textContent ?? '(none)';
     const chosen = (): string[] =>
       [...box.querySelectorAll('[data-selected="true"] .rk-list-label')].map(
         (l) => l.textContent ?? '',
@@ -442,9 +440,55 @@ export const Disabled: Story = {
     );
 
     const cursorOn = (): string =>
-      frame.querySelector('[data-focused="true"] .rk-list-label')?.textContent ?? '(none)';
+      frame.querySelector('[role="option"][data-focused] .rk-list-label')?.textContent ?? '(none)';
     await userEvent.tab();
     await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(cursorOn()).toBe('src/junction.ts'));
+  },
+};
+
+/**
+ * A row that is both selected and disabled (0184). Tabbing in, React Aria
+ * aims at the selected row, cannot give it focus, and leaves focus on the list
+ * itself with no row under the cursor. That focus used to be invisible: the
+ * list drew no outline, so the keyboard was in the list but showed nowhere,
+ * and the first arrow seemed to be swallowed. The list now takes the focus
+ * ring while it holds focus itself, and the first arrow puts the cursor on
+ * the first row, as it does in any list nothing has been entered in yet.
+ */
+export const DisabledAndSelected: Story = {
+  name: 'Disabled and selected',
+  render: () => (
+    <Framed name="selected and disabled" width={20} rows={3}>
+      <Files
+        label="Chosen files"
+        rows={3}
+        files={FILES.slice(0, 3)}
+        disabled={['src/buffer.ts']}
+        selected={['src/buffer.ts']}
+      />
+    </Framed>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const box = canvas.getByRole('listbox', { name: 'Chosen files' });
+    // The row with the cursor, if any: the list carries data-focused too.
+    const cursorOn = (): string =>
+      box.querySelector('[role="option"][data-focused] .rk-list-label')?.textContent ?? '(none)';
+
+    await userEvent.tab();
+    await waitFor(() => expect(box).toHaveFocus());
+    expect(cursorOn()).toBe('(none)');
+    // The focus is on the list, and it shows.
+    expect(box).toHaveAttribute('data-focus-visible', 'true');
+    expect(getComputedStyle(box).outlineStyle).toBe('solid');
+
+    // The first arrow enters the rows; the ring gives way to the cursor.
+    await userEvent.keyboard('{ArrowDown}');
+    await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
+    expect(getComputedStyle(box).outlineStyle).toBe('none');
+    // And the next steps over the disabled row.
     await userEvent.keyboard('{ArrowDown}');
     await waitFor(() => expect(cursorOn()).toBe('src/junction.ts'));
   },
@@ -479,22 +523,34 @@ export const Empty: Story = {
         trimEnd: false,
       }),
     );
+
+    // With no rows to put the cursor on, the list itself holds focus, and
+    // shows it with the focus ring (0184).
+    const nothing = canvas.getByRole('listbox', { name: 'Nothing' });
+    await userEvent.tab();
+    await waitFor(() => expect(nothing).toHaveFocus());
+    expect(getComputedStyle(nothing).outlineStyle).toBe('solid');
   },
 };
 
 /**
- * Every density, under both painters: a row is one cell tall wherever it is,
+ * Every density, under one painter: a row is one cell tall wherever it is,
  * the list is a whole number of rows, and the scrollbar's blocks fill their
- * cells (the continuity check runs after this story). Every state at each:
- * a selection and a disabled row hold still, and hover and the cursor are
+ * cells (the continuity check runs after the story). Every state at each: a
+ * selection and a disabled row hold still, and hover and the cursor are
  * brought into each list in turn.
+ *
+ * One story per painter. Both painters' eight lists in one story took past
+ * CI's thirty seconds: the check after it reads every list's pixels in
+ * several cells of the matrix, and the play function hovers and clicks in
+ * each.
  */
-export const Densities: Story = {
-  render: () => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: 'var(--rk-x-2)' }}>
-      {DENSITIES.flatMap((density) =>
-        PAINTERS.map((painter) => (
-          <div key={`${density}-${painter}`} data-density={density}>
+function densities(painter: (typeof PAINTERS)[number]): Story {
+  return {
+    render: () => (
+      <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: 'var(--rk-x-2)' }}>
+        {DENSITIES.map((density) => (
+          <div key={density} data-density={density}>
             <Framed name={`${density}, ${painter}`} width={18} rows={4} painter={painter}>
               <Files
                 label={`Files, ${density}, ${painter}`}
@@ -505,14 +561,12 @@ export const Densities: Story = {
               />
             </Framed>
           </div>
-        )),
-      )}
-    </div>
-  ),
-  play: async ({ canvas }) => {
-    await settled();
-    for (const density of DENSITIES) {
-      for (const painter of PAINTERS) {
+        ))}
+      </div>
+    ),
+    play: async ({ canvas }) => {
+      await settled();
+      for (const density of DENSITIES) {
         const frame = canvas.getByRole('group', { name: `${density}, ${painter}` });
         const cell = cellOf(frame);
         const list = frame.querySelector('.rk-list') as HTMLElement;
@@ -552,9 +606,12 @@ export const Densities: Story = {
           ),
         );
       }
-    }
-  },
-};
+    },
+  };
+}
+
+export const Densities: Story = { ...densities('glyph'), name: 'Densities, glyph' };
+export const DensitiesRule: Story = { ...densities('rule'), name: 'Densities, rule' };
 
 /** The glyph and rule painters draw the same list, cell for cell: single, multiple and empty. */
 export const Painters: Story = {

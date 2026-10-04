@@ -14,6 +14,23 @@ import { alias, type Group, type Token } from './dtcg.ts';
 const p = (slot: PaletteSlot): Token => alias(`ansi.${slot}`);
 
 export const intents = ['accent', 'info', 'success', 'warning', 'danger'] as const;
+
+/** What a highlighter can say about a piece of code (0144). */
+export const syntaxRoles = [
+  'plain',
+  'comment',
+  'keyword',
+  'string',
+  'constant',
+  'function',
+  'type',
+  'attribute',
+  'regexp',
+  'inserted',
+  'deleted',
+  'error',
+] as const;
+export type SyntaxRole = (typeof syntaxRoles)[number];
 export type Intent = (typeof intents)[number];
 
 /** Which colour each intent speaks with. The accent is the theme's blue. */
@@ -109,6 +126,29 @@ export function semanticColors(): Group {
       success: p('green'),
       warning: p('yellow'),
       danger: p('red'),
+    },
+    syntax: {
+      $type: 'color',
+      $description:
+        'Code, highlighted in the ANSI 16 the way terminal editors do it (0144). Each role is a palette slot, so code follows the theme and the mode, and a terminal theme a reader imports recolours it.',
+      plain: { ...p('foreground'), $description: 'Identifiers, punctuation, anything unnamed.' },
+      comment: {
+        ...p('muted'),
+        $description: 'Comments. Also italic, so they read as comments in greyscale.',
+      },
+      keyword: { ...p('magenta'), $description: 'Keywords and storage: `import`, `const`.' },
+      string: { ...p('green'), $description: 'Strings and template literals.' },
+      constant: { ...p('yellow'), $description: 'Numbers, booleans, constants.' },
+      function: { ...p('blue'), $description: 'Function and method names.' },
+      type: { ...p('cyan'), $description: 'Types, classes, components, tag names.' },
+      attribute: { ...p('yellow'), $description: 'Attribute and property keys in markup.' },
+      regexp: { ...p('red'), $description: 'Regular expressions and escapes.' },
+      inserted: { ...p('green'), $description: 'Added lines in a diff.' },
+      deleted: { ...p('red'), $description: 'Removed lines in a diff.' },
+      error: {
+        ...p('red'),
+        $description: 'Invalid code. Also underlined, so it reads as an error in greyscale.',
+      },
     },
   };
 }

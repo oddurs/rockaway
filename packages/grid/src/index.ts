@@ -41,6 +41,7 @@ export {
   junctionTable,
   mergeEdges,
 } from './junction.ts';
+export { drawLabel, type Label, type LabelAlign, type LabelOptions } from './label.ts';
 export {
   columns,
   fixed,
@@ -66,6 +67,7 @@ export {
   type ArcMark,
   arcMarks,
   boxMarks,
+  brailleMarks,
   type Mark,
   type Measure,
   type Metrics,

@@ -84,13 +84,71 @@ const attrNames: readonly (readonly [number, string])[] = [
 
 const token = (name: string): string => `var(--rk-${name.replaceAll('.', '-')})`;
 
-function applyStyle(el: HTMLElement, style: Style): void {
-  if (style.fg) el.style.color = token(style.fg);
+/**
+ * What one run is, as markup: its inline style and its data attributes. The
+ * DOM painter and the React renderer both write exactly this, so a screen
+ * painted on the client and one rendered on a server are the same nodes.
+ */
+export interface RunMarkup {
+  /** Inline style, as React writes it: camel case, and custom properties as they are. */
+  readonly style: Readonly<Record<string, string>>;
+  /** `data-rk-shape`: the shape the cell draws for itself. */
+  readonly shape?: string;
+  /** `data-attrs`: bold, dim, reverse, underline. */
+  readonly attrs?: string;
+  /** `data-rk-dots`: the dots a braille cell raises; one rule draws them all (0166). */
+  readonly dots?: string;
+}
+
+/** A run that starts at column `col`, as markup. */
+export function runMarkup(run: Run, col: number): RunMarkup {
+  const style: Record<string, string> = {};
+  // Where the run starts as well as how long it is: the stylesheet sizes it
+  // from both, so every column lands on the same pixel in every row.
+  if (col !== 0) style['--rk-col'] = String(col);
+  if (run.cells !== 1) style['--rk-run'] = String(run.cells);
+  if (run.style.fg) style.color = token(run.style.fg);
   // The colour alone, never the `background` shorthand: a shape draws its
   // strokes as background images, and an inline shorthand would erase them.
-  if (style.bg) el.style.backgroundColor = token(style.bg);
-  const attrs = attrNames.filter(([bit]) => (style.attrs & bit) !== 0).map(([, name]) => name);
-  if (attrs.length > 0) el.dataset.attrs = attrs.join(' ');
+  if (run.style.bg) style.backgroundColor = token(run.style.bg);
+  const attrs = attrNames
+    .filter(([bit]) => (run.style.attrs & bit) !== 0)
+    .map(([, name]) => name)
+    .join(' ');
+  const dots = (shapeOf(run.text)?.dots ?? []).join(' ');
+  return {
+    style,
+    ...(run.shape ? { shape: run.shape } : {}),
+    ...(attrs ? { attrs } : {}),
+    ...(dots ? { dots } : {}),
+  };
+}
+
+/** Every row of a buffer as its runs, each with the column it starts at. */
+export function rowsOf(buffer: Buffer): { readonly run: Run; readonly col: number }[][] {
+  return Array.from({ length: buffer.height }, (_, y) => {
+    let col = 0;
+    return rowRuns(buffer, y).map((run) => {
+      const at = { run, col };
+      col += run.cells;
+      return at;
+    });
+  });
+}
+
+/**
+ * The data attributes that make one character a cell the cell draws, for
+ * chrome that is a single element rather than a painted screen: a spinner's
+ * frame, a mark. Give the element the `rk-run` class too, so it is a whole
+ * cell. Empty for a letter, which the font draws (cairn 0166).
+ */
+export function shapeAttributes(ch: string): Record<string, string> {
+  const shape = shapeOf(ch);
+  if (!shape) return {};
+  return {
+    'data-rk-shape': shape.key,
+    ...(shape.dots.length > 0 ? { 'data-rk-dots': shape.dots.join(' ') } : {}),
+  };
 }
 
 /** Paint `buffer` into `target`, replacing what was there, with strokes of this style. */
@@ -105,15 +163,20 @@ export function paintCells(
   target.dataset.rkPainted = strokes;
   target.replaceChildren();
 
-  for (let y = 0; y < buffer.height; y++) {
+  for (const runs of rowsOf(buffer)) {
     const row = doc.createElement('div');
     row.className = `${prefix}-row`;
-    for (const run of rowRuns(buffer, y)) {
+    for (const { run, col } of runs) {
       const el = doc.createElement('span');
       el.className = `${prefix}-run`;
-      if (run.cells !== 1) el.style.setProperty('--rk-run', String(run.cells));
-      if (run.shape) el.dataset.rkShape = run.shape;
-      applyStyle(el, run.style);
+      const markup = runMarkup(run, col);
+      for (const [name, value] of Object.entries(markup.style)) {
+        if (name.startsWith('--')) el.style.setProperty(name, value);
+        else el.style[name as 'color' | 'backgroundColor'] = value;
+      }
+      if (markup.shape) el.dataset.rkShape = markup.shape;
+      if (markup.attrs) el.dataset.attrs = markup.attrs;
+      if (markup.dots) el.dataset.rkDots = markup.dots;
       el.textContent = run.text;
       row.append(el);
     }

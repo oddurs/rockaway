@@ -1,5 +1,6 @@
 /**
- * The barrels hold one line per component (cairn 0122).
+ * The barrels hold one line per component (cairn 0122), and each component has
+ * an entry of its own, `@rockaway/react/<name>` (cairn 0165).
  *
  * Parallel branches each add a line to `src/index.ts` and to the CSS package's
  * `index.css`, and `merge=union` joins them without asking. That is only safe
@@ -29,19 +30,52 @@ function count(paths: string[]): Map<string, number> {
   return counts;
 }
 
+/** Component names, `frame` for `components/frame.tsx`. */
+const names = components(react, '.tsx').map((file) => file.replace(/\.tsx$/, ''));
+
+describe('src/entries', () => {
+  const entries = readdirSync(path.join(react, 'entries')).sort();
+
+  // An entry is `@rockaway/react/<name>` (cairn 0165): a component without one
+  // cannot be hydrated on its own, and an entry without a component is a
+  // subpath that resolves to nothing.
+  test('has one entry per component, and nothing else', () => {
+    expect(entries).toEqual(names.map((name) => `${name}.ts`));
+  });
+
+  test('re-exports each component from its own module only', () => {
+    const strays = entries.flatMap((entry) => {
+      const source = readFileSync(path.join(react, 'entries', entry), 'utf8');
+      // Its own module, and that module's pure half (cairn 0126), which holds
+      // the buffer functions outside the client boundary.
+      const name = entry.replace(/\.ts$/, '');
+      const own = [`'../components/${name}.tsx'`, `'../components/${name}.pure.ts'`];
+      return [...source.matchAll(/from (['"][^'"]+['"])/g)]
+        .filter((m) => !own.includes(m[1] ?? ''))
+        .map((m) => `${entry}: ${m[1]}`);
+    });
+    expect(strays).toEqual([]);
+  });
+});
+
 describe('src/index.ts', () => {
   const source = readFileSync(path.join(react, 'index.ts'), 'utf8');
   const statements = source.split('\n').filter((line) => line.startsWith('export'));
   const listed = statements.flatMap((line) => {
-    const match = /from '\.\/components\/([^']+)';$/.exec(line);
+    const match = /^export \* from '\.\/entries\/([^']+)\.ts';$/.exec(line);
     return match?.[1] === undefined ? [] : [match[1]];
   });
 
-  test('has every component exactly once', () => {
+  test('has every component exactly once, through its entry', () => {
     const counts = count(listed);
-    const expected = components(react, '.tsx');
-    expect(expected.filter((file) => counts.get(file) !== 1)).toEqual([]);
-    expect(listed.filter((file) => !expected.includes(file))).toEqual([]);
+    expect(names.filter((name) => counts.get(name) !== 1)).toEqual([]);
+    expect(listed.filter((name) => !names.includes(name))).toEqual([]);
+  });
+
+  // Straight from a component module, the barrel would publish whatever the
+  // module exports for its tests or metadata.
+  test('never reaches past an entry into a component module', () => {
+    expect(statements.filter((line) => line.includes('./components/'))).toEqual([]);
   });
 
   test('gives each module one statement on one line', () => {

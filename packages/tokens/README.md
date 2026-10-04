@@ -1,7 +1,8 @@
 # @rockaway/tokens
 
 Design decisions as data. Five theme inputs produce every token (cairn 0058);
-mode and density are runtime contexts, resolved through the DTCG Resolver.
+theme, mode and density are runtime contexts, resolved through the DTCG
+Resolver.
 
 ## The theme
 
@@ -15,7 +16,42 @@ mode and density are runtime contexts, resolved through the DTCG Resolver.
 | `borderSet` | `single`, `double`, `heavy`, `rounded`, `ascii` |
 | `conformance` | `strict`, `standard`, `loose` |
 
-The others under `themes/` are presets: `themes` exports all of them by name.
+The others under `themes/` are presets, and `themes/terminal/` holds imported
+terminal palettes, each with its source and its licence beside it.
+`themeContexts` lists every theme with the modes it declares; `themes` and
+`themeGlyphs` give each one's inputs and glyphs by name.
+
+## Themes, modes and density on any element
+
+Each is an attribute, and each works on any element, nested in any order:
+
+```html
+<html data-rk-theme="ink" data-theme="dark" data-density="normal">
+  <aside data-rk-theme="solarized">…</aside>   <!-- Solarized, still dark -->
+  <section data-theme="light">…</section>      <!-- ink, light -->
+</html>
+```
+
+The default theme is in `tokens.css`. Every other is a stylesheet of its own,
+loaded after it:
+
+```css
+@import '@rockaway/tokens/tokens.css';
+@import '@rockaway/tokens/themes/ink.css';
+@import '@rockaway/tokens/themes/dracula.css';
+```
+
+A theme carries its palette in both modes, and every colour is a
+`light-dark()` pair over them, so a mode is only a `color-scheme`: that is
+what lets the two nest freely. A theme with a single mode, like Dracula, pins
+it. Chrome is drawn in JavaScript, so pair the attribute with
+`<GlyphProvider glyphs={themeGlyphs.ink}>` from `@rockaway/react` for the
+theme's border set and marks.
+
+Every theme passes the contrast gate (cairn 0022, 0163) in every mode it
+declares. A palette that does not pass is fitted: a failing colour moves in
+lightness, keeping its hue, until it does. `pnpm generate` prints every move,
+and the theme's DTCG file records them.
 
 ## Use
 
@@ -44,6 +80,14 @@ The `--rk-glyph-*` properties are written from the same object, but components
 do not read them: chrome is drawn into a buffer in JavaScript, possibly on a
 server, so `@rockaway/react` passes the object down through `GlyphProvider`.
 
+## Terminal themes
+
+Every theme also ships for the terminal, in each mode it declares:
+`@rockaway/tokens/terminal/{ghostty,kitty,alacritty,iterm2}/rockaway-<theme>-<mode>`.
+The colours are the ones the web uses, fitted to the same contrast gate. An
+imported theme's files open with where it came from, what fitting changed, and
+its upstream licence in full.
+
 ## Tailwind
 
 ```css
@@ -59,17 +103,18 @@ without a rebuild. The adapter is generated; do not edit it.
 ## Generated DTCG
 
 ```sh
-pnpm --filter @rockaway/tokens generate        # themes/default.json → dtcg/ → css/ and src/names.ts
+pnpm --filter @rockaway/tokens generate        # themes/ → dtcg/ → css/ and src/names.ts
 pnpm --filter @rockaway/tokens generate:check  # fails if anything generated is stale
 ```
 
-[`dtcg/`](dtcg), [`css/tokens.css`](css/tokens.css) and `src/names.ts` are
+[`dtcg/`](dtcg), [`css/`](css) and `src/names.ts` are
 committed so changes to the rules show up in review. Do not edit them by hand.
 The tests fail if any of them is stale, and Terrazzo validates the DTCG.
 
 | File | Holds |
 | --- | --- |
-| `rockaway.resolver.json` | How the files combine; `mode` and `density` modifiers |
-| `base.tokens.json` | Font primitives |
-| `palette.{light,dark}.tokens.json` | Palettes, one per `mode` context |
-| `density.{compact,regular,comfortable}.tokens.json` | Space and control sizes, one per `density` context |
+| `rockaway.resolver.json` | How the files combine; `theme`, `mode` and `density` modifiers |
+| `base.tokens.json` | Strokes and attributes |
+| `theme.{name}.tokens.json` | A theme: its palette in both modes, its type and its glyphs |
+| `mode.{light,dark}.tokens.json` | Which half of the palette `ansi.*` reads |
+| `density.{dense,normal,airy,touch}.tokens.json` | Space and control sizes, one per `density` context |

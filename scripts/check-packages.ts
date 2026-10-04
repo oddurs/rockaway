@@ -14,6 +14,12 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 
+/** An exports condition object, as far as these checks read one. */
+interface Target {
+  readonly types?: string;
+  readonly default?: string;
+}
+
 interface Manifest {
   name: string;
   private?: boolean;
@@ -34,7 +40,8 @@ const forbidden: ReadonlyArray<[RegExp, string]> = [
   [/\.(test|spec)\.[cm]?[jt]sx?$/, 'a test'],
   [/\.stories\.[jt]sx?$/, 'a story'],
   [/(^|\/)__screenshots__\//, 'a screenshot'],
-  [/(?<!\.d)\.[cm]?tsx?$/, 'TypeScript source'],
+  // Declarations are allowed, including a stylesheet's (`index.d.css.ts`).
+  [/(?<!\.d)(?<!\.d\.[a-z]+)\.[cm]?tsx?$/, 'TypeScript source'],
   [/\.tsbuildinfo$/, 'build state'],
 ];
 
@@ -93,9 +100,14 @@ for (const dir of readdirSync(path.join(root, 'packages')).sort()) {
   const seen = new Map<string, string>();
   for (const [subpath, target] of Object.entries(published ?? {})) {
     if (typeof target !== 'object' || target === null) continue;
-    const { types, default: js } = target as { types?: string; default?: string };
+    const { types, default: js } = target as Target;
     if (js === undefined) continue;
-    if (types !== js.replace(/\.js$/, '.d.ts')) {
+    // A stylesheet's declarations are named as TypeScript names them for any
+    // extension it does not know: `index.css` is typed by `index.d.css.ts`.
+    const declarations = js.endsWith('.css')
+      ? js.replace(/\.css$/, '.d.css.ts')
+      : js.replace(/\.js$/, '.d.ts');
+    if (types !== declarations) {
       failures.push(`${name}: ${subpath} is typed by ${types}, not by the declarations for ${js}`);
     }
     const other = seen.get(js);
@@ -135,6 +147,32 @@ for (const dir of readdirSync(path.join(root, 'packages')).sort()) {
     }
   }
 
+  // A pattern subpath (`./*`) is where each component's own entry lives
+  // (cairn 0165). attw checks only the subpaths it is told about, so every file
+  // a pattern reaches in the tarball becomes one. Patterns over data (the
+  // tokens' DTCG files, terminal themes) are not modules, and are left alone.
+  const reached: string[] = [];
+  for (const [subpath, target] of Object.entries(published ?? {})) {
+    const js = typeof target === 'object' && target !== null ? (target as Target).default : target;
+    if (!subpath.includes('*') || typeof js !== 'string' || !js.endsWith('*.js')) continue;
+    const [before = '', after = ''] = js.replace(/^\.\//, '').split('*');
+    for (const file of paths) {
+      if (file.length <= before.length + after.length) continue;
+      if (!file.startsWith(before) || !file.endsWith(after)) continue;
+      const concrete = subpath.replace('*', file.slice(before.length, file.length - after.length));
+      if (!(concrete in (published as object))) reached.push(concrete);
+    }
+  }
+
+  // A component module with no entry beside it cannot be imported on its own,
+  // and an islands site would hydrate the whole package to show it.
+  for (const file of paths) {
+    const component = /^dist\/components\/([a-z0-9-]+)\.js$/.exec(file)?.[1];
+    if (component !== undefined && !paths.includes(`dist/entries/${component}.js`)) {
+      failures.push(`${name}: ${file} has no entry, so ${name}/${component} does not exist`);
+    }
+  }
+
   console.log('');
   run(`${name}: publint`, bin('publint'), ['run', '--strict', packed.filename]);
   // ESM only, deliberately: node10 and CommonJS `require` are out of scope.
@@ -146,6 +184,7 @@ for (const dir of readdirSync(path.join(root, 'packages')).sort()) {
     'esm-only',
     '--no-emoji',
     ...(stylesheets.length > 0 ? ['--exclude-entrypoints', ...stylesheets] : []),
+    ...(reached.length > 0 ? ['--include-entrypoints', ...reached] : []),
     '--',
     packed.filename,
   ]);

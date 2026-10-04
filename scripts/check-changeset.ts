@@ -1,8 +1,10 @@
 /**
  * Fails a branch that changes what a package ships without a changeset (cairn 0162).
  *
- * What a package ships is its source and every directory in its `files`, so a
- * test, a story or a script changes nothing a user installs and needs nothing.
+ * What a package ships is its source, every directory in its `files`, and the
+ * fields of its package.json that reach an install (cairn 0173). A test, a
+ * story, a script or a devDependency changes nothing a user installs and needs
+ * nothing.
  * Every package touched that way must be named by a changeset this branch adds
  * or edits. A change that ships but that no user will notice (a comment, a
  * rename inside a module) is written out instead, as an empty changeset whose
@@ -13,12 +15,18 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { isDeepStrictEqual } from 'node:util';
 
 const root = path.join(import.meta.dirname, '..');
 const base = process.argv[2] ?? 'origin/main';
 
+// Quietly: asking for a file the base does not have is how a new package is found.
 const git = (...args: string[]): string =>
-  execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+  execFileSync('git', args, {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  }).trim();
 
 // The branch's own changes, from where it left the base rather than the base's
 // tip, and including what is not committed yet, so it can be run before a push.
@@ -29,19 +37,91 @@ const changed = [
 ].filter(Boolean);
 
 /** Package directory name → package name, for every published package. */
-const packages = new Map<string, { name: string; ships: string[] }>();
+const packages = new Map<string, { name: string; version: string; ships: string[] }>();
 for (const dir of readdirSync(path.join(root, 'packages'))) {
   const file = path.join(root, 'packages', dir, 'package.json');
   if (!existsSync(file)) continue;
   const manifest = JSON.parse(readFileSync(file, 'utf8')) as {
     name: string;
+    version: string;
     private?: boolean;
     files?: string[];
   };
   if (manifest.private) continue;
   // `dist` is built from `src`, so `src` stands in for it.
   const ships = new Set(['src', ...(manifest.files ?? [])].filter((entry) => entry !== 'dist'));
-  packages.set(dir, { name: manifest.name, ships: [...ships] });
+  packages.set(dir, { name: manifest.name, version: manifest.version, ships: [...ships] });
+}
+
+/**
+ * Below 1.0 a breaking change is a minor that says so (cairn 0172). So a
+ * changeset this branch adds or edits may not be major for a package still
+ * at 0.x, and one that begins `Breaking:` may not be a patch.
+ */
+const versions = new Map([...packages.values()].map((p) => [p.name, p.version]));
+const misbumped: string[] = [];
+for (const file of changed) {
+  if (!/^\.changeset\/[^/]+\.md$/.test(file) || file === '.changeset/README.md') continue;
+  const full = path.join(root, file);
+  if (!existsSync(full)) continue;
+  const match = /^---\n([\s\S]*?)^---\n([\s\S]*)$/m.exec(readFileSync(full, 'utf8'));
+  if (match === null) continue;
+  const [, front = '', body = ''] = match;
+  const breaking = body.trim().startsWith('Breaking:');
+  const bumps = [...front.matchAll(/^\s*['"]?(@?[^'":\s]+)['"]?\s*:\s*(\w+)/gm)];
+  for (const [, name = '', bump] of bumps) {
+    const belowOne = (versions.get(name) ?? '0.0.0').startsWith('0.');
+    if (bump === 'major' && belowOne) {
+      misbumped.push(
+        `${file}: ${name} is major, but below 1.0 a breaking change is a minor whose first line begins "Breaking:"`,
+      );
+    }
+  }
+  // A changeset can name several packages and break only one of them; the one
+  // it breaks has to be at least a minor.
+  if (breaking && bumps.length > 0 && bumps.every(([, , bump]) => bump === 'patch')) {
+    misbumped.push(`${file}: it says it is breaking, but every package in it is a patch`);
+  }
+}
+if (misbumped.length > 0) {
+  console.error(`Pre-1.0 versioning (cairn 0172):\n\n  ${misbumped.join('\n  ')}\n`);
+  process.exit(1);
+}
+
+/**
+ * The fields of a manifest a user receives (cairn 0173): what resolves, what
+ * installs with it, and what a bundler is told about it. Scripts,
+ * devDependencies and the version are left out: none reaches an install, and
+ * the release itself writes the version.
+ */
+const published = [
+  'name',
+  'type',
+  'exports',
+  'main',
+  'module',
+  'types',
+  'bin',
+  'files',
+  'sideEffects',
+  'dependencies',
+  'peerDependencies',
+  'peerDependenciesMeta',
+  'optionalDependencies',
+  'engines',
+  'publishConfig',
+] as const;
+
+/** The published fields that differ between the base and the branch, by name. */
+function manifestChanges(file: string): string[] {
+  let before: Record<string, unknown> = {};
+  try {
+    before = JSON.parse(git('show', `${since}:${file}`)) as Record<string, unknown>;
+  } catch {
+    // A package new on this branch: every field it publishes is a change.
+  }
+  const after = JSON.parse(readFileSync(path.join(root, file), 'utf8')) as Record<string, unknown>;
+  return published.filter((field) => !isDeepStrictEqual(before[field], after[field]));
 }
 
 /** The packages whose shipped files this branch changes, with one file each as the example. */
@@ -49,8 +129,13 @@ const touched = new Map<string, string>();
 for (const file of changed) {
   const [top, dir, first] = file.split('/');
   const pkg = top === 'packages' && dir !== undefined ? packages.get(dir) : undefined;
-  if (pkg === undefined || first === undefined) continue;
-  if (pkg.ships.includes(first) && !touched.has(pkg.name)) touched.set(pkg.name, file);
+  if (pkg === undefined || first === undefined || touched.has(pkg.name)) continue;
+  if (pkg.ships.includes(first)) {
+    touched.set(pkg.name, file);
+  } else if (first === 'package.json' && existsSync(path.join(root, file))) {
+    const fields = manifestChanges(file);
+    if (fields.length > 0) touched.set(pkg.name, `${file}: ${fields.join(', ')}`);
+  }
 }
 
 if (touched.size === 0) {

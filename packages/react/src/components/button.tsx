@@ -9,38 +9,29 @@
  *   - the delimiters are chrome: `aria-hidden`, never part of the name
  *   - pressing reverses the video, which needs no colour at all
  *   - hover underlines, disabled dims, focus is the ring in `focus.css`
+ *   - danger carries the theme's `!` as well as its colour (0118)
+ *
+ * One row, always. Inside the delimiters the label has a cell of air on each
+ * side, and the first of them is the button's mark cell: blank, or `!` for
+ * danger. The air belongs to the delimiters, so a button drawn without them
+ * (`delimiters="none"`, for a toolbar) is the bare label, and no variant or
+ * state changes how many cells a button takes (cairn 0131).
  *
  * Behaviour is React Aria's. It supplies `data-hovered`, `data-pressed`,
  * `data-focus-visible` and `data-disabled`, and the CSS reads nothing else:
  * there is no state in here that is not in the DOM.
  */
-import { Buffer, drawText, stringWidth } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useEffect, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
-import {
-  defineVariants,
-  type VariantProps,
-  type Variants,
-  type VariantValue,
-} from '../variants.ts';
-import { formatKeys, KeyHint, keyShortcut, type Platform } from './key-hint.tsx';
-
-const VARIANTS = {
-  variant: ['default', 'fill', 'quiet', 'danger'],
-  size: ['md', 'lg'],
-} as const;
-
-/** Button's variants, as data: the props, the attributes and the metadata all read this. */
-export const buttonVariants: Variants<typeof VARIANTS> = defineVariants(VARIANTS, {
-  variant: 'default',
-  size: 'md',
-});
+import { useGlyphs } from '../glyphs.tsx';
+import { usePlatform } from '../platform.ts';
+import type { VariantProps, VariantValue } from '../variants.ts';
+import { buttonVariants, chromeOf } from './button.pure.ts';
+import { keyShortcut } from './key-hint.pure.ts';
+import { KeyHint, type Platform } from './key-hint.tsx';
 
 export type ButtonVariant = VariantValue<typeof buttonVariants, 'variant'>;
-export type ButtonSize = VariantValue<typeof buttonVariants, 'size'>;
 
 export interface ButtonProps
   extends VariantProps<typeof buttonVariants>,
@@ -49,15 +40,15 @@ export interface ButtonProps
   /**
    * `fill` is the primary: reverse video, which survives forced colors and
    * greyscale because it is not a hue. `danger` is the destructive one, and
-   * carries a mark as well as a colour.
+   * carries the theme's `!` in its mark cell as well as its colour.
    */
   readonly variant?: ButtonVariant;
-  /** `md` is one row; `lg` is three, with a border drawn around the label. */
-  readonly size?: ButtonSize;
   /**
    * The delimiters around the label: the theme's control delimiters unless
    * given. Chrome, so they are hidden from the accessible name. `none` for a
-   * bare label in a toolbar.
+   * bare label in a toolbar, which drops the cell of air either side with
+   * them. A `danger` button keeps its delimiters whatever this says, because
+   * its mark has to have a cell to sit in.
    */
   readonly delimiters?: readonly [string, string] | 'none';
   /**
@@ -70,58 +61,13 @@ export interface ButtonProps
   readonly style?: React.CSSProperties;
 }
 
-/** The delimiters a button draws. `quiet` drops them unless they are asked for. */
-function endsOf(
-  variant: ButtonVariant,
-  delimiters: ButtonProps['delimiters'],
-  glyphs: Glyphs,
-): readonly [string, string] | undefined {
-  if (delimiters === 'none') return undefined;
-  return delimiters ?? (variant === 'quiet' ? undefined : glyphs.delimiter.control);
-}
-
-export interface ButtonTextOptions
-  extends Pick<ButtonProps, 'variant' | 'size' | 'delimiters' | 'keys'> {
+export interface ButtonTextOptions extends Pick<ButtonProps, 'variant' | 'delimiters' | 'keys'> {
   readonly platform?: Platform;
-}
-
-/**
- * The button as text, cell for cell, at the normal density: what it occupies
- * on the grid, and its text snapshot (cairn 0047). The delimiters come from
- * the same function the component draws them with, and the glyphs are the
- * theme's, as in the other buffer functions. The cell of air either side of
- * the label, and `lg`'s extra cell and three rows, are the stylesheet's, so
- * this has to follow `button.css` when that changes. Reverse video is an
- * attribute, and text has none: `fill` and a pressed button draw the same
- * cells as `default`.
- */
-export function buttonBuffer(
-  label: string,
-  options: ButtonTextOptions = {},
-  glyphs: Glyphs = defaultGlyphs,
-): Buffer {
-  const chosen = buttonVariants.select(options);
-  const ends = endsOf(chosen.variant, options.delimiters, glyphs);
-  const air = chosen.variant === 'quiet' ? '' : ' ';
-  const hint =
-    options.keys === undefined ? '' : ` ${formatKeys(options.keys, options.platform ?? 'other')}`;
-  const pad = chosen.size === 'lg' ? ' ' : '';
-  const line = `${pad}${ends?.[0] ?? ''}${air}${label}${hint}${air}${ends?.[1] ?? ''}${pad}`;
-  const rows = chosen.size === 'lg' ? 3 : 1;
-  return Buffer.create({ width: stringWidth(line), height: rows }).draw((draft) => {
-    drawText(draft, { x: 0, y: Math.floor(rows / 2) }, line);
-  });
-}
-
-/** The shortcut has to be resolved for the server too, so `auto` is `other`. */
-function resolve(platform: Platform | 'auto'): Platform {
-  return platform === 'auto' ? 'other' : platform;
 }
 
 export function Button({
   children,
   variant,
-  size,
   delimiters,
   keys,
   platform = 'auto',
@@ -132,16 +78,19 @@ export function Button({
   // `aria-keyshortcuts` never reaches the element through props. It is the right
   // attribute for a chord, so it goes on afterwards, by hand.
   const host = useRef<HTMLButtonElement>(null);
-  const shortcut = keys === undefined ? undefined : keyShortcut(keys, resolve(platform));
+  // One keyboard for what is drawn and what is announced, so a Mac shows ⌘S and
+  // is told Meta+s, never Control+s (cairn 0132).
+  const keyboard = usePlatform(platform);
+  const shortcut = keys === undefined ? undefined : keyShortcut(keys, keyboard);
   useEffect(() => {
     const el = host.current;
     if (!el) return;
     if (shortcut === undefined) el.removeAttribute('aria-keyshortcuts');
     else el.setAttribute('aria-keyshortcuts', shortcut);
   }, [shortcut]);
-  const chosen = buttonVariants.select({ variant, size });
+  const chosen = buttonVariants.select({ variant });
   const glyphs = useGlyphs();
-  const ends = endsOf(chosen.variant, delimiters, glyphs);
+  const chrome = chromeOf(chosen.variant, delimiters, glyphs);
 
   return (
     <AriaButton
@@ -150,23 +99,29 @@ export function Button({
       className={cx('rk-button', className)}
       {...buttonVariants.dataAttributes(chosen)}
     >
-      {ends === undefined ? null : (
-        <span aria-hidden="true" className="rk-button-end">
-          {ends[0]}
-        </span>
+      {chrome === undefined ? null : (
+        <>
+          <span aria-hidden="true" className="rk-button-end">
+            {chrome.open}
+          </span>
+          {/* The mark cell: blank, or the theme's `!` for danger. */}
+          <span aria-hidden="true" className="rk-button-mark">
+            {chrome.mark}
+          </span>
+        </>
       )}
       <span className="rk-button-label">
         {children}
         {keys === undefined ? null : (
           <>
             {' '}
-            <KeyHint keys={keys} platform={platform} decorative />
+            <KeyHint keys={keys} platform={keyboard} decorative />
           </>
         )}
       </span>
-      {ends === undefined ? null : (
+      {chrome === undefined ? null : (
         <span aria-hidden="true" className="rk-button-end">
-          {ends[1]}
+          {`${chrome.air}${chrome.close}`}
         </span>
       )}
     </AriaButton>

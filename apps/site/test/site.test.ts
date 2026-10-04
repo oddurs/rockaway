@@ -68,9 +68,14 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
 
   beforeAll(async () => {
     out = mkdtempSync(path.join(tmpdir(), 'rockaway-site-'));
-    execFileSync('pnpm', ['exec', 'astro', 'build', '--outDir', out], {
+    // `--force`: the content layer caches rendered Markdown, and does not know
+    // when the pipeline that rendered it has changed.
+    // Vitest puts its own BASE_URL in the environment, and a build's
+    // prerender reads import.meta.env.BASE_URL from there: it has to go.
+    const { BASE_URL: _, ...env } = process.env;
+    execFileSync('pnpm', ['exec', 'astro', 'build', '--force', '--outDir', out], {
       cwd: site,
-      env: { ...process.env, SITE_BASE: base, ASTRO_TELEMETRY_DISABLED: '1' },
+      env: { ...env, SITE_BASE: base, ASTRO_TELEMETRY_DISABLED: '1' },
       stdio: 'pipe',
     });
     server = await serve(out, base);
@@ -157,8 +162,12 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
         h1: article?.querySelector('h1')?.textContent,
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
         readme: [...document.querySelectorAll('a')].find((a) => a.textContent === 'README')?.href,
-        unreachable: [...document.querySelectorAll<HTMLElement>('pre, table')].filter(
+        // A table scrolls in a wrapper that can show its overflow marks.
+        unreachable: [...document.querySelectorAll<HTMLElement>('pre, .rk-scroll-marks')].filter(
           (el) => el.tabIndex !== 0,
+        ).length,
+        unwrapped: [...document.querySelectorAll('table')].filter(
+          (table) => !table.parentElement?.classList.contains('rk-scroll-marks'),
         ).length,
         shaped: [...document.querySelectorAll('pre [data-rk-shape]')].map((el) => el.textContent),
         styled: document.querySelectorAll('article [style]:not([data-rk-shape], col)').length,
@@ -172,11 +181,160 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.overflow).toBe(0);
     expect(found.readme).toBe('https://github.com/oddurs/rockaway/blob/main/README.md');
     expect(found.unreachable).toBe(0);
+    expect(found.unwrapped).toBe(0);
     // The diagram in section 4 is drawn by the cell, and still copies as text.
     expect(found.shaped).toContain('┌');
     // No page brings styles of its own: the only inline style is the pipeline's
     // run lengths and column widths.
     expect(found.styled).toBe(0);
+  });
+
+  test('draws the foundations with the system, for a phone, with no script (0106)', async () => {
+    const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const scripts: string[] = [];
+    phone.on('request', (r) => {
+      if (r.resourceType() === 'script') scripts.push(r.url());
+    });
+    const pages = [
+      '',
+      'grid/',
+      'strictness/',
+      'glyphs/',
+      'colour/',
+      'themes/',
+      'tokens/',
+      'accessibility/',
+    ];
+    for (const p of pages) {
+      const response = await phone.goto(`${origin}${base}foundations/${p}`);
+      expect(response?.ok(), p).toBe(true);
+      const found = await phone.evaluate(() => ({
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        unlabelled: [...document.querySelectorAll('figure[role="img"]')].filter(
+          (f) => !f.getAttribute('aria-label'),
+        ).length,
+        painted: document.querySelectorAll('[data-rk-painted] .rk-run').length,
+      }));
+      // Only code and tables scroll, inside their own boxes.
+      expect(found.overflow, p).toBe(0);
+      expect(found.unlabelled, p).toBe(0);
+      if (['grid/', 'glyphs/', 'themes/'].includes(p)) expect(found.painted, p).toBeGreaterThan(0);
+    }
+    // Every theme's island, in each mode it declares, with its terminal files.
+    await phone.goto(`${origin}${base}foundations/themes/`);
+    const themes = await phone.evaluate(() => ({
+      islands: document.querySelectorAll('figure[data-rk-theme]').length,
+      files: [...document.querySelectorAll<HTMLAnchorElement>('a[download]')].map((a) => a.href),
+    }));
+    expect(themes.islands).toBe(16);
+    expect(themes.files).toHaveLength(16 * 4);
+    const file = await phone.request.get(themes.files[0] ?? '');
+    expect(file.ok()).toBe(true);
+    expect((await file.text()).length).toBeGreaterThan(100);
+    await phone.close();
+    expect(scripts).toEqual([]);
+  });
+
+  test('publishes every document in docs/, linked to each other on the site (0107)', async () => {
+    const reader = await browser.newPage();
+    const response = await reader.goto(`${origin}${base}getting-started/`);
+    expect(response?.ok()).toBe(true);
+    const found = await reader.evaluate(() => ({
+      title: document.title,
+      h1: document.querySelector('article.rk-prose h1')?.textContent,
+      concept: [...document.querySelectorAll('a')]
+        .map((a) => a.getAttribute('href'))
+        .filter((href) => href?.includes('concept')),
+    }));
+    await reader.close();
+    expect(found.title).toBe('Getting started — rockaway');
+    expect(found.h1).toBe('Getting started');
+    // A document's link to another stays on the site, under its base.
+    expect(found.concept.length).toBeGreaterThan(0);
+    for (const href of found.concept) expect(href?.startsWith(`${base}concept/`)).toBe(true);
+  });
+
+  test('sets a Markdown alert as a callout, framed by the cell, with no script', async () => {
+    const reader = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    await reader.goto(`${origin}${base}concept/`);
+    await reader.evaluate(() => document.fonts.ready);
+    const found = await reader.evaluate(() => {
+      const note = document.querySelector<HTMLElement>('article aside.rk-callout-static');
+      // One cell, as the callout's own corner measures it: whatever face the
+      // page is set in, a corner is one cell wide.
+      const cell = note?.querySelector('[data-rk-shape]')?.getBoundingClientRect().width ?? 1;
+      const box = (el: Element | null | undefined) => el?.getBoundingClientRect();
+      const [top, , body, , bottom] = note ? [...note.children] : [];
+      const sides = note ? [...note.querySelectorAll('.rk-callout-side')] : [];
+      return {
+        role: note?.getAttribute('role'),
+        label: note?.getAttribute('aria-label'),
+        top: top?.textContent,
+        bottom: bottom?.textContent,
+        hidden: [top, bottom, ...sides].every((el) => el?.getAttribute('aria-hidden') === 'true'),
+        shaped: note?.querySelectorAll('[data-rk-shape]').length,
+        body: body?.textContent?.replace(/\s+/g, ' ').trim(),
+        width: (box(note)?.width ?? 0) / cell,
+        // The sides run the whole height of the content, whatever it wrapped to.
+        sides: sides.map((el) => Math.round(box(el)?.height ?? 0)),
+        content: Math.round(box(body)?.height ?? 0),
+        edges: [Math.round(box(top)?.height ?? 0), Math.round(box(bottom)?.height ?? 0)],
+      };
+    });
+    await reader.close();
+    expect(found.role).toBe('note');
+    expect(found.label).toBe('Note');
+    expect(found.top).toMatch(/^┌ ● Note ─┐$/);
+    expect(found.bottom).toBe('└─┘');
+    expect(found.hidden).toBe(true);
+    // Four corners, two edges across and two down.
+    expect(found.shaped).toBe(8);
+    expect(found.body).toMatch(/^The deal is not .never break the grid.\./);
+    expect(Math.abs(found.width - Math.round(found.width))).toBeLessThan(0.05);
+    expect(found.sides).toEqual([found.content, found.content]);
+    // Each edge is one row, and the content between is whole rows: on a phone
+    // the sentence wraps, and the sides are as tall as it wrapped to.
+    const [row = 0, bottom] = found.edges;
+    expect(bottom).toBe(row);
+    expect(found.content % row).toBe(0);
+    expect(found.content).toBeGreaterThan(row);
+  });
+
+  test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
+    const reader = await browser.newPage();
+    const scripts: string[] = [];
+    reader.on('request', (request) => {
+      if (request.resourceType() === 'script') scripts.push(request.url());
+    });
+    await reader.goto(`${origin}${base}concept/`);
+    const found = await reader.evaluate(() => {
+      const colour = (el: Element | null) => (el ? getComputedStyle(el).color : '');
+      const keyword = document.querySelector('pre .rk-syntax-type, pre .rk-syntax-keyword');
+      const root = document.documentElement;
+      root.dataset.theme = 'light';
+      const light = colour(keyword);
+      root.dataset.theme = 'dark';
+      const dark = colour(keyword);
+      const comment = document.querySelector('pre .rk-syntax-comment');
+      return {
+        light,
+        dark,
+        comment: comment ? getComputedStyle(comment).fontStyle : '',
+        styled: document.querySelectorAll('pre [style]:not([data-rk-shape])').length,
+        blocks: document.querySelectorAll('pre[style], pre[class]').length,
+      };
+    });
+    await reader.close();
+    // A page of prose runs no script at all.
+    expect(scripts).toEqual([]);
+    // The colour is the theme's, so changing the mode recolours code in place.
+    expect(found.light).not.toBe('');
+    expect(found.dark).not.toBe(found.light);
+    // A comment reads as one in greyscale.
+    expect(found.comment).toBe('italic');
+    // No colour is written into the page: roles are classes.
+    expect(found.styled).toBe(0);
+    expect(found.blocks).toBe(0);
   });
 
   test('the cell is the font, and the fallback has the same cell', async () => {
@@ -205,10 +363,8 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     });
     // The cell is the font's advance as the browser lays it out: 0.6em is
     // 9.6px at 16px, which Chromium on Linux, without subpixel positioning,
-    // rounds to 10px. Either way the screen measured what the text uses, to
-    // the layout unit: the measurement is rounded to 1/64px, so a run of cells
-    // and the same cells one by one land on the same pixels (cairn 0117).
-    expect(Math.abs(Number.parseFloat(cell) - web / 100)).toBeLessThanOrEqual(1 / 128);
+    // rounds to 10px. Either way the screen measured what the text uses.
+    expect(Number.parseFloat(cell)).toBeCloseTo(web / 100, 2);
     expect(Math.abs(web / 100 - 9.6)).toBeLessThanOrEqual(0.5);
     // At least one adjusted system font must be here for this to mean anything.
     expect(available.length).toBeGreaterThan(0);

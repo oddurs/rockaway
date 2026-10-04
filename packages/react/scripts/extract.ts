@@ -13,7 +13,8 @@
  * expanded — `inherits` lists those.
  *
  * Tokens are every `var(--rk-*)` read by a rule that selects one of the
- * component's classes, and by the painters it draws with, kept when the
+ * component's classes, and by the painters it draws with, and every colour
+ * its buffer functions give a cell (`border.default`), kept when the
  * custom property is a token: declared by `@rockaway/tokens`, or in the
  * `rk.tokens` layer of `@rockaway/css`. A component's own custom properties
  * (`--rk-button-end`) are not tokens and are left out.
@@ -297,6 +298,12 @@ function stringsOf(parsed: Parsed): string[] {
 }
 
 const VAR = /var\(\s*(--rk-[a-z0-9-]+)/g;
+
+/**
+ * A colour a buffer function gives a cell, as the engine names it
+ * (`border.default`), which a painter turns into `var(--rk-border-default)`.
+ */
+const STYLE_TOKEN = /^(?:fg|bg|border)(?:\.[a-z0-9-]+)+$/;
 const CLASS = /^rk-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 interface Stylesheet {
@@ -304,12 +311,17 @@ interface Stylesheet {
   readonly rules: readonly { readonly selector: string; readonly vars: readonly string[] }[];
 }
 
-function selectorOf(rule: Rule): string {
-  const parts = [rule.selector];
+/**
+ * Each selector a rule applies to, in full, nesting included. A selector list
+ * is split: `.a, .rk-button[data-pressed]` is two selectors, and only one of
+ * them is Button's.
+ */
+function selectorsOf(rule: Rule): string[] {
+  const parents: string[] = [];
   for (let node: CssNode | undefined = rule.parent; node; node = node.parent) {
-    if (node.type === 'rule') parts.unshift((node as Rule).selector);
+    if (node.type === 'rule') parents.unshift((node as Rule).selector);
   }
-  return parts.join(' ').replace(/\s+/g, ' ');
+  return rule.selectors.map((one) => [...parents, one].join(' ').replace(/\s+/g, ' '));
 }
 
 function cssFiles(dir: string): string[] {
@@ -335,7 +347,7 @@ function stylesheets(): readonly Stylesheet[] {
           if (child.type === 'decl')
             vars.push(...[...child.value.matchAll(VAR)].map((m) => m[1] ?? ''));
         });
-        rules.push({ selector: selectorOf(rule), vars });
+        for (const selector of selectorsOf(rule)) rules.push({ selector, vars });
       });
       return { file: path.relative(cssRoot, file), rules };
     });
@@ -399,6 +411,7 @@ export function analyse(): Map<string, Analysis> {
     const read = [
       ...rules.flatMap((rule) => rule.vars),
       ...strings.flatMap((s) => [...s.matchAll(VAR)].map((m) => m[1] ?? '')),
+      ...strings.filter((s) => STYLE_TOKEN.test(s)).map((s) => `--rk-${s.replaceAll('.', '-')}`),
     ];
     const consumed = [...new Set(read.filter((v) => known.has(v)))].sort();
     const selectors = [...new Set(rules.map((rule) => rule.selector))];

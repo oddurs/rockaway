@@ -11,6 +11,8 @@ import {
   type Glyphs,
   glyphs,
   glyphsFor,
+  keyLegends,
+  keyNames,
   markNames,
   marks,
   type Repertoire,
@@ -30,6 +32,7 @@ const everyGlyph = [
     ...spinnerFrames[r],
   ]),
   ...Object.values(delimiters).flat(),
+  ...Object.values(keyLegends.unicode),
 ];
 
 describe('glyphs', () => {
@@ -82,6 +85,13 @@ describe('glyphs', () => {
       expect(bars[r], r).toHaveLength(8);
       expect(bars[r].at(-1), r).toBe(blocks[r].full);
     }
+  });
+
+  test('key legends are symbols of one cell in Unicode, and words in ASCII', () => {
+    for (const r of repertoires) expect(Object.keys(keyLegends[r]), r).toEqual([...keyNames]);
+    for (const legend of Object.values(keyLegends.ascii)) expect(legend).toMatch(/^[A-Z][a-z]+$/i);
+    // Enter is the return symbol the system fonts carry, not the arrow that falls back.
+    expect(keyLegends.unicode.enter).toBe('\u23ce');
   });
 
   test('both repertoires name the same marks and blocks', () => {
@@ -150,6 +160,7 @@ function everyCharacter(g: Glyphs): string[] {
     ...g.bar,
     ...g.spinner,
     ...Object.values(g.delimiter).flat(),
+    ...Object.values(g.key).flatMap((legend) => [...legend]),
   ];
 }
 
@@ -170,6 +181,7 @@ function expectedTokens(g: Glyphs): Map<string, string> {
     out.set(`glyph.delimiter.${name}.open`, open);
     out.set(`glyph.delimiter.${name}.close`, close);
   }
+  put('key', Object.entries(g.key));
   return out;
 }
 

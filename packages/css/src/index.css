@@ -13,10 +13,12 @@
 @import "./screen.css";
 @import "./shapes.css";
 @import "./focus.css";
+@import "./scroll.css";
 @import "./motion.css";
 @import "./forced-colors.css";
 @import "./container.css";
 @import "./prose.css";
+@import "./syntax.css";
 
 /*
  * Components: one line each, sorted by path (cairn 0122). Their order does not
@@ -27,6 +29,12 @@
  */
 @import "./components/badge.css";
 @import "./components/button.css";
+@import "./components/callout.css";
+@import "./components/field.css";
+@import "./components/fieldset.css";
 @import "./components/key-hint.css";
+@import "./components/keymap.css";
 @import "./components/link.css";
 @import "./components/list.css";
+@import "./components/table.css";
+@import "./components/tree.css";

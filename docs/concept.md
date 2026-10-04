@@ -35,6 +35,13 @@ Fallback is by weight, not by name: a `double` junction that has no glyph falls
 back to `heavy`, then to `light`. A border set that cannot express a seam
 degrades instead of printing a hole.
 
+Titles commute too (`0175`). A title, or a label sunk into a rule, is text over
+border cells, and a rule crossing that edge would otherwise take a letter or
+lose its tee depending on which was drawn last. So a label is recorded rather
+than written, and set into its edge when the draw pass closes, once every edge
+is known: it owns its cells, stops short of the first junction in its edge,
+and truncates with the theme's ellipsis — `┌ si… ─┬─────┐`, whichever order.
+
 ## 2. The cell is `1ch` × `1lh`
 
 Across, a cell is the font's advance width. Down, it is the line box, which the
@@ -54,6 +61,21 @@ without arithmetic. Density is then a genuine multiplier on the grid rather than
 a second set of hard-coded lengths — which is also why DTCG's refusal to accept
 `ch` and `lh` as dimension units turned out to improve the design rather than
 constrain it.
+
+### What each density is for
+
+A one-row control is one cell tall, so the line box *is* its target size
+(`0197`). At the browser's default 16px:
+
+| density | line box | one row | for |
+| --- | --- | --- | --- |
+| `dense` | 1 | 16px | an opt-in for those who want a terminal's tightness; adjacent one-row targets fail WCAG 2.5.8, and the run says so every time |
+| `normal` | 1.5 | 24px | the default: one row is the 24px target WCAG 2.2 AA asks for |
+| `airy` | 2 | 32px | reading at length, with room between the lines |
+| `touch` | 2.75 | 44px | a coarse pointer: one row is a finger-sized target, and nothing moves to make it so (`0074`) |
+
+The default meets AA. A system that sells accessibility as a feature does not
+fail it by default, so the tight terminal look is the one you choose.
 
 ## 3. Four routes to a TUI on the web. We take the fourth
 
@@ -89,7 +111,16 @@ the content is ordinary HTML that happens to land on whole cells.
 
 Measurement is a 50-character probe (`cell-metrics.ts`), one `ResizeObserver`
 batched into a rAF, and `--rk-cell-width` / `--rk-cell-height` set on the host.
-Fonts load late and zoom changes; the cell is measured, never assumed.
+Fonts load late and zoom changes; the cell is measured, never assumed. Until it
+is — on a server, or before hydration — the cell is `1ch` by `1lh`, which is the
+same cell the measurement will find, so nothing moves when it does.
+
+The chrome is rendered, not painted in an effect (`0126`): `Screen` turns the
+buffer into rows of runs as elements, so a server sends the frame in its first
+response and hydration keeps those nodes. The buffer functions a component
+draws with (`frameBuffer`, `dividerBuffer`, `formatKeys`) live in each
+component's `.pure.ts`, outside the client boundary, so a server can call them
+too.
 
 ## 5. The font supplies letters; the cell supplies geometry
 
@@ -116,9 +147,9 @@ font says, not as tall as the cell. Measured in the workbench (system mono,
 | density | cell | font `│` | |
 | --- | --- | --- | --- |
 | dense | 16px | 21px | bleeds 3px into the row above and 2px into the row below |
-| normal | 20px | 21px | meets, by coincidence of this font |
-| airy | 24px | 21px | a 3px gap between rows |
-| touch | 32px | 21px | an 11px gap |
+| normal | 24px | 21px | a 3px gap between rows |
+| airy | 32px | 21px | an 11px gap |
+| touch | 44px | 21px | a 23px gap |
 
 Density *is* the line box (`0074`), so the line box will never match the font.
 The same is true of block elements — a scrollbar thumb of `█` falls apart into
@@ -137,11 +168,14 @@ font. Here that means:
   one cell tall and as many cells wide as it holds. Nothing painted takes its
   height from the font, so a background fills its cell and reverse video is a
   solid block.
-- **Box drawing and block elements are geometry, in the engine.**
+- **Box drawing, block elements and braille are geometry, in the engine.**
   `packages/grid/src/shape.ts` describes every glyph the junction table can
-  produce, and every block element, as rectangles and arcs measured from the
-  cell's own edges and centre. Pure data: a stylesheet or a canvas could read
-  it.
+  produce, every block element and all 256 braille patterns, as rectangles and
+  arcs measured from the cell's own edges and centre. Pure data: a stylesheet
+  or a canvas could read it. Braille is drawn for the same reason the rest is:
+  many monospace fonts, the site's among them, have none (`0166`), and a
+  spinner should not fall back to another face. Its 256 patterns share one rule
+  with a layer for each dot, raised by the cell's `data-rk-dots`.
 - **A stylesheet generated from it draws them.** `packages/css/src/shapes.css`
   is written from those shapes at build time and committed; a test fails if it
   is stale. A cell holding `┬` says so — `data-rk-shape="box-0111"`, its
@@ -210,9 +244,11 @@ whole CSS pixels on its own, whatever box it is in:
 - An arc is a gradient, which is not snapped, so it is placed on whole pixels
   itself and aimed at where the straight strokes were *drawn*, not where they
   were asked to be. At a hairline's width the difference is a visible step.
-- The measured cell is rounded to the browser's layout unit (1/64 px). A run of
-  eight cells and eight runs of one would otherwise round differently, and the
-  same column would land in different places on different rows.
+- A run is sized from where it ends to where it starts, each rounded to the
+  browser's layout unit (1/64 px), not as `cells × cell`. A run of eight cells
+  and eight runs of one would otherwise round differently, and the same column
+  would land in different places on different rows. The cell itself stays the
+  font's true advance, which is where text puts its letters.
 
 Worth remembering when adding a painter: **the geometry is right when
 neighbours join without being told they are neighbours**, and only a picture of
@@ -229,7 +265,10 @@ A grid nobody can break is a grid people quietly abandon (`0072`). Three levels
 
 `checkConformance` asserts that every box inside a screen measures a whole
 number of cells, in both directions, at every density and in every theme. It
-runs on every story via an `afterEach`. Anything off-grid without a reason
+runs on every story via an `afterEach`, which then switches the root through
+all four densities and both modes and runs it again in each, with continuity
+and a target-size check beside it, so a failure names the density and mode it
+failed at (`0125`). Anything off-grid without a reason
 fails; anything with one is printed in the report, grouped by reason and
 counted, so a page can say "3 exceptions, 2 reasons". An empty reason is not a
 reason: `data-rk-offgrid=""` fails on its own (`0123`).
@@ -247,8 +286,9 @@ The level belongs to the screen, not to a box in it, so a component cannot
 loosen the app it sits in. The workbench runs at `standard`, with a story
 pinned at each level.
 
-The deal is not "never break the grid". The deal is **breaking it quietly is
-what's forbidden** — exceptions become countable instead of accumulating.
+> [!NOTE]
+> The deal is not "never break the grid". The deal is **breaking it quietly is
+> what's forbidden** — exceptions become countable instead of accumulating.
 
 The screen's own box is exempt: the page decides how much room a screen gets,
 and the grid governs what is drawn inside it.
@@ -342,9 +382,41 @@ cell. Messages, such as an error under a field, are content and may add rows.
 
 The cursor and the selection are two signals, and List is where they meet: in
 a multi-select list the keyboard's row and the chosen rows are told apart in
-text, in greyscale and in forced colors. Reverse video swaps an element's own
-figure and ground. In forced colors that means the reader's text and canvas
-swapped, so it is never drawn as two halves that both collapse to the canvas.
+text, in greyscale and in forced colors.
+
+**Reverse means an element's own figure and ground, swapped.** That holds in
+every mode. In forced colors it is the reader's text and canvas swapped: the
+inverse pair becomes `CanvasText` behind `Canvas`, never two halves that both
+collapse to the canvas. Anything reversed also opts out of the adjustment
+(`forced-color-adjust: none`), because the browser otherwise paints a
+canvas-coloured backplate behind every line of text, and the reversed words
+vanish into it. Computed styles cannot see that backplate; the forced-colors
+stories check the pixels (`0181`).
+
+## 10. A scroll position is drawn in cells
+
+**No native scrollbar is ever drawn** (decision `0207`). A browser's scrollbar
+is drawn in pixels by the platform. Where it is a classic one, with a mouse
+attached or "always show scroll bars" on, it takes about fifteen pixels from
+its box. That leaves everything inside a fraction of a cell off the grid, and
+puts a second scrollbar beside the one a component draws in cells.
+
+So every element that scrolls hides it, with the `rk-scroll` class (or
+`rk-scroll-marks`, below), and shows where it is in cells:
+
+- a viewport that scrolls by rows draws a scrollbar column, as List does
+- a region that scrolls across shows the theme's overflow marks, `‹` and `›`,
+  at each edge that has more past it, as `less -S` does. That is
+  `rk-scroll-marks`, which prose code blocks and tables use, with the content
+  as its one child.
+
+Scrolling itself is untouched: wheel, trackpad, touch and keyboard all still
+work, and a scrolling region keeps its tab stop. After every story, a check
+fails any element whose computed overflow scrolls without
+`scrollbar-width: none`. It reads computed style, not pixels, because a
+headless browser hides scrollbars and a native bar measures nothing there. A
+fifth test browser turns classic scrollbars on, so the stories that scroll are
+also seen the way a reader with a mouse sees them.
 
 ---
 
@@ -388,11 +460,6 @@ Written down so it is a known limit rather than a later surprise.
   double line meeting a heavy one has no glyph, so the engine draws it one
   weight down (`0079`), and the cell strokes what the character says. Where
   that meets an undemoted neighbour the line steps, just as it does in a font.
-- **The cell is rounded to the layout unit.** So that a run of cells and the
-  same cells one by one land on the same pixels, the measured cell is rounded
-  to 1/64px. A font's advance is not, so a long run of text can sit up to half
-  a pixel off the cell grid by its far end. Nothing joins to text, so nothing
-  breaks; a canvas painter would not have the problem.
 - **Lines need the stylesheet.** Without `@rockaway/css` a shaped cell is an
   ordinary cell with its character in it, drawn by the font: legible, but back
   to meeting by coincidence.
@@ -402,9 +469,12 @@ Written down so it is a known limit rather than a later surprise.
   the line gets its own line: a documented exception, not a fix.
 - **`1ch` assumes the font is monospace.** A fallback that is not will measure
   wrong. We ship the metric rather than trusting a stack.
-- **Three painters is not four.** Server rendering uses `toText`; a static page
-  with no JavaScript gets chrome, but `Screen`'s measurement, and therefore an
-  exact fit, needs the client.
+- **A server cannot measure.** `Screen` renders its chrome as elements, so a
+  server sends it and a page with JavaScript off still shows its frame, drawn
+  by the cell renderer (`0126`). A screen with a fixed size in cells is exact
+  from the first paint, its cell `1ch` by `1lh` until measured. A screen that
+  measures its container has no size until the client runs: it renders at its
+  `fallback`, and corrects inside its own box when it hydrates.
 
 ## The contract a component is held to
 
@@ -417,7 +487,11 @@ cairn carries these as acceptance criteria, and the `component` template in
 2. **Both painters render it identically,** measured in cells.
 3. **Chrome is `aria-hidden`;** the accessible name never contains a glyph.
 4. **Behaviour comes from the behaviour layer.** No hand-rolled focus or
-   keyboard logic.
+   keyboard logic. React Aria handles the keys inside a component; the
+   keymap (`0141`) is the one handler for the page's own, so a shortcut is
+   bound with `useKeymap` and never with a listener of a component's: one
+   place decides which scope a key belongs to, keeps plain keys out of text
+   fields, finds conflicts, and lists every shortcut in the help screen.
 5. **Styled from `data-*` state and semantic tokens only.** A component that
    needs a reference token is a missing semantic.
 6. **Ships a text snapshot,** which is its documentation as much as its test.

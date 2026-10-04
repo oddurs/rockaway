@@ -76,6 +76,7 @@ the platform's own; nothing is intercepted.
 - [ ] Text longer than the box scrolls inside it by whole cells, and the box never grows
 - [ ] `multiline` scrolls whole rows and never shows half a line
 - [ ] Placeholder, read-only and disabled are distinguishable in greyscale
+- [ ] The textarea takes `rk-scroll` (0207/0208) and shows its position in cells if it scrolls by rows; a story tagged `classic-scrollbars` proves one scrollbar only
 
 ## 2026-10-03
 

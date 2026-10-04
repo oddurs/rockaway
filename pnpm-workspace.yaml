@@ -17,3 +17,13 @@ packageExtensions:
     peerDependenciesMeta:
       webpack:
         optional: true
+
+
+  # `astro check` supports TypeScript 5 and 6, and the repository is on 7 (cairn
+  # 0170). The language server it is built on gets a TypeScript 6 of its own,
+  # under another name so no `tsc` from it lands on anyone's path, and the
+  # site's `check:astro` script hands it that one. Drop this when the .astro
+  # check runs on 7 (Astro points at @astrojs/ts-content-mapper, for 7.1).
+  '@astrojs/language-server':
+    dependencies:
+      typescript-6: npm:typescript@6.0.3

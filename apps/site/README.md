@@ -25,11 +25,15 @@ a packaging bug, and it is fixed in the package.
 | --- | --- |
 | `src/pages/` | One file per route. Pages compose; they bring no CSS of their own. |
 | `src/layouts/Document.astro` | The one `<html>`: head order, the font, the stylesheet. |
-| `src/islands/` | One module per hydrated thing, never a component hydrated straight from the package (see `frame.ts` for why). |
+| `src/islands/` | Compositions of the system's components that the site hydrates. A single component is hydrated from its own entry, `@rockaway/react/<component>`, never from the package's index: an island keeps every export of the module it comes from, and the index would ship the whole package for one box. |
+| `src/content/foundations/`, `src/pages/foundations/` | The foundations (0106), in MDX: prose, with examples the engine draws at build time (`src/lib/foundations.ts`) and tables read from the tokens (`src/lib/tokens.ts`). |
+| `src/components/` | Build-time pieces for MDX: `Painted` (a buffer as the painter's own markup, no JavaScript), `Table` (data set as prose, columns sized in cells), `ThemeCard`. Never a component the system should have. |
+| `src/pages/terminal/` | Every theme's terminal files, served from what `@rockaway/tokens` ships. |
 | `src/lib/` | Logic, in TypeScript. Astro frontmatter is not typechecked, so keep it thin. |
 | `src/styles/site.css` | The system's CSS as a consumer imports it, and page layout. |
 | `src/fonts/` | The one font, its metrics and its licence. |
 | `src/content.config.ts` | Content collections. `docs` is the repository's own `docs/`, so a document is written once for GitHub and the site. |
+| `src/pages/[doc].astro`, `src/lib/docs.ts` | One page per document in `docs/` (`concept.md` is `/concept/`), with its title and description. A document with no entry fails the build. |
 | `src/layouts/Prose.astro` | A page of Markdown: `<article class="rk-prose">`, and nothing else. |
 
 Component pages (0147) will read the components' metadata from
@@ -49,8 +53,25 @@ The pipeline (`src/lib/markdown.ts`) only says what Markdown cannot:
 - box drawing and blocks become cells the cell draws (0116), so a diagram in
   a code block joins up at every density and still copies as text.
 
-Code is not highlighted yet: that is 0144, in the ANSI 16, with no borrowed
-palette in the meantime.
+Code is highlighted at build time by Shiki (0144), in the ANSI 16: the theme
+in `src/lib/highlight.ts` maps TextMate scopes to the `syntax.*` roles, and
+the page gets a class per role, `rk-syntax-keyword`, which `@rockaway/css`
+colours from the tokens. No colour is written into the page and no
+highlighter ships, so a change of theme or mode recolours code in place.
+
+The content layer caches rendered Markdown and cannot tell when the pipeline
+has changed, so `build` runs `astro build --force`.
+
+## The quickstart
+
+`docs/getting-started.md` is code a stranger runs, so it is run as a stranger
+would: `pnpm build && pnpm --filter site quickstart` packs the four packages,
+scaffolds a Vite app and a Next.js app with their own starters, installs the
+tarballs, writes in every fence marked `quickstart="vite"` or
+`quickstart="next"` (its `file` attribute is the path), builds each for
+production, and reads the screen back as text against the fence marked
+`quickstart="screen"`. It needs the network, so it is not part of `pnpm
+check`; CI runs it (0155).
 
 ## The base path
 
@@ -77,7 +98,12 @@ are not in the subset: the cell draws them (0116).
 To change the character set or the version, edit `scripts/font.ts`, run
 `pnpm --filter site font` after `pnpm build`, and commit what it writes.
 
-## Not yet checked
+## Checking .astro files
 
-`astro check` needs TypeScript 5 or 6 and the repository is on 7, so `.astro`
-files are not typechecked. `tsc` checks everything else.
+`tsc` checks the TypeScript. The .astro files are checked by Astro's
+language server, the checker `astro check` runs, in `scripts/check-astro.ts`
+(cairn 0170). It runs in the site's build, after `tsc`, and on its own as
+`pnpm --filter site check:astro` once the packages are built. `astro check`
+supports TypeScript 5 and 6 and the repository is on 7, so the language server
+has a TypeScript 6 of its own, installed under another name in
+`pnpm-workspace.yaml`. Everything else stays on 7.

@@ -1,0 +1,107 @@
+/*
+ * Scrolling regions (cairn 0207, 0208): no native scrollbar is ever drawn.
+ *
+ *   <div class="rk-scroll">…</div>                 hides the browser's bar
+ *   <div class="rk-scroll rk-scroll-marks">…</div>  and marks the edges with more
+ *
+ * A browser's scrollbar is drawn in pixels by the platform. A classic one,
+ * which you get with a mouse attached or with "always show scroll bars",
+ * takes its width from the box: about fifteen pixels. That leaves everything
+ * inside a fraction of a cell off the grid, and draws a second scrollbar
+ * beside the one a component draws in cells. So every region that scrolls
+ * hides it, and shows where it is in cells instead:
+ *
+ *   - a viewport that scrolls by rows draws a scrollbar column (List)
+ *   - a region that scrolls across shows the theme's overflow marks, `‹` at
+ *     the start and `›` at the end, at each edge that has more past it, the
+ *     way `less -S` does (prose code and tables)
+ *
+ * Scrolling itself is untouched. Wheel, trackpad, touch and keyboard all
+ * still scroll, and a scrolling region keeps its tab stop.
+ *
+ * Prose cannot carry a class from Markdown, so its code blocks and tables are
+ * named here as well. A check after every story fails any element whose
+ * computed overflow scrolls and still has a native bar.
+ */
+@layer rk.base {
+  .rk-scroll,
+  .rk-scroll-marks,
+  .rk-prose :where(pre, table) {
+    scrollbar-width: none;
+  }
+
+  /* Where `scrollbar-width` is not supported yet. */
+  .rk-scroll::-webkit-scrollbar,
+  .rk-scroll-marks::-webkit-scrollbar,
+  .rk-prose :where(pre, table)::-webkit-scrollbar {
+    display: none;
+  }
+
+  /*
+   * Overflow marks. The region is a one-column grid as wide as what it holds,
+   * so its marks can be pinned (sticky) to whichever edge of the view they
+   * belong to: the outermost cell at each side. A scroll-state query shows
+   * each mark only while there is more past its edge, over `--rk-scroll-ground`
+   * so it hides the character under it. Where the query is not supported, no
+   * mark is drawn, and the region still scrolls.
+   *
+   * The content is one element, `pre > code` or a table in a wrapper, and any
+   * room at the sides is the content's padding rather than the region's: a
+   * sticky box is held inside the region's padding, so padding on the region
+   * would keep the marks a cell or two in from its edges.
+   */
+  .rk-scroll-marks,
+  .rk-prose :where(pre) {
+    container-type: scroll-state;
+    display: grid;
+    grid-template-columns: max-content;
+  }
+
+  .rk-scroll-marks > *,
+  .rk-prose :where(pre) > * {
+    grid-area: 1 / 1;
+  }
+
+  .rk-scroll-marks::before,
+  .rk-scroll-marks::after,
+  .rk-prose :where(pre)::before,
+  .rk-prose :where(pre)::after {
+    grid-area: 1 / 1;
+    align-self: start;
+    position: sticky;
+    z-index: 1;
+    inline-size: var(--rk-cell-width);
+    /* The mark covers the cell it sits on: the region's own ground. */
+    background: var(--rk-scroll-ground, var(--rk-bg-page));
+    color: var(--rk-fg-muted);
+    visibility: hidden;
+  }
+
+  .rk-scroll-marks::before,
+  .rk-prose :where(pre)::before {
+    content: var(--rk-glyph-mark-overflow-start) / "";
+    justify-self: start;
+    inset-inline-start: 0;
+  }
+
+  .rk-scroll-marks::after,
+  .rk-prose :where(pre)::after {
+    content: var(--rk-glyph-mark-overflow-end) / "";
+    justify-self: end;
+    inset-inline-end: 0;
+  }
+
+  @container scroll-state(scrollable: inline-start) {
+    .rk-scroll-marks::before,
+    .rk-prose :where(pre)::before {
+      visibility: visible;
+    }
+  }
+
+  @container scroll-state(scrollable: inline-end) {
+    .rk-scroll-marks::after,
+    .rk-prose :where(pre)::after {
+      visibility: visible;
+    }
+  }
+}

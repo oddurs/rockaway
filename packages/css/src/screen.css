@@ -17,6 +17,13 @@
  */
 @layer rk.components {
   .rk-screen {
+    /*
+     * The engine's layout unit: what every box edge is snapped to. Blink and
+     * WebKit lay out in sixty-fourths of a pixel, Gecko in sixtieths (its app
+     * unit). A run's edges are rounded to it, so the engine never has to
+     * round them again (cairn 0212).
+     */
+    --rk-layout-unit: 0.015625px;
     position: relative;
     font-family: var(--rk-font-family-mono);
     /* Chrome is drawn in the cells it was drawn in: never collapse, never wrap. */
@@ -38,10 +45,37 @@
     block-size: var(--rk-cell-height);
   }
 
+  /* Only Gecko knows `-moz-orient`, and only Gecko lays out in sixtieths. */
+  @supports (-moz-orient: inline) {
+    .rk-screen {
+      --rk-layout-unit: calc(1px / 60);
+    }
+  }
+
   .rk-run {
     display: inline-block;
     vertical-align: top;
-    inline-size: calc(var(--rk-run, 1) * var(--rk-cell-width));
+    /*
+     * From where the run ends to where it starts, each rounded to the
+     * engine's layout unit, rather than `cells × cell`: the widths then sum to
+     * exactly where each column is, so a run of eight cells and eight runs of
+     * one land on the same pixels in every row, and the cell itself stays the
+     * font's true advance, which is where text puts its letters (cairn 0117).
+     * Rounded to any other unit, the engine rounds each width again, and the
+     * columns drift apart along the row (0212).
+     */
+    inline-size: calc(
+      round(
+        nearest,
+        calc((var(--rk-col, 0) + var(--rk-run, 1)) * var(--rk-cell-width)),
+        var(--rk-layout-unit, 0.015625px)
+      ) -
+      round(
+        nearest,
+        calc(var(--rk-col, 0) * var(--rk-cell-width)),
+        var(--rk-layout-unit, 0.015625px)
+      )
+    );
     block-size: var(--rk-cell-height);
     white-space: pre;
     /* A screen is a picture: its colours and lines print as they are. */
@@ -77,6 +111,8 @@
     --rk-ink-25: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 25%, transparent) 0 0);
     --rk-ink-50: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 50%, transparent) 0 0);
     --rk-ink-75: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 75%, transparent) 0 0);
+    /* A braille dot's side: eight of them fit, square (0166). */
+    --rk-stroke-dot: min(calc(var(--rk-cell-width) / 4), calc(var(--rk-cell-height) / 8));
     --rk-stroke-radius: calc(
       min(var(--rk-cell-width), var(--rk-cell-height)) /
       2 -
@@ -90,11 +126,19 @@
    * Forced colors drops every background image that is not a URL, which is
    * every stroke. The cell opts out of the adjustment and draws in the
    * reader's text colour instead, whatever colour the cell asked for.
+   *
+   * The text beside it does not opt out, so the browser puts a backplate in
+   * the reader's canvas colour behind it, and Firefox draws that backplate a
+   * pixel or so wider than the text's own cells: over a corner's last pixels,
+   * where a title follows it (0214). A positioned cell paints after the
+   * row's unpositioned runs, backplates included, so the stroke stays on
+   * top. It still paints under the content layer, which comes later.
    */
   @media (forced-colors: active) {
     [data-rk-shape] {
       forced-color-adjust: none;
       --rk-ink-colour: CanvasText;
+      position: relative;
     }
   }
 

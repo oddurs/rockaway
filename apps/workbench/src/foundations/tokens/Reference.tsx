@@ -53,8 +53,9 @@ function Table({
 }) {
   return (
     // A scrollable region needs keyboard access: tab to it, then arrow sideways.
+    // It hides the browser's scrollbar, as every scrolling region does (0207).
     // biome-ignore lint/a11y/noNoninteractiveTabindex: axe requires it (scrollable-region-focusable)
-    <section aria-label={caption} tabIndex={0} style={{ overflowX: 'auto' }}>
+    <section aria-label={caption} tabIndex={0} className="rk-scroll" style={{ overflowX: 'auto' }}>
       <table style={{ borderCollapse: 'collapse', width: '100%', ...text('body') }}>
         <caption
           style={{
@@ -275,7 +276,7 @@ export function Cells() {
 
 /** The characters chrome is drawn with (cairn 0091). */
 export function Glyphs() {
-  const all = group(docs.base as Record<string, unknown>, 'glyph');
+  const all = group(docs.theme as Record<string, unknown>, 'glyph');
   const sets = ['single', 'double', 'heavy', 'rounded', 'ascii'];
   const slots = [
     'top-left',

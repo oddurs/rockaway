@@ -28,6 +28,11 @@
     },
     "./meta.json": "./dist/meta.json",
     "./meta.schema.json": "./dist/meta.schema.json",
+    "./*": {
+      "@rockaway/source": "./src/entries/*.ts",
+      "types": "./dist/entries/*.d.ts",
+      "default": "./dist/entries/*.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -89,6 +94,10 @@
       },
       "./meta.json": "./dist/meta.json",
       "./meta.schema.json": "./dist/meta.schema.json",
+      "./*": {
+        "types": "./dist/entries/*.d.ts",
+        "default": "./dist/entries/*.js"
+      },
       "./package.json": "./package.json"
     }
   }
