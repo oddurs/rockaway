@@ -40,6 +40,13 @@ export const items: readonly ItemSource[] = [
     component: 'FileBrowser',
   },
   {
+    name: 'confirm-destructive',
+    title: 'Confirm destructive',
+    description:
+      'A destructive action that asks for a name typed back before it unlocks: the safe answer on escape, the dangerous one disabled until the words match.',
+    component: 'ConfirmDestructive',
+  },
+  {
     name: 'settings',
     title: 'Settings',
     description:
