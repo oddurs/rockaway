@@ -188,6 +188,48 @@ export const ClipsToTheScrollContainer: Story = {
   },
 };
 
+/** The visually hidden pattern, as a skip link wears it at rest. */
+const CLIPPED = { position: 'absolute', insetBlockStart: 0, clipPath: 'inset(50%)' } as const;
+
+/** The older spelling of the same pattern, which React Aria writes as well. */
+const RECT = { position: 'absolute', clip: 'rect(0 0 0 0)' } as const;
+
+/**
+ * An element clipped to nothing is in the DOM and seen by no one, so the
+ * screenshot does not read it back: not its words, not the words of anything
+ * inside it, and not its attributes in the legend. Once the clip comes off, it
+ * is read where it is, like any other element.
+ */
+export const SkipsTheVisuallyHidden: Story = {
+  name: 'Skips what is visually hidden',
+  render: () => (
+    <Frame title="hidden" cols={24} rows={4}>
+      <a href="#seen" data-testid="skip" style={CLIPPED}>
+        <strong>skip it</strong>
+      </a>
+      <span style={RECT}>rect</span>
+      <div style={{ marginBlockStart: 'var(--rk-y-1)' }}>seen</div>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    const frame = canvas.getByRole('group', { name: 'hidden' });
+    await waitFor(() => expect(frame.querySelector('.rk-row')).not.toBeNull());
+
+    expect(`\n${screenshot(frame)}`).toBe(`
+┌ hidden ──────────────┐
+│                      │
+│ seen                 │
+└──────────────────────┘`);
+
+    // Unclipped, as a skip link is once it has focus, it is read where it sits.
+    canvas.getByTestId('skip').style.clipPath = 'none';
+    const shown = screenshot(frame);
+    expect(shown.split('\n')[0]).toBe('┌ skip it──────────────┐');
+    expect(shown).toMatch(/bold underline\s+2,0\s+skip it/);
+    expect(shown).not.toContain('rect');
+  },
+};
+
 /**
  * A screen inside a screen — a fieldset in a frame — paints chrome of its own,
  * and it is read back where it sits, over the outer chrome, not stacked under
