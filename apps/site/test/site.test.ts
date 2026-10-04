@@ -17,6 +17,7 @@ import { frameBuffer } from '@rockaway/react';
 import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { items } from '../src/registry/items.ts';
 
 const site = path.join(import.meta.dirname, '..');
 
@@ -295,6 +296,53 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(bottom).toBe(row);
     expect(found.content % row).toBe(0);
     expect(found.content).toBeGreaterThan(row);
+  });
+
+  test('serves the registry: each item as its source, and drawn on its page (0046)', async () => {
+    const json = async (url: string) => {
+      const response = await fetch(url);
+      expect(response.status, url).toBe(200);
+      return response.json();
+    };
+    const index = await json(`${origin}${base}r/registry.json`);
+    expect(index.items.map((i: { name: string }) => i.name)).toEqual(items.map((i) => i.name));
+    for (const { name } of items) {
+      const item = await json(`${origin}${base}r/${name}.json`);
+      for (const file of item.files) {
+        const source = path.join(site, 'src/registry', name, path.basename(file.path));
+        expect(file.content).toBe(readFileSync(source, 'utf8'));
+      }
+    }
+
+    const reader = await browser.newPage();
+    const errors: string[] = [];
+    reader.on('pageerror', (error) => errors.push(error.message));
+    reader.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    await reader.goto(`${origin}${base}registry/`);
+    for (const { name } of items) {
+      await reader.waitForSelector(`[data-registry-item="${name}"] .rk-frame[data-rk-painted]`);
+    }
+    const shown = await reader.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('[data-registry-item]')].map((section) => ({
+        name: section.dataset.registryItem,
+        install: section.querySelector('pre')?.textContent,
+        // The frame's content stays inside it: nothing wider than the screen.
+        overflow: [...section.querySelectorAll<HTMLElement>('.rk-screen .rk-content')].some(
+          (content) => content.scrollWidth > Math.ceil(content.clientWidth),
+        ),
+      })),
+    );
+    await reader.close();
+    expect(errors).toEqual([]);
+    expect(shown.map((s) => s.name)).toEqual(items.map((i) => i.name));
+    for (const s of shown) {
+      expect(s.install).toMatch(
+        new RegExp(`^npx shadcn@latest add https?://\\S+${base}r/${s.name}\\.json$`),
+      );
+      expect(s.overflow, s.name).toBe(false);
+    }
   });
 
   test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
