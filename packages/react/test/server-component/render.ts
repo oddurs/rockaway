@@ -130,6 +130,13 @@ const checks: [string, unknown, unknown][] = [
       .row(1),
     ' └── a.ts ',
   ],
+  [
+    'panesBuffer',
+    pure
+      .panesBuffer({ width: 16, height: 3 }, { panes: [{ size: 6, title: 'a' }, { title: 'b' }] })
+      .row(0),
+    '┌ a ───┬ b ────┐',
+  ],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)

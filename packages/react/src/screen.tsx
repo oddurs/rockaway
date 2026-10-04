@@ -54,8 +54,12 @@ export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
    * measured screen is not a whole number of cells wide.
    */
   contentInset?: Inset;
-  /** Real elements, laid over the chrome. */
-  children?: ReactNode;
+  /**
+   * Real elements, laid over the chrome. A function is given the size the
+   * screen drew at, in cells, for content placed by the same layout as the
+   * chrome: a pane's content in the cells its borders enclose.
+   */
+  children?: ReactNode | ((size: Size) => ReactNode);
 }
 
 const FALLBACK: Size = { width: 80, height: 24 };
@@ -155,7 +159,7 @@ export function Screen({
       </div>
       {children === undefined ? null : (
         <div className="rk-content" style={insetStyle(contentInset)}>
-          {children}
+          {typeof children === 'function' ? children(size) : children}
         </div>
       )}
     </div>
