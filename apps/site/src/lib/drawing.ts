@@ -18,7 +18,7 @@ import {
   Buffer,
   borderSets,
   drawBox,
-  drawText,
+  drawLabel,
   type Point,
   type Rect,
   rect,
@@ -95,31 +95,29 @@ export function startingBoxes({ width, height }: Size): Box[] {
   ];
 }
 
-/** The words in the panes: what to do, where there is room to say it. */
-function legend(width: number, height: number, split: number): readonly [Point, string][] {
-  const left = split - 3;
-  const right = width - split - 3;
-  const lines: [Point, string][] = [];
-  // A group of lines says all of itself or nothing.
-  const say = (x: number, y: number, room: number, ...text: string[]): void => {
-    if (text.every((line) => [...line].length <= room)) {
-      text.forEach((line, i) => lines.push([{ x, y: y + i }, line]));
-    }
-  };
-  say(2, 1, left, 'Drag to draw a box,', 'or arrows and Enter.');
-  say(2, height - 4, left, 'Nothing stores a ┌:', 'every corner is', 'looked up.');
-  say(split + 2, 1, right, '1 light  2 heavy', '3 double');
-  return lines;
+/** The weights, as a label set into the bottom edge of the right pane: on one row, or not at all. */
+function weightsLabel(room: number): string | undefined {
+  const long = '1 light  2 heavy  3 double';
+  if (room >= long.length + 4) return long;
+  const short = '1 2 3 weight';
+  return room >= short.length + 4 ? short : undefined;
 }
 
 /** The drawing at a size: the starting boxes, the reader's, and the one being drawn. */
 export function drawing(size: Size, state: DrawingState): Buffer {
   const { width, height } = size;
   const split = Math.max(12, Math.floor(width * 0.42));
-  const muted = { fg: 'fg.muted', attrs: Attr.none };
   return Buffer.create(size).draw((draft) => {
-    for (const [at, text] of legend(width, height, split)) {
-      drawText(draft, at, text, { style: muted });
+    // The only words are labels set into edges: a box drawn across one takes
+    // the cells it needs and the label gives them back, so nothing a reader
+    // draws can land on text (0175).
+    const weights = weightsLabel(width - split);
+    if (weights) {
+      drawLabel(draft, rect(split, height - 1, width - split, 1), weights, {
+        set: setOf('light'),
+        align: 'end',
+        style: { fg: 'fg.muted', attrs: Attr.none },
+      });
     }
     for (const box of [...startingBoxes(size), ...state.boxes]) {
       drawBox(draft, box, {

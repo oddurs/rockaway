@@ -128,23 +128,21 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
   });
 
   test('paints a Frame from the published package, character for character', async () => {
-    // The home page's Frame, inside the shell's content pane.
-    const screen = page.locator('article .rk-screen');
+    // The landing page's Frame, under the code that draws it, rendered on the
+    // server by the component and never hydrated.
+    const screen = page.locator('article .rk-screen[aria-label="hello"]');
     const width = Number(await screen.getAttribute('data-rk-cols'));
     const height = Number(await screen.getAttribute('data-rk-rows'));
-    expect(width).toBeGreaterThan(20);
+    expect(width).toBe(32);
     expect(height).toBe(5);
 
     const painted = await screen.locator('.rk-frame .rk-row').allTextContents();
-    const expected = frameBuffer({ width, height }, { title: 'rockaway' });
+    const expected = frameBuffer({ width, height }, { title: 'hello' });
     expect(painted).toEqual(Array.from({ length: height }, (_, y) => expected.row(y)));
 
     // The content layer is real text, named by the title rather than the glyphs.
-    await expect(screen.getAttribute('aria-label')).resolves.toBe('rockaway');
     await expect(screen.locator('.rk-frame').getAttribute('aria-hidden')).resolves.toBe('true');
-    expect(await screen.locator('.rk-content').textContent()).toContain(
-      'A TUI design system for the web.',
-    );
+    expect(await screen.locator('.rk-content').textContent()).toContain('A screen, in cells.');
   });
 
   test('preloads its one font, and uses the preloaded file', async () => {
@@ -783,6 +781,19 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       expect(lines.some((line) => /^└─+┴─+┴─+┘$/.test(line))).toBe(true);
       expect(lines.some((line) => line.includes('│ ├── Badge'))).toBe(true);
       expect(lines.at(-1)).toMatch(/^ COMPONENTS {2}Components \/ Badge .*Top$/);
+      // Every row of the screen is the same width, and every seam is in the
+      // same column all the way down: the top edge's tees, each row's rules
+      // and the bottom edge's tees.
+      const screen = lines.slice(0, -1).map((line) => [...line]);
+      expect(new Set(screen.map((row) => row.length))).toEqual(new Set([cols]));
+      const at = (row: string[], glyphs: string) =>
+        row.flatMap((ch, x) => (glyphs.includes(ch) ? [x] : []));
+      const seams = at(screen[0] ?? [], '┬');
+      expect(seams.length).toBe(2);
+      for (const row of screen.slice(1, -1)) {
+        for (const x of seams) expect('│├┤┼', `column ${x}`).toContain(row[x]);
+      }
+      expect(at(screen.at(-1) ?? [], '┴')).toEqual(seams);
       await close();
     });
 
@@ -883,6 +894,162 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       await ansi.focus();
       await tab.keyboard.press('Space');
       await expect.poll(said).toMatch(/^Copied the page as ANSI/);
+      await close();
+    });
+  });
+
+  describe('the landing page (0108)', () => {
+    /** The landing page in a window this wide, with or without script. */
+    const land = async (width: number, script = true, height = 800) => {
+      const context = await browser.newContext({
+        viewport: { width, height },
+        javaScriptEnabled: script,
+      });
+      await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin });
+      const reader = await context.newPage();
+      const scripts: string[] = [];
+      reader.on('response', (response) => {
+        if (response.request().resourceType() === 'script') scripts.push(response.url());
+      });
+      await reader.goto(`${origin}${base}`);
+      if (script) await reader.waitForFunction(hydrated);
+      await reader.evaluate(() => document.fonts.ready);
+      return { reader, scripts, close: () => context.close() };
+    };
+
+    /** The drawing's rows, as text: what its chrome shows. */
+    const drawn = () =>
+      [...document.querySelectorAll('[data-site-drawing] .rk-screen > .rk-frame > .rk-row')].map(
+        (row) => row.textContent ?? '',
+      );
+
+    test('says what it is in one line, with the rules, the code, the install and where to go', async () => {
+      const { reader, close } = await land(1280);
+      const found = await reader.evaluate(() => ({
+        h1: document.querySelector('article h1')?.textContent,
+        claim: document.querySelector('article h1 + p strong')?.textContent,
+        rules: document.querySelectorAll('article ol > li').length,
+        code: [...document.querySelectorAll('article pre')].map((pre) => pre.textContent ?? ''),
+        links: [...document.querySelectorAll<HTMLAnchorElement>('article a[href]')].map((a) =>
+          a.getAttribute('href'),
+        ),
+      }));
+      expect(found.h1).toBe('rockaway');
+      expect(found.claim).toBe('A design system for terminal interfaces on the web.');
+      expect(found.rules).toBe(3);
+      expect(found.code.some((code) => code.includes("from '@rockaway/react'"))).toBe(true);
+      expect(found.code.some((code) => code.startsWith('npm install @rockaway/react'))).toBe(true);
+      for (const page of ['getting-started/', 'concept/', 'foundations/', 'components/']) {
+        expect(found.links).toContain(`${base}${page}`);
+      }
+      await close();
+    });
+
+    test('draws a live screen above the fold that is there before any script', async () => {
+      const still = await land(1280, false);
+      const before = await still.reader.evaluate(drawn);
+      // The server's frame: the engine's junctions, every weight, no script.
+      expect(before.join('\n')).toMatch(/┿/);
+      expect(before.join('\n')).toMatch(/╂/);
+      expect(before.join('\n')).toMatch(/╫/);
+      expect(still.scripts).toEqual([]);
+      await still.close();
+
+      const { reader, close } = await land(1280);
+      const box = await reader.locator('[data-site-drawing] .rk-screen').boundingBox();
+      // Above the fold, and widened to the room it has.
+      expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThan(800);
+      expect(
+        await reader.evaluate(
+          () =>
+            document.querySelector<HTMLElement>('[data-site-drawing] .rk-screen')?.dataset.rkCols,
+        ),
+      ).not.toBe('34');
+      await close();
+    });
+
+    test('lets a reader draw, with the pointer or the keys, and joins whatever they draw', async () => {
+      const { reader, close } = await land(1280);
+      const screen = reader.locator('[data-site-drawing] .rk-screen');
+      const box = await screen.boundingBox();
+      // The screen is a whole number of cells, so its box over its count is the cell.
+      const cell = await screen.evaluate((el) => {
+        const box = el.getBoundingClientRect();
+        return {
+          width: box.width / Number(el.dataset.rkCols),
+          height: box.height / Number(el.dataset.rkRows),
+        };
+      });
+      const at = (x: number, y: number) => ({
+        x: (box?.x ?? 0) + (x + 0.5) * cell.width,
+        y: (box?.y ?? 0) + (y + 0.5) * cell.height,
+      });
+      const before = await reader.evaluate(drawn);
+      // A box from inside the left pane to inside the right, across the split.
+      await reader.mouse.move(at(3, 1).x, at(3, 1).y);
+      await reader.mouse.down();
+      await reader.mouse.move(at(45, 11).x, at(45, 11).y, { steps: 4 });
+      await reader.mouse.up();
+      const after = await reader.evaluate(drawn);
+      expect(after).not.toEqual(before);
+      // Where it crosses the split's rule, top and bottom, it meets it in a cross.
+      const split = [...(before[0] ?? '')].indexOf('┬');
+      expect([...(after[1] ?? '')][split]).toBe('┼');
+      expect([...(after[11] ?? '')][split]).toBe('┼');
+
+      // By the keys: heavy, from the cursor, then taken back.
+      await screen.focus();
+      await reader.keyboard.press('2');
+      await reader.keyboard.press('Enter');
+      for (let i = 0; i < 6; i++) await reader.keyboard.press('ArrowRight');
+      for (let i = 0; i < 3; i++) await reader.keyboard.press('ArrowUp');
+      await reader.keyboard.press('Enter');
+      const keyed = await reader.evaluate(drawn);
+      expect(keyed.join('\n')).not.toBe(after.join('\n'));
+      await expect
+        .poll(() => reader.locator('.rk-statusbar [role="status"]').textContent())
+        .toMatch(/^Drew a heavy box, 7 by 4 cells\./);
+      await reader.keyboard.press('Backspace');
+      await reader.keyboard.press('Escape');
+      await screen.blur();
+      expect(await reader.evaluate(drawn)).toEqual(after);
+      await close();
+    });
+
+    test('reads at forty cells on a phone and at 400% zoom, without scrolling across', async () => {
+      // A phone, then 1280 pixels at 400%: 320 of them, 33 cells.
+      for (const width of [390, 320]) {
+        const { reader, close } = await land(width, true, 800);
+        const found = await reader.evaluate(() => {
+          const drawing = document.querySelector<HTMLElement>('[data-site-drawing] .rk-screen');
+          const main = document.getElementById('content') as HTMLElement;
+          return {
+            overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+            fits:
+              (drawing?.getBoundingClientRect().right ?? 0) <=
+              main.getBoundingClientRect().right + 0.5,
+            cols: Number(drawing?.dataset.rkCols),
+          };
+        });
+        expect(found.overflow, `${width}`).toBe(0);
+        expect(found.fits, `${width}`).toBe(true);
+        expect(found.cols, `${width}`).toBeGreaterThanOrEqual(24);
+        await close();
+      }
+    });
+
+    test('ships no React, and a few kilobytes of script', async () => {
+      const { reader, scripts, close } = await land(1280);
+      await reader.waitForFunction(hydrated);
+      const bytes = scripts.reduce((sum, url) => {
+        const file = path.join(out, decodeURIComponent(new URL(url).pathname.slice(base.length)));
+        return sum + gzipSync(readFileSync(file), { level: 9 }).length;
+      }, 0);
+      expect(
+        scripts.some((url) => /react-dom|client\./.test(url)),
+        scripts.join('\n'),
+      ).toBe(false);
+      expect(bytes).toBeLessThan(40_000);
       await close();
     });
   });

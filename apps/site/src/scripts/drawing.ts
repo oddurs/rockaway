@@ -59,7 +59,7 @@ function live(figure: HTMLElement): void {
   };
 
   // As wide as the room it has, in whole cells: the server's guess was a phone.
-  const fit = (): void => {
+  const fitWidth = (): void => {
     cell = cellOf(screen);
     const room = figure.getBoundingClientRect().width;
     const width = Math.max(24, Math.min(MOST, Math.floor(room / cell.width + 1 / 32)));
@@ -166,8 +166,8 @@ function live(figure: HTMLElement): void {
     paint();
   });
 
-  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(fit).observe(figure);
-  fit();
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(fitWidth).observe(figure);
+  fitWidth();
 }
 
 for (const figure of document.querySelectorAll<HTMLElement>('[data-site-drawing]')) live(figure);

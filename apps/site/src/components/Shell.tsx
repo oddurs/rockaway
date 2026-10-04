@@ -116,23 +116,16 @@ export function Shell({
         </StatusSegment>
         <StatusMessage />
         <StatusSegment {...segment('copy')} label="Copy">
-          <Button
-            delimiters="none"
-            keys="y"
-            platform="other"
-            aria-label="Copy the screen as text"
-            data-site-copy="text"
-          >
-            copy
+          {/* Terminal notation, as a TUI writes it: `y`, and `Y` for Shift. */}
+          <Button delimiters="none" aria-label="Copy the screen as text" data-site-copy="text">
+            <KeyHint keys="y" notation="terminal" decorative /> copy
           </Button>{' '}
           <Button
             delimiters="none"
-            keys="shift+y"
-            platform="other"
             aria-label="Copy the screen as ANSI, for a terminal"
             data-site-copy="ANSI"
           >
-            ansi
+            <KeyHint keys="shift+y" notation="terminal" decorative /> ansi
           </Button>
         </StatusSegment>
         <StatusSegment {...segment('keys')}>

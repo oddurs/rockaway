@@ -48,6 +48,8 @@ const first = drawing(SERVER_SIZE, { boxes: [], weight: 'light' });
       draw={() => first}
       cols={SERVER_SIZE.width}
       rows={SERVER_SIZE.height}
+      role="application"
+      aria-roledescription="drawing"
       aria-label="Boxes joined by the junction table. Drag across it, or use the arrow keys and Enter, to draw another."
     />
   </figure>
