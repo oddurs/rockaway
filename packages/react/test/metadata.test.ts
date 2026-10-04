@@ -88,6 +88,13 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       null,
       createElement(rockaway.OverlayPopover, { isOpen: false, ...props }, 'inside'),
     ),
+  // Closed, as Popover's is: a menu opens in one, and has no trigger here.
+  Menu: (props) =>
+    createElement(
+      rockaway.Menu,
+      { 'aria-label': 'Actions', ...props },
+      createElement(rockaway.MenuItem, { id: 'a' }, 'Rename'),
+    ),
   // Closed, as OverlayPopover's is: on a server an open one renders nothing anyway.
   Popover: (props) =>
     createElement(

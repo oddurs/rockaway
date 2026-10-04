@@ -36,5 +36,6 @@
 @import "./components/keymap.css";
 @import "./components/link.css";
 @import "./components/list.css";
+@import "./components/menu.css";
 @import "./components/overlay.css";
 @import "./components/tree.css";
