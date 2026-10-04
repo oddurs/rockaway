@@ -734,7 +734,7 @@ function Words({ text, fitted }: { readonly text: string; readonly fitted: strin
       <span aria-hidden="true" className="rk-table-value">
         {fitted}
       </span>
-      <VisuallyHidden>{text}</VisuallyHidden>
+      <VisuallyHidden elementType="span">{text}</VisuallyHidden>
     </span>
   );
 }
