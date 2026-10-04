@@ -49,35 +49,45 @@ export function measureCell(el: HTMLElement): CellMetrics {
 }
 
 /**
- * How far a length laid out as whole cells can be from them (cairn 0228): a
- * sixteenth of a cell. Layout rounds every box edge to the engine's unit
- * (1/64px; 1/60px in Gecko), and the cell is the font's true advance, so a
- * box of n cells measures a hair either side of n. Boxes laid end to end add
- * their errors: a select's trigger, five runs in a row, came out a few
- * hundredths of a pixel over thirty cells. So the grace is not a pixel count,
- * which some number of boxes always beats, but a fraction of the cell: a
- * sixteenth is over thirty layout units at any reading size, and a length
- * that far from whole cells is a cell's worth wrong in no engine.
+ * Two questions about a length in cells, and the grace each takes (cairn 0228).
  *
- * The cost is at the other end: a box a sixteenth of a cell short of n cells
- * is drawn as n, a sliver past its edge, rather than as n - 1 with a cell
- * missing at the side. The stylesheets use the same sixteenth wherever they
- * round to cells (field, fieldset and table).
+ * Layout rounds every box to the engine's unit (1/64px; 1/60px in Gecko), and
+ * the cell is the font's true advance, so a length meant to be n cells
+ * measures a hair either side of n.
+ *
+ * How many cells FIT in a box (`cellsIn`): a screen in its container, a sheet
+ * in the viewport. The box is the page's, and its edge is hard: cells drawn
+ * past it are cut off, or give its scroller a sliver to scroll. So the grace
+ * is what one box's rounding can take from an exact n cells, two of the
+ * coarsest layout unit, and nothing anyone can see past the edge.
+ *
+ * How many cells COVER a length (`cellsCovering`): a select's list as wide as
+ * its trigger. The length is content laid out in cells, often many boxes end
+ * to end, and their errors add: a trigger of five runs came out a few
+ * hundredths of a pixel over thirty cells, and took thirty-one. One cell too
+ * many is the failure, and a surface a sliver narrower than its trigger is
+ * not, so the grace is a fraction of the cell: a sixteenth, over thirty layout
+ * units at any reading size, and a cell's worth wrong in no engine.
+ *
+ * A long row of cells is not left to the grace: it is laid out as a screen
+ * lays out its runs, each edge rounded from the row's start (screen.css), and
+ * comes out exact.
  */
-export const CELL_GRACE: number = 1 / 16;
+export const CELL_SNAP: number = 1 / 32;
+export const CELL_COVER_GRACE: number = 1 / 16;
 
-/** How many whole cells fit. Never negative, never fractional. */
+/** How many whole cells fit in a box. Never negative, never fractional. */
 export function cellsIn(pixels: number, cell: number): number {
   if (!Number.isFinite(pixels) || !Number.isFinite(cell) || cell <= 0) return 0;
-  return Math.max(0, Math.floor(pixels / cell + CELL_GRACE));
+  return Math.max(0, Math.floor((pixels + CELL_SNAP) / cell));
 }
 
 /**
- * How many whole cells it takes to cover a length: the dual of `cellsIn`, for
- * a surface at least as wide as something else, as a select's list is as
- * wide as its trigger. A length a sixteenth of a cell over n cells is n.
+ * How many whole cells cover a length: the dual of `cellsIn`, for a surface
+ * at least as wide as something laid out in cells. A length a sixteenth of a
+ * cell over n cells is n.
  */
 export function cellsCovering(pixels: number, cell: number): number {
   if (!Number.isFinite(pixels) || !Number.isFinite(cell) || cell <= 0) return 0;
-  return Math.max(0, Math.ceil(pixels / cell - CELL_GRACE));
+  return Math.max(0, Math.ceil(pixels / cell - CELL_COVER_GRACE));
 }

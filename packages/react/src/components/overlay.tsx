@@ -352,10 +352,10 @@ function Surface({
   const [triggerCols, setTriggerCols] = useState<number | undefined>(undefined);
   useCellSnap(host, anchor, sheet);
 
-  // As wide as the trigger, in whole cells: the cells that cover its width,
-  // with the grace every cell count takes (0228). A trigger laid out as
-  // thirty cells measures a hair either side of them, by as many layout units
-  // as it has boxes, and is thirty cells, not thirty-one.
+  // As wide as the trigger, in whole cells: the cells that cover its width
+  // (0228). A trigger laid out as thirty cells measures a hair either side of
+  // them, by as many layout units as it has boxes, and is thirty cells, not
+  // thirty-one.
   useIsomorphicLayoutEffect(() => {
     if (minCols !== 'trigger') return;
     const trigger = anchor();

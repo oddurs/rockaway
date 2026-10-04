@@ -1,17 +1,22 @@
-import { CELL_GRACE, cellsCovering, cellsIn, measureCell } from '@rockaway/react';
+import { CELL_COVER_GRACE, CELL_SNAP, cellsCovering, cellsIn, measureCell } from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 
 /**
  * Whole cells, measured (cairn 0228). A box laid out as n cells measures a
  * hair either side of n: layout rounds each box to the engine's unit, and
- * boxes laid end to end add their errors. `cellsIn` and `cellsCovering` allow
- * a sixteenth of a cell for it. This lays out boxes of whole cells at every
- * density's line box, at reading sizes that put the cell on fractions of a
- * pixel, across and down, as one box and as up to thirty boxes in a row, and
- * requires every one to read back as exactly its cells. The worst error is
- * printed, as a share of the grace, so a change that eats into it shows
- * before it fails.
+ * boxes laid end to end add their errors. This lays out boxes of whole cells
+ * at every density's line box, at reading sizes that put the cell on
+ * fractions of a pixel, across and down:
+ *
+ *   - one box reads back as exactly its cells both ways, what fits
+ *     (`cellsIn`, which takes only a box's own snap) and what covers it
+ *   - up to thirty boxes in a row read back exactly as what covers them
+ *     (`cellsCovering`, a sixteenth of a cell's grace), and never as more
+ *     cells fitting than they hold
+ *
+ * The worst error of a row is printed as a share of the cover grace, so a
+ * change that eats into it shows before it fails.
  *
  * No fixed grace covers any number of boxes. Chromium truncates each box to
  * its unit, about a hundredth of a pixel lost a box, so two hundred one-cell
@@ -52,9 +57,16 @@ export const WholeCells: Story = {
         scope.style.setProperty('--rk-cell-width', `${cell.width}px`);
         scope.style.setProperty('--rk-cell-height', `${cell.height}px`);
 
-        const check = (what: string, px: number, size: number, n: number): void => {
-          worst = Math.max(worst, Math.abs(px / size - n));
+        // One box: exactly n, both ways, and off by less than its snap.
+        const box1 = (what: string, px: number, size: number, n: number): void => {
           if (cellsIn(px, size) !== n || cellsCovering(px, size) !== n) {
+            misses.push(`${density} ${size}px ${what}: ${px}px is not ${n} cells of ${size}px`);
+          }
+        };
+        // Boxes in a row: covered by exactly n, and never more than n fit.
+        const row = (what: string, px: number, size: number, n: number): void => {
+          worst = Math.max(worst, Math.abs(px / size - n));
+          if (cellsCovering(px, size) !== n || cellsIn(px, size) > n) {
             misses.push(`${density} ${size}px ${what}: ${px}px is not ${n} cells of ${size}px`);
           }
         };
@@ -65,8 +77,8 @@ export const WholeCells: Story = {
           box.style.cssText = `position:absolute; inline-size:calc(${n} * var(--rk-cell-width)); block-size:calc(${n} * var(--rk-cell-height))`;
           scope.append(box);
           const r = box.getBoundingClientRect();
-          check(`${n} across`, r.width, cell.width, n);
-          check(`${n} down`, r.height, cell.height, n);
+          box1(`${n} across`, r.width, cell.width, n);
+          box1(`${n} down`, r.height, cell.height, n);
           box.remove();
 
           // Boxes end to end: five runs, as a select's trigger lays out, and
@@ -87,18 +99,13 @@ export const WholeCells: Story = {
               down.append(d);
             }
             scope.append(across, down);
-            check(
+            row(
               `${n} across in ${parts} boxes`,
               across.getBoundingClientRect().width,
               cell.width,
               n,
             );
-            check(
-              `${n} down in ${parts} boxes`,
-              down.getBoundingClientRect().height,
-              cell.height,
-              n,
-            );
+            row(`${n} down in ${parts} boxes`, down.getBoundingClientRect().height, cell.height, n);
             across.remove();
             down.remove();
           }
@@ -107,7 +114,7 @@ export const WholeCells: Story = {
       }
     }
     console.info(
-      `cell grace: the worst length was ${(worst * 100).toFixed(3)}% of a cell from whole cells, ${((worst / CELL_GRACE) * 100).toFixed(1)}% of the grace`,
+      `cell grace: the worst row was ${(worst * 100).toFixed(3)}% of a cell from whole cells, ${((worst / CELL_COVER_GRACE) * 100).toFixed(1)}% of the cover grace; one box's snap is ${CELL_SNAP}px`,
     );
     expect(misses.length, misses.slice(0, 12).join('\n')).toBe(0);
   },
@@ -151,6 +158,6 @@ export const Telescoped: Story = {
     console.info(
       `200 cells: boxed one by one ${(boxed * 100).toFixed(2)}% of a cell off, telescoped ${(telescoped * 100).toFixed(2)}%`,
     );
-    expect(telescoped).toBeLessThan(CELL_GRACE / 8);
+    expect(telescoped * cell).toBeLessThan(CELL_SNAP);
   },
 };

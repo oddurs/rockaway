@@ -1,6 +1,6 @@
 import { Buffer, contentArea, drawBox, drawText, rect, type Size } from '@rockaway/grid';
 import {
-  CELL_GRACE,
+  CELL_SNAP,
   cellsIn,
   Frame,
   frameBuffer,
@@ -63,12 +63,11 @@ export const MeasuresItsContainer: Story = {
     // The cell is the font's, not a number anyone picked.
     const cell = Number.parseFloat(getComputedStyle(screen).getPropertyValue('--rk-cell-width'));
     expect(cell).toBeGreaterThan(4);
-    // The whole cells in the box, with a sixteenth of a cell's grace (0228): a
-    // box that short of n cells is n, drawn a sliver past its edge, which cuts
-    // no line, since lines are drawn through a cell's middle.
+    // The whole cells that fit in the box (0228), and never past its edge by
+    // more than the snap a box's rounding takes.
     const width = host.getBoundingClientRect().width;
     expect(cols).toBe(cellsIn(width, cell));
-    expect(cols * cell - width).toBeLessThanOrEqual(cell * CELL_GRACE);
+    expect(cols * cell - width).toBeLessThanOrEqual(CELL_SNAP);
   },
 };
 
