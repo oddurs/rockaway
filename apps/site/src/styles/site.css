@@ -21,6 +21,8 @@
   overflow: clip;
   /* One ground under every pane, the one a Tree and a List are drawn on. */
   background: var(--rk-bg-surface);
+  /* Its size says, before any script, whether the panes will stack. */
+  container: site-shell / size;
 }
 
 /*
@@ -80,6 +82,49 @@
 }
 
 [data-rk-script]:not([data-rk-shell]) .site-shell {
+  visibility: hidden;
+  animation: site-shell-reveal 0s 3s forwards;
+}
+
+/*
+ * Except on a phone (0152). Narrower than the shell's `STACK_BELOW` cells,
+ * the panes stack, and stacked, the page's pane is the same distance from the
+ * screen's corner at every size, and as wide and as tall as the screen's whole
+ * cells less the borders, so long as there are rows enough for the map over
+ * it (`stackedPage`, in src/lib/shell.ts: 15 rows of panes, and the status
+ * bar's). So the page is shown at once, exactly where the script will put it:
+ * on a slow connection the reader can start reading while the script arrives,
+ * and when it does, nothing moves. The borders, the map and the status bar
+ * appear around it; they are drawn at the screen's size, which only the
+ * script knows. The distances are the engine's, written on the shell by the
+ * server; the two numbers here are checked against it.
+ */
+@container site-shell (inline-size < 64ch) and (block-size >= 16lh) {
+  [data-rk-script]:not([data-rk-shell])
+    .site-shell
+    > .rk-panes
+    > .rk-content
+    > .rk-pane:has(> main#content) {
+    visibility: visible;
+    inset-inline-start: calc(var(--site-early-x) * var(--rk-cell-width));
+    inset-block-start: calc(var(--site-early-y) * var(--rk-cell-height));
+    inline-size: calc(
+      round(down, 100%, var(--rk-cell-width)) -
+      var(--site-early-less-cols) *
+      var(--rk-cell-width)
+    );
+    block-size: calc(100% - var(--site-early-less-rows) * var(--rk-cell-height));
+  }
+}
+
+/*
+ * The landing page's drawing (0108) is as wide as the room it has, which only
+ * its script knows; the server draws it for one phone. So with script, it is
+ * hidden until it has been drawn at its width, rather than shown at the
+ * server's in the first frame above and then redrawn. With no script, the
+ * server's drawing is the drawing.
+ */
+[data-rk-script] [data-site-drawing]:not([data-site-drawn]) > .rk-screen {
   visibility: hidden;
   animation: site-shell-reveal 0s 3s forwards;
 }

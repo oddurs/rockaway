@@ -168,6 +168,8 @@ function live(figure: HTMLElement): void {
 
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(fitWidth).observe(figure);
   fitWidth();
+  // Drawn at the room it has: it can be seen (site.css).
+  figure.dataset.siteDrawn = '';
 }
 
 for (const figure of document.querySelectorAll<HTMLElement>('[data-site-drawing]')) live(figure);

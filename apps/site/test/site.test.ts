@@ -1386,5 +1386,120 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       },
       120_000,
     );
+
+    /** Every element of the page that is showing, and where, but the drawing, which is hidden until drawn. */
+    const placed = () => {
+      const main = document.getElementById('content') as HTMLElement;
+      return [main, ...main.querySelectorAll('*')].flatMap((el) => {
+        const r = el.getBoundingClientRect();
+        if ((r.width === 0 && r.height === 0) || el.closest('[data-site-drawing] > .rk-screen'))
+          return [];
+        const name = `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ''}`;
+        return [
+          {
+            name,
+            box: [r.x, r.y, r.width, r.height],
+            showing: getComputedStyle(el).visibility === 'visible',
+          },
+        ];
+      });
+    };
+
+    test.runIf(base === '/rockaway/')(
+      'shows a phone the page before the script arrives, where the script then puts it: nothing moves',
+      async () => {
+        const moved: string[] = [];
+        for (const [width, height, phone] of [
+          [390, 844, true],
+          [320, 640, true],
+          [1280, 800, false],
+        ] as const) {
+          for (const p of ['', 'concept/', 'foundations/grid/', 'components/tree/']) {
+            const at = `${p || 'home'} at ${width}px`;
+            // The first frame: every script of the site's own held back.
+            const early = await browser.newContext({ viewport: { width, height } });
+            const before = await early.newPage();
+            await before.route('**/_astro/*.js', (route) => route.abort());
+            await before.goto(`${origin}${base}${p}`);
+            await before.evaluate(() => document.fonts.ready);
+            expect(
+              await before.evaluate(() => document.documentElement.dataset.rkShell),
+              at,
+            ).toBeUndefined();
+            const first = await before.evaluate(placed);
+            await early.close();
+            // A phone is shown the page; a wider window, which the server cannot
+            // guess, nothing until the script has measured it (0104).
+            expect(
+              first.some((el) => el.showing),
+              at,
+            ).toBe(phone);
+
+            const live = await browser.newContext({ viewport: { width, height } });
+            const after = await live.newPage();
+            await after.goto(`${origin}${base}${p}`);
+            await after.waitForFunction(hydrated);
+            await after.evaluate(() => document.fonts.ready);
+            const last = await after.evaluate(placed);
+            await live.close();
+
+            expect(
+              last.map((el) => el.name),
+              at,
+            ).toEqual(first.map((el) => el.name));
+            first.forEach((el, i) => {
+              if (!el.showing) return;
+              const now = last[i]?.box ?? [];
+              // To the engine's layout unit, a sixty-fourth of a pixel.
+              if (el.box.some((n, k) => Math.abs(n - (now[k] ?? Number.NaN)) > 1 / 64))
+                moved.push(`${at}: ${el.name} ${el.box} -> ${now}`);
+            });
+          }
+        }
+        expect(moved).toEqual([]);
+      },
+      120_000,
+    );
+
+    test.runIf(base === '/rockaway/')(
+      'loads on Slow 4G with no layout shift, on a phone or a desktop',
+      async () => {
+        for (const [width, height] of [
+          [390, 844],
+          [1280, 800],
+        ] as const) {
+          const context = await browser.newContext({ viewport: { width, height } });
+          const reader = await context.newPage();
+          // DevTools' Slow 4G, so the first frame stands long enough to be seen.
+          const cdp = await context.newCDPSession(reader);
+          await cdp.send('Network.enable');
+          await cdp.send('Network.emulateNetworkConditions', {
+            offline: false,
+            latency: 150,
+            downloadThroughput: (1.6 * 1024 * 1024) / 8,
+            uploadThroughput: (750 * 1024) / 8,
+          });
+          await reader.addInitScript(() => {
+            const seen: number[] = [];
+            (window as unknown as { shifts: number[] }).shifts = seen;
+            new PerformanceObserver((list) => {
+              for (const entry of list.getEntries())
+                seen.push((entry as unknown as { value: number }).value);
+            }).observe({ type: 'layout-shift', buffered: true });
+          });
+          for (const p of ['', 'components/tree/']) {
+            await reader.goto(`${origin}${base}${p}`);
+            await reader.waitForFunction(hydrated, null, { timeout: 20_000 });
+            await reader.evaluate(() => document.fonts.ready);
+            const shifts = await reader.evaluate(
+              () => (window as unknown as { shifts: number[] }).shifts,
+            );
+            expect(shifts, `${p || 'home'} at ${width}px`).toEqual([]);
+          }
+          await context.close();
+        }
+      },
+      60_000,
+    );
   });
 });

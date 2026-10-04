@@ -25,7 +25,7 @@ import { KeymapHelp } from '@rockaway/react/keymap';
 import { LinkTree } from '@rockaway/react/link-tree';
 import { Pane, Panes } from '@rockaway/react/panes';
 import { StatusBar, StatusMessage, StatusSegment } from '@rockaway/react/status-bar';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { DEFAULT_LOOK } from '../lib/look.ts';
 import type { NavNode } from '../lib/nav.ts';
 import type { Heading } from '../lib/outline.ts';
@@ -35,6 +35,7 @@ import {
   type ShellBinding,
   STATUS_SEGMENTS,
   shellSplit,
+  stackedPage,
 } from '../lib/shell.ts';
 
 export interface ShellProps {
@@ -75,8 +76,16 @@ export function Shell({
 }: ShellProps): ReactNode {
   const split = shellSplit({ stacked: false, title, outline: headings.length > 0 });
   const [map, page, outline] = split.panes;
+  // Where the page goes on a phone, for the frame before the script (site.css).
+  const early = stackedPage({ title, outline: headings.length > 0 });
+  const style = {
+    '--site-early-x': early.x,
+    '--site-early-y': early.y,
+    '--site-early-less-cols': early.lessCols,
+    '--site-early-less-rows': early.lessRows,
+  } as CSSProperties;
   return (
-    <div className="site-shell" data-site-title={title}>
+    <div className="site-shell" data-site-title={title} style={style}>
       <Panes direction="row" fallback={SERVER_SIZE}>
         <Pane {...map} label="" pad={0}>
           <nav aria-label="Site" className="rk-scroll site-scroll" data-site-map>

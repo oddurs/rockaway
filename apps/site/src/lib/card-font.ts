@@ -3,8 +3,8 @@
  * build, so its bytes are here wherever the build put this module.
  */
 import fontData from '../fonts/jetbrains-mono.woff2?inline';
-import { useFont } from './card.ts';
+import { drawWithFont } from './card.ts';
 
-useFont(Buffer.from(fontData.slice(fontData.indexOf(',') + 1), 'base64'));
+drawWithFont(Buffer.from(fontData.slice(fontData.indexOf(',') + 1), 'base64'));
 
 export * from './card.ts';

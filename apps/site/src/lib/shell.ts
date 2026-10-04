@@ -4,7 +4,7 @@
  * and the page's script lays them out and binds the keys from it, so the two
  * can never describe a different shell.
  */
-import type { PaneSpec, SplitSpec } from '@rockaway/react/panes';
+import { layoutPanes, type PaneSpec, type SplitSpec } from '@rockaway/react/panes';
 import type { NavNode } from './nav.ts';
 import type { Heading } from './outline.ts';
 
@@ -38,9 +38,60 @@ export function shellSplit({ stacked, title, outline }: ShellShape): SplitSpec {
   const panes: PaneSpec[] = [
     { title: 'rockaway', size: stacked ? 6 : 26, min: stacked ? 3 : 18, priority: 2 },
     { title, size: '1fr', min: stacked ? 6 : 36, priority: 3 },
-    { title: 'on this page', size: 28, min: stacked || !outline ? NEVER : 18, priority: 1 },
+    // A pane's fixed size is its minimum, and outranks `min`: the outline that
+    // should never show is given a size that never fits, not only a minimum.
+    stacked || !outline
+      ? { title: 'on this page', size: NEVER, min: NEVER, priority: 1 }
+      : { title: 'on this page', size: 28, min: 18, priority: 1 },
   ];
   return { direction: stacked ? 'column' : 'row', panes };
+}
+
+/** A phone's screen, in cells: where the stacked panes are measured for the first frame. */
+const PHONE = { width: 40, height: 40 } as const;
+
+/** Where a pane's content is, and how much narrower and shorter than the screen. */
+interface Placed {
+  readonly x: number;
+  readonly y: number;
+  readonly lessCols: number;
+  readonly lessRows: number;
+}
+
+/** A shell's shape, stacked or not. */
+type ShellShapeOf = Omit<ShellShape, 'stacked'>;
+
+/** The page's pane at one stacked size, or nothing if it has no room. */
+function stackedAt(size: { width: number; height: number }, shape: ShellShapeOf): Placed | null {
+  const { panes } = layoutPanes(size, shellSplit({ ...shape, stacked: true }));
+  const page = panes.find((pane) => pane.path.length === 1 && pane.path[0] === 1);
+  if (!page || page.collapsed) return null;
+  const { x, y, width, height } = page.content;
+  return { x, y, lessCols: size.width - width, lessRows: size.height - height };
+}
+
+/**
+ * Where the page's pane is when the panes are stacked (0152): its corner, in
+ * cells from the screen's, and how many cells narrower and shorter than the
+ * screen it is. Stacked, those are the same at every size from `minRows` rows
+ * of panes up, so a phone can be shown the page where the script will put it
+ * before the script has arrived, and nothing moves when it does. Shorter than
+ * that, the map is the pane that goes, and the page moves up.
+ */
+export function stackedPage(shape: ShellShapeOf): Placed & { readonly minRows: number } {
+  const placed = stackedAt(PHONE, shape);
+  if (!placed) throw new Error('a phone has no room for the page');
+  let minRows = PHONE.height;
+  const same = (other: Placed | null) =>
+    other !== null &&
+    other.x === placed.x &&
+    other.y === placed.y &&
+    other.lessCols === placed.lessCols &&
+    other.lessRows === placed.lessRows;
+  while (minRows > 1 && same(stackedAt({ width: PHONE.width, height: minRows - 1 }, shape))) {
+    minRows -= 1;
+  }
+  return { ...placed, minRows };
 }
 
 /** The status bar's segments, in order, as `StatusSegment` gives them: the message line is not one. */

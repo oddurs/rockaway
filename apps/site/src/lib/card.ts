@@ -26,7 +26,7 @@ import * as hb from 'harfbuzzjs';
 import sharp from 'sharp';
 // The site's own font file (src/fonts/jetbrains-mono.woff2): the build
 // inlines it (src/lib/card-font.ts) and a script reads it from disk, and
-// either hands its bytes to `useFont`.
+// either hands its bytes to `drawWithFont`.
 //
 // Drawing its outlines into an image is within its licence. JetBrains Mono is
 // under the SIL Open Font License 1.1 (src/fonts/OFL.txt), whose condition 5
@@ -72,14 +72,14 @@ let fonts: Promise<Fonts> | undefined;
 let fontBytes: Uint8Array | undefined;
 
 /** The font file's bytes, before anything is drawn: WOFF2, as the site serves it. */
-export function useFont(bytes: Uint8Array): void {
+export function drawWithFont(bytes: Uint8Array): void {
   fontBytes = bytes;
   fonts = undefined;
 }
 
 function loadFonts(): Promise<Fonts> {
   fonts ??= (async () => {
-    if (!fontBytes) throw new Error('card.ts: call useFont with the font file first');
+    if (!fontBytes) throw new Error('card.ts: call drawWithFont with the font file first');
     // fontverter reads its input as a Node Buffer.
     const sfnt = await convert(Buffer.from(fontBytes), 'sfnt');
     const face = new hb.Face(new hb.Blob(sfnt));

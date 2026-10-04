@@ -1,6 +1,9 @@
+import { readFileSync } from 'node:fs';
+import { layoutPanes } from '@rockaway/react/panes';
 import { describe, expect, test } from 'vitest';
 import { modeOf, type NavNode, trail } from '../src/lib/nav.ts';
 import { outline, slugify, textOf } from '../src/lib/outline.ts';
+import { STACK_BELOW, shellSplit, stackedPage } from '../src/lib/shell.ts';
 
 describe('a page outline (0104)', () => {
   test('reads sections and the sections within them, keeping the ids Markdown gave', () => {
@@ -54,5 +57,55 @@ describe('the site map (0104)', () => {
     expect(modeOf(trail(nav, '/foundations/grid/'))).toBe('FOUNDATIONS');
     expect(modeOf(trail(nav, '/'))).toBe('HOME');
     expect(modeOf(trail(nav, '/concept/'))).toBe('GUIDE');
+  });
+});
+
+describe('the shell’s panes (0104, 0152)', () => {
+  const shown = (width: number, height: number, stacked: boolean, sections: boolean) =>
+    layoutPanes(
+      { width, height },
+      shellSplit({ stacked, title: 'The grid', outline: sections }),
+    ).panes.map((pane) => !pane.collapsed);
+
+  test('never shows the outline stacked, or for a page with no sections, however much room', () => {
+    for (let height = 20; height <= 200; height += 1) {
+      expect(shown(40, height, true, true)[2], `stacked, ${height} rows`).toBe(false);
+    }
+    for (let width = STACK_BELOW; width <= 400; width += 1) {
+      expect(shown(width, 40, false, false)[2], `no sections, ${width} cells`).toBe(false);
+    }
+    expect(shown(133, 40, false, true)).toEqual([true, true, true]);
+  });
+
+  test('puts the stacked page in the same place at every phone’s size, as the first frame assumes', () => {
+    const shape = { title: 'The grid', outline: true };
+    const early = stackedPage(shape);
+    for (let width = 16; width < STACK_BELOW; width += 1) {
+      for (let height = early.minRows; height <= 120; height += 1) {
+        const page = layoutPanes({ width, height }, shellSplit({ ...shape, stacked: true }))
+          .panes[1];
+        expect(page?.content, `${width} by ${height}`).toEqual({
+          x: early.x,
+          y: early.y,
+          width: width - early.lessCols,
+          height: height - early.lessRows,
+        });
+      }
+    }
+    // A row shorter, and the map is the pane that goes: the page moves up.
+    const short = layoutPanes(
+      { width: 40, height: early.minRows - 1 },
+      shellSplit({ ...shape, stacked: true }),
+    ).panes[1];
+    expect(short?.content.y).not.toBe(early.y);
+  });
+
+  test('shows the first frame on exactly the screens it is right for', () => {
+    const css = readFileSync(new URL('../src/styles/site.css', import.meta.url), 'utf8');
+    const { minRows } = stackedPage({ title: 'The grid', outline: true });
+    // The panes take every whole row but the status bar's.
+    expect(css).toContain(
+      `@container site-shell (inline-size < ${STACK_BELOW}ch) and (block-size >= ${minRows + 1}lh)`,
+    );
   });
 });

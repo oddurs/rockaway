@@ -9,10 +9,10 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { repoCardPng, useFont } from '../src/lib/card.ts';
+import { drawWithFont, repoCardPng } from '../src/lib/card.ts';
 
 const site = path.join(import.meta.dirname, '..');
-useFont(readFileSync(path.join(site, 'src/fonts/jetbrains-mono.woff2')));
+drawWithFont(readFileSync(path.join(site, 'src/fonts/jetbrains-mono.woff2')));
 const out = path.join(site, 'public/social-preview.png');
 writeFileSync(out, await repoCardPng());
 console.log(`wrote ${path.relative(process.cwd(), out)}`);
