@@ -16,6 +16,8 @@ declare module 'vitest/browser' {
 declare module 'vitest' {
   interface ProvidedContext {
     plan: Plan;
+    /** Milliseconds a test may run before the page is taken to have stopped answering. */
+    watchdog: number;
   }
 }
 
@@ -34,13 +36,14 @@ setRunner({
 /**
  * A story that starves the page — a loop that never yields — cannot fail on
  * its own timeout, because the timeout is a timer in the page. The watchdog is
- * in Node: past this, it names the test and closes the page, and the run
- * fails instead of hanging (see `commands.ts`). Longer than any project's test
- * timeout, so it only ever acts on a page that has stopped answering.
+ * in Node: past its time, it names the test and closes the page, and the run
+ * fails instead of hanging (see `commands.ts`). Each project gives the time,
+ * longer than its own test timeout, so it only ever acts on a page that has
+ * stopped answering.
  */
-const WATCHDOG = 45_000;
+const watchdog = inject('watchdog');
 beforeEach(async () => {
-  await commands.watchdog(WATCHDOG);
+  await commands.watchdog(watchdog);
 });
 afterEach(async () => {
   await commands.watchdog(null);
