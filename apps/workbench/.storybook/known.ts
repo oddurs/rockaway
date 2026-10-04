@@ -80,7 +80,6 @@ export const known: readonly Known[] = [
     element: /./,
     reason:
       'a form exactly sixty cells wide stacks in WebKit: measured, the form is 593.4375px and a 60ch box inside it is 593.4375px, yet `@container rk-form (width < 60ch)` matches there and the label column goes; Chromium and Firefox line it up',
-    ticket:
-      'a form exactly at the sixty-cell threshold lines up in every engine (proposed in the 0124 report)',
+    ticket: '0257: a form exactly at the sixty-cell threshold lines up in every engine',
   },
 ];
