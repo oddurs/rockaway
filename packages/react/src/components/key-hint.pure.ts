@@ -54,6 +54,17 @@ const NAMED: Readonly<
 const WORDS = { ctrl: 'Ctrl', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
 const SPOKEN = { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Command' } as const;
 
+/**
+ * The chords of a sequence, in order: `g h` is two, `mod+k` one. Chords are
+ * written with `+` and separated by spaces (cairn 0141).
+ */
+export function stepsOf(spec: string): string[] {
+  return spec
+    .trim()
+    .split(/\s+/)
+    .filter((step) => step !== '');
+}
+
 /** `mod+shift+k` → the spec. `mod` is Command on an Apple keyboard, Control elsewhere. */
 export function parseKeys(spec: string, platform: Platform = 'other'): KeySpec {
   const out = { ctrl: false, alt: false, shift: false, meta: false, key: '' };
@@ -96,6 +107,11 @@ export function formatKeys(
   notation: KeyNotation = 'platform',
   glyphs: Glyphs = themeGlyphs.default,
 ): string {
+  // A sequence, `g h`, is its chords one after another, a cell apart.
+  const steps = stepsOf(spec);
+  if (steps.length > 1) {
+    return steps.map((step) => formatKeys(step, platform, notation, glyphs)).join(' ');
+  }
   const keys = parseKeys(spec, platform);
   const face = keyFace(keys.key, platform, glyphs);
 
@@ -124,16 +140,23 @@ export function formatKeys(
   return stacked ? `${legends.join('')}${face}` : [...legends, face].join('+');
 }
 
-/** What a reader hears. `⌘` is not a word. */
+/** What a reader hears. `⌘` is not a word. A sequence is its chords, "then" between them. */
 export function spokenKeys(spec: string, platform: Platform = 'other'): string {
+  const steps = stepsOf(spec);
+  if (steps.length > 1) return steps.map((step) => spokenKeys(step, platform)).join(' then ');
   const keys = parseKeys(spec, platform);
   const named = NAMED[keys.key];
   const face = named ? named.spoken : keys.key.toUpperCase();
   return [...held(keys, SPOKEN), face].join(' ');
 }
 
-/** What the platform is told: the value for `aria-keyshortcuts`. */
-export function keyShortcut(spec: string, platform: Platform = 'other'): string {
+/**
+ * What the platform is told: the value for `aria-keyshortcuts`. One chord:
+ * the attribute has no way to say "this, then that", and a space in its value
+ * means "or", so a sequence has no value here and gives `undefined`.
+ */
+export function keyShortcut(spec: string, platform: Platform = 'other'): string | undefined {
+  if (stepsOf(spec).length > 1) return undefined;
   const keys = parseKeys(spec, platform);
   const names = { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
   return [...held(keys, names), keys.key].join('+');
