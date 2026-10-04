@@ -924,10 +924,16 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "className",
         "type": "string",
         "required": false
+      },
+      {
+        "name": "shift",
+        "type": "OverlayShift",
+        "required": false,
+        "description": "An offset in whole cells, `{ main: 0, cross: 0 }` by default. A submenu takes `{ main: 1, cross: -1 }`: beside its parent's frame, its first item level with the item that opened it. Not applied to a sheet."
       }
     ],
     "inherits": [
-      "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'UNSTABLE_portalContainer' >"
+      "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'UNSTABLE_portalContainer' >"
     ],
     "tokens": [
       "--rk-bg-page",

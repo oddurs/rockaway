@@ -302,6 +302,68 @@ export const Beside: Story = {
 };
 
 /**
+ * Shifted in whole cells: a submenu's place, one cell out past its trigger's
+ * edge and one row up, so its frame is beside the parent's and its first row
+ * level with the trigger. Flipped, the shift mirrors.
+ */
+function Shifted(): ReactNode {
+  // The boundary is set once it is on the page, and the popovers open then.
+  const [boundary, setBoundary] = useState<HTMLDivElement | null>(null);
+  const within = boundary === null ? {} : { boundaryElement: boundary };
+  return (
+    <div ref={setBoundary} style={{ display: 'inline-block' }}>
+      <Frame title="shift" cols={64} rows={8}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingBlockStart: 'var(--rk-cell-height)',
+          }}
+        >
+          <DialogTrigger isOpen={boundary !== null}>
+            <Button>Out</Button>
+            <OverlayPopover placement="end top" shift={{ main: 1, cross: -1 }} {...within}>
+              <Dialog aria-label="Out">
+                <p style={{ margin: 0 }}>one</p>
+              </Dialog>
+            </OverlayPopover>
+          </DialogTrigger>
+          <DialogTrigger isOpen={boundary !== null}>
+            <Button>Back</Button>
+            <OverlayPopover placement="end top" shift={{ main: 1, cross: -1 }} {...within}>
+              <Dialog aria-label="Back">
+                <p style={{ margin: 0 }}>no room on the right</p>
+              </Dialog>
+            </OverlayPopover>
+          </DialogTrigger>
+        </div>
+      </Frame>
+    </div>
+  );
+}
+
+export const Shift: Story = {
+  name: 'Shifted in cells',
+  render: () => <Shifted />,
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const out = canvas.getByRole('button', { name: 'Out' });
+    const back = canvas.getByRole('button', { name: 'Back' });
+    const surfaceOf = (name: string) =>
+      document.querySelector(`[role="dialog"][aria-label="${name}"]`)?.closest('.rk-overlay');
+    const first = surfaceOf('Out');
+    const second = surfaceOf('Back');
+    if (!first || !second) throw new Error('no popovers');
+    const [ox, oy, ow] = placeOf(out, out);
+    expect(placeOf(first, out).slice(0, 2)).toEqual([ox + ow + 1, oy - 1]);
+    // No room on the right: flipped to the start side, a cell clear of it.
+    const [bx, by] = placeOf(back, back);
+    const [x, y, width] = placeOf(second, back);
+    expect([x + width, y]).toEqual([bx - 1, by - 1]);
+  },
+};
+
+/**
  * Keyboard and pointer: Escape closes a popover and focus goes back to its
  * trigger; so does a press outside it. A modal closes on Escape, and on a
  * press on its backdrop only when it is dismissable.
@@ -344,6 +406,8 @@ export const Dismiss: Story = {
   render: () => <Dismissal />,
   play: async ({ canvas }) => {
     await measured(document.body);
+    // A loaded runner can take more than waitFor's default second to settle a close.
+    const CLOSE = { timeout: 5000 };
     const open = (name: string) => canvas.getByRole('button', { name });
     const dialog = (name: string) =>
       document.querySelector(`[role="dialog"][aria-label="${name}"]`);
@@ -353,14 +417,14 @@ export const Dismiss: Story = {
     await userEvent.keyboard('{Enter}');
     await waitFor(() => expect(dialog('Popover')).not.toBeNull());
     await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(dialog('Popover')).toBeNull());
+    await waitFor(() => expect(dialog('Popover')).toBeNull(), CLOSE);
     expect(open('Popover')).toHaveFocus();
 
     // Popover: a press outside it closes it.
     await userEvent.click(open('Popover'));
     await waitFor(() => expect(dialog('Popover')).not.toBeNull());
     await userEvent.click(document.body, { skipHover: true });
-    await waitFor(() => expect(dialog('Popover')).toBeNull());
+    await waitFor(() => expect(dialog('Popover')).toBeNull(), CLOSE);
 
     // A modal that is not dismissable: the backdrop does nothing; Escape closes.
     await userEvent.click(open('Fixed'));
@@ -369,7 +433,7 @@ export const Dismiss: Story = {
     await userEvent.click(scrim, { skipHover: true });
     expect(dialog('Fixed')).not.toBeNull();
     await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(dialog('Fixed')).toBeNull());
+    await waitFor(() => expect(dialog('Fixed')).toBeNull(), CLOSE);
     expect(open('Fixed')).toHaveFocus();
 
     // A dismissable modal: a press on the backdrop closes it.
@@ -378,7 +442,7 @@ export const Dismiss: Story = {
     await userEvent.click(document.querySelector('.rk-overlay-scrim') as HTMLElement, {
       skipHover: true,
     });
-    await waitFor(() => expect(dialog('Loose')).toBeNull());
+    await waitFor(() => expect(dialog('Loose')).toBeNull(), CLOSE);
     expect(open('Loose')).toHaveFocus();
   },
 };
