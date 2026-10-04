@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
-import { type BadgeOptions, type BadgeTone, badgeBuffer, badgeVariants } from './badge.tsx';
+import { badgeBuffer, badgeVariants } from './badge.pure.ts';
+import type { BadgeOptions, BadgeTone } from './badge.tsx';
 
 const cells = (text: string, options: BadgeOptions = {}): string =>
   toText(badgeBuffer(text, options), { trimEnd: false });

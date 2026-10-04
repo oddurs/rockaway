@@ -111,6 +111,8 @@
     --rk-ink-25: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 25%, transparent) 0 0);
     --rk-ink-50: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 50%, transparent) 0 0);
     --rk-ink-75: linear-gradient(color-mix(in srgb, var(--rk-ink-colour) 75%, transparent) 0 0);
+    /* A braille dot's side: eight of them fit, square (0166). */
+    --rk-stroke-dot: min(calc(var(--rk-cell-width) / 4), calc(var(--rk-cell-height) / 8));
     --rk-stroke-radius: calc(
       min(var(--rk-cell-width), var(--rk-cell-height)) /
       2 -

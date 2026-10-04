@@ -67,6 +67,7 @@ export {
   type ArcMark,
   arcMarks,
   boxMarks,
+  brailleMarks,
   type Mark,
   type Measure,
   type Metrics,

@@ -21,29 +21,15 @@
  * `data-focus-visible` and `data-disabled`, and the CSS reads nothing else:
  * there is no state in here that is not in the DOM.
  */
-import { Buffer, drawText, stringWidth } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useEffect, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
+import { useGlyphs } from '../glyphs.tsx';
 import { usePlatform } from '../platform.ts';
-import {
-  defineVariants,
-  type VariantProps,
-  type Variants,
-  type VariantValue,
-} from '../variants.ts';
-import { formatKeys, KeyHint, keyShortcut, type Platform } from './key-hint.tsx';
-
-const VARIANTS = {
-  variant: ['default', 'fill', 'danger'],
-} as const;
-
-/** Button's variants, as data: the props, the attributes and the metadata all read this. */
-export const buttonVariants: Variants<typeof VARIANTS> = defineVariants(VARIANTS, {
-  variant: 'default',
-});
+import type { VariantProps, VariantValue } from '../variants.ts';
+import { buttonVariants, chromeOf } from './button.pure.ts';
+import { keyShortcut } from './key-hint.pure.ts';
+import { KeyHint, type Platform } from './key-hint.tsx';
 
 export type ButtonVariant = VariantValue<typeof buttonVariants, 'variant'>;
 
@@ -75,60 +61,8 @@ export interface ButtonProps
   readonly style?: React.CSSProperties;
 }
 
-/** What a button draws around its label: the delimiters, and the mark cell inside the first. */
-interface Chrome {
-  readonly open: string;
-  readonly mark: string;
-  readonly air: string;
-  readonly close: string;
-}
-
-/**
- * The chrome a button draws. Without delimiters there is nothing, not even
- * the air; danger always has delimiters, so its mark always has its cell.
- */
-function chromeOf(
-  variant: ButtonVariant,
-  delimiters: ButtonProps['delimiters'],
-  glyphs: Glyphs,
-): Chrome | undefined {
-  const danger = variant === 'danger';
-  if (delimiters === 'none' && !danger) return undefined;
-  const [open, close] =
-    delimiters === undefined || delimiters === 'none' ? glyphs.delimiter.control : delimiters;
-  return { open, mark: danger ? glyphs.mark.danger : glyphs.mark.blank, air: ' ', close };
-}
-
 export interface ButtonTextOptions extends Pick<ButtonProps, 'variant' | 'delimiters' | 'keys'> {
   readonly platform?: Platform;
-}
-
-/**
- * The button as text, cell for cell: what it occupies on the grid, and its
- * text snapshot (cairn 0047). The chrome comes from the same function the
- * component draws it with, and the glyphs are the theme's, as in the other
- * buffer functions. Every cell is drawn here and in the DOM as text; the
- * stylesheet adds none. Reverse video is an attribute, and text has none:
- * `fill` and a pressed button draw the same cells as `default`.
- */
-export function buttonBuffer(
-  label: string,
-  options: ButtonTextOptions = {},
-  glyphs: Glyphs = defaultGlyphs,
-): Buffer {
-  const chosen = buttonVariants.select(options);
-  const chrome = chromeOf(chosen.variant, options.delimiters, glyphs);
-  const hint =
-    options.keys === undefined
-      ? ''
-      : ` ${formatKeys(options.keys, options.platform ?? 'other', 'platform', glyphs)}`;
-  const line =
-    chrome === undefined
-      ? `${label}${hint}`
-      : `${chrome.open}${chrome.mark}${label}${hint}${chrome.air}${chrome.close}`;
-  return Buffer.create({ width: stringWidth(line), height: 1 }).draw((draft) => {
-    drawText(draft, { x: 0, y: 0 }, line);
-  });
 }
 
 export function Button({
