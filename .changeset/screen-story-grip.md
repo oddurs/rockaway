@@ -1,4 +1,5 @@
 ---
+'@rockaway/react': patch
 ---
 
-No package changes. Grid/Screen's container stories hosted the screen in a box with `resize: horizontal`, and an engine that draws the native resize grip (WebKit on macOS, Firefox on Linux) drew it over the box's corner, which is the screen's last cell. The continuity check read the grip laid over `┘` and its neighbour as a broken line. The stories set the host's width themselves, so the host no longer asks for a grip. The renderer was never at fault.
+Say in Frame's metadata, and on `Screen`, that a screen filling a box with CSS `resize` shares its last cell with the browser's resize grip, which some engines draw over the corner. Grid/Screen's own stories had exactly that, and read it as a broken corner in WebKit on macOS and Firefox on Linux; their host no longer asks for a grip.
