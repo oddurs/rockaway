@@ -3,8 +3,10 @@ id: 109
 uid: 04d9e239-c50a-4ce1-873b-db2273abb664
 title: Hold the site to a budget in CI
 type: chore
-status: backlog
+status: doing
 milestone: site
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 88
 - 103

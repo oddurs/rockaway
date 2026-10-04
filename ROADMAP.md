@@ -279,7 +279,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0104`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0104-build-the-site-shell-as-a-tui.md) Build the site shell as a TUI <sup>feature · site · p0</sup>
 - [ ] [`0105`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0105-make-every-screen-copyable-as-text-and-as-ansi.md) Make every screen copyable as text and as ANSI <sup>feature · site · p1</sup>
 - [ ] [`0108`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0108-build-the-landing-page.md) Build the landing page <sup>feature · site · p0</sup>
-- [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0113`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0113-measure-the-paint-budget-and-decide-whether-a-canvas-painter-is-needed.md) Measure the paint budget, and decide whether a canvas painter is needed <sup>spike · grid · p1</sup>
 - [ ] [`0145`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0145-enable-github-pages-for-the-repository.md) Enable GitHub Pages for the repository <sup>chore · tooling · p0 · needs-owner</sup>
 - [ ] [`0146`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0146-deploy-the-site-to-github-pages-on-every-push-to-main.md) Deploy the site to GitHub Pages on every push to main <sup>chore · tooling · p0</sup>
@@ -297,6 +296,10 @@ A website built out of the system it documents, which is the only honest way
 ### ready
 
 - [ ] [`0241`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0241-read-the-site-s-base-from-the-astro-config-everywhere-including-under-test.md) Read the site's base from the Astro config everywhere, including under test <sup>chore · site · p3</sup>
+
+### in progress
+
+- [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 
 ### in review
 
