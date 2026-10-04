@@ -3,6 +3,7 @@
 // The pure half: no client boundary, so a server can call these (cairn 0126).
 export {
   backdropBuffer,
+  type OverlayDivider,
   type OverlayFrameOptions,
   type OverlayKind,
   type OverlayScroll,
@@ -13,6 +14,8 @@ export {
   type OverlayLayerProps,
   OverlayModal,
   type OverlayModalProps,
+  type OverlayPadding,
   OverlayPopover,
   type OverlayPopoverProps,
+  type OverlaySurfaceOptions,
 } from '../components/overlay.tsx';

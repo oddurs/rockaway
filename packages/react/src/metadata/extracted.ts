@@ -764,10 +764,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false
       },
       {
-        "name": "maxRows",
+        "name": "minCols",
         "type": "number",
         "required": false,
-        "description": "The most rows the surface may take before its content scrolls."
+        "description": "The fewest columns the surface may be, its frame's two included."
       },
       {
         "name": "className",
@@ -776,7 +776,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       }
     ],
     "inherits": [
-      "Omit<ModalOverlayProps, 'children' | 'className' | 'style' | 'UNSTABLE_portalContainer'>"
+      "Omit<ModalOverlayProps, 'children' | 'className' | 'style' | 'UNSTABLE_portalContainer'>",
+      "Omit<OverlaySurfaceOptions, 'minCols'>"
     ],
     "tokens": [
       "--rk-bg-page",
@@ -791,15 +792,39 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "file": "overlay.tsx",
     "props": [
       {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false
-      },
-      {
         "name": "maxRows",
         "type": "number",
         "required": false,
         "description": "The most rows the surface may take before its content scrolls."
+      },
+      {
+        "name": "minCols",
+        "type": "number | 'trigger'",
+        "required": false,
+        "description": "The fewest columns the surface may be, its frame's two included: a number, or `'trigger'` for as wide as its trigger, in whole cells (a select's list). A sheet is as wide as the viewport whatever this says."
+      },
+      {
+        "name": "padding",
+        "type": "OverlayPadding",
+        "required": false,
+        "description": "Cells between the frame and the content, `{ x: 1, y: 0 }` by default. A menu takes `{ x: 0, y: 0 }`, so a highlighted row runs from side to side."
+      },
+      {
+        "name": "dividers",
+        "type": "readonly OverlayDivider[]",
+        "required": false,
+        "description": "Rules across the surface, at rows of the content: `row: 0` is a rule on the content's first row, drawn in the frame and joining its sides. They move with the content as it scrolls, and are not drawn while scrolled out of sight. The content leaves those rows empty: a menu's separator, or the row a section's heading is set into."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "The painter, `glyph` or `rule`. By default, the painter of the screen the overlay was opened from, so a popover from a ruled frame is ruled too."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
       },
       {
         "name": "className",
@@ -826,16 +851,14 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "minCols",
         "type": "number | 'trigger'",
         "required": false,
-        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width, rounded up to whole cells, or a count. `0` lets it be as narrow as what it holds.",
+        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width in whole cells, or a count. `0` lets it be as narrow as what it holds.\n @default 'trigger'",
         "default": "'trigger'"
       }
     ],
     "inherits": [
       "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
     ],
-    "tokens": [
-      "--rk-cell-width"
-    ]
+    "tokens": []
   },
   "Select": {
     "file": "select.tsx",

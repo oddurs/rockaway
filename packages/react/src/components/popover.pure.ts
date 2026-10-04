@@ -18,7 +18,8 @@ import { overlayBuffer } from './overlay.pure.ts';
 
 /**
  * Where an overlay's surface puts its content: the border's cell and a cell
- * of air across, the border's row down. The contract's `contentInset`.
+ * of air across, the border's row down: the contract's default padding,
+ * `{ x: 1, y: 0 }`, and the border.
  */
 const INSET = { x: 2, y: 1 } as const;
 
