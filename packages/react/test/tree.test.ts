@@ -1,7 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { describe, expect, test } from 'vitest';
-import { type TreeRow, treeBuffer, treeGuides } from '../src/components/tree.tsx';
+import { type TreeRow, treeBuffer, treeGuides } from '../src/components/tree.pure.ts';
 
 /** A file tree three levels deep, every row's place in it written out. */
 const FILES: readonly TreeRow[] = [

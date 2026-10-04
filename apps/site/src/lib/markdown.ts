@@ -25,13 +25,19 @@ function walk(node: Root | Element, visit: (element: Element) => void): void {
   }
 }
 
+const docs = path.join(root, 'docs');
+
 /**
  * A document from the repository links to its neighbours by relative path,
- * which is right on GitHub and a 404 here. Those links go to the file on
- * GitHub; links within the site, to anchors and to other origins, are left
- * alone.
+ * which is right on GitHub and a 404 here. A link to another document in
+ * `docs/` goes to its page on the site (`concept.md#x` is `/concept/#x`, under
+ * the base); a link to anything else in the repository goes to the file on
+ * GitHub. Links to anchors, to the site and to other origins are left alone.
  */
-export function rehypeRepositoryLinks(): (tree: Root, file: File) => void {
+export function rehypeRepositoryLinks(
+  options: { readonly base?: string } = {},
+): (tree: Root, file: File) => void {
+  const base = options.base ?? '/';
   return (tree, file) => {
     if (!file.path) return;
     const from = path.dirname(file.path);
@@ -40,9 +46,15 @@ export function rehypeRepositoryLinks(): (tree: Root, file: File) => void {
       if (element.tagName !== 'a' || typeof href !== 'string') return;
       if (/^([a-z][a-z0-9+.-]*:|\/|#)/i.test(href)) return;
       const [target = '', hash] = href.split('#');
-      const resolved = path.relative(root, path.resolve(from, target));
+      const absolute = path.resolve(from, target);
+      const anchor = hash ? `#${hash}` : '';
+      if (path.dirname(absolute) === docs && absolute.endsWith('.md')) {
+        element.properties.href = `${base}${path.basename(absolute, '.md')}/${anchor}`;
+        return;
+      }
+      const resolved = path.relative(root, absolute);
       if (resolved.startsWith('..')) return;
-      element.properties.href = `${REPOSITORY}/blob/main/${resolved}${hash ? `#${hash}` : ''}`;
+      element.properties.href = `${REPOSITORY}/blob/main/${resolved}${anchor}`;
     });
   };
 }
@@ -50,15 +62,29 @@ export function rehypeRepositoryLinks(): (tree: Root, file: File) => void {
 /**
  * Code blocks and tables scroll when they are wider than the measure, and a
  * box that scrolls has to be reachable by keyboard to be scrolled by one.
+ *
+ * A table is wrapped, and the wrapper scrolls instead (cairn 0208). The
+ * overflow marks that show a reader there is more to either side need one box
+ * to hold, and a table is several: its header and its body.
  */
 export function rehypeScrollable(): (tree: Root) => void {
-  return (tree) => {
-    walk(tree, (element) => {
-      if (element.tagName === 'pre' || element.tagName === 'table') {
-        element.properties.tabIndex = 0;
+  const visit = (node: Root | Element): void => {
+    node.children = node.children.map((child) => {
+      if (child.type !== 'element') return child;
+      if (child.tagName === 'pre') child.properties.tabIndex = 0;
+      if (child.tagName === 'table') {
+        return {
+          type: 'element',
+          tagName: 'div',
+          properties: { className: ['rk-scroll-marks'], tabIndex: 0 },
+          children: [child],
+        } satisfies Element;
       }
-    });
+      visit(child);
+      return child;
+    }) as typeof node.children;
   };
+  return visit;
 }
 
 /** The prose measure, in cells, and the blank cells between table columns. */
@@ -104,6 +130,29 @@ export function fitColumns(
 }
 
 /**
+ * Each column's width in cells, its gap included, for a table of this text;
+ * or nothing, when the table fits the measure as it is. What `<col
+ * style="--rk-cols: N">` carries, for the pipeline and for any table the site
+ * writes itself.
+ */
+export function columnCells(rows: readonly (readonly string[])[]): number[] | undefined {
+  const natural: number[] = [];
+  const minimum: number[] = [];
+  for (const row of rows) {
+    row.forEach((raw, i) => {
+      const content = raw.trim().replace(/\s+/g, ' ');
+      const longestWord = Math.max(0, ...content.split(' ').map(stringWidth));
+      natural[i] = Math.max(natural[i] ?? 0, stringWidth(content));
+      minimum[i] = Math.max(minimum[i] ?? 0, longestWord);
+    });
+  }
+  const gaps = GAP * Math.max(0, natural.length - 1);
+  if (natural.reduce((a, b) => a + b, 0) + gaps <= MEASURE) return undefined;
+  const widths = fitColumns(natural, minimum, MEASURE - gaps);
+  return widths.map((width, i) => width + (i < widths.length - 1 ? GAP : 0));
+}
+
+/**
  * A table wider than the measure would otherwise not wrap at all (prose.css
  * never lets the browser squeeze one, because it squeezes in fractions of a
  * pixel). This gives each column a width in whole cells that fits the
@@ -117,26 +166,19 @@ export function rehypeTableColumns(): (tree: Root) => void {
       walk(table, (el) => {
         if (el.tagName === 'tr') rows.push(el);
       });
-      const natural: number[] = [];
-      const minimum: number[] = [];
-      for (const row of rows) {
-        const cells = row.children.filter(
-          (c): c is Element => c.type === 'element' && (c.tagName === 'th' || c.tagName === 'td'),
-        );
-        cells.forEach((cell, i) => {
-          const content = text(cell).trim().replace(/\s+/g, ' ');
-          const longestWord = Math.max(0, ...content.split(' ').map(stringWidth));
-          natural[i] = Math.max(natural[i] ?? 0, stringWidth(content));
-          minimum[i] = Math.max(minimum[i] ?? 0, longestWord);
-        });
-      }
-      const gaps = GAP * Math.max(0, natural.length - 1);
-      if (natural.reduce((a, b) => a + b, 0) + gaps <= MEASURE) return;
-      const widths = fitColumns(natural, minimum, MEASURE - gaps);
-      const cols: Element[] = widths.map((width, i) => ({
+      const cells = rows.map((row) =>
+        row.children
+          .filter(
+            (c): c is Element => c.type === 'element' && (c.tagName === 'th' || c.tagName === 'td'),
+          )
+          .map((c) => text(c)),
+      );
+      const widths = columnCells(cells);
+      if (!widths) return;
+      const cols: Element[] = widths.map((width) => ({
         type: 'element',
         tagName: 'col',
-        properties: { style: `--rk-cols: ${width + (i < widths.length - 1 ? GAP : 0)}` },
+        properties: { style: `--rk-cols: ${width}` },
         children: [],
       }));
       table.children.unshift({

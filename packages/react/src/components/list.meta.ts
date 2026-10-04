@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type ListRow, listBuffer } from './list.tsx';
+import { listBuffer } from './list.pure.ts';
+import type { ListRow } from './list.tsx';
 
 const FILES = ['src/index.ts', 'src/buffer.ts', 'src/junction.ts', 'src/layout.ts', 'README.md'];
 
@@ -80,6 +81,11 @@ export const listMeta: ComponentMetaInput = defineMeta({
     },
   ],
   states: [
+    {
+      state: 'focus-unframed',
+      part: 'List',
+      note: 'Only while the list itself holds focus with no row under the cursor: when it has no rows, or when React Aria could not enter on its selected row because that row is disabled. Once a row has focus, the cursor shows it.',
+    },
     { state: 'hover', part: 'ListItem' },
     {
       state: 'cursor',

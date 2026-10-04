@@ -111,7 +111,16 @@ the content is ordinary HTML that happens to land on whole cells.
 
 Measurement is a 50-character probe (`cell-metrics.ts`), one `ResizeObserver`
 batched into a rAF, and `--rk-cell-width` / `--rk-cell-height` set on the host.
-Fonts load late and zoom changes; the cell is measured, never assumed.
+Fonts load late and zoom changes; the cell is measured, never assumed. Until it
+is — on a server, or before hydration — the cell is `1ch` by `1lh`, which is the
+same cell the measurement will find, so nothing moves when it does.
+
+The chrome is rendered, not painted in an effect (`0126`): `Screen` turns the
+buffer into rows of runs as elements, so a server sends the frame in its first
+response and hydration keeps those nodes. The buffer functions a component
+draws with (`frameBuffer`, `dividerBuffer`, `formatKeys`) live in each
+component's `.pure.ts`, outside the client boundary, so a server can call them
+too.
 
 ## 5. The font supplies letters; the cell supplies geometry
 
@@ -159,11 +168,14 @@ font. Here that means:
   one cell tall and as many cells wide as it holds. Nothing painted takes its
   height from the font, so a background fills its cell and reverse video is a
   solid block.
-- **Box drawing and block elements are geometry, in the engine.**
+- **Box drawing, block elements and braille are geometry, in the engine.**
   `packages/grid/src/shape.ts` describes every glyph the junction table can
-  produce, and every block element, as rectangles and arcs measured from the
-  cell's own edges and centre. Pure data: a stylesheet or a canvas could read
-  it.
+  produce, every block element and all 256 braille patterns, as rectangles and
+  arcs measured from the cell's own edges and centre. Pure data: a stylesheet
+  or a canvas could read it. Braille is drawn for the same reason the rest is:
+  many monospace fonts, the site's among them, have none (`0166`), and a
+  spinner should not fall back to another face. Its 256 patterns share one rule
+  with a layer for each dot, raised by the cell's `data-rk-dots`.
 - **A stylesheet generated from it draws them.** `packages/css/src/shapes.css`
   is written from those shapes at build time and committed; a test fails if it
   is stale. A cell holding `┬` says so — `data-rk-shape="box-0111"`, its
@@ -381,6 +393,31 @@ canvas-coloured backplate behind every line of text, and the reversed words
 vanish into it. Computed styles cannot see that backplate; the forced-colors
 stories check the pixels (`0181`).
 
+## 10. A scroll position is drawn in cells
+
+**No native scrollbar is ever drawn** (decision `0207`). A browser's scrollbar
+is drawn in pixels by the platform. Where it is a classic one, with a mouse
+attached or "always show scroll bars" on, it takes about fifteen pixels from
+its box. That leaves everything inside a fraction of a cell off the grid, and
+puts a second scrollbar beside the one a component draws in cells.
+
+So every element that scrolls hides it, with the `rk-scroll` class (or
+`rk-scroll-marks`, below), and shows where it is in cells:
+
+- a viewport that scrolls by rows draws a scrollbar column, as List does
+- a region that scrolls across shows the theme's overflow marks, `‹` and `›`,
+  at each edge that has more past it, as `less -S` does. That is
+  `rk-scroll-marks`, which prose code blocks and tables use, with the content
+  as its one child.
+
+Scrolling itself is untouched: wheel, trackpad, touch and keyboard all still
+work, and a scrolling region keeps its tab stop. After every story, a check
+fails any element whose computed overflow scrolls without
+`scrollbar-width: none`. It reads computed style, not pixels, because a
+headless browser hides scrollbars and a native bar measures nothing there. A
+fifth test browser turns classic scrollbars on, so the stories that scroll are
+also seen the way a reader with a mouse sees them.
+
 ---
 
 ## What we borrowed, and from whom
@@ -432,9 +469,12 @@ Written down so it is a known limit rather than a later surprise.
   the line gets its own line: a documented exception, not a fix.
 - **`1ch` assumes the font is monospace.** A fallback that is not will measure
   wrong. We ship the metric rather than trusting a stack.
-- **Three painters is not four.** Server rendering uses `toText`; a static page
-  with no JavaScript gets chrome, but `Screen`'s measurement, and therefore an
-  exact fit, needs the client.
+- **A server cannot measure.** `Screen` renders its chrome as elements, so a
+  server sends it and a page with JavaScript off still shows its frame, drawn
+  by the cell renderer (`0126`). A screen with a fixed size in cells is exact
+  from the first paint, its cell `1ch` by `1lh` until measured. A screen that
+  measures its container has no size until the client runs: it renders at its
+  `fallback`, and corrects inside its own box when it hydrates.
 
 ## The contract a component is held to
 
@@ -447,7 +487,11 @@ cairn carries these as acceptance criteria, and the `component` template in
 2. **Both painters render it identically,** measured in cells.
 3. **Chrome is `aria-hidden`;** the accessible name never contains a glyph.
 4. **Behaviour comes from the behaviour layer.** No hand-rolled focus or
-   keyboard logic.
+   keyboard logic. React Aria handles the keys inside a component; the
+   keymap (`0141`) is the one handler for the page's own, so a shortcut is
+   bound with `useKeymap` and never with a listener of a component's: one
+   place decides which scope a key belongs to, keeps plain keys out of text
+   fields, finds conflicts, and lists every shortcut in the help screen.
 5. **Styled from `data-*` state and semantic tokens only.** A component that
    needs a reference token is a missing semantic.
 6. **Ships a text snapshot,** which is its documentation as much as its test.

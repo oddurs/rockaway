@@ -15,7 +15,7 @@ import { createElement, Fragment, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { type Analysis, analyse, owns, packageRoot, render } from '../scripts/extract.ts';
-import { formatKeys, parseKeys } from '../src/components/key-hint.tsx';
+import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
 import schema from '../src/metadata/meta.schema.json' with { type: 'json' };
@@ -43,6 +43,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  Chrome:
+    "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
 
 /**
@@ -67,6 +69,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Form: (props) => createElement(rockaway.Form, props, createElement(rockaway.Label, null, 'Name')),
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
+  Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
   Tree: (props) =>
     createElement(
@@ -84,6 +87,23 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       { 'aria-label': 'files', selectionMode: 'single', ...props },
       createElement(rockaway.ListItem, { id: 'a' }, 'a.ts'),
       createElement(rockaway.ListItem, { id: 'b' }, 'b.ts'),
+    ),
+  Table: (props) =>
+    createElement(
+      rockaway.Table,
+      { 'aria-label': 'files', ...props },
+      createElement(
+        rockaway.TableHeader,
+        null,
+        // A column's words are required, and createElement's types cannot see them in its third argument.
+        // biome-ignore lint/correctness/noChildrenProp: as above
+        createElement(rockaway.Column, { id: 'name', isRowHeader: true, children: 'Name' }),
+      ),
+      createElement(
+        rockaway.TableBody,
+        null,
+        createElement(rockaway.Row, { id: 'a' }, createElement(rockaway.Cell, null, 'a.ts')),
+      ),
     ),
 };
 
@@ -604,6 +624,54 @@ describe('the snapshots, as the site draws them', () => {
       Cmd+S save
       Shift+Up select
       S-Up select"
+    `);
+  });
+
+  test('Table', () => {
+    expect(snapshots(byName('Table'))).toMatchInlineSnapshot(`
+      "── Three column kinds
+      ┌ files ───────┬────────┬──────────────────┐
+      │ Name        ▴│   Size │ Modified         │
+      ├──────────────┼────────┼──────────────────┤
+      │ LICENSE      │   1071 │ 2026-07-04       │
+      │▸README.md    │    340 │ 2026-09-12       │
+      │ package.json │     88 │ 2026-08-30       │
+      │ src/index.ts │   1204 │ 2026-10-01       │
+      └──────────────┴────────┴──────────────────┘
+      ── Multi-select
+      ┌───────────────┬────────┬─────────────────┐
+      │  Name        ▴│   Size │ Modified        │
+      ├───────────────┼────────┼─────────────────┤
+      │  LICENSE      │   1071 │ 2026-07-04      │
+      │▸✓README.md    │    340 │ 2026-09-12      │
+      │  package.json │     88 │ 2026-08-30      │
+      │ ✓src/index.ts │   1204 │ 2026-10-01      │
+      └───────────────┴────────┴─────────────────┘
+      ── Empty
+      ┌──────┬────────┬──────────────────────────┐
+      │ Name▴│   Size │ Modified                 │
+      ├──────┴────────┴──────────────────────────┤
+      │ Nothing here.                            │
+      └──────────────────────────────────────────┘"
+      `);
+  });
+
+  test('Keymap', () => {
+    expect(snapshots(byName('Keymap'))).toMatchInlineSnapshot(`
+      "── Help, on any keyboard but Apple’s
+      Ctrl+K  Open the palette
+      /       Search
+      G H     Go home
+      J       Next row
+      K       Previous row
+      ?       Show this help
+      ── Help, on an Apple keyboard
+      ⌘K   Open the palette
+      /    Search
+      G H  Go home
+      J    Next row
+      K    Previous row
+      ?    Show this help"
     `);
   });
 
