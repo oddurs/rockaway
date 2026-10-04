@@ -273,9 +273,11 @@ function ConfirmDelete({
       }
     >
       <p>
-        Everything in <strong>{ACCOUNT}</strong> goes, and cannot come back. Type the account's name
-        to delete it.
+        Everything in <strong>{ACCOUNT}</strong> goes,
+        <br />
+        and cannot come back.
       </p>
+      <p>Type the account's name to delete it.</p>
       <TextField label="Account" value={typed} onChange={setTyped} autoFocus />
     </Dialog>
   );
