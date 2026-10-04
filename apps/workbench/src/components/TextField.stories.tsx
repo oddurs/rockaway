@@ -11,7 +11,9 @@ import {
 import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { type ReactNode, useState } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { runner } from '../../.storybook/runner.ts';
 import { measured } from '../settled.ts';
 
 const meta = {
@@ -188,6 +190,84 @@ export const Keyboard: Story = {
     await userEvent.tab({ shift: true });
     expect(name).toHaveFocus();
     await waitFor(() => expect(edge(fieldOf(repository))).toMatch(/^┌ Repository ─+┐$/));
+  },
+};
+
+/**
+ * Typing reaches the app: a controlled field and an uncontrolled one each
+ * take every keystroke, a single row and a box of rows, and `onChange` is
+ * called with the text. The field keeps its text on whole cells by listening
+ * to its own input events, and that work happens after the event, never
+ * during it, or React would put the old value back before its own handler
+ * saw the new one.
+ */
+function Typed(): ReactNode {
+  const [name, setName] = useState('abc');
+  const [notes, setNotes] = useState('');
+  const [heard, setHeard] = useState<readonly string[]>([]);
+  return (
+    <Frame title="typed" cols={48} rows={14}>
+      <Form>
+        <TextField
+          label="Name"
+          value={name}
+          onChange={(next) => {
+            setName(next);
+            setHeard((was) => [...was, `name ${next}`]);
+          }}
+        />
+        <TextField
+          label="Notes"
+          rows={2}
+          value={notes}
+          onChange={(next) => {
+            setNotes(next);
+            setHeard((was) => [...was, `notes ${next}`]);
+          }}
+        />
+        <TextField
+          label="Free"
+          defaultValue="abc"
+          onChange={(next) => setHeard((was) => [...was, `free ${next}`])}
+        />
+      </Form>
+      <output data-testid="heard">{heard.at(-1) ?? ''}</output>
+    </Frame>
+  );
+}
+
+export const Typing: Story = {
+  render: () => <Typed />,
+  play: async ({ canvas }) => {
+    // Real keys, through the browser: a synthetic event dispatched from a
+    // script runs every listener in one stack, and hides what goes wrong
+    // between them.
+    const run = runner();
+    if (!run) return;
+    await measured(document.body);
+    const heard = canvas.getByTestId('heard');
+    /** Focus a box with its caret at the end, and type into it for real. */
+    const type = async (box: HTMLElement, keys: string): Promise<void> => {
+      const field = box as HTMLInputElement | HTMLTextAreaElement;
+      field.focus();
+      field.setSelectionRange(field.value.length, field.value.length);
+      await run.type(keys);
+    };
+
+    const name = canvas.getByRole('textbox', { name: 'Name' });
+    await type(name, 'Z');
+    await waitFor(() => expect(name).toHaveValue('abcZ'));
+    expect(heard).toHaveTextContent('name abcZ');
+
+    const notes = canvas.getByRole('textbox', { name: 'Notes' });
+    await type(notes, 'hi');
+    await waitFor(() => expect(notes).toHaveValue('hi'));
+    expect(heard).toHaveTextContent('notes hi');
+
+    const free = canvas.getByRole('textbox', { name: 'Free' });
+    await type(free, 'Z');
+    await waitFor(() => expect(free).toHaveValue('abcZ'));
+    expect(heard).toHaveTextContent('free abcZ');
   },
 };
 

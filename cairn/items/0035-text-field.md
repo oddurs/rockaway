@@ -11,7 +11,7 @@ depends_on:
 - 127
 - 129
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-04
 priority: p1
 layer: components
 effort: m
@@ -107,3 +107,7 @@ Criterion 11 ticked after merging 0198 (#112): touch's line box is now 2.75, so 
 ## 2026-10-03
 
 Criterion 22 ticked after #107: the classic-scrollbars browser now runs Overflow and Multiline with real, space-taking scrollbars, and both pass, Multiline asserting that no bar takes room from the text area.
+
+## 2026-10-04
+
+Fixed a dropped-keystroke bug found by the tokens engineer building the settings app: useCellScroll's native input/keyup/... listeners on the input itself called setState during the event; on a real (trusted) key the browser calls each listener from an empty stack, so React flushed that render between the input's listener and React's root one, restored the controlled value, and never called onChange. The work now runs on the next frame. The workbench's synthetic userEvent dispatches every listener in one stack and hid it; the runner gained type(keys), the provider's trusted keyboard, and the story 'Typing' (controlled row, controlled box of rows, uncontrolled) fails without the fix.

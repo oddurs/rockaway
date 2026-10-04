@@ -1,5 +1,5 @@
 import { inject } from 'vitest';
-import { commands, page } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
 
@@ -26,4 +26,6 @@ setRunner({
   // Each project says what it walks; see `vitest.config.ts`.
   plan: inject('plan'),
   record: (use) => commands.recordKnown(use),
+  // The provider's keyboard: trusted events, as a reader's keys are.
+  type: (keys) => userEvent.keyboard(keys),
 });

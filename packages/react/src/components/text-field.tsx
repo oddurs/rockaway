@@ -131,18 +131,24 @@ function useCellScroll(
     const el = ref.current;
     if (!el) return;
     read();
+    // After the event, never during it. These listeners are on the field
+    // itself, so they run before React's, which wait at the root; a state
+    // change here re-renders in between, React puts the controlled value back,
+    // and its own handler then sees no change and never calls onChange. A
+    // reader's real keys show it; a script's synthetic ones do not (0035).
+    let frame = 0;
+    const later = (): void => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(read);
+    };
     const events = ['scroll', 'input', 'keyup', 'focus', 'select'] as const;
-    for (const event of events) el.addEventListener(event, read, { passive: true });
-    if (typeof ResizeObserver === 'undefined') {
-      return () => {
-        for (const event of events) el.removeEventListener(event, read);
-      };
-    }
-    const observer = new ResizeObserver(read);
-    observer.observe(el);
+    for (const event of events) el.addEventListener(event, later, { passive: true });
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(read);
+    observer?.observe(el);
     return () => {
-      for (const event of events) el.removeEventListener(event, read);
-      observer.disconnect();
+      cancelAnimationFrame(frame);
+      for (const event of events) el.removeEventListener(event, later);
+      observer?.disconnect();
     };
   }, [ref, read]);
 
