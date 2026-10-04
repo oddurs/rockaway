@@ -38,6 +38,7 @@ const notUtilities: Readonly<Record<string, string>> = {
   'rk-button': 'a component root, reported with the component',
   'rk-link': 'a component root, reported with the component',
   'rk-list-item': 'a component part, reported with the component',
+  'rk-tree-item': 'a component part, reported with the component',
 };
 
 /** Attributes a page may set, on the root or on any element. */
@@ -54,6 +55,7 @@ const internalAttributes: Readonly<Record<string, string>> = {
   'data-attrs': 'the painted attributes of a run: bold, dim, reverse, underline',
   'data-rk-painted': 'which painter drew a screen',
   'data-rk-shape': 'the shape a cell draws in place of its glyph (0116)',
+  'data-rk-dots': 'the raised dots of a braille cell the cell draws (0166)',
   'data-pressed': "React Aria's state, reported with the component that draws it",
   'data-selected': "React Aria's state, reported with the component that draws it",
   'data-variant': 'a variant, reported with the component',

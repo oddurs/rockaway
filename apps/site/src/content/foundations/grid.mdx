@@ -1,0 +1,105 @@
+---
+title: The grid
+description: The cell is one character wide and one row tall, every size is a count of cells, and density is how tall a row is.
+order: 1
+---
+
+import Painted from '../../components/Painted.astro';
+import Table from '../../components/Table.astro';
+import { densityRows } from '../../lib/foundations.ts';
+import { breakpoints } from '@rockaway/tokens';
+import { frameBuffer } from '@rockaway/react';
+import { toText } from '@rockaway/grid';
+
+# The grid
+
+Everything sits on a grid of cells. A cell is one character wide and one row
+tall, and nothing is ever half of one.
+
+<Painted
+  label="A frame 32 cells wide and 5 rows tall, with a divider after its second row"
+  text={toText(frameBuffer({ width: 32, height: 5 }, { title: 'one cell, one row', dividers: [2] }))}
+/>
+
+## The cell
+
+Across, a cell is `1ch`: the advance of the monospace font, the width every
+character has. Down, it is `1lh`: the line box. Neither is a number the system
+picked. The font picks the width, the density picks the height, and the reader's
+zoom and font size scale both.
+
+`Screen`, which every framed component is drawn in, measures the cell instead
+of assuming it: a probe of fifty characters, measured again whenever the box
+resizes. The measured width and height are set on the screen
+as `--rk-cell-width` and `--rk-cell-height`, and everything inside it is sized
+from them.
+
+## Every size is a count
+
+Tokens do not carry lengths. They carry counts of cells, and one file,
+`cell.css`, turns a count into a length:
+
+```css
+--rk-x-2: calc(var(--rk-space-2) * var(--rk-cell-width));
+--rk-y-1: calc(var(--rk-row-1) * var(--rk-cell-height));
+```
+
+So a component writes `padding: var(--rk-y-1) var(--rk-x-2)` and lands on the
+grid without arithmetic. There are no pixel sizes, no radii and no shadows to
+reach for, because none of them is a whole number of cells.
+
+## Density is the row
+
+Density changes how tall a row is, and nothing else. A layout has the same
+cells at every density; they are taller or shorter. That is how a one-row
+control grows into a touch target without one coordinate moving.
+
+<Table
+  columns={[
+    { label: 'Density', code: true },
+    { label: 'Line box', align: 'right' },
+    { label: 'Row at 16px', align: 'right' },
+  ]}
+  rows={densityRows().map((d) => [d.name, `${d.lineBox}`, `${d.px}px`])}
+/>
+
+A coarse pointer gets `touch` unless the page says otherwise. The density is an
+attribute on any element, so one pane can be dense and the next one roomy.
+
+## Widths terminals have always had
+
+A layout answers to how many cells it has, not to the size of the window, and
+the steps are the ones terminals use:
+
+<Table
+  columns={[
+    { label: 'Step', code: true },
+    { label: 'Cells', align: 'right' },
+  ]}
+  rows={Object.entries(breakpoints).map(([name, cells]) => [name, `${cells}`])}
+/>
+
+A component asks with a container query on `.rk-container`, so the same panel
+reflows in a sidebar and in a main column alike.
+
+## What a theme is made of
+
+A theme is five inputs, and every token is derived from them:
+
+| Input | What it decides |
+| --- | --- |
+| `accentHue` | The hue of the accent, which is the theme's blue |
+| `neutralTemperature` | Which way the greys lean: `cool`, `neutral` or `warm` |
+| `typePairing` | The monospace family, and so the cell |
+| `borderSet` | What chrome is drawn with: `single`, `double`, `heavy`, `rounded` or `ascii` |
+| `conformance` | How strictly the theme holds the grid: [strictness](../strictness/) |
+
+Three things are not inputs but contexts, switched at runtime on any element:
+the theme itself, the mode (light or dark) and the density. Contexts nest, so a
+dark pane in a light page, or a Nord sidebar in an Ink app, is an attribute.
+
+## The rules
+
+Every component is held to [ten rules](../../concept/#the-contract-a-component-is-held-to).
+The first is the one the rest follow from: sized in cells, drawn by the frame
+engine, and never a box character written by hand.

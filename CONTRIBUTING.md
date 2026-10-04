@@ -229,16 +229,22 @@ What counts as public is decided in [docs/public-api.md](docs/public-api.md)
 your change moves an `API.md`, it changes the public API. Read that diff, and
 say so in the changeset.
 
-Semver is strict:
+Every package is below 1.0, and versions follow pre-1.0 semver (cairn 0172):
 
-- **Major**: something a user relies on is removed or renamed, or behaves
-  differently with the same input. That covers an export, a prop, a token, a
-  CSS class or `data-*` attribute a stylesheet can select, an export path, or a
-  default. A removed or renamed semantic token is major.
+- **Breaking — minor, and it says so.** Something a user relies on is
+  removed or renamed, or behaves differently with the same input: an export,
+  a prop, a token, a CSS class or `data-*` attribute a stylesheet can select,
+  an export path, or a default. A removed or renamed semantic token counts.
+  Below 1.0 this is a **minor**, and the changeset's first line begins
+  `Breaking:` and says what a user has to change. CI refuses a major changeset
+  for a package below 1.0, and a `Breaking:` changeset marked patch.
 - **Minor**: something is added and nothing existing changes, such as a
   component, a prop, an export, a token or a theme. A changed semantic token
   value is minor.
 - **Patch**: a fix that makes the package do what it already said it did.
+
+Pin a 0.x release with `~` (`~0.1.0`): a minor can break. 1.0 will be a
+decision of its own, and from then on a breaking change is a major.
 
 ## Commits and pull requests
 

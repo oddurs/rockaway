@@ -25,6 +25,7 @@ borderSets
 bottom
 boxMarks
 type BoxOptions
+brailleMarks
 Buffer
 bufferSerializer
 type Cell
