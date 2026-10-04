@@ -3,14 +3,16 @@ id: 55
 uid: 0795fc10-3a42-4b94-8053-af06525955e8
 title: Combobox
 type: component
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-04
 depends_on:
 - 34
 - 35
 - 133
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-04
 priority: p2
 layer: components
 effort: m
@@ -67,3 +69,7 @@ clears. The number of results is announced as it changes.
 ## 2026-10-03
 
 Rewritten by the program plan: the pre-pivot template text is replaced with how this works on the grid, the criteria are one list (the template, plus the contracts from the plan, plus this item's own), and the dependencies point at the contracts it is built on.
+
+## 2026-10-04
+
+Claimed with --force at the CTO's word: Text field (#117) has landed but 0035 is still 'in review' on main; Popover is #153, queued. Built on feat/select (#152, which carries Popover) with main merged, so this stacks on #153 then #152.
