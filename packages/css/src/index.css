@@ -13,6 +13,7 @@
 @import "./screen.css";
 @import "./shapes.css";
 @import "./focus.css";
+@import "./contrast.css";
 @import "./scroll.css";
 @import "./motion.css";
 @import "./forced-colors.css";
@@ -36,6 +37,7 @@
 @import "./components/keymap.css";
 @import "./components/link.css";
 @import "./components/list.css";
+@import "./components/overlay.css";
 @import "./components/table.css";
 @import "./components/tabs.css";
 @import "./components/tree.css";
