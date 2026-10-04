@@ -84,6 +84,7 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
+  TextField: (props) => createElement(rockaway.TextField, { label: 'Name', ...props }),
   Tree: (props) =>
     createElement(
       rockaway.Tree,

@@ -25,6 +25,7 @@ import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
+import { textFieldMeta } from '../components/text-field.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
@@ -69,6 +70,7 @@ const sources: readonly ComponentMetaInput[] = [
   listMeta,
   overlayMeta,
   tableMeta,
+  textFieldMeta,
   treeMeta,
 ];
 
