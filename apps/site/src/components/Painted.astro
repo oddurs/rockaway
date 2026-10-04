@@ -1,0 +1,47 @@
+---
+/**
+ * A screen the engine drew, painted at build time the way `paintGlyph` paints
+ * it in a browser (cairn 0106): rows of runs, each run as wide as its cells,
+ * box drawing and blocks drawn by the cell. It is the painter's own markup
+ * and the system's own stylesheet, with no JavaScript, so an example on a
+ * foundations page is the system and not a picture of it. Selecting it copies
+ * the text it was drawn from.
+ *
+ * A reader hears the label, never the glyphs.
+ */
+import { fromText } from '@rockaway/grid';
+import { rowRuns } from '@rockaway/react';
+import { escapeHtml } from '../lib/html.ts';
+
+interface Props {
+  /** The screen as text, as `toText` gives it. */
+  text: string;
+  /** What a reader hears instead of the glyphs. */
+  label: string;
+}
+
+const { text, label } = Astro.props;
+const buffer = fromText(text);
+
+// Written as one string: whitespace between inline-block runs would draw.
+const html = Array.from({ length: buffer.height }, (_, y) => {
+  let col = 0;
+  const runs = rowRuns(buffer, y).map((run) => {
+    const vars = [
+      col === 0 ? '' : `--rk-col: ${col}`,
+      run.cells === 1 ? '' : `--rk-run: ${run.cells}`,
+    ]
+      .filter(Boolean)
+      .join('; ');
+    col += run.cells;
+    const shape = run.shape ? ` data-rk-shape="${run.shape}"` : '';
+    const style = vars ? ` style="${vars}"` : '';
+    return `<span class="rk-run"${shape}${style}>${escapeHtml(run.text)}</span>`;
+  });
+  return `<div class="rk-row">${runs.join('')}</div>`;
+}).join('');
+---
+
+<figure role="img" aria-label={label}>
+  <div data-rk-painted="glyph" aria-hidden="true" set:html={html} />
+</figure>

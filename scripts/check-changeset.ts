@@ -37,19 +37,55 @@ const changed = [
 ].filter(Boolean);
 
 /** Package directory name → package name, for every published package. */
-const packages = new Map<string, { name: string; ships: string[] }>();
+const packages = new Map<string, { name: string; version: string; ships: string[] }>();
 for (const dir of readdirSync(path.join(root, 'packages'))) {
   const file = path.join(root, 'packages', dir, 'package.json');
   if (!existsSync(file)) continue;
   const manifest = JSON.parse(readFileSync(file, 'utf8')) as {
     name: string;
+    version: string;
     private?: boolean;
     files?: string[];
   };
   if (manifest.private) continue;
   // `dist` is built from `src`, so `src` stands in for it.
   const ships = new Set(['src', ...(manifest.files ?? [])].filter((entry) => entry !== 'dist'));
-  packages.set(dir, { name: manifest.name, ships: [...ships] });
+  packages.set(dir, { name: manifest.name, version: manifest.version, ships: [...ships] });
+}
+
+/**
+ * Below 1.0 a breaking change is a minor that says so (cairn 0172). So a
+ * changeset this branch adds or edits may not be major for a package still
+ * at 0.x, and one that begins `Breaking:` may not be a patch.
+ */
+const versions = new Map([...packages.values()].map((p) => [p.name, p.version]));
+const misbumped: string[] = [];
+for (const file of changed) {
+  if (!/^\.changeset\/[^/]+\.md$/.test(file) || file === '.changeset/README.md') continue;
+  const full = path.join(root, file);
+  if (!existsSync(full)) continue;
+  const match = /^---\n([\s\S]*?)^---\n([\s\S]*)$/m.exec(readFileSync(full, 'utf8'));
+  if (match === null) continue;
+  const [, front = '', body = ''] = match;
+  const breaking = body.trim().startsWith('Breaking:');
+  const bumps = [...front.matchAll(/^\s*['"]?(@?[^'":\s]+)['"]?\s*:\s*(\w+)/gm)];
+  for (const [, name = '', bump] of bumps) {
+    const belowOne = (versions.get(name) ?? '0.0.0').startsWith('0.');
+    if (bump === 'major' && belowOne) {
+      misbumped.push(
+        `${file}: ${name} is major, but below 1.0 a breaking change is a minor whose first line begins "Breaking:"`,
+      );
+    }
+  }
+  // A changeset can name several packages and break only one of them; the one
+  // it breaks has to be at least a minor.
+  if (breaking && bumps.length > 0 && bumps.every(([, , bump]) => bump === 'patch')) {
+    misbumped.push(`${file}: it says it is breaking, but every package in it is a patch`);
+  }
+}
+if (misbumped.length > 0) {
+  console.error(`Pre-1.0 versioning (cairn 0172):\n\n  ${misbumped.join('\n  ')}\n`);
+  process.exit(1);
 }
 
 /**
