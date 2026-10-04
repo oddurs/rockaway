@@ -117,7 +117,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
 - [ ] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
 - [ ] [`0041`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0041-menu.md) Menu <sup>component · components · p1</sup>
-- [ ] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [ ] [`0043`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0043-tooltip.md) Tooltip <sup>component · components · p1</sup>
 - [ ] [`0044`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p1</sup>
 - [ ] [`0055`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0055-combobox.md) Combobox <sup>component · components · p2</sup>
@@ -165,6 +164,7 @@ The component contract, proven on a first set of components.
 
 ### in progress
 
+- [ ] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 
 ### in review

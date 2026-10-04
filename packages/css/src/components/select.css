@@ -1,0 +1,90 @@
+/*
+ * Select (cairn 0042).
+ *
+ * A field (field.css places it): the trigger in the control column, one row,
+ * exactly as wide as the cells it writes: the delimiter and a cell of air,
+ * the value padded to its room, a cell of air, the open mark and the closing
+ * delimiter. So nothing here sets a size, and no state changes one (0118).
+ *
+ * The popover's rows are List's, drawn by list.css: the cursor mark, and the
+ * selected row in reverse with the check. This adds only that the list fills
+ * the popover's width, so a selected row is a bar across it.
+ */
+@layer rk.components {
+  .rk-select-trigger {
+    --rk-select-end: var(--rk-border-control);
+
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--rk-fg-default);
+    font: inherit;
+    white-space: pre;
+    cursor: pointer;
+  }
+
+  .rk-select-value-slot {
+    display: inline-flex;
+  }
+
+  .rk-select-end {
+    color: var(--rk-select-end);
+  }
+
+  /* The open mark is the control's own, in its text colour. */
+  .rk-select-mark {
+    color: var(--rk-fg-default);
+  }
+
+  .rk-select[data-disabled] .rk-select-mark {
+    color: var(--rk-fg-disabled);
+  }
+
+  /* React Aria marks the value that is still its placeholder. */
+  .rk-select-value-slot[data-placeholder] .rk-select-value {
+    color: var(--rk-fg-muted);
+  }
+
+  .rk-select-trigger[data-hovered] .rk-select-value {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* Pressed: the value in reverse video, as a button goes down. */
+  .rk-select-trigger[data-pressed] .rk-select-value {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-page);
+  }
+
+  .rk-select[data-invalid] .rk-select-trigger {
+    --rk-select-end: var(--rk-border-danger);
+  }
+
+  .rk-select[data-disabled] .rk-select-trigger {
+    --rk-select-end: currentcolor;
+
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+
+  .rk-select[data-disabled] .rk-select-value-slot[data-placeholder] .rk-select-value {
+    color: var(--rk-fg-disabled);
+  }
+
+  /* The rows' reserved cells are spaces when they hold nothing, and a space
+   * is a cell: the overlay's body wraps text, so the list keeps its own. */
+  .rk-select-list {
+    display: block;
+    outline: none;
+    white-space: pre;
+  }
+
+  /* A reversed value is the reader's text and canvas swapped (0181). */
+  @media (forced-colors: active) {
+    .rk-select-trigger[data-pressed] .rk-select-value {
+      forced-color-adjust: none;
+    }
+  }
+}

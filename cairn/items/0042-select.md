@@ -3,8 +3,10 @@ id: 42
 uid: 570abc45-84f2-4acc-8874-7c47bb60ab01
 title: Select
 type: component
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 34
 - 127
@@ -70,3 +72,11 @@ submission and autofill working.
 ## 2026-10-03
 
 Rewritten by the program plan: the pre-pivot template text is replaced with how this works on the grid, the criteria are one list (the template, plus the contracts from the plan, plus this item's own), and the dependencies point at the contracts it is built on.
+
+## 2026-10-03
+
+Built on the overlay contract (#149) with OverlayPopover standing in for Popover (0034), whose API overlays has settled (placement 'bottom start', maxRows, minCols default 'trigger') but not pushed; the switch is one import once feat/popover lands, and the 'at least as wide as the trigger' story comes with it. The trigger is [ value… ▾]: the value starts in its third cell because the popover's content inset is two cells (border plus air, confirmed by overlays), so the popover's rows start in the value's column. Rows reuse List's classes and listMarks with two reserved cells (cursor, check), as the item asks; the list sets white-space: pre because the overlay body wraps and an empty mark cell would collapse to nothing and sit half a cell low.
+
+## 2026-10-03
+
+The visible value is aria-hidden and cut/padded to its cells; a VisuallyHidden copy gives the reader the whole value, so the name never holds the ellipsis (checkField caught 'Choose…'). The placeholder is React Aria's data-placeholder on SelectValue, not hand-set; the state vocabulary's placeholder row gains [data-placeholder] beside :placeholder-shown. The open mark is its own span in fg.default: in the delimiters' border.control colour it was 4.48:1 on bg.surface and failed axe.

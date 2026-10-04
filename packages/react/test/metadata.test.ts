@@ -70,6 +70,14 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
   Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
   KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
   Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
+  Select: (props) =>
+    createElement(
+      rockaway.Select,
+      { label: 'Theme', ...props },
+      // An option's words are required, and createElement's types cannot see them in its third argument.
+      // biome-ignore lint/correctness/noChildrenProp: as above
+      createElement(rockaway.SelectItem, { id: 'ink', children: 'ink' }),
+    ),
   Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
   Tree: (props) =>
     createElement(
@@ -603,6 +611,23 @@ describe('the snapshots, as the site draws them', () => {
       J    Next row
       K    Previous row
       ?    Show this help"
+    `);
+  });
+
+  test('Select', () => {
+    expect(snapshots(byName('Select'))).toMatchInlineSnapshot(`
+      "── Closed
+      [ phosphor    ▾]
+      [ Choose one  ▾]
+      ── Open
+      [ phosphor    ▾]
+      ┏━━━━━━━━━━━━━━━┓
+      ┃   default     ┃
+      ┃ ▸ ink         ┃
+      ┃  ✓phosphor    ┃
+      ┃   ice         ┃
+      ┃   tokyo-night ┃
+      ┗━━━━━━━━━━━━━━━┛"
     `);
   });
 
