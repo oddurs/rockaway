@@ -19,8 +19,10 @@ import { formMeta } from '../components/field.meta.ts';
 import { fieldsetMeta } from '../components/fieldset.meta.ts';
 import { frameMeta } from '../components/frame.meta.ts';
 import { keyHintMeta } from '../components/key-hint.meta.ts';
+import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
+import { tableMeta } from '../components/table.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
@@ -59,8 +61,10 @@ const sources: readonly ComponentMetaInput[] = [
   formMeta,
   frameMeta,
   keyHintMeta,
+  keymapMeta,
   linkMeta,
   listMeta,
+  tableMeta,
   treeMeta,
 ];
 

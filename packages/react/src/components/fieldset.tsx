@@ -33,16 +33,7 @@
  * `FieldFrame` is the part a framed control is drawn in. `Fieldset` is a
  * `FieldFrame` that is a group, named by its legend.
  */
-import {
-  Attr,
-  type BorderSetName,
-  Buffer,
-  borderSets,
-  drawBox,
-  rect,
-  stringWidth,
-  truncate,
-} from '@rockaway/grid';
+import { stringWidth } from '@rockaway/grid';
 import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useContext, useId, useMemo } from 'react';
 import {
@@ -56,23 +47,10 @@ import {
   VisuallyHidden,
 } from 'react-aria-components';
 import { cx } from '../cx.ts';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
+import { useGlyphs } from '../glyphs.tsx';
 import { type Inset, type PainterName, Screen } from '../screen.tsx';
-import {
-  defineVariants,
-  type VariantProps,
-  type Variants,
-  type VariantValue,
-} from '../variants.ts';
-
-const VARIANTS = {
-  kind: ['control', 'group'],
-} as const;
-
-/** FieldFrame's variants, as data. */
-export const fieldFrameVariants: Variants<typeof VARIANTS> = defineVariants(VARIANTS, {
-  kind: 'control',
-});
+import type { VariantProps, VariantValue } from '../variants.ts';
+import { fieldFrameBuffer, fieldFrameVariants } from './fieldset.pure.ts';
 
 export type FieldFrameKind = VariantValue<typeof fieldFrameVariants, 'kind'>;
 
@@ -85,49 +63,6 @@ export interface FieldFrameState {
   readonly disabled?: boolean;
   /** Focus is visible inside a control's own frame. */
   readonly focused?: boolean;
-}
-
-/** The set a heavier frame is drawn in. ASCII has no heavier line to give. */
-function heavier(set: BorderSetName): BorderSetName {
-  return set === 'ascii' ? 'ascii' : 'heavy';
-}
-
-/**
- * A field frame as a buffer: a frame with the label set into its top edge,
- * and the required mark after it, both bold, or dim when disabled. Pure, so
- * it is the text snapshot, and the text a server renders.
- *
- * The label is truncated here, before the frame sees it, so that the mark is
- * never the part that is cut off. The frame's lines carry no colour of their
- * own: the stylesheet colours them from the state.
- */
-export function fieldFrameBuffer(
-  size: { readonly width: number; readonly height: number },
-  state: FieldFrameState,
-  glyphs: Glyphs = defaultGlyphs,
-): Buffer {
-  const heavy = state.invalid === true || state.focused === true;
-  const border = heavy ? heavier(glyphs.borderSet) : glyphs.borderSet;
-  const mark = state.required ? glyphs.mark.required : '';
-  // The corners, a cell of line either side and a cell of air either side
-  // of the words: what `drawBox` leaves a title.
-  const room = Math.max(0, size.width - 6 - stringWidth(mark));
-  const label = truncate(state.label, room, glyphs.mark.ellipsis);
-  // The words are a label in the edge, which the engine sets when the pass
-  // closes and which gives way to any junction drawn into the edge (0175). A
-  // label has one style, so the mark is drawn in the words' style.
-  const words = {
-    fg: state.disabled ? 'fg.disabled' : 'fg.default',
-    attrs: state.disabled ? Attr.dim : Attr.bold,
-  };
-  return Buffer.create(size).draw((draft) => {
-    drawBox(draft, rect(0, 0, size.width, size.height), {
-      set: borderSets[border],
-      ellipsis: glyphs.mark.ellipsis,
-      title: `${label}${mark}`,
-      titleStyle: words,
-    });
-  });
 }
 
 export interface FieldFrameProps extends VariantProps<typeof fieldFrameVariants> {
@@ -248,6 +183,16 @@ function FrameScreen({
   readonly children: ReactNode;
 }): ReactNode {
   const { label, required, invalid, disabled, focused } = state;
+  // As tall as what it holds, and as wide as its column, which only the page
+  // knows: drawn at its smallest until it has measured, and stretched to fit
+  // (Screen), so a page with no script shows the frame at its true size.
+  const fallback = useMemo(
+    () => ({
+      width: stringWidth(label) + stringWidth(required ? glyphs.mark.required : '') + 6,
+      height: 3,
+    }),
+    [label, required, glyphs],
+  );
   const draw = useMemo(
     () => (size: { width: number; height: number }) =>
       fieldFrameBuffer(size, { label, required, invalid, disabled, focused }, glyphs),
@@ -257,16 +202,13 @@ function FrameScreen({
     <Screen
       draw={draw}
       contentInset={inset}
-      fallback={FALLBACK}
+      fallback={fallback}
       {...(painter === undefined ? {} : { painter })}
     >
       {children}
     </Screen>
   );
 }
-
-/** The size drawn before the frame has measured itself, and on a server. */
-const FALLBACK = { width: 24, height: 3 };
 
 export interface FieldsetProps {
   /** Set into the top edge, and the group's accessible name. */

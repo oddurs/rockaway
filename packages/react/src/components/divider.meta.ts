@@ -1,7 +1,8 @@
 import { toText } from '@rockaway/grid';
 import { type Glyphs, glyphsFor } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type DividerOptions, dividerBuffer } from './divider.tsx';
+import { dividerBuffer } from './divider.pure.ts';
+import type { DividerOptions } from './divider.tsx';
 
 const cells = (width: number, options: DividerOptions = {}, glyphs?: Glyphs): string =>
   toText(dividerBuffer({ width, height: 1 }, options, glyphs), { trimEnd: false });

@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type LinkState, linkBuffer } from './link.tsx';
+import { linkBuffer } from './link.pure.ts';
+import type { LinkState } from './link.tsx';
 
 const cells = (label: string, state: LinkState): string =>
   toText(linkBuffer(label, state), { trimEnd: false });
@@ -82,6 +83,7 @@ export const linkMeta: ComponentMetaInput = defineMeta({
       '"changelog, link", or "changelog (opens in a new tab), link". A current link is announced as the current page.',
     notes: [
       'A disabled link renders as a span with role="link", so it stays in the reading order.',
+      "For client-side routing, wrap the app in RouterProvider from @rockaway/react, given the router's navigate (and useHref for a base path). It is React Aria's, re-exported so it is the same instance Link reads.",
     ],
   },
   snapshots: [

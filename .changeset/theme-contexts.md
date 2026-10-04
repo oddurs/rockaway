@@ -1,9 +1,9 @@
 ---
-'@rockaway/tokens': major
+'@rockaway/tokens': minor
 '@rockaway/css': patch
 ---
 
-Every theme is a CSS context. `data-rk-theme="ink"` on any element switches that subtree to the ink theme, the way `data-theme` switches mode and `data-density` switches density, and the three nest in any order. The default theme stays in `tokens.css`. Every other theme ships as `@rockaway/tokens/themes/<name>.css`, loaded after it.
+Breaking: the DTCG files and the palette's custom properties are restructured (below). Every theme is a CSS context. `data-rk-theme="ink"` on any element switches that subtree to the ink theme, the way `data-theme` switches mode and `data-density` switches density, and the three nest in any order. The default theme stays in `tokens.css`. Every other theme ships as `@rockaway/tokens/themes/<name>.css`, loaded after it.
 
 Five well-known terminal palettes ship beside the presets: Catppuccin (Latte and Mocha), Dracula, Nord, Solarized and Tokyo Night (Day and Night). Each is imported from its upstream terminal theme, with its source and licence recorded in `themes/terminal/`. A theme with one mode pins it. Every theme passes the contrast gate in every mode it declares, and a colour that fell short was moved in lightness, keeping its hue. The moves are printed by the generator and recorded in the theme's DTCG file. `themeContexts`, `themeFromInputs`, `presetNames` and `importedNames` are new; `themes` and `themeGlyphs` now cover every theme.
 
