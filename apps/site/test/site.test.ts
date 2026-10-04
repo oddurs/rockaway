@@ -14,6 +14,7 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { frameBuffer } from '@rockaway/react';
+import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import { items } from '../src/registry/items.ts';
@@ -25,6 +26,9 @@ const types: Record<string, string> = {
   '.js': 'text/javascript',
   '.css': 'text/css',
   '.woff2': 'font/woff2',
+  '.txt': 'text/plain; charset=utf-8',
+  '.md': 'text/markdown; charset=utf-8',
+  '.json': 'application/json',
 };
 
 /** Serve `dir` at `base`, and nothing anywhere else, as Pages would. */
@@ -70,9 +74,12 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     out = mkdtempSync(path.join(tmpdir(), 'rockaway-site-'));
     // `--force`: the content layer caches rendered Markdown, and does not know
     // when the pipeline that rendered it has changed.
+    // Vitest puts its own BASE_URL in the environment, and a build's
+    // prerender reads import.meta.env.BASE_URL from there: it has to go.
+    const { BASE_URL: _, ...env } = process.env;
     execFileSync('pnpm', ['exec', 'astro', 'build', '--force', '--outDir', out], {
       cwd: site,
-      env: { ...process.env, SITE_BASE: base, ASTRO_TELEMETRY_DISABLED: '1' },
+      env: { ...env, SITE_BASE: base, ASTRO_TELEMETRY_DISABLED: '1' },
       stdio: 'pipe',
     });
     server = await serve(out, base);
@@ -178,6 +185,52 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     // No page brings styles of its own: the only inline style is the pipeline's
     // run lengths and column widths.
     expect(found.styled).toBe(0);
+  });
+
+  test('draws the foundations with the system, for a phone, with no script (0106)', async () => {
+    const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const scripts: string[] = [];
+    phone.on('request', (r) => {
+      if (r.resourceType() === 'script') scripts.push(r.url());
+    });
+    const pages = [
+      '',
+      'grid/',
+      'strictness/',
+      'glyphs/',
+      'colour/',
+      'themes/',
+      'tokens/',
+      'accessibility/',
+    ];
+    for (const p of pages) {
+      const response = await phone.goto(`${origin}${base}foundations/${p}`);
+      expect(response?.ok(), p).toBe(true);
+      const found = await phone.evaluate(() => ({
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        unlabelled: [...document.querySelectorAll('figure[role="img"]')].filter(
+          (f) => !f.getAttribute('aria-label'),
+        ).length,
+        painted: document.querySelectorAll('[data-rk-painted] .rk-run').length,
+      }));
+      // Only code and tables scroll, inside their own boxes.
+      expect(found.overflow, p).toBe(0);
+      expect(found.unlabelled, p).toBe(0);
+      if (['grid/', 'glyphs/', 'themes/'].includes(p)) expect(found.painted, p).toBeGreaterThan(0);
+    }
+    // Every theme's island, in each mode it declares, with its terminal files.
+    await phone.goto(`${origin}${base}foundations/themes/`);
+    const themes = await phone.evaluate(() => ({
+      islands: document.querySelectorAll('figure[data-rk-theme]').length,
+      files: [...document.querySelectorAll<HTMLAnchorElement>('a[download]')].map((a) => a.href),
+    }));
+    expect(themes.islands).toBe(16);
+    expect(themes.files).toHaveLength(16 * 4);
+    const file = await phone.request.get(themes.files[0] ?? '');
+    expect(file.ok()).toBe(true);
+    expect((await file.text()).length).toBeGreaterThan(100);
+    await phone.close();
+    expect(scripts).toEqual([]);
   });
 
   test('publishes every document in docs/, linked to each other on the site (0107)', async () => {
@@ -327,6 +380,35 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     // No colour is written into the page: roles are classes.
     expect(found.styled).toBe(0);
     expect(found.blocks).toBe(0);
+  });
+
+  test('serves llms.txt, and every link in it, as text an agent can read (0048)', async () => {
+    const read = async (url: string) => {
+      const response = await fetch(url);
+      expect(response.status, url).toBe(200);
+      return response.text();
+    };
+    const index = await read(`${origin}${base}llms.txt`);
+    expect(index.startsWith('# rockaway\n\n> ')).toBe(true);
+    // The links are absolute, where SITE_URL places the site; here, they are
+    // followed on the site as built, under its base.
+    const links = [...index.matchAll(/\]\((https?:[^)]+)\)/g)].map(([, url]) => new URL(url ?? ''));
+    const own = links.filter((url) => url.hostname !== 'github.com');
+    expect(own.filter((url) => !url.pathname.startsWith(base)).map(String)).toEqual([]);
+    const names = meta.components.map((c) => c.name);
+    expect(own.filter((url) => url.pathname.startsWith(`${base}components/`))).toHaveLength(
+      names.length,
+    );
+    for (const url of own) {
+      const body = await read(`${origin}${url.pathname}`);
+      if (url.pathname.endsWith('.md')) expect(body).toMatch(/^# \S/);
+    }
+    const full = await read(`${origin}${base}llms-full.txt`);
+    for (const name of names) expect(full).toContain(`\n# ${name}\n`);
+    const button = await read(`${origin}${base}components/button.md`);
+    for (const snapshot of meta.components.find((c) => c.name === 'Button')?.snapshots ?? []) {
+      expect(button).toContain(`\n${snapshot.text}\n`);
+    }
   });
 
   test('the cell is the font, and the fallback has the same cell', async () => {

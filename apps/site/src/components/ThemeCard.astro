@@ -1,0 +1,66 @@
+---
+/**
+ * One shipped theme (cairn 0106): its name, where it came from, and the theme
+ * itself in each mode it declares, as an island of `data-rk-theme` with a
+ * screen drawn in its border set and its sixteen colours in a row. Then its
+ * terminal files, the same palette for Ghostty, kitty, Alacritty and iTerm2.
+ */
+import { ansiSlots, type ThemeContext } from '@rockaway/tokens';
+import { terminalFile, terminalFormats, themeSample } from '../lib/foundations.ts';
+import { href } from '../lib/paths.ts';
+import Painted from './Painted.astro';
+
+interface Props {
+  theme: ThemeContext;
+}
+
+const { theme } = Astro.props;
+const swatches = ansiSlots
+  .map(
+    (slot, i) =>
+      `<span class="rk-run" data-rk-shape="block-2588" style="${i === 0 ? '' : `--rk-col: ${i * 2}; `}--rk-run: 2; color: var(--rk-ansi-${slot})">██</span>`,
+  )
+  .join('');
+---
+
+<h2>{theme.title}</h2>
+<p>
+  {theme.kind === 'imported' && theme.source ? (
+    <>
+      Imported from <a href={theme.source}>{theme.source.replace(/^https:\/\//, '')}</a>, {theme.licence?.spdx}.
+    </>
+  ) : (
+    <>A preset, generated from five inputs.</>
+  )}{' '}
+  {theme.modes.length === 1 ? `${theme.modes[0]} only` : 'Light and dark'}; border set{' '}
+  <code>{theme.inputs.borderSet}</code>.
+</p>
+{
+  theme.modes.map((mode) => (
+    <figure
+      data-rk-theme={theme.name}
+      data-theme={mode}
+      style="background: var(--rk-bg-page); color: var(--rk-fg-default); padding: var(--rk-y-1) var(--rk-x-2)"
+    >
+      <Painted text={themeSample(theme)} label={`${theme.title}, ${mode}: a frame in its border set`} />
+      <div data-rk-painted="glyph" aria-hidden="true" class="rk-row" set:html={swatches} />
+    </figure>
+  ))
+}
+<ul>
+  {
+    theme.modes.map((mode) => (
+      <li>
+        For your terminal, {mode}:{' '}
+        {terminalFormats.map((format, i) => (
+          <>
+            {i > 0 && ', '}
+            <a href={href(`terminal/${terminalFile(theme.name, mode, format)}`)} download>
+              {format.label}
+            </a>
+          </>
+        ))}
+      </li>
+    ))
+  }
+</ul>

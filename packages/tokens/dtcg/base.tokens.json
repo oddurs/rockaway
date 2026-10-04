@@ -1,44 +1,4 @@
 {
-  "stroke": {
-    "$description": "Line weights for box drawing, which the cell draws rather than the font (cairn 0116).",
-    "glyph": {
-      "$type": "number",
-      "$description": "The glyph painter: a fraction of the font size, so a line is weighted like the type beside it.",
-      "light": {
-        "$value": 0.08
-      },
-      "heavy": {
-        "$value": 0.16
-      },
-      "gap": {
-        "$value": 0.12,
-        "$description": "The space between a double line's strokes."
-      }
-    },
-    "rule": {
-      "$type": "dimension",
-      "$description": "The rule painter: hairlines, whatever the font size.",
-      "light": {
-        "$value": {
-          "value": 1,
-          "unit": "px"
-        }
-      },
-      "heavy": {
-        "$value": {
-          "value": 2,
-          "unit": "px"
-        }
-      },
-      "gap": {
-        "$value": {
-          "value": 1,
-          "unit": "px"
-        },
-        "$description": "The space between a double line's strokes."
-      }
-    }
-  },
   "attribute": {
     "$description": "How emphasis is drawn. Reverse is a swap, so it has no value of its own.",
     "bold": {
