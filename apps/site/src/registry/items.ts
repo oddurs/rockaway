@@ -13,6 +13,8 @@ export interface ItemSource {
   readonly description: string;
   /** The component the site draws on the registry page, from the item's first file. */
   readonly component: string;
+  /** An example app (0151): it has a page of its own, `/examples/<name>/`, where it fills the screen. */
+  readonly example?: boolean;
 }
 
 export const items: readonly ItemSource[] = [
@@ -43,5 +45,6 @@ export const items: readonly ItemSource[] = [
     description:
       'A settings page: every field component in framed sections, validation from the server, and a delete that asks for the account’s name. Its theme, mode and density apply live to itself.',
     component: 'Settings',
+    example: true,
   },
 ];

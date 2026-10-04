@@ -6,6 +6,7 @@ import '@rockaway/tokens/themes/nord.css';
 import '@rockaway/tokens/themes/phosphor.css';
 import '@rockaway/tokens/themes/solarized.css';
 import '@rockaway/tokens/themes/tokyo-night.css';
+import { GlyphProvider } from '@rockaway/react';
 import { Button } from '@rockaway/react/button';
 import { Checkbox, CheckboxGroup } from '@rockaway/react/checkbox';
 import { Dialog } from '@rockaway/react/dialog';
@@ -17,7 +18,6 @@ import { Radio, RadioGroup } from '@rockaway/react/radio-group';
 import { Select, SelectItem } from '@rockaway/react/select';
 import { Switch } from '@rockaway/react/switch';
 import { TextField } from '@rockaway/react/text-field';
-import { GlyphProvider } from '@rockaway/react';
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import { type FormEvent, type ReactNode, useRef, useState } from 'react';
 import {
@@ -29,8 +29,8 @@ import {
   type Mode,
   NOTIFICATIONS,
   SAVED,
-  type Settings as Values,
   save,
+  type Settings as Values,
 } from './data.ts';
 
 export interface SettingsProps {
@@ -223,7 +223,13 @@ function Actions({
         Reset
       </Button>
       <span> </span>
-      <Button ref={saveButton} variant="fill" type="submit" keys="mod+s" isDisabled={!dirty || busy}>
+      <Button
+        ref={saveButton}
+        variant="fill"
+        type="submit"
+        keys="mod+s"
+        isDisabled={!dirty || busy}
+      >
         Save
       </Button>
     </div>
@@ -282,4 +288,3 @@ function ConfirmDelete({
     </Dialog>
   );
 }
-

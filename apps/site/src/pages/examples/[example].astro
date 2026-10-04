@@ -1,0 +1,31 @@
+---
+/**
+ * An example app (cairn 0151), on a page of its own: the registry item's own
+ * code, hydrated, filling the screen. It is the same module `shadcn add`
+ * copies in, so the page and the item cannot drift apart.
+ */
+import { RegistryItem } from '../../islands/RegistryItem.tsx';
+import Document from '../../layouts/Document.astro';
+import { href } from '../../lib/paths.ts';
+import { entries, installLine } from '../../lib/registry-site.ts';
+
+export function getStaticPaths() {
+  return entries
+    .filter(({ item }) => item.example === true)
+    .map((entry) => ({ params: { example: entry.item.name }, props: entry }));
+}
+
+const { item, files } = Astro.props as (typeof entries)[number];
+---
+
+<Document title={`${item.title} — rockaway`} description={item.description}>
+  <main class="example">
+    <RegistryItem client:load file={`${item.name}/${files[0]?.name}`} component={item.component} />
+    <article class="rk-prose">
+      <p>
+        {item.description} Copy it in with <code>{installLine(item.name)}</code>, or read it in
+        the <a href={href(`registry/#${item.name}`)}>registry</a>.
+      </p>
+    </article>
+  </main>
+</Document>

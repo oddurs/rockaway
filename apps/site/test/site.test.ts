@@ -544,6 +544,82 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     }
   });
 
+  test('the settings example works by keyboard alone, wide, narrow and at touch (0151)', async () => {
+    for (const { width, density } of [
+      { width: 1200, density: undefined },
+      { width: 420, density: undefined },
+      { width: 420, density: 'touch' },
+    ]) {
+      const reader = await browser.newPage({ viewport: { width, height: 1000 } });
+      const errors: string[] = [];
+      reader.on('pageerror', (error) => errors.push(error.message));
+      reader.on('console', (message) => {
+        if (message.type() === 'error') errors.push(message.text());
+      });
+      await reader.goto(`${origin}${base}examples/settings/`);
+      if (density) {
+        await reader.evaluate((d) => {
+          document.documentElement.dataset.density = d;
+        }, density);
+      }
+      await reader.waitForSelector('.settings .rk-frame[data-rk-painted]');
+      // Hydrated: Astro drops the island's \`ssr\` attribute once it is.
+      await reader.waitForSelector('astro-island:not([ssr])');
+      const at = `${width}px${density ? `, ${density}` : ''}`;
+
+      // Nothing scrolls across, at a phone's width either.
+      const overflow = await reader.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow, at).toBe(0);
+
+      // Tab to the name, change it, and save with the keyboard.
+      const name = reader.getByRole('textbox', { name: 'Name' });
+      for (
+        let i = 0;
+        i < 10 && !(await name.evaluate((el) => el === document.activeElement));
+        i++
+      ) {
+        await reader.keyboard.press('Tab');
+      }
+      await expect(name.evaluate((el) => el === document.activeElement)).resolves.toBe(true);
+      // Tab selects the whole value; the right arrow puts the caret at its end.
+      await reader.keyboard.press('ArrowRight');
+      await reader.keyboard.type(' King');
+      expect(await name.inputValue(), at).toBe('Ada Lovelace King');
+      await reader.keyboard.press('ControlOrMeta+s');
+      await reader.waitForFunction(
+        () => document.querySelector('.settings-status')?.textContent === 'Saved.',
+      );
+
+      // A server error lands on its field, and nothing is saved.
+      const email = reader.getByRole('textbox', { name: 'Email' });
+      await email.focus();
+      await reader.keyboard.press('ControlOrMeta+a');
+      await reader.keyboard.type('ada@x');
+      await reader.keyboard.press('ControlOrMeta+s');
+      await reader.waitForFunction(() =>
+        document.querySelector('.settings-status')?.textContent?.startsWith('Not saved'),
+      );
+      await expect(email.getAttribute('aria-invalid')).resolves.toBe('true');
+
+      // Deleting asks for the account's name before it does anything.
+      await reader.getByRole('button', { name: 'Delete account' }).focus();
+      await reader.keyboard.press('Enter');
+      const dialog = reader.getByRole('alertdialog', { name: /Delete account/ });
+      await dialog.waitFor();
+      const remove = dialog.getByRole('button', { name: 'Delete' });
+      await expect(remove.isDisabled()).resolves.toBe(true);
+      await reader.keyboard.type('ada');
+      await expect(remove.isDisabled()).resolves.toBe(false);
+      await reader.keyboard.press('Escape');
+      await dialog.waitFor({ state: 'detached' });
+
+      expect(errors, at).toEqual([]);
+      await reader.close();
+    }
+  });
+
   test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
     // The page's own script, and a highlighter if one shipped, would load here.
     const live = await browser.newPage();
