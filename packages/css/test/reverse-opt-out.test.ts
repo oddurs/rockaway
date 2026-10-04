@@ -10,6 +10,11 @@
  * A rule reverses when it draws words in a ground colour: its `color` reads a
  * `--rk-bg-*` token or an `--rk-fg-on-*` one (the text that sits on a fill),
  * directly or through a custom property of its own that a `color` reads.
+ *
+ * A shape the cell draws is inked in the reader's text colour under forced
+ * colors, which in reverse video is the ground. So an opt-out that covers a
+ * reversal also has to set `--rk-forced-ink`, the figure a shape inside it is
+ * inked in (screen.css).
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -26,6 +31,8 @@ interface Found {
   readonly reversing: readonly { readonly selector: string; readonly where: string }[];
   /** Selectors that opt out of the adjustment under forced colors. */
   readonly optOuts: readonly string[];
+  /** Those of them whose rule sets no `--rk-forced-ink`, with where. */
+  readonly unInked: readonly { readonly selector: string; readonly where: string }[];
 }
 
 /** Each selector a rule applies to, its parents' prepended, list split. */
@@ -50,6 +57,7 @@ function inForcedColors(node: Node): boolean {
 function scan(sheets: readonly { readonly file: string; readonly css: string }[]): Found {
   const reversing: { selector: string; where: string }[] = [];
   const optOuts: string[] = [];
+  const unInked: { selector: string; where: string }[] = [];
   for (const { file, css } of sheets) {
     const root = postcss.parse(css, { from: file });
     // The sheet's own custom properties that some `color` reads.
@@ -60,22 +68,30 @@ function scan(sheets: readonly { readonly file: string; readonly css: string }[]
     root.walkRules((rule) => {
       let reverses = false;
       let optsOut = false;
+      let inksShapes = false;
       rule.each((child) => {
         if (child.type !== 'decl') return;
         if ((child.prop === 'color' || inks.has(child.prop)) && GROUND.test(child.value)) {
           reverses = true;
         }
         if (child.prop === 'forced-color-adjust' && child.value.trim() === 'none') optsOut = true;
+        if (child.prop === '--rk-forced-ink') inksShapes = true;
       });
       if (reverses && !inForcedColors(rule)) {
         for (const selector of selectorsOf(rule)) {
           reversing.push({ selector, where: `${file}:${rule.source?.start?.line ?? 0}` });
         }
       }
-      if (optsOut && inForcedColors(rule)) optOuts.push(...selectorsOf(rule));
+      if (optsOut && inForcedColors(rule)) {
+        optOuts.push(...selectorsOf(rule));
+        if (!inksShapes) {
+          const where = `${file}:${rule.source?.start?.line ?? 0}`;
+          unInked.push(...selectorsOf(rule).map((selector) => ({ selector, where })));
+        }
+      }
     });
   }
-  return { reversing, optOuts };
+  return { reversing, optOuts, unInked };
 }
 
 /**
@@ -105,6 +121,18 @@ function covered(selector: string, optOuts: readonly string[]): boolean {
   });
 }
 
+/**
+ * Opt-outs that cover a reversal but set no ink for the shapes inside it. An
+ * opt-out covering no reversal (a shape's own, a prose rule's) needs none.
+ */
+function unInkedReversals(found: Found): string[] {
+  return found.unInked
+    .filter(({ selector }) =>
+      found.reversing.some((reversal) => covered(reversal.selector, [selector])),
+    )
+    .map(({ selector, where }) => `${where}  ${selector}`);
+}
+
 function uncovered(found: Found): string[] {
   return found.reversing
     .filter(({ selector }) => !covered(selector, found.optOuts))
@@ -131,6 +159,10 @@ describe('every reversed thing opts out of the forced-colors backplate', () => {
 
   test('every one is covered by an opt-out', () => {
     expect(uncovered(found)).toEqual([]);
+  });
+
+  test('every opt-out that covers one inks the shapes inside it', () => {
+    expect(unInkedReversals(found)).toEqual([]);
   });
 });
 
@@ -160,6 +192,24 @@ describe('the check', () => {
       // The opt-out is for [data-y~="z"]: the `~` inside it is not a combinator.
       'x.css:5  .rk-w[data-y]',
     ]);
+  });
+
+  test('fails a reversal whose opt-out does not ink its shapes, and only that', () => {
+    const found = scan([
+      {
+        file: 'x.css',
+        css: `
+          .rk-x[data-selected] { color: var(--rk-bg-page); }
+          .rk-v[data-selected] { color: var(--rk-bg-page); }
+          @media (forced-colors: active) {
+            .rk-x[data-selected] { forced-color-adjust: none; }
+            .rk-v[data-selected] { forced-color-adjust: none; --rk-forced-ink: Canvas; }
+            [data-rk-shape] { forced-color-adjust: none; }
+          }
+        `,
+      },
+    ]);
+    expect(unInkedReversals(found)).toEqual(['x.css:5  .rk-x[data-selected]']);
   });
 
   test('passes one an opt-out covers, a narrower selector, and words in a figure colour', () => {
