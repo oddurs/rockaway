@@ -14,6 +14,7 @@
 import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
+import { checkboxMeta } from '../components/checkbox.meta.ts';
 import { codeBlockMeta } from '../components/code-block.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
 import { formMeta } from '../components/field.meta.ts';
@@ -23,7 +24,9 @@ import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
+import { overlayMeta } from '../components/overlay.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
+import { textFieldMeta } from '../components/text-field.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
@@ -56,8 +59,9 @@ export { type StateName, type StateRow, stateVocabulary } from './states.ts';
 const sources: readonly ComponentMetaInput[] = [
   badgeMeta,
   buttonMeta,
-  codeBlockMeta,
   calloutMeta,
+  checkboxMeta,
+  codeBlockMeta,
   dividerMeta,
   fieldsetMeta,
   formMeta,
@@ -66,7 +70,9 @@ const sources: readonly ComponentMetaInput[] = [
   keymapMeta,
   linkMeta,
   listMeta,
+  overlayMeta,
   tableMeta,
+  textFieldMeta,
   treeMeta,
 ];
 
