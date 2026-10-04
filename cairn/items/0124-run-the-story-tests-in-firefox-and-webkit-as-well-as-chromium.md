@@ -77,3 +77,7 @@ CI times. Before (main, runs 37171080651 and 37170628378): 5m13s and 4m50s of wa
 ## Result
 
 Every story runs in Chromium, Firefox and WebKit on every pull request, Firefox and WebKit as a parallel job adding about 30s of wall time; forced colours in Chromium and Firefox; engine defects declared as known failures, scoped by project and platform
+
+## 2026-10-03
+
+Merged main after #187 and #218. #187 took the native resize grip off Grid/Screen's host, which WebKit on macOS and Firefox on Linux drew over the screen's last cell: firefox-linux-screen-corner and webkit-mac-screen-corner are gone (the renderer was never at fault). #218 (0218) shows overflow marks from a script where scroll-state queries are missing: scroll-state-marks is gone, and Table's and Prose's assertions are plain again. Main's new Contrast story cannot run in Firefox: Playwright's emulated prefers-contrast matches in matchMedia but never in the style sheets (measured: three seconds on, the standard reading still holds), so it is tagged contrast-emulation and left out of Firefox, like print and native-scrollbars.

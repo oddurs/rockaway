@@ -73,16 +73,6 @@ export const known: readonly Known[] = [
     ticket: '0197: the default density meets AA; dense is the documented opt-in that does not',
   },
   {
-    id: 'scroll-state-marks',
-    check: 'play',
-    projects: ['firefox', 'webkit'],
-    stories: ['components-table--scrolls', 'foundations-prose--overflow-marks'],
-    element: /./,
-    reason:
-      "a region's overflow marks are shown by `@container scroll-state(scrollable: …)`, which only Chromium implements: in Firefox and WebKit a table or a code block that scrolls across never shows the mark that says there is more (measured: the end mark's visibility stays hidden)",
-    ticket: '0218: show overflow marks where scroll-state queries are missing',
-  },
-  {
     id: 'webkit-form-at-sixty',
     check: 'play',
     projects: ['webkit'],
@@ -92,33 +82,5 @@ export const known: readonly Known[] = [
       'a form exactly sixty cells wide stacks in WebKit: measured, the form is 593.4375px and a 60ch box inside it is 593.4375px, yet `@container rk-form (width < 60ch)` matches there and the label column goes; Chromium and Firefox line it up',
     ticket:
       'a form exactly at the sixty-cell threshold lines up in every engine (proposed in the 0124 report)',
-  },
-  {
-    id: 'firefox-linux-screen-corner',
-    check: 'continuity',
-    rule: 'broken',
-    projects: ['firefox'],
-    platforms: ['Linux'],
-    stories: ['grid-screen--'],
-    element: /rk-frame/,
-    present: '.rk-screen',
-    reason:
-      "in Firefox on Linux, a screen measured from its container breaks at its bottom-right corner: the east stroke of `─` at 48,4 and the west stroke of `┘` at 49,4 do not join the rest of their glyphs, in Screen's four container stories; Firefox on macOS draws them whole, so it is the platform's font",
-    ticket:
-      'a container-measured screen joins its corner in Firefox on Linux (proposed in the 0124 report)',
-  },
-  {
-    id: 'webkit-mac-screen-corner',
-    check: 'continuity',
-    rule: 'leak',
-    projects: ['webkit'],
-    platforms: ['Mac'],
-    stories: ['grid-screen--'],
-    element: /rk-frame/,
-    present: '.rk-screen',
-    reason:
-      "in WebKit on macOS, the same corner of a screen measured from its container leaks: `┘` at 47,4 puts ink on its east edge, which has no line, in Screen's four container stories; WebKit on Linux draws it clean",
-    ticket:
-      "a container-measured screen's last corner joins in every engine (proposed in the 0124 report)",
   },
 ];

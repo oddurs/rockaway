@@ -9,6 +9,7 @@ declare module 'vitest/browser' {
     printToPdf: (html: string) => Promise<{ fills: number }>;
     readWithoutScripts: (html: string) => Promise<{ rows: string[]; shapes: number; ran: boolean }>;
     recordKnown: (use: KnownUse) => Promise<void>;
+    emulateContrast: (contrast: 'more' | 'no-preference') => Promise<void>;
   }
 }
 
@@ -31,4 +32,5 @@ setRunner({
   project: inject('project'),
   platform: inject('platform'),
   record: (use) => commands.recordKnown(use),
+  contrast: (preference) => commands.emulateContrast(preference),
 });

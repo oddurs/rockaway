@@ -3,11 +3,18 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
-import { knownLedger, printToPdf, readWithoutScripts, recordKnown } from './.storybook/commands.ts';
+import {
+  emulateContrast,
+  knownLedger,
+  printToPdf,
+  readWithoutScripts,
+  recordKnown,
+} from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
 import type { Platform } from './.storybook/known.ts';
 import { known } from './.storybook/known.ts';
 import type { Plan } from './.storybook/matrix.ts';
+import { slowStories } from './.storybook/slow.ts';
 
 const configDir = path.join(import.meta.dirname, '.storybook');
 
@@ -80,7 +87,7 @@ const browser = (
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
   instances: [{ browser: engine }] satisfies BrowserInstanceOption[],
-  commands: { printToPdf, readWithoutScripts, recordKnown },
+  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown },
 });
 
 /**
@@ -129,7 +136,9 @@ const CLASSIC_SCROLLBARS = 'classic-scrollbars';
  * to PDF only in Chromium. Stories tagged `native-scrollbars` stay out of
  * Firefox, where Playwright gives every box `scrollbar-width: none` (measured
  * on a plain `overflow: auto` box), so a native bar never appears to be
- * caught. Those are capabilities a runner lacks; a defect in one engine is a
+ * caught; and stories tagged `contrast-emulation` stay out of Firefox, whose
+ * emulated `prefers-contrast` matches in matchMedia but never in the style
+ * sheets. Those are capabilities a runner lacks; a defect in one engine is a
  * known failure instead (`.storybook/known.ts`), printed in every run until
  * it is fixed.
  *
@@ -275,8 +284,9 @@ const engineProjects = others.map((engine) => ({
           FORCED_COLORS,
           P3,
           'print',
-          // Playwright's Firefox gives every box `scrollbar-width: none`.
-          ...(engine === 'firefox' ? ['native-scrollbars'] : []),
+          // Playwright's Firefox gives every box `scrollbar-width: none`, and
+          // its emulated `prefers-contrast` never reaches the style sheets.
+          ...(engine === 'firefox' ? ['native-scrollbars', 'contrast-emulation'] : []),
         ],
       },
     }),
@@ -308,7 +318,7 @@ const firefoxForcedColors = others.includes('firefox')
 
 const config: ViteUserConfig = defineConfig({
   test: {
-    reporters: ['default', staleKnown()],
+    reporters: ['default', staleKnown(), slowStories()],
     projects: [...(chromium ? chromiumProjects : []), ...engineProjects, ...firefoxForcedColors],
   },
 });

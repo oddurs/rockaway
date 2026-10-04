@@ -4,7 +4,7 @@
  * meet there: 4.5:1 for text, 3:1 for control boundaries and focus (1.4.11).
  * `fg.default` is held to 7:1, above AA, because it is most of the text.
  */
-import { intents, syntaxRoles } from './semantic.ts';
+import { type Contrast, intents, syntaxRoles } from './semantic.ts';
 
 export interface Pair {
   readonly fg: string;
@@ -38,3 +38,11 @@ export const pairs: readonly Pair[] = [
     }),
   ),
 ];
+
+/**
+ * A pair's minimum in a contrast context. Increased contrast (0065) holds text
+ * to 7:1, WCAG's AAA; an edge or a fill is a boundary, and stays at 3:1.
+ */
+export function minimumIn(pair: Pair, contrast: Contrast): number {
+  return contrast === 'more' && pair.min >= 4.5 ? Math.max(pair.min, 7) : pair.min;
+}
