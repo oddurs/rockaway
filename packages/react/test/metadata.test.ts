@@ -99,6 +99,14 @@ const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => Rea
       openDialogBody({ title: 'Rename', variant: 'default', ...props }),
       openDialogBody({ title: 'Discard?', variant: 'alert' }),
     ),
+  // Closed, and so nothing: a tooltip renders on hover or focus, never on a
+  // server. Its role is React Aria's, asserted in its stories.
+  Tooltip: (props) =>
+    createElement(
+      rockaway.OverlayLayer,
+      null,
+      createElement(rockaway.Tooltip, { isOpen: false, ...props }, 'Save the file'),
+    ),
   // Closed: a popover has no trigger here, and on a server an open one renders nothing anyway.
   OverlayPopover: (props) =>
     createElement(
@@ -424,10 +432,10 @@ describe('the checks fail when the metadata is wrong', () => {
       ...button.accessibility,
       keyboard: [{ keys: ['return'], action: 'Not a key KeyHint knows.' }],
     };
-    const related = [{ name: 'Tooltip', why: 'Not written yet.' }];
+    const related = [{ name: 'Sparkline', why: 'Not written yet.' }];
     expect(problems({ ...button, accessibility, related }, found)).toEqual([
       'key return is not a chord KeyHint can draw',
-      'it names Tooltip, which has no metadata',
+      'it names Sparkline, which has no metadata',
     ]);
   });
 });

@@ -54,6 +54,9 @@ import {
   Popover,
   PopoverContext,
   type PopoverProps,
+  Tooltip,
+  TooltipContext,
+  type TooltipProps,
   useSlottedContext,
 } from 'react-aria-components';
 import { measureCell } from '../cell-metrics.ts';
@@ -413,6 +416,11 @@ function Surface({
     };
   }, []);
 
+  // A tooltip whose words fit on one row is that row, in reverse video, with
+  // a cell of it either side; when they wrap, it is framed as a popover is.
+  // The words wrap at the same width either way, so which it is never
+  // changes what it holds.
+  const row = kind === 'tooltip' && (scroll?.total ?? 1) <= 1;
   const padX = Math.max(0, Math.floor(padding.x));
   const padY = Math.max(0, Math.floor(padding.y));
   const draw = useMemo(
@@ -451,13 +459,15 @@ function Surface({
       className={cx(
         'rk-overlay',
         sheet && 'rk-overlay-sheet',
+        kind === 'tooltip' && 'rk-overlay-tooltip',
+        row && 'rk-overlay-row',
         minCols === 'trigger' && 'rk-overlay-min-trigger',
       )}
       style={style}
     >
       <Screen
         draw={draw}
-        contentInset={{ x: 1 + padX, y: 1 + padY }}
+        contentInset={row ? { x: 1, y: 0 } : { x: 1 + padX, y: 1 + padY }}
         fallback={{ width: 2, height: 2 }}
         {...(painter === undefined ? {} : { painter })}
       >
@@ -567,6 +577,68 @@ export function OverlayPopover({
         {children}
       </Surface>
     </Popover>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tooltip
+
+export interface OverlayTooltipProps
+  extends Omit<
+    TooltipProps,
+    | 'children'
+    | 'className'
+    | 'style'
+    | 'offset'
+    | 'crossOffset'
+    | 'containerPadding'
+    | 'UNSTABLE_portalContainer'
+  > {
+  readonly children?: ReactNode;
+  readonly className?: string;
+  /** The painter. By default, the painter of the screen its trigger is in. */
+  readonly painter?: PainterName;
+}
+
+/**
+ * A hint beside its trigger: React Aria's `Tooltip`, on the cell grid of its
+ * trigger's screen, on the row next to it with no gap. One row of reverse
+ * video, or framed heavy when its words wrap, at most 40 cells wide. Never a
+ * sheet: a tooltip is shown on hover and keyboard focus, not on touch.
+ */
+export function OverlayTooltip({
+  children,
+  className,
+  painter,
+  placement = 'top',
+  ...aria
+}: OverlayTooltipProps): ReactNode {
+  const container = useContext(LayerContext);
+  const context = useSlottedContext(TooltipContext);
+  const triggerRef = aria.triggerRef ?? context?.triggerRef;
+  const anchor = useCallback(() => triggerRef?.current, [triggerRef]);
+  const origin = useOrigin(anchor);
+  return (
+    <Tooltip
+      {...aria}
+      {...origin.contexts}
+      placement={placement}
+      offset={0}
+      crossOffset={0}
+      containerPadding={0}
+      className={cx('rk-overlay-tooltip-root', className)}
+      {...(container === null ? {} : { UNSTABLE_portalContainer: container })}
+    >
+      <Surface
+        kind="tooltip"
+        anchor={anchor}
+        sheet={false}
+        padding={{ x: 1, y: 0 }}
+        painter={painter ?? origin.painter}
+      >
+        {children}
+      </Surface>
+    </Tooltip>
   );
 }
 

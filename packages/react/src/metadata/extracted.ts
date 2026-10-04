@@ -1008,11 +1008,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -1047,11 +1049,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<OverlaySurfaceOptions, 'minCols'>"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -1121,11 +1125,53 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'UNSTABLE_portalContainer' >"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "OverlayTooltip": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "The painter. By default, the painter of the screen its trigger is in."
+      }
+    ],
+    "inherits": [
+      "Omit< TooltipProps, | 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'containerPadding' | 'UNSTABLE_portalContainer' >"
+    ],
+    "tokens": [
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -1310,6 +1356,26 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
     ]
+  },
+  "Tooltip": {
+    "file": "tooltip.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The hint: a few words, wrapping at 36 cells."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<OverlayTooltipProps, 'children' | 'className'>"
+    ],
+    "tokens": []
   },
   "Tree": {
     "file": "tree.tsx",
