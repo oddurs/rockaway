@@ -3,8 +3,13 @@
 #   foreground: #d8dee9 -> #e5ebf6
 #   blue: #81a1c1 -> #90b1d1
 #   red: #bf616a -> #f49098
-#   bright-red: #bf616a -> #e17f87
+#   bright-red: #bf616a -> #ffd5d7
 #   magenta: #b48ead -> #c9a2c2
+#   bright-blue: #81a1c1 -> #b9dbfc
+#   bright-cyan: #8fbcbb -> #b6e5e3
+#   bright-green: #a3be8c -> #c7e3b0
+#   bright-yellow: #ebcb8b -> #fddd9c
+#   bright-magenta: #b48ead -> #f4cbec
 #
 # MIT licence. Copyright (c) 2016-present Sven Greb.
 #
@@ -55,10 +60,10 @@ white = "#e5e9f0"
 
 [colors.bright]
 black = "#4c566a"
-red = "#e17f87"
-green = "#a3be8c"
-yellow = "#ebcb8b"
-blue = "#81a1c1"
-magenta = "#b48ead"
-cyan = "#8fbcbb"
+red = "#ffd5d7"
+green = "#c7e3b0"
+yellow = "#fddd9c"
+blue = "#b9dbfc"
+magenta = "#f4cbec"
+cyan = "#b6e5e3"
 white = "#eceff4"
