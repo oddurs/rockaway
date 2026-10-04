@@ -1141,7 +1141,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
-      "--rk-bg-surface",
       "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -1152,6 +1151,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-focus-offset",
       "--rk-focus-width",
       "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light",
       "--rk-x-2"
     ]
   },
@@ -1207,7 +1212,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
-      "--rk-bg-surface",
       "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -1218,6 +1222,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-focus-offset",
       "--rk-focus-width",
       "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light",
       "--rk-x-2"
     ]
   },
