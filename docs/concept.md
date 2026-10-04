@@ -248,7 +248,17 @@ whole CSS pixels on its own, whatever box it is in:
   browser's layout unit (1/64 px), not as `cells × cell`. A run of eight cells
   and eight runs of one would otherwise round differently, and the same column
   would land in different places on different rows. The cell itself stays the
-  font's true advance, which is where text puts its letters.
+  font's true advance, which is where text puts its letters. Without this, the
+  error is not small: two hundred one-cell boxes sized one by one end a fifth of
+  a cell or more short of two hundred cells in Chromium and WebKit, each box
+  losing a hundredth of a pixel to its rounding; telescoped, the same row is
+  exact in every engine.
+- Counting cells in a measured length is two questions. How many **fit** in a
+  box the page gives, a container or a viewport, allows only the snap one box's
+  rounding takes (1/32 px), because the box's edge is hard. How many **cover** a
+  length laid out in cells, such as a trigger made of several runs, allows a
+  sixteenth of a cell, because errors add across boxes and one cell too many is
+  the failure. `cellsIn` and `cellsCovering` are the two answers.
 
 Worth remembering when adding a painter: **the geometry is right when
 neighbours join without being told they are neighbours**, and only a picture of
