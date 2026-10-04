@@ -58,6 +58,21 @@ import { menuEnd, menuMarks } from './menu.pure.ts';
 import type { OverlayDivider } from './overlay.pure.ts';
 import { Popover, type PopoverProps } from './popover.tsx';
 
+/**
+ * React Aria's triggers, re-exported beside Menu so they are the instances
+ * Menu's popover reads, and so code that may import only `@rockaway/*` (a
+ * registry item, an example app) can open a menu at all, as Link re-exports
+ * `RouterProvider` (0168).
+ *
+ *   import { Button, Menu, MenuItem, MenuTrigger } from '@rockaway/react';
+ *
+ *   <MenuTrigger>
+ *     <Button>File</Button>
+ *     <Menu aria-label="File">…</Menu>
+ *   </MenuTrigger>
+ */
+export { MenuTrigger, SubmenuTrigger } from 'react-aria-components';
+
 /** Runs before paint in a browser, and not at all on a server. */
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 

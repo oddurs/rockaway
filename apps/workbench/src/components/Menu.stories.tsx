@@ -10,11 +10,12 @@ import {
   type MenuProps,
   MenuSection,
   MenuSeparator,
+  MenuTrigger,
+  SubmenuTrigger,
 } from '@rockaway/react';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useState } from 'react';
-import { MenuTrigger, SubmenuTrigger } from 'react-aria-components';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { measured } from '../settled.ts';
 
