@@ -14,8 +14,10 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { frameBuffer } from '@rockaway/react';
+import meta from '@rockaway/react/meta.json' with { type: 'json' };
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { items } from '../src/registry/items.ts';
 
 const site = path.join(import.meta.dirname, '..');
 
@@ -24,6 +26,9 @@ const types: Record<string, string> = {
   '.js': 'text/javascript',
   '.css': 'text/css',
   '.woff2': 'font/woff2',
+  '.txt': 'text/plain; charset=utf-8',
+  '.md': 'text/markdown; charset=utf-8',
+  '.json': 'application/json',
 };
 
 /** Serve `dir` at `base`, and nothing anywhere else, as Pages would. */
@@ -49,6 +54,39 @@ function serve(dir: string, base: string): Promise<Server> {
   return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)));
 }
 
+/**
+ * Wait until the page has stopped moving, as the workbench's `measured()`
+ * does (cairn 0164): the face the page is set in loaded, then every screen
+ * measured and drawn at its own size.
+ *
+ * Not the painted frame's arrival: the server sends the chrome (0126), drawn
+ * at its smallest and stretched to fit until the screen has measured (0238),
+ * so `.rk-frame` is there before any script runs. A screen has measured when
+ * its cell is written in pixels rather than `1ch`, and its columns fill its
+ * box. On a slow CI runner that is well after the page loads; reading the
+ * columns before it got the smallest frame's 14.
+ */
+async function settled(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const { font } = getComputedStyle(document.documentElement);
+    if (font !== '') await document.fonts.load(font);
+    await document.fonts.ready;
+  });
+  await page.waitForFunction(() => {
+    const screens = [...document.querySelectorAll<HTMLElement>('.rk-screen')];
+    return (
+      screens.length > 0 &&
+      screens.every((screen) => {
+        const written = getComputedStyle(screen).getPropertyValue('--rk-cell-width').trim();
+        if (!written.endsWith('px')) return false;
+        const cell = Number.parseFloat(written);
+        const cols = Number(screen.dataset.rkCols);
+        return Math.abs(screen.getBoundingClientRect().width - cols * cell) < cell;
+      })
+    );
+  });
+}
+
 let browser: Browser;
 beforeAll(async () => {
   browser = await chromium.launch();
@@ -69,9 +107,12 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     out = mkdtempSync(path.join(tmpdir(), 'rockaway-site-'));
     // `--force`: the content layer caches rendered Markdown, and does not know
     // when the pipeline that rendered it has changed.
+    // Vitest puts its own BASE_URL in the environment, and a build's
+    // prerender reads import.meta.env.BASE_URL from there: it has to go.
+    const { BASE_URL: _, ...env } = process.env;
     execFileSync('pnpm', ['exec', 'astro', 'build', '--force', '--outDir', out], {
       cwd: site,
-      env: { ...process.env, SITE_BASE: base, ASTRO_TELEMETRY_DISABLED: '1' },
+      env: { ...env, SITE_BASE: base, ASTRO_TELEMETRY_DISABLED: '1' },
       stdio: 'pipe',
     });
     server = await serve(out, base);
@@ -88,8 +129,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     });
     page.on('pageerror', (error) => failures.push(`page: ${error.message}`));
     await page.goto(`${origin}${base}`);
-    await page.waitForSelector('.rk-frame[data-rk-painted]');
-    await page.evaluate(() => document.fonts.ready);
+    await settled(page);
   });
 
   afterAll(async () => {
@@ -179,6 +219,71 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.styled).toBe(0);
   });
 
+  test('draws the foundations with the system, for a phone, with no script (0106)', async () => {
+    const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    const scripts: string[] = [];
+    phone.on('request', (r) => {
+      if (r.resourceType() === 'script') scripts.push(r.url());
+    });
+    const pages = [
+      '',
+      'grid/',
+      'strictness/',
+      'glyphs/',
+      'colour/',
+      'themes/',
+      'tokens/',
+      'accessibility/',
+    ];
+    for (const p of pages) {
+      const response = await phone.goto(`${origin}${base}foundations/${p}`);
+      expect(response?.ok(), p).toBe(true);
+      const found = await phone.evaluate(() => ({
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        unlabelled: [...document.querySelectorAll('figure[role="img"]')].filter(
+          (f) => !f.getAttribute('aria-label'),
+        ).length,
+        painted: document.querySelectorAll('[data-rk-painted] .rk-run').length,
+      }));
+      // Only code and tables scroll, inside their own boxes.
+      expect(found.overflow, p).toBe(0);
+      expect(found.unlabelled, p).toBe(0);
+      if (['grid/', 'glyphs/', 'themes/'].includes(p)) expect(found.painted, p).toBeGreaterThan(0);
+    }
+    // Every theme's island, in each mode it declares, with its terminal files.
+    await phone.goto(`${origin}${base}foundations/themes/`);
+    const themes = await phone.evaluate(() => ({
+      islands: document.querySelectorAll('figure[data-rk-theme]').length,
+      files: [...document.querySelectorAll<HTMLAnchorElement>('a[download]')].map((a) => a.href),
+    }));
+    expect(themes.islands).toBe(16);
+    expect(themes.files).toHaveLength(16 * 4);
+    const file = await phone.request.get(themes.files[0] ?? '');
+    expect(file.ok()).toBe(true);
+    expect((await file.text()).length).toBeGreaterThan(100);
+    await phone.close();
+    expect(scripts).toEqual([]);
+  });
+
+  test('publishes every document in docs/, linked to each other on the site (0107)', async () => {
+    const reader = await browser.newPage();
+    const response = await reader.goto(`${origin}${base}getting-started/`);
+    expect(response?.ok()).toBe(true);
+    const found = await reader.evaluate(() => ({
+      title: document.title,
+      h1: document.querySelector('article.rk-prose h1')?.textContent,
+      concept: [...document.querySelectorAll('a')]
+        .map((a) => a.getAttribute('href'))
+        .filter((href) => href?.includes('concept')),
+    }));
+    await reader.close();
+    expect(found.title).toBe('Getting started — rockaway');
+    expect(found.h1).toBe('Getting started');
+    // A document's link to another stays on the site, under its base.
+    expect(found.concept.length).toBeGreaterThan(0);
+    for (const href of found.concept) expect(href?.startsWith(`${base}concept/`)).toBe(true);
+  });
+
   test('sets a Markdown alert as a callout, framed by the cell, with no script', async () => {
     const reader = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await reader.goto(`${origin}${base}concept/`);
@@ -225,6 +330,53 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.content).toBeGreaterThan(row);
   });
 
+  test('serves the registry: each item as its source, and drawn on its page (0046)', async () => {
+    const json = async (url: string) => {
+      const response = await fetch(url);
+      expect(response.status, url).toBe(200);
+      return response.json();
+    };
+    const index = await json(`${origin}${base}r/registry.json`);
+    expect(index.items.map((i: { name: string }) => i.name)).toEqual(items.map((i) => i.name));
+    for (const { name } of items) {
+      const item = await json(`${origin}${base}r/${name}.json`);
+      for (const file of item.files) {
+        const source = path.join(site, 'src/registry', name, path.basename(file.path));
+        expect(file.content).toBe(readFileSync(source, 'utf8'));
+      }
+    }
+
+    const reader = await browser.newPage();
+    const errors: string[] = [];
+    reader.on('pageerror', (error) => errors.push(error.message));
+    reader.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    await reader.goto(`${origin}${base}registry/`);
+    for (const { name } of items) {
+      await reader.waitForSelector(`[data-registry-item="${name}"] .rk-frame[data-rk-painted]`);
+    }
+    const shown = await reader.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('[data-registry-item]')].map((section) => ({
+        name: section.dataset.registryItem,
+        install: section.querySelector('pre')?.textContent,
+        // The frame's content stays inside it: nothing wider than the screen.
+        overflow: [...section.querySelectorAll<HTMLElement>('.rk-screen .rk-content')].some(
+          (content) => content.scrollWidth > Math.ceil(content.clientWidth),
+        ),
+      })),
+    );
+    await reader.close();
+    expect(errors).toEqual([]);
+    expect(shown.map((s) => s.name)).toEqual(items.map((i) => i.name));
+    for (const s of shown) {
+      expect(s.install).toMatch(
+        new RegExp(`^npx shadcn@latest add https?://\\S+${base}r/${s.name}\\.json$`),
+      );
+      expect(s.overflow, s.name).toBe(false);
+    }
+  });
+
   test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
     const reader = await browser.newPage();
     const scripts: string[] = [];
@@ -260,6 +412,35 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     // No colour is written into the page: roles are classes.
     expect(found.styled).toBe(0);
     expect(found.blocks).toBe(0);
+  });
+
+  test('serves llms.txt, and every link in it, as text an agent can read (0048)', async () => {
+    const read = async (url: string) => {
+      const response = await fetch(url);
+      expect(response.status, url).toBe(200);
+      return response.text();
+    };
+    const index = await read(`${origin}${base}llms.txt`);
+    expect(index.startsWith('# rockaway\n\n> ')).toBe(true);
+    // The links are absolute, where SITE_URL places the site; here, they are
+    // followed on the site as built, under its base.
+    const links = [...index.matchAll(/\]\((https?:[^)]+)\)/g)].map(([, url]) => new URL(url ?? ''));
+    const own = links.filter((url) => url.hostname !== 'github.com');
+    expect(own.filter((url) => !url.pathname.startsWith(base)).map(String)).toEqual([]);
+    const names = meta.components.map((c) => c.name);
+    expect(own.filter((url) => url.pathname.startsWith(`${base}components/`))).toHaveLength(
+      names.length,
+    );
+    for (const url of own) {
+      const body = await read(`${origin}${url.pathname}`);
+      if (url.pathname.endsWith('.md')) expect(body).toMatch(/^# \S/);
+    }
+    const full = await read(`${origin}${base}llms-full.txt`);
+    for (const name of names) expect(full).toContain(`\n# ${name}\n`);
+    const button = await read(`${origin}${base}components/button.md`);
+    for (const snapshot of meta.components.find((c) => c.name === 'Button')?.snapshots ?? []) {
+      expect(button).toContain(`\n${snapshot.text}\n`);
+    }
   });
 
   test('the cell is the font, and the fallback has the same cell', async () => {

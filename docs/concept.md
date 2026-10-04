@@ -168,11 +168,14 @@ font. Here that means:
   one cell tall and as many cells wide as it holds. Nothing painted takes its
   height from the font, so a background fills its cell and reverse video is a
   solid block.
-- **Box drawing and block elements are geometry, in the engine.**
+- **Box drawing, block elements and braille are geometry, in the engine.**
   `packages/grid/src/shape.ts` describes every glyph the junction table can
-  produce, and every block element, as rectangles and arcs measured from the
-  cell's own edges and centre. Pure data: a stylesheet or a canvas could read
-  it.
+  produce, every block element and all 256 braille patterns, as rectangles and
+  arcs measured from the cell's own edges and centre. Pure data: a stylesheet
+  or a canvas could read it. Braille is drawn for the same reason the rest is:
+  many monospace fonts, the site's among them, have none (`0166`), and a
+  spinner should not fall back to another face. Its 256 patterns share one rule
+  with a layer for each dot, raised by the cell's `data-rk-dots`.
 - **A stylesheet generated from it draws them.** `packages/css/src/shapes.css`
   is written from those shapes at build time and committed; a test fails if it
   is stale. A cell holding `┬` says so — `data-rk-shape="box-0111"`, its
@@ -345,6 +348,15 @@ constraint on component design — state cannot be carried by hue alone, which i
 why attributes (bold, dim, reverse, underline) and marks carry it too, and why
 the system passes forced-colors mode without special-casing.
 
+The same constraint shapes how it answers `prefers-contrast: more` (`0065`).
+A pixel system would ship a third palette; a terminal has sixteen colours and
+its attributes. So increased contrast re-reads the one palette: muted text
+becomes the foreground, coloured text takes the bright slot (as a terminal's
+bold does), a fill becomes reverse video, lines get a step heavier and the
+focus ring thicker, and disabled is struck through so it never rests on
+dimness alone. Text is held to 7:1 there, by the same gate, and not a cell
+moves.
+
 ## 9. States are one vocabulary
 
 Every state is drawn one way, in every component (decision `0118`), and a
@@ -415,6 +427,49 @@ headless browser hides scrollbars and a native bar measures nothing there. A
 fifth test browser turns classic scrollbars on, so the stories that scroll are
 also seen the way a reader with a mouse sees them.
 
+## 11. Overlays float on the same grid
+
+Popover, Dialog, Menu, Select, Tooltip, Combobox and CommandPalette all float
+above a screen (decision `0128`). React Aria owns their behaviour: where they
+go in pixels, focus contained and returned, scroll locked, Escape and a press
+outside. The grid owns four things React Aria does not know about.
+
+- **Whole cells.** An overlay's surface is a screen of its own, framed like
+  any other, and React Aria's pixel position is moved onto the cell grid of
+  the screen its trigger is in. A popover sits on the row next to its
+  trigger, starting in its column, with no gap; it flips and shifts as React
+  Aria decides, and lands on cells wherever it ends up. A modal is centred on
+  the same grid. The move is a laid-out offset, never a transform: a layer
+  translated by a fraction of a pixel is snapped after it moves, and its
+  frame's strokes part.
+- **Contexts across the portal.** Overlays open into one `OverlayLayer`,
+  inside whatever carries the app's theme, and each copies its trigger's
+  nearest theme, mode, density, motion and conformance onto itself, and its
+  screen's painter, and keeps them current while it is open. A popover
+  opened from a touch-density pane is drawn at touch density.
+- **Elevation without shadows** (`0075`). A popover is framed heavy, a modal
+  double, one weight above the page, and a modal fills the viewport behind it
+  with the theme's light shade, drawn by the cell renderer on the page's
+  ground, hidden from the reader. A press on it closes the modal only when the
+  modal is dismissable.
+- **Snapshots.** `screenshot()` composes the open overlays over the screen
+  beneath them, in the order they opened, cut to its cells:
+
+```
+░░░░░╔═══════════════════════════╗░░░░░░
+░░░░░║ Discard changes?          ║░░░░░░
+░░░░░║ Three files will be lost. ║░░░░░░
+░░░░░╚═══════════════════════════╝░░░░░░
+```
+
+An overlay whose content is taller than it may be scrolls, with no native
+scrollbar: the frame's right edge carries the thumb, so the position is shown
+in cells it already has. Under 60 cells across, or at touch density, a modal
+is a full-width sheet on the bottom rows and a popover is as wide as the
+viewport. There is no motion: an overlay is there on the next frame, fully
+drawn. Nested overlays, a menu in a dialog, stack in the order they open and
+close innermost first, each returning focus to its own trigger.
+
 ---
 
 ## What we borrowed, and from whom
@@ -484,7 +539,11 @@ cairn carries these as acceptance criteria, and the `component` template in
 2. **Both painters render it identically,** measured in cells.
 3. **Chrome is `aria-hidden`;** the accessible name never contains a glyph.
 4. **Behaviour comes from the behaviour layer.** No hand-rolled focus or
-   keyboard logic.
+   keyboard logic. React Aria handles the keys inside a component; the
+   keymap (`0141`) is the one handler for the page's own, so a shortcut is
+   bound with `useKeymap` and never with a listener of a component's: one
+   place decides which scope a key belongs to, keeps plain keys out of text
+   fields, finds conflicts, and lists every shortcut in the help screen.
 5. **Styled from `data-*` state and semantic tokens only.** A component that
    needs a reference token is a missing semantic.
 6. **Ships a text snapshot,** which is its documentation as much as its test.

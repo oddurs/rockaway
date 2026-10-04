@@ -8,12 +8,15 @@ import { apca, type Oklch, type View, worstContrast } from './color.ts';
 import type { ColorValue, ResolverDocument } from './dtcg.ts';
 import { type GeneratedFiles, resolverFile } from './generate.ts';
 import { type Mode, modes } from './inputs.ts';
-import { pairs } from './pairs.ts';
+import { minimumIn, pairs } from './pairs.ts';
 import { resolveTree, resolveValue } from './resolve.ts';
+import type { Contrast } from './semantic.ts';
 
 export interface ContrastResult {
   readonly theme: string;
   readonly mode: string;
+  /** The contrast context (0065): `standard`, or `more`, where text is held to 7:1. */
+  readonly contrast: string;
   readonly fg: string;
   readonly bg: string;
   /** The ratio in the view where the pair reads worst. */
@@ -46,31 +49,43 @@ export function checkContrast(files: GeneratedFiles): ContrastResult[] {
   const resolver = files.get(resolverFile) as ResolverDocument;
   const themes = Object.entries(resolver.modifiers.theme?.contexts ?? { default: [] });
   return themes.flatMap(([theme, refs]) =>
-    declaredModes(files, refs[0]?.$ref).flatMap((mode) => {
-      const tree = resolveTree(files, { theme, mode });
-      const color = (path: string) => oklch(resolveValue(tree, path), path);
-      return pairs.flatMap((p) =>
-        p.bg.map((bg) => {
-          const [f, b] = [color(p.fg), color(bg)];
-          const { ratio, view } = worstContrast(f, b);
-          return {
-            theme,
-            mode,
-            fg: p.fg,
-            bg,
-            ratio,
-            view,
-            margin: ratio - p.min,
-            apca: apca(f, b),
-            min: p.min,
-            pass: ratio >= p.min,
-          };
-        }),
-      );
-    }),
+    declaredModes(files, refs[0]?.$ref).flatMap((mode) =>
+      contrastsOf(resolver).flatMap((contrast) => {
+        const tree = resolveTree(files, { theme, mode, contrast });
+        const color = (path: string) => oklch(resolveValue(tree, path), path);
+        return pairs.flatMap((p) => {
+          const min = minimumIn(p, contrast);
+          return p.bg.map((bg) => {
+            const [f, b] = [color(p.fg), color(bg)];
+            const { ratio, view } = worstContrast(f, b);
+            return {
+              theme,
+              mode,
+              contrast,
+              fg: p.fg,
+              bg,
+              ratio,
+              view,
+              margin: ratio - min,
+              apca: apca(f, b),
+              min,
+              pass: ratio >= min,
+            };
+          });
+        });
+      }),
+    ),
   );
 }
 
+/** The contrast contexts the resolver declares; a resolver without one has only `standard`. */
+function contrastsOf(resolver: ResolverDocument): readonly Contrast[] {
+  const contexts = resolver.modifiers.contrast?.contexts;
+  return contexts === undefined ? ['standard'] : (Object.keys(contexts) as Contrast[]);
+}
+
 export function describeFailure(r: ContrastResult): string {
-  return `${r.theme}: ${r.fg} on ${r.bg} (${r.mode}, ${r.view}): ${r.ratio.toFixed(2)}:1, needs ${r.min}:1`;
+  const where =
+    r.contrast === 'more' ? `${r.mode}, more contrast, ${r.view}` : `${r.mode}, ${r.view}`;
+  return `${r.theme}: ${r.fg} on ${r.bg} (${where}): ${r.ratio.toFixed(2)}:1, needs ${r.min}:1`;
 }
