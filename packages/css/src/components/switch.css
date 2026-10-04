@@ -115,6 +115,14 @@
       forced-color-adjust: none;
     }
 
+    /* The reversing rules set the track's ink on the switch itself, so the
+     * switch opts out where they do (0201's check reads it there). Every
+     * colour it draws with is a system colour here, so nothing else moves. */
+    .rk-switch-button[data-selected],
+    .rk-switch-button[data-pressed] {
+      forced-color-adjust: none;
+    }
+
     .rk-switch-track [data-rk-shape] {
       --rk-ink-colour: currentColor;
     }
