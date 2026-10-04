@@ -3,8 +3,10 @@ id: 252
 uid: 12006095-2b7b-479a-abd0-7f23926e6a9a
 title: Check the three component rules that only review holds today
 type: chore
-status: ready
+status: doing
 milestone: v0.1
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 created: 2026-10-03
 updated: 2026-10-03
 priority: p2
