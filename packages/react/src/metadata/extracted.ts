@@ -100,6 +100,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "name": "style",
         "type": "React.CSSProperties",
         "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<HTMLButtonElement>",
+        "required": false,
+        "description": "The button element, for an app that focuses it or a Keymap binding that presses it (cairn 0224). An object or a callback; Button keeps its own beside it."
       }
     ],
     "inherits": [
