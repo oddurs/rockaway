@@ -1,7 +1,8 @@
 import { toText } from '@rockaway/grid';
 import { type Glyphs, glyphsFor } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type FrameOptions, frameBuffer } from './frame.tsx';
+import { frameBuffer } from './frame.pure.ts';
+import type { FrameOptions } from './frame.tsx';
 
 const cells = (width: number, height: number, options: FrameOptions, glyphs?: Glyphs): string =>
   toText(frameBuffer({ width, height }, options, glyphs), { trimEnd: false });

@@ -34,30 +34,70 @@ type Density = (typeof DENSITIES)[number];
 const PAINTERS: readonly PainterName[] = ['glyph', 'rule'];
 const SETS: readonly BorderSetName[] = ['single', 'double', 'heavy', 'rounded', 'ascii'];
 
-/** A frame with every kind of seam: corners, tees on all four sides, and a crossing. */
-function junctions(border: BorderSetName, rule: BorderSetName = border) {
+/**
+ * Where a junction frame's column rule falls: after the longest title it
+ * carries, a cell of air and a cell of line, so every title reads whole and
+ * the tee under the top edge is plainly a tee (0175 sets what happens when a
+ * title does not fit; `label.test.ts` in the grid proves that).
+ */
+const RULE_AT = 11;
+/** A junction frame: the rule, and as much again after it. */
+const JUNCTION = { cols: 18, rows: 6 } as const;
+
+/**
+ * A frame with every kind of seam: corners, tees on all four sides, and a
+ * crossing. Titled with what it is: its border set, unless it mixes two.
+ */
+function junctions(border: BorderSetName, rule: BorderSetName = border, title: string = border) {
   return ({ width, height }: Size): Buffer =>
     Buffer.create({ width, height }).draw((d) => {
       const area = rect(0, 0, width, height);
-      drawBox(d, area, { set: borderSets[border], title: border });
+      drawBox(d, area, { set: borderSets[border], title });
       drawDivider(d, area, 3, { set: borderSets[rule] });
-      drawColumnRules(d, area, [7], { set: borderSets[rule] });
+      drawColumnRules(d, area, [RULE_AT], { set: borderSets[rule] });
       drawText(d, { x: 2, y: 1 }, 'cell');
     });
 }
 
-/** Block elements, and a scrollbar thumb that has to be one solid run. */
+/**
+ * Block elements, each kind on a row of its own and named beside it, and a
+ * scrollbar down the right edge: a thumb that has to be one solid run over its
+ * track. The kinds start in one column, so each row meets the rows either side
+ * of it.
+ *
+ * Every mark that reaches an edge of its cell meets one that reaches the same
+ * edge from the other side, or nothing: at 200% Chrome snaps a background to
+ * whole CSS pixels, so ink that reaches an edge on a half-pixel boundary lands
+ * a device pixel inside the next cell, and against a mark with no line on that
+ * edge the check reads it as a leak. Hence the order: the eighth bars first,
+ * the halves so that `▌` stands on `▕`, and the quadrants so that each one
+ * that reaches its right edge is followed by one that reaches its left.
+ */
+const BLOCKS: readonly (readonly [label: string, cells: string])[] = [
+  ['eighth bars', '▁▂▃▄▅▆▇█'],
+  ['shades', '█▓▒░'],
+  ['eighth edges', '▔▕▏'],
+  ['halves', '▀▌▐▄'],
+  ['quadrants', '▗▙▛▜▚▞▟▖▝▘'],
+  ['solid run', '██████████'],
+  ['shade runs', '░░░░░░░░░░'],
+  ['', '▓▓▓▓▓▓▓▓▓▓'],
+];
+/** The longest name and a cell of air. */
+const NAMES = 13;
+/** The names, the widest row, two cells of air, and the scrollbar. */
+const BLOCK = { cols: NAMES + 10 + 2 + 1, rows: BLOCKS.length } as const;
+/** The scrollbar's thumb, in rows; the track is the rest. */
+const THUMB = 6;
+
 const blocks = (): Buffer =>
-  fromText(
-    [
-      '█▓▒░ ▁▂▃▄▅▆▇█',
-      '█  ▀▄▌▐▔▕▏',
-      '█  ▖▗▘▝▙▚▛▜▞▟',
-      '█  ████████',
-      '░  ░░░░░░░░',
-      '░  ▓▓▓▓▓▓▓▓',
-    ].join('\n'),
-  );
+  Buffer.create({ width: BLOCK.cols, height: BLOCK.rows }).draw((d) => {
+    BLOCKS.forEach(([label, cells], y) => {
+      drawText(d, { x: 0, y }, label, { style: { fg: 'fg.muted', attrs: Attr.none } });
+      drawText(d, { x: NAMES, y }, cells);
+      drawText(d, { x: BLOCK.cols - 1, y }, y < THUMB ? '█' : '░');
+    });
+  });
 
 /** Reverse video and a filled background, row on row: no stripes between them. */
 const filled = ({ width, height }: Size): Buffer =>
@@ -89,30 +129,30 @@ function Matrix({ density }: { density: Density }) {
               data-testid={`${density} ${painter} ${set}`}
               draw={junctions(set)}
               painter={painter}
-              cols={14}
-              rows={6}
+              cols={JUNCTION.cols}
+              rows={JUNCTION.rows}
             />
           ))}
           <Screen
             data-testid={`${density} ${painter} mixed`}
-            draw={junctions('double', 'single')}
+            draw={junctions('double', 'single', 'mixed')}
             painter={painter}
-            cols={14}
-            rows={6}
+            cols={JUNCTION.cols}
+            rows={JUNCTION.rows}
           />
           <Screen
             data-testid={`${density} ${painter} heavy rules`}
-            draw={junctions('single', 'heavy')}
+            draw={junctions('single', 'heavy', 'weights')}
             painter={painter}
-            cols={14}
-            rows={6}
+            cols={JUNCTION.cols}
+            rows={JUNCTION.rows}
           />
           <Screen
             data-testid={`${density} ${painter} blocks`}
             draw={blocks}
             painter={painter}
-            cols={14}
-            rows={6}
+            cols={BLOCK.cols}
+            rows={BLOCK.rows}
           />
           <Screen
             data-testid={`${density} ${painter} filled`}
@@ -144,15 +184,23 @@ type Story = StoryObj<typeof meta>;
 const matrix = (density: Density): Story => ({
   args: { density },
   play: async ({ canvasElement }) => {
-    // A title gives way to the rule under it: it reads whole, or ends in the
-    // ellipsis, and is never cut by the tee (0175).
+    // Every frame is wide enough for its title, so each one reads whole: a
+    // reader is told what each frame is, not shown an ellipsis.
+    const titled = [
+      ...SETS.map((set) => [set, set]),
+      ['mixed', 'mixed'],
+      ['heavy rules', 'weights'],
+    ];
     for (const painter of PAINTERS) {
-      for (const set of SETS) {
-        const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${set}"]`);
+      for (const [id, name] of titled) {
+        const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${id}"]`);
         const top = screen?.querySelector('.rk-row')?.textContent ?? '';
-        const title = top.split(' ')[1] ?? '';
-        expect(title === set || title.endsWith('…'), `${set}: ${top}`).toBe(true);
+        expect(top.split(' ')[1], `${id}: ${top}`).toBe(name);
       }
+      // And every row of blocks says what it is.
+      const blocks = canvasElement.querySelector(`[data-testid="${density} ${painter} blocks"]`);
+      const rows = [...(blocks?.querySelectorAll('.rk-row') ?? [])].map((r) => r.textContent ?? '');
+      expect(rows.map((r) => r.slice(0, NAMES).trim())).toEqual(BLOCKS.map(([label]) => label));
     }
     const run = runner();
     if (!run) return;
@@ -188,7 +236,12 @@ export const FontDrawn: Story = {
           '.font-drawn [data-rk-shape] { background-image: none; -webkit-text-fill-color: currentColor; }'
         }
       </style>
-      <Screen data-testid="font" draw={junctions('single')} cols={14} rows={6} />
+      <Screen
+        data-testid="font"
+        draw={junctions('single')}
+        cols={JUNCTION.cols}
+        rows={JUNCTION.rows}
+      />
     </div>
   ),
   play: async ({ canvasElement }) => {
@@ -273,7 +326,14 @@ async function inkRows(
  */
 export const Prints: Story = {
   args: { density: 'normal' },
-  render: () => <Screen data-testid="print" draw={junctions('single')} cols={14} rows={6} />,
+  render: () => (
+    <Screen
+      data-testid="print"
+      draw={junctions('single')}
+      cols={JUNCTION.cols}
+      rows={JUNCTION.rows}
+    />
+  ),
   play: async ({ canvas }) => {
     const run = runner();
     if (!run) return;
@@ -321,11 +381,21 @@ export const SubPixel: Story = {
               fontSize: `${size}px`,
               paddingInlineStart: `${shift}px`,
               paddingBlockStart: `${shift}px`,
+              // Each screen on its own: a screen's edge ink lands up to a
+              // device pixel past it at 200%, so screens that touch would
+              // each be read with the other's ink in them.
+              display: 'grid',
+              gap: 'var(--rk-y-1)',
             }}
           >
-            <Screen draw={blocks} cols={14} rows={6} />
-            <Screen draw={junctions('double')} painter="rule" cols={14} rows={6} />
-            <Screen draw={junctions('rounded')} cols={14} rows={6} />
+            <Screen draw={blocks} cols={BLOCK.cols} rows={BLOCK.rows} />
+            <Screen
+              draw={junctions('double')}
+              painter="rule"
+              cols={JUNCTION.cols}
+              rows={JUNCTION.rows}
+            />
+            <Screen draw={junctions('rounded')} cols={JUNCTION.cols} rows={JUNCTION.rows} />
           </div>
         )),
       )}
@@ -337,6 +407,90 @@ export const SubPixel: Story = {
     const report = await expectContinuity(canvasElement, { capture: run.capture });
     expect(report.layers).toBe(27);
     expect(report.joins).toBeGreaterThan(900);
+  },
+};
+
+/** Every braille pattern, 32 to a row. */
+const brailles = (): Buffer =>
+  fromText(
+    Array.from({ length: 8 }, (_, row) =>
+      Array.from({ length: 32 }, (_, col) => String.fromCodePoint(0x2800 + row * 32 + col)).join(
+        '',
+      ),
+    ).join('\n'),
+  );
+
+/**
+ * Braille is drawn by the cell, like blocks (cairn 0166): all 256 patterns, at
+ * every density, read back pixel by pixel — each of a cell's eight dot places
+ * is inked exactly when the pattern raises that dot. The character itself is
+ * transparent, so no font, with braille or without, draws any of it.
+ */
+export const Braille: Story = {
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
+      {DENSITIES.map((density) => (
+        <div key={density} data-density={density}>
+          <Screen data-testid={`braille ${density}`} draw={brailles} cols={32} rows={8} />
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    for (const density of DENSITIES) {
+      const layer = canvas
+        .getByTestId(`braille ${density}`)
+        .querySelector<HTMLElement>('[data-rk-painted]') as HTMLElement;
+      const png = await run.capture(layer);
+      const blob =
+        typeof png === 'string'
+          ? new Blob([Uint8Array.from(atob(png), (c) => c.charCodeAt(0))], { type: 'image/png' })
+          : png;
+      const bitmap = await createImageBitmap(blob);
+      const canvasEl = new OffscreenCanvas(bitmap.width, bitmap.height);
+      const ctx = canvasEl.getContext('2d') as OffscreenCanvasRenderingContext2D;
+      ctx.drawImage(bitmap, 0, 0);
+      const { data, width } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+      const frame = layer.getBoundingClientRect();
+      const dpr = devicePixelRatio;
+      const ox = Math.floor(frame.left + 1e-3);
+      const oy = Math.floor(frame.top + 1e-3);
+      const at = (x: number, y: number): number => {
+        const i = (Math.floor((y - oy) * dpr) * width + Math.floor((x - ox) * dpr)) * 4;
+        return (data[i] ?? 0) + (data[i + 1] ?? 0) + (data[i + 2] ?? 0);
+      };
+      const ground = at(frame.left + 1, frame.top + 1);
+      const wrong: string[] = [];
+      for (const cell of layer.querySelectorAll<HTMLElement>('[data-rk-shape^="braille-"]')) {
+        expect(getComputedStyle(cell).webkitTextFillColor).toBe('rgba(0, 0, 0, 0)');
+        const pattern = (cell.textContent?.codePointAt(0) ?? 0) - 0x2800;
+        const box = cell.getBoundingClientRect();
+        // Dots 1 2 3 7 down the left, 4 5 6 8 down the right.
+        const places: [number, number][] = [
+          [0, 0],
+          [0, 1],
+          [0, 2],
+          [1, 0],
+          [1, 1],
+          [1, 2],
+          [0, 3],
+          [1, 3],
+        ];
+        places.forEach(([col, row], bit) => {
+          const x = box.left + box.width * (0.25 + col / 2);
+          const y = box.top + box.height * (0.125 + row / 4);
+          const inked = Math.abs(at(x, y) - ground) > 96;
+          if (inked !== ((pattern & (1 << bit)) !== 0)) {
+            wrong.push(`${cell.textContent} dot ${bit + 1}`);
+          }
+        });
+      }
+      expect(wrong, density).toEqual([]);
+      expect(layer.querySelectorAll('[data-rk-shape^="braille-"]')).toHaveLength(256);
+    }
   },
 };
 

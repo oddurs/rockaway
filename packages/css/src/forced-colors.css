@@ -68,25 +68,31 @@
       --rk-border-warning: CanvasText;
       --rk-border-danger: CanvasText;
 
-      /* Filled things become the selection colours, the one filled pair the palette has. */
-      --rk-bg-accent-solid: Highlight;
-      --rk-bg-accent-solid-hover: Highlight;
-      --rk-bg-info-solid: Highlight;
-      --rk-bg-info-solid-hover: Highlight;
-      --rk-bg-success-solid: Highlight;
-      --rk-bg-success-solid-hover: Highlight;
-      --rk-bg-warning-solid: Highlight;
-      --rk-bg-warning-solid-hover: Highlight;
-      --rk-bg-danger-solid: Highlight;
-      --rk-bg-danger-solid-hover: Highlight;
+      /*
+       * A filled thing is reverse video: the reader's text and canvas swapped,
+       * as bg.inverse is (0181). Not Highlight and HighlightText: that is the
+       * selection pair, and nothing promises it reads — Firefox's emulated
+       * palette pairs them at 2.94:1. CanvasText on Canvas is the one pair the
+       * reader chose to read in, so its reversal is the one that holds (0215).
+       */
+      --rk-bg-accent-solid: CanvasText;
+      --rk-bg-accent-solid-hover: CanvasText;
+      --rk-bg-info-solid: CanvasText;
+      --rk-bg-info-solid-hover: CanvasText;
+      --rk-bg-success-solid: CanvasText;
+      --rk-bg-success-solid-hover: CanvasText;
+      --rk-bg-warning-solid: CanvasText;
+      --rk-bg-warning-solid-hover: CanvasText;
+      --rk-bg-danger-solid: CanvasText;
+      --rk-bg-danger-solid-hover: CanvasText;
 
-      --rk-fg-on-accent: HighlightText;
-      --rk-fg-on-info: HighlightText;
-      --rk-fg-on-success: HighlightText;
-      --rk-fg-on-warning: HighlightText;
-      --rk-fg-on-danger: HighlightText;
+      --rk-fg-on-accent: Canvas;
+      --rk-fg-on-info: Canvas;
+      --rk-fg-on-success: Canvas;
+      --rk-fg-on-warning: Canvas;
+      --rk-fg-on-danger: Canvas;
 
-      --rk-fg-accent-solid-text: HighlightText;
+      --rk-fg-accent-solid-text: Canvas;
 
       /* Tinted backgrounds cannot be seen; fall back to the canvas. */
       --rk-bg-accent-subtle: Canvas;
@@ -123,14 +129,20 @@
  *
  * Button's rules are here rather than in button.css so that Button's own
  * polish (0131) can move them without this fix waiting on it.
+ *
+ * A test (test/reverse-opt-out.test.ts) finds every rule that draws words in
+ * a ground colour and fails if nothing here, or a forced-colors block of its
+ * own, opts it out (0201).
  */
 @layer rk.base {
   @media (forced-colors: active) {
     [data-attrs~="reverse"],
+    [data-rk-fill]:focus-visible,
     .rk-button[data-variant="fill"],
     .rk-button[data-pressed],
     .rk-link[data-pressed],
-    .rk-list-item[data-selected] {
+    .rk-list-item[data-selected],
+    .rk-tree-item[data-selected] {
       forced-color-adjust: none;
     }
   }

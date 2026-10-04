@@ -3,12 +3,8 @@ import { glyphsFor } from '@rockaway/tokens';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import {
-  Callout,
-  calloutBuffer,
-  calloutTitle,
-  calloutVariants,
-} from '../src/components/callout.tsx';
+import { calloutBuffer, calloutTitle, calloutVariants } from '../src/components/callout.pure.ts';
+import { Callout } from '../src/components/callout.tsx';
 
 const SIZE = { width: 28, height: 3 };
 
