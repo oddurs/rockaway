@@ -64,6 +64,8 @@ export interface Parameters {
   readonly targets?: boolean;
   /** `false` for a story that breaks the field contract on purpose, to show the check. */
   readonly fields?: boolean;
+  /** `false` for a story that puts a glyph in a name on purpose, to show the check (0252). */
+  readonly names?: boolean;
   readonly matrix?: { readonly skip?: readonly Skip[] };
 }
 

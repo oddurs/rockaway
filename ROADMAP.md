@@ -314,7 +314,7 @@ A website built out of the system it documents, which is the only honest way
 
 ## v0.1 — v0.1 — first release
 
-`##········` 20% · 3 of 15 done · due 2027-03-21
+`###·······` 27% · 4 of 15 done · due 2027-03-21
 
 Something another project can install and build on.
 
@@ -334,10 +334,6 @@ Something another project can install and build on.
 - [ ] [`0251`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0251-give-the-classic-scrollbars-project-the-shared-test-timeout.md) Give the classic-scrollbars project the shared test timeout <sup>chore · tooling · p2</sup>
 - [ ] [`0253`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0253-fit-the-zoom-continuity-dense-story-inside-ci-s-time.md) Fit the zoom Continuity Dense story inside CI's time <sup>chore · tooling · p1</sup>
 
-### in progress
-
-- [ ] [`0252`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0252-check-the-three-component-rules-that-only-review-holds-today.md) Check the three component rules that only review holds today <sup>chore · tooling · p2</sup>
-
 ### in review
 
 - [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
@@ -347,6 +343,7 @@ Something another project can install and build on.
 - [x] [`0162`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0162-require-a-changeset-for-every-package-change-and-back-fill-the-missing-ones.md) Require a changeset for every package change, and back-fill the missing ones <sup>chore · distribution · p1</sup>
 - [x] [`0172`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0172-decide-whether-the-first-release-is-0-1-0-or-1-0-0.md) Decide whether the first release is 0.1.0 or 1.0.0 <sup>decision · distribution · p2</sup>
 - [x] [`0173`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0173-check-package-json-changes-for-a-changeset-when-they-reach-users.md) Check package.json changes for a changeset when they reach users <sup>chore · distribution · p3</sup>
+- [x] [`0252`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0252-check-the-three-component-rules-that-only-review-holds-today.md) Check the three component rules that only review holds today <sup>chore · tooling · p2</sup>
 
 ## later — Later
 

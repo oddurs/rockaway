@@ -1,5 +1,5 @@
 import { GlyphProvider } from '@rockaway/react';
-import { expectField, expectNoNativeScrollbars } from '@rockaway/react/testing';
+import { expectField, expectNames, expectNoNativeScrollbars } from '@rockaway/react/testing';
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import { afterEach as axe } from '@storybook/addon-a11y/preview';
 import type { Decorator, Preview, StoryContext } from '@storybook/react-vite';
@@ -132,10 +132,13 @@ export const afterEach = async (context: StoryContext): Promise<void> => {
   if (parameters.scrollbars !== false) expectNoNativeScrollbars(context.canvasElement);
   // The field contract (cairn 0203) is a question of semantics, not of cells,
   // so it is asked once, in the story's own context, of every field on the page.
+  const theme = context.globals.theme as ThemeName | undefined;
+  const glyphs = themeGlyphs[theme ?? 'default'];
   if (parameters.fields !== false && context.canvasElement.querySelector('.rk-field')) {
-    const theme = context.globals.theme as ThemeName | undefined;
-    expectField(context.canvasElement, { glyphs: themeGlyphs[theme ?? 'default'] });
+    expectField(context.canvasElement, { glyphs });
   }
+  // And outside a field, no name holds a glyph (0252): chrome is drawn, not said.
+  if (parameters.names !== false) expectNames(context.canvasElement, { glyphs });
   const run = runner();
   await walk(context.id, context.canvasElement, parameters, {
     capture: run?.capture,

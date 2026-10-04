@@ -19,6 +19,7 @@
  * It reads the DOM only, so it runs wherever a field is rendered.
  */
 import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
+import { glyphTest, spoken } from './names.ts';
 
 export interface FieldProblem {
   /** The field, as a selector-ish description: `div.rk-field[Email]`. */
@@ -40,14 +41,6 @@ export interface FieldOptions {
   readonly glyphs?: Glyphs;
 }
 
-/** Box drawing, blocks, geometric shapes, dingbats and braille: chrome, never words. */
-const GLYPH_RANGES: readonly (readonly [number, number])[] = [
-  [0x2500, 0x259f],
-  [0x25a0, 0x25ff],
-  [0x2700, 0x27bf],
-  [0x2800, 0x28ff],
-];
-
 const LIVE = '[aria-live]:not([aria-live="off"]), [role="alert"], [role="status"], [role="log"]';
 
 /** A control a label can name. */
@@ -60,18 +53,6 @@ function describe(field: Element, label: string | undefined): string {
       ? `.${field.className.trim().split(/\s+/).join('.')}`
       : '';
   return `${field.tagName.toLowerCase()}${cls}${label ? `[${label}]` : ''}`;
-}
-
-/** Text a reader is given: everything but what is `aria-hidden`. */
-function spoken(el: Element): string {
-  let out = '';
-  for (const node of el.childNodes) {
-    if (node.nodeType === Node.TEXT_NODE) out += node.textContent ?? '';
-    else if (node instanceof Element && node.getAttribute('aria-hidden') !== 'true') {
-      out += spoken(node);
-    }
-  }
-  return out;
 }
 
 /** A control's accessible name, by the routes a field gives it one. */
@@ -107,13 +88,8 @@ function own(field: Element, el: Element): boolean {
 
 function checkOne(field: HTMLElement, glyphs: Glyphs): FieldProblem[] {
   const problems: string[] = [];
-  const marks = new Set(
-    Object.values(glyphs.mark).filter((ch) => ch.trim() !== '' && (ch.codePointAt(0) ?? 0) > 0x7e),
-  );
-  const isGlyph = (ch: string): boolean => {
-    const code = ch.codePointAt(0) ?? 0;
-    return marks.has(ch) || GLYPH_RANGES.some(([from, to]) => code >= from && code <= to);
-  };
+  // A label is a word or two, never prose: every mark is chrome in it.
+  const isGlyph = glyphTest(glyphs, true);
 
   // The label: inline, or the hidden one a frame carries for its edge.
   const label =
