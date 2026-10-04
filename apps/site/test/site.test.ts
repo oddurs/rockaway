@@ -520,8 +520,11 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       if (message.type() === 'error') errors.push(message.text());
     });
     await reader.goto(`${origin}${base}registry/`);
+    // Hydrated, each: not every item draws a frame (a trigger is only a button).
     for (const { name } of items) {
-      await reader.waitForSelector(`[data-registry-item="${name}"] .rk-frame[data-rk-painted]`);
+      await reader.waitForSelector(`[data-registry-item="${name}"] astro-island:not([ssr])`, {
+        state: 'attached',
+      });
     }
     const shown = await reader.evaluate(() =>
       [...document.querySelectorAll<HTMLElement>('[data-registry-item]')].map((section) => ({
