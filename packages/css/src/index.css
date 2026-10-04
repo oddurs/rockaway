@@ -33,7 +33,9 @@
 @import "./components/field.css";
 @import "./components/fieldset.css";
 @import "./components/key-hint.css";
+@import "./components/keymap.css";
 @import "./components/link.css";
 @import "./components/list.css";
 @import "./components/status-bar.css";
+@import "./components/table.css";
 @import "./components/tree.css";
