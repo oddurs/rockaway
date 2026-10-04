@@ -1,0 +1,204 @@
+{
+  "fg": {
+    "muted": {
+      "$type": "color",
+      "$value": "{ansi.foreground}"
+    },
+    "disabled": {
+      "$type": "color",
+      "$value": "{ansi.muted}"
+    },
+    "accent": {
+      "$type": "color",
+      "$value": "{ansi.bright-blue}"
+    },
+    "info": {
+      "$type": "color",
+      "$value": "{ansi.bright-cyan}"
+    },
+    "success": {
+      "$type": "color",
+      "$value": "{ansi.bright-green}"
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "{ansi.bright-yellow}"
+    },
+    "danger": {
+      "$type": "color",
+      "$value": "{ansi.bright-red}"
+    }
+  },
+  "bg": {
+    "accent": {
+      "solid": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      },
+      "solid-hover": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      }
+    },
+    "info": {
+      "solid": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      },
+      "solid-hover": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      }
+    },
+    "success": {
+      "solid": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      },
+      "solid-hover": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      }
+    },
+    "warning": {
+      "solid": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      },
+      "solid-hover": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      }
+    },
+    "danger": {
+      "solid": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      },
+      "solid-hover": {
+        "$type": "color",
+        "$value": "{ansi.foreground}"
+      }
+    }
+  },
+  "border": {
+    "subtle": {
+      "$type": "color",
+      "$value": "{ansi.border}"
+    },
+    "default": {
+      "$type": "color",
+      "$value": "{ansi.border-strong}"
+    },
+    "surface": {
+      "$type": "color",
+      "$value": "{ansi.border-strong}"
+    },
+    "control": {
+      "$type": "color",
+      "$value": "{ansi.foreground}"
+    }
+  },
+  "syntax": {
+    "comment": {
+      "$type": "color",
+      "$value": "{ansi.foreground}"
+    },
+    "keyword": {
+      "$type": "color",
+      "$value": "{ansi.bright-magenta}"
+    },
+    "string": {
+      "$type": "color",
+      "$value": "{ansi.bright-green}"
+    },
+    "constant": {
+      "$type": "color",
+      "$value": "{ansi.bright-yellow}"
+    },
+    "function": {
+      "$type": "color",
+      "$value": "{ansi.bright-blue}"
+    },
+    "type": {
+      "$type": "color",
+      "$value": "{ansi.bright-cyan}"
+    },
+    "attribute": {
+      "$type": "color",
+      "$value": "{ansi.bright-yellow}"
+    },
+    "regexp": {
+      "$type": "color",
+      "$value": "{ansi.bright-red}"
+    },
+    "inserted": {
+      "$type": "color",
+      "$value": "{ansi.bright-green}"
+    },
+    "deleted": {
+      "$type": "color",
+      "$value": "{ansi.bright-red}"
+    },
+    "error": {
+      "$type": "color",
+      "$value": "{ansi.bright-red}"
+    }
+  },
+  "attribute": {
+    "dim": {
+      "$type": "color",
+      "$value": "{ansi.foreground}"
+    }
+  },
+  "stroke": {
+    "$description": "Line weights for box drawing, which the cell draws rather than the font (cairn 0116).",
+    "glyph": {
+      "$type": "number",
+      "$description": "The glyph painter: a fraction of the font size, so a line is weighted like the type beside it.",
+      "light": {
+        "$value": 0.12
+      },
+      "heavy": {
+        "$value": 0.22
+      },
+      "gap": {
+        "$value": 0.12,
+        "$description": "The space between a double line's strokes."
+      }
+    },
+    "rule": {
+      "$type": "dimension",
+      "$description": "The rule painter: hairlines, whatever the font size.",
+      "light": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "heavy": {
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      },
+      "gap": {
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        },
+        "$description": "The space between a double line's strokes."
+      }
+    }
+  },
+  "focus": {
+    "$type": "dimension",
+    "$description": "A thicker ring for a reader who asked for more contrast.",
+    "width": {
+      "$value": {
+        "value": 3,
+        "unit": "px"
+      }
+    }
+  }
+}

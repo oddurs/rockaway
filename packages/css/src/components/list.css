@@ -28,7 +28,10 @@
      * minimum size is its content, and content cannot overflow itself. */
     min-block-size: 0;
     overflow: hidden auto;
-    outline: none;
+    /* No outline of its own: while a row has focus the cursor shows it, and
+     * the list itself takes the focus ring (focus.css) only when it holds
+     * focus with no row under the cursor. React Aria leaves it there when the
+     * row it would have entered on is disabled, or when there are no rows. */
     /* A scrolled list stops on a whole row at every density, however it was
      * scrolled: the wheel, a finger, or the keyboard bringing a row in. */
     scroll-snap-type: block mandatory;
@@ -75,8 +78,7 @@
 
   /* Selected: reverse video, the list's own figure and ground swapped, so the
    * reversed words are exactly the list's ground. In forced colors that is the
-   * reader's text behind their canvas, opted out of the backplate in
-   * forced-colors.css (0181). */
+   * reader's text behind their canvas, opted out of the backplate below. */
   .rk-list-item[data-selected] {
     background: var(--rk-fg-default);
     color: var(--rk-bg-surface);
@@ -90,5 +92,15 @@
   .rk-list-item[data-disabled][data-selected] {
     background: var(--rk-fg-disabled);
     color: var(--rk-bg-surface);
+  }
+
+  /* Reversed words are drawn in a ground colour, which under forced colors is
+   * the canvas the browser paints behind text unless told not to. So whatever
+   * this stylesheet reverses opts out of the adjustment (0181), and keeps the
+   * reader's colours through the tokens it reads. */
+  @media (forced-colors: active) {
+    .rk-list-item[data-selected] {
+      forced-color-adjust: none;
+    }
   }
 }

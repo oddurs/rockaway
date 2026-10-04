@@ -20,14 +20,28 @@ export interface ChromeProps {
   readonly className?: string;
 }
 
+/**
+ * The row and the column of a buffer that stretch to fill the box it is drawn
+ * in, when its size is not yet known (cairn 0126, and the server fix that
+ * followed it). A box drawn at its smallest stretches along its last row but
+ * one and its last column but one, which are a side's plain edge and a run of
+ * the top and bottom edges: the lines lengthen, and nothing else moves.
+ */
+export interface Stretch {
+  readonly row?: number;
+  readonly col?: number;
+}
+
 /** A buffer's rows, as elements: the nodes `paintCells` would write. */
-export function chromeRows(buffer: Buffer): ReactNode[] {
+export function chromeRows(buffer: Buffer, stretch: Stretch = {}): ReactNode[] {
   return rowsOf(buffer).map((runs, y) => (
     // Rows and runs never reorder: a row is its index, a run its column.
     // biome-ignore lint/suspicious/noArrayIndexKey: the index is the identity
-    <div className="rk-row" key={y}>
+    <div className="rk-row" key={y} data-rk-stretch={y === stretch.row ? '' : undefined}>
       {runs.map(({ run, col }) => {
         const markup = runMarkup(run, col);
+        const stretches =
+          stretch.col !== undefined && col <= stretch.col && stretch.col < col + run.cells;
         return (
           <span
             key={col}
@@ -35,6 +49,8 @@ export function chromeRows(buffer: Buffer): ReactNode[] {
             style={markup.style as CSSProperties}
             data-rk-shape={markup.shape}
             data-attrs={markup.attrs}
+            data-rk-dots={markup.dots}
+            data-rk-stretch={stretches ? '' : undefined}
           >
             {run.text}
           </span>
