@@ -295,7 +295,7 @@ Something another project can install and build on.
 - [ ] [`0158`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0158-launch-tag-0-1-0-publish-and-post-show-hn.md) Launch: tag 0.1.0, publish, and post Show HN <sup>chore · distribution · p1 · needs-owner</sup>
 - [ ] [`0172`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0172-decide-whether-the-first-release-is-0-1-0-or-1-0-0.md) Decide whether the first release is 0.1.0 or 1.0.0 <sup>decision · distribution · p2</sup>
 
-### in progress
+### in review
 
 - [ ] [`0048`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
 
