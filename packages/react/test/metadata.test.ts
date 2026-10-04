@@ -14,7 +14,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import { createElement, Fragment, type ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import { type Analysis, analyse, packageRoot, render } from '../scripts/extract.ts';
+import { type Analysis, analyse, owns, packageRoot, render } from '../scripts/extract.ts';
 import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
@@ -408,6 +408,36 @@ describe('the checks fail when the metadata is wrong', () => {
 });
 
 describe('what is extracted', () => {
+  test("a rule is credited only when every hook in it is the component's (0192)", () => {
+    const frame = {
+      classes: new Set(['rk-screen', 'rk-frame', 'rk-content', 'rk-frame-box']),
+      attributes: new Set(['data-rk-painted', 'data-rk-shape']),
+    };
+    const divider = {
+      classes: new Set(['rk-screen', 'rk-frame', 'rk-divider']),
+      attributes: frame.attributes,
+    };
+    // Another component's class in the selector: not this one's rule.
+    expect(owns('.rk-callout > .rk-content', frame)).toBe(false);
+    expect(owns('.rk-frame-box > .rk-frame', divider)).toBe(false);
+    expect(owns('.rk-frame-box > .rk-frame', frame)).toBe(true);
+    // The painter's hooks name no class, and are the painted component's.
+    expect(owns('[data-rk-painted="rule"]', frame)).toBe(true);
+    expect(owns('[data-rk-painted] [data-rk-shape="box-0110"]', frame)).toBe(true);
+    // A state or a variant says when a rule applies, not whose it is.
+    expect(owns('.rk-frame[data-hovered]', frame)).toBe(true);
+    expect(owns('[data-hovered]', frame)).toBe(false);
+    expect(owns(':focus-visible', frame)).toBe(false);
+  });
+
+  test("a painted component lists its stroke tokens, and not a neighbour's ground", () => {
+    const { tokens } = byName('Frame');
+    expect(tokens).toContain('--rk-stroke-glyph-light');
+    expect(tokens).toContain('--rk-stroke-rule-light');
+    // `.rk-callout > .rk-content` is Callout's, though Frame writes rk-content.
+    expect(tokens).not.toContain('--rk-bg-surface');
+  });
+
   test('tokens come from the stylesheets and the focus ring, and a local property is not one', () => {
     const { tokens } = byName('Button');
     expect(tokens).toContain('--rk-border-control');

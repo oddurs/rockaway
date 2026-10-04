@@ -11,4 +11,4 @@ export {
   type StrokeStyle,
   shapeAttributes,
 } from './cells.ts';
-export { Cells, type CellsProps } from './render.tsx';
+export { Cells, type CellsProps, type Stretch } from './render.tsx';

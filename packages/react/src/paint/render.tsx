@@ -34,11 +34,30 @@ export interface CellsProps {
    * the row's colour; attributes and shapes are written either way.
    */
   readonly colours?: boolean;
+  /**
+   * The row and column that stretch to fill the box, while a screen's size is
+   * not yet known; the layer is then marked elastic.
+   */
+  readonly stretch?: Stretch;
+}
+
+/**
+ * The row and the column of a buffer that stretch to fill the box it is drawn
+ * in, when its size is not yet known (cairn 0126, and the server fix that
+ * followed it, 0238). A box drawn at its smallest stretches along its last row
+ * but one and its last column but one, which are a side's plain edge and a run
+ * of the top and bottom edges: the lines lengthen, and nothing else moves.
+ */
+export interface Stretch {
+  readonly row?: number;
+  readonly col?: number;
 }
 
 /** One run, as the element `paintCells` would write for it. */
-function runElement(run: Run, col: number, colours: boolean): ReactNode {
+function runElement(run: Run, col: number, colours: boolean, stretch: Stretch): ReactNode {
   const markup = runMarkup(run, col);
+  const stretches =
+    stretch.col !== undefined && col <= stretch.col && stretch.col < col + run.cells;
   const style = colours
     ? markup.style
     : Object.fromEntries(Object.entries(markup.style).filter(([name]) => name.startsWith('--')));
@@ -50,6 +69,7 @@ function runElement(run: Run, col: number, colours: boolean): ReactNode {
       data-rk-shape={markup.shape}
       data-attrs={markup.attrs}
       data-rk-dots={markup.dots}
+      data-rk-stretch={stretches ? '' : undefined}
     >
       {run.text}
     </span>
@@ -63,22 +83,29 @@ export function Cells({
   className = 'rk-frame',
   inline = false,
   colours = true,
+  stretch,
 }: CellsProps): ReactNode {
   const rows = rowsOf(buffer);
+  const at = stretch ?? {};
   if (inline) {
     return (
       <span className={className} aria-hidden="true" data-rk-painted={strokes}>
-        {(rows[0] ?? []).map(({ run, col }) => runElement(run, col, colours))}
+        {(rows[0] ?? []).map(({ run, col }) => runElement(run, col, colours, at))}
       </span>
     );
   }
   return (
-    <div className={className} aria-hidden="true" data-rk-painted={strokes}>
+    <div
+      className={className}
+      aria-hidden="true"
+      data-rk-painted={strokes}
+      data-rk-elastic={stretch === undefined ? undefined : ''}
+    >
       {rows.map((runs, y) => (
         // Rows and runs never reorder: a row is its index, a run its column.
         // biome-ignore lint/suspicious/noArrayIndexKey: the index is the identity
-        <div className="rk-row" key={y}>
-          {runs.map(({ run, col }) => runElement(run, col, colours))}
+        <div className="rk-row" key={y} data-rk-stretch={y === at.row ? '' : undefined}>
+          {runs.map(({ run, col }) => runElement(run, col, colours, at))}
         </div>
       ))}
     </div>
