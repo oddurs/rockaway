@@ -78,6 +78,11 @@ export const listMeta: ComponentMetaInput = defineMeta({
     },
   ],
   states: [
+    {
+      state: 'focus-unframed',
+      part: 'List',
+      note: 'Only while the list itself holds focus with no row under the cursor: when it has no rows, or when React Aria could not enter on its selected row because that row is disabled. Once a row has focus, the cursor shows it.',
+    },
     { state: 'hover', part: 'ListItem' },
     {
       state: 'cursor',
