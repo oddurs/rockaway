@@ -1032,6 +1032,11 @@
   inherits: true;
 }
 
+@property --rk-glyph-mark-prompt {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-radio {
   syntax: '*';
   inherits: true;
@@ -2095,7 +2100,7 @@
     --rk-glyph-border-ascii-bottom-left: "+";
     --rk-glyph-border-ascii-bottom-right: "+";
     --rk-glyph-border-ascii-cross: "+";
-    --rk-glyph-border-ascii-horizontal: -;
+    --rk-glyph-border-ascii-horizontal: "-";
     --rk-glyph-border-ascii-tee-down: "+";
     --rk-glyph-border-ascii-tee-left: "+";
     --rk-glyph-border-ascii-tee-right: "+";
@@ -2190,6 +2195,7 @@
     --rk-glyph-mark-external: "↗";
     --rk-glyph-mark-overflow-end: "›";
     --rk-glyph-mark-overflow-start: "‹";
+    --rk-glyph-mark-prompt: "›";
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
@@ -2814,7 +2820,7 @@
     --rk-glyph-border-ascii-bottom-left: "+";
     --rk-glyph-border-ascii-bottom-right: "+";
     --rk-glyph-border-ascii-cross: "+";
-    --rk-glyph-border-ascii-horizontal: -;
+    --rk-glyph-border-ascii-horizontal: "-";
     --rk-glyph-border-ascii-tee-down: "+";
     --rk-glyph-border-ascii-tee-left: "+";
     --rk-glyph-border-ascii-tee-right: "+";
@@ -2909,6 +2915,7 @@
     --rk-glyph-mark-external: "↗";
     --rk-glyph-mark-overflow-end: "›";
     --rk-glyph-mark-overflow-start: "‹";
+    --rk-glyph-mark-prompt: "›";
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";

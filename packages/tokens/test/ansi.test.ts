@@ -174,7 +174,7 @@ describe('importing a terminal theme', () => {
 });
 
 describe('the palettes that ship', () => {
-  const presets = ['default', 'ink', 'phosphor', 'ice'];
+  const presets = ['default', 'ink', 'phosphor', 'ice', 'ascii'];
 
   test.each(presets)('%s generates a palette that holds', async (name) => {
     const { readFile } = await import('node:fs/promises');
