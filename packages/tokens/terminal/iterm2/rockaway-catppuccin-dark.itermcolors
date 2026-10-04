@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 Catppuccin Mocha (dark), from https://github.com/catppuccin/ghostty
-Unchanged by @rockaway/tokens: it passes the contrast gate as it is.
+Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
+  bright-blue: #89b4fa -> #95c1ff
+  bright-red: #f38ba8 -> #ffa7c2
 
 MIT licence. Copyright (c) 2021 Catppuccin.
 
@@ -153,11 +155,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.952941</real>
+		<real>1.000000</real>
 		<key>Green Component</key>
-		<real>0.545098</real>
+		<real>0.654902</real>
 		<key>Blue Component</key>
-		<real>0.658824</real>
+		<real>0.760784</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -192,11 +194,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.537255</real>
+		<real>0.584314</real>
 		<key>Green Component</key>
-		<real>0.705882</real>
+		<real>0.756863</real>
 		<key>Blue Component</key>
-		<real>0.980392</real>
+		<real>1.000000</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
