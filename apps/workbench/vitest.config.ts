@@ -4,6 +4,7 @@ import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
 import {
+  emulateContrast,
   knownLedger,
   printToPdf,
   readWithoutScripts,
@@ -67,7 +68,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = fa
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { printToPdf, readWithoutScripts, recordKnown, wheel },
+  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown, wheel },
 });
 
 /**

@@ -30,6 +30,8 @@ export interface Runner {
   readonly record: (use: KnownUse) => Promise<void>;
   /** The mouse wheel turned over the element the selector finds, by this many pixels down. */
   readonly wheel: (selector: string, deltaY: number) => Promise<void>;
+  /** Emulates the reader's `prefers-contrast` (cairn 0065); `no-preference` gives it back. */
+  readonly contrast: (preference: 'more' | 'no-preference') => Promise<void>;
 }
 
 let current: Runner | undefined;

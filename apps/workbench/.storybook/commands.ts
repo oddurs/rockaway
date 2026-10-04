@@ -36,6 +36,18 @@ export const printToPdf: BrowserCommand<[html: string]> = async (context, html) 
 };
 
 /**
+ * Ask the page for `prefers-contrast: more`, or give it back (cairn 0065). It
+ * is a media feature of the browser, so a story cannot set it; the page it
+ * runs in can.
+ */
+export const emulateContrast: BrowserCommand<[contrast: 'more' | 'no-preference']> = async (
+  context,
+  contrast,
+) => {
+  await context.page.emulateMedia({ contrast });
+};
+
+/**
  * Load a document in a page with JavaScript switched off and read back what it
  * shows (cairn 0126): the text of each painted row, how many cells draw their
  * own shape, and whether the page's own script ran — which it must not have,

@@ -9,6 +9,7 @@ declare module 'vitest/browser' {
     readWithoutScripts: (html: string) => Promise<{ rows: string[]; shapes: number; ran: boolean }>;
     recordKnown: (use: KnownUse) => Promise<void>;
     wheel: (selector: string, deltaY: number) => Promise<void>;
+    emulateContrast: (contrast: 'more' | 'no-preference') => Promise<void>;
   }
 }
 
@@ -40,4 +41,5 @@ setRunner({
   plan: inject('plan'),
   record: (use) => commands.recordKnown(use),
   wheel: (selector, deltaY) => commands.wheel(selector, deltaY),
+  contrast: (preference) => commands.emulateContrast(preference),
 });
