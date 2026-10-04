@@ -3,6 +3,7 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
+import { paintBudget, recordPaint } from './.storybook/budget.ts';
 import {
   emulateContrast,
   knownLedger,
@@ -67,7 +68,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = fa
     contextOptions: { ...context, viewport: { width: 1600, height: 1200 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown },
+  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown, recordPaint },
 });
 
 /**
@@ -160,7 +161,7 @@ const staleKnown = (): Reporter => {
 
 const config: ViteUserConfig = defineConfig({
   test: {
-    reporters: ['default', staleKnown()],
+    reporters: ['default', staleKnown(), paintBudget()],
     projects: [
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
