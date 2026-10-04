@@ -184,14 +184,14 @@ function Status({
 }): ReactNode {
   const place = useSyncExternalStore(store.subscribe, store.get, () => SERVER_PLACE);
   const section = headings.find((h) => h.id === place.section)?.text;
-  const where = [...trail, ...(section === undefined || help ? [] : [section])].join(' / ');
+  const where = [...trail, ...(section === undefined ? [] : [section])].join(' / ');
   return (
     <StatusBar label="Status">
       <StatusSegment variant="mode" priority={4}>
         {help ? 'KEYS' : mode}
       </StatusSegment>
       <StatusSegment priority={1} label="You are at">
-        {help ? 'The keys' : where}
+        {where}
       </StatusSegment>
       <StatusMessage {...(message === undefined ? {} : { id: message.id })}>
         {message?.text}
@@ -363,7 +363,8 @@ export function Shell({
                 <section aria-labelledby="site-keys" className="rk-prose">
                   <h1 id="site-keys">Keys</h1>
                   <p>
-                    Every key here is also a link or a scroll: the map on the left, the outline on the right.
+                    Each of these is a shortcut for something on the screen: a scroll of this
+                    pane, or a row of the map, which is a link.
                   </p>
                   <KeymapHelp />
                 </section>

@@ -67,6 +67,15 @@ afterAll(async () => {
 
 const components = (meta as { components: unknown[] }).components;
 
+/**
+ * Every island has hydrated, and the shell has laid itself out (0104). Astro
+ * drops an island's `ssr` attribute when React starts hydrating it, which is
+ * before React has committed, so the shell says when it has.
+ */
+const hydrated = () =>
+  document.querySelectorAll('astro-island[ssr]').length === 0 &&
+  document.documentElement.dataset.rkShell === 'live';
+
 describe.each(['/rockaway/', '/'])('served at %s', (base) => {
   let out: string;
   let server: Server;
@@ -101,7 +110,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     });
     page.on('pageerror', (error) => failures.push(`page: ${error.message}`));
     await page.goto(`${origin}${base}`);
-    await page.waitForSelector('.rk-frame[data-rk-painted]');
+    await page.waitForFunction(hydrated);
     await page.evaluate(() => document.fonts.ready);
   });
 
@@ -117,20 +126,21 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
   });
 
   test('paints a Frame from the published package, character for character', async () => {
-    const screen = page.locator('.rk-screen');
+    // The home page's Frame, inside the shell's content pane.
+    const screen = page.locator('article .rk-screen');
     const width = Number(await screen.getAttribute('data-rk-cols'));
     const height = Number(await screen.getAttribute('data-rk-rows'));
     expect(width).toBeGreaterThan(20);
     expect(height).toBe(5);
 
-    const painted = await page.locator('.rk-frame .rk-row').allTextContents();
+    const painted = await screen.locator('.rk-frame .rk-row').allTextContents();
     const expected = frameBuffer({ width, height }, { title: 'rockaway' });
     expect(painted).toEqual(Array.from({ length: height }, (_, y) => expected.row(y)));
 
     // The content layer is real text, named by the title rather than the glyphs.
     await expect(screen.getAttribute('aria-label')).resolves.toBe('rockaway');
-    await expect(page.locator('.rk-frame').getAttribute('aria-hidden')).resolves.toBe('true');
-    expect(await page.locator('.rk-content').textContent()).toContain(
+    await expect(screen.locator('.rk-frame').getAttribute('aria-hidden')).resolves.toBe('true');
+    expect(await screen.locator('.rk-content').textContent()).toContain(
       'A TUI design system for the web.',
     );
   });
@@ -203,9 +213,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     for (const url of pages) {
       await reader.goto(url);
       await reader.evaluate(() => document.fonts.ready);
-      await reader.waitForFunction(
-        () => document.querySelectorAll('astro-island[ssr]').length === 0,
-      );
+      await reader.waitForFunction(hydrated);
       const report = await checkPage(reader);
       expect(report.axe, url).toEqual([]);
       expect(report.offGrid, `${url}\n${report.conformance}`).toBe(0);
@@ -268,7 +276,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       const url = `${origin}${base}components/${slug}/`;
       await still.goto(url);
       await live.goto(url);
-      await live.waitForFunction(() => document.querySelectorAll('astro-island[ssr]').length === 0);
+      await live.waitForFunction(hydrated);
       const [before, after] = [await still.evaluate(shown), await live.evaluate(shown)];
       expect(before.words.length, component.name).toBeGreaterThan(0);
       if (component.name === 'Keymap') {
@@ -287,11 +295,12 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
   }, 120_000);
 
   test('draws the foundations with the system, for a phone, with no script (0106)', async () => {
-    const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    const scripts: string[] = [];
-    phone.on('request', (r) => {
-      if (r.resourceType() === 'script') scripts.push(r.url());
+    // Script off: every drawing is the server's, and the shell is a document (0104).
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      javaScriptEnabled: false,
     });
+    const phone = await context.newPage();
     const pages = [
       '',
       'grid/',
@@ -328,8 +337,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     const file = await phone.request.get(themes.files[0] ?? '');
     expect(file.ok()).toBe(true);
     expect((await file.text()).length).toBeGreaterThan(100);
-    await phone.close();
-    expect(scripts).toEqual([]);
+    await context.close();
   });
 
   test('publishes every document in docs/, linked to each other on the site (0107)', async () => {
@@ -422,8 +430,10 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       };
     });
     await reader.close();
-    // A page of prose runs no script at all.
-    expect(scripts).toEqual([]);
+    // A page of prose runs the shell's island and nothing for its code: no
+    // highlighter, no grammar, no theme.
+    expect(scripts.length).toBeGreaterThan(0);
+    expect(scripts.filter((url) => /shiki|oniguruma|highlight|textmate/i.test(url))).toEqual([]);
     // The colour is the theme's, so changing the mode recolours code in place.
     expect(found.light).not.toBe('');
     expect(found.dark).not.toBe(found.light);

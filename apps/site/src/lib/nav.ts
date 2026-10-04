@@ -31,7 +31,7 @@ export interface SitePages {
 /** The tree, given the pages the collections hold. */
 export function siteNav({ foundations, components }: SitePages): readonly NavNode[] {
   return [
-    { id: 'home', title: 'rockaway', href: href('') },
+    { id: 'home', title: 'Home', href: href('') },
     { id: 'getting-started', title: 'Getting started', href: href('getting-started/') },
     { id: 'concept', title: 'The concept', href: href('concept/') },
     {

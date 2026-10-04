@@ -16,6 +16,9 @@
   grid-template-rows: auto auto;
   align-content: start;
   block-size: 100dvh;
+  /* The window is the screen's edge: a screen drawn wider than it, as the
+   * server's guess is on a phone, is cut there and never scrolls the page. */
+  overflow: clip;
   /* One ground under every pane, the one a Tree and a List are drawn on. */
   background: var(--rk-bg-surface);
 }
@@ -88,9 +91,9 @@
  */
 @media (scripting: none) {
   .site-shell,
-  .site-shell .rk-screen,
-  .site-shell .rk-content,
-  .site-shell .rk-pane,
+  .site-shell > .rk-panes,
+  .site-shell > .rk-panes > .rk-content,
+  .site-shell > .rk-panes > .rk-content > .rk-pane,
   .site-scroll {
     display: block;
     position: static;
@@ -99,12 +102,12 @@
     overflow: visible;
   }
 
-  .site-shell .rk-pane {
+  .site-shell > .rk-panes > .rk-content > .rk-pane {
     padding: var(--rk-y-1) var(--rk-x-2);
   }
 
-  .site-shell .rk-frame,
-  .site-shell .rk-statusbar {
+  .site-shell > .rk-panes > .rk-frame,
+  .site-shell > .rk-statusbar {
     display: none;
   }
 }
