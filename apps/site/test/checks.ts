@@ -43,8 +43,18 @@ export interface PageReport {
   readonly breaks: number;
 }
 
+export interface CheckOptions {
+  /**
+   * Continuity takes a screenshot of every painted layer, which is most of
+   * the time a check takes. A run over many looks of one page checks it in
+   * some of them; axe and conformance, which are cheap, in all.
+   */
+  readonly continuity?: boolean;
+}
+
 /** Everything wrong with the page as it is now. Hydrate it first. */
-export async function checkPage(page: Page): Promise<PageReport> {
+export async function checkPage(page: Page, options: CheckOptions = {}): Promise<PageReport> {
+  const continuity = options.continuity ?? true;
   await page.addScriptTag({ content: axeSource });
   const axe = await page.evaluate(async () => {
     const run = (
@@ -77,7 +87,7 @@ export async function checkPage(page: Page): Promise<PageReport> {
 
   // A string, not a function: Vitest rewrites `import()` in this file's code,
   // and the page has to run a real dynamic import.
-  const grid = (await page.evaluate(`(async () => {
+  const grid = (await page.evaluate(`(async (continuity) => {
     const testing = await import('/__rk/react/dist/testing/index.js');
     const capture = async (element) => {
       element.scrollIntoView({ block: 'center' });
@@ -88,13 +98,13 @@ export async function checkPage(page: Page): Promise<PageReport> {
       return globalThis.__rkCapture({ x, y, width: Math.ceil(r.right) - x, height: Math.ceil(r.bottom) - y });
     };
     const conformance = testing.checkConformance(document.body);
-    const continuity = await testing.checkContinuity(document.body, { capture });
+    const joins = continuity ? await testing.checkContinuity(document.body, { capture }) : undefined;
     return {
       conformance: testing.formatReport(conformance),
       offGrid: conformance.violations.length,
-      continuity: testing.formatContinuity(continuity),
-      breaks: continuity.breaks.length,
+      continuity: joins ? testing.formatContinuity(joins) : 'not checked',
+      breaks: joins ? joins.breaks.length : 0,
     };
-  })()`)) as Omit<PageReport, 'axe'>;
+  })(${continuity})`)) as Omit<PageReport, 'axe'>;
   return { axe, ...grid };
 }

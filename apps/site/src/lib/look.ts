@@ -68,10 +68,17 @@ export function next<T>(list: readonly T[], at: T, step = 1): T {
 /**
  * The script at the top of the head: it marks that script runs, reads the
  * reader's look and sets it on `<html>` before the body is parsed, and writes
- * the chosen theme's stylesheet into the head, where the parser makes it
- * render-blocking, so the first frame is drawn in it. Written as a string,
- * because it runs before any module could load; `themeUrls` are the built
- * stylesheets, by theme.
+ * the chosen theme's stylesheet into the head, so the first frame is drawn in
+ * it. Written as a string, because it runs before any module could load;
+ * `themeUrls` are the built stylesheets, by theme.
+ *
+ * `document.write` is deliberate; do not replace it. A stylesheet the parser
+ * inserts blocks the first frame in every engine. One a script inserts with
+ * `createElement` does not, so the page would paint once in the default theme
+ * and then flash to the reader's. `blocking="render"` would fix that only in
+ * Chromium. Writing the `<link>` from a classic, synchronous script in the
+ * head is the one way to get a parser-inserted, render-blocking stylesheet
+ * everywhere (0148, agreed with the CTO).
  */
 export function prePaint(themeUrls: Readonly<Record<string, string>>): string {
   return `(() => {

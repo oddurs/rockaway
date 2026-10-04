@@ -16,6 +16,7 @@ import path from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { frameBuffer } from '@rockaway/react';
 import meta from '@rockaway/react/meta.json' with { type: 'json' };
+import { themeNames } from '@rockaway/tokens';
 import { Terminal } from '@xterm/headless';
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
@@ -1140,34 +1141,50 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       await close();
     });
 
-    test('changes no geometry but the cell in any look: conformance holds in each', async () => {
-      const looks = [
-        { theme: 'ink', mode: 'dark', density: 'dense' },
-        { theme: 'phosphor', mode: 'light', density: 'touch' },
-        { theme: 'catppuccin', mode: 'dark', density: 'airy' },
-        { theme: 'default', mode: 'light', density: 'normal' },
-      ];
-      for (const stored of looks) {
-        const { reader, close } = await look({ stored });
-        const report = await checkPage(reader);
-        const at = JSON.stringify(stored);
-        // Dense is the documented opt-in that does not meet WCAG 2.5.8: one-row
-        // targets 16px tall (0197). The site offers it, and the run says so.
-        const dense = stored.density === 'dense';
-        expect(
-          report.axe.filter((v) => !(dense && v.startsWith('target-size'))),
-          at,
-        ).toEqual([]);
-        if (dense)
+    // Every theme in both modes, and every density: each axis whole (23 looks).
+    // The two bases are the same pages, so one of them is enough here.
+    test.runIf(base === '/rockaway/')(
+      'changes no geometry but the cell in any look: axe and conformance hold in each',
+      async () => {
+        const looks = [
+          ...themeNames.flatMap((theme) =>
+            ['light', 'dark'].map((mode) => ({ theme, mode, density: 'normal' })),
+          ),
+          ...['automatic', 'dense', 'normal', 'airy', 'touch'].map((density) => ({
+            theme: 'default',
+            mode: 'light',
+            density,
+          })),
+        ];
+        // Continuity, which screenshots every painted layer, in one look of each kind.
+        const pictured = new Set([
+          'ink dark normal',
+          'phosphor light normal',
+          'default light touch',
+        ]);
+        for (const stored of looks) {
+          const { reader, close } = await look({ stored });
+          const at = `${stored.theme} ${stored.mode} ${stored.density}`;
+          const report = await checkPage(reader, { continuity: pictured.has(at) });
+          // Dense is the documented opt-in that does not meet WCAG 2.5.8:
+          // one-row targets 16px tall (0197). The site offers it; the run says so.
+          const dense = stored.density === 'dense';
           expect(
-            report.axe.some((v) => v.startsWith('target-size')),
+            report.axe.filter((v) => !(dense && v.startsWith('target-size'))),
             at,
-          ).toBe(true);
-        expect(report.offGrid, `${at}\n${report.conformance}`).toBe(0);
-        expect(report.breaks, `${at}\n${report.continuity}`).toBe(0);
-        await close();
-      }
-    }, 120_000);
+          ).toEqual([]);
+          if (dense)
+            expect(
+              report.axe.some((v) => v.startsWith('target-size')),
+              at,
+            ).toBe(true);
+          expect(report.offGrid, `${at}\n${report.conformance}`).toBe(0);
+          expect(report.breaks, `${at}\n${report.continuity}`).toBe(0);
+          await close();
+        }
+      },
+      180_000,
+    );
 
     test('with no script, follows the system and shows no switcher', async () => {
       const dark = await look({ script: false, scheme: 'dark' });

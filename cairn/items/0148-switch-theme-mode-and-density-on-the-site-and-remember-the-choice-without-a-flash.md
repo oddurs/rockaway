@@ -29,7 +29,7 @@ first thing an HN reader on a phone will notice.
 
 - [ ] Theme preset, mode (light, dark, system) and density (dense, normal, airy, touch, automatic) are switchable from the status bar and from the command palette
 - [x] The choice persists, and an inline script in the head applies it before first paint: no flash, asserted by a Playwright test that captures the first frame
-- [ ] Switching theme or density changes no geometry beyond the cell's own size, and conformance passes in every combination
+- [x] Switching theme or density changes no geometry beyond the cell's own size, and conformance passes in every combination
 - [x] With JavaScript disabled the page follows the system's mode and pointer, and the switcher is not shown
 - [x] The site (0106, 0148) lists every theme and offers each terminal format for download
 
@@ -40,3 +40,11 @@ Built on feat/switcher, stacked on the landing page. The look is the three conte
 ## 2026-10-04
 
 Criterion 5 was done by 0106: the themes page lists every theme with its terminal files, which the site test checks (16 islands, 64 files).
+
+## 2026-10-04
+
+document.write in the pre-paint script is deliberate, agreed with the CTO: a stylesheet the parser inserts is render-blocking in every engine, one a script inserts with createElement is not (the page would paint once in the default theme, then flash), and blocking=render is Chromium-only. The comment in src/lib/look.ts says so, so nobody 'fixes' it later.
+
+## 2026-10-04
+
+Criterion 3, covered axis by axis as the CTO asked: every theme in both modes at normal density (18 looks) and every density in the default theme (5), 23 in all, each checked with axe and conformance, plus continuity in one look of each kind (ink dark, phosphor light, default touch). It runs once, at the /rockaway/ base, in about five seconds of the site test. Dense's target-size failures are asserted, as documented (0197).
