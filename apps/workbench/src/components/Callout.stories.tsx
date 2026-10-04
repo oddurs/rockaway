@@ -138,25 +138,26 @@ export const Painters: Story = {
 /**
  * Every density: taller rows, the same cells across, and a frame that still
  * fits its prose exactly. The continuity check runs on every frame here after
- * the story.
+ * the story. One story a density, so each does a quarter of the work: one of
+ * all four took 8 to 9 seconds locally, and CI's browsers are several times
+ * slower than that.
  */
-export const Densities: Story = {
+const at = (density: 'dense' | 'normal' | 'airy' | 'touch'): Story => ({
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}>
-      {(['dense', 'normal', 'airy', 'touch'] as const).map((density) => (
-        <div key={density} data-density={density} data-testid={density}>
-          <Tones />
-        </div>
-      ))}
+    <div data-density={density} data-testid={density}>
+      <Tones />
     </div>
   ),
   play: async ({ canvas, canvasElement }) => {
     await fitted(canvasElement);
-    for (const density of ['dense', 'normal', 'airy', 'touch']) {
-      await waitFor(() => expect(read(canvas.getByTestId(density))).toEqual(TONES_TEXT));
-    }
+    await waitFor(() => expect(read(canvas.getByTestId(density))).toEqual(TONES_TEXT));
   },
-};
+});
+
+export const AtDense: Story = at('dense');
+export const AtNormal: Story = at('normal');
+export const AtAiry: Story = at('airy');
+export const AtTouch: Story = at('touch');
 
 /**
  * Greyscale: with the hue gone, every tone is still told apart by its line

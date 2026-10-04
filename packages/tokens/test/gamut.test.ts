@@ -134,6 +134,11 @@ describe('fitting a palette to the gate', () => {
       [
         "light cyan: #007b81 → #007279",
         "light green: #008130 → #007f2f",
+        "light bright-blue: #204ca4 → #1d49a0",
+        "light bright-cyan: #006167 → #005257",
+        "light bright-green: #00671d → #005e17",
+        "light bright-yellow: #6e4c00 → #6a4900",
+        "light bright-red: #94221f → #92201e",
       ]
     `);
   });
