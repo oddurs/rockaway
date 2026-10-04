@@ -80,8 +80,10 @@ export const Active: Story = {
     await expect(token('--rk-fg-default')).toBe('CanvasText');
     await expect(token('--rk-border-surface')).toBe('CanvasText');
     await expect(token('--rk-fg-disabled')).toBe('GrayText');
-    await expect(token('--rk-bg-accent-solid')).toBe('Highlight');
-    await expect(token('--rk-fg-on-accent')).toBe('HighlightText');
+    // A filled control is reverse video in the reader's own pair, not the
+    // selection pair, which nothing promises reads (0215).
+    await expect(token('--rk-bg-accent-solid')).toBe('CanvasText');
+    await expect(token('--rk-fg-on-accent')).toBe('Canvas');
 
     // Nothing here separates by background alone, so the edge has to be real.
     await expect(getComputedStyle(canvas.getByLabelText('Surface')).boxShadow).toBe('none');
@@ -90,6 +92,18 @@ export const Active: Story = {
     const muted = getComputedStyle(canvas.getByTestId('muted')).color;
     const body = getComputedStyle(document.body).color;
     await expect(muted).toBe(body);
+
+    // The solid control is the page's own pair swapped: the reader's text as
+    // its ground, the reader's canvas as its text.
+    const solid = getComputedStyle(canvas.getByTestId('solid'));
+    const probe = document.createElement('span');
+    probe.style.color = 'Canvas';
+    document.body.append(probe);
+    const canvasColour = getComputedStyle(probe).color;
+    probe.remove();
+    await expect(solid.backgroundColor).toBe(body);
+    await expect(solid.color).toBe(canvasColour);
+    await expect(solid.color).not.toBe(solid.backgroundColor);
 
     // A theme island cannot bring its own colours back in.
     const themed = canvas.getByTestId('themed');

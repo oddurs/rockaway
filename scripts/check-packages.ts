@@ -40,7 +40,8 @@ const forbidden: ReadonlyArray<[RegExp, string]> = [
   [/\.(test|spec)\.[cm]?[jt]sx?$/, 'a test'],
   [/\.stories\.[jt]sx?$/, 'a story'],
   [/(^|\/)__screenshots__\//, 'a screenshot'],
-  [/(?<!\.d)\.[cm]?tsx?$/, 'TypeScript source'],
+  // Declarations are allowed, including a stylesheet's (`index.d.css.ts`).
+  [/(?<!\.d)(?<!\.d\.[a-z]+)\.[cm]?tsx?$/, 'TypeScript source'],
   [/\.tsbuildinfo$/, 'build state'],
 ];
 
@@ -101,7 +102,12 @@ for (const dir of readdirSync(path.join(root, 'packages')).sort()) {
     if (typeof target !== 'object' || target === null) continue;
     const { types, default: js } = target as Target;
     if (js === undefined) continue;
-    if (types !== js.replace(/\.js$/, '.d.ts')) {
+    // A stylesheet's declarations are named as TypeScript names them for any
+    // extension it does not know: `index.css` is typed by `index.d.css.ts`.
+    const declarations = js.endsWith('.css')
+      ? js.replace(/\.css$/, '.d.css.ts')
+      : js.replace(/\.js$/, '.d.ts');
+    if (types !== declarations) {
       failures.push(`${name}: ${subpath} is typed by ${types}, not by the declarations for ${js}`);
     }
     const other = seen.get(js);
