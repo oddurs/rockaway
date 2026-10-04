@@ -15,8 +15,8 @@ import { palette as generated, type Palette, type PaletteSlot } from './ansi.ts'
 import { contrast, type Oklch, round, toHex } from './color.ts';
 import type { Group } from './dtcg.ts';
 import type { Mode, ThemeInputs } from './inputs.ts';
-import { pairs } from './pairs.ts';
-import { semanticColors } from './semantic.ts';
+import { minimumIn, pairs } from './pairs.ts';
+import { type Contrast, moreContrast, semanticColors } from './semantic.ts';
 
 /** One slot, moved to pass the gate. */
 export interface Adjustment {
@@ -60,8 +60,22 @@ function slotsOf(group: Group, trail: string[] = [], out = new Map<string, Palet
 
 const semanticSlots = slotsOf(semanticColors());
 
-function slot(path: string): PaletteSlot {
-  const found = semanticSlots.get(path);
+/**
+ * Each contrast context (0065) reads the palette its own way, and each pair is
+ * held to that context's minimum: the standard reading, and increased
+ * contrast, where muted text is the foreground, colour takes the bright slot
+ * and text is held to 7:1.
+ */
+const readings: readonly {
+  readonly name: Contrast;
+  readonly slots: ReadonlyMap<string, PaletteSlot>;
+}[] = [
+  { name: 'standard', slots: semanticSlots },
+  { name: 'more', slots: new Map([...semanticSlots, ...Object.entries(moreContrast)]) },
+];
+
+function slotIn(slots: ReadonlyMap<string, PaletteSlot>, path: string): PaletteSlot {
+  const found = slots.get(path);
   if (!found) throw new Error(`${path} is not a semantic colour`);
   return found;
 }
@@ -85,22 +99,25 @@ export function fitContrast(
 
   for (let pass = 0; pass < 400; pass++) {
     let failing = 0;
-    for (const pair of pairs) {
-      for (const bg of pair.bg) {
-        const [f, b] = [slot(pair.fg), slot(bg)];
-        if (contrast(fitted[f], fitted[b]) >= pair.min) continue;
-        failing += 1;
-        const target = grounds.has(f) ? b : f;
-        if (grounds.has(target)) {
-          throw new Error(`${pair.fg} on ${bg} (${mode}): both are grounds, so neither can move`);
+    for (const reading of readings) {
+      for (const pair of pairs) {
+        const min = minimumIn(pair, reading.name);
+        for (const bg of pair.bg) {
+          const [f, b] = [slotIn(reading.slots, pair.fg), slotIn(reading.slots, bg)];
+          if (f === b || contrast(fitted[f], fitted[b]) >= min) continue;
+          failing += 1;
+          const target = grounds.has(f) ? b : f;
+          const where = `${pair.fg} on ${bg} (${mode}${reading.name === 'more' ? ', more contrast' : ''})`;
+          if (grounds.has(target)) {
+            throw new Error(`${where}: both are grounds, so neither can move`);
+          }
+          const before = fitted[target];
+          const l = Math.min(1, Math.max(0, before.l + direction * STEP));
+          if (l === before.l) throw new Error(`${where} cannot reach ${min}:1`);
+          fitted[target] = round({ ...before, l });
+          const because = `${pair.fg} on ${bg}${reading.name === 'more' ? ', in more contrast' : ''}`;
+          if (!moved.has(target)) moved.set(target, because);
         }
-        const before = fitted[target];
-        const l = Math.min(1, Math.max(0, before.l + direction * STEP));
-        if (l === before.l) {
-          throw new Error(`${pair.fg} on ${bg} (${mode}) cannot reach ${pair.min}:1`);
-        }
-        fitted[target] = round({ ...before, l });
-        if (!moved.has(target)) moved.set(target, `${pair.fg} on ${bg}`);
       }
     }
     if (failing === 0) break;
