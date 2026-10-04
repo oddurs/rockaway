@@ -33,7 +33,7 @@ url = "https://github.com/oddurs/rockaway/blob/main"
 name = "component"
 icon = "◇"
 color = "magenta"
-description = "A component: its anatomy, states, tokens and accessibility contract (docs/concept.md)."
+description = "A component: its anatomy, states, tokens and accessibility contract (docs/concept.md). Build it by docs/component-recipe.md."
 template = """
 ## Purpose
 

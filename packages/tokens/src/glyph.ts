@@ -114,6 +114,7 @@ export const markNames = [
   'cross',
   'bullet',
   'cursor',
+  'prompt',
   'expanded',
   'collapsed',
   'ellipsis',
@@ -137,7 +138,8 @@ export type MarkName = (typeof markNames)[number];
  * The marks a UI makes when it cannot use colour alone (cairn 0118). A
  * checkbox is `check`, `dash` or `blank` between the control delimiters; a
  * radio is `radio` or `radio-empty` on its own, so its empty state is still a
- * visible mark. Tree guides are not here: they are edges, and the junction
+ * visible mark. `prompt` starts an input row that takes a command, as a
+ * shell's does; it is not `overflow-end`, though in Unicode it is drawn alike. Tree guides are not here: they are edges, and the junction
  * table draws them.
  */
 export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string>>>> = {
@@ -146,6 +148,7 @@ export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string
     cross: '✗',
     bullet: '·',
     cursor: '▸',
+    prompt: '›',
     expanded: '▾',
     collapsed: '▸',
     ellipsis: '…',
@@ -168,6 +171,7 @@ export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string
     cross: 'X',
     bullet: '*',
     cursor: '>',
+    prompt: '>',
     expanded: 'v',
     collapsed: '>',
     ellipsis: '~',
@@ -340,8 +344,23 @@ export const strokeWeights = {
   rule: { light: 1, heavy: 2, gap: 1 },
 } as const;
 
-export function strokes(): Group {
-  const { glyph, rule } = strokeWeights;
+/**
+ * Increased contrast (cairn 0065): every line a step heavier, light and heavy
+ * still apart so a focused frame still reads as heavier than a resting one.
+ * Only the ink thickens; a line still sits in the middle of its cell.
+ */
+export const moreContrastStrokeWeights = {
+  glyph: { light: 0.12, heavy: 0.22, gap: 0.12 },
+  rule: { light: 2, heavy: 3, gap: 1 },
+} as const;
+
+export type StrokeWeights = {
+  readonly glyph: { readonly light: number; readonly heavy: number; readonly gap: number };
+  readonly rule: { readonly light: number; readonly heavy: number; readonly gap: number };
+};
+
+export function strokes(weights: StrokeWeights = strokeWeights): Group {
+  const { glyph, rule } = weights;
   return {
     stroke: {
       $description:
