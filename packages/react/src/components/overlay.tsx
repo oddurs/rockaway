@@ -212,6 +212,18 @@ function gridOf(el: Element | null | undefined): Grid {
  * transformed layer is shifted after its backgrounds are snapped to pixels,
  * and a translate of a fraction of a pixel parts the strokes of the frame.
  */
+/**
+ * Rounding a position in cells, the same in every engine. A modal centred
+ * in an odd number of spare cells sits on a half cell exactly, and each
+ * engine's float lengths put it a hair either side (Chromium's 1/64px, Firefox's
+ * 1/60px), so a plain `Math.round` sent it a column left in one and right in
+ * the other. A tie goes left, or up, everywhere; and a position a hair under a
+ * whole cell is that cell, as `cellsIn` takes a box a hair under n cells as n.
+ */
+const TIE = 0.01;
+const nearest = (cells: number): number => Math.ceil(cells - 0.5 - TIE);
+const down = (cells: number): number => Math.floor(cells + TIE);
+
 function useCellSnap(
   surface: RefObject<HTMLElement | null>,
   anchor: () => Element | null | undefined,
@@ -231,9 +243,9 @@ function useCellSnap(
       // row round towards the corner.
       const left = sheet ? 0 : grid.left;
       const cols = (rawX - left) / grid.width;
-      const x = left + (sheet ? Math.floor(cols) : Math.round(cols)) * grid.width;
+      const x = left + (sheet ? down(cols) : nearest(cols)) * grid.width;
       const rows = (rawY - grid.top) / grid.height;
-      const y = grid.top + (sheet ? Math.floor(rows) : Math.round(rows)) * grid.height;
+      const y = grid.top + (sheet ? down(rows) : nearest(rows)) * grid.height;
       const next = { x: x - rawX, y: y - rawY };
       if (Math.abs(next.x - shift.x) < 0.01 && Math.abs(next.y - shift.y) < 0.01) return;
       shift = next;
