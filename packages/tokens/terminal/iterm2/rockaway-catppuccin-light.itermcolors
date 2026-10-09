@@ -4,15 +4,17 @@ Catppuccin Latte (light), from https://github.com/catppuccin/ghostty
 Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
   foreground: #4c4f69 -> #3b3d56
   blue: #1e66f5 -> #0b55e4
-  bright-blue: #1e66f5 -> #1b63f2
+  bright-blue: #1e66f5 -> #0032c1
   cyan: #179299 -> #006f76
-  bright-cyan: #179299 -> #007a81
+  bright-cyan: #179299 -> #004e54
   green: #40a02b -> #017500
-  bright-green: #40a02b -> #187f00
+  bright-green: #40a02b -> #005200
   yellow: #df8e1d -> #965300
-  bright-yellow: #df8e1d -> #a35c00
+  bright-yellow: #df8e1d -> #6e3a00
   red: #d20f39 -> #c70030
   magenta: #ea76cb -> #a6378c
+  bright-red: #d20f39 -> #840017
+  bright-magenta: #ea76cb -> #840e6d
 
 MIT licence. Copyright (c) 2021 Catppuccin.
 
@@ -164,11 +166,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.823529</real>
+		<real>0.517647</real>
 		<key>Green Component</key>
-		<real>0.058824</real>
+		<real>0.000000</real>
 		<key>Blue Component</key>
-		<real>0.223529</real>
+		<real>0.090196</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -177,9 +179,9 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.094118</real>
+		<real>0.000000</real>
 		<key>Green Component</key>
-		<real>0.498039</real>
+		<real>0.321569</real>
 		<key>Blue Component</key>
 		<real>0.000000</real>
 		<key>Alpha Component</key>
@@ -190,9 +192,9 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.639216</real>
+		<real>0.431373</real>
 		<key>Green Component</key>
-		<real>0.360784</real>
+		<real>0.227451</real>
 		<key>Blue Component</key>
 		<real>0.000000</real>
 		<key>Alpha Component</key>
@@ -203,11 +205,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.105882</real>
+		<real>0.000000</real>
 		<key>Green Component</key>
-		<real>0.388235</real>
+		<real>0.196078</real>
 		<key>Blue Component</key>
-		<real>0.949020</real>
+		<real>0.756863</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -216,11 +218,11 @@ SOFTWARE.
 		<key>Color Space</key>
 		<string>sRGB</string>
 		<key>Red Component</key>
-		<real>0.917647</real>
+		<real>0.517647</real>
 		<key>Green Component</key>
-		<real>0.462745</real>
+		<real>0.054902</real>
 		<key>Blue Component</key>
-		<real>0.796078</real>
+		<real>0.427451</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>
@@ -231,9 +233,9 @@ SOFTWARE.
 		<key>Red Component</key>
 		<real>0.000000</real>
 		<key>Green Component</key>
-		<real>0.478431</real>
+		<real>0.305882</real>
 		<key>Blue Component</key>
-		<real>0.505882</real>
+		<real>0.329412</real>
 		<key>Alpha Component</key>
 		<real>1</real>
 	</dict>

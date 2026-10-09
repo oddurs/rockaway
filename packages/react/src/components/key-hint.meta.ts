@@ -18,7 +18,7 @@ const hint = (
 export const keyHintMeta: ComponentMetaInput = defineMeta({
   name: 'KeyHint',
   summary: `A chord and the action it performs: \`${hint('mod+s', 'save', 'apple')}\`.`,
-  description: `How a TUI teaches itself. One spec gives three strings: what you see (\`${formatKeys('mod+s', 'apple')}\` on an Apple keyboard, \`Ctrl+S\` elsewhere, \`^S\` in terminal notation), what a reader hears ("Command S"), and what the platform is told (\`Meta+s\`, for aria-keyshortcuts). The key legends are the theme's: symbols in Unicode, words in an ASCII theme.`,
+  description: `How a TUI teaches itself. One spec gives three strings: what you see (\`${formatKeys('mod+s', 'apple')}\` on an Apple keyboard, \`Ctrl+S\` elsewhere, \`^S\` in terminal notation), what a reader hears ("Command S"), and what the platform is told (\`Meta+S\`, for aria-keyshortcuts). The key legends are the theme's: symbols in Unicode, words in an ASCII theme.`,
   whenToUse: [
     'In a status bar or a footer, to list what the keys on this screen do.',
     'Beside an action that has a shortcut, outside a control.',

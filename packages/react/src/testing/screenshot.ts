@@ -19,6 +19,11 @@ export interface ScreenshotOptions {
   readonly legend?: boolean;
   /** Trim trailing spaces on each row. Default true. */
   readonly trimEnd?: boolean;
+  /**
+   * Draw the overlays open above the screen — a modal's backdrop and its
+   * dialog, a popover — over it, cut to its cells (cairn 0128). Default true.
+   */
+  readonly overlays?: boolean;
 }
 
 interface Grid {
@@ -59,85 +64,118 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     row: Math.round((rect.top - box.top) / cellHeight),
   });
 
-  // What a reader sees of an element: the screen, cut down by every ancestor
-  // that clips its overflow. A scrolled list's rows are in the DOM above and
-  // below its box, and drawing them would write over the frame (cairn 0160).
-  const everything: Clip = { left: 0, top: 0, right: cols, bottom: rows };
-  const clips = new Map<Element, Clip>();
-  const clipOf = (element: Element | null): Clip => {
-    if (element === null || !screen.contains(element)) return everything;
-    const known = clips.get(element);
-    if (known) return known;
-    const outer = clipOf(element === screen ? null : element.parentElement);
-    const { overflowX = 'visible', overflowY = 'visible' } =
-      element.ownerDocument.defaultView?.getComputedStyle(element) ?? {};
-    let clip = outer;
-    if (overflowX !== 'visible' || overflowY !== 'visible') {
-      // The padding box: what scrolls into view, without borders or scrollbars.
-      const r = element.getBoundingClientRect();
-      const left = r.left + element.clientLeft - box.left;
-      const top = r.top + element.clientTop - box.top;
-      clip = {
-        left:
-          overflowX === 'visible' ? outer.left : Math.max(outer.left, Math.round(left / cellWidth)),
-        right:
-          overflowX === 'visible'
-            ? outer.right
-            : Math.min(outer.right, Math.round((left + element.clientWidth) / cellWidth)),
-        top:
-          overflowY === 'visible' ? outer.top : Math.max(outer.top, Math.round(top / cellHeight)),
-        bottom:
-          overflowY === 'visible'
-            ? outer.bottom
-            : Math.min(outer.bottom, Math.round((top + element.clientHeight) / cellHeight)),
-      };
+  const attributes: { text: string; attrs: string; col: number; row: number }[] = [];
+
+  // Draw everything under `root` onto the grid: the screen itself, or an
+  // overlay open above it.
+  const draw = (root: HTMLElement): void => {
+    // What a reader sees of an element: the screen, cut down by every ancestor
+    // that clips its overflow. A scrolled list's rows are in the DOM above and
+    // below its box, and drawing them would write over the frame (cairn 0160).
+    const everything: Clip = { left: 0, top: 0, right: cols, bottom: rows };
+    const clips = new Map<Element, Clip>();
+    const clipOf = (element: Element | null): Clip => {
+      if (element === null || !root.contains(element)) return everything;
+      const known = clips.get(element);
+      if (known) return known;
+      const outer = clipOf(element === root ? null : element.parentElement);
+      const { overflowX = 'visible', overflowY = 'visible' } =
+        element.ownerDocument.defaultView?.getComputedStyle(element) ?? {};
+      let clip = outer;
+      if (overflowX !== 'visible' || overflowY !== 'visible') {
+        // The padding box: what scrolls into view, without borders or scrollbars.
+        const r = element.getBoundingClientRect();
+        const left = r.left + element.clientLeft - box.left;
+        const top = r.top + element.clientTop - box.top;
+        clip = {
+          left:
+            overflowX === 'visible'
+              ? outer.left
+              : Math.max(outer.left, Math.round(left / cellWidth)),
+          right:
+            overflowX === 'visible'
+              ? outer.right
+              : Math.min(outer.right, Math.round((left + element.clientWidth) / cellWidth)),
+          top:
+            overflowY === 'visible' ? outer.top : Math.max(outer.top, Math.round(top / cellHeight)),
+          bottom:
+            overflowY === 'visible'
+              ? outer.bottom
+              : Math.min(outer.bottom, Math.round((top + element.clientHeight) / cellHeight)),
+        };
+      }
+      clips.set(element, clip);
+      return clip;
+    };
+
+    // The painted chrome, which is already cell-aligned row by row. A screen
+    // inside this one — a fieldset in a form — paints its own, which is written
+    // where it sits and after the outer chrome, so it lies over it as it does on
+    // the page.
+    for (const layer of root.querySelectorAll<HTMLElement>('.rk-frame')) {
+      const { col, row } = at(layer.getBoundingClientRect());
+      const clip = clipOf(layer.parentElement);
+      layer.querySelectorAll<HTMLElement>(':scope > .rk-row').forEach((line, index) => {
+        write(grid, col, row + index, line.textContent ?? '', clip);
+      });
     }
-    clips.set(element, clip);
-    return clip;
+
+    // Everything else: real elements, placed by where they actually are.
+    const walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = node.textContent ?? '';
+      if (text.trim() === '') continue;
+      const parent = node.parentElement;
+      if (!parent || parent.closest('.rk-frame')) continue;
+
+      const range = root.ownerDocument.createRange();
+      range.selectNodeContents(node);
+      const clip = clipOf(parent);
+      const start = at(range.getBoundingClientRect());
+      if (range.getClientRects().length > 1) {
+        // Text that wraps is on several rows: each line of it is written where
+        // that line is, which only the line's own characters can say.
+        for (const line of linesOf(node, root.ownerDocument)) {
+          const { col, row } = at(line.rect);
+          if (row >= clip.top && row < clip.bottom) write(grid, col, row, line.text, clip);
+        }
+      } else {
+        if (start.row < clip.top || start.row >= clip.bottom) continue;
+        write(grid, start.col, start.row, text, clip);
+      }
+      const { col, row } = start;
+
+      // A painted run says what it carries; a real element is read for it.
+      const attrs =
+        parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs ?? drawnWith(parent, screen);
+      if (attrs) attributes.push({ text: text.trim(), attrs, col, row });
+    }
+
+    // Text cut to its room (0231) ends in the theme's ellipsis, which the
+    // stylesheet draws in the label's last cell, after the clipped text: a
+    // pseudo-element, so no text node says where it is.
+    for (const label of root.querySelectorAll<HTMLElement>('[data-rk-cut][data-rk-ellipsis]')) {
+      const rect = label.getBoundingClientRect();
+      const { row } = at(rect);
+      const col = Math.round((rect.right - box.left) / cellWidth) - 1;
+      const clip = clipOf(label.parentElement);
+      if (row >= clip.top && row < clip.bottom) {
+        write(grid, col, row, label.dataset.rkEllipsis ?? '', clip);
+      }
+    }
   };
 
-  // The painted chrome, which is already cell-aligned row by row. A screen
-  // inside this one — a fieldset in a form — paints its own, which is written
-  // where it sits and after the outer chrome, so it lies over it as it does on
-  // the page.
-  for (const layer of screen.querySelectorAll<HTMLElement>('.rk-frame')) {
-    const { col, row } = at(layer.getBoundingClientRect());
-    const clip = clipOf(layer.parentElement);
-    layer.querySelectorAll<HTMLElement>(':scope > .rk-row').forEach((line, index) => {
-      write(grid, col, row + index, line.textContent ?? '', clip);
-    });
-  }
+  draw(screen);
 
-  // Everything else: real elements, placed by where they actually are.
-  const walker = screen.ownerDocument.createTreeWalker(screen, NodeFilter.SHOW_TEXT);
-  const attributes: { text: string; attrs: string; col: number; row: number }[] = [];
-  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-    const text = node.textContent ?? '';
-    if (text.trim() === '') continue;
-    const parent = node.parentElement;
-    if (!parent || parent.closest('.rk-frame')) continue;
-
-    const range = screen.ownerDocument.createRange();
-    range.selectNodeContents(node);
-    const clip = clipOf(parent);
-    const start = at(range.getBoundingClientRect());
-    if (range.getClientRects().length > 1) {
-      // Text that wraps is on several rows: each line of it is written where
-      // that line is, which only the line's own characters can say.
-      for (const line of linesOf(node, screen.ownerDocument)) {
-        const { col, row } = at(line.rect);
-        if (row >= clip.top && row < clip.bottom) write(grid, col, row, line.text, clip);
-      }
-    } else {
-      if (start.row < clip.top || start.row >= clip.bottom) continue;
-      write(grid, start.col, start.row, text, clip);
+  // Overlays open above the screen (cairn 0128): a modal's backdrop and its
+  // dialog, a popover, a menu in a dialog. Each is drawn over what is beneath
+  // it, in the order they opened, cut to the screen's own cells.
+  if (options.overlays ?? true) {
+    for (const overlay of screen.ownerDocument.querySelectorAll<HTMLElement>(
+      '.rk-overlay-layer > *',
+    )) {
+      if (!overlay.contains(screen)) draw(overlay);
     }
-    const { col, row } = start;
-
-    // A painted run says what it carries; a real element is read for it.
-    const attrs =
-      parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs ?? drawnWith(parent, screen);
-    if (attrs) attributes.push({ text: text.trim(), attrs, col, row });
   }
 
   const lines = grid.cells.map((row) => {
