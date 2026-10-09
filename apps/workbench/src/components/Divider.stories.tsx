@@ -378,3 +378,26 @@ export const ForcedColors: Story = {
     }
   },
 };
+
+/**
+ * Held to `strict` (rule 7): every box in whole cells, drawn by the glyph
+ * painter. The check after the story is the test, at every density and in
+ * both modes, and this story is what lets the metadata say Divider holds
+ * `strict` (0167). Dividers on their own, not against a frame's edge, which
+ * is a case of its own ("Between panes").
+ */
+export const Strict: Story = {
+  name: 'Held to strict',
+  globals: { conformance: 'strict' },
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--rk-x-2)', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
+        <Divider cols={20} label="files" />
+        <Divider cols={20} ends="joined" />
+      </div>
+      <div style={{ height: 'calc(var(--rk-cell-height) * 4)' }}>
+        <Divider orientation="vertical" />
+      </div>
+    </div>
+  ),
+};

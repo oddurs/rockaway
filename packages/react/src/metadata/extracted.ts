@@ -988,7 +988,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ],
     "marks": [],
-    "level": "standard"
+    "level": "strict"
   },
   "FieldError": {
     "file": "field.tsx",
