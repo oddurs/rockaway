@@ -29,6 +29,10 @@ setRunner({
   record: (use) => commands.recordKnown(use),
   // The provider's keyboard: trusted events, as a reader's keys are.
   type: (keys) => userEvent.keyboard(keys),
-  click: (element) => userEvent.click(element),
+  // At a point, the press goes to whatever a reader would hit there, without
+  // waiting for the element itself to be the one on top: a backdrop is under
+  // the layer that holds the dialog.
+  click: (element, at) =>
+    userEvent.click(element, at === undefined ? {} : { position: at, force: true }),
   contrast: (preference) => commands.emulateContrast(preference),
 });

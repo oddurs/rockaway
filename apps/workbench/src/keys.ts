@@ -20,9 +20,17 @@ export async function tab({ shift = false }: { readonly shift?: boolean } = {}):
   await press(shift ? '{Shift>}{Tab}{/Shift}' : '{Tab}');
 }
 
-/** A click with the browser's own pointer, so the real keys after it go where a reader's would. */
-export async function click(element: Element): Promise<void> {
+/**
+ * A click with the browser's own pointer, so the real keys after it go where
+ * a reader's would. `at` is a point in the element, from its top-left corner,
+ * for a press that must miss what lies over its middle: a modal's backdrop,
+ * whose middle is the dialog.
+ */
+export async function click(
+  element: Element,
+  at?: { readonly x: number; readonly y: number },
+): Promise<void> {
   const run = runner();
-  if (run) await run.click(element);
-  else await userEvent.click(element);
+  if (run) await run.click(element, at);
+  else await userEvent.click(element, { skipHover: true });
 }
