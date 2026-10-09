@@ -3,7 +3,14 @@ import { expectField, expectNames, expectNoNativeScrollbars } from '@rockaway/re
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import { afterEach as axe } from '@storybook/addon-a11y/preview';
 import type { Decorator, Preview, StoryContext } from '@storybook/react-vite';
-import '@fontsource-variable/jetbrains-mono';
+// The default face (IBM Plex Mono): its four weights, and the true italic
+// prose and comments are set in, so nothing is a synthetic slant.
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/400-italic.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '@fontsource/ibm-plex-mono/700.css';
+import '@fontsource/ibm-plex-mono/700-italic.css';
 import '@rockaway/css';
 import '@rockaway/tokens/tokens.css';
 // Every theme but the default is a stylesheet of its own, loaded after the

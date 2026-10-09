@@ -4,6 +4,8 @@
  *
  * One size: a heading is weight, case or reverse, never a larger font (0075).
  * Ligatures are off, because a ligature is two characters in one cell.
+ * Italic is the face's own or nothing: a slant the browser fakes leans
+ * glyphs over the edge of their cell, and the default face has a true one.
  * Density is the line box, so the cells get taller and nothing moves.
  *
  * `color-scheme` is not set here: it belongs to the mode context, and this
@@ -23,6 +25,7 @@
     font-size: 1rem;
     font-variant-ligatures: none;
     font-variant-numeric: tabular-nums;
+    font-synthesis-style: none;
     -webkit-font-smoothing: antialiased;
   }
 

@@ -43,11 +43,11 @@ export interface ThemeContexts {
 export const modes: readonly Mode[] = ['light', 'dark'];
 export const densities: readonly Density[] = ['dense', 'normal', 'airy', 'touch'];
 
-/** The opinionated default. */
+/** The opinionated default. Set in IBM Plex Mono, which has a true italic. */
 export const defaultTheme: ThemeInputs = {
   accentHue: 262,
   neutralTemperature: 'neutral',
-  typePairing: 'system',
+  typePairing: 'ibm-plex',
   borderSet: 'single',
   conformance: 'standard',
 };
