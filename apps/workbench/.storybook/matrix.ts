@@ -64,6 +64,8 @@ export interface Parameters {
   readonly targets?: boolean;
   /** `false` for a story that breaks the field contract on purpose, to show the check. */
   readonly fields?: boolean;
+  /** `false` for a story that puts a glyph in a name on purpose, to show the check (0252). */
+  readonly names?: boolean;
   readonly matrix?: { readonly skip?: readonly Skip[] };
 }
 
@@ -157,13 +159,19 @@ function signature(root: HTMLElement): string {
 /**
  * Screens whose cell is not the line box they now sit in: they kept the cell
  * they measured before the context changed. Only a screen `Screen` measured
- * (it says how many cells it has); a story that builds one by hand sets its
- * cell on purpose.
+ * (it says how many cells it has, and its cell is in pixels); a story that
+ * builds one by hand sets its cell on purpose.
  */
 function stale(root: HTMLElement): Failure[] {
   const found: Failure[] = [];
   for (const screen of root.querySelectorAll<HTMLElement>('.rk-screen[data-rk-cols]')) {
-    const cell = Number.parseFloat(screen.style.getPropertyValue('--rk-cell-height'));
+    // Only a measured cell can be stale. A screen that has not measured, the
+    // server's markup before it hydrates or a page with no script, keeps the
+    // cell in `1ch` and `1lh`, which are the line box it sits in whatever the
+    // context: it follows a change by construction (cairn 0126, 0238).
+    const declared = screen.style.getPropertyValue('--rk-cell-height').trim();
+    if (!declared.endsWith('px')) continue;
+    const cell = Number.parseFloat(declared);
     const line = Number.parseFloat(getComputedStyle(screen).lineHeight);
     if (Number.isFinite(cell) && Number.isFinite(line) && Math.abs(cell - line) > 0.01) {
       const testId = screen.dataset.testid ? `[${screen.dataset.testid}]` : '';

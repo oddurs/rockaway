@@ -1,0 +1,8 @@
+── A file tree
+ ▾ src                  
+ ├─▾ components         
+ │ ├── button.tsx       
+▸│ └── list.tsx         
+ ├─▸ paint              
+ └── index.ts           
+   README.md            
