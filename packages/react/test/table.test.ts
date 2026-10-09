@@ -1,5 +1,5 @@
 import { stringWidth, toText } from '@rockaway/grid';
-import { glyphsFor } from '@rockaway/tokens';
+import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import { createElement as h, type ReactNode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
@@ -208,7 +208,7 @@ describe('a window of rows (0281)', () => {
   test('every row fitting, the scrollbar is all thumb', () => {
     const all = tableBuffer({ columns: COLUMNS, rows: ROWS, visible: 3 });
     const column = [3, 4, 5].map((y) => all.at({ x: all.width - 2, y })?.ch);
-    expect(new Set(column)).toEqual(new Set([glyphsFor({}).block.full]));
+    expect(new Set(column)).toEqual(new Set([themeGlyphs.default.block.full]));
   });
 });
 
@@ -291,6 +291,34 @@ describe('on a server, with no script', () => {
     expect(html).toMatch(/--rk-table-columns:calc\(var\(--rk-cell-width\) \* 15\)/);
     // And the values are fitted to them, as the client fits them.
     expect(html).toContain('src/index.ts');
+  });
+
+  test('a window of rows is as tall as the window, its scrollbar drawn, before any script', () => {
+    const html = renderToString(
+      h(
+        Table,
+        { title: 'files', cols: 40, rows: 1, 'aria-label': 'files' },
+        h(TableHeader, null, ...columns()),
+        h(TableBody<(typeof FILES)[number]>, {
+          items: FILES,
+          // biome-ignore lint/correctness/noChildrenProp: as above
+          children: (file) =>
+            h(Row, { id: file.id }, h(Cell, null, file.name), h(Cell, null, file.size)),
+        }),
+      ),
+    );
+    const want = tableBuffer({
+      title: 'files',
+      width: 40,
+      visible: 1,
+      columns: [{ header: 'Name' }, { header: 'Size', width: 6, align: 'end' }],
+      rows: FILES.map((f) => ({ cells: [f.name, f.size] })),
+    });
+    // The screen's rows, then the scrollbar's: one of two rows shown, the thumb at the top.
+    const painted = rows(html);
+    for (const y of [0, 2, want.height - 1]) expect(painted[y]).toBe(want.row(y));
+    expect(painted.slice(want.height)).toEqual([themeGlyphs.default.block.full]);
+    expect(html).toContain('--rk-table-rows:1');
   });
 
   test('static rows are read too', () => {

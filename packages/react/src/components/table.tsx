@@ -366,16 +366,20 @@ export function Table({
   const size = { width: layout.width, height: tableHeight(shown ?? rows) };
 
   // Where the body is scrolled to, in rows, for the scrollbar. Read with a
-  // native listener on the body, as List does, and measured when it is needed,
-  // because density decides how tall a row is.
+  // native listener, as List does, and measured when it is needed, because
+  // density decides how tall a row is. Caught on the way down from the table,
+  // because the body is the caller's element, drawn after the screen measures.
   const [scrolled, setScrolled] = useState(0);
   useEffect(() => {
-    const body = host.current?.querySelector<HTMLElement>('.rk-table-body');
-    if (shown === undefined || !body) return;
-    const read = (): void => setScrolled(Math.round(body.scrollTop / measureCell(body).height));
-    read();
-    body.addEventListener('scroll', read, { passive: true });
-    return () => body.removeEventListener('scroll', read);
+    const el = host.current;
+    if (shown === undefined || !el) return;
+    const read = (event: Event): void => {
+      const body = event.target;
+      if (!(body instanceof HTMLElement) || !body.classList.contains('rk-table-body')) return;
+      setScrolled(Math.round(body.scrollTop / measureCell(body).height));
+    };
+    el.addEventListener('scroll', read, { capture: true, passive: true });
+    return () => el.removeEventListener('scroll', read, { capture: true });
   }, [shown]);
   const bar = useMemo(
     () =>

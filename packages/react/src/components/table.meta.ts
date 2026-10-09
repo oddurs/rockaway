@@ -166,5 +166,11 @@ export const tableMeta: ComponentMetaInput = defineMeta({
       description: 'The words across the table, and the column rules stop at the header rule.',
       text: toText(tableBuffer({ ...FILES, rows: [] })),
     },
+    {
+      title: 'A window of rows',
+      description:
+        '`rows={2}`: two rows shown at once, scrolled down one, and the scrollbar in the cell inside the right edge (0281).',
+      text: toText(tableBuffer({ ...FILES, visible: 2, offset: 1 })),
+    },
   ],
 });

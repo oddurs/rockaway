@@ -1177,6 +1177,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "default": "'glyph'"
       },
       {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "The body rows shown at once: the table is exactly this tall, and its body scrolls in whole rows, following the cursor, with a scrollbar in cells. Every row, and no scrollbar, when not given."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false

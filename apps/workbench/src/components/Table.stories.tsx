@@ -301,6 +301,15 @@ export const RowsWindow: Story = {
     const window = { width: 44, visible: 3 } as const;
     const body = canvasElement.querySelector('.rk-table-body') as HTMLElement;
     const shown = (): string => screenshot(screen, { legend: false });
+    // The scrollbar follows the body's scroll event, a render later.
+    const bar = (): string =>
+      canvasElement.querySelector('.rk-table-scrollbar')?.textContent?.replace(/\s/g, '') ?? '';
+    const thumb = (offset: number): string =>
+      model(MANY, { ...window, offset })
+        .split('\n')
+        .slice(3, 6)
+        .map((line) => [...line].at(-2))
+        .join('');
 
     // At rest: the first three, the thumb at the top.
     expect(shown()).toBe(model(MANY, { ...window, offset: 0 }));
@@ -314,6 +323,7 @@ export const RowsWindow: Story = {
     const row = Number.parseFloat(getComputedStyle(screen).getPropertyValue('--rk-cell-height'));
     // Scrolled by whole rows, so the cursor's row is the window's last.
     await waitFor(() => expect(body.scrollTop / row).toBe(2));
+    await waitFor(() => expect(bar()).toBe(thumb(2)));
     expect(shown()).toBe(
       model(MANY, { ...window, offset: 2, row: (f) => ({ cursor: f.id === 'file-4' }) }),
     );
@@ -323,6 +333,7 @@ export const RowsWindow: Story = {
     await userEvent.keyboard('{Control>}{End}{/Control}');
     await waitFor(() => expect(rowOf(cellNamed(canvasElement, 'file-7.ts'))).toHaveFocus());
     await waitFor(() => expect(body.scrollTop / row).toBe(5));
+    await waitFor(() => expect(bar()).toBe(thumb(5)));
     expect(shown()).toBe(
       model(MANY, { ...window, offset: 5, row: (f) => ({ cursor: f.id === 'file-7' }) }),
     );
