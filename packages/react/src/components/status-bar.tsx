@@ -25,6 +25,7 @@
  * position that changes on every key is not read on every key.
  */
 import { type Size, stringWidth } from '@rockaway/grid';
+import type { Glyphs } from '@rockaway/tokens';
 import {
   Children,
   type CSSProperties,
@@ -40,8 +41,11 @@ import {
 } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
+import { type Platform, usePlatform } from '../platform.ts';
 import { Screen, type ScreenProps } from '../screen.tsx';
 import type { VariantProps } from '../variants.ts';
+import { keyHintCells } from './key-hint.pure.ts';
+import { KeyHint } from './key-hint.tsx';
 import {
   fitStatus,
   groundBuffer,
@@ -111,12 +115,21 @@ const MESSAGE_PRIORITY = 100;
  * A segment's width in cells when its content is text, which is known without
  * laying it out; undefined for anything else, which only the page can measure.
  */
-function textCells(children: ReactNode): number | undefined {
-  const items = Children.toArray(children);
-  if (!items.every((item) => typeof item === 'string' || typeof item === 'number')) {
-    return undefined;
+function textCells(children: ReactNode, platform: Platform, glyphs: Glyphs): number | undefined {
+  let cells = 0;
+  for (const item of Children.toArray(children)) {
+    if (typeof item === 'string' || typeof item === 'number') {
+      cells += stringWidth(String(item));
+      continue;
+    }
+    // A key hint's width is its legend and its label, both strings: known
+    // without a page, as text is.
+    if (!isElementOf(item, KeyHint)) return undefined;
+    const { keys, children: label, platform: own = 'auto', notation } = item.props;
+    if (label !== undefined && typeof label !== 'string') return undefined;
+    cells += keyHintCells(keys, label, own === 'auto' ? platform : own, notation, glyphs);
   }
-  return stringWidth(items.join(''));
+  return cells;
 }
 
 /**
@@ -163,6 +176,9 @@ export function StatusBar({
   ...screen
 }: StatusBarProps): ReactNode {
   const glyphs = useGlyphs();
+  // The keyboard a hint is drawn for: the neutral one on a server and on the
+  // render that hydrates, the reader's after, as KeyHint does (0132).
+  const platform = usePlatform();
   const parts: Part[] = Children.toArray(children).flatMap((child): Part[] => {
     if (isElementOf(child, StatusSegment)) return [{ kind: 'segment', props: child.props }];
     if (isElementOf(child, StatusMessage)) return [{ kind: 'message', props: child.props }];
@@ -213,7 +229,7 @@ export function StatusBar({
   // Until the page has measured: text at its own width, and nothing else. A
   // message has not arrived yet on the first render, so it is no cells.
   const guessed = parts.map((part) =>
-    part.kind === 'message' ? 0 : textCells(part.props.children),
+    part.kind === 'message' ? 0 : textCells(part.props.children, platform, glyphs),
   );
 
   return (

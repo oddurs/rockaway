@@ -89,7 +89,12 @@ describe('a screen rendered on a server (0126)', () => {
         createElement(StatusSegment, { variant: 'mode' }, 'NORMAL'),
         createElement(StatusSegment, null, 'src/list.tsx'),
         createElement(StatusSegment, { align: 'end' }, 12, ':', 4),
-        createElement(StatusSegment, { align: 'end' }, createElement(KeyHint, { keys: 'mod+s' })),
+        createElement(
+          StatusSegment,
+          { align: 'end' },
+          createElement(KeyHint, { keys: '?' }, 'help'),
+        ),
+        createElement(StatusSegment, { align: 'end' }, createElement('b', null, 'Top')),
         createElement(StatusMessage, null, 'Saved'),
       ),
     );
@@ -103,7 +108,7 @@ describe('a screen rendered on a server (0126)', () => {
     for (const [words, x, cols] of [
       ['NORMAL', 0, 8],
       ['src/list.tsx', 8, 14],
-      ['12:4', 34, 6],
+      ['12:4', 26, 6],
     ] as const) {
       const segment = byText(words);
       expect(segment, words).toBeDefined();
@@ -112,10 +117,17 @@ describe('a screen rendered on a server (0126)', () => {
       expect(style(segment), words).toContain(`--rk-status-cols:${cols}`);
       expect(style(segment), words).not.toContain('visibility');
     }
-    // A segment whose width only the page knows waits for it, hidden.
+    // A key hint's width is known from its props too: its legend, a cell, its
+    // label. `? help`, padded, in the end's last eight cells: the element after
+    // it, which only the page can measure, takes no room until then.
     const hint = segments.find((segment) => segment.includes('rk-keyhint'));
     expect(hint).toBeDefined();
-    expect(style(hint ?? '')).toBe('visibility:hidden');
+    expect(style(hint ?? '')).toContain('--rk-status-x:32');
+    expect(style(hint ?? '')).toContain('--rk-status-cols:8');
+    expect(hint).toContain('help');
+    // A segment whose width only the page knows waits for it, hidden.
+    const element = segments.find((segment) => segment.includes('<b>Top</b>'));
+    expect(style(element ?? '')).toBe('visibility:hidden');
     // The message has not arrived until the page runs: an empty live region.
     expect(html).toMatch(/role="status"/);
     expect(html).not.toContain('Saved');
