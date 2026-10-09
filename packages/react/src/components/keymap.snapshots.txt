@@ -1,0 +1,14 @@
+── Help, on any keyboard but Apple’s
+Ctrl+K  Open the palette
+/       Search
+g h     Go home
+j       Next row
+k       Previous row
+?       Show this help
+── Help, on an Apple keyboard
+⌘K   Open the palette
+/    Search
+g h  Go home
+j    Next row
+k    Previous row
+?    Show this help

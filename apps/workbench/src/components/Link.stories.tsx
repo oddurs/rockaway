@@ -1,5 +1,5 @@
 import { Frame, Link, linkBuffer, RouterProvider } from '@rockaway/react';
-import { screenshot } from '@rockaway/react/testing';
+import { checkTargets, screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useState } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
@@ -424,6 +424,46 @@ export const Touch: Story = {
     const gap =
       (guide?.getBoundingClientRect().left ?? 0) - (home?.getBoundingClientRect().right ?? 0);
     expect(wholeCells(gap, cell.width)).toBe(2);
+  },
+};
+
+/**
+ * A link alone at touch density (0244): with no words beside it, it is a
+ * target of its own and takes the whole row, 44px tall, where an inline box
+ * would be as tall as the font. A link in a sentence beside it stays inline,
+ * so it wraps with its words, and WCAG exempts it.
+ */
+export const Alone: Story = {
+  name: 'Alone, at touch',
+  render: () => (
+    <div data-density="touch">
+      <Frame title="alone" cols={36} rows={4}>
+        <div>
+          <Link href="#alone">read the guide</Link>
+        </div>
+        <div>
+          see <Link href="#sentence">the guide</Link> first
+        </div>
+      </Frame>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const frame = canvas.getByRole('group', { name: 'alone' });
+    const cell = cellOf(frame);
+    const alone = canvas.getByRole('link', { name: 'read the guide' });
+    const inSentence = canvas.getByRole('link', { name: 'the guide' });
+    await waitFor(() => expect(alone.hasAttribute('data-rk-alone')).toBe(true));
+    expect(inSentence.hasAttribute('data-rk-alone')).toBe(false);
+    expect(getComputedStyle(inSentence).display).toBe('inline');
+    // The row, whole: a cell tall, and at touch a finger's 44px.
+    expect(wholeCells(alone.getBoundingClientRect().height, cell.height)).toBe(1);
+    expect(alone.getBoundingClientRect().height + 0.5).toBeGreaterThanOrEqual(44);
+    expect(checkTargets(frame, { minHeight: 44 }).failures).toEqual([]);
+    // Nothing moves: it reads back as the same text.
+    expect(screenshot(frame, { legend: false }).split('\n')[1]).toBe(
+      `│ ${'read the guide'.padEnd(33)}│`,
+    );
   },
 };
 
