@@ -749,18 +749,9 @@ export const Densities: Story = {
           expect(trigger.getBoundingClientRect().height).toBeCloseTo(gridOf(trigger).height, 1);
           const [col, row] = cornerOf(trigger);
           const [x, y] = cornerOf(surface);
-          const t = trigger.getBoundingClientRect();
-          const g = gridOf(trigger);
-          const sf = surface.getBoundingClientRect();
-          expect(
-            y,
-            `${density} trig=${t.top}/${t.height} grid=${g.top}/${g.height} surf=${sf.top} wrap=${surface.parentElement?.getBoundingClientRect().top} style=${surface.style.top}`,
-          ).toBe(row + 1);
-          if (density !== 'touch')
-            expect(
-              x,
-              `${density} x: trig=${t.left} grid=${g.left}/${g.width} surf=${sf.left} wrap=${surface.parentElement?.getBoundingClientRect().left} sheet=${surface.className}`,
-            ).toBe(col);
+          expect(y, `${density}: on the row under the trigger`).toBe(row + 1);
+          // At touch a popover is a sheet, on the viewport's columns.
+          if (density !== 'touch') expect(x, `${density}: from its column`).toBe(col);
         });
       }
     } finally {

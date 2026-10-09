@@ -261,40 +261,15 @@ function useCellSnap(
     const resizes = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(snap);
     resizes?.observe(el);
     // The trigger's screen can move, or change its cell, without the surface
-    // changing size: a density switched at the root, say. React Aria places
-    // again when its trigger resizes, not when it only moves, as a trigger
-    // does when the screen it is in remeasures; then React Aria's pixels are
-    // where the trigger was, and snapping them only picks the nearest wrong
-    // row. So when the trigger has moved, React Aria is asked to place the
-    // overlay again, through the window resize it listens for, and the snap
-    // follows the style it writes (0246).
-    // A frame later, once what the move changed has rendered: a popover that
-    // was a sheet at touch is placed at its own width, not the sheet's.
-    let at = anchor()?.getBoundingClientRect();
-    let frame = 0;
-    const settled = (): void => {
-      const now = anchor()?.getBoundingClientRect();
-      const moved =
-        now !== undefined &&
-        at !== undefined &&
-        (Math.abs(now.left - at.left) > 0.01 || Math.abs(now.top - at.top) > 0.01);
-      at = now;
-      snap();
-      if (!moved) return;
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
-    };
-    const settles = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(settled);
+    // changing size: a density switched at the root, say.
     const screen = anchor()?.closest('.rk-screen');
-    if (screen) settles?.observe(screen);
-    const unobserve = observeContexts(settled);
+    if (screen) resizes?.observe(screen);
+    const unobserve = observeContexts(snap);
     window.addEventListener('resize', snap);
     window.addEventListener('scroll', snap, true);
     return () => {
-      cancelAnimationFrame(frame);
       mutations.disconnect();
       resizes?.disconnect();
-      settles?.disconnect();
       unobserve();
       window.removeEventListener('resize', snap);
       window.removeEventListener('scroll', snap, true);
@@ -320,6 +295,52 @@ function useSheet(el: () => Element | null | undefined): boolean {
     return () => window.removeEventListener('resize', read);
   }, [el]);
   return sheet;
+}
+
+/**
+ * Whether React Aria may place the popover now: briefly false after the
+ * trigger moves without changing size, then true again, which is a change it
+ * places again on. React Aria places again when its trigger resizes, but a
+ * trigger also moves without resizing, when the screen it is in remeasures
+ * its cell (0199): a density switched at the root, a sheet giving way to a
+ * popover. Then React Aria's pixels are where the trigger was, and snapping
+ * them to the grid only finds the nearest wrong row (0246).
+ */
+function usePlaceOnMove(anchor: () => Element | null | undefined): boolean {
+  const [held, setHeld] = useState(false);
+  // Kept across renders: where the trigger was when React Aria last placed.
+  const at = useRef<{ left: number; top: number } | undefined>(undefined);
+  useIsomorphicLayoutEffect(() => {
+    const el = anchor();
+    if (!el) return;
+    let frame = 0;
+    const check = (): void => {
+      const box = anchor()?.getBoundingClientRect();
+      if (!box) return;
+      const was = at.current;
+      at.current = { left: box.left, top: box.top };
+      if (!was || (Math.abs(box.left - was.left) < 0.01 && Math.abs(box.top - was.top) < 0.01)) {
+        return;
+      }
+      // Moved: hold for a frame, then let go, and React Aria places again.
+      setHeld(true);
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setHeld(false));
+    };
+    check();
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(check);
+    const screen = el.closest('.rk-screen');
+    if (screen) observer?.observe(screen);
+    const unobserve = observeContexts(check);
+    window.addEventListener('scroll', check, true);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      unobserve();
+      window.removeEventListener('scroll', check, true);
+    };
+  }, [anchor]);
+  return !held;
 }
 
 /** Cells between an overlay's frame and its content. */
@@ -562,6 +583,7 @@ export function OverlayPopover({
   const sheet = useSheet(anchor);
   const origin = useOrigin(anchor);
   const contexts = origin.contexts;
+  const placeable = usePlaceOnMove(anchor);
   // The shift in pixels of the trigger's cell, which React Aria offsets by
   // exactly, so the snap after it has nothing to round. Read at render: a
   // change of context re-renders through the origin, and the cell with it.
@@ -578,6 +600,7 @@ export function OverlayPopover({
       {...aria}
       {...contexts}
       placement={sheet ? 'bottom start' : placement}
+      shouldUpdatePosition={placeable && (aria.shouldUpdatePosition ?? true)}
       offset={offset}
       crossOffset={crossOffset}
       containerPadding={0}
