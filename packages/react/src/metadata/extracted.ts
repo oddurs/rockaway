@@ -1350,6 +1350,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "default": "DEFAULT_ROWS"
       },
       {
+        "name": "inputRef",
+        "type": "Ref<HTMLInputElement | HTMLTextAreaElement>",
+        "required": false,
+        "description": "The text box itself, `<input>` or, `multiline`, `<textarea>`: for an app to focus it, select its text or read its caret. An object or a callback; the field keeps its own beside it. `ref` is the field around it."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
