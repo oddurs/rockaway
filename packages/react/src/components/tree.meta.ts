@@ -81,7 +81,8 @@ export const treeMeta: ComponentMetaInput = defineMeta({
       name: 'label',
       className: 'rk-tree-label',
       chrome: false,
-      description: "The row's title, cut with an ellipsis where the tree ends.",
+      description:
+        "The row's title, cut where the tree ends in the theme's ellipsis, in its last cell. The whole title is still the text: found, copied and announced.",
     },
   ],
   states: [
