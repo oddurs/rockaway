@@ -8,15 +8,24 @@
  * reading its stylesheets and its source and by rendering it on the server —
  * and that nothing exported from the package goes without metadata.
  */
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
-import { createElement, Fragment, type ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import { type Analysis, analyse, packageRoot, render } from '../scripts/extract.ts';
+import {
+  type Analysis,
+  analyse,
+  metaFiles,
+  owns,
+  packageRoot,
+  render,
+  renderRegistry,
+} from '../scripts/extract.ts';
 import { formatKeys, parseKeys } from '../src/components/key-hint.pure.ts';
 import * as rockaway from '../src/index.ts';
+import { registry } from '../src/metadata/components.ts';
 import { components, metadata, stateVocabulary } from '../src/metadata/index.ts';
 import schema from '../src/metadata/meta.schema.json' with { type: 'json' };
 import type {
@@ -43,75 +52,39 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  RouterProvider:
+    "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
   Chrome:
     "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
 
+/** A component rendered once, as small as it can be. */
+type Fixture = (props?: Record<string, unknown>) => ReactElement;
+
 /**
- * Each component rendered once, as small as it can be: the evidence for its
- * roles, its focusability and the variant attributes it writes. A component
- * with metadata and no fixture fails below.
+ * Each component's fixture, from the `<name>.fixture.ts` beside it, by file:
+ * the evidence for its roles, its focusability and the variant attributes it
+ * writes. Beside the component rather than listed here, so two components
+ * added at once do not both edit this file (0262). A component with metadata
+ * and no fixture fails below.
  */
-const FIXTURES: Readonly<Record<string, (props?: Record<string, unknown>) => ReactElement>> = {
-  Badge: (props) => createElement(rockaway.Badge, props, 'passing'),
-  Button: (props) => createElement(rockaway.Button, props, 'Publish'),
-  Callout: (props) =>
-    createElement(rockaway.Callout, props, createElement('p', null, 'Mind the gap.')),
-  Divider: (props) => createElement(rockaway.Divider, { label: 'files', cols: 20, ...props }),
-  // Both parts of the module: the variant is FieldFrame's, and Fieldset is always a group.
-  Fieldset: (props) =>
-    createElement(
-      Fragment,
-      null,
-      createElement(rockaway.Fieldset, { legend: 'Notify' }),
-      createElement(rockaway.FieldFrame, { label: 'Message', ...props }),
-    ),
-  Form: (props) => createElement(rockaway.Form, props, createElement(rockaway.Label, null, 'Name')),
-  Frame: (props) => createElement(rockaway.Frame, { title: 'tokens', cols: 20, rows: 5, ...props }),
-  KeyHint: (props) => createElement(rockaway.KeyHint, { keys: 'mod+s', ...props }, 'save'),
-  Keymap: (props) => createElement(rockaway.Keymap, props, createElement(rockaway.KeymapHelp)),
-  Link: (props) => createElement(rockaway.Link, { href: '#docs', ...props }, 'docs'),
-  Tree: (props) =>
-    createElement(
-      rockaway.Tree,
-      { 'aria-label': 'files', defaultExpandedKeys: ['src'], ...props },
-      createElement(
-        rockaway.TreeItem,
-        { id: 'src', title: 'src' },
-        createElement(rockaway.TreeItem, { id: 'a', title: 'a.ts' }),
-      ),
-    ),
-  // Closed: a popover has no trigger here, and on a server an open one renders nothing anyway.
-  OverlayPopover: (props) =>
-    createElement(
-      rockaway.OverlayLayer,
-      null,
-      createElement(rockaway.OverlayPopover, { isOpen: false, ...props }, 'inside'),
-    ),
-  List: (props) =>
-    createElement(
-      rockaway.List,
-      { 'aria-label': 'files', selectionMode: 'single', ...props },
-      createElement(rockaway.ListItem, { id: 'a' }, 'a.ts'),
-      createElement(rockaway.ListItem, { id: 'b' }, 'b.ts'),
-    ),
-  Table: (props) =>
-    createElement(
-      rockaway.Table,
-      { 'aria-label': 'files', ...props },
-      createElement(
-        rockaway.TableHeader,
-        null,
-        // A column's words are required, and createElement's types cannot see them in its third argument.
-        // biome-ignore lint/correctness/noChildrenProp: as above
-        createElement(rockaway.Column, { id: 'name', isRowHeader: true, children: 'Name' }),
-      ),
-      createElement(
-        rockaway.TableBody,
-        null,
-        createElement(rockaway.Row, { id: 'a' }, createElement(rockaway.Cell, null, 'a.ts')),
-      ),
-    ),
+const componentsDir = path.join(packageRoot, 'src', 'components');
+const FIXTURES: Readonly<Record<string, Fixture>> = Object.fromEntries(
+  await Promise.all(
+    readdirSync(componentsDir)
+      .filter((file) => file.endsWith('.fixture.ts'))
+      .map(async (file) => {
+        const loaded = (await import(path.join(componentsDir, file))) as { fixture: Fixture };
+        return [file.replace(/\.fixture\.ts$/, ''), loaded.fixture] as const;
+      }),
+  ),
+);
+
+/** The file a component's metadata is written in: `key-hint` for KeyHint. */
+const fileOf = (name: string): string => {
+  const found = registry.find(({ meta }) => meta.name === name);
+  if (found === undefined) throw new Error(`${name} is not in the registry`);
+  return found.file;
 };
 
 /** A role a part may have without writing it, because its element implies it. */
@@ -124,8 +97,9 @@ const FOCUSABLE = /<(?:button|input|select|textarea)[\s>]|<a [^>]*href=|tabindex
 
 const analysis = analyse();
 const markup = (meta: ComponentMeta, props?: Record<string, unknown>): string => {
-  const fixture = FIXTURES[meta.name];
-  if (fixture === undefined) throw new Error(`${meta.name} has no fixture in this test.`);
+  const fixture = FIXTURES[fileOf(meta.name)];
+  if (fixture === undefined)
+    throw new Error(`${meta.name} has no ${fileOf(meta.name)}.fixture.ts.`);
   return renderToStaticMarkup(fixture(props));
 };
 
@@ -295,6 +269,17 @@ describe('every component has metadata', () => {
     }
   });
 
+  test('the registry lists every `*.meta.ts`, and is up to date', () => {
+    // Generated, so a component is added by its own files and a regenerate.
+    expect(registry.map(({ file }) => file)).toEqual(metaFiles().map(({ file }) => file));
+    const written = readFileSync(path.join(packageRoot, 'src/metadata/components.ts'), 'utf8');
+    expect(written, 'run `pnpm --filter @rockaway/react metadata`').toBe(renderRegistry());
+  });
+
+  test('every component has a fixture beside it, and every fixture a component', () => {
+    expect(Object.keys(FIXTURES).sort()).toEqual(registry.map(({ file }) => file).sort());
+  });
+
   test('the extracted props and tokens are up to date', () => {
     const written = readFileSync(path.join(packageRoot, 'src/metadata/extracted.ts'), 'utf8');
     // Regenerate with `pnpm --filter @rockaway/react metadata`.
@@ -415,6 +400,36 @@ describe('the checks fail when the metadata is wrong', () => {
 });
 
 describe('what is extracted', () => {
+  test("a rule is credited only when every hook in it is the component's (0192)", () => {
+    const frame = {
+      classes: new Set(['rk-screen', 'rk-frame', 'rk-content', 'rk-frame-box']),
+      attributes: new Set(['data-rk-painted', 'data-rk-shape']),
+    };
+    const divider = {
+      classes: new Set(['rk-screen', 'rk-frame', 'rk-divider']),
+      attributes: frame.attributes,
+    };
+    // Another component's class in the selector: not this one's rule.
+    expect(owns('.rk-callout > .rk-content', frame)).toBe(false);
+    expect(owns('.rk-frame-box > .rk-frame', divider)).toBe(false);
+    expect(owns('.rk-frame-box > .rk-frame', frame)).toBe(true);
+    // The painter's hooks name no class, and are the painted component's.
+    expect(owns('[data-rk-painted="rule"]', frame)).toBe(true);
+    expect(owns('[data-rk-painted] [data-rk-shape="box-0110"]', frame)).toBe(true);
+    // A state or a variant says when a rule applies, not whose it is.
+    expect(owns('.rk-frame[data-hovered]', frame)).toBe(true);
+    expect(owns('[data-hovered]', frame)).toBe(false);
+    expect(owns(':focus-visible', frame)).toBe(false);
+  });
+
+  test("a painted component lists its stroke tokens, and not a neighbour's ground", () => {
+    const { tokens } = byName('Frame');
+    expect(tokens).toContain('--rk-stroke-glyph-light');
+    expect(tokens).toContain('--rk-stroke-rule-light');
+    // `.rk-callout > .rk-content` is Callout's, though Frame writes rk-content.
+    expect(tokens).not.toContain('--rk-bg-surface');
+  });
+
   test('tokens come from the stylesheets and the focus ring, and a local property is not one', () => {
     const { tokens } = byName('Button');
     expect(tokens).toContain('--rk-border-control');
@@ -435,261 +450,22 @@ describe('what is extracted', () => {
   });
 });
 
+/**
+ * Each component's snapshots as the site draws them, in a file beside it,
+ * `<name>.snapshots.txt`: one file each, so two components added at once do
+ * not both edit this one (0262).
+ */
 describe('the snapshots, as the site draws them', () => {
-  test('Button', () => {
-    expect(snapshots(byName('Button'))).toMatchInlineSnapshot(`
-      "── Variants
-      default [ Publish ]
-      fill    [ Publish ]
-      danger  [!Publish ]
-      ── Without delimiters
-      default Publish
-      danger  [!Discard ]
-      ── With a shortcut
-      [ Save Ctrl+S ]
-      [ Save ⌘S ]"
-    `);
-  });
-
-  test('Divider', () => {
-    expect(snapshots(byName('Divider'))).toMatchInlineSnapshot(`
-      "── Open and joined
-      ╶──────────────────╴
-      ├──────────────────┤
-      ── Every border set
-      ├──────────────────┤
-      ╠══════════════════╣
-      ┣━━━━━━━━━━━━━━━━━━┫
-      +------------------+
-      ── Labelled
-      ╶─ files ──────────╴
-      ╶───── files ──────╴
-      ╶────────── files ─╴
-      ├ files ───────────┤
-      ├───── files ──────┤
-      ├─────────── files ┤
-      ╶─ a label far… ───╴
-      ── Vertical
-      ╷ ┬
-      │ │
-      │ │
-      │ │
-      ╵ ┴
-      ── Under an ASCII theme
-      -- a label far~ ----"
-    `);
-  });
-
-  test('Fieldset', () => {
-    expect(snapshots(byName('Fieldset'))).toMatchInlineSnapshot(`
-      "── Every state
-      ┌ Notify ──────────────┐
-      │                      │
-      └──────────────────────┘
-      ┌ Notify* ─────────────┐
-      │                      │
-      └──────────────────────┘
-      ┏ Notify ━━━━━━━━━━━━━━┓
-      ┃                      ┃
-      ┗━━━━━━━━━━━━━━━━━━━━━━┛
-      ┏ Notify ━━━━━━━━━━━━━━┓
-      ┃                      ┃
-      ┗━━━━━━━━━━━━━━━━━━━━━━┛"
-    `);
-  });
-
-  test('Form', () => {
-    expect(snapshots(byName('Form'))).toMatchInlineSnapshot(`
-      "── A form of mixed fields
-      Name         [Ada Lovelace        ]
-
-      Email*       [ada@                ]
-                   Where the receipts go.
-                   ✗ Enter an email address.
-
-      Repository   [rockaway            ]
-
-                   [✓] Sign commits
-
-                   ┌ Notify* ────────────────────────────────────────┐
-                   │ ● always  ○ never                               │
-                   └─────────────────────────────────────────────────┘
-
-                   [ Save ]
-      ── Under 60 cells
-      Name
-      [Ada Lovelace        ]
-
-      Email*
-      [ada@                ]
-      Where the receipts go.
-      ✗ Enter an email address.
-
-      Repository
-      [rockaway            ]
-
-      [✓] Sign commits
-
-      ┌ Notify* ─────────────────────────────┐
-      │ ● always  ○ never                    │
-      └──────────────────────────────────────┘
-
-      [ Save ]"
-    `);
-  });
-
-  test('Frame', () => {
-    expect(snapshots(byName('Frame'))).toMatchInlineSnapshot(`
-      "── A titled frame with a divider
-      ┌ tokens ──────────────────┐
-      │                          │
-      │                          │
-      │                          │
-      ├──────────────────────────┤
-      │                          │
-      └──────────────────────────┘
-      ── Every border set
-      ┌ single ──┐
-      │          │
-      └──────────┘
-      ╔ double ══╗
-      ║          ║
-      ╚══════════╝
-      ┏ heavy ━━━┓
-      ┃          ┃
-      ┗━━━━━━━━━━┛
-      ╭ rounded ─╮
-      │          │
-      ╰──────────╯
-      + ascii ---+
-      |          |
-      +----------+
-      ── Titles
-      ┌ start ───────────┐
-      ┌───── center ─────┐
-      ┌───────────── end ┐
-      ┌ a title far to… ─┐
-      ── Dividers in a lighter set
-      ┏ heavy ━━━━━┓
-      ┃            ┃
-      ┠────────────┨
-      ┃            ┃
-      ┗━━━━━━━━━━━━┛
-      ╔ double ════╗
-      ║            ║
-      ╟────────────╢
-      ║            ║
-      ╚════════════╝
-      ── Under an ASCII theme
-      + a title fa~ -+
-      |              |
-      +--------------+
-      |              |
-      +--------------+"
-    `);
-  });
-
-  test('KeyHint', () => {
-    expect(snapshots(byName('KeyHint'))).toMatchInlineSnapshot(`
-      "── One chord, each keyboard
-      ⌘S save
-      Ctrl+S save
-      ^S save
-      ── A status bar
-      ↑ move  Enter open  Esc close  Ctrl+Shift+K delete
-      ── Under an ASCII theme
-      Cmd+S save
-      Shift+Up select
-      S-Up select"
-    `);
-  });
-
-  test('Table', () => {
-    expect(snapshots(byName('Table'))).toMatchInlineSnapshot(`
-      "── Three column kinds
-      ┌ files ───────┬────────┬──────────────────┐
-      │ Name        ▴│   Size │ Modified         │
-      ├──────────────┼────────┼──────────────────┤
-      │ LICENSE      │   1071 │ 2026-07-04       │
-      │▸README.md    │    340 │ 2026-09-12       │
-      │ package.json │     88 │ 2026-08-30       │
-      │ src/index.ts │   1204 │ 2026-10-01       │
-      └──────────────┴────────┴──────────────────┘
-      ── Multi-select
-      ┌───────────────┬────────┬─────────────────┐
-      │  Name        ▴│   Size │ Modified        │
-      ├───────────────┼────────┼─────────────────┤
-      │  LICENSE      │   1071 │ 2026-07-04      │
-      │▸✓README.md    │    340 │ 2026-09-12      │
-      │  package.json │     88 │ 2026-08-30      │
-      │ ✓src/index.ts │   1204 │ 2026-10-01      │
-      └───────────────┴────────┴─────────────────┘
-      ── Empty
-      ┌──────┬────────┬──────────────────────────┐
-      │ Name▴│   Size │ Modified                 │
-      ├──────┴────────┴──────────────────────────┤
-      │ Nothing here.                            │
-      └──────────────────────────────────────────┘"
-      `);
-  });
-
-  test('Keymap', () => {
-    expect(snapshots(byName('Keymap'))).toMatchInlineSnapshot(`
-      "── Help, on any keyboard but Apple’s
-      Ctrl+K  Open the palette
-      /       Search
-      G H     Go home
-      J       Next row
-      K       Previous row
-      ?       Show this help
-      ── Help, on an Apple keyboard
-      ⌘K   Open the palette
-      /    Search
-      G H  Go home
-      J    Next row
-      K    Previous row
-      ?    Show this help"
-    `);
-  });
-
-  test('Link', () => {
-    expect(snapshots(byName('Link'))).toMatchInlineSnapshot(`
-      "── In place, current, and opening a new tab
-      rest      docs
-      current  ▸docs
-      new tab   docs↗"
-    `);
-  });
-
-  test('List', () => {
-    expect(snapshots(byName('List'))).toMatchInlineSnapshot(`
-      "── Single select
-      ▸src/index.ts    █
-       src/buffer.ts   █
-       src/junction.ts █
-       src/layout.ts   █
-       README.md       █
-      ── Multi-select
-        src/index.ts   █
-       ✓src/buffer.ts  █
-      ▸✓src/junction.ts█
-        src/layout.ts  █
-        README.md      █
-      ── Scrolled
-       line 8 of a ░
-       line 9 of a ░
-       line 10 of a░
-       line 11 of a█
-      ── Empty
-       Nothing here.   █
-                       █
-                       █"
-    `);
-  });
+  test.each(registry.map(({ file, meta }) => [meta.name, file] as const))(
+    '%s',
+    async (name, file) => {
+      await expect(snapshots(byName(name))).toMatchFileSnapshot(
+        `../src/components/${file}.snapshots.txt`,
+      );
+    },
+  );
 });
 
-// The JSON Schema and the types describe one shape. Each line fails to
-// compile when a property is in one and not the other.
 type Same<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
 type Defs = (typeof schema)['$defs'];
 type Keys<K extends keyof Defs> = Defs[K] extends { properties: infer P } ? keyof P : never;

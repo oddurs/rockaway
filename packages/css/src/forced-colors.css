@@ -12,14 +12,15 @@
 /*
  * The remapping sits in `rk.base`, not `rk.tokens`: both would otherwise be
  * the same layer as the generated token file, where the winner would depend on
- * import order. It is made on every theme island as well as the root, because
- * an island re-declares the palette and its aliases (cairn 0052), and would
- * otherwise put the theme's colours back inside it.
+ * import order. It is made on every theme and contrast island as well as the
+ * root, because an island re-declares the palette's aliases (cairn 0052,
+ * 0065), and would otherwise put the theme's colours back inside it.
  */
 @layer rk.base {
   @media (forced-colors: active) {
     :root,
-    [data-rk-theme] {
+    [data-rk-theme],
+    [data-rk-contrast] {
       /* The palette first: everything else aliases it (0089). */
       --rk-ansi-background: Canvas;
       --rk-ansi-surface: Canvas;
@@ -127,8 +128,9 @@
  * Its colours are still the reader's, because every token it reads is a
  * system colour here.
  *
- * Button's rules are here rather than in button.css so that Button's own
- * polish (0131) can move them without this fix waiting on it.
+ * A component's stylesheet opts out what it reverses itself (Button, Link,
+ * List and Tree do, 0202). This holds what the base reverses: painted cells in
+ * reverse video, and a filled thing's focus.
  *
  * A test (test/reverse-opt-out.test.ts) finds every rule that draws words in
  * a ground colour and fails if nothing here, or a forced-colors block of its
@@ -137,13 +139,10 @@
 @layer rk.base {
   @media (forced-colors: active) {
     [data-attrs~="reverse"],
-    [data-rk-fill]:focus-visible,
-    .rk-button[data-variant="fill"],
-    .rk-button[data-pressed],
-    .rk-link[data-pressed],
-    .rk-list-item[data-selected],
-    .rk-tree-item[data-selected] {
+    [data-rk-fill]:focus-visible {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }

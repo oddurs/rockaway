@@ -213,6 +213,18 @@ function gridOf(el: Element | null | undefined): Grid {
  * transformed layer is shifted after its backgrounds are snapped to pixels,
  * and a translate of a fraction of a pixel parts the strokes of the frame.
  */
+/**
+ * Rounding a position in cells, the same in every engine. A modal centred
+ * in an odd number of spare cells sits on a half cell exactly, and each
+ * engine's float lengths put it a hair either side (Chromium's 1/64px, Firefox's
+ * 1/60px), so a plain `Math.round` sent it a column left in one and right in
+ * the other. A tie goes left, or up, everywhere; and a position a hair under a
+ * whole cell is that cell, as `cellsIn` takes a box a hair under n cells as n.
+ */
+const TIE = 0.01;
+const nearest = (cells: number): number => Math.ceil(cells - 0.5 - TIE);
+const down = (cells: number): number => Math.floor(cells + TIE);
+
 function useCellSnap(
   surface: RefObject<HTMLElement | null>,
   anchor: () => Element | null | undefined,
@@ -232,9 +244,9 @@ function useCellSnap(
       // row round towards the corner.
       const left = sheet ? 0 : grid.left;
       const cols = (rawX - left) / grid.width;
-      const x = left + (sheet ? Math.floor(cols) : Math.round(cols)) * grid.width;
+      const x = left + (sheet ? down(cols) : nearest(cols)) * grid.width;
       const rows = (rawY - grid.top) / grid.height;
-      const y = grid.top + (sheet ? Math.floor(rows) : Math.round(rows)) * grid.height;
+      const y = grid.top + (sheet ? down(rows) : nearest(rows)) * grid.height;
       const next = { x: x - rawX, y: y - rawY };
       if (Math.abs(next.x - shift.x) < 0.01 && Math.abs(next.y - shift.y) < 0.01) return;
       shift = next;
@@ -377,12 +389,21 @@ function Surface({
     return () => observer.disconnect();
   }, []);
 
-  // The content's scroll, in rows, for the thumb in the frame's edge.
+  // The content's scroll, in rows, for the thumb in the frame's edge. A scroll
+  // position is kept in pixels, so when the cell changes (a new density) the
+  // browser leaves it, or clamps it, on a fraction of the new row. Whenever
+  // the body is resized or a context changes, the content is put back on the
+  // nearest whole row; a reader's own scrolling is never fought.
   useIsomorphicLayoutEffect(() => {
     const el = body.current;
     if (!el) return;
-    const read = (): void => {
+    const read = (snap: boolean): void => {
       const row = measureCell(el).height;
+      if (!(row > 0)) return;
+      if (snap) {
+        const whole = Math.round(el.scrollTop / row) * row;
+        if (Math.abs(whole - el.scrollTop) > 0.5) el.scrollTop = whole;
+      }
       const total = Math.round(el.scrollHeight / row);
       const visible = Math.round(el.clientHeight / row);
       const offset = Math.round(el.scrollTop / row);
@@ -392,13 +413,20 @@ function Surface({
           : { total, visible, offset },
       );
     };
-    read();
-    el.addEventListener('scroll', read, { passive: true });
-    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(read);
+    const scrolled = (): void => read(false);
+    const settled = (): void => read(true);
+    read(true);
+    el.addEventListener('scroll', scrolled, { passive: true });
+    const observer =
+      typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(settled);
     observer?.observe(el);
+    // The cell can change without the body changing size, when the rows it
+    // shows are held by `maxRows`: the context attributes say when.
+    const unobserve = observeContexts(settled);
     return () => {
-      el.removeEventListener('scroll', read);
+      el.removeEventListener('scroll', scrolled);
       observer?.disconnect();
+      unobserve();
     };
   }, []);
 

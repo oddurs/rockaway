@@ -14,6 +14,7 @@
  * mode pins it: its palette is the same whichever mode is asked for.
  */
 
+import ascii from '../themes/ascii.json' with { type: 'json' };
 import defaultInputs from '../themes/default.json' with { type: 'json' };
 import ice from '../themes/ice.json' with { type: 'json' };
 import ink from '../themes/ink.json' with { type: 'json' };
@@ -29,7 +30,7 @@ import { type Glyphs, glyphsFor } from './glyph.ts';
 import { defaultTheme, type Mode, modes, type ThemeInputs } from './inputs.ts';
 import { parseTheme } from './validate.ts';
 
-export const presetNames = ['default', 'ice', 'ink', 'phosphor'] as const;
+export const presetNames = ['default', 'ice', 'ink', 'phosphor', 'ascii'] as const;
 export type PresetName = (typeof presetNames)[number];
 
 export const importedNames = ['catppuccin', 'dracula', 'nord', 'solarized', 'tokyo-night'] as const;
@@ -81,6 +82,7 @@ const presetFiles: Readonly<Record<PresetName, unknown>> = {
   ice,
   ink,
   phosphor,
+  ascii,
 };
 
 const importedFiles: Readonly<Record<ImportedName, ImportedTheme>> = {
@@ -91,7 +93,12 @@ const importedFiles: Readonly<Record<ImportedName, ImportedTheme>> = {
   'tokyo-night': tokyoNight,
 };
 
+/** Names that are not words, written as they are. */
+const titles: Readonly<Record<string, string>> = { ascii: 'ASCII' };
+
 function title(name: string): string {
+  const own = titles[name];
+  if (own !== undefined) return own;
   return name.replace(
     /(^|-)(\w)/g,
     (_, dash: string, ch: string) => `${dash ? ' ' : ''}${ch.toUpperCase()}`,

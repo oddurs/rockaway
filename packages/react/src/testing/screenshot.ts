@@ -145,8 +145,23 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
       }
       const { col, row } = start;
 
-      const attrs = parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs;
+      // A painted run says what it carries; a real element is read for it.
+      const attrs =
+        parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs ?? drawnWith(parent, screen);
       if (attrs) attributes.push({ text: text.trim(), attrs, col, row });
+    }
+
+    // Text cut to its room (0231) ends in the theme's ellipsis, which the
+    // stylesheet draws in the label's last cell, after the clipped text: a
+    // pseudo-element, so no text node says where it is.
+    for (const label of root.querySelectorAll<HTMLElement>('[data-rk-cut][data-rk-ellipsis]')) {
+      const rect = label.getBoundingClientRect();
+      const { row } = at(rect);
+      const col = Math.round((rect.right - box.left) / cellWidth) - 1;
+      const clip = clipOf(label.parentElement);
+      if (row >= clip.top && row < clip.bottom) {
+        write(grid, col, row, label.dataset.rkEllipsis ?? '', clip);
+      }
     }
   };
 
@@ -200,6 +215,71 @@ function linesOf(node: Node, document: Document): { text: string; rect: DOMRect 
     }
   }
   return lines.map(({ text: t, rect }) => ({ text: t.replace(/\s+$/, ''), rect }));
+}
+
+/**
+ * The attributes a real element's text is drawn with, named as a painted run
+ * names them (cairn 0190): `bold`, `reverse`, `underline`, in that order. Read
+ * from computed style, so a List row's reverse video and a Link's underline
+ * show in a text snapshot as a painted cell's do.
+ */
+function drawnWith(el: HTMLElement, screen: HTMLElement): string {
+  const view = el.ownerDocument.defaultView;
+  if (!view) return '';
+  const style = view.getComputedStyle(el);
+  const found: string[] = [];
+  const weight = (of: Element): number => Number(view.getComputedStyle(of).fontWeight);
+  if (weight(el) >= 600 && weight(screen) < 600) found.push('bold');
+  if (reversed(el, screen, style.color)) found.push('reverse');
+  if (underlined(el, screen)) found.push('underline');
+  return found.join(' ');
+}
+
+/** Whether a colour is drawn at all: not `transparent`, nor any colour at alpha 0. */
+function opaque(colour: string): boolean {
+  if (colour === 'transparent') return false;
+  const alpha = /rgba?\([^)]*,\s*([\d.]+)\s*\)/.exec(colour)?.[1];
+  return colour.startsWith('rgba') ? Number(alpha) > 0 : true;
+}
+
+/** The nearest element at or above `from` that paints a ground, and its colour. */
+function groundOf(from: Element | null): { el: Element; colour: string } | undefined {
+  for (let el = from; el; el = el.parentElement) {
+    const colour = el.ownerDocument.defaultView?.getComputedStyle(el).backgroundColor ?? '';
+    if (opaque(colour)) return { el, colour };
+  }
+  return undefined;
+}
+
+/**
+ * Reverse video, read from the colours: the words sit on a ground of their
+ * own, inside the screen, and are drawn in the colour of the ground beneath
+ * that one. A selected List row (its text in the list's ground, on the list's
+ * figure) is reversed; a tinted badge is not.
+ */
+function reversed(el: HTMLElement, screen: HTMLElement, ink: string): boolean {
+  const own = groundOf(el);
+  if (!own || own.el === screen || !screen.contains(own.el)) return false;
+  const beneath = groundOf(own.el.parentElement);
+  return beneath !== undefined && ink === beneath.colour && own.colour !== beneath.colour;
+}
+
+/**
+ * Whether the text is underlined. A decoration is drawn on the element that
+ * sets it and on its in-flow descendants, but not into an inline-block or a
+ * box out of flow, so the walk up stops at one.
+ */
+function underlined(el: HTMLElement, screen: HTMLElement): boolean {
+  const view = el.ownerDocument.defaultView;
+  for (let node: Element | null = el; node && view; node = node.parentElement) {
+    const style = view.getComputedStyle(node);
+    if (style.textDecorationLine.includes('underline')) return true;
+    if (node === screen) return false;
+    const atomic = /^inline-/.test(style.display);
+    const outOfFlow = style.float !== 'none' || /^(absolute|fixed)$/.test(style.position);
+    if (atomic || outOfFlow) return false;
+  }
+  return false;
 }
 
 function write(
