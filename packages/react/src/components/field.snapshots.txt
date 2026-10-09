@@ -1,0 +1,35 @@
+── A form of mixed fields
+Name         [Ada Lovelace        ]
+
+Email*       [ada@                ]
+             Where the receipts go.
+             ✗ Enter an email address.
+
+Repository   [rockaway            ]
+
+             [✓] Sign commits
+
+             ┌ Notify* ────────────────────────────────────────┐
+             │ ● always  ○ never                               │
+             └─────────────────────────────────────────────────┘
+
+             [ Save ]
+── Under 60 cells
+Name
+[Ada Lovelace        ]
+
+Email*
+[ada@                ]
+Where the receipts go.
+✗ Enter an email address.
+
+Repository
+[rockaway            ]
+
+[✓] Sign commits
+
+┌ Notify* ─────────────────────────────┐
+│ ● always  ○ never                    │
+└──────────────────────────────────────┘
+
+[ Save ]

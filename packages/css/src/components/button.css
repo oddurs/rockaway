@@ -97,6 +97,13 @@
     .rk-button[data-variant="fill"],
     .rk-button[data-pressed] {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
+    }
+
+    /* A pressed fill reverses back, to the reader's text on their canvas. */
+    .rk-button[data-variant="fill"][data-pressed] {
+      --rk-forced-ink: CanvasText;
     }
   }
 }

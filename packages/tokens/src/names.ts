@@ -206,6 +206,7 @@ export const vars = {
   'glyph.mark.external': 'var(--rk-glyph-mark-external)',
   'glyph.mark.overflow-end': 'var(--rk-glyph-mark-overflow-end)',
   'glyph.mark.overflow-start': 'var(--rk-glyph-mark-overflow-start)',
+  'glyph.mark.prompt': 'var(--rk-glyph-mark-prompt)',
   'glyph.mark.radio': 'var(--rk-glyph-mark-radio)',
   'glyph.mark.radio-empty': 'var(--rk-glyph-mark-radio-empty)',
   'glyph.mark.required': 'var(--rk-glyph-mark-required)',
