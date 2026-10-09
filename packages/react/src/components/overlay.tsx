@@ -261,15 +261,40 @@ function useCellSnap(
     const resizes = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(snap);
     resizes?.observe(el);
     // The trigger's screen can move, or change its cell, without the surface
-    // changing size: a density switched at the root, say.
+    // changing size: a density switched at the root, say. React Aria places
+    // again when its trigger resizes, not when it only moves, as a trigger
+    // does when the screen it is in remeasures; then React Aria's pixels are
+    // where the trigger was, and snapping them only picks the nearest wrong
+    // row. So when the trigger has moved, React Aria is asked to place the
+    // overlay again, through the window resize it listens for, and the snap
+    // follows the style it writes (0246).
+    // A frame later, once what the move changed has rendered: a popover that
+    // was a sheet at touch is placed at its own width, not the sheet's.
+    let at = anchor()?.getBoundingClientRect();
+    let frame = 0;
+    const settled = (): void => {
+      const now = anchor()?.getBoundingClientRect();
+      const moved =
+        now !== undefined &&
+        at !== undefined &&
+        (Math.abs(now.left - at.left) > 0.01 || Math.abs(now.top - at.top) > 0.01);
+      at = now;
+      snap();
+      if (!moved) return;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+    };
+    const settles = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(settled);
     const screen = anchor()?.closest('.rk-screen');
-    if (screen) resizes?.observe(screen);
-    const unobserve = observeContexts(snap);
+    if (screen) settles?.observe(screen);
+    const unobserve = observeContexts(settled);
     window.addEventListener('resize', snap);
     window.addEventListener('scroll', snap, true);
     return () => {
+      cancelAnimationFrame(frame);
       mutations.disconnect();
       resizes?.disconnect();
+      settles?.disconnect();
       unobserve();
       window.removeEventListener('resize', snap);
       window.removeEventListener('scroll', snap, true);

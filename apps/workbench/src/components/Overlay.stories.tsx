@@ -713,10 +713,11 @@ export const Ruled: Story = {
 
 /**
  * The root's density switched while a popover is open: the popover takes the
- * new density across the portal at each one, and lands on whole cells of its
- * trigger's screen, on the row under the trigger. Until a screen remeasures
- * on a context change (0199) the page's screen keeps the cell it first
- * measured, so the trigger's grid is read as that screen reports it.
+ * new density across the portal, and its trigger's screen, sized in cells,
+ * remeasures its cell (0199, 0246). At each density the popover is exactly
+ * where it opened: on the row under its trigger, from its column, in the new
+ * cell. Touch is a sheet, on the viewport's columns, so only its row is
+ * checked there.
  */
 export const Densities: Story = {
   render: () => (
@@ -741,18 +742,27 @@ export const Densities: Story = {
         await measured(document.body);
         const [surface] = surfaces();
         if (!surface) throw new Error('no popover');
-        await waitFor(() =>
-          expect(surface.closest('[data-density]')?.getAttribute('data-density')).toBe(density),
-        );
-        // On whole cells of the trigger's screen, whatever cell it reports.
-        await waitFor(() => cornerOf(surface));
+        await waitFor(() => {
+          expect(surface.closest('[data-density]')?.getAttribute('data-density')).toBe(density);
+          // The trigger's screen has caught up with the new cell: the trigger
+          // is one row tall in it.
+          expect(trigger.getBoundingClientRect().height).toBeCloseTo(gridOf(trigger).height, 1);
+          const [col, row] = cornerOf(trigger);
+          const [x, y] = cornerOf(surface);
+          const t = trigger.getBoundingClientRect();
+          const g = gridOf(trigger);
+          const sf = surface.getBoundingClientRect();
+          expect(
+            y,
+            `${density} trig=${t.top}/${t.height} grid=${g.top}/${g.height} surf=${sf.top} wrap=${surface.parentElement?.getBoundingClientRect().top} style=${surface.style.top}`,
+          ).toBe(row + 1);
+          if (density !== 'touch')
+            expect(
+              x,
+              `${density} x: trig=${t.left} grid=${g.left}/${g.width} surf=${sf.left} wrap=${surface.parentElement?.getBoundingClientRect().left} sheet=${surface.className}`,
+            ).toBe(col);
+        });
       }
-      // Back at the density the screen measured in, on the row under the
-      // trigger, from its column. At every density once 0199 lands.
-      const [surface] = surfaces();
-      if (!surface) throw new Error('no popover');
-      const [col, row] = cornerOf(trigger);
-      await waitFor(() => expect(cornerOf(surface)).toEqual([col, row + 1]));
     } finally {
       if (was === null) root.removeAttribute('data-density');
       else root.setAttribute('data-density', was);
