@@ -249,3 +249,15 @@ export const StatusBar: Story = {
     expect(frame.textContent).toContain('^Enter');
   },
 };
+
+/**
+ * Held to `strict` (rule 7): every box in whole cells, drawn by the glyph
+ * painter. The check after the story is the test, at every density and in
+ * both modes, and this story is what lets the metadata say KeyHint holds
+ * `strict` (0167).
+ */
+export const Strict: Story = {
+  name: 'Held to strict',
+  globals: { conformance: 'strict' },
+  render: () => <Variants title="strict" />,
+};

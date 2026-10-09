@@ -759,3 +759,31 @@ export const Densities: Story = {
     }
   },
 };
+
+/**
+ * Held to `strict` (rule 7): every box in whole cells, drawn by the glyph
+ * painter. The check after the story is the test, at every density and in
+ * both modes, and this story is what lets the metadata say an overlay holds
+ * `strict` (0167).
+ */
+export const Strict: Story = {
+  name: 'Held to strict: a popover',
+  globals: { conformance: 'strict' },
+  render: () => (
+    <Frame title="page" cols={60} rows={12}>
+      <Branches />
+    </Frame>
+  ),
+};
+
+export const StrictModal: Story = {
+  name: 'Held to strict: a dialog',
+  globals: { conformance: 'strict' },
+  render: () => (
+    <div style={{ position: 'fixed', inset: 0, display: 'grid', placeItems: 'center' }}>
+      <Frame title="page" cols={40} rows={11}>
+        <Discard />
+      </Frame>
+    </div>
+  ),
+};

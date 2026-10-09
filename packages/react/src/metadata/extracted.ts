@@ -349,7 +349,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "control"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "Column": {
     "file": "table.tsx",
@@ -518,7 +518,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-y-1"
     ],
     "marks": [],
-    "level": "standard"
+    "level": "strict"
   },
   "FieldFrame": {
     "file": "fieldset.tsx",
@@ -666,7 +666,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "Form": {
     "file": "field.tsx",
@@ -824,7 +824,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-x-1"
     ],
     "marks": [],
-    "level": "standard"
+    "level": "strict"
   },
   "Keymap": {
     "file": "keymap.tsx",
@@ -861,7 +861,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-x-2"
     ],
     "marks": [],
-    "level": "standard"
+    "level": "strict"
   },
   "KeymapHelp": {
     "file": "keymap.tsx",
@@ -886,7 +886,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-x-2"
     ],
     "marks": [],
-    "level": "standard"
+    "level": "strict"
   },
   "Label": {
     "file": "field.tsx",
@@ -924,7 +924,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-y-1"
     ],
     "marks": [],
-    "level": "standard"
+    "level": "strict"
   },
   "Link": {
     "file": "link.tsx",
@@ -968,7 +968,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "control"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "List": {
     "file": "list.tsx",
@@ -1123,7 +1123,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "OverlayPopover": {
     "file": "overlay.tsx",
@@ -1195,7 +1195,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "Row": {
     "file": "table.tsx",
