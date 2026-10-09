@@ -36,7 +36,10 @@
  *     cell is the ring
  *
  * A table wider than the room it has keeps its columns and scrolls across in
- * whole columns, its overflow marked; nothing else scrolls.
+ * whole columns, its overflow marked. Given `rows`, it shows that many at
+ * once and its body scrolls down in whole rows, following the cursor as React
+ * Aria brings the focused row into view; a scrollbar drawn in cells, List's,
+ * stands in the cell inside the right edge (0281).
  */
 import { type BorderSetName, type Size, stringWidth } from '@rockaway/grid';
 import {
@@ -72,8 +75,10 @@ import {
 import { cellsIn, measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
+import { Chrome } from '../paint/chrome.tsx';
 import { type PainterName, Screen } from '../screen.tsx';
 import { watchOverflowMarks } from '../scroll.ts';
+import { scrollbarBuffer } from './list.pure.ts';
 import {
   EMPTY,
   fitCell,
@@ -82,6 +87,7 @@ import {
   tableChromeBuffer,
   tableHeight,
   tableLayout,
+  windowOffset,
 } from './table.pure.ts';
 
 /** How wide a column's content is: cells, a share of what is left, or its widest value. */
@@ -120,6 +126,8 @@ export interface TableLayout {
   readonly width: number;
   /** True when the columns could not fit the room given, and the table scrolls. */
   readonly overflows: boolean;
+  /** True when a cell inside the right edge holds the body's scrollbar (0281). */
+  readonly scrollbar: boolean;
 }
 
 /** A row as text. */
@@ -143,6 +151,10 @@ export interface TableText {
   readonly border?: BorderSetName;
   /** What an empty table says. */
   readonly empty?: string;
+  /** The rows shown at once; every row when not given. */
+  readonly visible?: number;
+  /** The first row shown, when `visible` is given. */
+  readonly offset?: number;
 }
 
 // ── The component ──────────────────────────────────────────────────────────
@@ -284,6 +296,12 @@ export interface TableProps extends Omit<AriaTableProps, 'className' | 'style' |
   readonly cols?: number;
   readonly border?: BorderSetName;
   readonly painter?: PainterName;
+  /**
+   * The body rows shown at once: the table is exactly this tall, and its body
+   * scrolls in whole rows, following the cursor, with a scrollbar in cells.
+   * Every row, and no scrollbar, when not given.
+   */
+  readonly rows?: number;
   readonly className?: string;
   /** A TableHeader and a TableBody. */
   readonly children?: ReactNode;
@@ -298,6 +316,7 @@ export function Table({
   cols,
   border,
   painter = 'glyph',
+  rows: visible,
   className,
   children,
   selectionMode = 'none',
@@ -338,11 +357,36 @@ export function Table({
       tableLayout(measured?.columns ?? [], measured?.values ?? [], {
         ...(room === undefined ? {} : { room }),
         selectionMode: mode,
+        scrollbar: visible !== undefined,
       }),
-    [measured, room, mode],
+    [measured, room, mode, visible],
   );
   const rows = measured?.rows ?? 0;
-  const size = { width: layout.width, height: tableHeight(rows) };
+  const shown = visible === undefined ? undefined : Math.max(1, Math.trunc(visible));
+  const size = { width: layout.width, height: tableHeight(shown ?? rows) };
+
+  // Where the body is scrolled to, in rows, for the scrollbar. Read with a
+  // native listener on the body, as List does, and measured when it is needed,
+  // because density decides how tall a row is.
+  const [scrolled, setScrolled] = useState(0);
+  useEffect(() => {
+    const body = host.current?.querySelector<HTMLElement>('.rk-table-body');
+    if (shown === undefined || !body) return;
+    const read = (): void => setScrolled(Math.round(body.scrollTop / measureCell(body).height));
+    read();
+    body.addEventListener('scroll', read, { passive: true });
+    return () => body.removeEventListener('scroll', read);
+  }, [shown]);
+  const bar = useMemo(
+    () =>
+      shown === undefined
+        ? undefined
+        : scrollbarBuffer(
+            { total: rows, visible: shown, offset: windowOffset(rows, shown, scrolled) },
+            glyphs,
+          ),
+    [shown, rows, scrolled, glyphs],
+  );
 
   // Its overflow marks, where the stylesheet cannot show them itself (0218).
   const overflows = layout.overflows;
@@ -391,8 +435,10 @@ export function Table({
       className={cx(
         'rk-table',
         layout.overflows && 'rk-scroll rk-scroll-marks rk-table-scrolls',
+        shown !== undefined && 'rk-table-windowed',
         className,
       )}
+      {...(shown === undefined ? {} : { style: { '--rk-table-rows': shown } as CSSProperties })}
       // A table wider than its room scrolls across, a column at a time.
       {...(layout.overflows
         ? {
@@ -421,6 +467,15 @@ export function Table({
             {children}
           </AriaTable>
         </LayoutContext.Provider>
+        {bar === undefined ? null : (
+          // In the cell inside the right edge, from the first body row.
+          <span
+            className="rk-table-scrollbar"
+            style={{ '--rk-table-bar-x': layout.width - 2 } as CSSProperties}
+          >
+            <Chrome buffer={bar} />
+          </span>
+        )}
       </Screen>
     </div>
   );
@@ -566,7 +621,9 @@ export function TableBody<T extends object>({
   return (
     <AriaTableBody
       {...aria}
-      className={cx('rk-table-body', className)}
+      // Scrolls down when the table shows fewer rows than it has: no bar of
+      // the browser's (0207); the table draws one in cells.
+      className={cx('rk-table-body rk-scroll', className)}
       renderEmptyState={(state) => (
         <span className="rk-table-empty">
           <EmptyLead />
