@@ -11,7 +11,7 @@ const AUTHORS: ComboBoxText['options'] = [
 ];
 
 const cells = (text: Omit<ComboBoxText, 'cols' | 'options'>): string =>
-  toText(comboBoxBuffer({ cols: 18, options: AUTHORS, ...text }));
+  toText(comboBoxBuffer({ cols: 20, options: AUTHORS, ...text }));
 
 export const comboBoxMeta: ComponentMetaInput = defineMeta({
   name: 'ComboBox',
@@ -82,7 +82,7 @@ export const comboBoxMeta: ComponentMetaInput = defineMeta({
     },
     {
       kind: 'element',
-      name: 'overflow cells',
+      name: 'overflow-cells',
       className: 'rk-combobox-cell',
       chrome: true,
       description:

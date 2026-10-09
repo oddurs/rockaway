@@ -6,7 +6,15 @@
  * and no client boundary, so a server component, a static renderer or a test
  * can call them; `combobox.tsx` imports them from here.
  */
-import { Attr, Buffer, type Draft, drawText, type Style, stringWidth } from '@rockaway/grid';
+import {
+  Attr,
+  Buffer,
+  type Draft,
+  drawText,
+  graphemes,
+  type Style,
+  stringWidth,
+} from '@rockaway/grid';
 import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import { listMarks, listRowStyle } from './list.pure.ts';
 import { overlayBuffer } from './overlay.pure.ts';
@@ -79,12 +87,14 @@ function fold(text: string): string {
 export function matchRange(label: string, query: string): readonly [number, number] | undefined {
   const wanted = fold(query);
   if (wanted === '') return undefined;
-  // The label folded a character at a time, with the span each came from.
+  // The label folded a character at a time, with the span each came from. A
+  // character is a grapheme, so an accent written as a mark of its own goes
+  // with the letter it is on.
   let folded = '';
   const starts: number[] = [];
   const ends: number[] = [];
   let at = 0;
-  for (const ch of label) {
+  for (const ch of graphemes(label)) {
     const f = fold(ch);
     for (let i = 0; i < f.length; i++) {
       starts.push(at);
@@ -143,7 +153,12 @@ export function comboBoxBoxBuffer(
   const more = !placeholder && stringWidth(typed) > room;
   return Buffer.create({ width, height: 1 }).draw((draft) => {
     drawText(draft, { x: 0, y: 0 }, open, { style: styles.ends });
-    drawText(draft, { x: COMBOBOX_LEAD, y: 0 }, shown, { maxWidth: room, style: styles.text });
+    // Cut where the box ends, as an input cuts it: no ellipsis.
+    drawText(draft, { x: COMBOBOX_LEAD, y: 0 }, shown, {
+      maxWidth: room,
+      ellipsis: '',
+      style: styles.text,
+    });
     const end = COMBOBOX_LEAD + room;
     if (more)
       drawText(draft, { x: end, y: 0 }, glyphs.mark['overflow-end'], { style: styles.ends });

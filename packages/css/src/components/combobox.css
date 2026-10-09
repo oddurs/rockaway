@@ -136,6 +136,8 @@
   @media (forced-colors: active) {
     .rk-combobox-button[data-pressed] .rk-combobox-mark {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }

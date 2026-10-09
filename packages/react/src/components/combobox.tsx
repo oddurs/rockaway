@@ -185,9 +185,14 @@ export interface ComboBoxItemProps<T extends object>
   readonly className?: string;
 }
 
-/** The words of an option, with what the typed text matches underlined and bold. */
-function Matched({ label, query }: { readonly label: string; readonly query: string }): ReactNode {
-  const range = matchRange(label, query);
+/**
+ * The words of an option, with what the typed text matches underlined and
+ * bold. It reads the typed text itself, inside React Aria's item: the item is
+ * rendered from the collection, where the wrapper's context is not.
+ */
+function Matched({ label }: { readonly label: string }): ReactNode {
+  const state = useContext(ComboBoxStateContext);
+  const range = matchRange(label, state?.inputValue ?? '');
   if (range === undefined) return label;
   return (
     <>
@@ -208,8 +213,6 @@ export function ComboBoxItem<T extends object>({
   ...item
 }: ComboBoxItemProps<T>): ReactNode {
   const glyphs = useGlyphs();
-  const state = useContext(ComboBoxStateContext);
-  const query = state?.inputValue ?? '';
   return (
     <ListBoxItem
       {...item}
@@ -231,7 +234,7 @@ export function ComboBoxItem<T extends object>({
               {check}
             </span>
             <span className="rk-list-label">
-              <Matched label={children} query={query} />
+              <Matched label={children} />
             </span>
           </>
         );
