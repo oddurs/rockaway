@@ -1,23 +1,16 @@
-import { measureCell, useTick } from '@rockaway/react';
+import { measureCell, useReducedMotion, useTick } from '@rockaway/react';
 import { Button } from '@rockaway/react/button';
 import { Dialog } from '@rockaway/react/dialog';
 import { KeyHint } from '@rockaway/react/key-hint';
 import { Keymap, KeymapHelp, useKeymap } from '@rockaway/react/keymap';
-import { Meter, type MeterProps } from '@rockaway/react/meter';
+import { Meter } from '@rockaway/react/meter';
 import { Pane, Panes } from '@rockaway/react/panes';
 import { Sparkline } from '@rockaway/react/sparkline';
 import { Spinner } from '@rockaway/react/spinner';
 import { StatusBar, StatusMessage, StatusSegment } from '@rockaway/react/status-bar';
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@rockaway/react/table';
 import { TextField } from '@rockaway/react/text-field';
-import {
-  type ReactNode,
-  type RefObject,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react';
+import { type ReactNode, type RefObject, useEffect, useRef, useState } from 'react';
 import {
   advance,
   boot,
@@ -60,28 +53,6 @@ function useCols(ref: RefObject<HTMLElement | null>): number {
   return cols;
 }
 
-/** Whether the reader asked for less motion: the system's setting, or the page's `data-motion`. */
-function useReducedMotion(): boolean {
-  return useSyncExternalStore(
-    (listener) => {
-      const media = matchMedia('(prefers-reduced-motion: reduce)');
-      const observer = new MutationObserver(listener);
-      media.addEventListener('change', listener);
-      observer.observe(document.documentElement, { attributeFilter: ['data-motion'] });
-      return () => {
-        media.removeEventListener('change', listener);
-        observer.disconnect();
-      };
-    },
-    () => {
-      const set = document.documentElement.dataset.motion;
-      if (set === 'reduced' || set === 'full') return set === 'reduced';
-      return matchMedia('(prefers-reduced-motion: reduce)').matches;
-    },
-    () => false,
-  );
-}
-
 /** The simulation the monitor opens on: seeded, so the server and the browser agree. */
 const BOOT = boot();
 
@@ -91,8 +62,10 @@ const BOOT = boot();
  *
  * Values change in place: the table keeps the order it was sorted in until a
  * sort is asked for again, so no row moves under the cursor. It shows as many
- * processes as fit, the way top does. Under reduced motion it holds still,
- * and `r` takes one step; `p` pauses it either way.
+ * processes as fit, the way top does. It reads the machine on the refresh
+ * tick: every second, and under reduced motion every five, because current
+ * numbers are not motion; only the spinner stops. `p` pauses it, and `r`
+ * takes one step.
  *
  * It watches a seeded simulation, so it is a fixture as much as an example;
  * copied in, `machine` and what a kill does are yours.
@@ -118,14 +91,13 @@ export function SystemMonitor({
   const cols = useCols(box);
   const narrow = cols > 0 && cols < NARROW;
   const reduced = useReducedMotion();
-  const live = !paused && !reduced;
   const say = (text: string) => setMessage((m) => ({ id: m.id + 1, text }));
 
-  // A step a second: the blink tick is half that. Under reduced motion the
-  // tick stands at 0, so nothing steps unless `r` asks.
-  const frame = useTick('blink');
+  // A step on each refresh: data, not motion, so it keeps coming, slower,
+  // under reduced motion.
+  const frame = useTick('refresh');
   useEffect(() => {
-    if (!paused && frame > 0 && frame % 2 === 0) setMachine(advance);
+    if (!paused && frame > 0) setMachine(advance);
   }, [frame, paused]);
 
   const resort = (column: SortColumn, direction: SortDirection) => {
@@ -190,7 +162,7 @@ export function SystemMonitor({
 
   const meters = narrow ? (
     <>
-      <Level
+      <Meter
         label="cpu "
         value={cpuTotal(machine)}
         warning={70}
@@ -198,7 +170,7 @@ export function SystemMonitor({
         cols={Math.max(8, cols - 15)}
         valueLabel={pct(cpuTotal(machine))}
       />
-      <Level
+      <Meter
         label="used"
         aria-label="Memory used"
         value={machine.memory.used}
@@ -258,7 +230,7 @@ export function SystemMonitor({
               <Panes>
                 <Pane title="cpu" label="CPU">
                   {machine.cores.map((c, i) => (
-                    <Level
+                    <Meter
                       // biome-ignore lint/suspicious/noArrayIndexKey: a core is its index.
                       key={i}
                       label={String(i).padStart(2)}
@@ -272,7 +244,7 @@ export function SystemMonitor({
                   ))}
                 </Pane>
                 <Pane title="memory" label="Memory">
-                  <Level
+                  <Meter
                     label="used"
                     aria-label="Memory used"
                     value={machine.memory.used}
@@ -282,7 +254,7 @@ export function SystemMonitor({
                     cols={Math.max(8, third - 18)}
                     valueLabel={gib(machine.memory.used, machine.memory.total)}
                   />
-                  <Level
+                  <Meter
                     label="buff"
                     aria-label="Buffers and cache"
                     value={machine.memory.cache}
@@ -291,7 +263,7 @@ export function SystemMonitor({
                     cols={Math.max(8, third - 18)}
                     valueLabel={gib(machine.memory.cache, machine.memory.total)}
                   />
-                  <Level
+                  <Meter
                     label="swap"
                     aria-label="Swap used"
                     value={machine.memory.swap}
@@ -316,7 +288,7 @@ export function SystemMonitor({
         )}
         <StatusBar label="Status">
           <StatusSegment variant="mode" priority={4}>
-            {live ? <Spinner label="live" /> : paused ? 'paused' : 'still'}
+            {paused ? 'paused' : <Spinner label={`live · every ${reduced ? 5 : 1}s`} />}
           </StatusSegment>
           <StatusSegment
             priority={3}
@@ -387,15 +359,6 @@ export function SystemMonitor({
         )}
       </Dialog>
     </Keymap>
-  );
-}
-
-/** A meter on a line of its own: a meter is a row of text, and runs on from the one before. */
-function Level(props: MeterProps): ReactNode {
-  return (
-    <div>
-      <Meter {...props} />
-    </div>
   );
 }
 

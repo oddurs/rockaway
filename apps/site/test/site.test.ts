@@ -827,15 +827,22 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       await reader.close();
     }
 
-    // Under reduced motion it holds still, complete, until it is asked to step.
+    // Under reduced motion the spinner stops, and the numbers still come: current
+    // numbers are not motion. They come on the slower refresh, every five seconds.
     const still = await browser.newPage({ reducedMotion: 'reduce' });
     await still.goto(`${origin}${base}examples/top/`);
     await still.waitForSelector('astro-island:not([ssr])');
-    await still.getByText('still', { exact: true }).waitFor();
+    await still.getByText('live · every 5s').waitFor();
+    const frame = still.locator('.rk-spinner-frame');
+    const turned = await frame.textContent();
     const rows = still.locator('[role="row"][data-key]');
     const first = await rows.evaluateAll((all) => all.map((r) => r.textContent));
     await still.waitForTimeout(1500);
     await expect(rows.evaluateAll((all) => all.map((r) => r.textContent))).resolves.toEqual(first);
+    await expect
+      .poll(() => rows.evaluateAll((all) => all.map((r) => r.textContent)), { timeout: 8000 })
+      .not.toEqual(first);
+    await expect(frame.textContent()).resolves.toBe(turned);
     await still.close();
   }, 60_000);
 
