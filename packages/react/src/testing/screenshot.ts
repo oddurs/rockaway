@@ -150,6 +150,19 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
         parent.closest<HTMLElement>('[data-attrs]')?.dataset.attrs ?? drawnWith(parent, screen);
       if (attrs) attributes.push({ text: text.trim(), attrs, col, row });
     }
+
+    // Text cut to its room (0231) ends in the theme's ellipsis, which the
+    // stylesheet draws in the label's last cell, after the clipped text: a
+    // pseudo-element, so no text node says where it is.
+    for (const label of root.querySelectorAll<HTMLElement>('[data-rk-cut][data-rk-ellipsis]')) {
+      const rect = label.getBoundingClientRect();
+      const { row } = at(rect);
+      const col = Math.round((rect.right - box.left) / cellWidth) - 1;
+      const clip = clipOf(label.parentElement);
+      if (row >= clip.top && row < clip.bottom) {
+        write(grid, col, row, label.dataset.rkEllipsis ?? '', clip);
+      }
+    }
   };
 
   draw(screen);
