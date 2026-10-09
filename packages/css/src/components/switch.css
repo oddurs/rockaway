@@ -109,8 +109,14 @@
    * swapped, opted out of the backplate that would hide its thumb (0181). The
    * line in it is stroked in the track's own colour, not in CanvasText, which
    * is its ground there.
+   *
+   * The delimiters round it opt out too. Their backplate is the line's, as
+   * tall as the font, and at dense the font is taller than the cell: it lay
+   * over the track's last row of pixels, a canvas edge under a reversed
+   * track. Their colours are system colours here through the tokens anyway.
    */
   @media (forced-colors: active) {
+    .rk-switch-indicator,
     .rk-switch-track {
       forced-color-adjust: none;
     }
@@ -121,6 +127,9 @@
     .rk-switch-button[data-selected],
     .rk-switch-button[data-pressed] {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css).
+       * The track's own line is inked by the rule below, in its colour. */
+      --rk-forced-ink: Canvas;
     }
 
     .rk-switch-track [data-rk-shape] {
