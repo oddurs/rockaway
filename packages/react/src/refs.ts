@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Refs a component shares with its caller (cairn 0224).
  *
