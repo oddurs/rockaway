@@ -38,8 +38,8 @@
 @import "./components/keymap.css";
 @import "./components/link.css";
 @import "./components/list.css";
-@import "./components/skip-link.css";
 @import "./components/overlay.css";
+@import "./components/skip-link.css";
 @import "./components/table.css";
 @import "./components/text-field.css";
 @import "./components/tree.css";
