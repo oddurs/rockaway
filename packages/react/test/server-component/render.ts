@@ -131,6 +131,13 @@ const checks: [string, unknown, unknown][] = [
     ' └── a.ts ',
   ],
   [
+    'panesBuffer',
+    pure
+      .panesBuffer({ width: 16, height: 3 }, { panes: [{ size: 6, title: 'a' }, { title: 'b' }] })
+      .row(0),
+    '┌ a ───┬ b ────┐',
+  ],
+  [
     'statusBarBuffer',
     pure
       .statusBarBuffer(16, [

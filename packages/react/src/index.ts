@@ -20,6 +20,7 @@ export * from './entries/keymap.ts';
 export * from './entries/link.ts';
 export * from './entries/list.ts';
 export * from './entries/overlay.ts';
+export * from './entries/panes.ts';
 export * from './entries/status-bar.ts';
 export * from './entries/table.ts';
 export * from './entries/text-field.ts';
