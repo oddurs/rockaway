@@ -52,7 +52,7 @@ a menu in a second story, and a dialog over its backdrop in a third.
 
 - [x] One story renders every component, and a test fails if a component exported from `@rockaway/react` is not on it
 - [ ] Theme preset, mode, density, border set, conformance level and painter are Storybook controls, and switch without a rebuild
-- [ ] It passes conformance and continuity in every combination of the controls
+- [x] It passes conformance and continuity in every combination of the controls
 - [x] Its text snapshot is checked in, so any component change shows up as a diff of the whole screen
 
 ## 2026-10-03
@@ -70,3 +70,7 @@ Criterion 2 is partly true: theme, mode, density and conformance are the toolbar
 ## 2026-10-09
 
 Found by the sink: List's reserved cells collapsed in prose (white-space normal), sitting half a row down; fixed in #217. Also seen: Frame's site example puts a line of content on its divider's row (├─fg.muted──┤), for the design pass. A ResizeObserver 'undelivered notifications' notice appears once per density switch in a page of nested measured screens; it fails nothing, and no example alone or the sink alone at one density produces it.
+
+## 2026-10-09
+
+Criterion 3 ticked on the CTO's ruling: covering each control's values, walked where they change something (Everything at every density and mode at strict; each border set and the painter at every density in light; each theme at normal light), suffices, as for the site's switcher. Criterion 2 stays partial until the PainterProvider ticket (batch 11). Frame's example no longer writes on its divider's row (fixed in #215).
