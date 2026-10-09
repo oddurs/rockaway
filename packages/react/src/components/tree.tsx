@@ -33,7 +33,7 @@
  * are the treegrid's to announce.
  */
 import type { Buffer } from '@rockaway/grid';
-import { type CSSProperties, createContext, type ReactNode, useContext } from 'react';
+import { type CSSProperties, createContext, type ReactNode, useContext, useRef } from 'react';
 import {
   Tree as AriaTree,
   TreeItem as AriaTreeItem,
@@ -43,6 +43,7 @@ import {
   TreeItemContent,
   type TreeItemContentRenderProps,
 } from 'react-aria-components';
+import { useCut } from '../cut.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import type { StrokeStyle } from '../paint/cells.ts';
@@ -110,6 +111,20 @@ function Guides({ buffer }: { buffer: Buffer }): ReactNode {
   );
 }
 
+/**
+ * A row's label: its whole title, cut to the row in the theme's ellipsis when
+ * it does not fit (0231), as `treeBuffer` cuts it.
+ */
+function Label({ title, ellipsis }: { title: string; ellipsis: string }): ReactNode {
+  const label = useRef<HTMLSpanElement>(null);
+  useCut(label, title);
+  return (
+    <span ref={label} className="rk-tree-label" data-rk-ellipsis={ellipsis}>
+      <span className="rk-tree-text">{title}</span>
+    </span>
+  );
+}
+
 export interface TreeItemProps<T extends object>
   extends Omit<AriaTreeItemProps<T>, 'className' | 'children' | 'textValue'> {
   /** The row's label, and the text type-ahead matches. */
@@ -172,7 +187,7 @@ export function TreeItem<T extends object>({
                 <span aria-hidden="true" className="rk-tree-mark" />
               ) : null}
               <span aria-hidden="true" className="rk-tree-mark" />
-              <span className="rk-tree-label">{title}</span>
+              <Label title={title} ellipsis={glyphs.mark.ellipsis} />
             </>
           );
         }}
