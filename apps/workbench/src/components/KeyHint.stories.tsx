@@ -192,7 +192,7 @@ export const Keyboard: Story = {
 
     await userEvent.tab();
     expect(save).toHaveFocus();
-    // Drawn and announced for one keyboard: ⌘S with Meta+s, or Ctrl+S with Control+s.
+    // Drawn and announced for one keyboard: ⌘S with Meta+S, or Ctrl+S with Control+S.
     await waitFor(() =>
       expect(save.getAttribute('aria-keyshortcuts')).toBe(keyShortcut('mod+s', keyboard)),
     );

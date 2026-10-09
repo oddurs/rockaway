@@ -180,6 +180,26 @@ describe('the Glyphs object and the tokens agree', () => {
       expect(declared.get(id.replaceAll('.', '-')), id).toBe(value);
     }
   });
+
+  test.each(themeNames.filter((name) => name !== 'default'))(
+    '%s: its sheet carries its glyphs as strings, value for value',
+    async (name) => {
+      const file = path.join(import.meta.dirname, '..', 'css', 'themes', `${name}.css`);
+      const css = await readFile(file, 'utf8');
+      // Every glyph a string, closed: a bare `-` or an unescaped `\\` is not one.
+      const glyphLines = [...css.matchAll(/^\s*--rk-glyph-[\w-]+:.*$/gm)].map((m) => m[0]);
+      for (const line of glyphLines) expect(line).toMatch(/: "(?:[^"\\]|\\.)*";$/);
+      const declared = new Map(
+        [...css.matchAll(/^\s*--rk-(glyph-[\w-]+):\s*"((?:[^"\\]|\\.)*)";/gm)].map((m) => [
+          m[1],
+          JSON.parse(`"${m[2]}"`) as string,
+        ]),
+      );
+      for (const [id, value] of expectedTokens(themeGlyphs[name])) {
+        expect(declared.get(id.replaceAll('.', '-')), id).toBe(value);
+      }
+    },
+  );
 });
 
 function hex(ch: string): string {

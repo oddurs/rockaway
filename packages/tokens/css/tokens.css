@@ -1197,6 +1197,11 @@
   inherits: true;
 }
 
+@property --rk-glyph-mark-prompt {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-radio {
   syntax: '*';
   inherits: true;
@@ -1401,9 +1406,23 @@
 }
 
 @property --rk-palette-dark-bright-red {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(76.4% 0.1437 10.3);
+}
+
+@property --rk-palette-dark-bright-red-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-red-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-dark-bright-red-rec2020 {
+  syntax: '*';
+  inherits: true;
 }
 
 @property --rk-palette-dark-bright-white {
@@ -1655,9 +1674,23 @@
 }
 
 @property --rk-palette-light-bright-magenta {
-  syntax: '<color>';
+  syntax: '*';
   inherits: true;
-  initial-value: oklch(64.6% 0.2224 299.3);
+}
+
+@property --rk-palette-light-bright-magenta-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-magenta-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-bright-magenta-rec2020 {
+  syntax: '*';
+  inherits: true;
 }
 
 @property --rk-palette-light-bright-red {
@@ -2232,7 +2265,7 @@
     --rk-glyph-border-ascii-bottom-left: "+";
     --rk-glyph-border-ascii-bottom-right: "+";
     --rk-glyph-border-ascii-cross: "+";
-    --rk-glyph-border-ascii-horizontal: -;
+    --rk-glyph-border-ascii-horizontal: "-";
     --rk-glyph-border-ascii-tee-down: "+";
     --rk-glyph-border-ascii-tee-left: "+";
     --rk-glyph-border-ascii-tee-right: "+";
@@ -2360,6 +2393,7 @@
     --rk-glyph-mark-external: "↗";
     --rk-glyph-mark-overflow-end: "›";
     --rk-glyph-mark-overflow-start: "‹";
+    --rk-glyph-mark-prompt: "›";
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
@@ -2422,13 +2456,13 @@
     --rk-palette-light-border-strong: oklch(56% 0.006 262);
     --rk-palette-light-border-subtle: oklch(92% 0.0033 262);
     --rk-palette-light-bright-black: oklch(42% 0.006 262);
-    --rk-palette-light-bright-blue: oklch(44% 0.15 262);
-    --rk-palette-light-bright-cyan: oklch(44.89% 0.0764 201.8);
-    --rk-palette-light-bright-green: oklch(44.83% 0.1373 145.9);
+    --rk-palette-light-bright-blue: oklch(43% 0.15 262);
+    --rk-palette-light-bright-cyan: oklch(39.89% 0.0679 202);
+    --rk-palette-light-bright-green: oklch(41.9% 0.1306 145.3);
     --rk-palette-light-bright-magenta: oklch(44% 0.15 320);
-    --rk-palette-light-bright-red: oklch(44% 0.15 27);
+    --rk-palette-light-bright-red: oklch(43.5% 0.15 27);
     --rk-palette-light-bright-white: oklch(99% 0.0017 262);
-    --rk-palette-light-bright-yellow: oklch(44.18% 0.0917 79.24);
+    --rk-palette-light-bright-yellow: oklch(43.18% 0.0897 79.11);
     --rk-palette-light-cursor: oklch(52% 0.16 262);
     --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
     --rk-palette-light-faint: oklch(68% 0.006 262);
@@ -2538,9 +2572,9 @@
       --rk-palette-dark-cyan: oklch(66.38% 0.1512 200.5);
       --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
       --rk-palette-dark-yellow: oklch(66.04% 0.1562 84.25);
-      --rk-palette-light-bright-cyan: oklch(44.76% 0.102 201.7);
-      --rk-palette-light-bright-green: oklch(44% 0.15 150);
-      --rk-palette-light-bright-yellow: oklch(44.16% 0.1053 79.86);
+      --rk-palette-light-bright-cyan: oklch(39.76% 0.0906 201.9);
+      --rk-palette-light-bright-green: oklch(41% 0.15 150);
+      --rk-palette-light-bright-yellow: oklch(43.16% 0.103 79.74);
       --rk-palette-light-cyan: oklch(50.26% 0.1145 201.5);
       --rk-palette-light-green: oklch(51.5% 0.16 150);
       --rk-palette-light-selection: oklch(94.58% 0.0297 248.6);
@@ -2599,9 +2633,9 @@
       --rk-palette-dark-cyan: oklch(66% 0.16 200);
       --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
       --rk-palette-dark-yellow: oklch(66.01% 0.1593 84.86);
-      --rk-palette-light-bright-cyan: oklch(44% 0.15 200);
-      --rk-palette-light-bright-green: oklch(44% 0.15 150);
-      --rk-palette-light-bright-yellow: oklch(44.12% 0.1073 80.02);
+      --rk-palette-light-bright-cyan: oklch(39.13% 0.1458 200.4);
+      --rk-palette-light-bright-green: oklch(41% 0.15 150);
+      --rk-palette-light-bright-yellow: oklch(43.12% 0.1049 79.93);
       --rk-palette-light-cyan: oklch(49.5% 0.16 200);
       --rk-palette-light-green: oklch(51.5% 0.16 150);
       --rk-palette-light-selection: oklch(94.68% 0.0293 250.3);
@@ -2623,7 +2657,8 @@
 }
 
 @layer rk.tokens {
-  [data-rk-theme] {
+  [data-rk-theme],
+  [data-rk-contrast='standard'] {
     --rk-ansi-active: light-dark(var(--rk-palette-light-active), var(--rk-palette-dark-active));
     --rk-ansi-background: light-dark(var(--rk-palette-light-background), var(--rk-palette-dark-background));
     --rk-ansi-black: light-dark(var(--rk-palette-light-black), var(--rk-palette-dark-black));
@@ -2704,6 +2739,16 @@
     --rk-fg-on-warning: var(--rk-ansi-background);
     --rk-fg-success: var(--rk-ansi-green);
     --rk-fg-warning: var(--rk-ansi-yellow);
+    --rk-focus-offset: 2px;
+    --rk-focus-width: 2px;
+    /* The space between a double line's strokes. */
+    --rk-stroke-glyph-gap: 0.12;
+    --rk-stroke-glyph-heavy: 0.16;
+    --rk-stroke-glyph-light: 0.08;
+    /* The space between a double line's strokes. */
+    --rk-stroke-rule-gap: 1px;
+    --rk-stroke-rule-heavy: 2px;
+    --rk-stroke-rule-light: 1px;
     --rk-syntax-attribute: var(--rk-ansi-yellow);
     --rk-syntax-comment: var(--rk-ansi-muted);
     --rk-syntax-constant: var(--rk-ansi-yellow);
@@ -2716,6 +2761,234 @@
     --rk-syntax-regexp: var(--rk-ansi-red);
     --rk-syntax-string: var(--rk-ansi-green);
     --rk-syntax-type: var(--rk-ansi-cyan);
+  }
+}
+
+@layer rk.tokens {
+  [data-rk-contrast='more'],
+  [data-rk-contrast='more'] [data-rk-theme] {
+    /* Dim: quieter text, not lower opacity. */
+    --rk-attribute-dim: var(--rk-ansi-foreground);
+    /* Filled accent backgrounds. */
+    --rk-bg-accent-solid: var(--rk-ansi-foreground);
+    --rk-bg-accent-solid-hover: var(--rk-ansi-foreground);
+    /* Tinted accent backgrounds: callouts, rows. */
+    --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
+    /* An element being pressed, or selected. */
+    --rk-bg-active: var(--rk-ansi-active);
+    /* Filled danger backgrounds. */
+    --rk-bg-danger-solid: var(--rk-ansi-foreground);
+    --rk-bg-danger-solid-hover: var(--rk-ansi-foreground);
+    /* Tinted danger backgrounds: callouts, rows. */
+    --rk-bg-danger-subtle: var(--rk-ansi-tint-red);
+    /* An element under the pointer. */
+    --rk-bg-hover: var(--rk-ansi-hover);
+    /* Filled info backgrounds. */
+    --rk-bg-info-solid: var(--rk-ansi-foreground);
+    --rk-bg-info-solid-hover: var(--rk-ansi-foreground);
+    /* Tinted info backgrounds: callouts, rows. */
+    --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
+    /* Reverse video: the foreground becomes the ground. */
+    --rk-bg-inverse: var(--rk-ansi-foreground);
+    /* The page behind everything: the terminal background. */
+    --rk-bg-page: var(--rk-ansi-background);
+    /* Quiet element backgrounds: inputs, wells, code. */
+    --rk-bg-subtle: var(--rk-ansi-subtle);
+    /* Filled success backgrounds. */
+    --rk-bg-success-solid: var(--rk-ansi-foreground);
+    --rk-bg-success-solid-hover: var(--rk-ansi-foreground);
+    /* Tinted success backgrounds: callouts, rows. */
+    --rk-bg-success-subtle: var(--rk-ansi-tint-green);
+    /* A raised surface. On a grid it is its border that raises it. */
+    --rk-bg-surface: var(--rk-ansi-surface);
+    /* Filled warning backgrounds. */
+    --rk-bg-warning-solid: var(--rk-ansi-foreground);
+    --rk-bg-warning-solid-hover: var(--rk-ansi-foreground);
+    /* Tinted warning backgrounds: callouts, rows. */
+    --rk-bg-warning-subtle: var(--rk-ansi-tint-yellow);
+    --rk-border-accent: var(--rk-ansi-blue);
+    /* The boundary of an input or control. At least 3:1 (WCAG 1.4.11). */
+    --rk-border-control: var(--rk-ansi-foreground);
+    --rk-border-danger: var(--rk-ansi-red);
+    /* The ordinary edge: frames, dividers, tables. A boundary a reader can see, at least 3:1 against every ground it is drawn on (WCAG 1.4.11, cairn 0178). */
+    --rk-border-default: var(--rk-ansi-border-strong);
+    /* The focus ring, and the cursor (0061). */
+    --rk-border-focus: var(--rk-ansi-blue);
+    --rk-border-info: var(--rk-ansi-cyan);
+    /* Decorative separation only, below 3:1: a rule inside a surface that something else already bounds. Never the only edge of anything (cairn 0178). */
+    --rk-border-subtle: var(--rk-ansi-border);
+    --rk-border-success: var(--rk-ansi-green);
+    /* The edge of a resting surface. On a grid, a surface is its border, so it is border.default. */
+    --rk-border-surface: var(--rk-ansi-border-strong);
+    --rk-border-warning: var(--rk-ansi-yellow);
+    /* Links and accent text. */
+    --rk-fg-accent: var(--rk-ansi-bright-blue);
+    --rk-fg-danger: var(--rk-ansi-bright-red);
+    /* Body text. At least 7:1 on every background. */
+    --rk-fg-default: var(--rk-ansi-foreground);
+    /* Disabled text. Exempt from contrast minimums, so never load-bearing. */
+    --rk-fg-disabled: var(--rk-ansi-muted);
+    --rk-fg-info: var(--rk-ansi-bright-cyan);
+    /* Secondary text. At least 4.5:1 on every background. */
+    --rk-fg-muted: var(--rk-ansi-foreground);
+    /* Text on bg.accent.solid. */
+    --rk-fg-on-accent: var(--rk-ansi-background);
+    --rk-fg-on-danger: var(--rk-ansi-background);
+    --rk-fg-on-info: var(--rk-ansi-background);
+    --rk-fg-on-inverse: var(--rk-ansi-background);
+    --rk-fg-on-success: var(--rk-ansi-background);
+    --rk-fg-on-warning: var(--rk-ansi-background);
+    --rk-fg-success: var(--rk-ansi-bright-green);
+    --rk-fg-warning: var(--rk-ansi-bright-yellow);
+    --rk-focus-offset: 2px;
+    --rk-focus-width: 3px;
+    /* The space between a double line's strokes. */
+    --rk-stroke-glyph-gap: 0.12;
+    --rk-stroke-glyph-heavy: 0.22;
+    --rk-stroke-glyph-light: 0.12;
+    /* The space between a double line's strokes. */
+    --rk-stroke-rule-gap: 1px;
+    --rk-stroke-rule-heavy: 3px;
+    --rk-stroke-rule-light: 2px;
+    /* Attribute and property keys in markup. */
+    --rk-syntax-attribute: var(--rk-ansi-bright-yellow);
+    /* Comments. Also italic, so they read as comments in greyscale. */
+    --rk-syntax-comment: var(--rk-ansi-foreground);
+    /* Numbers, booleans, constants. */
+    --rk-syntax-constant: var(--rk-ansi-bright-yellow);
+    /* Removed lines in a diff. */
+    --rk-syntax-deleted: var(--rk-ansi-bright-red);
+    /* Invalid code. Also underlined, so it reads as an error in greyscale. */
+    --rk-syntax-error: var(--rk-ansi-bright-red);
+    /* Function and method names. */
+    --rk-syntax-function: var(--rk-ansi-bright-blue);
+    /* Added lines in a diff. */
+    --rk-syntax-inserted: var(--rk-ansi-bright-green);
+    /* Keywords and storage: `import`, `const`. */
+    --rk-syntax-keyword: var(--rk-ansi-bright-magenta);
+    /* Identifiers, punctuation, anything unnamed. */
+    --rk-syntax-plain: var(--rk-ansi-foreground);
+    /* Regular expressions and escapes. */
+    --rk-syntax-regexp: var(--rk-ansi-bright-red);
+    /* Strings and template literals. */
+    --rk-syntax-string: var(--rk-ansi-bright-green);
+    /* Types, classes, components, tag names. */
+    --rk-syntax-type: var(--rk-ansi-bright-cyan);
+  }
+}
+
+@layer rk.tokens {
+  @media (prefers-contrast: more) {
+    :root:not([data-rk-contrast='standard']),
+    :root:not([data-rk-contrast='standard']) [data-rk-theme]:not([data-rk-contrast='standard'], [data-rk-contrast='standard'] *) {
+      /* Dim: quieter text, not lower opacity. */
+      --rk-attribute-dim: var(--rk-ansi-foreground);
+      /* Filled accent backgrounds. */
+      --rk-bg-accent-solid: var(--rk-ansi-foreground);
+      --rk-bg-accent-solid-hover: var(--rk-ansi-foreground);
+      /* Tinted accent backgrounds: callouts, rows. */
+      --rk-bg-accent-subtle: var(--rk-ansi-tint-blue);
+      /* An element being pressed, or selected. */
+      --rk-bg-active: var(--rk-ansi-active);
+      /* Filled danger backgrounds. */
+      --rk-bg-danger-solid: var(--rk-ansi-foreground);
+      --rk-bg-danger-solid-hover: var(--rk-ansi-foreground);
+      /* Tinted danger backgrounds: callouts, rows. */
+      --rk-bg-danger-subtle: var(--rk-ansi-tint-red);
+      /* An element under the pointer. */
+      --rk-bg-hover: var(--rk-ansi-hover);
+      /* Filled info backgrounds. */
+      --rk-bg-info-solid: var(--rk-ansi-foreground);
+      --rk-bg-info-solid-hover: var(--rk-ansi-foreground);
+      /* Tinted info backgrounds: callouts, rows. */
+      --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
+      /* Reverse video: the foreground becomes the ground. */
+      --rk-bg-inverse: var(--rk-ansi-foreground);
+      /* The page behind everything: the terminal background. */
+      --rk-bg-page: var(--rk-ansi-background);
+      /* Quiet element backgrounds: inputs, wells, code. */
+      --rk-bg-subtle: var(--rk-ansi-subtle);
+      /* Filled success backgrounds. */
+      --rk-bg-success-solid: var(--rk-ansi-foreground);
+      --rk-bg-success-solid-hover: var(--rk-ansi-foreground);
+      /* Tinted success backgrounds: callouts, rows. */
+      --rk-bg-success-subtle: var(--rk-ansi-tint-green);
+      /* A raised surface. On a grid it is its border that raises it. */
+      --rk-bg-surface: var(--rk-ansi-surface);
+      /* Filled warning backgrounds. */
+      --rk-bg-warning-solid: var(--rk-ansi-foreground);
+      --rk-bg-warning-solid-hover: var(--rk-ansi-foreground);
+      /* Tinted warning backgrounds: callouts, rows. */
+      --rk-bg-warning-subtle: var(--rk-ansi-tint-yellow);
+      --rk-border-accent: var(--rk-ansi-blue);
+      /* The boundary of an input or control. At least 3:1 (WCAG 1.4.11). */
+      --rk-border-control: var(--rk-ansi-foreground);
+      --rk-border-danger: var(--rk-ansi-red);
+      /* The ordinary edge: frames, dividers, tables. A boundary a reader can see, at least 3:1 against every ground it is drawn on (WCAG 1.4.11, cairn 0178). */
+      --rk-border-default: var(--rk-ansi-border-strong);
+      /* The focus ring, and the cursor (0061). */
+      --rk-border-focus: var(--rk-ansi-blue);
+      --rk-border-info: var(--rk-ansi-cyan);
+      /* Decorative separation only, below 3:1: a rule inside a surface that something else already bounds. Never the only edge of anything (cairn 0178). */
+      --rk-border-subtle: var(--rk-ansi-border);
+      --rk-border-success: var(--rk-ansi-green);
+      /* The edge of a resting surface. On a grid, a surface is its border, so it is border.default. */
+      --rk-border-surface: var(--rk-ansi-border-strong);
+      --rk-border-warning: var(--rk-ansi-yellow);
+      /* Links and accent text. */
+      --rk-fg-accent: var(--rk-ansi-bright-blue);
+      --rk-fg-danger: var(--rk-ansi-bright-red);
+      /* Body text. At least 7:1 on every background. */
+      --rk-fg-default: var(--rk-ansi-foreground);
+      /* Disabled text. Exempt from contrast minimums, so never load-bearing. */
+      --rk-fg-disabled: var(--rk-ansi-muted);
+      --rk-fg-info: var(--rk-ansi-bright-cyan);
+      /* Secondary text. At least 4.5:1 on every background. */
+      --rk-fg-muted: var(--rk-ansi-foreground);
+      /* Text on bg.accent.solid. */
+      --rk-fg-on-accent: var(--rk-ansi-background);
+      --rk-fg-on-danger: var(--rk-ansi-background);
+      --rk-fg-on-info: var(--rk-ansi-background);
+      --rk-fg-on-inverse: var(--rk-ansi-background);
+      --rk-fg-on-success: var(--rk-ansi-background);
+      --rk-fg-on-warning: var(--rk-ansi-background);
+      --rk-fg-success: var(--rk-ansi-bright-green);
+      --rk-fg-warning: var(--rk-ansi-bright-yellow);
+      --rk-focus-offset: 2px;
+      --rk-focus-width: 3px;
+      /* The space between a double line's strokes. */
+      --rk-stroke-glyph-gap: 0.12;
+      --rk-stroke-glyph-heavy: 0.22;
+      --rk-stroke-glyph-light: 0.12;
+      /* The space between a double line's strokes. */
+      --rk-stroke-rule-gap: 1px;
+      --rk-stroke-rule-heavy: 3px;
+      --rk-stroke-rule-light: 2px;
+      /* Attribute and property keys in markup. */
+      --rk-syntax-attribute: var(--rk-ansi-bright-yellow);
+      /* Comments. Also italic, so they read as comments in greyscale. */
+      --rk-syntax-comment: var(--rk-ansi-foreground);
+      /* Numbers, booleans, constants. */
+      --rk-syntax-constant: var(--rk-ansi-bright-yellow);
+      /* Removed lines in a diff. */
+      --rk-syntax-deleted: var(--rk-ansi-bright-red);
+      /* Invalid code. Also underlined, so it reads as an error in greyscale. */
+      --rk-syntax-error: var(--rk-ansi-bright-red);
+      /* Function and method names. */
+      --rk-syntax-function: var(--rk-ansi-bright-blue);
+      /* Added lines in a diff. */
+      --rk-syntax-inserted: var(--rk-ansi-bright-green);
+      /* Keywords and storage: `import`, `const`. */
+      --rk-syntax-keyword: var(--rk-ansi-bright-magenta);
+      /* Identifiers, punctuation, anything unnamed. */
+      --rk-syntax-plain: var(--rk-ansi-foreground);
+      /* Regular expressions and escapes. */
+      --rk-syntax-regexp: var(--rk-ansi-bright-red);
+      /* Strings and template literals. */
+      --rk-syntax-string: var(--rk-ansi-bright-green);
+      /* Types, classes, components, tag names. */
+      --rk-syntax-type: var(--rk-ansi-bright-cyan);
+    }
   }
 }
 
@@ -2745,7 +3018,7 @@
     --rk-glyph-border-ascii-bottom-left: "+";
     --rk-glyph-border-ascii-bottom-right: "+";
     --rk-glyph-border-ascii-cross: "+";
-    --rk-glyph-border-ascii-horizontal: -;
+    --rk-glyph-border-ascii-horizontal: "-";
     --rk-glyph-border-ascii-tee-down: "+";
     --rk-glyph-border-ascii-tee-left: "+";
     --rk-glyph-border-ascii-tee-right: "+";
@@ -2873,6 +3146,7 @@
     --rk-glyph-mark-external: "↗";
     --rk-glyph-mark-overflow-end: "›";
     --rk-glyph-mark-overflow-start: "‹";
+    --rk-glyph-mark-prompt: "›";
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
@@ -2932,13 +3206,13 @@
     --rk-palette-light-border-strong: oklch(56% 0.006 262);
     --rk-palette-light-border-subtle: oklch(92% 0.0033 262);
     --rk-palette-light-bright-black: oklch(42% 0.006 262);
-    --rk-palette-light-bright-blue: oklch(44% 0.15 262);
-    --rk-palette-light-bright-cyan: oklch(44.89% 0.0764 201.8);
-    --rk-palette-light-bright-green: oklch(44.83% 0.1373 145.9);
+    --rk-palette-light-bright-blue: oklch(43% 0.15 262);
+    --rk-palette-light-bright-cyan: oklch(39.89% 0.0679 202);
+    --rk-palette-light-bright-green: oklch(41.9% 0.1306 145.3);
     --rk-palette-light-bright-magenta: oklch(44% 0.15 320);
-    --rk-palette-light-bright-red: oklch(44% 0.15 27);
+    --rk-palette-light-bright-red: oklch(43.5% 0.15 27);
     --rk-palette-light-bright-white: oklch(99% 0.0017 262);
-    --rk-palette-light-bright-yellow: oklch(44.18% 0.0917 79.24);
+    --rk-palette-light-bright-yellow: oklch(43.18% 0.0897 79.11);
     --rk-palette-light-cursor: oklch(52% 0.16 262);
     --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
     --rk-palette-light-faint: oklch(68% 0.006 262);
@@ -2998,9 +3272,9 @@
       --rk-palette-dark-cyan: oklch(66.38% 0.1512 200.5);
       --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
       --rk-palette-dark-yellow: oklch(66.04% 0.1562 84.25);
-      --rk-palette-light-bright-cyan: oklch(44.76% 0.102 201.7);
-      --rk-palette-light-bright-green: oklch(44% 0.15 150);
-      --rk-palette-light-bright-yellow: oklch(44.16% 0.1053 79.86);
+      --rk-palette-light-bright-cyan: oklch(39.76% 0.0906 201.9);
+      --rk-palette-light-bright-green: oklch(41% 0.15 150);
+      --rk-palette-light-bright-yellow: oklch(43.16% 0.103 79.74);
       --rk-palette-light-cyan: oklch(50.26% 0.1145 201.5);
       --rk-palette-light-green: oklch(51.5% 0.16 150);
       --rk-palette-light-selection: oklch(94.58% 0.0297 248.6);
@@ -3058,9 +3332,9 @@
       --rk-palette-dark-cyan: oklch(66% 0.16 200);
       --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
       --rk-palette-dark-yellow: oklch(66.01% 0.1593 84.86);
-      --rk-palette-light-bright-cyan: oklch(44% 0.15 200);
-      --rk-palette-light-bright-green: oklch(44% 0.15 150);
-      --rk-palette-light-bright-yellow: oklch(44.12% 0.1073 80.02);
+      --rk-palette-light-bright-cyan: oklch(39.13% 0.1458 200.4);
+      --rk-palette-light-bright-green: oklch(41% 0.15 150);
+      --rk-palette-light-bright-yellow: oklch(43.12% 0.1049 79.93);
       --rk-palette-light-cyan: oklch(49.5% 0.16 200);
       --rk-palette-light-green: oklch(51.5% 0.16 150);
       --rk-palette-light-selection: oklch(94.68% 0.0293 250.3);

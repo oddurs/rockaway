@@ -52,6 +52,9 @@ export function fieldFrameBuffer(
   return Buffer.create(size).draw((draft) => {
     drawBox(draft, rect(0, 0, size.width, size.height), {
       set: borderSets[border],
+      // ASCII has no heavier line, so a heavy ASCII frame is a bold one (0183):
+      // `+-|` stay letters, drawn by the font, and bold is their weight.
+      ...(heavy && borderSets[border].ascii ? { style: { attrs: Attr.bold } } : {}),
       ellipsis: glyphs.mark.ellipsis,
       title: `${label}${mark}`,
       titleStyle: words,

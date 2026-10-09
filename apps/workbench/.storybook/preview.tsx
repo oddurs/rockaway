@@ -1,5 +1,5 @@
-import { GlyphProvider } from '@rockaway/react';
-import { expectField, expectNoNativeScrollbars } from '@rockaway/react/testing';
+import { GlyphProvider, OverlayLayer } from '@rockaway/react';
+import { expectField, expectNames, expectNoNativeScrollbars } from '@rockaway/react/testing';
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import { afterEach as axe } from '@storybook/addon-a11y/preview';
 import type { Decorator, Preview, StoryContext } from '@storybook/react-vite';
@@ -11,6 +11,7 @@ import '@rockaway/tokens/tokens.css';
 import '@rockaway/tokens/themes/ice.css';
 import '@rockaway/tokens/themes/ink.css';
 import '@rockaway/tokens/themes/phosphor.css';
+import '@rockaway/tokens/themes/ascii.css';
 import '@rockaway/tokens/themes/catppuccin.css';
 import '@rockaway/tokens/themes/dracula.css';
 import '@rockaway/tokens/themes/nord.css';
@@ -39,7 +40,10 @@ const withContexts: Decorator = (Story, { globals }) => {
   });
   return (
     <GlyphProvider glyphs={themeGlyphs[theme]}>
-      <Story />
+      {/* Overlays open into the canvas, so every check after a story sees them (cairn 0128). */}
+      <OverlayLayer>
+        <Story />
+      </OverlayLayer>
     </GlyphProvider>
   );
 };
@@ -101,6 +105,22 @@ const preview: Preview = {
   decorators: [withContexts],
   parameters: {
     layout: 'centered',
+    // The frame a story runs in under Vitest. The Storybook plugin makes it
+    // 1200 by 900 unless told otherwise, and a screenshot stops at its edge:
+    // at touch, twenty-two rows of 44px are 968, and the rows past the edge
+    // read as lines that stop short (cairn 0199). Tall from the start, so no
+    // story is resized in the middle of being checked. The page around it is
+    // taller still (`vitest.config.ts`), so the frame is never scaled.
+    viewport: {
+      options: {
+        'rk-test-frame': {
+          name: 'Test frame (1200 × 2300)',
+          styles: { width: '1200px', height: '2300px' },
+          type: 'desktop',
+        },
+      },
+      defaultViewport: 'rk-test-frame',
+    },
     // Every story is an accessibility test: a violation fails the run.
     a11y: { test: 'error' },
   },
@@ -132,10 +152,13 @@ export const afterEach = async (context: StoryContext): Promise<void> => {
   if (parameters.scrollbars !== false) expectNoNativeScrollbars(context.canvasElement);
   // The field contract (cairn 0203) is a question of semantics, not of cells,
   // so it is asked once, in the story's own context, of every field on the page.
+  const theme = context.globals.theme as ThemeName | undefined;
+  const glyphs = themeGlyphs[theme ?? 'default'];
   if (parameters.fields !== false && context.canvasElement.querySelector('.rk-field')) {
-    const theme = context.globals.theme as ThemeName | undefined;
-    expectField(context.canvasElement, { glyphs: themeGlyphs[theme ?? 'default'] });
+    expectField(context.canvasElement, { glyphs });
   }
+  // And outside a field, no name holds a glyph (0252): chrome is drawn, not said.
+  if (parameters.names !== false) expectNames(context.canvasElement, { glyphs });
   const run = runner();
   await walk(context.id, context.canvasElement, parameters, {
     capture: run?.capture,

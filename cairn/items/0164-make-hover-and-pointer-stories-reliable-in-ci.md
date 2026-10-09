@@ -25,7 +25,7 @@ hover story will meet it.
 
 - [x] A shared helper in the workbench waits for fonts and two frames before a story measures or points, or hover is driven by the real pointer through `vitest/browser`
 - [x] Every existing hover story uses it, and a CI run repeated five times passes every time
-- [ ] The recipe (0134) says to use it
+- [x] The recipe (0134) says to use it
 
 ## 2026-10-03
 
@@ -50,3 +50,7 @@ Five full CI runs on 18dbc2d, the final head with the experiment removed, all gr
 ## 2026-10-03
 
 After merging main again: Themes/Switching from #95 clicks a theme button and compares cell geometry, so it now calls settled() too. Every story with a pointer interaction (Link, Button, List, Themes) imports the shared helper. These five green runs were before Themes joined; one more green CI run on the new head covers it.
+
+## 2026-10-03
+
+docs/component-recipe.md (0134) says it, under Stories: a play function that hovers, presses with the pointer or compares geometry starts with await settled().

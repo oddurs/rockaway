@@ -3,9 +3,12 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { describe, expect, test } from 'vitest';
+import { ansiSlots, roleSlots } from '../src/ansi.ts';
 import { breakpoints, controlRows, lineBox, spaceSteps } from '../src/density.ts';
 import { generate, resolverFile, serialize } from '../src/generate.ts';
+import { moreContrastStrokeWeights, strokeWeights } from '../src/glyph.ts';
 import { defaultTheme } from '../src/inputs.ts';
+import { intents, moreContrast } from '../src/semantic.ts';
 import { themeContexts } from '../src/themes.ts';
 import { parseTheme } from '../src/validate.ts';
 
@@ -79,6 +82,17 @@ describe('generated files', () => {
     for (const [name, doc] of files) {
       const groups = Object.keys(doc as Node).filter((k) => !k.startsWith('$'));
       if (name.startsWith('mode.')) expect(groups, name).toEqual(['ansi']);
+      if (name === 'contrast.standard.tokens.json') expect(groups, name).toEqual(['stroke']);
+      if (name === 'contrast.more.tokens.json')
+        expect(groups, name).toEqual([
+          'fg',
+          'bg',
+          'border',
+          'syntax',
+          'attribute',
+          'stroke',
+          'focus',
+        ]);
       if (name.startsWith('theme.'))
         expect(groups, name).toEqual(['palette', 'font', 'glyph', 'conformance']);
       if (name.startsWith('density.'))
@@ -262,5 +276,35 @@ describe('the shipped CSS survives a minifier (0066)', () => {
       const css = await readFile(path.join(root, file), 'utf8');
       expect(css, file).not.toMatch(/^\s*font: /m);
     }
+  });
+});
+
+describe('increased contrast is the same palette, read differently (0065)', () => {
+  test('every reading names a slot the palette already has: there is no third palette', () => {
+    const slots = new Set<string>([...ansiSlots, ...roleSlots]);
+    for (const [path, slot] of Object.entries(moreContrast))
+      expect(slots.has(slot), path).toBe(true);
+    const more = files.get('contrast.more.tokens.json') as Node;
+    for (const [id, token] of tokens(more)) {
+      if (typeof token.$value !== 'string') continue;
+      expect(token.$value as string, id).toMatch(/^\{ansi\.[\w-]+\}$/);
+    }
+  });
+
+  test('a fill is reverse video, muted text is the foreground, and lines get heavier, not wider', () => {
+    for (const intent of intents) {
+      expect(moreContrast[`bg.${intent}.solid`]).toBe('foreground');
+      expect(moreContrast[`fg.${intent}`]).toBe(
+        `bright-${intent === 'accent' ? 'blue' : { info: 'cyan', success: 'green', warning: 'yellow', danger: 'red' }[intent]}`,
+      );
+    }
+    expect(moreContrast['fg.muted']).toBe('foreground');
+    expect(moreContrastStrokeWeights.glyph.light).toBeGreaterThan(strokeWeights.glyph.light);
+    expect(moreContrastStrokeWeights.glyph.heavy).toBeGreaterThan(
+      moreContrastStrokeWeights.glyph.light,
+    );
+    expect(moreContrastStrokeWeights.rule.heavy).toBeGreaterThan(
+      moreContrastStrokeWeights.rule.light,
+    );
   });
 });

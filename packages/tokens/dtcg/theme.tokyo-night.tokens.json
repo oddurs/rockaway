@@ -1,5 +1,5 @@
 {
-  "$description": "Tokyo Night (cairn 0052). Imported from https://github.com/folke/tokyonight.nvim under Apache-2.0 (Copyright Folke Lemaitre). Fitted to the contrast gate: light foreground: #3760bf → #0f318c (for fg.default on bg.page); light muted: #6788cd → #375495 (for fg.muted on bg.page); light blue: #2e7de9 → #0056be (for fg.accent on bg.page); light bright-blue: #358aff → #005fd0 (for fg.on-accent on bg.accent.solid-hover); light cyan: #007197 → #005f84 (for fg.info on bg.page); light bright-cyan: #007ea8 → #006c95 (for fg.on-info on bg.info.solid-hover); light green: #587539 → #456125 (for fg.success on bg.page); light bright-green: #5c8524 → #476f00 (for fg.on-success on bg.success.solid-hover); light yellow: #8c6c3e → #735425 (for fg.warning on bg.page); light bright-yellow: #a27629 → #865c00 (for fg.on-warning on bg.warning.solid-hover); light red: #f52a65 → #b2003d (for fg.danger on bg.page); light bright-red: #ff4774 → #c8004a (for fg.on-danger on bg.danger.solid-hover); light border: #9da5d8 → #6f76a6 (for border.default on bg.page); light border-strong: #8790d1 → #6b74b2 (for border.control on bg.page); light magenta: #9854f1 → #7b30ce (for syntax.keyword on bg.surface); dark muted: #8990b1 → #959dbe (for fg.muted on bg.hover); dark border: #60627b → #6e718a (for border.default on bg.page).",
+  "$description": "Tokyo Night (cairn 0052). Imported from https://github.com/folke/tokyonight.nvim under Apache-2.0 (Copyright Folke Lemaitre). Fitted to the contrast gate: light foreground: #3760bf → #0f318c (for fg.default on bg.page); light muted: #6788cd → #375495 (for fg.muted on bg.page); light blue: #2e7de9 → #0056be (for fg.accent on bg.page); light bright-blue: #358aff → #0033a3 (for fg.on-accent on bg.accent.solid-hover); light cyan: #007197 → #005f84 (for fg.info on bg.page); light bright-cyan: #007ea8 → #003f5e (for fg.on-info on bg.info.solid-hover); light green: #587539 → #456125 (for fg.success on bg.page); light bright-green: #5c8524 → #244400 (for fg.on-success on bg.success.solid-hover); light yellow: #8c6c3e → #735425 (for fg.warning on bg.page); light bright-yellow: #a27629 → #5a3600 (for fg.on-warning on bg.warning.solid-hover); light red: #f52a65 → #b2003d (for fg.danger on bg.page); light bright-red: #ff4774 → #790026 (for fg.on-danger on bg.danger.solid-hover); light border: #9da5d8 → #6f76a6 (for border.default on bg.page); light border-strong: #8790d1 → #6b74b2 (for border.control on bg.page); light magenta: #9854f1 → #7b30ce (for syntax.keyword on bg.surface); light bright-magenta: #a463ff → #5e00ab (for syntax.keyword on bg.surface, in more contrast); dark muted: #8990b1 → #959dbe (for fg.muted on bg.hover); dark border: #60627b → #6e718a (for border.default on bg.page); dark bright-blue: #8db0ff → #95b8ff (for fg.accent on bg.accent.subtle, in more contrast); dark bright-red: #ff899d → #ffa2b2 (for fg.danger on bg.surface, in more contrast).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "imported",
@@ -112,7 +112,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.525,
+            0.355,
             0.2194,
             11.2
           ]
@@ -122,7 +122,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.492,
+            0.347,
             0.1327,
             129.8
           ]
@@ -132,7 +132,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.506,
+            0.366,
             0.1068,
             77.6
           ]
@@ -142,7 +142,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.509,
+            0.374,
             0.192,
             257.6
           ]
@@ -152,7 +152,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.646,
+            0.401,
             0.2224,
             299.3
           ]
@@ -162,7 +162,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.496,
+            0.341,
             0.1115,
             230.6
           ]
@@ -455,7 +455,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.764,
+            0.824,
             0.1437,
             10.3
           ]
@@ -485,7 +485,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.763,
+            0.788,
             0.1205,
             265.4
           ]
@@ -1082,6 +1082,9 @@
       },
       "cursor": {
         "$value": "▸"
+      },
+      "prompt": {
+        "$value": "›"
       },
       "expanded": {
         "$value": "▾"

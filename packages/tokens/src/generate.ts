@@ -3,10 +3,11 @@
  * out. The output is committed and reviewed, so a changed rule is a visible
  * diff.
  *
- *   base.tokens.json               strokes and attributes: line weights, and how emphasis is drawn
+ *   base.tokens.json               attributes: how emphasis is drawn
  *   semantic.tokens.json           the semantic tier: colour, motion, focus
  *   theme.{theme}.tokens.json      a theme: its palette in both modes, its type and glyphs
  *   mode.{mode}.tokens.json        which half of the palette `ansi.*` reads
+ *   contrast.{contrast}.tokens.json  line weights; `more` re-reads the semantic tier (0065)
  *   density.{density}.tokens.json  the cell, space and control sizes, one per `density` context
  *   rockaway.resolver.json         how they combine
  *
@@ -20,7 +21,7 @@ import { ansiSlots, type Palette, roleSlots } from './ansi.ts';
 import { breakpoints, controlRows, lineBox, spaceSteps } from './density.ts';
 import { alias, color, type Group, px, type ResolverDocument, type Token } from './dtcg.ts';
 import { describeAdjustment } from './fit.ts';
-import { attributes, glyphs, strokes } from './glyph.ts';
+import { attributes, glyphs, moreContrastStrokeWeights, strokes } from './glyph.ts';
 import {
   type Density,
   defaultContexts,
@@ -30,7 +31,7 @@ import {
   type ThemeInputs,
 } from './inputs.ts';
 import { motion } from './motion.ts';
-import { semanticColors } from './semantic.ts';
+import { contrasts, moreContrastColors, semanticColors } from './semantic.ts';
 import { type ThemeContext, themeContexts } from './themes.ts';
 import { families, weights } from './type.ts';
 
@@ -123,6 +124,23 @@ function theme(t: ThemeContext): Group {
   } as unknown as Group;
 }
 
+/**
+ * Increased contrast (0065): the semantic tier read from the same palette
+ * another way, every line a step heavier, and a thicker focus ring. None of it
+ * moves a cell: an outline costs none, and a stroke is ink inside its cell.
+ */
+function moreContrastTokens(): Group {
+  return {
+    ...moreContrastColors(),
+    ...strokes(moreContrastStrokeWeights),
+    focus: {
+      $type: 'dimension',
+      $description: 'A thicker ring for a reader who asked for more contrast.',
+      width: px(3),
+    },
+  } as Group;
+}
+
 /** The mode: which half of the theme's palette `ansi.*` reads. */
 function mode(m: Mode): Group {
   return {
@@ -197,6 +215,12 @@ function resolver(themes: readonly ThemeContext[]): ResolverDocument {
         contexts: Object.fromEntries(modes.map((m) => [m, [ref(`mode.${m}.tokens.json`)]])),
         default: defaultContexts.mode,
       },
+      contrast: {
+        description:
+          'Contrast (cairn 0065): `more` is what prefers-contrast: more asks for. Re-reads the semantic tier from the same palette, and thickens lines and the focus ring.',
+        contexts: Object.fromEntries(contrasts.map((c) => [c, [ref(`contrast.${c}.tokens.json`)]])),
+        default: 'standard',
+      },
       density: {
         description: 'Density: the line box. Overrides cell.*, space.*, row.* and size.* only.',
         contexts: Object.fromEntries(densities.map((d) => [d, [ref(`density.${d}.tokens.json`)]])),
@@ -207,6 +231,7 @@ function resolver(themes: readonly ThemeContext[]): ResolverDocument {
       ref('#/sets/base'),
       ref('#/modifiers/theme'),
       ref('#/modifiers/mode'),
+      ref('#/modifiers/contrast'),
       ref('#/modifiers/density'),
     ],
   };
@@ -215,10 +240,12 @@ function resolver(themes: readonly ThemeContext[]): ResolverDocument {
 /** Every theme's files. The first theme is the default context. */
 export function generate(themes: readonly ThemeContext[] = themeContexts): GeneratedFiles {
   const files = new Map<string, unknown>();
-  files.set('base.tokens.json', { ...strokes(), ...attributes() });
+  files.set('base.tokens.json', attributes());
   files.set('semantic.tokens.json', semantic());
   for (const t of themes) files.set(`theme.${t.name}.tokens.json`, theme(t));
   for (const m of modes) files.set(`mode.${m}.tokens.json`, mode(m));
+  files.set('contrast.standard.tokens.json', strokes());
+  files.set('contrast.more.tokens.json', moreContrastTokens());
   for (const d of densities) files.set(`density.${d}.tokens.json`, density(d));
   files.set(resolverFile, resolver(themes));
   return files;
