@@ -93,6 +93,14 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-fill-1: "-";
+    --rk-glyph-fill-2: "-";
+    --rk-glyph-fill-3: "-";
+    --rk-glyph-fill-4: "=";
+    --rk-glyph-fill-5: "=";
+    --rk-glyph-fill-6: "=";
+    --rk-glyph-fill-7: "=";
+    --rk-glyph-fill-8: "#";
     --rk-glyph-key-alt: "Opt";
     --rk-glyph-key-backspace: "Bksp";
     --rk-glyph-key-ctrl: "Ctrl";
