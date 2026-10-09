@@ -117,11 +117,14 @@ const MESSAGE_PRIORITY = 100;
  */
 function textCells(children: ReactNode, platform: Platform, glyphs: Glyphs): number | undefined {
   let cells = 0;
+  let elements = 0;
   for (const item of Children.toArray(children)) {
     if (typeof item === 'string' || typeof item === 'number') {
       cells += stringWidth(String(item));
       continue;
     }
+    // An element after another is a cell apart from it (status-bar.css).
+    if (elements++ > 0) cells += 1;
     // A key hint's width is its legend and its label, both strings: known
     // without a page, as text is.
     if (!isElementOf(item, KeyHint)) return undefined;

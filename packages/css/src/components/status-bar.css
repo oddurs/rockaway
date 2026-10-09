@@ -37,6 +37,12 @@
     white-space: pre;
   }
 
+  /* Hints side by side are a cell apart, as words are, with no space written
+   * between them (0280): `? help  : command`. */
+  .rk-status-content > * + * {
+    margin-inline-start: var(--rk-cell-width);
+  }
+
   .rk-status-ellipsis {
     flex: none;
     inline-size: var(--rk-cell-width);
