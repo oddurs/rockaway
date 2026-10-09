@@ -206,7 +206,9 @@ const count = (haystack: string, needle: string): number => haystack.split(needl
 
 /**
  * The sections that best match a query: the most of its words first, then the
- * most occurrences, a word in the title counting thrice.
+ * most of them in the title, then the most occurrences, a word in the title
+ * counting thrice. A heading searched for word for word is found, however
+ * often another section uses the same words.
  */
 export function searchDocs(data: Data, query: string, limit = 5): Section[] {
   const words = terms(query);
@@ -216,11 +218,15 @@ export function searchDocs(data: Data, query: string, limit = 5): Section[] {
       const title = section.title.toLowerCase();
       const text = section.text.toLowerCase();
       const matched = words.filter((w) => text.includes(w) || title.includes(w)).length;
+      const titled = words.filter((w) => title.includes(w)).length;
       const score = words.reduce((sum, w) => sum + count(text, w) + 3 * count(title, w), 0);
-      return { section, matched, score, order };
+      return { section, matched, titled, score, order };
     })
     .filter((hit) => hit.matched > 0)
-    .sort((a, b) => b.matched - a.matched || b.score - a.score || a.order - b.order)
+    .sort(
+      (a, b) =>
+        b.matched - a.matched || b.titled - a.titled || b.score - a.score || a.order - b.order,
+    )
     .slice(0, limit)
     .map((hit) => hit.section);
 }
