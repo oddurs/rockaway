@@ -1,5 +1,11 @@
 import { describe, expect, test } from 'vitest';
-import { CELL_COVER_GRACE, cellsCovering, cellsIn } from '../src/cell-metrics.ts';
+import {
+  CELL_COVER_GRACE,
+  cellsCovering,
+  cellsIn,
+  floorCell,
+  nearestCell,
+} from '../src/cell-metrics.ts';
 
 describe('cellsIn: how many cells fit in a box', () => {
   test('a box laid out a hair under n cells is n cells', () => {
@@ -49,5 +55,22 @@ describe('cellsCovering: how many cells cover a length', () => {
     expect(cellsCovering(0, 8)).toBe(0);
     expect(cellsCovering(-20, 8)).toBe(0);
     expect(cellsCovering(80, 0)).toBe(0);
+  });
+});
+
+describe('positions in cells', () => {
+  test('a tie goes to the start, the same whichever side of it an engine lands', () => {
+    // Centred in seven spare cells: 3.5, a hair either side in two engines.
+    expect(nearestCell(3.5)).toBe(3);
+    expect(nearestCell(3.5 - 1 / 64 / 9.6)).toBe(3);
+    expect(nearestCell(3.5 + 1 / 60 / 9.6)).toBe(3);
+    expect(nearestCell(3.6)).toBe(4);
+    expect(nearestCell(3.4)).toBe(3);
+  });
+
+  test('a position a hair under a whole cell is that cell', () => {
+    expect(floorCell(4 - 1 / 64 / 9.6)).toBe(4);
+    expect(floorCell(4.9)).toBe(4);
+    expect(floorCell(3.9)).toBe(3);
   });
 });

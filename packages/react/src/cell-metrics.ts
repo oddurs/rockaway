@@ -91,3 +91,23 @@ export function cellsCovering(pixels: number, cell: number): number {
   if (!Number.isFinite(pixels) || !Number.isFinite(cell) || cell <= 0) return 0;
   return Math.max(0, Math.ceil(pixels / cell - CELL_COVER_GRACE));
 }
+
+/**
+ * Rounding a position in cells, the same in every engine (0128, #195). A
+ * surface centred in an odd number of spare cells sits on a half cell
+ * exactly, and each engine's float lengths put it a hair either side
+ * (Chromium's 1/64px, Firefox's 1/60px), so a plain `Math.round` sent it a
+ * column left in one engine and right in another. A position is a count of
+ * cells, so the tie is a share of a cell: a hundredth.
+ */
+export const CELL_TIE: number = 0.01;
+
+/** The nearest whole cell to a position in cells; a tie goes to the start, left or up. */
+export function nearestCell(cells: number): number {
+  return Math.ceil(cells - 0.5 - CELL_TIE);
+}
+
+/** The whole cell a position is in; a position a hair under a whole cell is that cell. */
+export function floorCell(cells: number): number {
+  return Math.floor(cells + CELL_TIE);
+}
