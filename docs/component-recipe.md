@@ -20,6 +20,8 @@ after them. `<name>` is kebab-case (`key-hint`); `<Name>` is the export.
 | `packages/react/src/components/<name>.pure.ts` | The pure half: variants, chrome, the buffer function. No React, no `'use client'`. |
 | `packages/react/src/components/<name>.tsx` | The component, with `'use client'` on its first line. |
 | `packages/react/src/components/<name>.meta.ts` | Its metadata: what it is for, its anatomy, states, keys and snapshots. |
+| `packages/react/src/components/<name>.fixture.ts` | The component rendered once, as small as it can be: `metadata.test.ts`'s evidence for its roles and attributes. |
+| `packages/react/src/components/<name>.snapshots.txt` | Its metadata's snapshots as the site draws them, written by `metadata.test.ts` (`vitest -u`) and checked by it after. |
 | `packages/react/src/entries/<name>.ts` | `@rockaway/react/<name>`, and the one list of what it makes public. |
 | `packages/css/src/components/<name>.css` | Its stylesheet, inside `@layer rk.components`. |
 | `packages/react/test/<name>.test.ts` | The buffer function, in Node, with inline text snapshots. |
@@ -28,7 +30,7 @@ after them. `<name>` is kebab-case (`key-hint`); `<Name>` is the export.
 
 ### The lines
 
-Each barrel gets one line, and the metadata list gets one entry:
+Each barrel gets one line:
 
 ```ts
 // packages/react/src/entries/button.ts
@@ -54,11 +56,10 @@ export * from './entries/button.ts';
 @import "./components/button.css";
 ```
 
-```ts
-// packages/react/src/metadata/index.ts
-import { buttonMeta } from '../components/button.meta.ts';
-// …and buttonMeta in the `sources` list.
-```
+The metadata has no list to add to: `pnpm --filter @rockaway/react metadata`
+writes the registry, `src/metadata/components.ts`, from every `*.meta.ts`
+beside a component. It is generated, so on a merge conflict take either side
+and run it again; `metadata.test.ts` fails while it is stale (0262).
 
 The entry names the component's public values and types. Anything else its
 files export, for tests or for the metadata, stays private. The build, the
@@ -453,18 +454,25 @@ named, and review is what holds it.
    each control by `getByRole(role, { name })` with its plain words, so a glyph
    in the name fails to match. axe fails a control with no name. For a field,
    `checkField` after every story fails a mark that is not `aria-hidden` and a
-   name that holds a glyph. For anything else, only the stories' queries check
-   it.
+   name that holds a glyph. Outside a field, `checkNames` after every story
+   fails a name that holds a glyph, by any route a name is given:
+   `aria-labelledby`, `aria-label`, a label, `alt` or its content. The
+   ellipsis, dash and bullet marks are allowed there, because prose names hold
+   them (0252).
 4. **Behaviour comes from the behaviour layer.** The **Keyboard** story walks
    every key the metadata lists. `metadata.test.ts` fails a focusable component
    that names no focus state, and a key KeyHint cannot draw. `keymap.test.ts`
-   covers the page's own shortcuts, bound with `useKeymap`. No test finds a
-   hand-written key or focus listener in a component: review does.
+   covers the page's own shortcuts, bound with `useKeymap`.
+   `no-hand-listeners.test.ts` fails a hand-written key or focus listener in a
+   component: an `onKey…`, `onFocus…` or `onBlur…` prop or merged key,
+   `addEventListener` for one, or an assigned handler. Keymap's one document
+   listener is its listed exception (0252).
 5. **Styled from `data-*` state and semantic tokens only.** `metadata.test.ts`
    fails a state the stylesheet draws and the metadata does not name, and one
    it names that nothing draws. `variant-geometry.test.ts` fails a variant or
-   state that changes a size. No test fails a stylesheet that reads a token
-   other than a semantic one: review does.
+   state that changes a size. `semantic-tokens.test.ts` in @rockaway/css fails
+   a component stylesheet that reads a reference token (`--rk-ansi-*`,
+   `--rk-palette-*`) or writes a colour of its own (0252).
 6. **Ships a text snapshot.** The inline snapshots in `<name>.test.ts`, and
    the metadata's snapshots, which `metadata.test.ts` renders as the site draws
    them. The **Every variant** story ties the snapshot to the page:
