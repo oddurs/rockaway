@@ -50,11 +50,23 @@ a menu in a second story, and a dialog over its backdrop in a third.
 
 ## Acceptance criteria
 
-- [ ] One story renders every component, and a test fails if a component exported from `@rockaway/react` is not on it
+- [x] One story renders every component, and a test fails if a component exported from `@rockaway/react` is not on it
 - [ ] Theme preset, mode, density, border set, conformance level and painter are Storybook controls, and switch without a rebuild
 - [ ] It passes conformance and continuity in every combination of the controls
-- [ ] Its text snapshot is checked in, so any component change shows up as a diff of the whole screen
+- [x] Its text snapshot is checked in, so any component change shows up as a diff of the whole screen
 
 ## 2026-10-03
 
 Rewritten by the program plan: the pre-pivot template text is replaced with how this works on the grid, the criteria are one list (the template, plus the contracts from the plan, plus this item's own), and the dependencies point at the contracts it is built on.
+
+## 2026-10-09
+
+Generated, not listed (the CTO's direction): each component's example is <name>.example.tsx beside it (moved from the site's islands in #215, stacked on #158), and the sink finds them with import.meta.glob and names each pane from the generated metadata registry. metadata.test fails a component without an example, so a new component's PR brings its own and edits nothing shared. The sink grows as the remaining dependencies (Popover, Dialog, Tooltip, Switch, Radio, Tabs, Menu, Select, Combobox, StatusBar, Progress, CommandPalette, Panes, CodeBlock) land with their examples.
+
+## 2026-10-09
+
+Criterion 2 is partly true: theme, mode, density and conformance are the toolbar's globals, border set and painter are story controls, and all switch without a rebuild. But painter reaches only the panes: there is no painter context, so the screens inside an example take their own painter prop (default glyph). A sink-wide painter needs a PainterProvider that Screen reads by default, a core change; proposed as a follow-up. Criterion 3 is covered value by value, not as the full product (10 themes x 6 border sets x 2 painters x 3 levels x 2 modes x 4 densities): Everything walks every density and mode at strict; each border set and the rule painter walk every density in light (they change strokes, not colour); each theme walks normal light (colours and glyphs, no geometry). All 16 stories pass locally, Everything 11.6s, the rest 2-9s.
+
+## 2026-10-09
+
+Found by the sink: List's reserved cells collapsed in prose (white-space normal), sitting half a row down; fixed in #217. Also seen: Frame's site example puts a line of content on its divider's row (├─fg.muted──┤), for the design pass. A ResizeObserver 'undelivered notifications' notice appears once per density switch in a page of nested measured screens; it fails nothing, and no example alone or the sink alone at one density produces it.

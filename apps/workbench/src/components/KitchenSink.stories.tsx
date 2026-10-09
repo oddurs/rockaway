@@ -153,10 +153,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * Every component, each in a pane named for it. The screen as text is checked
- * in, so a change to any component shows here as a diff of the whole sink.
+ * Every component, each in a pane named for it, held to `strict` at every
+ * density in both modes. The screen as text is checked in, so a change to any
+ * component shows here as a diff of the whole sink.
  */
 export const Everything: Story = {
+  globals: { conformance: 'strict' },
   play: async ({ canvasElement }) => {
     await measured(document.body);
     // Every component the registry knows is on the screen, with its example.
@@ -174,3 +176,73 @@ export const Everything: Story = {
     );
   },
 };
+
+/*
+ * The other controls, each in a story of its own, every value of each. The
+ * walk after a story checks conformance and continuity at every density in
+ * both modes; here it walks only what the control can change. A border set
+ * and a painter change the cells' strokes, so they are walked at every
+ * density, in light: mode changes their colour and no cell, and Everything
+ * walks both modes. A theme changes colours and glyphs and no geometry, so
+ * each is read at one density and one mode, normal and light, against the
+ * reader's continuity check of its own ink.
+ */
+
+const DENSITIES = ['dense', 'normal', 'airy', 'touch'] as const;
+
+/** Walk light only: mode changes no cell. */
+const lightOnly = {
+  matrix: {
+    skip: [{ mode: 'dark', reason: 'a mode changes colours, not cells: Everything walks both' }],
+  },
+} as const;
+
+/** Walk normal light only: a theme changes colours and glyphs, not geometry. */
+const normalLightOnly = {
+  matrix: {
+    skip: [
+      ...DENSITIES.filter((density) => density !== 'normal').map((density) => ({
+        density,
+        reason: 'a theme changes colours and glyphs, not geometry: Everything walks every density',
+      })),
+      { mode: 'dark', reason: 'a mode changes colours, not cells: Everything walks both' },
+    ],
+  },
+} as const;
+
+/** Every component under one border set in place of the theme's. */
+const bordered = (borderSet: Exclude<SinkArgs['borderSet'], 'theme'>): Story => ({
+  name: `Border set: ${borderSet}`,
+  args: { borderSet },
+  parameters: lightOnly,
+});
+
+export const Single: Story = bordered('single');
+export const Rounded: Story = bordered('rounded');
+export const Heavy: Story = bordered('heavy');
+export const Double: Story = bordered('double');
+export const Ascii: Story = bordered('ascii');
+
+/** Every pane stroked as hairlines. */
+export const Rule: Story = {
+  name: 'Painter: rule',
+  args: { painter: 'rule' },
+  parameters: lightOnly,
+};
+
+/** Every component under one theme, its own colours and glyphs. */
+const themed = (theme: string): Story => ({
+  name: `Theme: ${theme}`,
+  globals: { theme },
+  parameters: normalLightOnly,
+});
+
+export const Ice: Story = themed('ice');
+export const Ink: Story = themed('ink');
+export const Phosphor: Story = themed('phosphor');
+export const AsciiTheme: Story = themed('ascii');
+export const Catppuccin: Story = themed('catppuccin');
+export const Dracula: Story = themed('dracula');
+export const Nord: Story = themed('nord');
+export const Solarized: Story = themed('solarized');
+export const TokyoNight: Story = themed('tokyo-night');
