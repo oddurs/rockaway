@@ -398,11 +398,20 @@ export async function checkContinuity(
 }
 
 /**
- * A screenshot of the chrome alone. A screen's content layer sits over its
+ * A screenshot of this chrome alone. A screen's content layer sits over its
  * chrome on purpose — a button may stand on a rule — and what it covers is the
  * page's business; whether the lines meet is the painter's. The content is made
  * transparent for the moment of the screenshot, which moves nothing and takes
  * focus from nothing.
+ *
+ * So is every other painted layer on the page. A letter is as tall as the
+ * font says, not as the cell (0116): at dense, where the line box is the font
+ * size, a descender in one screen's title reaches into the row below it, and
+ * when another screen starts on that row, as a fieldset in a frame does, the
+ * screenshot of its corner holds the other screen's `g` (0245). That ink is
+ * not this layer's, and is not read as this layer's. Neither layer is moved,
+ * and the ground a cell is compared with is read from its own ancestors,
+ * which this leaves alone.
  */
 async function chromeOnly(layer: HTMLElement, capture: Capture): Promise<string | Blob> {
   // Not the content layer the chrome is itself inside, like a list's scrollbar
@@ -410,8 +419,12 @@ async function chromeOnly(layer: HTMLElement, capture: Capture): Promise<string 
   const content = [
     ...(layer.closest('.rk-screen')?.querySelectorAll<HTMLElement>(':scope > .rk-content') ?? []),
   ].filter((el) => !el.contains(layer));
-  const before = content.map((el) => el.style.opacity);
-  for (const el of content) el.style.opacity = '0';
+  const others = [...layer.ownerDocument.querySelectorAll<HTMLElement>('[data-rk-painted]')].filter(
+    (el) => el !== layer && !el.contains(layer) && !layer.contains(el),
+  );
+  const hidden = [...content, ...others];
+  const before = hidden.map((el) => el.style.opacity);
+  for (const el of hidden) el.style.opacity = '0';
   // Nor any overlay open above it (cairn 0128): a backdrop would be read as
   // the frame's own ink. An overlay's own chrome is read with every other
   // part of the overlay layer hidden, so a dialog does not cover its backdrop.
@@ -424,7 +437,7 @@ async function chromeOnly(layer: HTMLElement, capture: Capture): Promise<string 
   try {
     return await capture(layer);
   } finally {
-    content.forEach((el, i) => {
+    hidden.forEach((el, i) => {
       el.style.opacity = before[i] ?? '';
     });
     layers.forEach((el, i) => {
