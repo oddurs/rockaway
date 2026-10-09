@@ -3,8 +3,10 @@ id: 64
 uid: 96e76a96-8e2d-4480-bf0e-3503ea0bd9ac
 title: 'Build the kitchen-sink screen: every component, with the theme inputs as controls'
 type: feature
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-09
 depends_on:
 - 13
 - 34
@@ -30,7 +32,7 @@ depends_on:
 - 139
 - 140
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-09
 priority: p1
 layer: docs
 effort: m

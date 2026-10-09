@@ -37,6 +37,12 @@ export interface Runner {
   readonly type: (keys: string) => Promise<void>;
   /** Emulates the reader's `prefers-contrast` (cairn 0065); `no-preference` gives it back. */
   readonly contrast: (preference: 'more' | 'no-preference') => Promise<void>;
+  /**
+   * Holds `text` to a checked-in file beside the story, as Vitest's
+   * `toMatchFileSnapshot` does: written with `-u`, compared otherwise. For a
+   * screen whose text is too long to read inline, the kitchen sink's (0064).
+   */
+  readonly matchFile: (text: string, file: string) => Promise<void>;
 }
 
 let current: Runner | undefined;

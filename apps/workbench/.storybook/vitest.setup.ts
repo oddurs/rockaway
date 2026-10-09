@@ -1,4 +1,4 @@
-import { inject } from 'vitest';
+import { expect, inject } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
@@ -30,4 +30,9 @@ setRunner({
   // The provider's keyboard: trusted events, as a reader's keys are.
   type: (keys) => userEvent.keyboard(keys),
   contrast: (preference) => commands.emulateContrast(preference),
+  // Vitest's own file snapshot, which a story cannot import: its module is
+  // also bundled for the Storybook UI, where there is no Vitest.
+  matchFile: async (text, file) => {
+    await expect(text).toMatchFileSnapshot(file);
+  },
 });
