@@ -41,8 +41,8 @@ describe('a chord, three ways', () => {
     expect(SPECS.map((spec) => spokenKeys(spec, 'apple')).join('\n')).toMatchInlineSnapshot(`
       "Command S
       Control Shift K
-      Alt X
-      Alt Shift Command P
+      Option X
+      Option Shift Command P
       Escape
       Command Enter
       Shift Up arrow
@@ -50,17 +50,117 @@ describe('a chord, three ways', () => {
     `);
   });
 
+  test('what a reader hears off an Apple keyboard: the words on its keys, Meta for meta', () => {
+    expect(
+      [...SPECS, 'meta+k', 'cmd+shift+p'].map((spec) => spokenKeys(spec, 'other')).join('\n'),
+    ).toMatchInlineSnapshot(`
+      "Control S
+      Control Shift K
+      Alt X
+      Control Alt Shift P
+      Escape
+      Control Enter
+      Shift Up arrow
+      Shift Enter
+      Meta K
+      Shift Meta P"
+    `);
+  });
+
   test('what the platform is told', () => {
     expect(SPECS.map((spec) => keyShortcut(spec, 'apple')).join('\n')).toMatchInlineSnapshot(`
-      "Meta+s
-      Control+Shift+k
-      Alt+x
-      Alt+Shift+Meta+p
-      esc
-      Meta+enter
-      Shift+up
-      Shift+enter"
+      "Meta+S
+      Control+Shift+K
+      Alt+X
+      Alt+Shift+Meta+P
+      Escape
+      Meta+Enter
+      Shift+ArrowUp
+      Shift+Enter"
     `);
+  });
+});
+
+/**
+ * `aria-keyshortcuts` names keys as WAI-ARIA 1.2 does: modifiers by their UI
+ * Events names, first; then one key, a printable character as it is printed
+ * or a UI Events key name, with `Space` for the space bar. ARIA counts `a`
+ * and `A` as one key, and writes letters as capitals in every example.
+ */
+describe('aria-keyshortcuts', () => {
+  test('a letter is its capital, with Shift or without it', () => {
+    expect(keyShortcut('shift+y')).toBe('Shift+Y');
+    expect(keyShortcut('y')).toBe('Y');
+    expect(keyShortcut('mod+shift+p', 'apple')).toBe('Shift+Meta+P');
+    // However the spec was written.
+    expect(keyShortcut('Shift+Y')).toBe(keyShortcut('shift+y'));
+  });
+
+  test('a named key is its UI Events key value, and the space bar is Space', () => {
+    const named = ['enter', 'esc', 'tab', 'space', 'backspace', 'delete'];
+    const moves = ['up', 'down', 'left', 'right', 'pageup', 'pagedown', 'home', 'end'];
+    expect([...named, ...moves].map((key) => keyShortcut(key)).join(' ')).toBe(
+      'Enter Escape Tab Space Backspace Delete ArrowUp ArrowDown ArrowLeft ArrowRight PageUp PageDown Home End',
+    );
+  });
+
+  test('a function key is F and its number, and a digit or a sign is itself', () => {
+    expect(keyShortcut('f1')).toBe('F1');
+    expect(keyShortcut('shift+f12')).toBe('Shift+F12');
+    expect(keyShortcut('ctrl+2')).toBe('Control+2');
+    expect(keyShortcut('ctrl+.')).toBe('Control+.');
+    expect(keyShortcut('/')).toBe('/');
+  });
+
+  test('every value is a valid shortcut: modifiers first, one key last', () => {
+    const MODIFIER = /^(Alt|Control|Shift|Meta)$/;
+    for (const spec of [...SPECS, 'shift+y', 'f5', 'ctrl+alt+delete']) {
+      const tokens = (keyShortcut(spec) ?? '').split('+');
+      const key = tokens.pop() ?? '';
+      expect(key, spec).not.toMatch(MODIFIER);
+      expect(key, spec).not.toMatch(/^[a-z]$/);
+      for (const token of tokens) expect(token, spec).toMatch(MODIFIER);
+    }
+  });
+});
+
+/**
+ * A letter on its own is what you type, so it shows as you type it; with a
+ * modifier it is a keycap, which prints a capital. In terminal notation a
+ * capital alone is Shift, so `y` and `shift+y` never read the same.
+ */
+describe('the case of a letter', () => {
+  test('bare is lower case, held with anything is a capital', () => {
+    const rows = ['y', 'shift+y', 'mod+k', 'alt+x', 'g h', 'mod+k g'].map(
+      (spec) =>
+        `${spec.padEnd(8)} ${formatKeys(spec, 'apple').padEnd(5)} ${formatKeys(spec, 'other').padEnd(8)} ${formatKeys(spec, 'other', 'terminal')}`,
+    );
+    expect(rows.join('\n')).toMatchInlineSnapshot(`
+      "y        y     y        y
+      shift+y  ⇧Y    Shift+Y  Y
+      mod+k    ⌘K    Ctrl+K   ^K
+      alt+x    ⌥X    Alt+X    M-X
+      g h      g h   g h      g h
+      mod+k g  ⌘K g  Ctrl+K g ^K g"
+    `);
+  });
+
+  test('y and shift+y never look the same, in any notation or theme', () => {
+    const ascii = glyphsFor({ borderSet: 'ascii' });
+    for (const platform of ['apple', 'other'] as const) {
+      for (const notation of ['platform', 'terminal'] as const) {
+        for (const glyphs of [undefined, ascii]) {
+          expect(formatKeys('y', platform, notation, glyphs)).not.toBe(
+            formatKeys('shift+y', platform, notation, glyphs),
+          );
+        }
+      }
+    }
+  });
+
+  test('a character that is not a letter has no case to change', () => {
+    expect(formatKeys('?')).toBe('?');
+    expect(formatKeys('/', 'other', 'terminal')).toBe('/');
   });
 });
 
@@ -102,9 +202,9 @@ describe('parseKeys', () => {
 
   test('a bare key is still a chord', () => {
     expect(formatKeys('esc', 'apple')).toBe('Esc');
-    expect(formatKeys('a', 'apple')).toBe('A');
+    expect(formatKeys('a', 'apple')).toBe('a');
     expect(spokenKeys('pageup')).toBe('Page up');
-    expect(keyShortcut('esc')).toBe('esc');
+    expect(keyShortcut('esc')).toBe('Escape');
   });
 
   test('an empty spec is empty, not a crash', () => {

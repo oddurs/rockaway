@@ -28,11 +28,13 @@
  * The weight is the buffer's, because a heavier line is a different glyph;
  * the colour is the stylesheet's, from the `data-*` attributes React Aria's
  * `Group` writes on the frame. Under the `ascii` border set there is no
- * heavier line to draw, and the colour and the field's error carry it.
+ * heavier line to draw, so the frame's `+-|` go bold instead: the font draws
+ * ASCII, and bold is the weight it has (0183).
  *
  * `FieldFrame` is the part a framed control is drawn in. `Fieldset` is a
  * `FieldFrame` that is a group, named by its legend.
  */
+import { stringWidth } from '@rockaway/grid';
 import type { Glyphs } from '@rockaway/tokens';
 import { type ReactNode, useContext, useId, useMemo } from 'react';
 import {
@@ -182,6 +184,16 @@ function FrameScreen({
   readonly children: ReactNode;
 }): ReactNode {
   const { label, required, invalid, disabled, focused } = state;
+  // As tall as what it holds, and as wide as its column, which only the page
+  // knows: drawn at its smallest until it has measured, and stretched to fit
+  // (Screen), so a page with no script shows the frame at its true size.
+  const fallback = useMemo(
+    () => ({
+      width: stringWidth(label) + stringWidth(required ? glyphs.mark.required : '') + 6,
+      height: 3,
+    }),
+    [label, required, glyphs],
+  );
   const draw = useMemo(
     () => (size: { width: number; height: number }) =>
       fieldFrameBuffer(size, { label, required, invalid, disabled, focused }, glyphs),
@@ -191,16 +203,13 @@ function FrameScreen({
     <Screen
       draw={draw}
       contentInset={inset}
-      fallback={FALLBACK}
+      fallback={fallback}
       {...(painter === undefined ? {} : { painter })}
     >
       {children}
     </Screen>
   );
 }
-
-/** The size drawn before the frame has measured itself, and on a server. */
-const FALLBACK = { width: 24, height: 3 };
 
 export interface FieldsetProps {
   /** Set into the top edge, and the group's accessible name. */

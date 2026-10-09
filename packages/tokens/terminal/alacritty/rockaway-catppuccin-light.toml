@@ -2,15 +2,17 @@
 # Changed by @rockaway/tokens, to pass its contrast gate (WCAG 2, in every gamut):
 #   foreground: #4c4f69 -> #3b3d56
 #   blue: #1e66f5 -> #0b55e4
-#   bright-blue: #1e66f5 -> #1b63f2
+#   bright-blue: #1e66f5 -> #0032c1
 #   cyan: #179299 -> #006f76
-#   bright-cyan: #179299 -> #007a81
+#   bright-cyan: #179299 -> #004e54
 #   green: #40a02b -> #017500
-#   bright-green: #40a02b -> #187f00
+#   bright-green: #40a02b -> #005200
 #   yellow: #df8e1d -> #965300
-#   bright-yellow: #df8e1d -> #a35c00
+#   bright-yellow: #df8e1d -> #6e3a00
 #   red: #d20f39 -> #c70030
 #   magenta: #ea76cb -> #a6378c
+#   bright-red: #d20f39 -> #840017
+#   bright-magenta: #ea76cb -> #840e6d
 #
 # MIT licence. Copyright (c) 2021 Catppuccin.
 #
@@ -61,10 +63,10 @@ white = "#acb0be"
 
 [colors.bright]
 black = "#6c6f85"
-red = "#d20f39"
-green = "#187f00"
-yellow = "#a35c00"
-blue = "#1b63f2"
-magenta = "#ea76cb"
-cyan = "#007a81"
+red = "#840017"
+green = "#005200"
+yellow = "#6e3a00"
+blue = "#0032c1"
+magenta = "#840e6d"
+cyan = "#004e54"
 white = "#bcc0cc"
