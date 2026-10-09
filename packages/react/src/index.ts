@@ -21,6 +21,7 @@ export * from './entries/link.ts';
 export * from './entries/list.ts';
 export * from './entries/overlay.ts';
 export * from './entries/table.ts';
+export * from './entries/text-field.ts';
 export * from './entries/tree.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { Chrome, type ChromeProps, chromeRows, type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle, shapeAttributes } from './paint/index.ts';

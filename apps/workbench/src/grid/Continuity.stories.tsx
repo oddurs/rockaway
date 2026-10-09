@@ -608,6 +608,37 @@ export const SubPixel: Story = {
   },
 };
 
+/**
+ * Two screens that overlap by half a row, so each one's lines cross the
+ * other's edge: the upper frame's bottom line runs along the lower frame's
+ * top edge, and the lower frame's top line along the upper's bottom. Each
+ * layer is read alone, with the other's ink hidden, so neither is charged
+ * with a leak that is the other's (0245). A title's descender at dense, on
+ * a font whose descent is deeper than the line box, reaches into the screen
+ * below it the same way; this is that, on any font.
+ */
+export const Overlapping: Story = {
+  name: 'Overlapping screens',
+  args: { density: 'normal' },
+  render: () => (
+    <div data-testid="overlapping" style={{ display: 'grid' }}>
+      <Screen draw={junctions('single')} cols={JUNCTION.cols} rows={JUNCTION.rows} />
+      <Screen
+        draw={junctions('single', 'single', 'below')}
+        cols={JUNCTION.cols}
+        rows={JUNCTION.rows}
+        style={{ marginBlockStart: 'calc(var(--rk-cell-height) / -2)' }}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const run = runner();
+    if (!run) return;
+    const report = await expectContinuity(canvasElement, { capture: run.capture });
+    expect(report.layers).toBe(2);
+  },
+};
+
 /** Every braille pattern, 32 to a row. */
 const brailles = (): Buffer =>
   fromText(

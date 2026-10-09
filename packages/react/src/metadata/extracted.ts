@@ -1296,6 +1296,91 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "TextField": {
+    "file": "text-field.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The field's name: inline before a `md` box, in the top edge of a framed one."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help, dim, under the box."
+      },
+      {
+        "name": "errorMessage",
+        "type": "ReactNode | ((validation: ValidationResult) => ReactNode)",
+        "required": false,
+        "description": "Words for the error; the field's own validation messages when not given."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The box's width, in cells: the text it shows at once.",
+        "default": "DEFAULT_COLS"
+      },
+      {
+        "name": "size",
+        "type": "TextFieldSize",
+        "required": false,
+        "description": "`md` is one row between the delimiters; `lg` is three, framed, the label in the edge."
+      },
+      {
+        "name": "multiline",
+        "type": "boolean",
+        "required": false,
+        "description": "Several rows, framed, scrolling by whole rows.",
+        "default": "false"
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "How many rows a `multiline` box shows.",
+        "default": "DEFAULT_ROWS"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof textFieldVariants>",
+      "Omit<AriaTextFieldProps, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Tree": {
     "file": "tree.tsx",
     "props": [
