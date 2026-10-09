@@ -12,7 +12,7 @@ depends_on:
 - 118
 - 120
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-09
 priority: p1
 layer: components
 effort: s
@@ -87,3 +87,6 @@ Criteria 8, 13 and 16, closed on #188.
 
 The check found one class of break, and it is the checker's, not the drawing's. A mark an eighth of a cell in from an edge, such as a braille dot or the 7/8 block at a bar's leading edge, antialiases into the first whole pixel inside that edge when the cell starts at a fraction of a pixel. The leak rule reads that pixel as a line on the edge. #151 (0229) does not settle it: its new slack only forgives a neighbour that reaches the edge, and it reads deeper lines. The continuity stories therefore assert every gap, step and break and set aside only those leaks; the matrix's known entry `eighth-inset-spill` (which replaces `braille-edge-spill`) names the follow-up. The leak rule should not read a shape's own mark, inset by its geometry, as ink on the edge.
 
+## 2026-10-09
+
+CTO ruling (2026-10-04): live data refreshing is not motion. Added ticks.refresh (1s) and reducedTicks.refresh (5s, token motion.tick-reduced.refresh): under reduced motion it keeps counting at the slower rate while every other tick stops on frame 0, and a clock is retimed rather than stopped when the setting changes, keeping its count. useReducedMotion() exports the setting itself. Meter is now display: block so meters stack without wrappers. After #202, progress.meta.ts split into meter, progress, sparkline and spinner .meta.ts, each with a fixture and snapshots file.
