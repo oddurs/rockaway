@@ -13,6 +13,10 @@
  * is measured, the cell is `1ch` by `1lh` — the font's own cell, which is what
  * the measurement will find — so a screen with a fixed size in cells does not
  * change size when it hydrates.
+ *
+ * A screen that fills a box with CSS `resize` shares its last cell with the
+ * browser's resize grip, which some engines draw over the box's corner: size
+ * such a box some other way, or a cell larger than the screen.
  */
 import type { Buffer, Size } from '@rockaway/grid';
 import {
@@ -27,7 +31,7 @@ import {
   useState,
 } from 'react';
 import { type CellMetrics, cellsIn, measureCell } from './cell-metrics.ts';
-import { chromeRows } from './paint/chrome.tsx';
+import { chromeRows, type Stretch } from './paint/chrome.tsx';
 
 export type PainterName = 'glyph' | 'rule';
 
@@ -45,7 +49,12 @@ export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
   /** Fix the size in cells instead of measuring the container. */
   cols?: number;
   rows?: number;
-  /** The size to draw before the first measurement, and on a server. */
+  /**
+   * The size to draw before the first measurement, and on a server. Until a
+   * measured axis is measured, the chrome stretches along it to fill the box
+   * the page gives the screen, so make the fallback the smallest the chrome
+   * can be: a page with no script then shows the frame at its true size.
+   */
   fallback?: Size;
   /**
    * Inset the content layer by this many cells, so real elements start inside
@@ -80,6 +89,7 @@ export function Screen({
   ...rest
 }: ScreenProps): ReactNode {
   const host = useRef<HTMLDivElement>(null);
+  const probe = useRef<HTMLSpanElement>(null);
   // Unmeasured on the server and in the first client render, which have to
   // agree; the layout effect measures before the browser paints.
   const [cell, setCell] = useState<CellMetrics | undefined>(undefined);
@@ -121,6 +131,12 @@ export function Screen({
       frameId = requestAnimationFrame(remeasure);
     });
     observer.observe(el);
+    // A screen given its size in cells sizes its own box from the cell it
+    // measured, so a new density, a font that loads late or a reader's larger
+    // text changes the cell without resizing that box, and the observer above
+    // never hears of it (cairn 0199). The probe is one cell, in the units that
+    // are one cell, so it resizes whenever the cell does.
+    if (probe.current) observer.observe(probe.current);
     return () => {
       cancelAnimationFrame(frameId);
       observer.disconnect();
@@ -128,9 +144,24 @@ export function Screen({
   }, [remeasure]);
 
   const buffer = useMemo(() => draw(size), [draw, size]);
+  // Until it is measured, a screen whose size the page decides cannot know how
+  // many cells it has: on a server, with no script, and in the first client
+  // render. It draws the fallback and stretches it to the box, along the axes
+  // it will measure, so the frame is the box's size from the first paint and
+  // measuring it changes nothing anyone can see.
+  const stretch: Stretch | undefined = useMemo(() => {
+    if (measured !== undefined) return undefined;
+    const across = cols === undefined && buffer.width >= 3;
+    const down = rows === undefined && buffer.height >= 3;
+    if (!across && !down) return undefined;
+    return {
+      ...(down ? { row: buffer.height - 2 } : {}),
+      ...(across ? { col: buffer.width - 2 } : {}),
+    };
+  }, [measured, cols, rows, buffer]);
   // Built once per buffer: a re-render that only measured the cell leaves the
   // chrome's nodes alone.
-  const chrome = useMemo(() => chromeRows(buffer), [buffer]);
+  const chrome = useMemo(() => chromeRows(buffer, stretch), [buffer, stretch]);
 
   const vars = {
     '--rk-cell-width': cell ? `${cell.width}px` : '1ch',
@@ -154,7 +185,12 @@ export function Screen({
       style={{ ...vars, ...style }}
       {...rest}
     >
-      <div className="rk-frame" aria-hidden="true" data-rk-painted={painter}>
+      <div
+        className="rk-frame"
+        aria-hidden="true"
+        data-rk-painted={painter}
+        data-rk-elastic={stretch === undefined ? undefined : ''}
+      >
         {chrome}
       </div>
       {children === undefined ? null : (
@@ -162,9 +198,21 @@ export function Screen({
           {typeof children === 'function' ? children(size) : children}
         </div>
       )}
+      <span ref={probe} aria-hidden="true" style={PROBE} />
     </div>
   );
 }
+
+/** One cell, in the units that are one cell: `1ch` by `1lh`. Unseen, and on the grid at the origin. */
+const PROBE: CSSProperties = {
+  position: 'absolute',
+  insetBlockStart: 0,
+  insetInlineStart: 0,
+  inlineSize: '1ch',
+  blockSize: '1lh',
+  visibility: 'hidden',
+  pointerEvents: 'none',
+};
 
 const sameCell = (a: CellMetrics, b: CellMetrics): boolean =>
   a.width === b.width && a.height === b.height;

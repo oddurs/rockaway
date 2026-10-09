@@ -6,12 +6,8 @@ import { Example } from '../../islands/examples/form.tsx';
 import source from '../../islands/examples/form.tsx?raw';
 import Source from '../../components/Source.astro';
 
-Text field (0035) is not built yet, so this sketches one from React Aria's `TextField` and `Input` with the system's `Label`, `Description` and `FieldError` on it, the way the field contract means a field to be put together.
-
-<div data-rk-offgrid="React Aria's bare Input is the browser's width until Text field (0035) sizes it in cells">
-  <div class="rk-scroll-marks" tabindex="0" role="region" aria-label="Example">
-    <Example client:load />
-  </div>
+<div class="rk-scroll-marks" tabindex="0" role="region" aria-label="Example">
+  <Example client:load />
 </div>
 
 <Source code={source} lang="tsx" />

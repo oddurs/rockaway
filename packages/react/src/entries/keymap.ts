@@ -30,4 +30,5 @@ export {
   type UseKeymapOptions,
   useActiveBindings,
   useKeymap,
+  useKeymapIfAny,
 } from '../components/keymap.tsx';

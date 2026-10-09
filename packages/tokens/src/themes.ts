@@ -2,7 +2,8 @@
  * The themes that ship (cairn 0052, 0119).
  *
  * Two kinds. A preset is the five theme inputs under `themes/`, and its palette
- * is generated. An imported theme is a terminal palette under
+ * is generated — or, for a preset that brings its own (sunset), written out in
+ * OKLCH beside the inputs, every slot in each mode. An imported theme is a terminal palette under
  * `themes/terminal/`, brought in through `importPalette`: it brings colours
  * only, so it draws with the default type, border set and conformance. Each
  * imported theme names its source and its licence, and the licence text sits
@@ -14,22 +15,24 @@
  * mode pins it: its palette is the same whichever mode is asked for.
  */
 
+import ascii from '../themes/ascii.json' with { type: 'json' };
 import defaultInputs from '../themes/default.json' with { type: 'json' };
 import ice from '../themes/ice.json' with { type: 'json' };
 import ink from '../themes/ink.json' with { type: 'json' };
 import phosphor from '../themes/phosphor.json' with { type: 'json' };
+import sunset from '../themes/sunset.json' with { type: 'json' };
 import catppuccin from '../themes/terminal/catppuccin.json' with { type: 'json' };
 import dracula from '../themes/terminal/dracula.json' with { type: 'json' };
 import nord from '../themes/terminal/nord.json' with { type: 'json' };
 import solarized from '../themes/terminal/solarized.json' with { type: 'json' };
 import tokyoNight from '../themes/terminal/tokyo-night.json' with { type: 'json' };
 import { importPalette, type Palette, palette, type TerminalTheme } from './ansi.ts';
-import { type Adjustment, fitContrast } from './fit.ts';
+import { type Adjustment, describeAdjustment, fitContrast } from './fit.ts';
 import { type Glyphs, glyphsFor } from './glyph.ts';
 import { defaultTheme, type Mode, modes, type ThemeInputs } from './inputs.ts';
-import { parseTheme } from './validate.ts';
+import { parsePalette, parseTheme } from './validate.ts';
 
-export const presetNames = ['default', 'ice', 'ink', 'phosphor'] as const;
+export const presetNames = ['default', 'ice', 'ink', 'phosphor', 'ascii', 'sunset'] as const;
 export type PresetName = (typeof presetNames)[number];
 
 export const importedNames = ['catppuccin', 'dracula', 'nord', 'solarized', 'tokyo-night'] as const;
@@ -81,6 +84,8 @@ const presetFiles: Readonly<Record<PresetName, unknown>> = {
   ice,
   ink,
   phosphor,
+  ascii,
+  sunset,
 };
 
 const importedFiles: Readonly<Record<ImportedName, ImportedTheme>> = {
@@ -91,7 +96,12 @@ const importedFiles: Readonly<Record<ImportedName, ImportedTheme>> = {
   'tokyo-night': tokyoNight,
 };
 
+/** Names that are not words, written as they are. */
+const titles: Readonly<Record<string, string>> = { ascii: 'ASCII' };
+
 function title(name: string): string {
+  const own = titles[name];
+  if (own !== undefined) return own;
   return name.replace(
     /(^|-)(\w)/g,
     (_, dash: string, ch: string) => `${dash ? ' ' : ''}${ch.toUpperCase()}`,
@@ -121,20 +131,47 @@ function fitted(
   };
 }
 
-/** A theme from the five inputs, generated in both modes and fitted to the gate. */
-export function themeFromInputs(inputs: ThemeInputs, name: PresetName = 'default'): ThemeContext {
+/**
+ * A theme from the five inputs, in both modes and fitted to the gate. Its
+ * palette is generated from them, unless the theme writes its own.
+ */
+export function themeFromInputs(
+  inputs: ThemeInputs,
+  name: PresetName = 'default',
+  own?: Readonly<Record<Mode, Palette>>,
+): ThemeContext {
   return {
     name,
     title: title(name),
     kind: 'preset',
     inputs,
     modes,
-    ...fitted(name, modes, (mode) => palette(inputs, mode)),
+    ...fitted(name, modes, (mode) => own?.[mode] ?? palette(inputs, mode)),
   };
 }
 
 function preset(name: PresetName): ThemeContext {
-  return themeFromInputs(parseTheme(presetFiles[name], `themes/${name}.json`), name);
+  return presetTheme(presetFiles[name], name);
+}
+
+/**
+ * A preset from its file: the five inputs, and the palette when it writes its
+ * own. Exported so a test can hand it a palette that should be refused.
+ */
+export function presetTheme(file: unknown, name: PresetName): ThemeContext {
+  const source = `themes/${name}.json`;
+  const { palette: written, ...inputs } = (file ?? {}) as Record<string, unknown>;
+  const own = written === undefined ? undefined : parsePalette(written, source);
+  const theme = themeFromInputs(parseTheme(inputs, source), name, own);
+  // A palette written colour by colour is the author's, so the gate does not
+  // quietly move it: it passes as written, or the theme does not ship, and
+  // the message says what each failing slot would have to be.
+  if (own !== undefined && theme.adjustments.length > 0) {
+    throw new Error(
+      `${source}: its palette does not pass the contrast gate as written. Write these instead:\n  ${theme.adjustments.map(describeAdjustment).join('\n  ')}`,
+    );
+  }
+  return theme;
 }
 
 function imported(name: ImportedName): ThemeContext {

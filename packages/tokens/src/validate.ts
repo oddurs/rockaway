@@ -1,4 +1,6 @@
-import type { ThemeInputs } from './inputs.ts';
+import { ansiSlots, type Palette, type PaletteSlot, roleSlots } from './ansi.ts';
+import type { Oklch } from './color.ts';
+import { type Mode, modes, type ThemeInputs } from './inputs.ts';
 
 const temperatures = ['cool', 'neutral', 'warm'];
 const pairings = ['system', 'jetbrains', 'ibm-plex', 'berkeley'];
@@ -28,4 +30,47 @@ export function parseTheme(value: unknown, source = 'theme'): ThemeInputs {
     errors.push(`conformance must be one of ${levels.join(', ')}`);
   if (errors.length > 0) throw new Error(`${source}:\n  ${errors.join('\n  ')}`);
   return v as unknown as ThemeInputs;
+}
+
+const OKLCH = /^oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*\)$/;
+
+/** `oklch(0.74 0.16 38)`: lightness 0–1, chroma, hue in degrees. */
+function parseOklch(value: unknown): Oklch | undefined {
+  if (typeof value !== 'string') return undefined;
+  const m = OKLCH.exec(value.trim());
+  if (!m) return undefined;
+  const [l, c, h] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  if (l > 1 || h >= 360) return undefined;
+  return { l, c, h };
+}
+
+/**
+ * Parse a palette a theme writes itself: every slot, in each mode, as
+ * `oklch(l c h)`. A missing slot or one that is not a colour says which.
+ */
+export function parsePalette(value: unknown, source = 'theme'): Readonly<Record<Mode, Palette>> {
+  const errors: string[] = [];
+  const slots: readonly PaletteSlot[] = [...roleSlots, ...ansiSlots];
+  const out: Partial<Record<Mode, Palette>> = {};
+  const v = (typeof value === 'object' && value !== null ? value : {}) as Record<string, unknown>;
+  for (const mode of modes) {
+    const given = v[mode];
+    if (typeof given !== 'object' || given === null) {
+      errors.push(`palette.${mode} must be an object of slots`);
+      continue;
+    }
+    const entries = given as Record<string, unknown>;
+    for (const k of Object.keys(entries))
+      if (!(slots as readonly string[]).includes(k))
+        errors.push(`palette.${mode}: unknown slot "${k}"`);
+    const palette: Partial<Record<PaletteSlot, Oklch>> = {};
+    for (const slot of slots) {
+      const colour = parseOklch(entries[slot]);
+      if (colour === undefined) errors.push(`palette.${mode}.${slot} must be oklch(l c h)`);
+      else palette[slot] = colour;
+    }
+    out[mode] = palette as Palette;
+  }
+  if (errors.length > 0) throw new Error(`${source}:\n  ${errors.join('\n  ')}`);
+  return out as Record<Mode, Palette>;
 }

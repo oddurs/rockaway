@@ -15,8 +15,8 @@
   }
 
   [data-rk-fill]:focus-visible {
-    background: var(--rk-fg-default);
-    color: var(--rk-bg-page);
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
     outline: var(--rk-focus-width) solid var(--rk-border-focus);
     outline-offset: 0;
   }

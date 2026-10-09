@@ -18,6 +18,10 @@ import tokyoNight from '@rockaway/tokens/themes/tokyo-night.css?url';
  *      the first frame whether or not the font has arrived
  *   4. the system's stylesheet, which the build appends
  *
+ * The page's one script is an enhancement: where the browser has no
+ * scroll-state queries, it shows the overflow marks on code and tables that
+ * scroll across (0218). With it off, they scroll without marks.
+ *
  * Keep logic out of here: frontmatter in an `.astro` file is not typechecked
  * (see the site's README), so it lives in `src/lib`.
  */
@@ -89,5 +93,9 @@ const themes = {
   </head>
   <body>
     <slot />
+    <script>
+      import { watchOverflowMarks } from '@rockaway/react';
+      watchOverflowMarks();
+    </script>
   </body>
 </html>

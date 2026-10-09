@@ -15,8 +15,8 @@ import { palette as generated, type Palette, type PaletteSlot } from './ansi.ts'
 import { contrast, type Oklch, round, toHex } from './color.ts';
 import type { Group } from './dtcg.ts';
 import type { Mode, ThemeInputs } from './inputs.ts';
-import { pairs } from './pairs.ts';
-import { semanticColors } from './semantic.ts';
+import { minimumIn, pairs } from './pairs.ts';
+import { type Contrast, moreContrast, semanticColors } from './semantic.ts';
 
 /** One slot, moved to pass the gate. */
 export interface Adjustment {
@@ -60,13 +60,42 @@ function slotsOf(group: Group, trail: string[] = [], out = new Map<string, Palet
 
 const semanticSlots = slotsOf(semanticColors());
 
-function slot(path: string): PaletteSlot {
-  const found = semanticSlots.get(path);
+/**
+ * Each contrast context (0065) reads the palette its own way, and each pair is
+ * held to that context's minimum: the standard reading, and increased
+ * contrast, where muted text is the foreground, colour takes the bright slot
+ * and text is held to 7:1.
+ */
+const readings: readonly {
+  readonly name: Contrast;
+  readonly slots: ReadonlyMap<string, PaletteSlot>;
+}[] = [
+  { name: 'standard', slots: semanticSlots },
+  { name: 'more', slots: new Map([...semanticSlots, ...Object.entries(moreContrast)]) },
+];
+
+function slotIn(slots: ReadonlyMap<string, PaletteSlot>, path: string): PaletteSlot {
+  const found = slots.get(path);
   if (!found) throw new Error(`${path} is not a semantic colour`);
   return found;
 }
 
 const STEP = 0.005;
+
+const same = (a: Oklch, b: Oklch): boolean => a.l === b.l && a.c === b.c && a.h === b.h;
+
+/**
+ * The role slots that are another slot unless a theme writes them itself: a
+ * generated or imported theme focuses in its accent and reverses to its ink.
+ * While they are the same colour they are fitted as one, so moving the accent
+ * for a link moves the focus ring with it, exactly as when they were one slot.
+ */
+function linksOf(palette: Palette): ReadonlyMap<PaletteSlot, PaletteSlot> {
+  const links = new Map<PaletteSlot, PaletteSlot>();
+  if (same(palette.focus, palette.blue)) links.set('focus', 'blue');
+  if (same(palette.inverse, palette.foreground)) links.set('inverse', 'foreground');
+  return links;
+}
 const clampL = (l: number): number => Math.min(1, Math.max(0, l));
 
 /**
@@ -80,32 +109,38 @@ export function fitContrast(
 ): { palette: Palette; adjustments: Adjustment[] } {
   const fitted: Record<PaletteSlot, Oklch> = { ...palette };
   const moved = new Map<PaletteSlot, string>();
+  const links = linksOf(palette);
+  const own = (slot: PaletteSlot): PaletteSlot => links.get(slot) ?? slot;
   // Away from the page: lighter on a dark background, darker on a light one.
   const direction = fitted.background.l < 0.5 ? 1 : -1;
 
   for (let pass = 0; pass < 400; pass++) {
     let failing = 0;
-    for (const pair of pairs) {
-      for (const bg of pair.bg) {
-        const [f, b] = [slot(pair.fg), slot(bg)];
-        if (contrast(fitted[f], fitted[b]) >= pair.min) continue;
-        failing += 1;
-        const target = grounds.has(f) ? b : f;
-        if (grounds.has(target)) {
-          throw new Error(`${pair.fg} on ${bg} (${mode}): both are grounds, so neither can move`);
+    for (const reading of readings) {
+      for (const pair of pairs) {
+        const min = minimumIn(pair, reading.name);
+        for (const bg of pair.bg) {
+          const [f, b] = [own(slotIn(reading.slots, pair.fg)), own(slotIn(reading.slots, bg))];
+          if (f === b || contrast(fitted[f], fitted[b]) >= min) continue;
+          failing += 1;
+          const target = grounds.has(f) ? b : f;
+          const where = `${pair.fg} on ${bg} (${mode}${reading.name === 'more' ? ', more contrast' : ''})`;
+          if (grounds.has(target)) {
+            throw new Error(`${where}: both are grounds, so neither can move`);
+          }
+          const before = fitted[target];
+          const l = Math.min(1, Math.max(0, before.l + direction * STEP));
+          if (l === before.l) throw new Error(`${where} cannot reach ${min}:1`);
+          fitted[target] = round({ ...before, l });
+          const because = `${pair.fg} on ${bg}${reading.name === 'more' ? ', in more contrast' : ''}`;
+          if (!moved.has(target)) moved.set(target, because);
         }
-        const before = fitted[target];
-        const l = Math.min(1, Math.max(0, before.l + direction * STEP));
-        if (l === before.l) {
-          throw new Error(`${pair.fg} on ${bg} (${mode}) cannot reach ${pair.min}:1`);
-        }
-        fitted[target] = round({ ...before, l });
-        if (!moved.has(target)) moved.set(target, `${pair.fg} on ${bg}`);
       }
     }
     if (failing === 0) break;
     if (pass === 399) throw new Error(`the ${mode} palette could not be fitted to the gate`);
   }
+  for (const [slot, to] of links) fitted[slot] = fitted[to];
 
   // Fitting can bring two edges to the same 3:1 from different starts, and a
   // control's edge must never end up quieter than the ordinary one (0178).

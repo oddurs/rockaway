@@ -89,6 +89,12 @@
     "selection": {
       "$value": "{palette.light.selection}"
     },
+    "focus": {
+      "$value": "{palette.light.focus}"
+    },
+    "inverse": {
+      "$value": "{palette.light.inverse}"
+    },
     "tint-blue": {
       "$value": "{palette.light.tint-blue}"
     },

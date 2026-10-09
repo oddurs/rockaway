@@ -50,10 +50,32 @@
     color: var(--rk-fg-muted);
   }
 
+  /*
+   * A label that does not fit is cut in the theme's ellipsis, not the font's
+   * (0231): the whole title stays in the text, which is found, copied and
+   * announced, and while it is marked cut the mark takes the label's last
+   * cell. With no script the label clips at its edge.
+   */
   .rk-tree-label {
+    display: flex;
     min-inline-size: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
+  }
+
+  .rk-tree-text {
+    min-inline-size: 0;
+    overflow: hidden;
+  }
+
+  /* The mark's cell, which exists only while the label is cut: the state
+   * gives it content, and nothing about its size. */
+  .rk-tree-label::after {
+    flex: none;
+    inline-size: var(--rk-cell-width);
+  }
+
+  .rk-tree-label[data-rk-cut]::after {
+    content: attr(data-rk-ellipsis);
   }
 
   .rk-tree-item[data-hovered] .rk-tree-label {
@@ -64,22 +86,12 @@
   /* Selected: reverse video, as List draws it, the guides reversed with the
    * row so the row is one bar. */
   .rk-tree-item[data-selected] {
-    background: var(--rk-fg-default);
+    background: var(--rk-bg-inverse);
     color: var(--rk-bg-surface);
   }
 
   .rk-tree-item[data-selected] .rk-tree-guides {
     color: inherit;
-  }
-
-  /* In forced colors a shape the cell draws is inked in the reader's text
-   * colour, which in a selected row is the ground the row is reversed onto.
-   * There the guides take the reversed figure, the canvas, and stay visible
-   * (0181). */
-  @media (forced-colors: active) {
-    .rk-tree-item[data-selected] .rk-tree-guides [data-rk-shape] {
-      --rk-ink-colour: Canvas;
-    }
   }
 
   .rk-tree-item[data-disabled] {
@@ -94,6 +106,8 @@
   @media (forced-colors: active) {
     .rk-tree-item[data-selected] {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }

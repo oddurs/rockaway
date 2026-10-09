@@ -65,8 +65,9 @@ export function semanticColors(): Group {
       hover: { ...p('hover'), $description: 'An element under the pointer.' },
       active: { ...p('active'), $description: 'An element being pressed, or selected.' },
       inverse: {
-        ...p('foreground'),
-        $description: 'Reverse video: the foreground becomes the ground.',
+        ...p('inverse'),
+        $description:
+          'Reverse video: the foreground becomes the ground. The foreground itself, unless the theme reverses to a colour.',
       },
       ...perIntent((intent) => ({
         solid: { ...p(intentSlot[intent].solid), $description: `Filled ${intent} backgrounds.` },
@@ -120,7 +121,11 @@ export function semanticColors(): Group {
         $description:
           'The edge of a resting surface. On a grid, a surface is its border, so it is border.default.',
       },
-      focus: { ...p('blue'), $description: 'The focus ring, and the cursor (0061).' },
+      focus: {
+        ...p('focus'),
+        $description:
+          'The focus ring, and the cursor (0061). The accent, unless the theme focuses in a colour of its own.',
+      },
       accent: p('blue'),
       info: p('cyan'),
       success: p('green'),
@@ -151,4 +156,70 @@ export function semanticColors(): Group {
       },
     },
   };
+}
+
+/** The contrast contexts (cairn 0065). `more` is what `prefers-contrast: more` asks for. */
+export const contrasts = ['standard', 'more'] as const;
+export type Contrast = (typeof contrasts)[number];
+
+/**
+ * Increased contrast (cairn 0065), answered the way a terminal would rather
+ * than with a third palette: the same slots, read differently.
+ *
+ *   - muted text and the dim attribute become the foreground
+ *   - reverse video is the foreground, in a theme that reverses to a colour
+ *   - coloured text takes the bright slot, as a terminal's bold text does
+ *   - a filled control is reverse video: a foreground ground, background text
+ *   - every edge steps up a weight: subtle becomes the ordinary edge, the
+ *     ordinary edge the control's, the control's the foreground
+ *   - disabled text is the old muted; the CSS strikes it through as well, so
+ *     disabled never rests on dimness alone
+ *
+ * Text pairs are held to 7:1 here, and the palette is fitted to meet that as
+ * well as the standard pairs.
+ */
+export const moreContrast: Readonly<Record<string, PaletteSlot>> = {
+  'fg.muted': 'foreground',
+  'fg.disabled': 'muted',
+  // Reverse video is the ink itself: a theme that reverses to a colour
+  // (sunset's coral) gives it up for the strongest ground it has.
+  'bg.inverse': 'foreground',
+  ...Object.fromEntries(
+    intents.flatMap((i) => [
+      [`fg.${i}`, intentSlot[i].bright],
+      [`bg.${i}.solid`, 'foreground'],
+      [`bg.${i}.solid-hover`, 'foreground'],
+    ]),
+  ),
+  'border.subtle': 'border',
+  'border.default': 'border-strong',
+  'border.surface': 'border-strong',
+  'border.control': 'foreground',
+  'syntax.comment': 'foreground',
+  'syntax.keyword': 'bright-magenta',
+  'syntax.string': 'bright-green',
+  'syntax.constant': 'bright-yellow',
+  'syntax.function': 'bright-blue',
+  'syntax.type': 'bright-cyan',
+  'syntax.attribute': 'bright-yellow',
+  'syntax.regexp': 'bright-red',
+  'syntax.inserted': 'bright-green',
+  'syntax.deleted': 'bright-red',
+  'syntax.error': 'bright-red',
+  'attribute.dim': 'foreground',
+};
+
+/** The DTCG group for the `more` context: each override as an alias into the palette. */
+export function moreContrastColors(): Group {
+  const out: Record<string, unknown> = {};
+  for (const [path, slot] of Object.entries(moreContrast)) {
+    const keys = path.split('.');
+    let node = out;
+    for (const key of keys.slice(0, -1)) {
+      node[key] ??= {};
+      node = node[key] as Record<string, unknown>;
+    }
+    node[keys.at(-1) as string] = { $type: 'color', ...p(slot) };
+  }
+  return out as Group;
 }

@@ -137,11 +137,18 @@
    * where a title follows it (0214). A positioned cell paints after the
    * row's unpositioned runs, backplates included, so the stroke stays on
    * top. It still paints under the content layer, which comes later.
+   *
+   * In reverse video the reader's text colour is the ground, and a line in it
+   * is no line at all: a selected tree row's guides, a box drawn reversed. So
+   * whatever reverses sets `--rk-forced-ink` to the reversed figure beside
+   * its opt-out from the adjustment, and a shape inside it, or a reversed
+   * shape itself, is inked in that. A test in this package holds every
+   * reversal's opt-out to it.
    */
   @media (forced-colors: active) {
     [data-rk-shape] {
       forced-color-adjust: none;
-      --rk-ink-colour: CanvasText;
+      --rk-ink-colour: var(--rk-forced-ink, CanvasText);
       position: relative;
     }
   }
@@ -150,6 +157,45 @@
   .rk-content {
     position: absolute;
     inset: 0;
+  }
+
+  /*
+   * A screen the page sizes, before it has measured itself: on a server, in a
+   * page with no script, and for the first client render. The chrome is drawn
+   * at its smallest and stretched to the box along its last row but one and
+   * its last column but one, so a frame is the size of what it holds before
+   * any script runs, and measuring it changes nothing anyone can see. The
+   * cell draws a side's line as tall as its cell and an edge's as wide, so the
+   * lines simply lengthen (0116).
+   */
+  .rk-frame[data-rk-elastic] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rk-frame[data-rk-elastic] > .rk-row {
+    display: flex;
+    flex: none;
+  }
+
+  .rk-frame[data-rk-elastic] > .rk-row[data-rk-stretch] {
+    flex: 1 1 auto;
+    min-block-size: 0;
+  }
+
+  .rk-frame[data-rk-elastic] .rk-run {
+    flex: none;
+  }
+
+  .rk-frame[data-rk-elastic] .rk-run[data-rk-stretch] {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+
+  /* The cells of the stretching row are as tall as it is: a side's line runs
+   * the whole way down. */
+  .rk-frame[data-rk-elastic] > .rk-row[data-rk-stretch] > .rk-run {
+    block-size: auto;
   }
 
   /* The content layer sits over the chrome, but only where it has something

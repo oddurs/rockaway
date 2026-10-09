@@ -1,0 +1,97 @@
+/*
+ * Checkbox and CheckboxGroup (cairn 0036).
+ *
+ * A row is text the component writes, cell by cell: the delimiters around the
+ * mark cell, a cell of air, the words, and the required mark's cell. Nothing
+ * here sets a size the text does not already have, and no state sets one at
+ * all (0118). The row is one cell tall at every density.
+ *
+ * The delimiters and the mark take their colours from custom properties set
+ * on the row, so every state is one rule on the row.
+ */
+@layer rk.components {
+  .rk-checkbox-row {
+    --rk-checkbox-end: var(--rk-border-control);
+    --rk-checkbox-mark: var(--rk-fg-accent);
+
+    display: inline-flex;
+    align-items: start;
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+    color: var(--rk-fg-default);
+    cursor: pointer;
+  }
+
+  .rk-checkbox-box {
+    display: inline-flex;
+  }
+
+  /* Each of the box's three cells is a cell wide, whatever the glyph in it.
+   * A mark the font lacks comes from a fallback whose advance is not quite
+   * the cell's, and without this the box was a hair wider checked than
+   * unchecked. */
+  .rk-checkbox-end,
+  .rk-checkbox-mark {
+    display: inline-block;
+    inline-size: var(--rk-cell-width);
+    overflow: hidden;
+  }
+
+  .rk-checkbox-end {
+    color: var(--rk-checkbox-end);
+  }
+
+  .rk-checkbox-mark {
+    color: var(--rk-checkbox-mark);
+  }
+
+  /* Hover: the words underline. */
+  .rk-checkbox-row[data-hovered] .rk-checkbox-label {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* Focus: the ring, around the row. The native checkbox it is on is hidden. */
+  .rk-checkbox-row[data-focus-visible] {
+    outline: var(--rk-focus-width) solid var(--rk-border-focus);
+    outline-offset: var(--rk-focus-offset);
+  }
+
+  /* Pressed: the box reverses, its own figure and ground swapped (0181). */
+  .rk-checkbox-row[data-pressed] .rk-checkbox-box {
+    --rk-checkbox-end: currentcolor;
+    --rk-checkbox-mark: currentcolor;
+
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
+  }
+
+  .rk-checkbox-row[data-invalid] {
+    --rk-checkbox-end: var(--rk-border-danger);
+  }
+
+  .rk-checkbox-row[data-required] .rk-label-mark {
+    color: var(--rk-fg-danger);
+  }
+
+  .rk-checkbox-row[data-disabled] {
+    --rk-checkbox-end: currentcolor;
+    --rk-checkbox-mark: currentcolor;
+
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+
+  /* Read-only: the delimiters' cells are blank, and the mark stands alone. */
+  .rk-checkbox-row[data-readonly] {
+    cursor: default;
+  }
+
+  @media (forced-colors: active) {
+    .rk-checkbox-row[data-pressed] .rk-checkbox-box {
+      forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
+    }
+  }
+}

@@ -14,7 +14,7 @@
  * rule's own end cells, so a divider with nothing to meet still reads as though
  * it met something.
  */
-import type { BorderSetName, Size } from '@rockaway/grid';
+import { type BorderSetName, type Size, stringWidth } from '@rockaway/grid';
 import { type ReactNode, useMemo } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
@@ -78,8 +78,19 @@ export function Divider({
     return (size: Size) => dividerBuffer(size, options, glyphs);
   }, [orientation, border, label, labelAlign, ends, glyphs]);
 
+  // As long as the page makes it: drawn at its smallest until it has
+  // measured, and stretched to fit (Screen), its label in place.
+  const smallest = useMemo(
+    () =>
+      horizontal
+        ? { width: label === undefined ? 3 : stringWidth(label) + 8, height: 1 }
+        : { width: 1, height: 3 },
+    [horizontal, label],
+  );
+
   return (
     <Screen
+      fallback={smallest}
       {...screen}
       draw={draw}
       className={cx('rk-divider', className)}
