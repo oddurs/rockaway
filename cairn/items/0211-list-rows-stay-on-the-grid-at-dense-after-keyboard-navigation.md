@@ -3,14 +3,14 @@ id: 211
 uid: 1cf34716-2f27-434e-949d-018574b161a8
 title: List rows stay on the grid at dense after keyboard navigation
 type: bug
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 133
 created: 2026-10-03
-updated: 2026-10-04
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p2
 layer: components
 effort: s
@@ -25,7 +25,7 @@ QA carries it as the known entry `list-dense-offset`.
 ## Acceptance criteria
 
 - [x] Rows land on whole cells at every density after keyboard navigation
-- [ ] The `list-dense-offset` known entry is removed
+- [x] The `list-dense-offset` known entry is removed
 
 ## 2026-10-03
 

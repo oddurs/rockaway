@@ -38,18 +38,6 @@ const TARGETS = '.rk-button, .rk-link, .rk-list-item, button, a[href], [role="op
 
 export const known: readonly Known[] = [
   {
-    id: 'list-dense-offset',
-    check: 'conformance',
-    rule: 'y',
-    densities: ['dense'],
-    stories: ['components-list--disabled'],
-    element: /rk-list/,
-    present: '.rk-list-item',
-    reason:
-      "after keyboard navigation, a list's rows sit a pixel above the grid at dense: y = 15, 31 and 47px in 16px cells, so the list has scrolled by one pixel that a whole row would not",
-    ticket: '0211: list rows stay on the grid at dense after keyboard navigation',
-  },
-  {
     id: 'dense-one-row',
     check: 'targets',
     rule: 'size',
