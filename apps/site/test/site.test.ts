@@ -131,7 +131,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
   test('paints a Frame from the published package, character for character', async () => {
     // The landing page's Frame, under the code that draws it, rendered on the
     // server by the component and never hydrated.
-    const screen = page.locator('article .rk-screen[aria-label="hello"]');
+    const screen = page.locator('main .rk-screen[aria-label="hello"]');
     const width = Number(await screen.getAttribute('data-rk-cols'));
     const height = Number(await screen.getAttribute('data-rk-rows'));
     expect(width).toBe(32);
@@ -460,9 +460,13 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
         probe.remove();
         return width;
       };
-      const screen = document.querySelector<HTMLElement>('.rk-screen');
+      // A screen that has measured its cell, rather than one still at `1ch`.
+      const cellOf = (el: Element) => getComputedStyle(el).getPropertyValue('--rk-cell-width');
+      const screen = [...document.querySelectorAll('.rk-screen')].find((el) =>
+        cellOf(el).trim().endsWith('px'),
+      );
       return {
-        cell: screen ? getComputedStyle(screen).getPropertyValue('--rk-cell-width') : '',
+        cell: screen ? cellOf(screen) : '',
         web: measure(stack),
         // The same stack without the web font: what the page draws before it arrives.
         fallback: measure(stack.replace(/^"JetBrains Mono",\s*/, '')),
@@ -924,25 +928,88 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
         (row) => row.textContent ?? '',
       );
 
-    test('says what it is in one line, with the rules, the code, the install and where to go', async () => {
+    test('is a product page, not a page of the docs: a top bar, the claim, the software, the code and the install', async () => {
       const { reader, close } = await land(1280);
       const found = await reader.evaluate(() => ({
-        h1: document.querySelector('article h1')?.textContent,
-        claim: document.querySelector('article h1 + p strong')?.textContent,
-        rules: document.querySelectorAll('article ol > li').length,
-        code: [...document.querySelectorAll('article pre')].map((pre) => pre.textContent ?? ''),
-        links: [...document.querySelectorAll<HTMLAnchorElement>('article a[href]')].map((a) =>
+        // Not the docs' shell: no panes around the page, no map, no status bar.
+        shell: document.querySelector('.site-shell') !== null,
+        brand: document.querySelector('.site-topbar .site-brand')?.textContent,
+        bar: [...document.querySelectorAll('.site-topbar nav a')].map((a) => a.textContent),
+        looks: [...document.querySelectorAll('.site-topbar [data-site-look]')].map(
+          (b) => (b as HTMLElement).dataset.siteLook,
+        ),
+        h1: document.querySelectorAll('main h1').length,
+        claim: document.querySelector('main h1 + p strong')?.textContent,
+        shots: [...document.querySelectorAll('main .site-shot')].map((shot) => ({
+          // A picture of software, tabbed past, and said in its caption.
+          inert: shot.querySelector('[inert] .rk-screen') !== null,
+          named: shot.querySelector('[role="region"]')?.getAttribute('aria-label'),
+          caption: [...shot.querySelectorAll('figcaption a')].map((a) => a.getAttribute('href')),
+        })),
+        rules: document.querySelectorAll('main ol > li').length,
+        code: [...document.querySelectorAll('main pre')].map((pre) => pre.textContent ?? ''),
+        install: document.querySelector('main [aria-label="The install line"] .rk-content')
+          ?.textContent,
+        links: [...document.querySelectorAll<HTMLAnchorElement>('footer a[href]')].map((a) =>
           a.getAttribute('href'),
         ),
       }));
-      expect(found.h1).toBe('rockaway');
-      expect(found.claim).toBe('A design system for terminal interfaces on the web.');
+      expect(found.shell).toBe(false);
+      expect(found.brand).toBe('rockaway');
+      expect(found.bar).toEqual(['Docs', 'Components', 'GitHub']);
+      expect(found.looks).toEqual(['theme', 'mode']);
+      expect(found.h1).toBe(1);
+      expect(found.claim).toBe(
+        'rockaway is a design system that draws on a grid of character cells.',
+      );
+      expect(found.shots).toHaveLength(3);
+      for (const shot of found.shots) {
+        expect(shot.inert, shot.named ?? '').toBe(true);
+        expect(shot.named).toBeTruthy();
+        expect(shot.caption.length, shot.named ?? '').toBeGreaterThan(0);
+        for (const link of shot.caption) expect(link).toMatch(new RegExp(`^${base}components/`));
+      }
       expect(found.rules).toBe(3);
       expect(found.code.some((code) => code.includes("from '@rockaway/react'"))).toBe(true);
-      expect(found.code.some((code) => code.startsWith('npm install @rockaway/react'))).toBe(true);
+      expect(found.install?.trim()).toBe(
+        'npm install @rockaway/react @rockaway/css @rockaway/tokens',
+      );
       for (const page of ['getting-started/', 'concept/', 'foundations/', 'components/']) {
         expect(found.links).toContain(`${base}${page}`);
       }
+      await close();
+    });
+
+    test('draws its product shots at their size before any script, and fits their status bars after', async () => {
+      const still = await land(1280, false);
+      const before = await still.reader.evaluate(() =>
+        [...document.querySelectorAll<HTMLElement>('.site-shot [inert] .rk-screen')].map(
+          (screen) => `${screen.dataset.rkCols}x${screen.dataset.rkRows}`,
+        ),
+      );
+      await still.close();
+      const { reader, close } = await land(1280);
+      const after = await reader.evaluate(() => ({
+        sizes: [...document.querySelectorAll<HTMLElement>('.site-shot [inert] .rk-screen')].map(
+          (screen) => `${screen.dataset.rkCols}x${screen.dataset.rkRows}`,
+        ),
+        segments: [
+          ...document.querySelectorAll<HTMLElement>(
+            '.site-shot .rk-statusbar .rk-status-segment:not([hidden]) .rk-status-content',
+          ),
+        ]
+          .filter((el) => getComputedStyle(el).visibility === 'visible')
+          .map((el) => el.textContent?.trim()),
+      }));
+      expect(after.sizes).toEqual(before);
+      // Every segment shown, in order: the keys one is a KeyHint, read here as its text nodes.
+      expect(after.segments).toEqual([
+        'DIFF',
+        'main, 2 ahead',
+        '',
+        expect.stringMatching(/commit$/),
+        '2 files',
+      ]);
       await close();
     });
 
@@ -1008,7 +1075,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       const keyed = await reader.evaluate(drawn);
       expect(keyed.join('\n')).not.toBe(after.join('\n'));
       await expect
-        .poll(() => reader.locator('.rk-statusbar [role="status"]').textContent())
+        .poll(() => reader.locator('.site-topbar [role="status"]').textContent())
         .toMatch(/^Drew a heavy box, 7 by 4 cells\./);
       await reader.keyboard.press('Backspace');
       await reader.keyboard.press('Escape');
@@ -1379,7 +1446,9 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
             problems.push(`${p}: the page scrolls across by ${found.overflow}px`);
           if (found.wide.length > 0)
             problems.push(`${p}: clipped by the pane: ${found.wide.join(', ')}`);
-          if (found.stacked !== 'column') problems.push(`${p}: the panes did not stack`);
+          // The landing page is not in the shell: it has no panes to stack.
+          if (p !== '' && found.stacked !== 'column')
+            problems.push(`${p}: the panes did not stack`);
         }
         expect(problems).toEqual([]);
         await context.close();
@@ -1429,11 +1498,12 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
             const first = await before.evaluate(placed);
             await early.close();
             // A phone is shown the page; a wider window, which the server cannot
-            // guess, nothing until the script has measured it (0104).
+            // guess, nothing until the script has measured it (0104). The
+            // landing page has no shell to measure: it is shown at every width.
             expect(
               first.some((el) => el.showing),
               at,
-            ).toBe(phone);
+            ).toBe(phone || p === '');
 
             const live = await browser.newContext({ viewport: { width, height } });
             const after = await live.newPage();

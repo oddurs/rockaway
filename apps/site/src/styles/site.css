@@ -156,3 +156,73 @@
     display: none;
   }
 }
+
+/*
+ * The landing page (0108): a product page, not an app. One column of whole
+ * cells, the prose measure wide, in the middle of the window, under a top
+ * bar that sets the same column. Everything in it is the system's; what is
+ * here is only where things go.
+ */
+.site-landing {
+  padding-block: var(--rk-cell-height);
+  padding-inline: calc(2 * var(--rk-cell-width));
+}
+
+.site-landing > * {
+  margin-inline: auto;
+}
+
+/* The brand, where to go, a message, and the look, on one row that wraps. */
+.site-topbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: calc(2 * var(--rk-cell-width));
+}
+
+.site-brand {
+  padding-inline: var(--rk-cell-width);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.site-topbar-links,
+.site-topbar-look,
+.site-hero-actions,
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: calc(2 * var(--rk-cell-width));
+}
+
+/* The message takes what is left of the row, and pushes the look to its end. */
+.site-topbar-message {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  color: var(--rk-fg-muted);
+}
+
+/* The page's sections, two blank rows apart: a product page breathes more than prose. */
+.site-landing-page > section + section {
+  margin-block-start: calc(2 * var(--rk-cell-height));
+}
+
+/* A product shot: a screen of software, scrolled across in its own box on a phone. */
+.site-shot {
+  margin-inline: 0;
+}
+
+.site-shot > figcaption {
+  margin-block-start: var(--rk-cell-height);
+  color: var(--rk-fg-muted);
+}
+
+.site-shot-stack {
+  display: grid;
+  justify-content: start;
+}
+
+/* The buttons and badges under a shot's fields, a cell apart. */
+.site-shot-actions {
+  white-space: pre;
+}

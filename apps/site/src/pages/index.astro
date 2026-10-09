@@ -1,18 +1,20 @@
 ---
 /**
  * The landing page (cairn 0108): the page that gets posted, read on a phone,
- * and judged in four seconds.
+ * and judged in four seconds. A product page, not a page of the docs: the
+ * top bar, a hero with the live drawing, then the system shown as software,
+ * three screens built from its real components, then the rules, the code and
+ * the install.
  *
- * The claim in a line, then a screen the engine draws, live, that a reader
- * can draw on; the constraint in three rules; ten lines of code beside what
- * they render; and where to go next. Everything on it is the system: the
- * drawing is `@rockaway/grid`'s, painted by the cell renderer, and the frame
- * under the code is `@rockaway/react`'s, rendered on the server. Both are
- * there before any script runs; the script only lets you draw.
+ * Everything on it is the system, rendered on the server: the drawing is
+ * `@rockaway/grid`'s, painted by the cell renderer, and every screen is
+ * `@rockaway/react`'s. All of it is there before any script runs; the script
+ * only lets you draw, and switches the look.
  */
 import { Button, Frame, Screen } from '@rockaway/react';
+import { Deploys, GitClient, Settings } from '../components/Shots.tsx';
 import Source from '../components/Source.astro';
-import Prose from '../layouts/Prose.astro';
+import Landing from '../layouts/Landing.astro';
 import { drawing, SERVER_SIZE } from '../lib/drawing.ts';
 import { fixed } from '../lib/pages.ts';
 import { href } from '../lib/paths.ts';
@@ -28,86 +30,136 @@ export function App() {
   );
 }`;
 
+const install = 'npm install @rockaway/react @rockaway/css @rockaway/tokens';
 const first = drawing(SERVER_SIZE, { boxes: [], weight: 'light' });
 ---
 
-<Prose title={fixed.home.title} description={fixed.home.description} name="home">
-  <h1>rockaway</h1>
-  <p>
-    <strong>A design system for terminal interfaces on the web.</strong> Every box is drawn on a
-    grid of character cells by a small engine, and every page is still a web page: links, a
-    keyboard, a screen reader, a phone, and no JavaScript needed to read it. This site is built with
-    it.
-  </p>
+<Landing title={fixed.home.title} description={fixed.home.description}>
+  <section aria-labelledby="hero" class="site-hero">
+    <h1 id="hero">Terminal interfaces, on the web</h1>
+    <p>
+      <strong>rockaway is a design system that draws on a grid of character cells.</strong> Every
+      box is laid out by a small engine, and every page is still a web page: links, a keyboard, a
+      screen reader, a phone, and no JavaScript needed to read it. This site is built with it.
+    </p>
+    <p class="site-hero-actions">
+      <a href={href('getting-started/')}>Get started</a>
+      <a href={href('components/')}>See the components</a>
+      <a href="https://github.com/oddurs/rockaway">Read the source</a>
+    </p>
+    <figure data-site-drawing aria-label="A drawing of boxes joined by the junction table">
+      <Screen
+        draw={() => first}
+        cols={SERVER_SIZE.width}
+        rows={SERVER_SIZE.height}
+        role="application"
+        aria-roledescription="drawing"
+        aria-label="Boxes joined by the junction table. Drag across it, or use the arrow keys and Enter, to draw another."
+      />
+    </figure>
+    <p>
+      That is drawn live. Drag across it to draw a box, or <kbd>Tab</kbd> to it and use the arrows
+      and <kbd>Enter</kbd>; <kbd>1</kbd>, <kbd>2</kbd> and <kbd>3</kbd> change the weight. However
+      the boxes cross, they meet in the right junction, because no character is stored, only edges.
+    </p>
+  </section>
 
-  <figure data-site-drawing aria-label="A drawing of boxes joined by the junction table">
-    <Screen
-      draw={() => first}
-      cols={SERVER_SIZE.width}
-      rows={SERVER_SIZE.height}
-      role="application"
-      aria-roledescription="drawing"
-      aria-label="Boxes joined by the junction table. Drag across it, or use the arrow keys and Enter, to draw another."
-    />
-  </figure>
-  <p>
-    That is drawn live. Drag across it to draw a box, or <kbd>Tab</kbd> to it and use the arrows
-    and <kbd>Enter</kbd>; <kbd>1</kbd>, <kbd>2</kbd> and <kbd>3</kbd> change the weight. However the
-    boxes cross, they meet in the right junction, because no character is stored, only edges.{' '}
-    <kbd>y</kbd> copies it as text and <kbd>Y</kbd> as ANSI, for your terminal.
-  </p>
+  <section aria-labelledby="software">
+    <h2 id="software">Software, not pages</h2>
+    <p>
+      Panes that split and stack, a status bar that gives way by priority, trees and tables that
+      take the keyboard: the parts of a real tool, each a component. This is a git client made of
+      them.
+    </p>
+    <figure class="site-shot">
+      <div class="rk-scroll-marks" tabindex="0" role="region" aria-label="A git client">
+        <div inert><GitClient /></div>
+      </div>
+      <figcaption>
+        <a href={href('components/panes/')}>Panes</a>, a <a href={href('components/link-tree/')}
+          >LinkTree</a
+        > and a <a href={href('components/status-bar/')}>StatusBar</a>.
+      </figcaption>
+    </figure>
+  </section>
 
-  <h2>Three rules</h2>
-  <ol>
-    <li>
-      <strong>Every size is a count of cells.</strong> One character across, one line down, and never
-      half of one. You write <code>cols={'{40}'}</code>, never pixels.
-    </li>
-    <li>
-      <strong>Every border is edges on a cell.</strong> The character is looked up from the edges
-      when the drawing is done, so two boxes cannot be joined wrong.
-    </li>
-    <li>
-      <strong>It is still the web.</strong> Real elements sit over the drawing, so it reads aloud,
-      links, zooms, takes a keyboard, and fits a phone forty cells wide.
-    </li>
-  </ol>
+  <section aria-labelledby="forms">
+    <h2 id="forms">Forms on the grid</h2>
+    <p>
+      A field is a label, a box and a line for its error, each a whole number of cells, and every
+      control is React Aria's underneath, so it reads, focuses and submits like a form should.
+    </p>
+    <figure class="site-shot">
+      <div class="rk-scroll-marks" tabindex="0" role="region" aria-label="A settings screen">
+        <div inert><Settings /></div>
+      </div>
+      <figcaption>
+        A <a href={href('components/frame/')}>Frame</a> and <a href={href('components/button/')}
+          >Buttons</a
+        >, with the theme's marks for the choices.
+      </figcaption>
+    </figure>
+  </section>
 
-  <h2>Ten lines</h2>
-  <Source code={app} lang="tsx" />
-  <p>Which draws this, rendered by the component on the server:</p>
-  <div class="rk-scroll-marks" tabindex="0" role="region" aria-label="What it draws">
-    <Frame title="hello" cols={32} rows={5}>
-      <p>A screen, in cells.</p>
-      <Button>Continue</Button>
-    </Frame>
-  </div>
-  <Source code="npm install @rockaway/react @rockaway/css @rockaway/tokens" lang="sh" />
-  <p>
-    <strong>Not on npm yet.</strong> The first release, 0.1.0, is being made; until then <a
-      href={href('getting-started/')}>getting started</a
-    > says how to install it from the repository.
-  </p>
+  <section aria-labelledby="data">
+    <h2 id="data">Data, in columns</h2>
+    <p>
+      A table is cut to its columns and scrolls by them, sorts from its header, and says how many
+      rows it has. A badge says a state in a word and a mark, never in colour alone.
+    </p>
+    <figure class="site-shot">
+      <div class="rk-scroll-marks" tabindex="0" role="region" aria-label="A deploys dashboard">
+        <div inert><Deploys /></div>
+      </div>
+      <figcaption>
+        A <a href={href('components/table/')}>Table</a> and <a href={href('components/badge/')}
+          >Badges</a
+        > in a Frame.
+      </figcaption>
+    </figure>
+  </section>
 
-  <h2>Read on</h2>
-  <ul>
-    <li><a href={href('getting-started/')}>Getting started</a>: install it and draw a screen.</li>
-    <li>
-      <a href={href('concept/')}>The concept</a>: how a terminal interface becomes a web page, and
-      the rules a component is held to.
-    </li>
-    <li>
-      <a href={href('foundations/')}>Foundations</a>: the grid, the glyphs, the colour and the
-      themes, each drawn by the system it describes.
-    </li>
-    <li>
-      <a href={href('components/')}>Components</a>: every one, with its snapshot, a live example
-      and its keyboard.
-    </li>
-    <li><a href="https://github.com/oddurs/rockaway">The source</a>, on GitHub.</li>
-  </ul>
-</Prose>
+  <section aria-labelledby="rules">
+    <h2 id="rules">Three rules</h2>
+    <ol>
+      <li>
+        <strong>Every size is a count of cells.</strong> One character across, one line down, and
+        never half of one. You write <code>cols={'{40}'}</code>, never pixels.
+      </li>
+      <li>
+        <strong>Every border is edges on a cell.</strong> The character is looked up from the edges
+        when the drawing is done, so two boxes cannot be joined wrong.
+      </li>
+      <li>
+        <strong>It is still the web.</strong> Real elements sit over the drawing, so it reads aloud,
+        links, zooms, takes a keyboard, and fits a phone forty cells wide.
+      </li>
+    </ol>
+  </section>
 
-<script>
-  import '../scripts/drawing.ts';
-</script>
+  <section aria-labelledby="code">
+    <h2 id="code">Ten lines</h2>
+    <Source code={app} lang="tsx" />
+    <p>Which draws this, rendered by the component on the server:</p>
+    <div class="rk-scroll-marks" tabindex="0" role="region" aria-label="What it draws">
+      <Frame title="hello" cols={32} rows={5}>
+        <p>A screen, in cells.</p>
+        <Button>Continue</Button>
+      </Frame>
+    </div>
+  </section>
+
+  <section aria-labelledby="install">
+    <h2 id="install">Install</h2>
+    <div class="rk-scroll-marks" tabindex="0" role="region" aria-label="The install line">
+      <Frame title="install" cols={install.length + 6} rows={3} pad={{ x: 2, y: 0 }}>
+        <code>{install}</code>
+      </Frame>
+    </div>
+    <p>
+      <strong>Not on npm yet.</strong> The first release, 0.1.0, is being made; until then <a
+        href={href('getting-started/')}>getting started</a
+      > says how to install it from the repository.
+    </p>
+  </section>
+</Landing>

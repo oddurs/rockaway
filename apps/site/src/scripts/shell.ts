@@ -15,16 +15,6 @@ import { keyShortcut } from '@rockaway/react/key-hint';
 import { attachKeymap, detectPlatform, KeymapEngine } from '@rockaway/react/keymap';
 import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import {
-  attributesOf,
-  DENSITIES,
-  type Look,
-  MODES,
-  next,
-  readLook,
-  STORAGE_KEY,
-  THEMES,
-} from '../lib/look.ts';
-import {
   type Action,
   HELP_BINDINGS,
   type ShellBinding,
@@ -32,20 +22,7 @@ import {
   STATUS_SEGMENTS,
   shellSplit,
 } from '../lib/shell.ts';
-
-/** The reader's stored look, if the browser keeps one. */
-function stored(): string | null {
-  try {
-    return localStorage.getItem(STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-/** The built theme stylesheets, by theme, as the head's script left them. */
-function themeUrls(): Readonly<Record<string, string>> {
-  return (globalThis as { rockawayThemes?: Record<string, string> }).rockawayThemes ?? {};
-}
+import { lookSwitch } from './look-switch.ts';
 
 /** How long a message stays on the message line, as StatusMessage keeps it. */
 const MESSAGE_FOR = 4000;
@@ -79,10 +56,9 @@ if (shell && panes && bar && main && page && help) {
 
   let stacked = false;
   let helping = false;
-  let look: Look = readLook(stored());
   /** The theme's glyphs: its border set draws the panes, its marks cut the bar. */
   const glyphs = (): Glyphs =>
-    (themeGlyphs as Readonly<Record<string, Glyphs>>)[look.theme] ?? themeGlyphs.default;
+    (themeGlyphs as Readonly<Record<string, Glyphs>>)[looks.current().theme] ?? themeGlyphs.default;
 
   /** Lay the panes and the bar out at the window's size, in whole cells. */
   const layout = (): void => {
@@ -236,77 +212,12 @@ if (shell && panes && bar && main && page && help) {
 
   // ── The look (0148) ────────────────────────────────────────────────────
 
-  /** Show the look on its buttons, with what each is for a reader. */
-  const label = (): void => {
-    for (const button of bar.querySelectorAll<HTMLElement>('[data-site-look]')) {
-      const part = button.dataset.siteLook as keyof Look;
-      const value = button.querySelector<HTMLElement>('[data-site-look-value]');
-      if (value) value.textContent = look[part];
-      button.setAttribute('aria-label', `${part[0]?.toUpperCase()}${part.slice(1)}: ${look[part]}`);
-    }
-  };
-
-  /** A theme's stylesheet, loaded once: the default theme is in the tokens already. */
-  const sheet = (theme: string): Promise<void> => {
-    const url = themeUrls()[theme];
-    if (!url || document.querySelector(`link[data-rk-look="${theme}"]`)) return Promise.resolve();
-    return new Promise((done) => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = url;
-      link.dataset.rkLook = theme;
-      link.addEventListener('load', () => done(), { once: true });
-      link.addEventListener('error', () => done(), { once: true });
-      document.head.append(link);
-    });
-  };
-
-  /** Apply a look: its stylesheet first, then the attributes, then the screen at the new cell. */
-  let choosing = 0;
-  const choose = async (chosen: Look, said: string): Promise<void> => {
-    // The next key reads this look, even while its stylesheet is on its way.
-    look = chosen;
-    const turn = ++choosing;
-    await sheet(chosen.theme);
-    if (turn !== choosing) return;
-    const root = document.documentElement;
-    for (const [name, value] of Object.entries(attributesOf(look))) {
-      if (value === undefined) root.removeAttribute(name);
-      else root.setAttribute(name, value);
-    }
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(look));
-    } catch {
-      // A private window keeps nothing: the look holds for this page.
-    }
-    label();
+  // The theme, mode and density buttons in the status bar, and their keys.
+  const looks = lookSwitch(bar, (_look, said) => {
     layout();
     follow();
-    document.dispatchEvent(new CustomEvent('rk:look', { detail: look }));
     say(said);
-  };
-
-  const turn = {
-    theme: (step: number) => {
-      const theme = next(THEMES, look.theme, step);
-      void choose({ ...look, theme }, `Theme: ${theme}.`);
-    },
-    mode: () => {
-      const mode = next(MODES, look.mode);
-      void choose({ ...look, mode }, `Mode: ${mode}.`);
-    },
-    density: () => {
-      const density = next(DENSITIES, look.density);
-      void choose({ ...look, density }, `Density: ${density}.`);
-    },
-  };
-  for (const button of bar.querySelectorAll<HTMLElement>('[data-site-look]')) {
-    const part = button.dataset.siteLook;
-    button.addEventListener('click', () =>
-      part === 'theme' ? turn.theme(1) : part === 'mode' ? turn.mode() : turn.density(),
-    );
-  }
-  label();
+  });
 
   // ── The keys ───────────────────────────────────────────────────────────
 
@@ -346,10 +257,10 @@ if (shell && panes && bar && main && page && help) {
     back: () => showHelp(false),
     'copy-text': () => copy('text'),
     'copy-ansi': () => copy('ANSI'),
-    theme: () => turn.theme(1),
-    'theme-back': () => turn.theme(-1),
-    mode: () => turn.mode(),
-    density: () => turn.density(),
+    theme: () => looks.theme(1),
+    'theme-back': () => looks.theme(-1),
+    mode: () => looks.mode(),
+    density: () => looks.density(),
   };
 
   const bindingFor = (binding: ShellBinding) => ({
