@@ -159,9 +159,11 @@
     --rk-palette-dark-cursor: oklch(61.5% 0.1394 244.9);
     --rk-palette-dark-cyan: oklch(67.9% 0.1019 187.4);
     --rk-palette-dark-faint: oklch(44.1% 0.0356 205.3);
+    --rk-palette-dark-focus: oklch(68.5% 0.1394 244.9);
     --rk-palette-dark-foreground: oklch(82.9% 0.0197 205.3);
     --rk-palette-dark-green: oklch(68.9% 0.1508 118.6);
     --rk-palette-dark-hover: oklch(31.7% 0.0448 219.8);
+    --rk-palette-dark-inverse: oklch(82.9% 0.0197 205.3);
     --rk-palette-dark-magenta: oklch(70.2% 0.2025 355.9);
     --rk-palette-dark-muted: oklch(70.3% 0.0284 205.3);
     --rk-palette-dark-red: oklch(73.04% 0.166 27.23);
@@ -193,9 +195,11 @@
     --rk-palette-light-cursor: oklch(61.5% 0.1394 244.9);
     --rk-palette-light-cyan: oklch(50.59% 0.0884 186.7);
     --rk-palette-light-faint: oklch(79.1% 0.0272 221.9);
+    --rk-palette-light-focus: oklch(51.32% 0.1353 247.1);
     --rk-palette-light-foreground: oklch(39.3% 0.0285 221.9);
     --rk-palette-light-green: oklch(50.59% 0.1195 119.5);
     --rk-palette-light-hover: oklch(92.1% 0.0264 90.1);
+    --rk-palette-light-inverse: oklch(39.3% 0.0285 221.9);
     --rk-palette-light-magenta: oklch(54.7% 0.2025 355.9);
     --rk-palette-light-muted: oklch(49.5% 0.0278 221.9);
     --rk-palette-light-red: oklch(53.6% 0.2064 27.1);
@@ -226,6 +230,7 @@
       --rk-palette-light-blue: oklch(51% 0.1394 244.9);
       --rk-palette-light-bright-red: oklch(42.23% 0.1691 34.35);
       --rk-palette-light-cyan: oklch(49.9% 0.1019 187.4);
+      --rk-palette-light-focus: oklch(51% 0.1394 244.9);
       --rk-palette-light-green: oklch(50.51% 0.1383 119);
       --rk-palette-light-yellow: oklch(52% 0.1232 83.05);
     }
@@ -246,6 +251,7 @@
       --rk-palette-light-blue: oklch(51% 0.1394 244.9);
       --rk-palette-light-bright-red: oklch(42.2% 0.1691 34.29);
       --rk-palette-light-cyan: oklch(49.9% 0.1019 187.4);
+      --rk-palette-light-focus: oklch(51% 0.1394 244.9);
       --rk-palette-light-green: oklch(50.45% 0.1423 118.9);
       --rk-palette-light-yellow: oklch(51.96% 0.1255 83.73);
     }

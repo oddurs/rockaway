@@ -12,6 +12,7 @@ import '@rockaway/tokens/themes/ice.css';
 import '@rockaway/tokens/themes/ink.css';
 import '@rockaway/tokens/themes/phosphor.css';
 import '@rockaway/tokens/themes/ascii.css';
+import '@rockaway/tokens/themes/sunset.css';
 import '@rockaway/tokens/themes/catppuccin.css';
 import '@rockaway/tokens/themes/dracula.css';
 import '@rockaway/tokens/themes/nord.css';

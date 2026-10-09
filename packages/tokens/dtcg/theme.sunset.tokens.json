@@ -1,5 +1,5 @@
 {
-  "$description": "ASCII (cairn 0052). Generated from the theme inputs. Fitted to the contrast gate: light blue: #0074a3 → #00719f (for fg.accent on bg.accent.subtle); light cyan: #007b81 → #007279 (for fg.info on bg.page); light green: #008130 → #007f2f (for fg.success on bg.success.subtle); light bright-blue: #005c83 → #005176 (for fg.accent on bg.page, in more contrast); light bright-cyan: #006167 → #005257 (for fg.info on bg.page, in more contrast); light bright-green: #00671d → #005e17 (for fg.success on bg.page, in more contrast); light bright-yellow: #6e4c00 → #6a4900 (for fg.warning on bg.warning.subtle, in more contrast); light bright-red: #94221f → #92201e (for fg.danger on bg.danger.subtle, in more contrast).",
+  "$description": "Sunset (cairn 0052). Generated from the theme inputs.",
   "$extensions": {
     "dev.rockaway": {
       "kind": "preset",
@@ -13,14 +13,14 @@
     "$type": "color",
     "$description": "Raw colours, both modes. Read through `ansi.*`, which the mode points here.",
     "light": {
-      "$description": "ASCII, light: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
+      "$description": "Sunset, light: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
       "black": {
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.21,
-            0.0055,
-            230
+            0.29,
+            0.045,
+            258
           ]
         }
       },
@@ -28,9 +28,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.52,
-            0.16,
-            27
+            0.48,
+            0.145,
+            22
           ]
         }
       },
@@ -38,9 +38,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.515,
-            0.16,
-            150
+            0.47,
+            0.075,
+            182
           ]
         }
       },
@@ -48,9 +48,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.52,
-            0.16,
-            85
+            0.48,
+            0.09,
+            70
           ]
         }
       },
@@ -58,9 +58,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.51,
-            0.16,
-            230
+            0.49,
+            0.115,
+            40
           ]
         }
       },
@@ -68,9 +68,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.52,
-            0.16,
-            320
+            0.47,
+            0.115,
+            352
           ]
         }
       },
@@ -78,9 +78,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.495,
-            0.16,
-            200
+            0.46,
+            0.085,
+            248
           ]
         }
       },
@@ -88,9 +88,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.93,
-            0.0031,
-            230
+            0.92,
+            0.02,
+            75
           ]
         }
       },
@@ -98,9 +98,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.42,
-            0.006,
-            230
+            0.455,
+            0.04,
+            262
           ]
         }
       },
@@ -108,9 +108,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.435,
-            0.15,
-            27
+            0.4,
+            0.13,
+            22
           ]
         }
       },
@@ -118,9 +118,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.41,
-            0.15,
-            150
+            0.39,
+            0.065,
+            182
           ]
         }
       },
@@ -128,9 +128,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.43,
-            0.15,
-            85
+            0.4,
+            0.08,
+            68
           ]
         }
       },
@@ -138,9 +138,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.405,
-            0.15,
-            230
+            0.41,
+            0.1,
+            40
           ]
         }
       },
@@ -148,9 +148,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.44,
-            0.15,
-            320
+            0.39,
+            0.1,
+            352
           ]
         }
       },
@@ -158,9 +158,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.39,
-            0.15,
-            200
+            0.38,
+            0.075,
+            248
           ]
         }
       },
@@ -169,8 +169,8 @@
           "colorSpace": "oklch",
           "components": [
             0.99,
-            0.0017,
-            230
+            0.006,
+            80
           ]
         }
       },
@@ -178,9 +178,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.985,
-            0.0019,
-            230
+            0.965,
+            0.018,
+            78
           ]
         }
       },
@@ -188,9 +188,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            1,
-            0,
-            230
+            0.98,
+            0.012,
+            80
           ]
         }
       },
@@ -198,9 +198,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.958,
-            0.0025,
-            230
+            0.94,
+            0.022,
+            75
           ]
         }
       },
@@ -208,9 +208,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.935,
-            0.003,
-            230
+            0.915,
+            0.026,
+            72
           ]
         }
       },
@@ -218,9 +218,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.914,
-            0.0034,
-            230
+            0.89,
+            0.03,
+            70
           ]
         }
       },
@@ -228,9 +228,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.21,
-            0.0055,
-            230
+            0.29,
+            0.045,
+            258
           ]
         }
       },
@@ -238,9 +238,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.47,
-            0.006,
-            230
+            0.455,
+            0.04,
+            262
           ]
         }
       },
@@ -249,8 +249,8 @@
           "colorSpace": "oklch",
           "components": [
             0.68,
-            0.006,
-            230
+            0.03,
+            262
           ]
         }
       },
@@ -258,9 +258,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.92,
-            0.0033,
-            230
+            0.9,
+            0.025,
+            72
           ]
         }
       },
@@ -268,9 +268,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.63,
-            0.006,
-            230
+            0.62,
+            0.035,
+            258
           ]
         }
       },
@@ -278,9 +278,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.56,
-            0.006,
-            230
+            0.53,
+            0.045,
+            258
           ]
         }
       },
@@ -288,9 +288,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.52,
-            0.16,
-            230
+            0.57,
+            0.11,
+            62
           ]
         }
       },
@@ -298,9 +298,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.95,
+            0.88,
             0.045,
-            230
+            32
           ]
         }
       },
@@ -308,9 +308,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.51,
-            0.16,
-            230
+            0.57,
+            0.11,
+            62
           ]
         }
       },
@@ -318,9 +318,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.21,
-            0.0055,
-            230
+            0.52,
+            0.105,
+            36
           ]
         }
       },
@@ -328,9 +328,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.95,
-            0.045,
-            230
+            0.935,
+            0.03,
+            42
           ]
         }
       },
@@ -338,9 +338,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.95,
-            0.045,
-            200
+            0.935,
+            0.025,
+            248
           ]
         }
       },
@@ -348,9 +348,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.95,
-            0.045,
-            150
+            0.935,
+            0.025,
+            182
           ]
         }
       },
@@ -358,9 +358,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.95,
-            0.045,
-            85
+            0.94,
+            0.035,
+            80
           ]
         }
       },
@@ -368,22 +368,22 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.95,
-            0.045,
-            27
+            0.93,
+            0.03,
+            22
           ]
         }
       }
     },
     "dark": {
-      "$description": "ASCII, dark: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
+      "$description": "Sunset, dark: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
       "black": {
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.245,
-            0.0059,
-            230
+            0.285,
+            0.039,
+            256
           ]
         }
       },
@@ -391,9 +391,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.66,
-            0.16,
-            27
+            0.74,
+            0.12,
+            22
           ]
         }
       },
@@ -401,9 +401,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.66,
-            0.16,
-            150
+            0.78,
+            0.07,
+            178
           ]
         }
       },
@@ -411,9 +411,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.66,
-            0.16,
-            85
+            0.86,
+            0.09,
+            88
           ]
         }
       },
@@ -421,9 +421,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.66,
-            0.16,
-            230
+            0.78,
+            0.1,
+            42
           ]
         }
       },
@@ -431,9 +431,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.66,
-            0.16,
-            320
+            0.76,
+            0.09,
+            345
           ]
         }
       },
@@ -441,9 +441,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.66,
-            0.16,
-            200
+            0.78,
+            0.065,
+            238
           ]
         }
       },
@@ -452,8 +452,8 @@
           "colorSpace": "oklch",
           "components": [
             0.86,
-            0.0044,
-            230
+            0.022,
+            80
           ]
         }
       },
@@ -461,9 +461,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.36,
-            0.006,
-            230
+            0.47,
+            0.035,
+            262
           ]
         }
       },
@@ -471,9 +471,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.78,
-            0.15,
-            27
+            0.81,
+            0.1,
+            22
           ]
         }
       },
@@ -481,9 +481,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.78,
-            0.15,
-            150
+            0.85,
+            0.06,
+            178
           ]
         }
       },
@@ -491,9 +491,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.78,
-            0.15,
-            85
+            0.91,
+            0.075,
+            88
           ]
         }
       },
@@ -501,9 +501,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.78,
-            0.15,
-            230
+            0.85,
+            0.085,
+            45
           ]
         }
       },
@@ -511,9 +511,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.78,
-            0.15,
-            320
+            0.83,
+            0.075,
+            345
           ]
         }
       },
@@ -521,9 +521,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.78,
-            0.15,
-            200
+            0.85,
+            0.055,
+            238
           ]
         }
       },
@@ -531,9 +531,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.98,
-            0.002,
-            230
+            0.97,
+            0.012,
+            82
           ]
         }
       },
@@ -541,9 +541,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.165,
-            0.0048,
-            230
+            0.23,
+            0.036,
+            250
           ]
         }
       },
@@ -551,9 +551,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.205,
-            0.0054,
-            230
+            0.255,
+            0.037,
+            253
           ]
         }
       },
@@ -561,9 +561,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.245,
-            0.0059,
-            230
+            0.285,
+            0.039,
+            256
           ]
         }
       },
@@ -571,9 +571,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.27,
-            0.006,
-            230
+            0.315,
+            0.04,
+            260
           ]
         }
       },
@@ -581,9 +581,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.295,
-            0.006,
-            230
+            0.345,
+            0.042,
+            264
           ]
         }
       },
@@ -591,9 +591,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.94,
-            0.0029,
-            230
+            0.93,
+            0.026,
+            82
           ]
         }
       },
@@ -601,9 +601,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.74,
-            0.006,
-            230
+            0.77,
+            0.032,
+            268
           ]
         }
       },
@@ -611,9 +611,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.46,
-            0.006,
-            230
+            0.54,
+            0.03,
+            265
           ]
         }
       },
@@ -621,9 +621,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.26,
-            0.006,
-            230
+            0.31,
+            0.038,
+            258
           ]
         }
       },
@@ -631,9 +631,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.53,
-            0.006,
-            230
+            0.57,
+            0.038,
+            262
           ]
         }
       },
@@ -641,9 +641,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.6,
-            0.006,
-            230
+            0.64,
+            0.042,
+            266
           ]
         }
       },
@@ -651,9 +651,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.66,
-            0.16,
-            230
+            0.83,
+            0.09,
+            75
           ]
         }
       },
@@ -661,9 +661,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.26,
-            0.045,
-            230
+            0.43,
+            0.065,
+            25
           ]
         }
       },
@@ -671,9 +671,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.66,
-            0.16,
-            230
+            0.83,
+            0.09,
+            75
           ]
         }
       },
@@ -681,9 +681,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.94,
-            0.0029,
-            230
+            0.77,
+            0.095,
+            38
           ]
         }
       },
@@ -691,9 +691,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.26,
-            0.045,
-            230
+            0.29,
+            0.035,
+            42
           ]
         }
       },
@@ -701,9 +701,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.26,
-            0.045,
-            200
+            0.29,
+            0.035,
+            238
           ]
         }
       },
@@ -711,9 +711,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.26,
-            0.045,
-            150
+            0.29,
+            0.03,
+            178
           ]
         }
       },
@@ -721,9 +721,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.26,
-            0.045,
-            85
+            0.3,
+            0.03,
+            88
           ]
         }
       },
@@ -731,9 +731,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.26,
-            0.045,
-            27
+            0.29,
+            0.04,
+            22
           ]
         }
       }
@@ -786,7 +786,7 @@
     "$type": "fontFamily",
     "$description": "The characters chrome is drawn with (cairn 0091, 0119). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.",
     "border": {
-      "$description": "The theme draws with the ascii set; the others are here to be switched to.",
+      "$description": "The theme draws with the rounded set; the others are here to be switched to.",
       "single": {
         "horizontal": {
           "$value": "─"
@@ -964,94 +964,94 @@
       },
       "current": {
         "horizontal": {
-          "$value": "-"
+          "$value": "─"
         },
         "vertical": {
-          "$value": "|"
+          "$value": "│"
         },
         "top-left": {
-          "$value": "+"
+          "$value": "╭"
         },
         "top-right": {
-          "$value": "+"
+          "$value": "╮"
         },
         "bottom-left": {
-          "$value": "+"
+          "$value": "╰"
         },
         "bottom-right": {
-          "$value": "+"
+          "$value": "╯"
         },
         "tee-left": {
-          "$value": "+"
+          "$value": "┤"
         },
         "tee-right": {
-          "$value": "+"
+          "$value": "├"
         },
         "tee-up": {
-          "$value": "+"
+          "$value": "┴"
         },
         "tee-down": {
-          "$value": "+"
+          "$value": "┬"
         },
         "cross": {
-          "$value": "+"
+          "$value": "┼"
         }
       }
     },
     "mark": {
       "check": {
-        "$value": "x"
+        "$value": "✓"
       },
       "cross": {
-        "$value": "X"
+        "$value": "✗"
       },
       "bullet": {
-        "$value": "*"
+        "$value": "·"
       },
       "cursor": {
-        "$value": ">"
+        "$value": "▸"
       },
       "prompt": {
-        "$value": ">"
+        "$value": "›"
       },
       "expanded": {
-        "$value": "v"
+        "$value": "▾"
       },
       "collapsed": {
-        "$value": ">"
+        "$value": "▸"
       },
       "ellipsis": {
-        "$value": "~"
+        "$value": "…"
       },
       "dash": {
-        "$value": "-"
+        "$value": "–"
       },
       "radio": {
-        "$value": "*"
+        "$value": "●"
       },
       "radio-empty": {
-        "$value": "o"
+        "$value": "○"
       },
       "blank": {
         "$value": " "
       },
       "switch-thumb": {
-        "$value": "O"
+        "$value": "●"
       },
       "switch-track": {
-        "$value": "-"
+        "$value": "─"
       },
       "sort-ascending": {
-        "$value": "^"
+        "$value": "▴"
       },
       "sort-descending": {
-        "$value": "v"
+        "$value": "▾"
       },
       "overflow-start": {
-        "$value": "<"
+        "$value": "‹"
       },
       "overflow-end": {
-        "$value": ">"
+        "$value": "›"
       },
       "required": {
         "$value": "*"
@@ -1060,64 +1060,82 @@
         "$value": "!"
       },
       "external": {
-        "$value": "^"
+        "$value": "↗"
       }
     },
     "block": {
       "full": {
-        "$value": "#"
+        "$value": "█"
       },
       "dark": {
-        "$value": "%"
+        "$value": "▓"
       },
       "medium": {
-        "$value": ":"
+        "$value": "▒"
       },
       "light": {
-        "$value": "."
+        "$value": "░"
       },
       "caret": {
-        "$value": "|"
+        "$value": "▏"
       }
     },
     "bar": {
       "1": {
-        "$value": "_"
+        "$value": "▁"
       },
       "2": {
-        "$value": "_"
+        "$value": "▂"
       },
       "3": {
-        "$value": "."
+        "$value": "▃"
       },
       "4": {
-        "$value": "-"
+        "$value": "▄"
       },
       "5": {
-        "$value": "-"
+        "$value": "▅"
       },
       "6": {
-        "$value": "="
+        "$value": "▆"
       },
       "7": {
-        "$value": "="
+        "$value": "▇"
       },
       "8": {
-        "$value": "#"
+        "$value": "█"
       }
     },
     "spinner": {
       "1": {
-        "$value": "|"
+        "$value": "⠋"
       },
       "2": {
-        "$value": "/"
+        "$value": "⠙"
       },
       "3": {
-        "$value": "-"
+        "$value": "⠹"
       },
       "4": {
-        "$value": "\\"
+        "$value": "⠸"
+      },
+      "5": {
+        "$value": "⠼"
+      },
+      "6": {
+        "$value": "⠴"
+      },
+      "7": {
+        "$value": "⠦"
+      },
+      "8": {
+        "$value": "⠧"
+      },
+      "9": {
+        "$value": "⠇"
+      },
+      "10": {
+        "$value": "⠏"
       }
     },
     "delimiter": {
@@ -1133,55 +1151,55 @@
     "key": {
       "$description": "Key legends, for KeyHint (cairn 0132). Symbols in Unicode; words in ASCII, the only glyphs wider than a cell.",
       "ctrl": {
-        "$value": "Ctrl"
+        "$value": "⌃"
       },
       "alt": {
-        "$value": "Opt"
+        "$value": "⌥"
       },
       "shift": {
-        "$value": "Shift"
+        "$value": "⇧"
       },
       "meta": {
-        "$value": "Cmd"
+        "$value": "⌘"
       },
       "enter": {
-        "$value": "Enter"
+        "$value": "⏎"
       },
       "tab": {
-        "$value": "Tab"
+        "$value": "⇥"
       },
       "space": {
-        "$value": "Space"
+        "$value": "␣"
       },
       "backspace": {
-        "$value": "Bksp"
+        "$value": "⌫"
       },
       "delete": {
-        "$value": "Del"
+        "$value": "⌦"
       },
       "up": {
-        "$value": "Up"
+        "$value": "↑"
       },
       "down": {
-        "$value": "Down"
+        "$value": "↓"
       },
       "left": {
-        "$value": "Left"
+        "$value": "←"
       },
       "right": {
-        "$value": "Right"
+        "$value": "→"
       },
       "pageup": {
-        "$value": "PgUp"
+        "$value": "⇞"
       },
       "pagedown": {
-        "$value": "PgDn"
+        "$value": "⇟"
       },
       "home": {
-        "$value": "Home"
+        "$value": "↖"
       },
       "end": {
-        "$value": "End"
+        "$value": "↘"
       }
     }
   },

@@ -62,8 +62,8 @@
     --rk-checkbox-end: currentcolor;
     --rk-checkbox-mark: currentcolor;
 
-    background: var(--rk-fg-default);
-    color: var(--rk-bg-page);
+    background: var(--rk-bg-inverse);
+    color: var(--rk-fg-on-inverse);
   }
 
   .rk-checkbox-row[data-invalid] {

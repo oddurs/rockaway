@@ -40,6 +40,8 @@
       --rk-ansi-red: Highlight;
       --rk-ansi-selection: Highlight;
       --rk-ansi-cursor: CanvasText;
+      --rk-ansi-focus: CanvasText;
+      --rk-ansi-inverse: CanvasText;
 
       /* Surfaces collapse to the reader's canvas; borders do the separating. */
       --rk-bg-page: Canvas;
