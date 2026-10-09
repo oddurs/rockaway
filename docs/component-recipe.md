@@ -454,18 +454,25 @@ named, and review is what holds it.
    each control by `getByRole(role, { name })` with its plain words, so a glyph
    in the name fails to match. axe fails a control with no name. For a field,
    `checkField` after every story fails a mark that is not `aria-hidden` and a
-   name that holds a glyph. For anything else, only the stories' queries check
-   it.
+   name that holds a glyph. Outside a field, `checkNames` after every story
+   fails a name that holds a glyph, by any route a name is given:
+   `aria-labelledby`, `aria-label`, a label, `alt` or its content. The
+   ellipsis, dash and bullet marks are allowed there, because prose names hold
+   them (0252).
 4. **Behaviour comes from the behaviour layer.** The **Keyboard** story walks
    every key the metadata lists. `metadata.test.ts` fails a focusable component
    that names no focus state, and a key KeyHint cannot draw. `keymap.test.ts`
-   covers the page's own shortcuts, bound with `useKeymap`. No test finds a
-   hand-written key or focus listener in a component: review does.
+   covers the page's own shortcuts, bound with `useKeymap`.
+   `no-hand-listeners.test.ts` fails a hand-written key or focus listener in a
+   component: an `onKey…`, `onFocus…` or `onBlur…` prop or merged key,
+   `addEventListener` for one, or an assigned handler. Keymap's one document
+   listener is its listed exception (0252).
 5. **Styled from `data-*` state and semantic tokens only.** `metadata.test.ts`
    fails a state the stylesheet draws and the metadata does not name, and one
    it names that nothing draws. `variant-geometry.test.ts` fails a variant or
-   state that changes a size. No test fails a stylesheet that reads a token
-   other than a semantic one: review does.
+   state that changes a size. `semantic-tokens.test.ts` in @rockaway/css fails
+   a component stylesheet that reads a reference token (`--rk-ansi-*`,
+   `--rk-palette-*`) or writes a colour of its own (0252).
 6. **Ships a text snapshot.** The inline snapshots in `<name>.test.ts`, and
    the metadata's snapshots, which `metadata.test.ts` renders as the site draws
    them. The **Every variant** story ties the snapshot to the page:
