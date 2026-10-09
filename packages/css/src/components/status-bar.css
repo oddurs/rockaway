@@ -54,6 +54,8 @@
   @media (forced-colors: active) {
     .rk-status-segment[data-variant="mode"] {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }
