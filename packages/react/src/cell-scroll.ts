@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * A field's text kept on whole cells as it scrolls (cairn 0035).
  *
