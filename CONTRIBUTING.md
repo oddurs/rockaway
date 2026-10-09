@@ -84,8 +84,10 @@ and touches no other line:
 - Every component file needs `'use client'` as its first line if it uses a hook
   or an event handler. CI fails the packed build without it.
 - `packages/react/src/components/<name>.meta.ts`: its metadata (cairn 0047),
-  added to the list in `src/metadata/index.ts`. Then run
-  `pnpm --filter @rockaway/react metadata` to read its props and tokens.
+  and `<name>.fixture.ts` beside it, the component rendered once for the
+  metadata test. Then run `pnpm --filter @rockaway/react metadata`, which reads
+  its props and tokens and lists it in the generated registry,
+  `src/metadata/components.ts`.
   `test/metadata.test.ts` fails for a component exported without metadata, and
   for metadata that names a part, variant or state the component does not have.
 - Anything that scrolls takes `rk-scroll`, so the browser draws no scrollbar of
