@@ -50,10 +50,32 @@
     color: var(--rk-fg-muted);
   }
 
+  /*
+   * A label that does not fit is cut in the theme's ellipsis, not the font's
+   * (0231): the whole title stays in the text, which is found, copied and
+   * announced, and while it is marked cut the mark takes the label's last
+   * cell. With no script the label clips at its edge.
+   */
   .rk-tree-label {
+    display: flex;
     min-inline-size: 0;
     overflow: hidden;
-    text-overflow: ellipsis;
+  }
+
+  .rk-tree-text {
+    min-inline-size: 0;
+    overflow: hidden;
+  }
+
+  /* The mark's cell, which exists only while the label is cut: the state
+   * gives it content, and nothing about its size. */
+  .rk-tree-label::after {
+    flex: none;
+    inline-size: var(--rk-cell-width);
+  }
+
+  .rk-tree-label[data-rk-cut]::after {
+    content: attr(data-rk-ellipsis);
   }
 
   .rk-tree-item[data-hovered] .rk-tree-label {
