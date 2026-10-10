@@ -161,7 +161,6 @@ The component contract, proven on a first set of components.
 
 ### ready
 
-- [ ] [`0237`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0237-split-switch-radio-group-table-and-keymap-buffers-into-pure-halves.md) Split Switch, Radio group, Table and Keymap buffers into pure halves <sup>chore · components · p3</sup>
 - [ ] [`0242`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0242-hold-overlay-surfaces-to-their-anchor-s-grid-in-checkconformance.md) Hold overlay surfaces to their anchor's grid in checkConformance <sup>feature · tooling · p2</sup>
 - [ ] [`0249`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0249-own-a-skip-link-in-the-system.md) Own a skip link in the system <sup>feature · components · p2</sup>
 - [ ] [`0250`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0250-draw-a-scrolling-pane-s-position-in-its-border.md) Draw a scrolling Pane's position in its border <sup>feature · components · p3</sup>
@@ -269,6 +268,7 @@ The component contract, proven on a first set of components.
 - [x] [`0230`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0230-clip-checkcontinuity-to-what-a-scroll-region-shows.md) Clip checkContinuity to what a scroll region shows <sup>feature · tooling · p2</sup>
 - [x] [`0231`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0231-use-the-theme-s-ellipsis-in-the-dom.md) Use the theme's ellipsis in the DOM <sup>feature · components · p3</sup>
 - [x] [`0236`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0236-ink-shapes-inside-a-reversed-element-in-the-reversed-figure-under-forced-colours.md) Ink shapes inside a reversed element in the reversed figure under forced colours <sup>bug · css · p2</sup>
+- [x] [`0237`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0237-split-switch-radio-group-table-and-keymap-buffers-into-pure-halves.md) Split Switch, Radio group, Table and Keymap buffers into pure halves <sup>chore · components · p3</sup>
 - [x] [`0238`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0238-size-a-server-rendered-screen-from-its-content-not-screen-s-fallback.md) Size a server-rendered screen from its content, not Screen's fallback <sup>bug · components · p1</sup>
 - [x] [`0240`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0240-make-keyhint-phrasing-content-so-it-can-sit-inside-a-paragraph.md) Make KeyHint phrasing content, so it can sit inside a paragraph <sup>bug · components · p2</sup>
 - [x] [`0243`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0243-keep-a-titled-table-s-title-when-there-is-no-javascript.md) Keep a titled Table's title when there is no JavaScript <sup>bug · components · p1</sup>

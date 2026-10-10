@@ -205,7 +205,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -471,7 +470,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -855,7 +853,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       },
       {
         "name": "notation",
-        "type": "'platform' | 'terminal'",
+        "type": "KeyNotation",
         "required": false,
         "default": "'platform'"
       },
@@ -915,7 +913,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
     ]
@@ -938,7 +935,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
     ]
@@ -1615,7 +1611,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1837,7 +1832,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1863,7 +1857,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "string",
         "required": false,
         "description": "What an empty table says, in its first row. `renderEmptyState` replaces it.",
-        "default": "'Nothing here.'"
+        "default": "EMPTY"
       },
       {
         "name": "className",
@@ -1879,7 +1873,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1914,7 +1907,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",

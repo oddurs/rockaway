@@ -133,6 +133,16 @@ const checks: [string, unknown, unknown][] = [
   ],
   ['codeBlockText', pure.codeBlockText('a', { cols: 8 }).row(1), '│ a    │'],
   [
+    'tableBuffer',
+    pure.tableBuffer({ columns: [{ header: 'Name' }], rows: [{ cells: ['a.ts'] }] }).row(0),
+    '┌──────┐',
+  ],
+  [
+    'keymapHelpBuffer',
+    pure.keymapHelpBuffer([{ keys: 'mod+k', description: 'Palette' }], 'apple').row(0),
+    '⌘K  Palette',
+  ],
+  [
     'panesBuffer',
     pure
       .panesBuffer({ width: 16, height: 3 }, { panes: [{ size: 6, title: 'a' }, { title: 'b' }] })
