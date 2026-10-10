@@ -349,7 +349,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`#####·····` 43% · 16 of 37 done · due 2027-02-21
+`#####·····` 46% · 17 of 37 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -378,7 +378,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0148`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0148-switch-theme-mode-and-density-on-the-site-and-remember-the-choice-without-a-flash.md) Switch theme, mode and density on the site, and remember the choice without a flash <sup>feature · site · p0</sup>
 - [ ] [`0152`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0152-review-the-site-end-to-end-phone-zoom-keyboard-screen-reader-slow-network.md) Review the site end to end: phone, zoom, keyboard, screen reader, slow network <sup>chore · site · p0</sup>
-- [ ] [`0324`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0324-lay-the-site-out-in-the-three-tiers.md) Lay the site out in the three tiers <sup>feature · site · p1</sup>
 
 ### in review
 
@@ -404,6 +403,7 @@ A website built out of the system it documents, which is the only honest way
 - [x] [`0218`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0218-show-overflow-marks-where-scroll-state-queries-are-missing.md) Show overflow marks where scroll-state queries are missing <sup>feature · css · p2</sup>
 - [x] [`0273`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0273-show-a-phone-its-page-before-the-shell-s-script.md) Show a phone its page before the shell's script <sup>bug · site · p1</sup>
 - [x] [`0287`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0287-make-the-docs-left-navigation-a-sidebar-worth-using.md) Make the docs' left navigation a sidebar worth using <sup>feature · site · p0</sup>
+- [x] [`0324`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0324-lay-the-site-out-in-the-three-tiers.md) Lay the site out in the three tiers <sup>feature · site · p1</sup>
 
 ## v0.1 — v0.1 — first release
 
