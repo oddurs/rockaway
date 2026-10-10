@@ -131,6 +131,13 @@ const checks: [string, unknown, unknown][] = [
     ' └── a.ts ',
   ],
   ['codeBlockText', pure.codeBlockText('a', { cols: 8 }).row(1), '│ a    │'],
+  [
+    'panesBuffer',
+    pure
+      .panesBuffer({ width: 16, height: 3 }, { panes: [{ size: 6, title: 'a' }, { title: 'b' }] })
+      .row(0),
+    '┌ a ───┬ b ────┐',
+  ],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)
