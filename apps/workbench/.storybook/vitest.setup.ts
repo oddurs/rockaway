@@ -1,6 +1,7 @@
 import { afterEach, beforeAll, beforeEach, inject } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import type { OverBudget } from './budget.ts';
+import type { Platform } from './known.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
 
@@ -19,6 +20,8 @@ declare module 'vitest/browser' {
 declare module 'vitest' {
   interface ProvidedContext {
     plan: Plan;
+    project: string;
+    platform: Platform;
     /** Milliseconds a test may run before the page is taken to have stopped answering. */
     watchdog: number;
   }
@@ -44,6 +47,8 @@ setRunner({
   withoutScripts: (html) => commands.readWithoutScripts(html),
   // Each project says what it walks; see `vitest.config.ts`.
   plan: inject('plan'),
+  project: inject('project'),
+  platform: inject('platform'),
   record: (use) => commands.recordKnown(use),
   wheel: (selector, deltaY) => commands.wheel(selector, deltaY),
   // The provider's keyboard: trusted events, as a reader's keys are.

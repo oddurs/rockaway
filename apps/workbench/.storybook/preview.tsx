@@ -131,8 +131,11 @@ const preview: Preview = {
       },
       defaultViewport: 'rk-test-frame',
     },
-    // Every story is an accessibility test: a violation fails the run.
-    a11y: { test: 'error' },
+    // Every story is an accessibility test: a violation fails the run. The
+    // walk after the story runs axe itself (`afterEach` below), in every mode,
+    // so the addon's own run is off and axe's failures meet the known ones
+    // like any other check's.
+    a11y: { test: 'off' },
   },
 };
 
@@ -170,14 +173,23 @@ export const afterEach = async (context: StoryContext): Promise<void> => {
   // And outside a field, no name holds a glyph (0252): chrome is drawn, not said.
   if (parameters.names !== false) expectNames(context.canvasElement, { glyphs });
   const run = runner();
+  const a11y = context.parameters.a11y as { disable?: boolean } | undefined;
   // The paint budget (0113): named at the end of the run, never a failure.
   const over = overBudget(context.canvasElement);
   if (run && over.length > 0) await run.paint({ story: context.id, screens: over });
   await walk(context.id, context.canvasElement, parameters, {
+    project: run?.project,
+    platform: run?.platform,
     capture: run?.capture,
     plan: run?.plan,
     record: run?.record,
-    axe: () => axe(context),
+    axe: async () => {
+      if (a11y?.disable) return;
+      await axe({
+        ...context,
+        parameters: { ...context.parameters, a11y: { ...a11y, test: 'error' } },
+      });
+    },
   });
 };
 

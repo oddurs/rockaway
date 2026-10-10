@@ -680,6 +680,8 @@ async function inkRows(
  */
 export const Prints: Story = {
   args: { density: 'normal' },
+  // Playwright prints to PDF only in Chromium (cairn 0124).
+  tags: ['print'],
   render: () => (
     <Screen
       data-testid="print"

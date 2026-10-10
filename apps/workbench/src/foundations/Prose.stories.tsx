@@ -253,7 +253,10 @@ export const FortyCells: Story = {
     // table scrolls in its wrapper, which can mark its edges.
     const article = screen.querySelector<HTMLElement>('.rk-prose');
     await expect(article?.scrollWidth).toBe(article?.clientWidth);
+    // An inline box cannot scroll. Its clientWidth is 0 in every engine, and
+    // Firefox also gives it a scrollWidth, so it is left out (cairn 0124).
     const scrolls = [...screen.querySelectorAll<HTMLElement>('*')]
+      .filter((el) => getComputedStyle(el).display !== 'inline')
       .filter((el) => el.scrollWidth > el.clientWidth + 1)
       .map((el) => (el.matches('.rk-scroll-marks') ? 'table' : el.tagName.toLowerCase()));
     await expect(new Set(scrolls)).toEqual(new Set(['pre', 'table']));
