@@ -1,5 +1,5 @@
 {
-  "$description": "Dracula (cairn 0052). Imported from https://github.com/dracula/ghostty under MIT (Copyright (c) 2023 Dracula Theme). Fitted to the contrast gate: dark muted: #b5b5ac → #b8b8af (for fg.muted on bg.active); dark red: #ff5555 → #ff948d (for fg.danger on bg.surface); dark border: #7d7f89 → #81838e (for border.default on bg.subtle); dark bright-blue: #d6acff → #e6c0ff (for fg.accent on bg.surface, in more contrast); dark bright-red: #ff6e6e → #ffccc8 (for fg.danger on bg.page, in more contrast); dark bright-magenta: #ff92df → #ffc1f4 (for syntax.keyword on bg.surface, in more contrast).",
+  "$description": "Dracula (cairn 0052). Imported from https://github.com/dracula/ghostty under MIT (Copyright (c) 2023 Dracula Theme). Fitted to the contrast gate: dark muted: #b5b5ac → #b8b8af (for fg.muted on bg.active); dark red: #ff5555 → #ff948d (for fg.danger on bg.surface); dark border: #7d7f89 → #81838e (for border.default on bg.subtle); dark bright-blue: #d6acff → #e6c0ff (for fg.accent on bg.surface, in more contrast); dark bright-red: #ff6e6e → #ffccc8 (for fg.danger on bg.page, in more contrast); dark bright-magenta: #ff92df → #ffc1f4 (for syntax.keyword on bg.surface, in more contrast); dark surface-overlay: #3a3c48 → #383a45 (for fg.danger on bg.surface-overlay).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "imported",
@@ -193,6 +193,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.288,
+            0.0221,
+            277.5
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.312,
+            0.0216,
+            277.5
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.336,
+            0.0211,
+            277.5
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.35,
+            0.0206,
+            277.5
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -300,6 +340,26 @@
             0.403,
             0.0322,
             277.8
+          ]
+        }
+      },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.742,
+            0.1485,
+            301.9
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.977,
+            0.0079,
+            106.5
           ]
         }
       },
@@ -536,6 +596,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.288,
+            0.0221,
+            277.5
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.312,
+            0.0216,
+            277.5
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.336,
+            0.0211,
+            277.5
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.35,
+            0.0206,
+            277.5
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -646,6 +746,26 @@
           ]
         }
       },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.742,
+            0.1485,
+            301.9
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.977,
+            0.0079,
+            106.5
+          ]
+        }
+      },
       "tint-blue": {
         "$value": {
           "colorSpace": "oklch",
@@ -704,6 +824,7 @@
       "$type": "fontFamily",
       "mono": {
         "$value": [
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "SF Mono",
@@ -715,6 +836,7 @@
       },
       "display": {
         "$value": [
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "SF Mono",
@@ -1128,6 +1250,9 @@
       },
       "external": {
         "$value": "↗"
+      },
+      "separator": {
+        "$value": "›"
       }
     },
     "block": {

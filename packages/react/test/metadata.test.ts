@@ -99,6 +99,8 @@ const fileOf = (name: string): string => {
 const IMPLICIT: Readonly<Record<string, RegExp>> = {
   button: /<button[\s>]/,
   link: /<a [^>]*href=/,
+  list: /<ul[\s>]/,
+  radio: /<input [^>]*type="radio"/,
 };
 
 const FOCUSABLE = /<(?:button|input|select|textarea)[\s>]|<a [^>]*href=|tabindex="0"/;

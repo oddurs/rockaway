@@ -12,14 +12,18 @@ export interface Pair {
   readonly min: number;
 }
 
-const surfaces = ['bg.page', 'bg.surface', 'bg.subtle', 'bg.hover', 'bg.active'];
+/** The four layers (0307): every text role is readable on each. */
+const levels = ['bg.surface-sunken', 'bg.surface-base', 'bg.surface-raised', 'bg.surface-overlay'];
+const surfaces = ['bg.page', 'bg.surface', 'bg.subtle', 'bg.hover', 'bg.active', ...levels];
 
 export const pairs: readonly Pair[] = [
   { fg: 'fg.default', bg: surfaces, min: 7 },
   { fg: 'fg.muted', bg: surfaces, min: 4.5 },
   { fg: 'fg.on-inverse', bg: ['bg.inverse'], min: 4.5 },
+  // A selected row in a list or a tree reverses to the surface it sits on.
+  { fg: 'bg.surface', bg: ['bg.inverse'], min: 4.5 },
   ...intents.flatMap((i): Pair[] => [
-    { fg: `fg.${i}`, bg: ['bg.page', 'bg.surface', `bg.${i}.subtle`], min: 4.5 },
+    { fg: `fg.${i}`, bg: ['bg.page', 'bg.surface', ...levels, `bg.${i}.subtle`], min: 4.5 },
     { fg: `fg.on-${i}`, bg: [`bg.${i}.solid`, `bg.${i}.solid-hover`], min: 4.5 },
     { fg: `border.${i}`, bg: ['bg.page', 'bg.surface'], min: 3 },
   ]),
@@ -33,7 +37,7 @@ export const pairs: readonly Pair[] = [
   ...syntaxRoles.map(
     (role): Pair => ({
       fg: `syntax.${role}`,
-      bg: ['bg.surface', 'bg.subtle'],
+      bg: ['bg.surface', ...levels, 'bg.subtle'],
       min: 4.5,
     }),
   ),

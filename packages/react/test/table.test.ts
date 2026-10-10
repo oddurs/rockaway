@@ -1,9 +1,9 @@
 import { stringWidth, toText } from '@rockaway/grid';
-import { glyphsFor } from '@rockaway/tokens';
+import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import { createElement as h, type ReactNode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
-import { fitCell, tableBuffer, tableLayout } from '../src/components/table.pure.ts';
+import { fitCell, tableBuffer, tableHeight, tableLayout } from '../src/components/table.pure.ts';
 import {
   Cell,
   Column,
@@ -153,6 +153,65 @@ describe('tableBuffer', () => {
   });
 });
 
+describe('a window of rows (0281)', () => {
+  const MANY: TableText['rows'] = Array.from({ length: 8 }, (_, i) => ({
+    cells: [`file-${i}.ts`, String(100 * i), '2026-10-01'],
+    ...(i === 3 ? { cursor: true } : {}),
+  }));
+
+  test('shows that many rows from the offset, with the scrollbar inside the right edge', () => {
+    const at = (offset: number): string =>
+      toText(tableBuffer({ columns: COLUMNS, rows: MANY, width: 44, visible: 3, offset }));
+    expect([at(0), at(3), at(5)].join('\n')).toMatchInlineSnapshot(`
+      "┌───────────┬────────┬─────────────────────┐
+      │ Name     ▴│   Size │ Modified            │
+      ├───────────┼────────┼─────────────────────┤
+      │ file-0.ts │      0 │ 2026-10-01         █│
+      │ file-1.ts │    100 │ 2026-10-01         ░│
+      │ file-2.ts │    200 │ 2026-10-01         ░│
+      └───────────┴────────┴─────────────────────┘
+      ┌───────────┬────────┬─────────────────────┐
+      │ Name     ▴│   Size │ Modified            │
+      ├───────────┼────────┼─────────────────────┤
+      │▸file-3.ts │    300 │ 2026-10-01         ░│
+      │ file-4.ts │    400 │ 2026-10-01         █│
+      │ file-5.ts │    500 │ 2026-10-01         ░│
+      └───────────┴────────┴─────────────────────┘
+      ┌───────────┬────────┬─────────────────────┐
+      │ Name     ▴│   Size │ Modified            │
+      ├───────────┼────────┼─────────────────────┤
+      │ file-5.ts │    500 │ 2026-10-01         ░│
+      │ file-6.ts │    600 │ 2026-10-01         ░│
+      │ file-7.ts │    700 │ 2026-10-01         █│
+      └───────────┴────────┴─────────────────────┘"
+    `);
+  });
+
+  test('as tall as the window, whatever the rows; one cell wider, for the scrollbar', () => {
+    const plain = tableBuffer({ columns: COLUMNS, rows: MANY });
+    const windowed = tableBuffer({ columns: COLUMNS, rows: MANY, visible: 3 });
+    expect(windowed.height).toBe(tableHeight(3));
+    expect(windowed.width).toBe(plain.width + 1);
+    expect(tableBuffer({ columns: COLUMNS, rows: MANY.slice(0, 2), visible: 3 }).height).toBe(
+      tableHeight(3),
+    );
+  });
+
+  test('an offset past the end shows the last rows; before the start, the first', () => {
+    const last = toText(tableBuffer({ columns: COLUMNS, rows: MANY, visible: 3, offset: 99 }));
+    expect(last).toContain('file-7.ts');
+    expect(last).not.toContain('file-4.ts');
+    const first = toText(tableBuffer({ columns: COLUMNS, rows: MANY, visible: 3, offset: -2 }));
+    expect(first).toContain('file-0.ts');
+  });
+
+  test('every row fitting, the scrollbar is all thumb', () => {
+    const all = tableBuffer({ columns: COLUMNS, rows: ROWS, visible: 3 });
+    const column = [3, 4, 5].map((y) => all.at({ x: all.width - 2, y })?.ch);
+    expect(new Set(column)).toEqual(new Set([themeGlyphs.default.block.full]));
+  });
+});
+
 describe('tableLayout', () => {
   const columns: ColumnShape[] = [
     { header: 'Name' },
@@ -232,6 +291,34 @@ describe('on a server, with no script', () => {
     expect(html).toMatch(/--rk-table-columns:calc\(var\(--rk-cell-width\) \* 15\)/);
     // And the values are fitted to them, as the client fits them.
     expect(html).toContain('src/index.ts');
+  });
+
+  test('a window of rows is as tall as the window, its scrollbar drawn, before any script', () => {
+    const html = renderToString(
+      h(
+        Table,
+        { title: 'files', cols: 40, rows: 1, 'aria-label': 'files' },
+        h(TableHeader, null, ...columns()),
+        h(TableBody<(typeof FILES)[number]>, {
+          items: FILES,
+          // biome-ignore lint/correctness/noChildrenProp: as above
+          children: (file) =>
+            h(Row, { id: file.id }, h(Cell, null, file.name), h(Cell, null, file.size)),
+        }),
+      ),
+    );
+    const want = tableBuffer({
+      title: 'files',
+      width: 40,
+      visible: 1,
+      columns: [{ header: 'Name' }, { header: 'Size', width: 6, align: 'end' }],
+      rows: FILES.map((f) => ({ cells: [f.name, f.size] })),
+    });
+    // The screen's rows, then the scrollbar's: one of two rows shown, the thumb at the top.
+    const painted = rows(html);
+    for (const y of [0, 2, want.height - 1]) expect(painted[y]).toBe(want.row(y));
+    expect(painted.slice(want.height)).toEqual([themeGlyphs.default.block.full]);
+    expect(html).toContain('--rk-table-rows:1');
   });
 
   test('static rows are read too', () => {

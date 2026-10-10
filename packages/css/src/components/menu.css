@@ -80,6 +80,14 @@
     border: none;
   }
 
+  /* The comfort's air after a rule or a title, beside the rule and never in
+   * it (0317). Menu sets its comfort, compact unless asked, so a menu has no
+   * air by default; a rule that comes to rest on a half-row takes the half
+   * before it as well, in script, since the frame draws rules on whole rows. */
+  .rk-menu :is(.rk-menu-separator, .rk-menu-title) {
+    margin-block-end: calc(var(--rk-rhythm-group) * var(--rk-step-y));
+  }
+
   /* As wide as the rule needs: a cell of line and a cell of air before the
    * title, a cell of air and two of line after it. */
   .rk-menu-title {

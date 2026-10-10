@@ -11,7 +11,14 @@ import path from 'node:path';
 import { describe, expect, test } from 'vitest';
 
 const root = path.join(import.meta.dirname, '..', '..', '..');
-const DIRS = ['packages/css/src', 'packages/react/src', 'apps/site/src', 'apps/workbench/src'];
+const DIRS = [
+  'packages/css/src',
+  'packages/react/src',
+  'apps/web/app',
+  'apps/web/components',
+  'apps/web/lib',
+  'apps/workbench/src',
+];
 const FILES = /\.(css|astro|tsx?)$/;
 const DOUBLED = /text-?decoration(?:-?style)?["']?\s*:\s*[^;}\n]*\bdouble\b/gi;
 

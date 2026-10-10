@@ -124,6 +124,10 @@ export const OnAnElement: Story = {
  */
 export const FromTheSystem: Story = {
   name: 'From the system',
+  // Under Playwright, Firefox's emulated `prefers-contrast` reaches
+  // matchMedia but never the style sheets (measured: three seconds on, the
+  // standard reading still holds), so this cannot be shown there (cairn 0124).
+  tags: ['contrast-emulation'],
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)' }}>
       <Island />

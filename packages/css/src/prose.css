@@ -30,10 +30,11 @@
     overflow-wrap: anywhere;
     /* Prose wraps, even inside a screen, whose chrome never does. */
     white-space: normal;
-    /* Strokes weighted like the type beside them, as the glyph painter's are. */
-    --rk-stroke-light: calc(var(--rk-stroke-glyph-light) * 1em);
-    --rk-stroke-heavy: calc(var(--rk-stroke-glyph-heavy) * 1em);
-    --rk-stroke-gap: calc(var(--rk-stroke-glyph-gap) * 1em);
+    /* Strokes weighted like the type beside them, as the glyph painter's are,
+     * and a whole number of pixels, as theirs are (screen.css). */
+    --rk-stroke-light: max(1px, round(nearest, calc(var(--rk-stroke-glyph-light) * 1em), 1px));
+    --rk-stroke-heavy: max(1px, round(nearest, calc(var(--rk-stroke-glyph-heavy) * 1em), 1px));
+    --rk-stroke-gap: max(1px, round(nearest, calc(var(--rk-stroke-glyph-gap) * 1em), 1px));
   }
 
   /*
@@ -336,5 +337,48 @@
     block-size: var(--rk-cell-height);
     border: 0;
     color: var(--rk-border-subtle);
+  }
+
+  /* ── Reading rhythm (0322) ───────────────────────────────────────────────
+   * `data-rk-reading` on a block of prose sets it for reading at length, a
+   * docs page or an article: running text a quarter row looser than the cell,
+   * and blocks the comfort's rhythm gap apart, a row and a half when
+   * comfortable. It is a free zone (0311): what is inside is not on whole
+   * rows, so the block is a seam, its outer box closed to whole rows where the
+   * engine can round an auto height, and the page around it stays on the grid.
+   * Free zones are for `loose`, the level for docs and marketing pages.
+   *
+   * Headings keep the cell's leading, so a rule under one is still a row box,
+   * and code keeps it, since code's lines are the grid's.
+   */
+  .rk-prose[data-rk-reading] {
+    --rk-reading-leading: 1.25;
+    display: flex;
+    flex-direction: column;
+    /* On the block, whose line is the cell: a gap set on a child would be
+     * measured in the child's own, looser line. */
+    row-gap: calc(var(--rk-rhythm-gap) * var(--rk-step-y));
+  }
+
+  .rk-prose[data-rk-reading] > :where(*) {
+    margin-block: 0;
+  }
+
+  /* A new section: a row more than the gap. */
+  .rk-prose[data-rk-reading] > :where(* + h1, * + h2) {
+    margin-block-start: var(--rk-y-1);
+  }
+
+  /* Running text, set once on each block so nothing inside compounds it: a
+   * line height inherits as a length. */
+  .rk-prose[data-rk-reading]
+  > :where(p, ul, ol, dl, blockquote, figure, details, .rk-scroll-marks) {
+    line-height: calc(1lh * var(--rk-reading-leading));
+  }
+
+  @supports (block-size: calc-size(auto, size)) {
+    .rk-prose[data-rk-reading] {
+      block-size: calc-size(auto, round(up, size, var(--rk-cell-height)));
+    }
   }
 }

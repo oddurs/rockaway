@@ -24,6 +24,10 @@
       /* The palette first: everything else aliases it (0089). */
       --rk-ansi-background: Canvas;
       --rk-ansi-surface: Canvas;
+      --rk-ansi-surface-sunken: Canvas;
+      --rk-ansi-surface-base: Canvas;
+      --rk-ansi-surface-raised: Canvas;
+      --rk-ansi-surface-overlay: Canvas;
       --rk-ansi-subtle: Canvas;
       --rk-ansi-hover: Canvas;
       --rk-ansi-active: Canvas;
@@ -40,10 +44,16 @@
       --rk-ansi-red: Highlight;
       --rk-ansi-selection: Highlight;
       --rk-ansi-cursor: CanvasText;
+      --rk-ansi-focus: CanvasText;
+      --rk-ansi-inverse: CanvasText;
 
       /* Surfaces collapse to the reader's canvas; borders do the separating. */
       --rk-bg-page: Canvas;
       --rk-bg-surface: Canvas;
+      --rk-bg-surface-sunken: Canvas;
+      --rk-bg-surface-base: Canvas;
+      --rk-bg-surface-raised: Canvas;
+      --rk-bg-surface-overlay: Canvas;
       --rk-bg-subtle: Canvas;
       --rk-bg-hover: Canvas;
       --rk-bg-active: Canvas;

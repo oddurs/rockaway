@@ -6,7 +6,15 @@ import { importPalette, palette } from '../src/ansi.ts';
 import { contrast } from '../src/color.ts';
 import { describeAdjustment, fitContrast } from '../src/fit.ts';
 import { defaultTheme } from '../src/inputs.ts';
-import { importedNames, presetNames, themeContexts, themeGlyphs, themes } from '../src/themes.ts';
+import {
+  importedNames,
+  presetNames,
+  presetTheme,
+  themeContexts,
+  themeGlyphs,
+  themes,
+} from '../src/themes.ts';
+import sunsetFile from '../themes/sunset.json' with { type: 'json' };
 
 const root = path.join(import.meta.dirname, '..');
 
@@ -120,6 +128,113 @@ describe('fitting a palette to the gate', () => {
       foreground: grey,
     });
     expect(() => fitContrast(flat, 'dark')).toThrow(/cannot reach|could not be fitted/);
+  });
+});
+
+describe('sunset: a preset that writes its own palette', () => {
+  const sunset = themeContexts.find((t) => t.name === 'sunset');
+  const at = (mode: 'light' | 'dark', slot: 'focus' | 'blue' | 'inverse' | 'foreground') =>
+    sunset?.palettes[mode][slot];
+
+  test('passes the gate as written, in both modes, with nothing moved', () => {
+    expect(sunset?.kind).toBe('preset');
+    expect(sunset?.modes).toEqual(['light', 'dark']);
+    expect(sunset?.adjustments).toEqual([]);
+  });
+
+  test('focuses in amber and reverses to coral, apart from its accent and its ink', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      expect(at(mode, 'focus')).not.toEqual(at(mode, 'blue'));
+      expect(at(mode, 'inverse')).not.toEqual(at(mode, 'foreground'));
+    }
+  });
+
+  test('draws with rounded corners', () => {
+    expect(themeGlyphs.sunset.borderSet).toBe('rounded');
+    expect(themeGlyphs.sunset.border['top-left']).toBe('╭');
+    expect(themeGlyphs.sunset.border['bottom-right']).toBe('╯');
+  });
+
+  test('a palette missing a slot, or with a slot that is not oklch, is refused by name', () => {
+    const { foreground: _, ...rest } = sunsetFile.palette.dark;
+    const missing = { ...sunsetFile, palette: { ...sunsetFile.palette, dark: rest } };
+    expect(() => presetTheme(missing, 'sunset')).toThrow(/palette\.dark\.foreground must be oklch/);
+    const hex = {
+      ...sunsetFile,
+      palette: { ...sunsetFile.palette, light: { ...sunsetFile.palette.light, red: '#b71532' } },
+    };
+    expect(() => presetTheme(hex, 'sunset')).toThrow(/palette\.light\.red must be oklch/);
+    const extra = {
+      ...sunsetFile,
+      palette: {
+        ...sunsetFile.palette,
+        light: { ...sunsetFile.palette.light, orange: 'oklch(0.6 0.1 50)' },
+      },
+    };
+    expect(() => presetTheme(extra, 'sunset')).toThrow(/unknown slot "orange"/);
+  });
+
+  test('a palette the gate would have to move is refused, with what to write instead', () => {
+    // Muted text a step from the ground: the gate could fix it, but an authored palette is the author's.
+    const dim = {
+      ...sunsetFile,
+      palette: {
+        ...sunsetFile.palette,
+        dark: { ...sunsetFile.palette.dark, muted: 'oklch(0.4 0.055 330)' },
+      },
+    };
+    expect(() => presetTheme(dim, 'sunset')).toThrow(
+      /does not pass the contrast gate as written\. Write these instead:\n {2}dark muted: #/,
+    );
+  });
+});
+
+describe('focus and reverse video, as role slots of their own', () => {
+  test.each(themeContexts.filter((t) => t.name !== 'sunset').map((t) => [t.name, t] as const))(
+    '%s focuses in its accent and reverses to its ink, exactly as before the slots',
+    (_, theme) => {
+      for (const mode of theme.modes) {
+        const p = theme.palettes[mode];
+        expect(p.focus).toEqual(p.blue);
+        expect(p.inverse).toEqual(p.foreground);
+      }
+    },
+  );
+});
+
+describe('surface levels (0307)', () => {
+  const levels = ['surface-sunken', 'surface-base', 'surface-raised', 'surface-overlay'] as const;
+
+  test.each(themeContexts.flatMap((t) => t.modes.map((mode) => [t.name, mode, t] as const)))(
+    '%s %s: four distinct layers, each lifting toward the next',
+    (_, mode, theme) => {
+      const p = theme.palettes[mode];
+      const ls = levels.map((slot) => p[slot].l);
+      // Dark themes lift each layer; a light theme's layers rise toward white.
+      // Fitting may close a gap but never reverse one.
+      for (let i = 1; i < ls.length; i++) {
+        expect(ls[i] as number).toBeGreaterThanOrEqual(ls[i - 1] as number);
+      }
+      expect(new Set(levels.map((slot) => JSON.stringify(p[slot]))).size).toBe(4);
+    },
+  );
+
+  test('forced colours collapse all four to Canvas', async () => {
+    const css = await readFile(path.join(root, '..', 'css', 'src', 'forced-colors.css'), 'utf8');
+    for (const level of levels) {
+      expect(css).toContain(`--rk-bg-${level}: Canvas;`);
+      expect(css).toContain(`--rk-ansi-${level}: Canvas;`);
+    }
+  });
+
+  test('the gate moves a layer, never a text colour, to hold text on a layer', () => {
+    for (const theme of themeContexts) {
+      for (const adjustment of theme.adjustments) {
+        if (/ on bg\.surface-/.test(adjustment.because)) {
+          expect(adjustment.slot).toMatch(/^surface-/);
+        }
+      }
+    }
   });
 });
 
