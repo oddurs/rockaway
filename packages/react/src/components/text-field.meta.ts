@@ -155,11 +155,12 @@ export const textFieldMeta: ComponentMetaInput = defineMeta({
       text: toText(
         formBuffer(
           [
-            { label: 'Name', control: textFieldBuffer({ value: 'Ada Lovelace' }) },
+            { label: 'Name', control: textFieldBuffer({ value: 'Ada Lovelace' }), box: true },
             {
               label: 'Email',
               required: true,
               control: textFieldBuffer({ value: 'ada@' }),
+              box: true,
               error: 'Enter an email address.',
             },
             { control: textFieldBuffer({ size: 'lg', label: 'Repository', value: 'rockaway' }) },
