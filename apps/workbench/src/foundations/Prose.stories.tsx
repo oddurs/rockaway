@@ -19,7 +19,7 @@ import fixture from './prose.fixture.md?raw';
  * The wrapper is a screen only in the sense conformance needs: a box that says
  * how big a cell is, so every box inside can be measured in cells.
  */
-function ProseOnTheGrid({ cols }: { cols?: number }) {
+function ProseOnTheGrid({ cols, reading = false }: { cols?: number; reading?: boolean }) {
   // A box that scrolls has to be reachable by keyboard, so code and tables
   // take a tab stop, as the site's pipeline gives them. A table is wrapped,
   // and the wrapper scrolls, so it can show its overflow marks (0208).
@@ -36,10 +36,16 @@ function ProseOnTheGrid({ cols }: { cols?: number }) {
     <div
       className="rk-screen"
       data-testid="prose"
+      // Prose set for reading is a free zone, which only `loose` allows (0311).
+      {...(reading ? { 'data-rk-conformance': 'loose' } : {})}
       style={cols === undefined ? undefined : { inlineSize: `calc(${cols} * 1ch)` }}
     >
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: the fixture is ours, rendered from Markdown */}
-      <article className="rk-prose" dangerouslySetInnerHTML={{ __html: html }} />
+      <article
+        className="rk-prose"
+        {...(reading ? { 'data-rk-reading': '' } : {})}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: the fixture is ours, rendered from Markdown
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     </div>
   );
 }
@@ -152,6 +158,53 @@ export const Fixture: Story = {
 
     // Lists are still lists: the markers are native, only restyled.
     await expect(canvas.getAllByRole('list').length).toBeGreaterThanOrEqual(4);
+  },
+};
+
+/**
+ * Set for reading (0322): running text a quarter row looser than the cell,
+ * blocks a row and a half apart, headings and code still on the cell's line.
+ * A free zone, so the screen is `loose`; the block is a seam, so its outer box
+ * is whole rows at every density and the page after it stays on the grid.
+ */
+export const Reading: Story = {
+  args: { reading: true },
+  play: async ({ canvas }) => {
+    const screen = canvas.getByTestId('prose');
+    const article = screen.querySelector<HTMLElement>('.rk-prose');
+    if (!article) throw new Error('no prose');
+    const root = document.documentElement;
+    const was = root.dataset.density;
+    try {
+      for (const density of DENSITIES) {
+        root.dataset.density = density;
+        await frame();
+        measure(screen);
+        await frame();
+        const cell = cellOf(screen).height;
+        const line = (el: Element | null) =>
+          el ? Number.parseFloat(getComputedStyle(el).lineHeight) : Number.NaN;
+        // Running text is looser; a heading and code keep the cell's line.
+        expect(line(article.querySelector(':scope > p')), density).toBeCloseTo(cell * 1.25, 1);
+        expect(line(article.querySelector(':scope > ul li')), density).toBeCloseTo(cell * 1.25, 1);
+        expect(line(article.querySelector(':scope > h2')), density).toBeCloseTo(cell, 1);
+        expect(line(article.querySelector(':scope > pre')), density).toBeCloseTo(cell, 1);
+        // Blocks are a row and a half apart.
+        expect(Number.parseFloat(getComputedStyle(article).rowGap) / cell, density).toBeCloseTo(
+          1.5,
+          2,
+        );
+        // The seam: the block is whole rows, however its inside is spaced.
+        const rows = article.getBoundingClientRect().height / cell;
+        expect(Math.abs(rows - Math.round(rows)), `${density}: ${rows} rows`).toBeLessThan(1 / 32);
+        expectConformance(screen);
+      }
+    } finally {
+      if (was === undefined) delete root.dataset.density;
+      else root.dataset.density = was;
+      await frame();
+      measure(screen);
+    }
   },
 };
 
