@@ -238,7 +238,14 @@ export const Resize: Story = {
               <input
                 aria-label="note"
                 defaultValue=""
-                style={{ font: 'inherit', inlineSize: '20ch' }}
+                // A bare input, a row tall at every density, as a field's box is.
+                style={{
+                  font: 'inherit',
+                  inlineSize: '20ch',
+                  blockSize: 'var(--rk-cell-height)',
+                  padding: 0,
+                  border: 'none',
+                }}
               />
             </Pane>
           </Panes>

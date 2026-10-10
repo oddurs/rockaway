@@ -28,7 +28,7 @@ review and must follow the same rule.
 - [x] A check after every story fails any element whose computed overflow scrolls without `scrollbar-width: none`, with a fixture proving it fails
 - [x] A run with classic scrollbars forced on, if Chromium allows it, shows List conforming and one scrollbar only; if it cannot be forced, the item says why
 - [x] Horizontally scrolling prose shows `mark.overflow-start`/`-end` at the edge with more (this absorbs 0187)
-- [ ] `docs/concept.md` states the rule, and the recipe (0134) says how a new scroll region shows its position
+- [x] `docs/concept.md` states the rule, and the recipe (0134) says how a new scroll region shows its position
 
 ## 2026-10-03
 
@@ -45,3 +45,7 @@ Overflow marks are CSS only. The region is a one-column grid as wide as its cont
 ## 2026-10-03
 
 Criterion 5 is half done. docs/concept.md has section 10, and CONTRIBUTING's Adding a component says how a new scroll region shows its position. The recipe (0134) does not exist yet, so it is unticked; 0134 has a note to carry it. The check reads computed style, not pixels (0207), and it covers the story's canvas only, not the workbench page around it.
+
+## 2026-10-03
+
+Criterion 5: concept.md section 10 states the rule, and docs/component-recipe.md (0134) says how a new scroll region shows its position, under Scrolling: rk-scroll, a scrollbar column for rows or rk-scroll-marks across, and the classic-scrollbars tag.

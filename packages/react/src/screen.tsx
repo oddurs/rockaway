@@ -13,6 +13,10 @@
  * is measured, the cell is `1ch` by `1lh` — the font's own cell, which is what
  * the measurement will find — so a screen with a fixed size in cells does not
  * change size when it hydrates.
+ *
+ * A screen that fills a box with CSS `resize` shares its last cell with the
+ * browser's resize grip, which some engines draw over the box's corner: size
+ * such a box some other way, or a cell larger than the screen.
  */
 import type { Buffer, Size } from '@rockaway/grid';
 import {
@@ -85,6 +89,7 @@ export function Screen({
   ...rest
 }: ScreenProps): ReactNode {
   const host = useRef<HTMLDivElement>(null);
+  const probe = useRef<HTMLSpanElement>(null);
   // Unmeasured on the server and in the first client render, which have to
   // agree; the layout effect measures before the browser paints.
   const [cell, setCell] = useState<CellMetrics | undefined>(undefined);
@@ -126,6 +131,12 @@ export function Screen({
       frameId = requestAnimationFrame(remeasure);
     });
     observer.observe(el);
+    // A screen given its size in cells sizes its own box from the cell it
+    // measured, so a new density, a font that loads late or a reader's larger
+    // text changes the cell without resizing that box, and the observer above
+    // never hears of it (cairn 0199). The probe is one cell, in the units that
+    // are one cell, so it resizes whenever the cell does.
+    if (probe.current) observer.observe(probe.current);
     return () => {
       cancelAnimationFrame(frameId);
       observer.disconnect();
@@ -187,9 +198,21 @@ export function Screen({
           {typeof children === 'function' ? children(size) : children}
         </div>
       )}
+      <span ref={probe} aria-hidden="true" style={PROBE} />
     </div>
   );
 }
+
+/** One cell, in the units that are one cell: `1ch` by `1lh`. Unseen, and on the grid at the origin. */
+const PROBE: CSSProperties = {
+  position: 'absolute',
+  insetBlockStart: 0,
+  insetInlineStart: 0,
+  inlineSize: '1ch',
+  blockSize: '1lh',
+  visibility: 'hidden',
+  pointerEvents: 'none',
+};
 
 const sameCell = (a: CellMetrics, b: CellMetrics): boolean =>
   a.width === b.width && a.height === b.height;
