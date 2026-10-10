@@ -44,8 +44,32 @@
  *
  * Every Link inside then navigates through the router, and a modified click
  * (a new tab, a download) is still the browser's.
+ *
+ * A router's navigate cannot prefetch, and cannot be a framework's own link.
+ * For that (cairn 0300), supply the link itself:
+ *
+ *   import NextLink from 'next/link';
+ *   <LinkComponentProvider component={NextLink}>…</LinkComponentProvider>
+ *
+ * Every Link inside then renders through it, so the framework prefetches the
+ * page when the link is seen or pointed at, and follows it itself. Without a
+ * provider, and on a server with no script, a Link is a real `a href`, which
+ * is also what the framework's own link renders. Use one of the two for
+ * navigation, not both: a framework link already follows itself.
  */
-import { type CSSProperties, type ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
+import {
+  type AnchorHTMLAttributes,
+  type ComponentProps,
+  type ComponentType,
+  type CSSProperties,
+  createContext,
+  type ReactNode,
+  type Ref,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from 'react';
 import {
   Link as AriaLink,
   type LinkProps as AriaLinkProps,
@@ -60,6 +84,44 @@ import {
  * provide a router no Link can see.
  */
 export { RouterProvider } from 'react-aria-components';
+
+/**
+ * The app's own link: what a framework calls its `Link` (`next/link`, a
+ * router's `Link`). It is given the anchor's props (class, `data-*` states,
+ * ARIA, event handlers) and a `ref` to attach to the anchor it renders.
+ */
+export type LinkComponent = ComponentType<
+  AnchorHTMLAttributes<HTMLAnchorElement> & {
+    readonly href: string;
+    readonly ref?: Ref<HTMLAnchorElement>;
+  }
+>;
+
+const LinkComponentContext = createContext<LinkComponent | undefined>(undefined);
+
+export interface LinkComponentProviderProps {
+  /** The framework's link, which every link the system draws renders through. */
+  readonly component: LinkComponent;
+  readonly children?: ReactNode;
+}
+
+/**
+ * Renders every link the system draws through `component` (cairn 0300). A
+ * link that is disabled is never given to `component`.
+ */
+export function LinkComponentProvider({
+  component,
+  children,
+}: LinkComponentProviderProps): ReactNode {
+  return (
+    <LinkComponentContext.Provider value={component}>{children}</LinkComponentContext.Provider>
+  );
+}
+
+/** The link component the app supplied, or nothing: a plain anchor. */
+export function useLinkComponent(): LinkComponent | undefined {
+  return useContext(LinkComponentContext);
+}
 
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
@@ -94,6 +156,7 @@ export function Link({
   ...aria
 }: LinkProps): ReactNode {
   const { mark } = useGlyphs();
+  const Anchor = useLinkComponent();
   const newTab = aria.target === '_blank';
   // An anchor, or a span when disabled: React Aria types it as the anchor.
   const ref = useRef<HTMLAnchorElement>(null);
@@ -103,7 +166,25 @@ export function Link({
     if (el) el.toggleAttribute('data-rk-alone', standsAlone(el));
   });
   return (
-    <AriaLink {...aria} ref={ref} className={cx('rk-link', className)}>
+    <AriaLink
+      {...aria}
+      ref={ref}
+      className={cx('rk-link', className)}
+      {...(Anchor === undefined
+        ? {}
+        : {
+            // A disabled link goes nowhere, so the framework never sees it: its own
+            // click would follow the link React Aria has just refused to.
+            render: (props: object) =>
+              'href' in props && !(props as { 'aria-disabled'?: unknown })['aria-disabled'] ? (
+                <Anchor {...(props as ComponentProps<LinkComponent>)} />
+              ) : 'href' in props ? (
+                <a {...(props as ComponentProps<'a'>)} />
+              ) : (
+                <span {...props} />
+              ),
+          })}
+    >
       {({ isCurrent }) => (
         <>
           {/* The cell before the link, which the cursor mark borrows. */}
