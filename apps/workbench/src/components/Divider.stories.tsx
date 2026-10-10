@@ -11,9 +11,10 @@ import {
 import { expectContinuity, screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { cellsOf, cellsOfBuffer } from '../cells.ts';
+import { tab } from '../keys.ts';
 
 const meta = {
   title: 'Components/Divider',
@@ -307,11 +308,11 @@ export const Keyboard: Story = {
   play: async ({ canvas }) => {
     const rule = canvas.getByRole('separator', { name: 'unstaged' });
     expect(rule.tabIndex).toBe(-1);
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Stage' }));
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Discard' }));
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Stage' }));
   },
 };
