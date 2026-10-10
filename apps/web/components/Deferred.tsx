@@ -67,12 +67,27 @@ function Gate({ id, children }: { readonly id: string; readonly children: ReactN
   return children;
 }
 
+/**
+ * Hold the first frame until a part's HTML is in place. React writes a large
+ * part after the page, for a script beside it to move in (its progressive
+ * chunk size), so on a slow connection the browser could paint the page with
+ * the part's box empty and then fill it: everything under it moved. The
+ * part ends in a marker, and the head asks the browser not to render until
+ * that marker is parsed (`rel="expect"`, which React hoists to the head);
+ * the script that moves the part in follows it at once. A browser that does
+ * not know `expect` renders as before.
+ */
+const expect = (end: string) => ({ rel: 'expect', href: `#${end}`, blocking: 'render' });
+
 export function Deferred({ children }: { readonly children: ReactNode }): ReactNode {
   const id = useId();
+  const end = `${id}end`;
   return (
     <div data-site-deferred={id} className="site-deferred">
+      <link {...expect(end)} />
       <Suspense fallback={null}>
         <Gate id={id}>{children}</Gate>
+        <span id={end} hidden />
       </Suspense>
     </div>
   );
