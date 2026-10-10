@@ -194,6 +194,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.935,
+            0.026,
+            74
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.953,
+            0.021,
+            76
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.971,
+            0.016,
+            78
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.988,
+            0.01,
+            82
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -554,6 +594,46 @@
             0.255,
             0.037,
             253
+          ]
+        }
+      },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2,
+            0.034,
+            248
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.235,
+            0.036,
+            251
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.265,
+            0.038,
+            254
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.295,
+            0.04,
+            257
           ]
         }
       },

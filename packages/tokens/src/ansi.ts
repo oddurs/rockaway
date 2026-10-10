@@ -45,6 +45,10 @@ export type AnsiSlot = (typeof ansiSlots)[number];
 export const roleSlots = [
   'background',
   'surface',
+  'surface-sunken',
+  'surface-base',
+  'surface-raised',
+  'surface-overlay',
   'subtle',
   'hover',
   'active',
@@ -75,6 +79,8 @@ export const slotHue = { red: 27, green: 150, yellow: 85, magenta: 320, cyan: 20
 interface Ramp {
   readonly background: number;
   readonly surface: number;
+  /** Four layers, a small step apart (0307). Not tied to the other grounds. */
+  readonly levels: readonly [number, number, number, number];
   readonly subtle: number;
   readonly hover: number;
   readonly active: number;
@@ -99,6 +105,7 @@ const RAMP: Readonly<Record<Mode, Ramp>> = {
   dark: {
     background: 0.165,
     surface: 0.205,
+    levels: [0.175, 0.2, 0.225, 0.25],
     subtle: 0.245,
     hover: 0.27,
     active: 0.295,
@@ -121,6 +128,7 @@ const RAMP: Readonly<Record<Mode, Ramp>> = {
   light: {
     background: 0.985,
     surface: 1,
+    levels: [0.962, 0.974, 0.987, 1],
     subtle: 0.958,
     hover: 0.935,
     active: 0.914,
@@ -170,6 +178,10 @@ export function palette(inputs: ThemeInputs, mode: Mode): Palette {
   return {
     background: grey(ramp.background),
     surface: grey(ramp.surface),
+    'surface-sunken': grey(ramp.levels[0]),
+    'surface-base': grey(ramp.levels[1]),
+    'surface-raised': grey(ramp.levels[2]),
+    'surface-overlay': grey(ramp.levels[3]),
     subtle: grey(ramp.subtle),
     hover: grey(ramp.hover),
     active: grey(ramp.active),
@@ -270,11 +282,20 @@ export function importPalette(theme: TerminalTheme): Palette {
   const between = (a: Oklch, b: Oklch, t: number): Oklch =>
     round({ l: a.l + (b.l - a.l) * t, c: a.c + (b.c - a.c) * t, h: a.h });
   const tintOf = (colour: Oklch): Oklch => between(background, colour, 0.14);
+  // The four layers (0307) step from the background toward the foreground: a
+  // dark theme's page is its sunken level and each layer lifts; a light
+  // theme's page is its overlay and each layer below it sinks.
+  const level = (steps: number): Oklch => between(background, foreground, steps * 0.035);
+  const dark = background.l < 0.5;
 
   return {
     ...slot,
     background,
     surface: between(background, foreground, 0.05),
+    'surface-sunken': level(dark ? 0 : 3),
+    'surface-base': level(dark ? 1 : 2),
+    'surface-raised': level(dark ? 2 : 1),
+    'surface-overlay': level(dark ? 3 : 0),
     subtle: between(background, foreground, 0.09),
     hover: between(background, foreground, 0.13),
     active: between(background, foreground, 0.17),

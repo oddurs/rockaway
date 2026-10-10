@@ -147,6 +147,26 @@
   inherits: true;
 }
 
+@property --rk-ansi-surface-base {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-surface-overlay {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-surface-raised {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-surface-sunken {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-ansi-tint-blue {
   syntax: '*';
   inherits: true;
@@ -291,6 +311,26 @@
 }
 
 @property --rk-bg-surface {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-bg-surface-base {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-bg-surface-overlay {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-bg-surface-raised {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-bg-surface-sunken {
   syntax: '*';
   inherits: true;
 }
@@ -1588,6 +1628,30 @@
   initial-value: oklch(25.7% 0.0234 280.5);
 }
 
+@property --rk-palette-dark-surface-base {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(24.8% 0.0228 280.5);
+}
+
+@property --rk-palette-dark-surface-overlay {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(29.1% 0.0256 280.5);
+}
+
+@property --rk-palette-dark-surface-raised {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(26.9% 0.0242 280.5);
+}
+
+@property --rk-palette-dark-surface-sunken {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(22.6% 0.0214 280.5);
+}
+
 @property --rk-palette-dark-tint-blue {
   syntax: '<color>';
   inherits: true;
@@ -1944,6 +2008,30 @@
   initial-value: oklch(89.3% 0.0143 277.2);
 }
 
+@property --rk-palette-light-surface-base {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(88.5% 0.0173 277.2);
+}
+
+@property --rk-palette-light-surface-overlay {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(91.3% 0.0068 277.2);
+}
+
+@property --rk-palette-light-surface-raised {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(89.9% 0.012 277.2);
+}
+
+@property --rk-palette-light-surface-sunken {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(88.1% 0.0225 277.2);
+}
+
 @property --rk-palette-light-tint-blue {
   syntax: '<color>';
   inherits: true;
@@ -2288,6 +2376,10 @@
     --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
     --rk-ansi-subtle: light-dark(var(--rk-palette-light-subtle), var(--rk-palette-dark-subtle));
     --rk-ansi-surface: light-dark(var(--rk-palette-light-surface), var(--rk-palette-dark-surface));
+    --rk-ansi-surface-base: light-dark(var(--rk-palette-light-surface-base), var(--rk-palette-dark-surface-base));
+    --rk-ansi-surface-overlay: light-dark(var(--rk-palette-light-surface-overlay), var(--rk-palette-dark-surface-overlay));
+    --rk-ansi-surface-raised: light-dark(var(--rk-palette-light-surface-raised), var(--rk-palette-dark-surface-raised));
+    --rk-ansi-surface-sunken: light-dark(var(--rk-palette-light-surface-sunken), var(--rk-palette-dark-surface-sunken));
     --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
     --rk-ansi-tint-cyan: light-dark(var(--rk-palette-light-tint-cyan), var(--rk-palette-dark-tint-cyan));
     --rk-ansi-tint-green: light-dark(var(--rk-palette-light-tint-green), var(--rk-palette-dark-tint-green));
@@ -2318,6 +2410,10 @@
     --rk-bg-success-solid-hover: var(--rk-ansi-bright-green);
     --rk-bg-success-subtle: var(--rk-ansi-tint-green);
     --rk-bg-surface: var(--rk-ansi-surface);
+    --rk-bg-surface-base: var(--rk-ansi-surface-base);
+    --rk-bg-surface-overlay: var(--rk-ansi-surface-overlay);
+    --rk-bg-surface-raised: var(--rk-ansi-surface-raised);
+    --rk-bg-surface-sunken: var(--rk-ansi-surface-sunken);
     --rk-bg-warning-solid: var(--rk-ansi-yellow);
     --rk-bg-warning-solid-hover: var(--rk-ansi-bright-yellow);
     --rk-bg-warning-subtle: var(--rk-ansi-tint-yellow);
@@ -2561,6 +2657,10 @@
     --rk-palette-dark-selection: oklch(26% 0.045 262);
     --rk-palette-dark-subtle: oklch(24.5% 0.0059 262);
     --rk-palette-dark-surface: oklch(20.5% 0.0054 262);
+    --rk-palette-dark-surface-base: oklch(20% 0.0053 262);
+    --rk-palette-dark-surface-overlay: oklch(25% 0.006 262);
+    --rk-palette-dark-surface-raised: oklch(22.5% 0.0057 262);
+    --rk-palette-dark-surface-sunken: oklch(17.5% 0.005 262);
     --rk-palette-dark-tint-blue: oklch(26% 0.045 262);
     --rk-palette-dark-tint-cyan: oklch(26.04% 0.0443 200.1);
     --rk-palette-dark-tint-green: oklch(26% 0.045 150);
@@ -2597,6 +2697,10 @@
     --rk-palette-light-selection: oklch(94.54% 0.0278 246);
     --rk-palette-light-subtle: oklch(95.8% 0.0025 262);
     --rk-palette-light-surface: oklch(100% 0 262);
+    --rk-palette-light-surface-base: oklch(97.4% 0.0021 262);
+    --rk-palette-light-surface-overlay: oklch(100% 0 262);
+    --rk-palette-light-surface-raised: oklch(98.7% 0.0018 262);
+    --rk-palette-light-surface-sunken: oklch(96.2% 0.0024 262);
     --rk-palette-light-tint-blue: oklch(94.54% 0.0278 246);
     --rk-palette-light-tint-cyan: oklch(95% 0.045 200);
     --rk-palette-light-tint-green: oklch(95% 0.045 150);
@@ -2810,6 +2914,10 @@
     --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
     --rk-ansi-subtle: light-dark(var(--rk-palette-light-subtle), var(--rk-palette-dark-subtle));
     --rk-ansi-surface: light-dark(var(--rk-palette-light-surface), var(--rk-palette-dark-surface));
+    --rk-ansi-surface-base: light-dark(var(--rk-palette-light-surface-base), var(--rk-palette-dark-surface-base));
+    --rk-ansi-surface-overlay: light-dark(var(--rk-palette-light-surface-overlay), var(--rk-palette-dark-surface-overlay));
+    --rk-ansi-surface-raised: light-dark(var(--rk-palette-light-surface-raised), var(--rk-palette-dark-surface-raised));
+    --rk-ansi-surface-sunken: light-dark(var(--rk-palette-light-surface-sunken), var(--rk-palette-dark-surface-sunken));
     --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
     --rk-ansi-tint-cyan: light-dark(var(--rk-palette-light-tint-cyan), var(--rk-palette-dark-tint-cyan));
     --rk-ansi-tint-green: light-dark(var(--rk-palette-light-tint-green), var(--rk-palette-dark-tint-green));
@@ -2836,6 +2944,10 @@
     --rk-bg-success-solid-hover: var(--rk-ansi-bright-green);
     --rk-bg-success-subtle: var(--rk-ansi-tint-green);
     --rk-bg-surface: var(--rk-ansi-surface);
+    --rk-bg-surface-base: var(--rk-ansi-surface-base);
+    --rk-bg-surface-overlay: var(--rk-ansi-surface-overlay);
+    --rk-bg-surface-raised: var(--rk-ansi-surface-raised);
+    --rk-bg-surface-sunken: var(--rk-ansi-surface-sunken);
     --rk-bg-warning-solid: var(--rk-ansi-yellow);
     --rk-bg-warning-solid-hover: var(--rk-ansi-bright-yellow);
     --rk-bg-warning-subtle: var(--rk-ansi-tint-yellow);
@@ -2925,6 +3037,14 @@
     --rk-bg-success-subtle: var(--rk-ansi-tint-green);
     /* A raised surface. On a grid it is its border that raises it. */
     --rk-bg-surface: var(--rk-ansi-surface);
+    /* The ordinary panel layer (0307). */
+    --rk-bg-surface-base: var(--rk-ansi-surface-base);
+    /* The topmost layer: what floats above a panel (0307). */
+    --rk-bg-surface-overlay: var(--rk-ansi-surface-overlay);
+    /* A panel above the base layer (0307). */
+    --rk-bg-surface-raised: var(--rk-ansi-surface-raised);
+    /* A layer below its neighbours: a well a panel sits in (0307). */
+    --rk-bg-surface-sunken: var(--rk-ansi-surface-sunken);
     /* Filled warning backgrounds. */
     --rk-bg-warning-solid: var(--rk-ansi-foreground);
     --rk-bg-warning-solid-hover: var(--rk-ansi-foreground);
@@ -3039,6 +3159,14 @@
       --rk-bg-success-subtle: var(--rk-ansi-tint-green);
       /* A raised surface. On a grid it is its border that raises it. */
       --rk-bg-surface: var(--rk-ansi-surface);
+      /* The ordinary panel layer (0307). */
+      --rk-bg-surface-base: var(--rk-ansi-surface-base);
+      /* The topmost layer: what floats above a panel (0307). */
+      --rk-bg-surface-overlay: var(--rk-ansi-surface-overlay);
+      /* A panel above the base layer (0307). */
+      --rk-bg-surface-raised: var(--rk-ansi-surface-raised);
+      /* A layer below its neighbours: a well a panel sits in (0307). */
+      --rk-bg-surface-sunken: var(--rk-ansi-surface-sunken);
       /* Filled warning backgrounds. */
       --rk-bg-warning-solid: var(--rk-ansi-foreground);
       --rk-bg-warning-solid-hover: var(--rk-ansi-foreground);
@@ -3326,6 +3454,10 @@
     --rk-palette-dark-selection: oklch(26% 0.045 262);
     --rk-palette-dark-subtle: oklch(24.5% 0.0059 262);
     --rk-palette-dark-surface: oklch(20.5% 0.0054 262);
+    --rk-palette-dark-surface-base: oklch(20% 0.0053 262);
+    --rk-palette-dark-surface-overlay: oklch(25% 0.006 262);
+    --rk-palette-dark-surface-raised: oklch(22.5% 0.0057 262);
+    --rk-palette-dark-surface-sunken: oklch(17.5% 0.005 262);
     --rk-palette-dark-tint-blue: oklch(26% 0.045 262);
     --rk-palette-dark-tint-cyan: oklch(26.04% 0.0443 200.1);
     --rk-palette-dark-tint-green: oklch(26% 0.045 150);
@@ -3362,6 +3494,10 @@
     --rk-palette-light-selection: oklch(94.54% 0.0278 246);
     --rk-palette-light-subtle: oklch(95.8% 0.0025 262);
     --rk-palette-light-surface: oklch(100% 0 262);
+    --rk-palette-light-surface-base: oklch(97.4% 0.0021 262);
+    --rk-palette-light-surface-overlay: oklch(100% 0 262);
+    --rk-palette-light-surface-raised: oklch(98.7% 0.0018 262);
+    --rk-palette-light-surface-sunken: oklch(96.2% 0.0024 262);
     --rk-palette-light-tint-blue: oklch(94.54% 0.0278 246);
     --rk-palette-light-tint-cyan: oklch(95% 0.045 200);
     --rk-palette-light-tint-green: oklch(95% 0.045 150);

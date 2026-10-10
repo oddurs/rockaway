@@ -61,6 +61,22 @@ export function semanticColors(): Group {
         ...p('surface'),
         $description: 'A raised surface. On a grid it is its border that raises it.',
       },
+      'surface-sunken': {
+        ...p('surface-sunken'),
+        $description: 'A layer below its neighbours: a well a panel sits in (0307).',
+      },
+      'surface-base': {
+        ...p('surface-base'),
+        $description: 'The ordinary panel layer (0307).',
+      },
+      'surface-raised': {
+        ...p('surface-raised'),
+        $description: 'A panel above the base layer (0307).',
+      },
+      'surface-overlay': {
+        ...p('surface-overlay'),
+        $description: 'The topmost layer: what floats above a panel (0307).',
+      },
       subtle: { ...p('subtle'), $description: 'Quiet element backgrounds: inputs, wells, code.' },
       hover: { ...p('hover'), $description: 'An element under the pointer.' },
       active: { ...p('active'), $description: 'An element being pressed, or selected.' },
