@@ -1097,6 +1097,46 @@
   inherits: true;
 }
 
+@property --rk-glyph-fill-1 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-2 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-4 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-5 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-6 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-7 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-8 {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-key-alt {
   syntax: '*';
   inherits: true;
@@ -1342,6 +1382,12 @@
   inherits: true;
 }
 
+@property --rk-motion-tick-reduced-refresh {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 5000ms;
+}
+
 @property --rk-motion-tick-blink {
   syntax: '<time>';
   inherits: true;
@@ -1352,6 +1398,12 @@
   syntax: '<time>';
   inherits: true;
   initial-value: 100ms;
+}
+
+@property --rk-motion-tick-refresh {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 1000ms;
 }
 
 @property --rk-motion-tick-spinner {
@@ -2514,6 +2566,14 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-fill-1: "▏";
+    --rk-glyph-fill-2: "▎";
+    --rk-glyph-fill-3: "▍";
+    --rk-glyph-fill-4: "▌";
+    --rk-glyph-fill-5: "▋";
+    --rk-glyph-fill-6: "▊";
+    --rk-glyph-fill-7: "▉";
+    --rk-glyph-fill-8: "█";
     --rk-glyph-key-alt: "⌥";
     --rk-glyph-key-backspace: "⌫";
     --rk-glyph-key-ctrl: "⌃";
@@ -2565,6 +2625,8 @@
     --rk-glyph-spinner-10: "⠏";
     --rk-motion-tick-blink: 500ms;
     --rk-motion-tick-progress: 100ms;
+    --rk-motion-tick-reduced-refresh: 5000ms;
+    --rk-motion-tick-refresh: 1000ms;
     --rk-motion-tick-spinner: 80ms;
     --rk-palette-dark-active: oklch(29.5% 0.006 262);
     --rk-palette-dark-background: oklch(16.5% 0.0048 262);
@@ -3306,6 +3368,14 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-fill-1: "▏";
+    --rk-glyph-fill-2: "▎";
+    --rk-glyph-fill-3: "▍";
+    --rk-glyph-fill-4: "▌";
+    --rk-glyph-fill-5: "▋";
+    --rk-glyph-fill-6: "▊";
+    --rk-glyph-fill-7: "▉";
+    --rk-glyph-fill-8: "█";
     --rk-glyph-key-alt: "⌥";
     --rk-glyph-key-backspace: "⌫";
     --rk-glyph-key-ctrl: "⌃";

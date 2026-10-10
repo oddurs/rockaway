@@ -29,8 +29,14 @@ export default async function Doc({
   const page = await renderDoc(id);
   return (
     <PageBody title={docFor(id).title}>
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: the repository's own Markdown, rendered at build. */}
-      <article className="rk-prose" dangerouslySetInnerHTML={{ __html: page.html }} />
+      {/* For reading at length (0322): a free zone, so the page is loose (0311). */}
+      <article
+        className="rk-prose"
+        data-rk-reading=""
+        data-rk-conformance="loose"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: the repository's own Markdown, rendered at build.
+        dangerouslySetInnerHTML={{ __html: page.html }}
+      />
     </PageBody>
   );
 }

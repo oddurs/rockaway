@@ -57,7 +57,8 @@ import {
 import { useCut } from '../cut.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { rowRuns, type StrokeStyle } from '../paint/cells.ts';
+import type { StrokeStyle } from '../paint/cells.ts';
+import { Cells } from '../paint/render.tsx';
 import { type TreeLineage, treeExpandMark, treeGuides, treeMarks } from './tree.pure.ts';
 
 /** Which stroke the guides are drawn with, set on the tree and read by its rows. */
@@ -174,28 +175,16 @@ function lineageOf(render: TreeItemContentRenderProps): TreeLineage {
   return { level: render.level, last };
 }
 
-/** A row's guides, as runs of cells: the painter's own runs, so they stroke as painted chrome does. */
+/**
+ * A row's guides, as runs of cells: drawn by the same renderer as a screen's
+ * chrome, so they stroke as painted chrome does. Their colour is the
+ * stylesheet's, which a selected row changes, so the runs carry none.
+ */
 function Guides({ buffer }: { buffer: Buffer }): ReactNode {
   const strokes = useContext(Strokes);
   if (buffer.width === 0) return null;
-  let col = 0;
   return (
-    <span aria-hidden="true" className="rk-tree-guides" data-rk-painted={strokes}>
-      {rowRuns(buffer, 0).map((run) => {
-        const at = col;
-        col += run.cells;
-        return (
-          <span
-            key={at}
-            className="rk-run"
-            {...(run.shape === undefined ? {} : { 'data-rk-shape': run.shape })}
-            style={{ '--rk-col': at, '--rk-run': run.cells } as CSSProperties}
-          >
-            {run.text}
-          </span>
-        );
-      })}
-    </span>
+    <Cells buffer={buffer} strokes={strokes} className="rk-tree-guides" inline colours={false} />
   );
 }
 

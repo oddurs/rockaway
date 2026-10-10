@@ -1,4 +1,4 @@
-import { fromText, toText } from '@rockaway/grid';
+import { Attr, Buffer, drawText, fromText, toText } from '@rockaway/grid';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
@@ -7,6 +7,7 @@ import { Frame } from '../src/components/frame.tsx';
 import { KeyHint } from '../src/components/key-hint.tsx';
 import { List, ListItem } from '../src/components/list.tsx';
 import { Tab, TabList, TabPanel, Tabs } from '../src/components/tabs.tsx';
+import { Cells } from '../src/paint/render.tsx';
 import { Screen } from '../src/screen.tsx';
 
 /** The text of each painted row in some markup, entities decoded. */
@@ -107,5 +108,31 @@ describe('a screen rendered on a server (0126)', () => {
     // A label only the page can measure: the tabs wait for it, out of sight.
     const later = tabs(['files', createElement(KeyHint, { keys: 'mod+s' })]);
     expect(later).toContain('--rk-tab-shown:0;--rk-tab-clip:inset(50%)');
+  });
+});
+
+describe('one renderer for painted cells (0227)', () => {
+  const muted = Buffer.create({ width: 4, height: 1 }).draw((d) => {
+    drawText(d, { x: 0, y: 0 }, '├─ x', { style: { fg: 'fg.muted', attrs: Attr.none } });
+  });
+
+  test('writes a block of rows, each run with its colour and shape', () => {
+    const html = renderToString(createElement(Cells, { buffer: muted }));
+    expect(html).toMatch(/^<div class="rk-frame" aria-hidden="true" data-rk-painted="glyph">/);
+    expect(rows(html)).toEqual(['├─ x']);
+    expect(html).toContain('color:var(--rk-fg-muted)');
+    expect(html).toContain('data-rk-shape');
+  });
+
+  test('sets one row inline, its colour left to the stylesheet, as a tree row’s guides', () => {
+    const html = renderToString(
+      createElement(Cells, { buffer: muted, className: 'guides', inline: true, colours: false }),
+    );
+    expect(html).toMatch(/^<span class="guides" aria-hidden="true" data-rk-painted="glyph">/);
+    expect(html).not.toContain('rk-row');
+    expect(html).not.toContain('color:');
+    // Where each run starts and how long it is are still written.
+    expect(html).toContain('--rk-col');
+    expect(html).toContain('data-rk-shape');
   });
 });

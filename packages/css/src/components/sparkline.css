@@ -1,0 +1,16 @@
+/*
+ * Sparkline (cairn 0101): rows of cells the cell draws, braille dots or the
+ * theme's bars, in fg.accent.
+ */
+@layer rk.components {
+  .rk-sparkline {
+    display: inline-block;
+    vertical-align: top;
+    white-space: pre;
+    color: var(--rk-fg-accent);
+  }
+
+  .rk-sparkline > .rk-row {
+    display: block;
+  }
+}

@@ -64,6 +64,17 @@ export const known: readonly Known[] = [
     ticket: '0197: the default density meets AA; dense is the documented opt-in that does not',
   },
   {
+    id: 'eighth-inset-spill',
+    check: 'continuity',
+    rule: 'leak',
+    element: /rk-(sparkline|progress-bar|spinner-frame)/,
+    present: '.rk-sparkline, .rk-progress-bar, .rk-spinner-frame',
+    reason:
+      "a mark an eighth of a cell in from an edge (a braille dot, the 7/8 block at a bar's leading edge) antialiases into the first whole pixel inside that edge when the cell starts at a fraction of a pixel, and the leak rule reads that pixel as a line on the edge",
+    ticket:
+      'follow-up to 0229: the leak rule should not read a shape’s own mark, inset by its geometry, as ink on the edge',
+  },
+  {
     id: 'firefox-forced-syntax',
     check: 'axe',
     projects: ['forced-colors-firefox'],

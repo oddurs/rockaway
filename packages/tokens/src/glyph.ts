@@ -243,6 +243,17 @@ export const bars: Readonly<Record<Repertoire, readonly string[]>> = {
   ascii: ['_', '_', '.', '-', '-', '=', '=', '#'],
 };
 
+/**
+ * The eight-step fill, from one eighth of a cell to all of it, left to right:
+ * a progress bar's or a meter's leading edge, so a bar grows in eighths of a
+ * cell rather than whole cells (cairn 0101). ASCII cannot draw part of a cell,
+ * so its steps are coarser marks that still read as more and less.
+ */
+export const fills: Readonly<Record<Repertoire, readonly string[]>> = {
+  unicode: ['▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'],
+  ascii: ['-', '-', '-', '=', '=', '=', '=', '#'],
+};
+
 /** Braille frames, the spinner every terminal has agreed on. ASCII has four. */
 export const spinnerFrames: Readonly<Record<Repertoire, readonly string[]>> = {
   unicode: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
@@ -348,6 +359,8 @@ export interface Glyphs {
   readonly mark: Readonly<Record<MarkName, string>>;
   readonly block: Readonly<Record<BlockName, string>>;
   readonly bar: readonly string[];
+  /** A bar's leading edge across a cell, in eighths: see `fills`. */
+  readonly fill: readonly string[];
   readonly spinner: readonly string[];
   readonly delimiter: Readonly<Record<DelimiterName, Delimiters>>;
   /** Key legends. A word in ASCII, so the one group whose entries may be wider than a cell. */
@@ -367,6 +380,7 @@ export function glyphsFor(theme: {
     mark: marks[r],
     block: blocks[r],
     bar: bars[r],
+    fill: fills[r],
     spinner: spinnerFrames[r],
     delimiter: delimiters,
     key: keyLegends[r],
@@ -485,6 +499,7 @@ export function glyphs(set: BorderSetName, weights?: Partial<FrameWeights>): Gro
       mark: table(resolved.mark),
       block: table(resolved.block),
       bar: sequence(resolved.bar),
+      fill: sequence(resolved.fill),
       spinner: sequence(resolved.spinner),
       delimiter: Object.fromEntries(
         Object.entries(resolved.delimiter).map(([name, [open, close]]) => [
