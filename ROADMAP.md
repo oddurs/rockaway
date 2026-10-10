@@ -427,5 +427,8 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0263`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0263-repeat-the-paint-figures-in-firefox-webkit-and-on-a-low-end-phone.md) Repeat the paint figures in Firefox, WebKit and on a low-end phone <sup>chore · grid · p3</sup>
 - [ ] [`0267`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0267-share-overlay-row-measurement.md) Share overlay row measurement <sup>chore · components · p3</sup>
 - [ ] [`0272`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0272-compare-the-step-between-table-header-rules.md) Compare the step between table-header rules <sup>chore · tooling · p3</sup>
+
+### in progress
+
 - [ ] [`0298`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0298-draw-block-letter-display-type-with-the-cell-renderer.md) Draw block-letter display type with the cell renderer <sup>feature · grid · p2</sup>
 
