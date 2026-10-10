@@ -7,3 +7,5 @@ public/themes/
 # Written by scripts/routes.ts before every build.
 app/components/(each)/
 app/@outline/components/(each)/
+app/(twins)/
+app/components/(twins)/

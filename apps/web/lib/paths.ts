@@ -16,3 +16,14 @@ export const BASE: string =
 export function asset(path: string): string {
   return `${BASE}/${path.replace(/^\/+/, '')}`;
 }
+
+/** Where the site is served from, for an absolute URL: GitHub Pages unless `SITE_URL` says otherwise. */
+export const ORIGIN: string = (process.env.SITE_URL ?? 'https://oddurs.github.io').replace(
+  /\/$/,
+  '',
+);
+
+/** An absolute URL for a path within the site: `absolute('llms.txt')`. */
+export function absolute(path: string): string {
+  return `${ORIGIN}${asset(path)}`;
+}

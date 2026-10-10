@@ -31,6 +31,6 @@ export const docs: Readonly<Record<string, Doc>> = {
 
 export function docFor(id: string): Doc {
   const doc = docs[id];
-  if (!doc) throw new Error(`docs/${id}.md has no entry in apps/site/src/lib/docs.ts`);
+  if (!doc) throw new Error(`docs/${id}.md has no entry in apps/web/lib/docs.ts`);
   return doc;
 }

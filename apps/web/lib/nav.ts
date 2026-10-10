@@ -33,6 +33,7 @@ export function siteNav({ foundations, components }: SitePages): readonly NavNod
         { id: 'getting-started', title: 'Getting started', href: href('getting-started/') },
         { id: 'concept', title: 'The concept', href: href('concept/') },
         { id: 'component-recipe', title: 'The component recipe', href: href('component-recipe/') },
+        { id: 'registry', title: 'Registry', href: href('registry/') },
       ],
     },
     ...(foundations.length === 0

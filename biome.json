@@ -61,7 +61,9 @@
         "apps/web/app/**/page.tsx",
         "apps/web/app/**/layout.tsx",
         "apps/web/app/**/default.tsx",
-        "apps/web/app/**/not-found.tsx"
+        "apps/web/app/**/not-found.tsx",
+        "apps/web/app/robots.ts",
+        "apps/web/app/sitemap.ts"
       ],
       "linter": {
         "rules": {

@@ -4,11 +4,9 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { PageBody } from '../../components/shell/PageBody.tsx';
 import { components, inline, slugOf } from '../../lib/components.ts';
+import { pageMetadata } from '../../lib/pages.ts';
 
-export const metadata: Metadata = {
-  title: 'Components',
-  description: 'Every component in rockaway, with its snapshot, a live example and its keyboard.',
-};
+export const metadata: Metadata = pageMetadata('components/');
 
 export default function Components(): ReactNode {
   return (

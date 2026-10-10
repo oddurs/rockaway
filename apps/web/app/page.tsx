@@ -19,11 +19,10 @@ import {
 import { ScrollRegion } from '../components/ScrollRegion.tsx';
 import { PageBody } from '../components/shell/PageBody.tsx';
 import { drawing, SERVER_SIZE } from '../lib/drawing.ts';
+import { pageMetadata } from '../lib/pages.ts';
 import { screenHtml } from '../lib/painted.ts';
 
-export const metadata: Metadata = {
-  title: { absolute: 'rockaway — terminal interfaces on the web' },
-};
+export const metadata: Metadata = pageMetadata('');
 
 const app = `
 export function App() {
