@@ -163,6 +163,7 @@ export const markNames = [
   'required',
   'danger',
   'external',
+  'separator',
 ] as const;
 export type MarkName = (typeof markNames)[number];
 
@@ -171,7 +172,9 @@ export type MarkName = (typeof markNames)[number];
  * checkbox is `check`, `dash` or `blank` between the control delimiters; a
  * radio is `radio` or `radio-empty` on its own, so its empty state is still a
  * visible mark. `prompt` starts an input row that takes a command, as a
- * shell's does; it is not `overflow-end`, though in Unicode it is drawn alike. Tree guides are not here: they are edges, and the junction
+ * shell's does; it is not `overflow-end`, though in Unicode it is drawn alike.
+ * `separator` stands between the levels of a path, as Breadcrumbs draws one
+ * (0319). Tree guides are not here: they are edges, and the junction
  * table draws them.
  */
 export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string>>>> = {
@@ -197,6 +200,7 @@ export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string
     required: '*',
     danger: '!',
     external: '↗',
+    separator: '›',
   },
   ascii: {
     check: 'x',
@@ -220,6 +224,7 @@ export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string
     required: '*',
     danger: '!',
     external: '^',
+    separator: '>',
   },
 };
 

@@ -5,6 +5,7 @@
  * regenerate. A test fails when this is stale.
  */
 import { badgeMeta } from '../components/badge.meta.ts';
+import { breadcrumbsMeta } from '../components/breadcrumbs.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
 import { cardMeta } from '../components/card.meta.ts';
@@ -30,13 +31,16 @@ import { sparklineMeta } from '../components/sparkline.meta.ts';
 import { spinnerMeta } from '../components/spinner.meta.ts';
 import { switchMeta } from '../components/switch.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
+import { tabsMeta } from '../components/tabs.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
+import { toolbarMeta } from '../components/toolbar.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import type { ComponentMetaInput } from './schema.ts';
 
 /** Every component's metadata, by the file it is written in. */
 export const registry: readonly { readonly file: string; readonly meta: ComponentMetaInput }[] = [
   { file: 'badge', meta: badgeMeta },
+  { file: 'breadcrumbs', meta: breadcrumbsMeta },
   { file: 'button', meta: buttonMeta },
   { file: 'callout', meta: calloutMeta },
   { file: 'card', meta: cardMeta },
@@ -62,6 +66,8 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'spinner', meta: spinnerMeta },
   { file: 'switch', meta: switchMeta },
   { file: 'table', meta: tableMeta },
+  { file: 'tabs', meta: tabsMeta },
   { file: 'text-field', meta: textFieldMeta },
+  { file: 'toolbar', meta: toolbarMeta },
   { file: 'tree', meta: treeMeta },
 ];

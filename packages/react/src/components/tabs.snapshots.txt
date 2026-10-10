@@ -1,0 +1,13 @@
+── Tabs in the top edge
+┌ files ─ log ─ diff ────────┐
+│                            │
+│                            │
+└────────────────────────────┘
+── Scrolled by whole tabs
+┌ files ─ log ─ diff ─────›┐
+┌ files ─ log ─ diff ─────›┐
+┌ files ─ log ─ diff ─────›┐
+┌‹─ log ─ diff ─ blame ───›┐
+┌‹─ diff ─ blame ─ stash ─›┐
+┌‹─ stash ─ remotes ──────›┐
+┌‹─ remotes ─ tags ────────┐
