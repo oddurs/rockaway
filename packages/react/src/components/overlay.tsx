@@ -55,6 +55,7 @@ import {
   type PopoverProps,
   useSlottedContext,
 } from 'react-aria-components';
+import { setAnchor } from '../anchor.ts';
 import { cellsCovering, floorCell, measureCell, nearestCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
@@ -372,6 +373,14 @@ function Surface({
     return () => observer.disconnect();
   }, [minCols, anchor]);
 
+  // Say which grid the surface was moved onto, so conformance can hold it there.
+  useIsomorphicLayoutEffect(() => {
+    const el = host.current;
+    if (!el) return;
+    setAnchor(el, anchor);
+    return () => setAnchor(el, undefined);
+  }, [anchor]);
+
   // React Aria gives a popover the most height it has room for, in pixels;
   // the surface takes the whole rows of it, its border's two included, and
   // its content scrolls past them.
@@ -591,6 +600,9 @@ export interface OverlayModalProps
 }
 
 /** The backdrop: a screen of shade over the viewport's whole cells. */
+/** A press that leaves focus where it is. */
+const keepFocus = (event: { preventDefault: () => void }): void => event.preventDefault();
+
 function Backdrop({ painter }: { readonly painter: PainterName | undefined }): ReactNode {
   const glyphs = useGlyphs();
   const draw = useCallback((size: Size) => backdropBuffer(size, glyphs), [glyphs]);
@@ -599,6 +611,11 @@ function Backdrop({ painter }: { readonly painter: PainterName | undefined }): R
       draw={draw}
       className="rk-overlay-scrim"
       aria-hidden="true"
+      // A press on the backdrop takes no focus. Firefox moves focus to the
+      // page's body on a press on anything that cannot hold it, and from the
+      // body Escape never reaches the modal, so a modal that is not
+      // dismissable could not be closed from the keyboard after a stray press.
+      onMouseDown={keepFocus}
       {...(painter === undefined ? {} : { painter })}
     />
   );

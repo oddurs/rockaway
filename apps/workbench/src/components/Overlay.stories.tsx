@@ -454,6 +454,9 @@ export const Dismiss: Story = {
     const scrim = document.querySelector('.rk-overlay-scrim') as HTMLElement;
     await userEvent.click(scrim, { skipHover: true });
     expect(dialog('Fixed')).not.toBeNull();
+    // The press took no focus: still in the dialog, where Escape reaches it.
+    // Firefox used to put it on the body, and Escape then closed nothing.
+    expect(dialog('Fixed')?.contains(document.activeElement)).toBe(true);
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(dialog('Fixed')).toBeNull(), CLOSE);
     await waitFor(() => expect(open('Fixed')).toHaveFocus(), CLOSE);
@@ -498,7 +501,10 @@ export const Nested: Story = {
   play: async ({ canvas }) => {
     await measured(document.body);
     const settings = canvas.getByRole('button', { name: 'Settings' });
-    await userEvent.click(settings);
+    // Opened from the keyboard, so the trigger has focus to be given back:
+    // WebKit, like Safari, does not focus a button it presses.
+    settings.focus();
+    await userEvent.keyboard('{Enter}');
     const actions = await waitFor(() => {
       const button = document.querySelector<HTMLElement>('[role="dialog"] button');
       expect(button).not.toBeNull();
@@ -519,11 +525,12 @@ export const Nested: Story = {
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(document.querySelector('[role="menu"]')).toBeNull());
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
-    expect(actions).toHaveFocus();
+    // Focus goes back a frame after the menu unmounts.
+    await waitFor(() => expect(actions).toHaveFocus());
 
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
-    expect(settings).toHaveFocus();
+    await waitFor(() => expect(settings).toHaveFocus());
   },
 };
 
