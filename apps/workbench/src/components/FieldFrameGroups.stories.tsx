@@ -10,6 +10,7 @@ import {
   NumberField,
 } from 'react-aria-components';
 import { expect, userEvent } from 'storybook/test';
+import { press } from '../keys.ts';
 import { measured } from '../settled.ts';
 
 /*
@@ -141,7 +142,7 @@ export const Stepping: Story = {
     await measured(document.body);
     const input = canvas.getByRole('textbox', { name: 'Retries' });
     await userEvent.click(input);
-    await userEvent.keyboard('{ArrowUp}{ArrowUp}');
+    await press('{ArrowUp}{ArrowUp}');
     expect(input).toHaveValue('5');
   },
 };
