@@ -2941,9 +2941,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<HTMLAttributes<HTMLElement>, 'children' | 'className' | 'style'>"
     ],
     "tokens": [
+      "--rk-cell-height",
       "--rk-cell-line",
       "--rk-cell-width",
-      "--rk-font-content"
+      "--rk-font-content",
+      "--rk-rhythm-gap",
+      "--rk-rhythm-section",
+      "--rk-step-y"
     ]
   },
   "TextField": {
