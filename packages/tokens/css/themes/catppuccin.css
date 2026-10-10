@@ -193,9 +193,11 @@
     --rk-palette-dark-cursor: oklch(92.3% 0.0238 30.5);
     --rk-palette-dark-cyan: oklch(85.8% 0.0792 182.7);
     --rk-palette-dark-faint: oklch(52.9% 0.0359 272.3);
+    --rk-palette-dark-focus: oklch(76.6% 0.1113 259.9);
     --rk-palette-dark-foreground: oklch(87.9% 0.0426 272.3);
     --rk-palette-dark-green: oklch(85.8% 0.1092 142.7);
     --rk-palette-dark-hover: oklch(32.6% 0.032 283.9);
+    --rk-palette-dark-inverse: oklch(87.9% 0.0426 272.3);
     --rk-palette-dark-magenta: oklch(87% 0.0752 336.3);
     --rk-palette-dark-muted: oklch(71.8% 0.0389 272.3);
     --rk-palette-dark-red: oklch(75.6% 0.1297 2.8);
@@ -227,9 +229,11 @@
     --rk-palette-light-cursor: oklch(71.4% 0.1045 33.1);
     --rk-palette-light-cyan: oklch(49.41% 0.0841 202.6);
     --rk-palette-light-faint: oklch(72.3% 0.0225 279.3);
+    --rk-palette-light-focus: oklch(50.9% 0.2255 262.1);
     --rk-palette-light-foreground: oklch(37% 0.043 279.3);
     --rk-palette-light-green: oklch(48.63% 0.1653 142.4);
     --rk-palette-light-hover: oklch(89% 0.0106 264.5);
+    --rk-palette-light-inverse: oklch(37% 0.043 279.3);
     --rk-palette-light-magenta: oklch(52.6% 0.1739 338.4);
     --rk-palette-light-muted: oklch(47.2% 0.0318 279.3);
     --rk-palette-light-red: oklch(52.44% 0.2108 20.69);

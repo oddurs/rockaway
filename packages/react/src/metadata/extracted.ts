@@ -381,7 +381,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
-      "--rk-bg-page",
+      "--rk-bg-inverse",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-cell-height",
@@ -389,7 +389,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled"
+      "--rk-fg-disabled",
+      "--rk-fg-on-inverse"
     ]
   },
   "CheckboxGroup": {
@@ -433,7 +434,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
-      "--rk-bg-page",
+      "--rk-bg-inverse",
       "--rk-border-control",
       "--rk-border-danger",
       "--rk-cell-height",
@@ -441,7 +442,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled"
+      "--rk-fg-disabled",
+      "--rk-fg-on-inverse"
     ]
   },
   "CodeBlock": {
@@ -1212,6 +1214,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -1240,6 +1243,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -1837,6 +1841,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-border-control",
@@ -1868,6 +1873,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-border-control",
@@ -2641,6 +2647,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
@@ -2687,6 +2694,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
