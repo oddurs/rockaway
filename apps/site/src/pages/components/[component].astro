@@ -9,7 +9,9 @@ import { getCollection, render } from 'astro:content';
  * component, fails the build.
  *
  * Snapshots are painted as the painter's markup, with no script. When
- * CodeBlock's snapshot (0138) lands, `Painted` becomes it.
+ * CodeBlock's snapshot (0138) lands, `Painted` becomes it. A snapshot a theme
+ * draws in other glyphs is painted once per drawing, each marked with its
+ * themes, and `tokens.css` shows the reader's (0171).
  */
 import { formatKeys, spokenKeys } from '@rockaway/react';
 import type { ComponentMeta } from '@rockaway/react/metadata';
@@ -19,6 +21,7 @@ import Prose from '../../layouts/Prose.astro';
 import { componentNamed, components, inline, slugOf, tokenAnchor } from '../../lib/components.ts';
 import { escapeHtml } from '../../lib/html.ts';
 import { href } from '../../lib/paths.ts';
+import { drawings } from '../../lib/snapshots.ts';
 
 export async function getStaticPaths() {
   const pages = await getCollection('components');
@@ -67,7 +70,15 @@ const keys = (spec: string) =>
           <strong>{snapshot.title}.</strong>{' '}
           {snapshot.description && <Fragment set:html={inline(snapshot.description)} />}
         </p>
-        <Painted text={snapshot.text} label={`${meta.name}, ${snapshot.title}, as text`} />
+        {drawings(snapshot).map((drawing, _, all) =>
+          all.length === 1 ? (
+            <Painted text={drawing.text} label={`${meta.name}, ${snapshot.title}, as text`} />
+          ) : (
+            <div data-rk-theme-only={drawing.themes.join(' ')}>
+              <Painted text={drawing.text} label={`${meta.name}, ${snapshot.title}, as text`} />
+            </div>
+          ),
+        )}
       </>
     ))
   }
