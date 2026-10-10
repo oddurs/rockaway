@@ -279,6 +279,70 @@ export const Keyboard: Story = {
   },
 };
 
+/** More files than the window shows: eight, named so they sort in order. */
+const MANY: readonly File[] = Array.from({ length: 8 }, (_, i) => ({
+  id: `file-${i}`,
+  name: `file-${i}.ts`,
+  size: 100 * (i + 1),
+  modified: '2026-10-01',
+}));
+
+/**
+ * A window of rows (0281): `rows={3}` shows three of eight, the table exactly
+ * that tall. The arrows move the cursor past the window's last row and the
+ * body follows it a whole row at a time; the scrollbar inside the right edge
+ * says where. Nothing moves but the rows.
+ */
+export const RowsWindow: Story = {
+  name: 'A window of rows',
+  render: () => <Files cols={44} rows={3} files={MANY} />,
+  play: async ({ canvasElement }) => {
+    await settled();
+    const screen = screenOf(canvasElement);
+    const before = box(screen);
+    const window = { width: 44, visible: 3 } as const;
+    const body = canvasElement.querySelector('.rk-table-body') as HTMLElement;
+    const shown = (): string => screenshot(screen, { legend: false });
+    // The scrollbar follows the body's scroll event, a render later.
+    const bar = (): string =>
+      canvasElement.querySelector('.rk-table-scrollbar')?.textContent?.replace(/\s/g, '') ?? '';
+    const thumb = (offset: number): string =>
+      model(MANY, { ...window, offset })
+        .split('\n')
+        .slice(3, 6)
+        .map((line) => [...line].at(-2))
+        .join('');
+
+    // At rest: the first three, the thumb at the top.
+    expect(shown()).toBe(model(MANY, { ...window, offset: 0 }));
+
+    // Into the grid, then down past the window: the body follows the cursor.
+    await userEvent.tab();
+    await waitFor(() => expect(rowOf(cellNamed(canvasElement, 'file-0.ts'))).toHaveFocus());
+    await userEvent.keyboard('{ArrowDown}{ArrowDown}{ArrowDown}{ArrowDown}');
+    await waitFor(() => expect(rowOf(cellNamed(canvasElement, 'file-4.ts'))).toHaveFocus());
+    await measured(document.body);
+    const row = Number.parseFloat(getComputedStyle(screen).getPropertyValue('--rk-cell-height'));
+    // Scrolled by whole rows, so the cursor's row is the window's last.
+    await waitFor(() => expect(body.scrollTop / row).toBe(2));
+    await waitFor(() => expect(bar()).toBe(thumb(2)));
+    expect(shown()).toBe(
+      model(MANY, { ...window, offset: 2, row: (f) => ({ cursor: f.id === 'file-4' }) }),
+    );
+
+    // To the end: the last three, the thumb at the bottom.
+    await userEvent.keyboard('{End}');
+    await userEvent.keyboard('{Control>}{End}{/Control}');
+    await waitFor(() => expect(rowOf(cellNamed(canvasElement, 'file-7.ts'))).toHaveFocus());
+    await waitFor(() => expect(body.scrollTop / row).toBe(5));
+    await waitFor(() => expect(bar()).toBe(thumb(5)));
+    expect(shown()).toBe(
+      model(MANY, { ...window, offset: 5, row: (f) => ({ cursor: f.id === 'file-7' }) }),
+    );
+    expect(box(screen)).toEqual(before);
+  },
+};
+
 /** Sorting: pressing a sortable header sorts by it, and its mark says which way. */
 export const Sorting: Story = {
   render: () => <Files cols={44} />,
