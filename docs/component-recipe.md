@@ -155,11 +155,27 @@ Each state is a row of the vocabulary in decision 0118
 and what carries it without colour. Draw it the row's way, so a cursor looks
 the same in every component.
 
-Reverse video needs one more line. Under forced colours the browser paints a
-canvas-coloured backplate behind text, and reversed words vanish on it. Add
-the reversed state's selector to the shared block in
-`packages/css/src/forced-colors.css` that sets `forced-color-adjust: none`
-(0181).
+Reverse video needs one more block. Under forced colours the browser paints a
+canvas-coloured backplate behind text, and reversed words vanish on it (0181);
+and a shape the cell draws is inked in the reader's text colour, which in
+reverse video is the ground it sits on (0236). So the component's own
+stylesheet opts its reversed state out, and inks any shape inside it in the
+reversed figure:
+
+```css
+@media (forced-colors: active) {
+  .rk-list-item[data-selected] {
+    forced-color-adjust: none;
+    /* A shape the cell draws in here takes the reversed figure (screen.css). */
+    --rk-forced-ink: Canvas;
+  }
+}
+```
+
+`packages/css/test/reverse-opt-out.test.ts` finds every rule that draws words
+in a ground colour, and fails one that no opt-out covers, or whose opt-out sets
+no `--rk-forced-ink`. `packages/css/src/forced-colors.css` holds only what the
+base reverses: painted cells in reverse video and a filled control's focus.
 
 ## Control, pane, or neither
 
