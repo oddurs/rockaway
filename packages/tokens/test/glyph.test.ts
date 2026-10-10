@@ -19,6 +19,8 @@ import {
   type Repertoire,
   spinnerFrames,
   strokeWeights,
+  weightNames,
+  weightsFor,
 } from '../src/glyph.ts';
 import { themeGlyphs, themeNames, themes } from '../src/themes.ts';
 
@@ -73,7 +75,37 @@ describe('glyphs', () => {
     expect(Object.keys(doc.border ?? {}).filter((k) => !k.startsWith('$'))).toEqual([
       ...borderSetNames,
       'current',
+      ...weightNames,
     ]);
+  });
+
+  test('frames stand out by weight: heavy for emphasis and raised, double for modal', () => {
+    for (const set of borderSetNames.filter((s) => s !== 'ascii')) {
+      expect(glyphsFor({ borderSet: set }).weight, set).toEqual({
+        emphasis: 'heavy',
+        raised: 'heavy',
+        modal: 'double',
+      });
+    }
+    // ASCII has one weight of line; bold carries the difference.
+    expect(glyphsFor({ borderSet: 'ascii' }).weight).toEqual({
+      emphasis: 'ascii',
+      raised: 'ascii',
+      modal: 'ascii',
+    });
+    // A theme can set any of them, and keeps the rest.
+    expect(weightsFor({ borderSet: 'rounded', weights: { modal: 'heavy' } })).toEqual({
+      emphasis: 'heavy',
+      raised: 'heavy',
+      modal: 'heavy',
+    });
+    const doc = glyphs('single', { raised: 'double' }).glyph as Record<
+      string,
+      Record<string, Record<string, { $value: string }>>
+    >;
+    expect(doc.border?.raised?.horizontal?.$value).toBe('═');
+    expect(doc.border?.emphasis?.horizontal?.$value).toBe('━');
+    expect(doc.border?.modal?.['top-left']?.$value).toBe('╔');
   });
 
   test('the spinner is the ten braille frames every terminal uses', () => {
@@ -142,7 +174,9 @@ describe('the Glyphs object and the tokens agree', () => {
   test.each(themeNames)('%s: the DTCG glyph tokens are written from its Glyphs', (name) => {
     const resolved = themeGlyphs[name];
     expect(resolved).toEqual(glyphsFor(themes[name]));
-    expect(tokenValues(glyphs(themes[name].borderSet))).toEqual(expectedTokens(resolved));
+    expect(tokenValues(glyphs(themes[name].borderSet, themes[name].weights))).toEqual(
+      expectedTokens(resolved),
+    );
   });
 
   test('tokens.css carries the default theme’s glyphs, value for value', async () => {
@@ -203,6 +237,7 @@ function expectedTokens(g: Glyphs): Map<string, string> {
     for (const [k, v] of entries) out.set(`glyph.${prefix}.${k}`, v);
   };
   put('border.current', Object.entries(g.border));
+  for (const name of weightNames) put(`border.${name}`, Object.entries(borderSets[g.weight[name]]));
   put('mark', Object.entries(g.mark));
   put('block', Object.entries(g.block));
   const numbered = (frames: readonly string[]): [string, string][] =>
@@ -228,7 +263,9 @@ function tokenValues(doc: unknown, trail: string[] = []): Map<string, string> {
     }
     for (const [k, v] of Object.entries(node)) {
       if (k.startsWith('$')) continue;
-      if (at.join('.') === 'glyph.border' && k !== 'current') continue;
+      if (at.join('.') === 'glyph.border' && (borderSetNames as readonly string[]).includes(k)) {
+        continue;
+      }
       walk(v as Record<string, unknown>, [...at, k]);
     }
   };

@@ -234,6 +234,18 @@ describe('the cell, and density', () => {
 describe('theme validation', () => {
   test('accepts the default theme', () => {
     expect(parseTheme({ ...defaultTheme })).toEqual(defaultTheme);
+    // Frame weights are optional, and stay in the theme's repertoire (0128).
+    const weighted = { ...defaultTheme, weights: { modal: 'heavy' } };
+    expect(parseTheme(weighted)).toEqual(weighted);
+    expect(() => parseTheme({ ...defaultTheme, weights: { modal: 'ascii' } })).toThrow(
+      /weights\.modal is ascii, but a theme drawn in single draws no ascii/,
+    );
+    expect(() => parseTheme({ ...defaultTheme, weights: { shadow: 'heavy' } })).toThrow(
+      /unknown weight "shadow"/,
+    );
+    expect(() =>
+      parseTheme({ ...defaultTheme, borderSet: 'ascii', weights: { raised: 'heavy' } }),
+    ).toThrow(/draws only ascii/);
   });
 
   test('names every problem at once', () => {

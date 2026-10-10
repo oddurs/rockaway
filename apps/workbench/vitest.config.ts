@@ -3,12 +3,14 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
+import { paintBudget, recordPaint } from './.storybook/budget.ts';
 import {
   emulateContrast,
   knownLedger,
   printToPdf,
   readWithoutScripts,
   recordKnown,
+  watchdog,
 } from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
 import { known } from './.storybook/known.ts';
@@ -27,6 +29,16 @@ const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
  * every density now that each screen follows its context, needs more on CI.
  */
 const testTimeout = 60_000;
+
+/**
+ * How long a test may run before the watchdog decides the page has stopped
+ * answering and closes it (see `.storybook/commands.ts`): a project's own
+ * timeout and fifteen seconds more, so a slow test fails on its timeout and
+ * only a page that cannot run its timers is closed. Derived, so a timeout
+ * raised for one project raises its watchdog with it. Vitest's default
+ * timeout is fifteen seconds.
+ */
+const watchdogAfter = (timeout = 15_000): number => timeout + 15_000;
 
 /**
  * Stories tagged `zoom` run again at 200%: the continuity matrix, prose, and
@@ -71,7 +83,7 @@ const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = fa
     contextOptions: { ...context, viewport: { width: 1600, height: 2400 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown },
+  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown, recordPaint, watchdog },
 });
 
 /**
@@ -164,7 +176,7 @@ const staleKnown = (): Reporter => {
 
 const config: ViteUserConfig = defineConfig({
   test: {
-    reporters: ['default', staleKnown(), slowStories()],
+    reporters: ['default', staleKnown(), slowStories(), paintBudget()],
     projects: [
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
@@ -172,7 +184,7 @@ const config: ViteUserConfig = defineConfig({
           name: 'storybook',
           setupFiles,
           testTimeout,
-          provide: { plan: plans.storybook },
+          provide: { plan: plans.storybook, watchdog: watchdogAfter(testTimeout) },
           browser: browser(),
         },
       },
@@ -182,7 +194,7 @@ const config: ViteUserConfig = defineConfig({
           name: P3,
           setupFiles,
           testTimeout,
-          provide: { plan: plans[P3] },
+          provide: { plan: plans[P3], watchdog: watchdogAfter(testTimeout) },
           browser: browser({}, 'display-p3-d65'),
         },
       },
@@ -192,7 +204,7 @@ const config: ViteUserConfig = defineConfig({
           name: FORCED_COLORS,
           setupFiles,
           testTimeout,
-          provide: { plan: plans[FORCED_COLORS] },
+          provide: { plan: plans[FORCED_COLORS], watchdog: watchdogAfter(testTimeout) },
           browser: browser({ forcedColors: 'active' }),
         },
       },
@@ -204,7 +216,7 @@ const config: ViteUserConfig = defineConfig({
           name: ZOOM,
           setupFiles,
           testTimeout,
-          provide: { plan: plans.zoom },
+          provide: { plan: plans.zoom, watchdog: watchdogAfter(testTimeout) },
           browser: browser({ deviceScaleFactor: 2 }),
         },
       },
@@ -220,6 +232,7 @@ const config: ViteUserConfig = defineConfig({
         test: {
           name: CLASSIC_SCROLLBARS,
           setupFiles,
+          provide: { watchdog: watchdogAfter() },
           browser: browser({}, 'srgb', true),
         },
       },

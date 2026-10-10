@@ -8,6 +8,7 @@ import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
 import { checkboxMeta } from '../components/checkbox.meta.ts';
+import { codeBlockMeta } from '../components/code-block.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
 import { formMeta } from '../components/field.meta.ts';
 import { fieldsetMeta } from '../components/fieldset.meta.ts';
@@ -18,6 +19,7 @@ import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
 import { meterMeta } from '../components/meter.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
+import { panesMeta } from '../components/panes.meta.ts';
 import { progressBarMeta } from '../components/progress.meta.ts';
 import { sparklineMeta } from '../components/sparkline.meta.ts';
 import { spinnerMeta } from '../components/spinner.meta.ts';
@@ -32,6 +34,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'button', meta: buttonMeta },
   { file: 'callout', meta: calloutMeta },
   { file: 'checkbox', meta: checkboxMeta },
+  { file: 'code-block', meta: codeBlockMeta },
   { file: 'divider', meta: dividerMeta },
   { file: 'field', meta: formMeta },
   { file: 'fieldset', meta: fieldsetMeta },
@@ -42,6 +45,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'list', meta: listMeta },
   { file: 'meter', meta: meterMeta },
   { file: 'overlay', meta: overlayMeta },
+  { file: 'panes', meta: panesMeta },
   { file: 'progress', meta: progressBarMeta },
   { file: 'sparkline', meta: sparklineMeta },
   { file: 'spinner', meta: spinnerMeta },
