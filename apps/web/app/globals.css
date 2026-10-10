@@ -22,8 +22,10 @@
  * of the map, it changes as an attribute on `<html>`, which the head's script
  * restores before the first frame.
  *
- * The window is the query container: its width in cells, in the font the
- * cells are, decides which panes there is room for.
+ * The window is the query container: its width in cells decides which panes
+ * there is room for. A query is written in ems, a cell being 0.6em, so it
+ * asks the same question before the font arrives as after (lib/font.ts):
+ * 72em is 120 cells, 43.2em is 72.
  */
 body {
   margin: 0;
@@ -84,7 +86,7 @@ body {
 }
 
 /* Narrower than this, the outline goes, and the page takes its room. */
-@container site (inline-size < 120ch) {
+@container site (inline-size < 72em) {
   .site-shell {
     --site-outline: 0;
     --site-outline-gap: 0;
@@ -99,7 +101,7 @@ body {
  * A phone (0152): the page is the whole window, with no gutter, and the map
  * is a drawer over it, opened from the status bar or with `[`.
  */
-@container site (inline-size < 72ch) {
+@container site (inline-size < 43.2em) {
   .site-shell {
     --site-gx: 0;
     --site-gy: 0;
@@ -335,19 +337,19 @@ body {
 }
 
 /* What gives way first as the window narrows: the look, then the copy. */
-@container site (inline-size < 110ch) {
+@container site (inline-size < 66em) {
   .site-status > .site-status-look {
     display: none;
   }
 }
 
-@container site (inline-size < 80ch) {
+@container site (inline-size < 48em) {
   .site-status > .site-status-copy {
     display: none;
   }
 }
 
-@container site (inline-size < 48ch) {
+@container site (inline-size < 28.8em) {
   .site-status > .site-status-keys {
     display: none;
   }

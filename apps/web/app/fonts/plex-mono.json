@@ -1,0 +1,44 @@
+{
+  "family": "IBM Plex Mono",
+  "license": "OFL-1.1",
+  "source": "https://raw.githubusercontent.com/IBM/plex/017181e320cd0bea18f798d9ceb27a11c885c618/packages/plex-mono/fonts/complete/ttf",
+  "metrics": {
+    "unitsPerEm": 1000,
+    "advance": 600,
+    "ascent": 1025,
+    "descent": -275,
+    "lineGap": 0
+  },
+  "faces": [
+    {
+      "file": "IBMPlexMono-Regular.ttf",
+      "out": "plex-mono-regular",
+      "weight": 400,
+      "style": "normal",
+      "bytes": 16120,
+      "unicodeRange": "U+20-7E,U+A0-17F,U+2010-2015,U+2018-201A,U+201C-201E,U+2020-2022,U+2026,U+2030,U+2032-2033,U+2039-203A,U+20AC,U+2122,U+2190-2195,U+2197,U+2212,U+2248,U+2260,U+2264-2265,U+2713"
+    },
+    {
+      "file": "IBMPlexMono-Bold.ttf",
+      "out": "plex-mono-bold",
+      "weight": 700,
+      "style": "normal",
+      "bytes": 16412,
+      "unicodeRange": "U+20-7E,U+A0-17F,U+2010-2015,U+2018-201A,U+201C-201E,U+2020-2022,U+2026,U+2030,U+2032-2033,U+2039-203A,U+20AC,U+2122,U+2190-2195,U+2197,U+2212,U+2248,U+2260,U+2264-2265,U+2713"
+    },
+    {
+      "file": "IBMPlexMono-Italic.ttf",
+      "out": "plex-mono-italic",
+      "weight": 400,
+      "style": "italic",
+      "bytes": 17720,
+      "unicodeRange": "U+20-7E,U+A0-17F,U+2010-2015,U+2018-201A,U+201C-201E,U+2020-2022,U+2026,U+2030,U+2032-2033,U+2039-203A,U+20AC,U+2122,U+2190-2195,U+2197,U+2212,U+2248,U+2260,U+2264-2265,U+2713"
+    }
+  ],
+  "symbols": {
+    "source": "https://raw.githubusercontent.com/JetBrains/JetBrainsMono/v2.304/fonts/variable/JetBrainsMono%5Bwght%5D.ttf",
+    "characters": "‖‗‛‟‣․‥‧‱‴‵‶‷‸↵⇥⇧⌃⌘⌥⌦⌫⎋⏎▴▸▾○●✗⠇⠋⠏⠙⠦⠧⠴⠸⠹⠼",
+    "unicodeRange": "U+2016-2017,U+201B,U+201F,U+2023-2025,U+2027,U+2031,U+2034-2038,U+21B5,U+21E5,U+21E7,U+2303,U+2318,U+2325-2326,U+232B,U+238B,U+23CE,U+25B4,U+25B8,U+25BE,U+25CB,U+25CF,U+2717,U+2807,U+280B,U+280F,U+2819,U+2826-2827,U+2834,U+2838-2839,U+283C",
+    "bytes": 2264
+  }
+}

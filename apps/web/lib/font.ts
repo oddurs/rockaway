@@ -1,24 +1,24 @@
 /**
- * The site's type (cairn 0103): one monospace font, and a fallback for it that
- * is the same width.
+ * The site's type (cairn 0103, 0295): IBM Plex Mono, and a fallback for it
+ * that is the same width.
  *
  * On a character grid the font's advance is the cell (`1ch`), so the moment
  * a web font replaces a system font is the moment every column could move.
  * Each fallback below is a system monospace font scaled with `size-adjust` so
- * its advance is exactly JetBrains Mono's 0.6em, and given JetBrains Mono's
- * ascent and descent so its glyphs sit at the same height in the row. When the
- * web font arrives, nothing moves: the cell was already the right size.
+ * its advance is exactly Plex's 0.6em, and given Plex's ascent and descent so
+ * its glyphs sit at the same height in the row. When the web font arrives,
+ * nothing moves: the cell was already the right size.
  *
- * The same scaling covers characters the subset leaves out. A glyph JetBrains
- * Mono does not have falls through to the adjusted fallback, at the same
- * advance, so it still fills exactly one cell.
+ * The same scaling covers characters Plex does not draw: the few the system
+ * sets that it lacks are cut from JetBrains Mono, whose advance is also 0.6em
+ * (`plex-symbols.woff2`, scripts/font.ts), and anything else falls through to
+ * the adjusted fallback, at the same advance, so it still fills one cell.
  *
- * The row is not at risk: `line-height` is a unitless multiple of the font
- * size (the density context), so `1lh` never depended on the font.
+ * The faces themselves are `next/font/local`'s (app/fonts.ts): self-hosted,
+ * hashed, preloaded, and declared by Next; this declares the fallbacks and
+ * the stack the tokens read.
  */
-import font from '../app/fonts/jetbrains-mono.json' with { type: 'json' };
-
-export const FAMILY = 'JetBrains Mono';
+import font from '../app/fonts/plex-mono.json' with { type: 'json' };
 
 /** A system monospace font, and how wide its cell is. */
 export interface Fallback {
@@ -90,7 +90,7 @@ export const metrics: Metrics = font.metrics;
 
 /** The family name a fallback face is declared under. */
 export function fallbackFamily(fallback: Fallback): string {
-  return `${FAMILY} (${fallback.name})`;
+  return `rockaway mono (${fallback.name})`;
 }
 
 /** The scale that makes a fallback's advance the web font's. */
@@ -98,33 +98,33 @@ export function sizeAdjust(fallback: Fallback, web: Metrics = metrics): number {
   return web.advance / web.unitsPerEm / fallback.advance;
 }
 
-/** Every family, the web font first, then the adjusted fallbacks, then the generic. */
-export function fontStack(): string {
-  return [FAMILY, ...fallbacks.map(fallbackFamily)]
-    .map((name) => `"${name}"`)
-    .concat('monospace')
-    .join(', ');
+const quoted = (name: string): string => (name.startsWith("'") ? name : `"${name}"`);
+
+/** Every family: the web faces first, then the adjusted fallbacks, then the generic. */
+export function fontStack(web: readonly string[]): string {
+  return [...web, ...fallbacks.map(fallbackFamily)].map(quoted).concat('monospace').join(', ');
 }
+
+/** How much wider a cell is than a letter, in pixels: see `fontFaces`. */
+const SLACK = 0.004;
 
 const percent = (n: number): string => `${Number((n * 100).toFixed(4))}%`;
 const locals = (names: readonly string[]): string =>
   names.map((name) => `local("${name}")`).join(', ');
 
 /**
- * The faces, and the token that names them, as one stylesheet. `src` is the
- * URL the build gave the font file, the same one the page preloads.
+ * The fallback faces, and the tokens that name the stack, as one stylesheet.
+ * `web` is the family names `next/font` gave the faces, in order.
  */
-export function fontFaces(src: string, web: Metrics = metrics): string {
-  const faces = [
-    `@font-face{font-family:"${FAMILY}";src:url("${src}") format("woff2");font-weight:400 700;font-style:normal;font-display:swap}`,
-  ];
+export function fontFaces(web: readonly string[], measured: Metrics = metrics): string {
+  const faces: string[] = [];
   for (const fallback of fallbacks) {
-    const scale = sizeAdjust(fallback, web);
+    const scale = sizeAdjust(fallback, measured);
     const vertical = [
       `size-adjust:${percent(scale)}`,
-      `ascent-override:${percent(web.ascent / web.unitsPerEm / scale)}`,
-      `descent-override:${percent(-web.descent / web.unitsPerEm / scale)}`,
-      `line-gap-override:${percent(web.lineGap / web.unitsPerEm / scale)}`,
+      `ascent-override:${percent(measured.ascent / measured.unitsPerEm / scale)}`,
+      `descent-override:${percent(-measured.descent / measured.unitsPerEm / scale)}`,
+      `line-gap-override:${percent(measured.lineGap / measured.unitsPerEm / scale)}`,
     ].join(';');
     for (const [weight, names] of [
       [400, fallback.regular],
@@ -136,7 +136,24 @@ export function fontFaces(src: string, web: Metrics = metrics): string {
     }
   }
   // Unlayered, so it wins over the token's system stack in `rk.tokens`.
-  const stack = fontStack();
-  faces.push(`:root{--rk-font-family-mono:${stack};--rk-font-family-display:${stack}}`);
+  //
+  // And the cell is the font's advance, written as a length rather than read
+  // from `1ch`, which is whichever font has arrived. Plex's and a scaled
+  // fallback's are within a hair of each other, but a hair is enough: at a
+  // width that is a whole number of cells the grid's tracks round one way in
+  // the fallback and the other in Plex, and a pane moves when the font
+  // arrives. Written as a length, the grid is the same in both.
+  //
+  // Plus SLACK. The engine sums a line's advances in floating point and
+  // snaps a box to its layout unit, so a line exactly as long as its measure
+  // came out a rounding error too long in Plex, and wrapped, where the
+  // fallback's kept it on one line: the paragraph grew a row when Plex
+  // arrived. With a cell a few thousandths of a pixel wider than a letter,
+  // a line that fills its measure fits in either font.
+  const stack = fontStack(web);
+  const cell = `calc(${Number((measured.advance / measured.unitsPerEm).toFixed(6))}em + ${SLACK}px)`;
+  faces.push(
+    `:root{--rk-font-family-mono:${stack};--rk-font-family-display:${stack};--rk-cell-width:${cell}}`,
+  );
   return faces.join('\n');
 }

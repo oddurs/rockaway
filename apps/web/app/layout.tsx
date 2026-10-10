@@ -11,8 +11,8 @@
  *
  * The head's order matters on a grid: the pre-paint script first, so the
  * reader's theme, mode, density and shell are on `<html>` before anything is
- * drawn (0148), then the font, preloaded, with fallbacks whose cell is the
- * font's, so nothing moves when it arrives.
+ * drawn (0148), then the font, preloaded by `next/font`, with fallbacks whose
+ * cell is the font's, so nothing moves when it arrives.
  */
 import { themeNames } from '@rockaway/tokens';
 import type { Metadata, Viewport } from 'next';
@@ -27,8 +27,7 @@ import { prePaint, SITE_THEME, STORAGE_KEY } from '../lib/look.ts';
 import { asset } from '../lib/paths.ts';
 import { shellBindings } from '../lib/shell.ts';
 import { NAV, THEME_URLS } from '../lib/site.ts';
-
-const font = asset('fonts/jetbrains-mono.woff2');
+import { siteMono, siteSymbols } from './fonts.ts';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://oddurs.github.io'),
@@ -39,6 +38,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = { width: 'device-width', initialScale: 1 };
+
+/** The families `next/font` declared, Plex's first, as a stack names them. */
+const webFamilies = [siteMono, siteSymbols].map(
+  (face) => face.style.fontFamily.split(',')[0]?.trim() ?? '',
+);
 
 /** A shut section of the map: its rows hidden, its mark turned. */
 const sectionCss = NAV.filter((node) => (node.children?.length ?? 0) > 0)
@@ -89,11 +93,10 @@ export default function RootLayout({
       <head>
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: the site's own script, written at build. */}
         <script dangerouslySetInnerHTML={{ __html: prePaint(THEME_URLS, themeNames) }} />
-        <link rel="preload" href={font} as="font" type="font/woff2" crossOrigin="" />
         <style
           // biome-ignore lint/security/noDangerouslySetInnerHtml: the faces and the glyph sets, written at build.
           dangerouslySetInnerHTML={{
-            __html: `${fontFaces(font)}\n${glyphSetCss()}\n${sectionCss}`,
+            __html: `${fontFaces(webFamilies)}\n${glyphSetCss()}\n${sectionCss}`,
           }}
         />
       </head>

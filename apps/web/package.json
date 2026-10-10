@@ -6,7 +6,9 @@
     "dev": "node scripts/themes.ts && node scripts/routes.ts && next dev --turbopack",
     "build": "node scripts/themes.ts && node scripts/routes.ts && tsc -p tsconfig.json && next build --turbopack",
     "typecheck": "node scripts/routes.ts && tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "font": "node scripts/font.ts",
+    "budget": "vitest run test/budget.test.ts"
   },
   "dependencies": {
     "@rockaway/css": "workspace:*",
@@ -32,6 +34,7 @@
     "@types/react-dom": "19.3.0",
     "babel-plugin-react-compiler": "1.0.0",
     "playwright": "1.63.0",
+    "subset-font": "2.9.0",
     "vitest": "4.1.11"
   }
 }
