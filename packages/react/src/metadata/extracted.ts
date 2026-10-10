@@ -1279,6 +1279,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "The accessible name, when the title is not the right one to say."
       },
       {
+        "name": "landmark",
+        "type": "boolean",
+        "required": false,
+        "description": "Whether a named pane is a region landmark. True by default. False makes it a plain container with no name, its title still drawn in its top edge: for a pane whose content is a landmark of its own, a `nav`, `main` or `aside`, which should stay at the top of a reader's list of landmarks."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -1352,116 +1358,21 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Radio": {
-    "file": "radio-group.tsx",
+  "Popover": {
+    "file": "popover.tsx",
     "props": [
       {
-        "name": "children",
-        "type": "ReactNode",
+        "name": "minCols",
+        "type": "number | 'trigger'",
         "required": false,
-        "description": "The label: the option's words, after its mark."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
+        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width in whole cells, or a count. `0` lets it be as narrow as what it holds.\n @default 'trigger'",
+        "default": "'trigger'"
       }
     ],
     "inherits": [
-      "Omit<AriaRadioFieldProps, 'children' | 'className' | 'style'>"
+      "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
     ],
-    "tokens": [
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-border-focus",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-accent",
-      "--rk-fg-danger",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light",
-      "--rk-x-2"
-    ]
-  },
-  "RadioGroup": {
-    "file": "radio-group.tsx",
-    "props": [
-      {
-        "name": "label",
-        "type": "string",
-        "required": true,
-        "description": "Set into the frame's top edge, and the group's accessible name."
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "description": "The radios."
-      },
-      {
-        "name": "description",
-        "type": "ReactNode",
-        "required": false,
-        "description": "Help under the group, dim, linked to it by `aria-describedby`."
-      },
-      {
-        "name": "errorMessage",
-        "type": "FieldErrorProps['children']",
-        "required": false,
-        "description": "Words for the error under the group; the group's own validation's when not given."
-      },
-      {
-        "name": "orientation",
-        "type": "RadioOrientation",
-        "required": false,
-        "description": "`vertical` puts a radio on each row; `horizontal` sets them across, two cells apart, wrapping whole radios to the next row when they do not fit. The arrow keys follow it."
-      },
-      {
-        "name": "painter",
-        "type": "PainterName",
-        "required": false,
-        "description": "How the frame's lines are stroked: weighted like the type, or hairlines."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      }
-    ],
-    "inherits": [
-      "VariantProps<typeof radioGroupVariants>",
-      "Omit<AriaRadioGroupProps, 'children' | 'className' | 'style' | 'orientation'>"
-    ],
-    "tokens": [
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-border-focus",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-accent",
-      "--rk-fg-danger",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light",
-      "--rk-x-2"
-    ]
+    "tokens": []
   },
   "Row": {
     "file": "table.tsx",
@@ -1691,6 +1602,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "How many rows a `multiline` box shows.",
         "default": "DEFAULT_ROWS"
+      },
+      {
+        "name": "inputRef",
+        "type": "Ref<HTMLInputElement | HTMLTextAreaElement>",
+        "required": false,
+        "description": "The text box itself, `<input>` or, `multiline`, `<textarea>`: for an app to focus it, select its text or read its caret. An object or a callback; the field keeps its own beside it. `ref` is the field around it."
       },
       {
         "name": "className",
