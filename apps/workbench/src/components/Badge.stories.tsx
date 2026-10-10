@@ -204,6 +204,33 @@ export const InProse: Story = {
   },
 };
 
+/**
+ * A mark in a font that lacks it is drawn in another, whose advance is not
+ * the cell's. Here the mark is drawn deliberately wider than a cell, as a
+ * fallback font may: the badge still takes exactly its cells, the mark and its
+ * air two and the words one each, so the sentence wraps where it would with
+ * the font's own ✓. Found by the kitchen sink on Linux (0142).
+ */
+export const WideMark: Story = {
+  name: 'A mark wider than its cell',
+  render: () => (
+    <Frame title="wide mark" cols={36} rows={4}>
+      <style>{'.wide-mark .rk-badge-mark { font-size: 1.6em; }'}</style>
+      <p className="wide-mark" style={{ margin: 0, whiteSpace: 'normal' }}>
+        The build is <Badge tone="success">passing</Badge> on main.
+      </p>
+    </Frame>
+  ),
+  play: async ({ canvasElement }) => {
+    await settled();
+    const screen = canvasElement.querySelector('.rk-screen') as HTMLElement;
+    const cell = cellOf(screen);
+    const box = badge(canvasElement, 'passing').getBoundingClientRect();
+    // Exactly its cells, to a hair: half a cell of slack would hide the bug.
+    expect(Math.abs(box.width - ('passing'.length + 2) * cell.width)).toBeLessThan(0.05);
+  },
+};
+
 /** The glyph and rule painters draw the frame; the badge lands in the same cells under both. */
 export const Painters: Story = {
   render: () => (
