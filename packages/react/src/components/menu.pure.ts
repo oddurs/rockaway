@@ -6,7 +6,15 @@
  * itself. No React and no client boundary, so a server component, a static
  * renderer or a test can call them; `menu.tsx` imports them from here.
  */
-import { Attr, type Buffer, drawText, type Style, stringWidth } from '@rockaway/grid';
+import {
+  Attr,
+  type Buffer,
+  type Comfort,
+  drawText,
+  rhythm,
+  type Style,
+  stringWidth,
+} from '@rockaway/grid';
 import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import { formatKeys } from './key-hint.pure.ts';
 import { type OverlayDivider, overlayBuffer } from './overlay.pure.ts';
@@ -44,6 +52,37 @@ export interface MenuBufferOptions {
   readonly checkable?: boolean;
   /** Cells across, its frame included; as wide as its widest row when not given. */
   readonly width?: number;
+  /**
+   * The air beside a rule (0317): none when compact, the default; half a row
+   * after each rule and section title when comfortable; a row when spacious.
+   */
+  readonly comfort?: Comfort;
+}
+
+/** A menu's rows laid out: where each starts, in half-rows, and how many whole rows it takes. */
+export interface MenuLayout {
+  readonly tops: readonly number[];
+  readonly rows: number;
+}
+
+/**
+ * Where each row of a menu sits, in half-rows from its first (0311, 0317).
+ * Every row is a row tall; a rule or a section title has the comfort's air
+ * after it, beside it and never in it; a rule that would land on a half-row
+ * takes the half-row before it as well, since the frame draws rules on whole
+ * rows; and the menu closes to whole rows.
+ */
+export function menuLayout(rows: readonly MenuRow[], comfort: Comfort = 'compact'): MenuLayout {
+  const air = rhythm[comfort].group;
+  const tops: number[] = [];
+  let at = 0;
+  for (const row of rows) {
+    const rule = !isItem(row);
+    if (rule && at % 2 === 1) at += 1;
+    tops.push(at);
+    at += 2 + (rule ? air : 0);
+  }
+  return { tops, rows: Math.ceil(at / 2) };
 }
 
 /** Between a label and its chord, at the least. */
@@ -129,18 +168,21 @@ export function menuCols(
  * `menuRowStyle` restates.
  */
 export function menuBuffer(
-  { rows, checkable, width }: MenuBufferOptions,
+  { rows, checkable, width, comfort }: MenuBufferOptions,
   glyphs: Glyphs = themeGlyphs.default,
 ): Buffer {
   const checks = checkable ?? rows.some((row) => isItem(row) && row.checked === true);
   const across = Math.max(2, width ?? menuCols(rows, checks, glyphs));
+  const layout = menuLayout(rows, comfort);
+  // A row resting on a half-row reads as the row below it, as screenshot() reads one.
+  const rowOf = (i: number): number => 1 + Math.ceil((layout.tops[i] ?? 0) / 2);
   const dividers: OverlayDivider[] = [];
-  rows.forEach((row, y) => {
-    if ('separator' in row) dividers.push({ row: 1 + y });
-    if ('section' in row) dividers.push({ row: 1 + y, title: row.section });
+  rows.forEach((row, i) => {
+    if ('separator' in row) dividers.push({ row: rowOf(i) });
+    if ('section' in row) dividers.push({ row: rowOf(i), title: row.section });
   });
   const frame = overlayBuffer(
-    { width: across, height: rows.length + 2 },
+    { width: across, height: layout.rows + 2 },
     { kind: 'popover', dividers },
     glyphs,
   );
@@ -148,7 +190,7 @@ export function menuBuffer(
   return frame.draw((draft) => {
     rows.forEach((row, i) => {
       if (!isItem(row)) return;
-      const y = 1 + i;
+      const y = rowOf(i);
       const style = menuRowStyle(row);
       // The row's ground runs from side to side, so the cursor's reverse
       // video is a bar across the menu and not a box around the words.

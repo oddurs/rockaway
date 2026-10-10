@@ -25,6 +25,7 @@
     --rk-rhythm-pad-x: 2;
     --rk-rhythm-help: 1;
     --rk-rhythm-field: 2;
+    --rk-rhythm-group: 1;
   }
 
   [data-rk-comfort="compact"] {
@@ -34,6 +35,7 @@
     --rk-rhythm-pad-x: 2;
     --rk-rhythm-help: 0;
     --rk-rhythm-field: 2;
+    --rk-rhythm-group: 0;
   }
 
   [data-rk-comfort="spacious"] {
@@ -43,6 +45,7 @@
     --rk-rhythm-pad-x: 4;
     --rk-rhythm-help: 2;
     --rk-rhythm-field: 4;
+    --rk-rhythm-group: 2;
   }
 }
 
