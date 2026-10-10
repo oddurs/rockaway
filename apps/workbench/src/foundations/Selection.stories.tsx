@@ -136,6 +136,7 @@ export const ThreeLines: Story = {
                 return;
               }
             }
+            throw new Error(`the prose wrapped to ${lines} lines, not the three this needs`);
           },
         ],
         [
