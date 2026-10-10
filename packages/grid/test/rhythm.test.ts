@@ -16,8 +16,11 @@ describe('rhythm (0311, 0312)', () => {
     expect(flow([], 3)).toEqual({ offsets: [], steps: 0, rows: 0, pad: 0 });
   });
 
-  it('pairs horizontal half-steps, so padding across is whole cells', () => {
-    for (const c of comforts) expect(rhythm[c].padX % 2).toBe(0);
+  it('pairs horizontal half-steps, and keeps fields on whole rows', () => {
+    for (const c of comforts) {
+      expect(rhythm[c].padX % 2).toBe(0);
+      expect(rhythm[c].field % 2).toBe(0);
+    }
   });
 
   it('makes a comfortable field three rows, and a compact one two', () => {

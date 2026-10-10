@@ -132,7 +132,7 @@ function sizes(): ReturnType<typeof formBuffer> {
       { control: textFieldBuffer({ size: 'lg', label: 'Repository' }) },
       { control: textFieldBuffer({ multiline: true, rows: 2, label: 'Message' }) },
     ],
-    { width: WIDE - 4 },
+    { comfort: 'compact', width: WIDE - 4 },
   );
 }
 
@@ -143,10 +143,11 @@ function sizes(): ReturnType<typeof formBuffer> {
  */
 export const Sizes: Story = {
   // Held to the strictest level: every box in it a whole number of cells.
+  // Strict is structure only (0311), so the form is the compact one.
   globals: { conformance: 'strict' },
   render: () => (
     <Frame title="new repository" cols={WIDE} rows={sizes().height + 2}>
-      <Form>
+      <Form comfort="compact">
         <TextField label="Name" />
         <TextField label="Email" isRequired description="Where the receipts go." />
         <TextField label="Repository" size="lg" />
@@ -171,6 +172,66 @@ export const Sizes: Story = {
     expect([cells(box?.width ?? 0, cell.width), cells(box?.height ?? 0, cell.height)]).toEqual([
       24, 3,
     ]);
+  },
+};
+
+/** The comfortable form as text: the model the next story is read against. */
+function comfortable(): ReturnType<typeof formBuffer> {
+  return formBuffer(
+    [
+      { label: 'Name', control: textFieldBuffer({}), box: true },
+      {
+        label: 'Email',
+        required: true,
+        control: textFieldBuffer({}),
+        box: true,
+        description: 'Where the receipts go.',
+      },
+      { control: textFieldBuffer({ size: 'lg', label: 'Repository' }) },
+    ],
+    { width: WIDE - 4 },
+  );
+}
+
+/**
+ * Comfortable, the default (0316): each label over its box, the box padded
+ * half a row above and below so its one row of text sits in two, the help
+ * half a row under it, and each field closed to whole rows. Read back off the
+ * page, cell for cell, at every density, and held to `standard`: the padding
+ * is rhythm, and every field's outer box is still whole rows.
+ */
+export const Comfortable: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}>
+      {(['dense', 'normal', 'airy', 'touch'] as const).map((density) => (
+        <div key={density} data-density={density}>
+          <Frame title={density} cols={WIDE} rows={comfortable().height + 2}>
+            <Form>
+              <TextField label="Name" />
+              <TextField label="Email" isRequired description="Where the receipts go." />
+              <TextField label="Repository" size="lg" />
+            </Form>
+          </Frame>
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    for (const density of ['dense', 'normal', 'airy', 'touch']) {
+      const frame = canvas.getByRole('group', { name: density });
+      expect(inside(screenshot(frame, { legend: false }), WIDE), density).toBe(
+        toText(comfortable()),
+      );
+      const cell = cellOf(frame);
+      // The text is one row; the box around it is two, and every field is whole rows.
+      for (const field of frame.querySelectorAll<HTMLElement>('.rk-field')) {
+        const rows = field.getBoundingClientRect().height / cell.height;
+        expect(Math.abs(rows - Math.round(rows)), `${density}: ${rows} rows`).toBeLessThan(1 / 32);
+      }
+      const box = frame.querySelector('.rk-text-field-box')?.getBoundingClientRect();
+      expect(cells(box?.height ?? 0, cell.height)).toBe(2);
+    }
   },
 };
 
@@ -471,7 +532,7 @@ export const Densities: Story = {
       {(['dense', 'normal', 'airy', 'touch'] as const).map((density) => (
         <div key={density} data-density={density}>
           <Frame title={density} cols={40} rows={8}>
-            <Form>
+            <Form comfort="compact">
               <TextField label={`Name ${density}`} cols={12} />
               <TextField label={`Path ${density}`} cols={12} size="lg" />
             </Form>

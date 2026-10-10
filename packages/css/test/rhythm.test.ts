@@ -26,6 +26,7 @@ describe('rhythm.css (0313)', () => {
         'pad-y': r.padY,
         'pad-x': r.padX,
         help: r.help,
+        field: r.field,
       });
     }
   });

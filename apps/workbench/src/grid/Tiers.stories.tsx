@@ -115,7 +115,7 @@ export const LevelsReadTheTiers: Story = {
   },
 };
 
-/** Compact has no gap: the blocks stack on whole rows and nothing bends. */
+/** Compact's gap is a whole row: the blocks stack on whole rows and nothing bends. */
 export const Compact: Story = {
   args: { comfort: 'compact' },
   play: async ({ canvasElement }) => {
@@ -123,7 +123,7 @@ export const Compact: Story = {
     const flowEl = canvasElement.querySelector<HTMLElement>('[data-testid="flow"]');
     if (!flowEl) throw new Error('no flow');
     const row = cell(flowEl);
-    await waitFor(() => expect(flowEl.getBoundingClientRect().height / row).toBeCloseTo(2, 1));
+    await waitFor(() => expect(flowEl.getBoundingClientRect().height / row).toBeCloseTo(3, 1));
     const report = checkConformance(canvasElement);
     expect(report.rhythm).toEqual([]);
   },

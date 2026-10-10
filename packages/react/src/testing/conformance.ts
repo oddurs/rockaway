@@ -209,7 +209,7 @@ function stepFor(
     // (the padding that makes it read as one) or inside a rhythm block (the
     // spacing between fields, menu sections, toolbar items). The block's own
     // box is still whole cells: it is a seam.
-    const rhythm = el.parentElement?.closest('[data-rk-control], [data-rk-rhythm]');
+    const rhythm = el.parentElement?.closest('[data-rk-control], [data-rk-rhythm], .rk-seam');
     if (rhythm && screen.contains(rhythm)) return 0.5;
   }
   return 1;
@@ -217,7 +217,11 @@ function stepFor(
 
 /** The outer box of a rhythm block or a free zone (0311). */
 function isSeam(el: HTMLElement): boolean {
-  return el.hasAttribute('data-rk-rhythm') || el.hasAttribute('data-rk-free');
+  return (
+    el.hasAttribute('data-rk-rhythm') ||
+    el.hasAttribute('data-rk-free') ||
+    el.classList.contains('rk-seam')
+  );
 }
 
 function group(exceptions: readonly Exception[]): ExceptionGroup[] {

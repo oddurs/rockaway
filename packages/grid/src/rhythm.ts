@@ -27,19 +27,21 @@ export interface Rhythm {
   readonly padX: number;
   /** From a control to the help or error under it. */
   readonly help: number;
+  /** Between one field and the next in a form. Always even, so every field starts on a whole row. */
+  readonly field: number;
 }
 
 /**
  * The rhythm of each comfort, in half-steps (0313). `compact` is the strict
- * TUI form: no padding inside a control and nothing between fields.
+ * TUI form: no padding inside a control and a row between blocks.
  * `comfortable` is the default (0311): a field's box is ½ + 1 + ½ = 2 rows,
  * and fields sit a row and a half apart. Keep in step with rhythm.css, which
  * packages/css/test/rhythm.test.ts holds to this table.
  */
 export const rhythm: Readonly<Record<Comfort, Rhythm>> = {
-  compact: { gap: 0, section: 2, padY: 0, padX: 2, help: 0 },
-  comfortable: { gap: 3, section: 4, padY: 1, padX: 2, help: 1 },
-  spacious: { gap: 4, section: 6, padY: 2, padX: 4, help: 2 },
+  compact: { gap: 2, section: 2, padY: 0, padX: 2, help: 0, field: 2 },
+  comfortable: { gap: 3, section: 4, padY: 1, padX: 2, help: 1, field: 2 },
+  spacious: { gap: 4, section: 6, padY: 2, padX: 4, help: 2, field: 4 },
 };
 
 /** Whole rows needed to hold a run of half-steps: the seam rounds up. */
