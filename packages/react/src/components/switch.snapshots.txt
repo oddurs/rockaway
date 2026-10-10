@@ -1,0 +1,6 @@
+── Off and on
+[●──] Wrap lines
+[──●] Wrap lines
+── Read-only
+[●  ] Wrap lines
+[  ●] Wrap lines

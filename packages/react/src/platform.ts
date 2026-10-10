@@ -15,28 +15,9 @@
  * only on the client is right from the first.
  */
 import { useSyncExternalStore } from 'react';
+import { detectPlatform, type Platform, type PlatformHints } from './platform.pure.ts';
 
-export type Platform = 'apple' | 'other';
-
-/** What a browser can tell us about itself. `userAgentData` is the modern way, where it exists. */
-export interface PlatformHints {
-  readonly userAgentData?: { readonly platform?: string } | undefined;
-  readonly userAgent?: string | undefined;
-}
-
-const APPLE = /mac|iphone|ipad|ipod|ios/i;
-
-/**
- * The keyboard a browser's hints describe. `userAgentData.platform` first,
- * because `navigator.platform` is deprecated and frozen in some browsers;
- * the user agent string where client hints are not offered (Safari, Firefox).
- */
-export function detectPlatform(hints: PlatformHints | undefined): Platform {
-  if (hints === undefined) return 'other';
-  const platform = hints.userAgentData?.platform;
-  if (platform !== undefined && platform !== '') return APPLE.test(platform) ? 'apple' : 'other';
-  return APPLE.test(hints.userAgent ?? '') ? 'apple' : 'other';
-}
+export { detectPlatform, type Platform, type PlatformHints } from './platform.pure.ts';
 
 /** The keyboard does not change under a page, so there is nothing to subscribe to. */
 const subscribe = (): (() => void) => () => {};
