@@ -23,9 +23,9 @@
  * restores before the first frame.
  *
  * The window is the query container: its width in cells decides which panes
- * there is room for. A query is written in ems, a cell being 0.6em, so it
- * asks the same question before the font arrives as after (lib/font.ts):
- * 72em is 120 cells, 43.2em is 72.
+ * there is room for. A query is written in ems, a cell being Plex's 0.6em,
+ * so it asks the same question before the font arrives as after: 72em is
+ * 120 cells, 43.2em is 72 (a little fewer where letters are whole pixels).
  */
 body {
   margin: 0;
@@ -51,10 +51,16 @@ body {
     calc(var(--site-gx) * var(--rk-cell-width))
     calc(var(--site-map) * var(--rk-cell-width))
     calc(var(--site-map-gap) * var(--rk-cell-width))
+    /* The page's track takes the whole cells left, give or take a pixel: the
+     * cell is the font's, and a scaled fallback's is a hair off Plex's, so at
+     * a width that is exactly a whole number of cells the count would round
+     * one way before the font arrives and the other after, and every pane
+     * would move a cell (Slow 4G, 1440 wide). */
     round(
       down,
       calc(
-        100% -
+        100% +
+        1px -
         (
           2 *
           var(--site-gx) +

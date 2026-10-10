@@ -137,21 +137,22 @@ export function fontFaces(web: readonly string[], measured: Metrics = metrics): 
   }
   // Unlayered, so it wins over the token's system stack in `rk.tokens`.
   //
-  // And the cell is the font's advance, written as a length rather than read
-  // from `1ch`, which is whichever font has arrived. Plex's and a scaled
-  // fallback's are within a hair of each other, but a hair is enough: at a
-  // width that is a whole number of cells the grid's tracks round one way in
-  // the fallback and the other in Plex, and a pane moves when the font
-  // arrives. Written as a length, the grid is the same in both.
+  // And the cell is the font's advance, `1ch`, plus SLACK. Not a length
+  // written from Plex's metrics (0.6em): an engine that sets text on whole
+  // pixels, as Chromium on Linux does, draws a letter 10px wide at 16px, and
+  // a grid of 9.6px cells under 10px letters is off the grid (the CI's
+  // conformance check found it). The fallbacks are scaled to Plex's advance,
+  // so `1ch` is within a hair of the same in either; the shell's tracks allow
+  // for that hair (globals.css).
   //
-  // Plus SLACK. The engine sums a line's advances in floating point and
+  // SLACK: the engine sums a line's advances in floating point and
   // snaps a box to its layout unit, so a line exactly as long as its measure
   // came out a rounding error too long in Plex, and wrapped, where the
   // fallback's kept it on one line: the paragraph grew a row when Plex
   // arrived. With a cell a few thousandths of a pixel wider than a letter,
   // a line that fills its measure fits in either font.
   const stack = fontStack(web);
-  const cell = `calc(${Number((measured.advance / measured.unitsPerEm).toFixed(6))}em + ${SLACK}px)`;
+  const cell = `calc(1ch + ${SLACK}px)`;
   faces.push(
     `:root{--rk-font-family-mono:${stack};--rk-font-family-display:${stack};--rk-cell-width:${cell}}`,
   );
