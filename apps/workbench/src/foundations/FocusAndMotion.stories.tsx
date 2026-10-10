@@ -11,6 +11,7 @@ import {
   TextField,
 } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { tab } from '../keys.ts';
 import { text } from '../text.ts';
 
 /**
@@ -104,7 +105,7 @@ export const Focus: Story = {
     const clipped = canvas.getByRole('button', { name: 'Inside overflow: hidden' });
 
     // Keyboard focus rings: 2px solid, offset 2px.
-    await userEvent.tab();
+    await tab();
     await expect(document.activeElement).toBe(button);
     // Computed style objects are live, so read the values out now.
     const ring = { ...getComputedStyle(button) } as CSSStyleDeclaration;

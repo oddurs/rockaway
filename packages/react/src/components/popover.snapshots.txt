@@ -1,0 +1,25 @@
+── Under its trigger
+[ Branches ]
+┏━━━━━━━━━━━━━┓
+┃ main        ┃
+┃ develop     ┃
+┃ release/0.1 ┃
+┗━━━━━━━━━━━━━┛
+── Flipped
+┏━━━━━━━━━━━━━┓
+┃ main        ┃
+┃ develop     ┃
+┃ release/0.1 ┃
+┗━━━━━━━━━━━━━┛
+[ Branches ]
+── As wide as its trigger
+[ Branches ]
+┏━━━━━━━━━━┓
+┃ main     ┃
+┗━━━━━━━━━━┛
+── Scrolled
+┏━━━━━━━┓
+┃ four  ┃
+┃ five  █
+┃ six   █
+┗━━━━━━━┛
