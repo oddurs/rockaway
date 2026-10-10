@@ -21,6 +21,9 @@ export const frameMeta: ComponentMetaInput = defineMeta({
     {
       text: 'Around a single control, which draws its own chrome. A frame with a title is a group, and a reader hears it as one.',
     },
+    {
+      text: "Filling a box with CSS `resize`. The browser draws its resize grip in the box's bottom-right corner, over the frame's last cell, and the corner reads as broken. Size the box some other way, or keep it a cell larger than the frame.",
+    },
   ],
   related: [
     {

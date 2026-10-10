@@ -36,6 +36,18 @@ export const printToPdf: BrowserCommand<[html: string]> = async (context, html) 
 };
 
 /**
+ * Ask the page for `prefers-contrast: more`, or give it back (cairn 0065). It
+ * is a media feature of the browser, so a story cannot set it; the page it
+ * runs in can.
+ */
+export const emulateContrast: BrowserCommand<[contrast: 'more' | 'no-preference']> = async (
+  context,
+  contrast,
+) => {
+  await context.page.emulateMedia({ contrast });
+};
+
+/**
  * Load a document in a page with JavaScript switched off and read back what it
  * shows (cairn 0126): the text of each painted row, how many cells draw their
  * own shape, and whether the page's own script ran — which it must not have,
@@ -56,6 +68,35 @@ export const readWithoutScripts: BrowserCommand<[html: string]> = async (context
   } finally {
     await isolated.close();
   }
+};
+
+/**
+ * A watchdog on the page's main thread (the Tabs hang, 0216). A loop that
+ * never yields — a `waitFor` whose callback changes the document it watches,
+ * so it runs again in a microtask, for ever — starves every timer in the
+ * page, Vitest's test timeout among them, and the run hangs instead of
+ * failing. Ending the script it is stuck in is not enough: the next change
+ * runs the callback again. A timer here, in Node, is not starved, so if a
+ * test is still running when it fires, it says so and closes the page, and
+ * the run fails at once instead of eating CI.
+ */
+const watchdogs = new Map<string, ReturnType<typeof setTimeout>>();
+
+export const watchdog: BrowserCommand<[ms: number | null]> = (context, ms) => {
+  clearTimeout(watchdogs.get(context.sessionId));
+  watchdogs.delete(context.sessionId);
+  if (ms === null) return;
+  const test = context.testPath ?? 'a test';
+  watchdogs.set(
+    context.sessionId,
+    setTimeout(() => {
+      watchdogs.delete(context.sessionId);
+      console.error(
+        `\nwatchdog: ${test} was still running after ${ms / 1000}s, past its own timeout, so the page has stopped answering (a loop that never yields?). Closing the page.\n`,
+      );
+      void context.page.close();
+    }, ms),
+  );
 };
 
 /**

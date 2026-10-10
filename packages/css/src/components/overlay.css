@@ -1,0 +1,116 @@
+/*
+ * Overlays (cairn 0128): the layer, the backdrop and the surface.
+ *
+ * React Aria places a popover in pixels and a modal in the middle of the
+ * viewport; the component then moves the surface onto the cell grid with a
+ * relative offset, laid out so its strokes are snapped to pixels after it,
+ * which a translate's are not. Nothing here sets a position in pixels. The surface is a screen
+ * whose content is in flow, so it is as tall as what it holds and as wide,
+ * in whole cells, and never taller than `--rk-overlay-max-rows`: past that its
+ * content scrolls, with no native scrollbar (0207), and the frame's right edge
+ * shows where.
+ *
+ * There is no motion: an overlay is there on the next frame, fully drawn.
+ */
+@layer rk.components {
+  /* The portal root sits at the corner of whatever holds it and takes no room. */
+  .rk-overlay-layer {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 0;
+    block-size: 0;
+  }
+
+  /* As wide as what it holds: React Aria measures it whole and moves it to fit,
+   * rather than the edge of the page squeezing it into wrapping. */
+  .rk-overlay {
+    position: relative;
+    display: inline-block;
+    inline-size: max-content;
+    color: var(--rk-fg-default);
+  }
+
+  /* The screen grows with what it holds, as a field frame's does. */
+  .rk-overlay > .rk-screen {
+    background: var(--rk-bg-surface);
+    min-inline-size: max(
+      calc(var(--rk-overlay-min-cols, 0) * var(--rk-cell-width)),
+      var(--rk-overlay-min-trigger, 0px)
+    );
+  }
+
+  /*
+   * As wide as the trigger, in whole cells: React Aria sets --trigger-width on
+   * the popover. A trigger on the grid is a whole number of cells already; a
+   * thirty-second of a pixel over is measurement, not another cell.
+   */
+  .rk-overlay-min-trigger > .rk-screen {
+    --rk-overlay-min-trigger: round(
+      up,
+      max(0px, var(--trigger-width, 0px) - 1px / 32),
+      var(--rk-cell-width)
+    );
+  }
+
+  .rk-overlay > .rk-screen > .rk-content {
+    position: relative;
+  }
+
+  /* The rows asked for, or the rows there is room for, whichever is fewer. */
+  .rk-overlay-body {
+    max-block-size: calc(
+      var(--rk-cell-height) *
+      min(var(--rk-overlay-max-rows, 1000), var(--rk-overlay-fit-rows, 1000))
+    );
+    overflow: hidden auto;
+    white-space: normal;
+  }
+
+  /*
+   * Under 60 cells, or at touch density: as wide as the viewport, in whole
+   * cells. A thirty-second of a pixel over first, as `cellsIn` takes it: a
+   * viewport exactly n cells wide divides to a hair under n in an engine whose
+   * lengths are not the cell's multiples (Firefox's 1/60px), and lost a cell.
+   */
+  .rk-overlay-sheet {
+    display: block;
+    inline-size: round(down, 100vw + 1px / 32, var(--rk-cell-width));
+  }
+
+  /*
+   * The modal's underlay: the viewport, a grid that centres the surface (and
+   * puts a sheet on the bottom rows), over the backdrop's screen of shade.
+   */
+  .rk-overlay-backdrop {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: var(--rk-bg-page);
+  }
+
+  .rk-overlay-backdrop-sheet {
+    place-items: end start;
+  }
+
+  /*
+   * The shade fills the viewport's whole cells. What is left at the right and
+   * the bottom, less than a cell, is the underlay's ground: a cell is never
+   * drawn where the viewport would cut it.
+   */
+  .rk-overlay-scrim {
+    position: absolute;
+    inset: 0;
+  }
+
+  .rk-overlay-modal {
+    position: relative;
+    outline: none;
+  }
+
+  .rk-overlay-popover {
+    outline: none;
+  }
+}

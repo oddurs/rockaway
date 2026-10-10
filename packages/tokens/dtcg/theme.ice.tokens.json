@@ -1,5 +1,5 @@
 {
-  "$description": "Ice (cairn 0052). Generated from the theme inputs. Fitted to the contrast gate: light blue: #007b81 → #007279 (for fg.accent on bg.page); light cyan: #007b81 → #007279 (for fg.info on bg.page); light green: #008130 → #007f2f (for fg.success on bg.success.subtle).",
+  "$description": "Ice (cairn 0052). Generated from the theme inputs. Fitted to the contrast gate: light blue: #007b81 → #007279 (for fg.accent on bg.page); light cyan: #007b81 → #007279 (for fg.info on bg.page); light green: #008130 → #007f2f (for fg.success on bg.success.subtle); light bright-blue: #006167 → #005257 (for fg.accent on bg.page, in more contrast); light bright-cyan: #006167 → #005257 (for fg.info on bg.page, in more contrast); light bright-green: #00671d → #005e17 (for fg.success on bg.page, in more contrast); light bright-yellow: #6e4c00 → #6a4900 (for fg.warning on bg.warning.subtle, in more contrast); light bright-red: #94221f → #92201e (for fg.danger on bg.danger.subtle, in more contrast).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "preset",
@@ -108,7 +108,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.44,
+            0.435,
             0.15,
             27
           ]
@@ -118,7 +118,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.44,
+            0.41,
             0.15,
             150
           ]
@@ -128,7 +128,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.44,
+            0.43,
             0.15,
             85
           ]
@@ -138,7 +138,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.44,
+            0.39,
             0.15,
             200
           ]
@@ -158,7 +158,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.44,
+            0.39,
             0.15,
             200
           ]
@@ -956,6 +956,114 @@
         "cross": {
           "$value": "┼"
         }
+      },
+      "emphasis": {
+        "$description": "A frame drawn heavier for a state: the heavy set (cairn 0128).",
+        "horizontal": {
+          "$value": "━"
+        },
+        "vertical": {
+          "$value": "┃"
+        },
+        "top-left": {
+          "$value": "┏"
+        },
+        "top-right": {
+          "$value": "┓"
+        },
+        "bottom-left": {
+          "$value": "┗"
+        },
+        "bottom-right": {
+          "$value": "┛"
+        },
+        "tee-left": {
+          "$value": "┫"
+        },
+        "tee-right": {
+          "$value": "┣"
+        },
+        "tee-up": {
+          "$value": "┻"
+        },
+        "tee-down": {
+          "$value": "┳"
+        },
+        "cross": {
+          "$value": "╋"
+        }
+      },
+      "raised": {
+        "$description": "A frame drawn above the page: the heavy set (cairn 0128).",
+        "horizontal": {
+          "$value": "━"
+        },
+        "vertical": {
+          "$value": "┃"
+        },
+        "top-left": {
+          "$value": "┏"
+        },
+        "top-right": {
+          "$value": "┓"
+        },
+        "bottom-left": {
+          "$value": "┗"
+        },
+        "bottom-right": {
+          "$value": "┛"
+        },
+        "tee-left": {
+          "$value": "┫"
+        },
+        "tee-right": {
+          "$value": "┣"
+        },
+        "tee-up": {
+          "$value": "┻"
+        },
+        "tee-down": {
+          "$value": "┳"
+        },
+        "cross": {
+          "$value": "╋"
+        }
+      },
+      "modal": {
+        "$description": "A frame drawn above everything: the double set (cairn 0128).",
+        "horizontal": {
+          "$value": "═"
+        },
+        "vertical": {
+          "$value": "║"
+        },
+        "top-left": {
+          "$value": "╔"
+        },
+        "top-right": {
+          "$value": "╗"
+        },
+        "bottom-left": {
+          "$value": "╚"
+        },
+        "bottom-right": {
+          "$value": "╝"
+        },
+        "tee-left": {
+          "$value": "╣"
+        },
+        "tee-right": {
+          "$value": "╠"
+        },
+        "tee-up": {
+          "$value": "╩"
+        },
+        "tee-down": {
+          "$value": "╦"
+        },
+        "cross": {
+          "$value": "╬"
+        }
       }
     },
     "mark": {
@@ -970,6 +1078,9 @@
       },
       "cursor": {
         "$value": "▸"
+      },
+      "prompt": {
+        "$value": "›"
       },
       "expanded": {
         "$value": "▾"

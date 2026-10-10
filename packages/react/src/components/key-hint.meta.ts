@@ -18,7 +18,7 @@ const hint = (
 export const keyHintMeta: ComponentMetaInput = defineMeta({
   name: 'KeyHint',
   summary: `A chord and the action it performs: \`${hint('mod+s', 'save', 'apple')}\`.`,
-  description: `How a TUI teaches itself. One spec gives three strings: what you see (\`${formatKeys('mod+s', 'apple')}\` on an Apple keyboard, \`Ctrl+S\` elsewhere, \`^S\` in terminal notation), what a reader hears ("Command S"), and what the platform is told (\`Meta+s\`, for aria-keyshortcuts). The key legends are the theme's: symbols in Unicode, words in an ASCII theme.`,
+  description: `How a TUI teaches itself. One spec gives three strings: what you see (\`${formatKeys('mod+s', 'apple')}\` on an Apple keyboard, \`Ctrl+S\` elsewhere, \`^S\` in terminal notation), what a reader hears ("Command S"), and what the platform is told (\`Meta+S\`, for aria-keyshortcuts). The key legends are the theme's: symbols in Unicode, words in an ASCII theme.`,
   whenToUse: [
     'In a status bar or a footer, to list what the keys on this screen do.',
     'Beside an action that has a shortcut, outside a control.',
@@ -62,7 +62,8 @@ export const keyHintMeta: ComponentMetaInput = defineMeta({
     name: 'None of its own: it is text, not a control. A reader hears the spoken chord and the action.',
     keyboard: [],
     typeAhead: false,
-    announces: '"Command S save".',
+    announces:
+      '"Command S save" on an Apple keyboard, "Control S save" on any other. Off an Apple keyboard the meta key is "Meta"; on one, Alt is "Option".',
     notes: [
       '`decorative` hides the whole hint, for use inside a control that carries aria-keyshortcuts instead.',
       "The keyboard comes from usePlatform(), which Button shares, so a chord is drawn and announced for the same keyboard. The server renders the neutral form, hydration agrees with it, and the reader's keyboard follows on the next render.",

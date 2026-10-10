@@ -56,6 +56,8 @@ export {
   type Delimiters,
   delimiterNames,
   delimiters,
+  type FrameWeights,
+  frameWeights,
   type Glyphs,
   glyphs,
   glyphsFor,
@@ -65,11 +67,16 @@ export {
   type MarkName,
   markNames,
   marks,
+  moreContrastStrokeWeights,
   type Repertoire,
   repertoireOf,
+  type StrokeWeights,
   spinnerFrames,
   strokes,
   strokeWeights,
+  type WeightName,
+  weightNames,
+  weightsFor,
 } from './glyph.ts';
 export {
   type BorderSetName,
@@ -88,9 +95,19 @@ export {
 } from './inputs.ts';
 export { motion, type TickName, tickNames, ticks } from './motion.ts';
 export { type TokenName, vars } from './names.ts';
-export { type Pair, pairs } from './pairs.ts';
+export { minimumIn, type Pair, pairs } from './pairs.ts';
 export { resolveTree, resolveValue } from './resolve.ts';
-export { type Intent, intents, type SyntaxRole, semanticColors, syntaxRoles } from './semantic.ts';
+export {
+  type Contrast,
+  contrasts,
+  type Intent,
+  intents,
+  moreContrast,
+  moreContrastColors,
+  type SyntaxRole,
+  semanticColors,
+  syntaxRoles,
+} from './semantic.ts';
 export {
   importedHeader,
   parseGhostty,

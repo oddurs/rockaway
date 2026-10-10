@@ -75,7 +75,7 @@ export const fieldsetMeta: ComponentMetaInput = defineMeta({
     {
       state: 'invalid',
       part: 'FieldFrame',
-      note: 'Heavy, in border.danger. Under the ascii border set there is no heavier line, and the colour and the error row carry it.',
+      note: 'Heavy, in border.danger. Under the ascii border set, which has no heavier line, the frame’s characters go bold instead (0183).',
     },
     { state: 'disabled', part: 'FieldFrame', note: 'The frame and the label in its edge dim.' },
     {

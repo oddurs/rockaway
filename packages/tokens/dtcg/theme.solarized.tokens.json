@@ -1,5 +1,5 @@
 {
-  "$description": "Solarized (cairn 0052). Imported from https://github.com/altercation/solarized under MIT (Copyright (c) 2011 Ethan Schoonover). Fitted to the contrast gate: light foreground: #657b83 → #354a51 (for fg.default on bg.page); light muted: #89a0a8 → #51666d (for fg.muted on bg.page); light blue: #268bd2 → #006baf (for fg.accent on bg.page); light bright-blue: #839496 → #637375 (for fg.on-accent on bg.accent.solid-hover); light cyan: #2aa198 → #00756d (for fg.info on bg.page); light bright-cyan: #93a1a1 → #677474 (for fg.on-info on bg.info.solid-hover); light green: #859900 → #5d6e00 (for fg.success on bg.page); light yellow: #b58900 → #896100 (for fg.warning on bg.page); light bright-yellow: #657b83 → #5e747c (for fg.on-warning on bg.warning.solid-hover); light red: #dc322f → #ca1a1e (for fg.danger on bg.page); light bright-red: #cb4b16 → #c6460e (for fg.on-danger on bg.danger.solid-hover); light border: #c1baa8 → #8d8674 (for border.default on bg.page); light border-strong: #aea795 → #8c8674 (for border.control on bg.page); light magenta: #d33682 → #c32375 (for syntax.keyword on bg.surface); dark foreground: #839496 → #b9cbcd (for fg.default on bg.page); dark muted: #5b7376 → #8ca5a8 (for fg.muted on bg.page); dark blue: #268bd2 → #41a1ea (for fg.accent on bg.page); dark cyan: #2aa198 → #39aca3 (for fg.info on bg.surface); dark green: #859900 → #92a722 (for fg.success on bg.surface); dark bright-green: #586e75 → #7b9299 (for fg.on-success on bg.success.solid-hover); dark yellow: #b58900 → #c39722 (for fg.warning on bg.surface); dark bright-yellow: #657b83 → #7b919a (for fg.on-warning on bg.warning.solid-hover); dark red: #dc322f → #ff796c (for fg.danger on bg.page); dark bright-red: #cb4b16 → #e76536 (for fg.on-danger on bg.danger.solid-hover); dark border: #3c5860 → #617d86 (for border.default on bg.page); dark border-strong: #4f676f → #647d85 (for border.control on bg.page); dark magenta: #d33682 → #fa5da3 (for syntax.keyword on bg.surface).",
+  "$description": "Solarized (cairn 0052). Imported from https://github.com/altercation/solarized under MIT (Copyright (c) 2011 Ethan Schoonover). Fitted to the contrast gate: light foreground: #657b83 → #354a51 (for fg.default on bg.page); light muted: #89a0a8 → #51666d (for fg.muted on bg.page); light blue: #268bd2 → #006baf (for fg.accent on bg.page); light bright-blue: #839496 → #3e4d4f (for fg.on-accent on bg.accent.solid-hover); light cyan: #2aa198 → #00756d (for fg.info on bg.page); light bright-cyan: #93a1a1 → #424e4e (for fg.on-info on bg.info.solid-hover); light green: #859900 → #5d6e00 (for fg.success on bg.page); light yellow: #b58900 → #896100 (for fg.warning on bg.page); light bright-yellow: #657b83 → #3a4f56 (for fg.on-warning on bg.warning.solid-hover); light red: #dc322f → #ca1a1e (for fg.danger on bg.page); light bright-red: #cb4b16 → #901800 (for fg.on-danger on bg.danger.solid-hover); light border: #c1baa8 → #8d8674 (for border.default on bg.page); light border-strong: #aea795 → #8c8674 (for border.control on bg.page); light magenta: #d33682 → #c32375 (for syntax.keyword on bg.surface); light bright-green: #586e75 → #394e54 (for fg.success on bg.page, in more contrast); light bright-magenta: #6c71c4 → #424392 (for syntax.keyword on bg.surface, in more contrast); dark foreground: #839496 → #b9cbcd (for fg.default on bg.page); dark muted: #5b7376 → #8ca5a8 (for fg.muted on bg.page); dark blue: #268bd2 → #41a1ea (for fg.accent on bg.page); dark cyan: #2aa198 → #39aca3 (for fg.info on bg.surface); dark green: #859900 → #92a722 (for fg.success on bg.surface); dark bright-green: #586e75 → #b0c8d0 (for fg.on-success on bg.success.solid-hover); dark yellow: #b58900 → #c39722 (for fg.warning on bg.surface); dark bright-yellow: #657b83 → #b0c8d1 (for fg.on-warning on bg.warning.solid-hover); dark red: #dc322f → #ff796c (for fg.danger on bg.page); dark bright-red: #cb4b16 → #ffc2a9 (for fg.on-danger on bg.danger.solid-hover); dark border: #3c5860 → #617d86 (for border.default on bg.page); dark border-strong: #4f676f → #647d85 (for border.control on bg.page); dark magenta: #d33682 → #fa5da3 (for syntax.keyword on bg.surface); dark bright-blue: #839496 → #b4c6c8 (for fg.accent on bg.page, in more contrast); dark bright-cyan: #93a1a1 → #b7c5c5 (for fg.info on bg.page, in more contrast); dark bright-magenta: #6c71c4 → #afb8ff (for syntax.keyword on bg.surface, in more contrast).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "imported",
@@ -108,7 +108,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.566,
+            0.421,
             0.1732,
             39.5
           ]
@@ -118,7 +118,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.523,
+            0.408,
             0.0283,
             219.1
           ]
@@ -128,7 +128,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.543,
+            0.413,
             0.0285,
             221.9
           ]
@@ -138,7 +138,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.544,
+            0.409,
             0.0197,
             205.3
           ]
@@ -148,7 +148,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.582,
+            0.427,
             0.1261,
             279.1
           ]
@@ -158,7 +158,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.548,
+            0.413,
             0.0159,
             196.8
           ]
@@ -451,7 +451,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.661,
+            0.876,
             0.1732,
             39.5
           ]
@@ -461,7 +461,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.643,
+            0.818,
             0.0283,
             219.1
           ]
@@ -471,7 +471,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.643,
+            0.818,
             0.0285,
             221.9
           ]
@@ -481,7 +481,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.654,
+            0.814,
             0.0197,
             205.3
           ]
@@ -491,7 +491,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.582,
+            0.807,
             0.1261,
             279.1
           ]
@@ -501,7 +501,7 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.698,
+            0.813,
             0.0159,
             196.8
           ]
@@ -956,6 +956,114 @@
         "cross": {
           "$value": "┼"
         }
+      },
+      "emphasis": {
+        "$description": "A frame drawn heavier for a state: the heavy set (cairn 0128).",
+        "horizontal": {
+          "$value": "━"
+        },
+        "vertical": {
+          "$value": "┃"
+        },
+        "top-left": {
+          "$value": "┏"
+        },
+        "top-right": {
+          "$value": "┓"
+        },
+        "bottom-left": {
+          "$value": "┗"
+        },
+        "bottom-right": {
+          "$value": "┛"
+        },
+        "tee-left": {
+          "$value": "┫"
+        },
+        "tee-right": {
+          "$value": "┣"
+        },
+        "tee-up": {
+          "$value": "┻"
+        },
+        "tee-down": {
+          "$value": "┳"
+        },
+        "cross": {
+          "$value": "╋"
+        }
+      },
+      "raised": {
+        "$description": "A frame drawn above the page: the heavy set (cairn 0128).",
+        "horizontal": {
+          "$value": "━"
+        },
+        "vertical": {
+          "$value": "┃"
+        },
+        "top-left": {
+          "$value": "┏"
+        },
+        "top-right": {
+          "$value": "┓"
+        },
+        "bottom-left": {
+          "$value": "┗"
+        },
+        "bottom-right": {
+          "$value": "┛"
+        },
+        "tee-left": {
+          "$value": "┫"
+        },
+        "tee-right": {
+          "$value": "┣"
+        },
+        "tee-up": {
+          "$value": "┻"
+        },
+        "tee-down": {
+          "$value": "┳"
+        },
+        "cross": {
+          "$value": "╋"
+        }
+      },
+      "modal": {
+        "$description": "A frame drawn above everything: the double set (cairn 0128).",
+        "horizontal": {
+          "$value": "═"
+        },
+        "vertical": {
+          "$value": "║"
+        },
+        "top-left": {
+          "$value": "╔"
+        },
+        "top-right": {
+          "$value": "╗"
+        },
+        "bottom-left": {
+          "$value": "╚"
+        },
+        "bottom-right": {
+          "$value": "╝"
+        },
+        "tee-left": {
+          "$value": "╣"
+        },
+        "tee-right": {
+          "$value": "╠"
+        },
+        "tee-up": {
+          "$value": "╩"
+        },
+        "tee-down": {
+          "$value": "╦"
+        },
+        "cross": {
+          "$value": "╬"
+        }
       }
     },
     "mark": {
@@ -970,6 +1078,9 @@
       },
       "cursor": {
         "$value": "▸"
+      },
+      "prompt": {
+        "$value": "›"
       },
       "expanded": {
         "$value": "▾"

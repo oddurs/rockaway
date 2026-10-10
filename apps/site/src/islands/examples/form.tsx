@@ -1,19 +1,10 @@
-import { Description, FieldError, Form, fieldClass, Label } from '@rockaway/react';
-import { Input, TextField } from 'react-aria-components';
+import { Form, TextField } from '@rockaway/react';
 
 export function Example() {
   return (
     <Form>
-      <TextField className={fieldClass()} isRequired>
-        {({ isRequired }) => (
-          <>
-            <Label isRequired={isRequired}>Name</Label>
-            <Input />
-            <Description>As it appears on the commit.</Description>
-            <FieldError />
-          </>
-        )}
-      </TextField>
+      <TextField label="Name" isRequired description="As it appears on the commit." />
+      <TextField label="Email" description="Where the receipts go." />
     </Form>
   );
 }

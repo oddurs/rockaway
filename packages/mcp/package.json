@@ -1,0 +1,54 @@
+{
+  "name": "@rockaway/mcp",
+  "version": "0.0.0",
+  "description": "An MCP server for rockaway: its components, tokens and documentation, for coding agents.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "bin": {
+    "rockaway-mcp": "./dist/bin.js"
+  },
+  "exports": {
+    ".": {
+      "@rockaway/source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oddurs/rockaway.git",
+    "directory": "packages/mcp"
+  },
+  "homepage": "https://github.com/oddurs/rockaway",
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "tsdown && node scripts/data.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@rockaway/react": "workspace:*",
+    "@rockaway/tokens": "workspace:*",
+    "@types/node": "26.6.2",
+    "vite": "8.3.0",
+    "vitest": "4.1.11"
+  }
+}

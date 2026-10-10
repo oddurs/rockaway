@@ -25,7 +25,7 @@ as data, two layers, four painters over one geometry, and the rules that follow.
 
 > [!NOTE]
 > **Pre-release.** Nothing is on npm yet; the first release will be 0.1.0. The
-> engine, the four painters, the tokens with nine themes, the CSS and eleven
+> engine, the four painters, the tokens with ten themes, the CSS and eleven
 > components are built and tested: Frame, Divider, Button, Link, KeyHint,
 > Badge, Callout, List, Tree, and the field and fieldset that forms are built
 > from. Below 1.0 a minor version can break, and says so in its changelog.
@@ -141,6 +141,7 @@ a terminal's tightness, at the cost of that target size. Layout responds to how 
 | `@rockaway/tokens` | DTCG sources, the ANSI palette, cell metrics, glyph sets, the resolver |
 | `@rockaway/css` | The CSS contract: cascade layers, reset, base, forced colors |
 | `@rockaway/react` | Components, on React Aria |
+| `@rockaway/mcp` | An MCP server: the components, tokens and docs, for coding agents |
 
 The engine has no dependencies and no DOM. The tokens and the CSS are
 framework-free. Only the components are React.
