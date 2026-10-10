@@ -26,6 +26,11 @@ type Plugin = Extract<NonNullable<ViteUserConfig['plugins']>[number], { name: st
  * works that way is a packaging bug to fix in the package, not here.
  *
  * TypeScript only: `@rockaway/css` publishes its `src` as CSS, as it should.
+ *
+ * A component's example, `<name>.example.tsx` (0064), is the exception: it
+ * lives beside the component but is a consumer of the package, not part of
+ * it, and is never published. Its own `@rockaway/*` imports go through the
+ * published exports like the site's, and this rule still holds them to it.
  */
 function publishedPackagesOnly(): Plugin {
   const packages = fileURLToPath(new URL('../../packages/', import.meta.url));
@@ -34,6 +39,7 @@ function publishedPackagesOnly(): Plugin {
     enforce: 'pre',
     load(id) {
       const file = id.split('?')[0] ?? id;
+      if (file.endsWith('.example.tsx')) return;
       if (file.startsWith(packages) && /(?<!\.d)\.[cm]?tsx?$/.test(file)) {
         this.error(
           `${file} is a workspace package's TypeScript source. The site imports @rockaway/* ` +

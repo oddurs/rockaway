@@ -1,5 +1,5 @@
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@rockaway/react';
-import { useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import type { SortDescriptor } from 'react-aria-components';
 
 const FILES = [
@@ -8,7 +8,7 @@ const FILES = [
   { id: 'package', name: 'package.json', size: 88 },
 ];
 
-export function Example() {
+export function Example(): ReactNode {
   const [sort, setSort] = useState<SortDescriptor>({ column: 'name', direction: 'ascending' });
   const rows = useMemo(
     () =>
