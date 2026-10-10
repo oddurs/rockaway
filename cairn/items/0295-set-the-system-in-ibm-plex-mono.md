@@ -3,8 +3,10 @@ id: 295
 uid: ed5b1a29-17dc-4cbc-99b5-be7a67cdd557
 title: Set the system in IBM Plex Mono
 type: decision
-status: ready
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-09
 created: 2026-10-09
 updated: 2026-10-09
 priority: p0

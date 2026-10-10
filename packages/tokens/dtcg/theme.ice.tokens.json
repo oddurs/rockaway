@@ -705,6 +705,7 @@
       "$type": "fontFamily",
       "mono": {
         "$value": [
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "SF Mono",
@@ -716,6 +717,7 @@
       },
       "display": {
         "$value": [
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "SF Mono",
