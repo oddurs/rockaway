@@ -118,6 +118,7 @@ const checks: [string, unknown, unknown][] = [
     `Name   [ Go ]${' '.repeat(51)}`,
   ],
   ['pictureBuffer', pure.pictureBuffer({ cols: 4, rows: 1 }).row(0), '░░░░'],
+  ['toolbarBuffer', pure.toolbarBuffer([['Go']]).row(0), ' Go '],
   [
     'calloutBuffer',
     pure.calloutBuffer({ width: 14, height: 3 }, { tone: 'tip' }).row(0),
