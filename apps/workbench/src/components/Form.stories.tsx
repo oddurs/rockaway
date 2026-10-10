@@ -233,6 +233,37 @@ export const MixedFields: Story = {
   },
 };
 
+/**
+ * Both painters draw the same form: the same cells and the same text, the
+ * model's, whatever strokes the frame around it. A form paints nothing of its
+ * own; its fields' frames are each proved in their own files (0142).
+ */
+export const Painters: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
+      {(['glyph', 'rule'] as const).map((painter) => (
+        <Frame
+          key={painter}
+          title={painter}
+          painter={painter}
+          cols={WIDE}
+          rows={mixedModel(WIDE - 4).height + 2}
+        >
+          <MixedForm />
+        </Frame>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const model = toText(mixedModel(WIDE - 4));
+    for (const name of ['glyph', 'rule']) {
+      const frame = canvas.getByRole('group', { name });
+      expect(inside(screenshot(frame, { legend: false }), WIDE)).toBe(model);
+    }
+  },
+};
+
 /** Under 60 cells the same form stacks: each label on the row above its control. */
 export const Stacked: Story = {
   name: 'Under 60 cells, stacked',

@@ -266,6 +266,52 @@ export const Help: Story = {
   },
 };
 
+/** The help, bound and listed, in a frame stroked by one painter. */
+function PaintedHelp({ painter }: { painter: 'glyph' | 'rule' }): ReactNode {
+  useKeymap(HELP.map((b) => ({ ...b, action: () => {} })));
+  return (
+    <Frame title={painter} painter={painter} cols={36} rows={HELP.length + 2}>
+      <KeymapHelp />
+    </Frame>
+  );
+}
+
+/**
+ * Both painters draw the same help screen: the same cells and the same text,
+ * the model's, whatever strokes the frame around it. The help itself is text
+ * and KeyHints, which no painter draws (0142).
+ */
+export const Painters: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+      <Keymap>
+        <PaintedHelp painter="glyph" />
+      </Keymap>
+      <Keymap>
+        <PaintedHelp painter="rule" />
+      </Keymap>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const inside = (name: string): string =>
+      screenshot(canvas.getByRole('group', { name }), { legend: false })
+        .split('\n')
+        .slice(1, -1)
+        .map((row) => row.slice(2, -1).trimEnd())
+        .join('\n')
+        .trimEnd();
+    const model = toText(keymapHelpBuffer(HELP, keyboard()));
+    await waitFor(() => expect(inside('glyph')).toBe(model));
+    expect(inside('rule')).toBe(model);
+    const box = (name: string) => canvas.getByRole('group', { name }).getBoundingClientRect();
+    expect([box('rule').width, box('rule').height]).toEqual([
+      box('glyph').width,
+      box('glyph').height,
+    ]);
+  },
+};
+
 /** A binding whose target is a button: the shortcut presses it, and is announced on it. */
 function Announced(): ReactNode {
   const save = useRef<HTMLButtonElement>(null);
