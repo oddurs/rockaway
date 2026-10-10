@@ -257,7 +257,7 @@ export function CommandPalette({
           <div aria-hidden="true" className="rk-palette-rule" />
           <div
             className="rk-palette-results"
-            style={{ '--rk-palette-rows': Math.max(1, Math.floor(rows)) } as CSSProperties}
+            style={{ '--rk-command-rows': Math.max(1, Math.floor(rows)) } as CSSProperties}
           >
             {/* A scrolling region keeps its tab stop (0207), as the site's code
                 blocks do: the arrows in the input move through the results, and

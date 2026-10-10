@@ -74,12 +74,12 @@
     display: grid;
     grid-template-columns: 1fr var(--rk-cell-width);
     grid-template-rows: minmax(0, auto);
-    max-block-size: calc(var(--rk-cell-height) * var(--rk-palette-rows, 8));
+    max-block-size: calc(var(--rk-cell-height) * var(--rk-command-rows, 8));
   }
 
   .rk-palette-box {
     min-block-size: 0;
-    max-block-size: calc(var(--rk-cell-height) * var(--rk-palette-rows, 8));
+    max-block-size: calc(var(--rk-cell-height) * var(--rk-command-rows, 8));
     overflow: hidden auto;
     scroll-snap-type: block mandatory;
   }
@@ -102,7 +102,7 @@
   }
 
   /* On the cursor's reversed row the match keeps its underline and takes the row's colour. */
-  .rk-menu-item[data-focused] .rk-palette-match {
+  .rk-palette-menu [data-focused] .rk-palette-match {
     color: inherit;
   }
 

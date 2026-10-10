@@ -20,4 +20,6 @@ export {
   type MenuSectionProps,
   MenuSeparator,
   type MenuSeparatorProps,
+  MenuTrigger,
+  SubmenuTrigger,
 } from '../components/menu.tsx';

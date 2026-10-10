@@ -1,5 +1,5 @@
 import { Buffer, contentArea, drawBox, drawText, rect, type Size } from '@rockaway/grid';
-import { Fieldset, Frame, List, ListItem, Screen } from '@rockaway/react';
+import { Badge, Fieldset, Frame, Link, List, ListItem, Screen } from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
@@ -69,6 +69,40 @@ export const ReadsTheScreenBack: Story = {
   },
 };
 
+/**
+ * Reading changes nothing (the Tabs hang, 0216). A story checks a screen
+ * inside `waitFor`, which runs its callback again on every change to the
+ * document: a screenshot that changed the page, even for an instant, called
+ * itself again in a microtask, for ever, while its assertion failed, and the
+ * run hung instead of failing. So reading a measured screen leaves no change
+ * behind, and a `waitFor` that cannot pass fails on its timeout.
+ */
+export const ChangesNothing: Story = {
+  name: 'Reading changes nothing',
+  play: async ({ canvas }) => {
+    const host = canvas.getByTestId('host');
+    const screen = host.firstElementChild as HTMLElement;
+    await waitFor(() => expect(screen.dataset.rkCols).toBe('30'));
+    await waitFor(() =>
+      expect(getComputedStyle(screen).getPropertyValue('--rk-cell-width')).toMatch(/px$/),
+    );
+
+    const changes: MutationRecord[] = [];
+    const observer = new MutationObserver((records) => changes.push(...records));
+    observer.observe(document, { subtree: true, childList: true, attributes: true });
+    screenshot(screen);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    observer.disconnect();
+    expect(changes).toEqual([]);
+
+    // A wait that can never pass fails on its timeout. Before, this did not
+    // return at all, and only the watchdog in the Vitest setup ended it.
+    await expect(
+      waitFor(() => expect(screenshot(screen)).toBe('never'), { timeout: 300 }),
+    ).rejects.toThrow();
+  },
+};
+
 export const ListsAttributes: Story = {
   name: 'Lists the attributes it saw',
   play: async ({ canvas }) => {
@@ -79,6 +113,48 @@ export const ListsAttributes: Story = {
     const shot = screenshot(screen);
     expect(shot).toContain('— attributes —');
     expect(shot).toMatch(/reverse\s+2,4\s+\[ publish \]/);
+  },
+};
+
+/**
+ * Real elements carry attributes too, and the legend reads them from computed
+ * style (cairn 0190): a List row's reverse video, a Link's underline, bold
+ * text. A tinted ground is not reverse video, and plain text carries nothing.
+ */
+export const ListsAttributesOfRealElements: Story = {
+  name: 'Lists the attributes of real elements',
+  render: () => (
+    <Frame title="files" cols={24} rows={7} pad={0}>
+      <div style={{ inlineSize: 'calc(var(--rk-cell-width) * 22)' }}>
+        <List aria-label="Files" rows={2} selectionMode="single" defaultSelectedKeys={['b']}>
+          <ListItem id="a">a.ts</ListItem>
+          <ListItem id="b">b.ts</ListItem>
+        </List>
+        <div>
+          <Link href="#docs">docs</Link>
+        </div>
+        <div>
+          <strong>loud</strong>
+        </div>
+        <div>
+          <Badge tone="accent">new</Badge>
+        </div>
+      </div>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    const frame = canvas.getByRole('group', { name: 'files' });
+    await waitFor(() => expect(frame.querySelector('.rk-row')).not.toBeNull());
+    const legend = screenshot(frame).split('— attributes —')[1]?.trim().split('\n') ?? [];
+    const of = (text: string): string =>
+      legend.find((line) => line.endsWith(`  ${text}`))?.split(/\s+/)[0] ?? '(none)';
+
+    expect(of('b.ts')).toBe('reverse');
+    expect(of('docs')).toBe('underline');
+    expect(of('loud')).toBe('bold');
+    // Unselected rows and a tinted badge carry no attribute.
+    expect(of('a.ts')).toBe('(none)');
+    expect(of('new')).toBe('(none)');
   },
 };
 

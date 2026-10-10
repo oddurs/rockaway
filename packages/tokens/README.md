@@ -48,8 +48,17 @@ it. Chrome is drawn in JavaScript, so pair the attribute with
 `<GlyphProvider glyphs={themeGlyphs.ink}>` from `@rockaway/react` for the
 theme's border set and marks.
 
+Increased contrast is a context too (cairn 0065). `prefers-contrast: more`
+applies it to a page that has not chosen, `data-rk-contrast="more"` asks for it
+on any element, and `data-rk-contrast="standard"` keeps an element out. It is
+not a third palette: the same colours are read differently. Muted text becomes
+the foreground, coloured text takes the bright slot, a fill becomes reverse
+video, every line is a step heavier, the focus ring is thicker, and disabled is
+struck through as well as dimmed. Text is held to 7:1 there, and nothing moves
+a cell.
+
 Every theme passes the contrast gate (cairn 0022, 0163) in every mode it
-declares. A palette that does not pass is fitted: a failing colour moves in
+declares, in both contrasts. A palette that does not pass is fitted: a failing colour moves in
 lightness, keeping its hue, until it does. `pnpm generate` prints every move,
 and the theme's DTCG file records them.
 
@@ -75,6 +84,9 @@ blocks, the spinner and the control delimiters. `glyphsFor(inputs)` resolves
 them, and `themeGlyphs` holds every preset's. A theme whose border set is
 `ascii` draws everything in ASCII — `>` for the cursor, `#` and `.` for a
 scrollbar — not just its boxes.
+The `ascii` preset is that theme: a neutral palette for any terminal that can
+be trusted with nothing past `~`, and the one to reach for when chrome has to
+survive a paste anywhere.
 
 The `--rk-glyph-*` properties are written from the same object, but components
 do not read them: chrome is drawn into a buffer in JavaScript, possibly on a

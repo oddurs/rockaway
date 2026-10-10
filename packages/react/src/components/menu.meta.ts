@@ -151,6 +151,7 @@ export const menuMeta: ComponentMetaInput = defineMeta({
     notes: [
       'An item with a submenu is announced as having a popup, and as expanded while it is open; the end cell shows the same thing as a mark.',
       'A section is a group named by its title.',
+      'MenuTrigger and SubmenuTrigger are React Aria’s, re-exported from @rockaway/react: put a Menu in a MenuTrigger after its Button, or in a SubmenuTrigger after the MenuItem that opens it.',
     ],
   },
   snapshots: [
