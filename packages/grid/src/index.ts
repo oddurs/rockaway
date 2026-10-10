@@ -64,6 +64,16 @@ export {
 } from './paint/ansi.ts';
 export { type SvgCell, type ToSvgOptions, toSvg } from './paint/svg.ts';
 export { fromText, type ToTextOptions, toText } from './paint/text.ts';
+export {
+  type Comfort,
+  comforts,
+  type FlowLayout,
+  fieldSteps,
+  flow,
+  type Rhythm,
+  rhythm,
+  seamRows,
+} from './rhythm.ts';
 export { type ShapeRun, shapeRuns } from './runs.ts';
 export {
   type ArcMark,

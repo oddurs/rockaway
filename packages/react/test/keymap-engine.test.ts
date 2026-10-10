@@ -147,6 +147,47 @@ describe('without React', () => {
     expect(keys.keyShortcut('mod+s', 'other')?.toLowerCase()).toBe('control+s');
   });
 
+  test("Space and Enter on a focused control are the control's, even unhydrated", () => {
+    const engine = new pure.KeymapEngine();
+    const root = engine.scope(undefined);
+    engine.mount(root);
+    const fired: string[] = [];
+    for (const spec of ['space', 'enter', 'mod+enter']) {
+      engine.register(root, { keys: spec, description: spec, action: () => fired.push(spec) });
+    }
+    const doc = fakeDocument();
+    pure.attachKeymap(engine, doc);
+    // A stand-in element: `closest` answers for the selector the way the DOM does.
+    const inside = (tag: string): EventTarget =>
+      ({
+        tagName: 'SPAN',
+        isContentEditable: false,
+        closest: (selector: string) => (selector.split(', ').includes(tag) ? {} : null),
+      }) as unknown as EventTarget;
+    const button = inside('button');
+    const link = inside('a[href]');
+    const page = { tagName: 'MAIN', isContentEditable: false, closest: () => null };
+
+    // On a button, or a span inside one, Space and Enter press it: not the page's.
+    expect(doc.press(' ', {}, button)).toBe(false);
+    expect(doc.press('Enter', {}, button)).toBe(false);
+    expect(doc.press('Enter', {}, link)).toBe(false);
+    expect(fired).toEqual([]);
+    // With a modifier it is a chord, and the page's wherever focus is.
+    expect(doc.press('Enter', { ctrlKey: true }, button)).toBe(true);
+    // Off any control, Space and Enter are the page's.
+    expect(doc.press(' ', {}, page)).toBe(true);
+    expect(doc.press('Enter', {}, page)).toBe(true);
+    expect(fired).toEqual(['mod+enter', 'space', 'enter']);
+    // Other keys on a control are still the page's: Space and Enter are what it takes.
+    expect(
+      pure.isControlKey(
+        { key: 'j', ctrlKey: false, altKey: false, shiftKey: false, metaKey: false },
+        button,
+      ),
+    ).toBe(false);
+  });
+
   test('what is typing: fields that take text, and nothing else', () => {
     const el = (tagName: string, extra: Record<string, unknown> = {}): EventTarget =>
       ({ tagName, isContentEditable: false, ...extra }) as unknown as EventTarget;
