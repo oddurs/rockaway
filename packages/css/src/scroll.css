@@ -61,6 +61,10 @@
      * only as wide as its content it measured itself one cell wide (found by
      * the site, 0152). */
     grid-template-columns: minmax(max-content, auto);
+    /* The marks are lifted over the content, and only over the content: the
+     * region is their stacking context, so a modal's backdrop after it on
+     * the page still covers them. */
+    isolation: isolate;
   }
 
   .rk-scroll-marks > *,

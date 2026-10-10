@@ -130,6 +130,7 @@ const checks: [string, unknown, unknown][] = [
       .row(1),
     ' └── a.ts ',
   ],
+  ['codeBlockText', pure.codeBlockText('a', { cols: 8 }).row(1), '│ a    │'],
   [
     'panesBuffer',
     pure

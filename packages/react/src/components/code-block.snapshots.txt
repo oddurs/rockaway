@@ -1,0 +1,19 @@
+── A titled block
+┌ panel.tsx ───────────────────────────── [ Copy ] ┐
+│ import { Frame } from '@rockaway/react';         │
+│                                                  │
+│ export const panel = <Frame title="tokens" />;   │
+└──────────────────────────────────────────────────┘
+── Line numbers
+┌───┬ panel.tsx ───────────────────────────── [ Copy ] ┐
+│ 1 │ import { Frame } from '@rockaway/react';         │
+│ 2 │                                                  │
+│ 3 │ export const panel = <Frame title="tokens" />;   │
+└───┴──────────────────────────────────────────────────┘
+── A snapshot
+┌ Frame ───────┐
+│ ┌ a ───────┐ │
+│ │          │ │
+│ ├──────────┤ │
+│ └──────────┘ │
+└──────────────┘

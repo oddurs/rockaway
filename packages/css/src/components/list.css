@@ -49,6 +49,11 @@
     align-items: center;
     block-size: var(--rk-cell-height);
     scroll-snap-align: start;
+    /* At dense the line box is shorter than the font's ascent and descent,
+     * and text that runs past a row is scrollable overflow: three rows in a
+     * box of three then had a pixel to scroll, and bringing the last into
+     * view took every row off the grid (0211). A row clips what it holds. */
+    overflow: clip;
   }
 
   .rk-list-item {

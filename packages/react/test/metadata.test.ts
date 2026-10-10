@@ -429,8 +429,14 @@ describe('what is extracted', () => {
     const { tokens } = byName('Frame');
     expect(tokens).toContain('--rk-stroke-glyph-light');
     expect(tokens).toContain('--rk-stroke-rule-light');
-    // `.rk-callout > .rk-content` is Callout's, though Frame writes rk-content.
-    expect(tokens).not.toContain('--rk-bg-surface');
+    // Callout's `.rk-callout > .rk-content` is not Frame's (`owns`, above). Frame's own
+    // surfaces (0308) fall back to `--rk-bg-surface`, so the token is no longer the proof.
+    expect(
+      owns('.rk-callout > .rk-content', {
+        classes: new Set(['rk-frame-box']),
+        attributes: new Set(),
+      }),
+    ).toBe(false);
   });
 
   test('tokens come from the stylesheets and the focus ring, and a local property is not one', () => {
