@@ -34,7 +34,7 @@ const FOCUSABLE = 'button:not([disabled]), input:not([disabled]), [tabindex="0"]
 const hydrated = (page: Page, name: string) =>
   page.waitForFunction(
     ([n, focusable]) => {
-      const first = document.querySelector(`[data-example="${n}"]`)?.querySelector(focusable);
+      const first = document.querySelector(`[data-site-example="${n}"]`)?.querySelector(focusable);
       return first != null && Object.keys(first).some((key) => key.startsWith('__reactProps'));
     },
     [name, FOCUSABLE] as const,
@@ -45,7 +45,7 @@ const enter = (page: Page, name: string) =>
   page.evaluate(
     ([n, focusable]) => {
       document
-        .querySelector(`[data-example="${n}"]`)
+        .querySelector(`[data-site-example="${n}"]`)
         ?.querySelector<HTMLElement>(focusable)
         ?.focus();
     },
@@ -87,8 +87,11 @@ test('the settings example works by keyboard alone, wide, narrow and at touch (0
       await reader.keyboard.press('Tab');
     }
     await expect(name.evaluate((el) => el === document.activeElement)).resolves.toBe(true);
-    // End puts the caret after the value, wherever focus put it.
-    await reader.keyboard.press('End');
+    // Out and back with Tab selects the whole value; the right arrow puts
+    // the caret at its end, on every platform.
+    await reader.keyboard.press('Shift+Tab');
+    await reader.keyboard.press('Tab');
+    await reader.keyboard.press('ArrowRight');
     await reader.keyboard.type(' King');
     expect(await name.inputValue(), at).toBe('Ada Lovelace King');
     await reader.keyboard.press('ControlOrMeta+s');
@@ -142,7 +145,7 @@ test('the git client works by keyboard alone, in panes and in tabs (0151)', asyn
         document.documentElement.dataset.density = d;
       }, density);
     }
-    await hydrated(reader, 'settings');
+    await hydrated(reader, 'git-client');
     const narrow = width < 600;
     const at = `${width}px${density ? `, ${density}` : ''}`;
 

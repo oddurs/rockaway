@@ -47,7 +47,7 @@ export default async function Example({
       <article className="rk-prose">
         <h1>{item.title}</h1>
       </article>
-      <div className="site-example" data-example={item.name}>
+      <div className="site-example" data-site-example={item.name}>
         <RegistryItem name={item.name} />
       </div>
       <article className="rk-prose">
