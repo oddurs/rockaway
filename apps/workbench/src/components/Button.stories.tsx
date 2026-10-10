@@ -11,6 +11,7 @@ import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useRef, useState } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
+import { press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -326,7 +327,7 @@ export const Keyboard: Story = {
     const discard = canvas.getByRole('button', { name: 'Discard' });
     const before = save.getBoundingClientRect();
 
-    await userEvent.tab();
+    await tab();
     expect(save).toHaveFocus();
     // Focus is only ever shown to the keyboard, as the ring, which costs no cell.
     expect(save.dataset.focusVisible).toBe('true');
@@ -341,14 +342,14 @@ export const Keyboard: Story = {
     );
 
     // Enter fires on the way down, Space on the way up: React Aria's onPress.
-    await userEvent.keyboard('{Enter}');
-    await userEvent.keyboard(' ');
+    await press('{Enter}');
+    await press(' ');
     await waitFor(() => expect(args.onPress).toHaveBeenCalledTimes(2));
 
     // The disabled button is not a stop.
-    await userEvent.tab();
+    await tab();
     expect(discard).toHaveFocus();
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(save).toHaveFocus();
   },
 };
@@ -491,7 +492,7 @@ export const StatesEverywhere: Story = {
 
     // Focus: Tab walks every enabled button, the ring shows, nothing moves.
     for (const button of buttons.filter((b) => !b.disabled)) {
-      await userEvent.tab();
+      await tab();
       expect(button).toHaveFocus();
       expect(button.dataset.focusVisible).toBe('true');
       expect(getComputedStyle(button).outlineStyle).toBe('solid');
