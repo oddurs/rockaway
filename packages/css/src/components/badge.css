@@ -25,6 +25,30 @@
     color: var(--rk-badge-edge);
   }
 
+  /*
+   * A mark is a glyph, and a font that lacks it draws it in another, whose
+   * advance is not the cell: a ✓ a little wider puts the words after it off
+   * the grid, and wraps a sentence a word early. So each takes exactly its
+   * cells, as Checkbox's box does: the mark and its cell of air two, a
+   * delimiter one. Found by the kitchen sink (0142), on Linux's fonts.
+   */
+  .rk-badge-mark,
+  .rk-badge-end {
+    display: inline-block;
+    block-size: var(--rk-cell-height);
+    line-height: var(--rk-cell-height);
+    overflow: hidden;
+    vertical-align: top;
+  }
+
+  .rk-badge-mark {
+    inline-size: calc(2 * var(--rk-cell-width));
+  }
+
+  .rk-badge-end {
+    inline-size: var(--rk-cell-width);
+  }
+
   .rk-badge[data-tone="accent"] {
     --rk-badge-fg: var(--rk-fg-accent);
     --rk-badge-ground: var(--rk-bg-accent-subtle);

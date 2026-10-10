@@ -1,4 +1,4 @@
-import { afterEach, beforeAll, beforeEach, inject } from 'vitest';
+import { afterEach, beforeAll, beforeEach, expect, inject } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import type { OverBudget } from './budget.ts';
 import type { Platform } from './known.ts';
@@ -67,6 +67,11 @@ setRunner({
     userEvent.click(element, at === undefined ? {} : { position: at, force: true }),
   contrast: (preference) => commands.emulateContrast(preference),
   paint: (over) => commands.recordPaint(over),
+  // Vitest's own file snapshot, which a story cannot import: its module is
+  // also bundled for the Storybook UI, where there is no Vitest.
+  matchFile: async (text, file) => {
+    await expect(text).toMatchFileSnapshot(file);
+  },
 });
 
 /**

@@ -3,14 +3,14 @@ id: 203
 uid: d3cd9fbf-f3e4-4dfd-a695-6ede9b8b4dd8
 title: Check the field contract from the testing package
 type: feature
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 127
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p1
 layer: tooling
 effort: s
@@ -38,3 +38,7 @@ checkField(root) in packages/react/src/testing/field.ts, with expectField and fo
 ## 2026-10-03
 
 Criterion 2 is met structurally: .storybook/preview.tsx runs expectField once (semantics, not cells, so not per density) after every story with a .rk-field on the page, with the theme's glyphs; parameters.fields = false turns it off for a story that breaks the contract on purpose. Grid/Field check has one story per failure: forgotten isRequired, a mark on a field not required, a frame with no mark in its edge, an unlinked description, a glyph in a name, a live region. Form and Fieldset's stories pass it.
+
+## 2026-10-10
+
+On main: expectField in packages/react/src/testing/field.ts, run after every story with a field. Closed from review.

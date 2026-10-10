@@ -3,14 +3,14 @@ id: 208
 uid: 5dc4f0bc-eb02-41d2-a069-135c3bb8f210
 title: Hide every native scrollbar, show position in cells, and check it after every story
 type: bug
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 207
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p0
 layer: css
 effort: m
@@ -49,3 +49,7 @@ Criterion 5 is half done. docs/concept.md has section 10, and CONTRIBUTING's Add
 ## 2026-10-03
 
 Criterion 5: concept.md section 10 states the rule, and docs/component-recipe.md (0134) says how a new scroll region shows its position, under Scrolling: rk-scroll, a scrollbar column for rows or rk-scroll-marks across, and the classic-scrollbars tag.
+
+## 2026-10-10
+
+On main: the scrollbar check runs after every story, and the recipe says how a scroll region shows its position. Closed from review.
