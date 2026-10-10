@@ -35,6 +35,10 @@ export interface Adjustment {
 const grounds: ReadonlySet<PaletteSlot> = new Set<PaletteSlot>([
   'background',
   'surface',
+  'surface-sunken',
+  'surface-base',
+  'surface-raised',
+  'surface-overlay',
   'subtle',
   'hover',
   'active',
@@ -57,6 +61,18 @@ function slotsOf(group: Group, trail: string[] = [], out = new Map<string, Palet
   }
   return out;
 }
+
+/**
+ * The four layers (0307). Unlike the other grounds they may move, because they
+ * are new: when text falls short on one, the layer gives up a step toward the
+ * page, so a theme that already passes keeps every colour it had.
+ */
+const levels: ReadonlySet<PaletteSlot> = new Set<PaletteSlot>([
+  'surface-sunken',
+  'surface-base',
+  'surface-raised',
+  'surface-overlay',
+]);
 
 const semanticSlots = slotsOf(semanticColors());
 
@@ -114,31 +130,42 @@ export function fitContrast(
   // Away from the page: lighter on a dark background, darker on a light one.
   const direction = fitted.background.l < 0.5 ? 1 : -1;
 
-  for (let pass = 0; pass < 400; pass++) {
-    let failing = 0;
-    for (const reading of readings) {
-      for (const pair of pairs) {
-        const min = minimumIn(pair, reading.name);
-        for (const bg of pair.bg) {
-          const [f, b] = [own(slotIn(reading.slots, pair.fg)), own(slotIn(reading.slots, bg))];
-          if (f === b || contrast(fitted[f], fitted[b]) >= min) continue;
-          failing += 1;
-          const target = grounds.has(f) ? b : f;
-          const where = `${pair.fg} on ${bg} (${mode}${reading.name === 'more' ? ', more contrast' : ''})`;
-          if (grounds.has(target)) {
-            throw new Error(`${where}: both are grounds, so neither can move`);
+  // Two phases. The first fits everything but the layers, exactly as before
+  // they existed, so no colour a theme had moves because of them; the second
+  // fits the layers to the text, and only a layer moves.
+  for (const withLevels of [false, true]) {
+    for (let pass = 0; pass < 400; pass++) {
+      let failing = 0;
+      for (const reading of readings) {
+        for (const pair of pairs) {
+          const min = minimumIn(pair, reading.name);
+          for (const bg of pair.bg) {
+            const [f, b] = [own(slotIn(reading.slots, pair.fg)), own(slotIn(reading.slots, bg))];
+            if (levels.has(b) !== withLevels) continue;
+            if (f === b || contrast(fitted[f], fitted[b]) >= min) continue;
+            failing += 1;
+            const onLevel = levels.has(b);
+            const target = onLevel || grounds.has(f) ? b : f;
+            const where = `${pair.fg} on ${bg} (${mode}${reading.name === 'more' ? ', more contrast' : ''})`;
+            if (grounds.has(target) && !levels.has(target)) {
+              throw new Error(`${where}: both are grounds, so neither can move`);
+            }
+            const before = fitted[target];
+            const step = levels.has(target)
+              ? Math.sign(fitted.background.l - before.l) * STEP
+              : direction * STEP;
+            const l = Math.min(1, Math.max(0, before.l + step));
+            if (l === before.l || (levels.has(target) && step === 0))
+              throw new Error(`${where} cannot reach ${min}:1`);
+            fitted[target] = round({ ...before, l });
+            const because = `${pair.fg} on ${bg}${reading.name === 'more' ? ', in more contrast' : ''}`;
+            if (!moved.has(target)) moved.set(target, because);
           }
-          const before = fitted[target];
-          const l = Math.min(1, Math.max(0, before.l + direction * STEP));
-          if (l === before.l) throw new Error(`${where} cannot reach ${min}:1`);
-          fitted[target] = round({ ...before, l });
-          const because = `${pair.fg} on ${bg}${reading.name === 'more' ? ', in more contrast' : ''}`;
-          if (!moved.has(target)) moved.set(target, because);
         }
       }
+      if (failing === 0) break;
+      if (pass === 399) throw new Error(`the ${mode} palette could not be fitted to the gate`);
     }
-    if (failing === 0) break;
-    if (pass === 399) throw new Error(`the ${mode} palette could not be fitted to the gate`);
   }
   for (const [slot, to] of links) fitted[slot] = fitted[to];
 

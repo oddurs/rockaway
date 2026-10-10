@@ -14,15 +14,15 @@ on:
     paths:
       - 'packages/**'
       - 'docs/getting-started.md'
-      - 'apps/site/scripts/quickstart.ts'
-      - 'apps/site/src/registry/**'
+      - 'apps/web/scripts/quickstart.ts'
+      - 'apps/web/registry/**'
       - '.github/workflows/quickstart.yml'
   pull_request:
     paths:
       - 'packages/**'
       - 'docs/getting-started.md'
-      - 'apps/site/scripts/quickstart.ts'
-      - 'apps/site/src/registry/**'
+      - 'apps/web/scripts/quickstart.ts'
+      - 'apps/web/registry/**'
       - '.github/workflows/quickstart.yml'
 
 concurrency:
@@ -63,12 +63,12 @@ jobs:
       # The registry is served from the built site, as a reader meets it.
       - name: Build the site
         if: matrix.app == 'registry'
-        run: pnpm --filter site build
+        run: pnpm --filter web build
         env:
-          ASTRO_TELEMETRY_DISABLED: '1'
+          NEXT_TELEMETRY_DISABLED: '1'
 
       - name: Install Chromium
-        run: pnpm --filter site exec playwright install --with-deps chromium
+        run: pnpm --filter web exec playwright install --with-deps chromium
 
       - name: Follow the guide in ${{ matrix.app }}
-        run: pnpm --filter site quickstart ${{ matrix.app }}
+        run: pnpm --filter web quickstart ${{ matrix.app }}

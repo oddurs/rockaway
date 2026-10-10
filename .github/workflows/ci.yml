@@ -64,13 +64,14 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
-      # The site builds from the packages' dist, as a consumer's app would, so
-      # it builds here, after them, and is typechecked against their
-      # published declarations as part of its own build.
+      # The site (apps/web, Next.js) builds from the packages' dist, as a
+      # consumer's app would, so it builds here, after them, and is
+      # typechecked against their published declarations as part of its own
+      # build. Its static export is out/.
       - name: Build packages and the site
         run: pnpm build
         env:
-          ASTRO_TELEMETRY_DISABLED: '1'
+          NEXT_TELEMETRY_DISABLED: '1'
 
       # The built site, for a reviewer to open. Deploying it is a separate
       # workflow (cairn 0146).
@@ -79,7 +80,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: site
-          path: apps/site/dist
+          path: apps/web/out
           retention-days: 14
 
       # The workspace resolves to source, so this is the only step that sees
@@ -94,9 +95,12 @@ jobs:
       - name: Contrast report (every declared pair, both modes)
         run: pnpm --filter @rockaway/tokens contrast
 
-  # The site's own tests load its built pages in a browser, at two bases, and
-  # take longer than the rest of `static` together, so they have a job of their
-  # own. It builds the site again (twenty seconds) rather than wait for one.
+  # The site's own tests load its export in a browser: every page from the
+  # site itself, axe, conformance and continuity, no layout shift at four
+  # widths on a fast connection and Slow 4G, no reload in ten routes, and
+  # navigation's interaction to next paint. They take longer than the rest of
+  # `static` together, so they have a job of their own, which builds the site
+  # again rather than wait for one.
   site-tests:
     name: Site tests
     needs: changes
@@ -110,14 +114,14 @@ jobs:
       - name: Build packages and the site
         run: pnpm build
         env:
-          ASTRO_TELEMETRY_DISABLED: '1'
+          NEXT_TELEMETRY_DISABLED: '1'
 
       - uses: ./.github/actions/playwright
+        with:
+          filter: web
 
       - name: Tests (the built site)
-        run: pnpm --filter site test
-        env:
-          ASTRO_TELEMETRY_DISABLED: '1'
+        run: pnpm --filter web test
 
   # A minifier sees the CSS here. Storybook's build needs nothing from the
   # other jobs, so it runs beside them.
@@ -206,10 +210,10 @@ jobs:
             [ "$result" = success ] || [ "$result" = skipped ] || exit 1
           done
 
-  # The site's budget (cairn 0109): its first page's JavaScript, a first paint
-  # with no script, axe on every page in both modes at touch, the grid and its
-  # lines on the built pages, and no layout shift through first load. A job of
-  # its own, beside the others, so it adds nothing to their wall clock.
+  # The site's budget (cairn 0109): every page's first load at most 150 kB
+  # gzipped shared, and at most 30 kB more on any page, printed on every run.
+  # A job of its own, beside the others, so a regression is named in the
+  # checks' list rather than found in a log.
   site-budget:
     name: Site budget
     needs: changes
@@ -221,17 +225,13 @@ jobs:
       - uses: ./.github/actions/setup
 
       # The site is built from the packages' dist, as a consumer's app would be.
-      - name: Build packages
-        run: pnpm -r --filter './packages/*' build
-
-      - uses: ./.github/actions/playwright
-        with:
-          filter: site
+      - name: Build packages and the site
+        run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
 
       - name: Hold the built site to its budget
-        run: pnpm --filter site budget
-        env:
-          ASTRO_TELEMETRY_DISABLED: '1'
+        run: pnpm --filter web budget
 
   changeset:
     name: Changeset for every package change

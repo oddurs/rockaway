@@ -206,6 +206,10 @@
     --rk-palette-dark-selection: oklch(40.3% 0.0322 277.8);
     --rk-palette-dark-subtle: oklch(35% 0.0208 277.5);
     --rk-palette-dark-surface: oklch(32.2% 0.0214 277.5);
+    --rk-palette-dark-surface-base: oklch(31.2% 0.0216 277.5);
+    --rk-palette-dark-surface-overlay: oklch(35% 0.0206 277.5);
+    --rk-palette-dark-surface-raised: oklch(33.6% 0.0211 277.5);
+    --rk-palette-dark-surface-sunken: oklch(28.8% 0.0221 277.5);
     --rk-palette-dark-tint-blue: oklch(35.2% 0.0398 277.5);
     --rk-palette-dark-tint-cyan: oklch(37.1% 0.0321 277.5);
     --rk-palette-dark-tint-green: oklch(37% 0.0497 277.5);
@@ -242,6 +246,10 @@
     --rk-palette-light-selection: oklch(40.3% 0.0322 277.8);
     --rk-palette-light-subtle: oklch(35% 0.0208 277.5);
     --rk-palette-light-surface: oklch(32.2% 0.0214 277.5);
+    --rk-palette-light-surface-base: oklch(31.2% 0.0216 277.5);
+    --rk-palette-light-surface-overlay: oklch(35% 0.0206 277.5);
+    --rk-palette-light-surface-raised: oklch(33.6% 0.0211 277.5);
+    --rk-palette-light-surface-sunken: oklch(28.8% 0.0221 277.5);
     --rk-palette-light-tint-blue: oklch(35.2% 0.0398 277.5);
     --rk-palette-light-tint-cyan: oklch(37.1% 0.0321 277.5);
     --rk-palette-light-tint-green: oklch(37% 0.0497 277.5);

@@ -89,6 +89,10 @@
   /* The reserved cells: the cursor's, and the check's under multi-select. */
   .rk-list-mark {
     inline-size: var(--rk-cell-width);
+    /* A whole cell down as well as across: an empty mark, on every row but
+     * the cursor's, is otherwise a box of no height in the middle of its
+     * row, half a row off the grid (found by the site's shell, 0104). */
+    block-size: var(--rk-cell-height);
     flex: none;
     /* A blank is a cell too: in prose, where whitespace collapses, a mark with
      * no cursor would otherwise have no height, and sit half a row down. */

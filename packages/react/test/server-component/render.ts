@@ -163,6 +163,26 @@ const checks: [string, unknown, unknown][] = [
     '┌ a ───┬ b ────┐',
   ],
   ['textBuffer', pure.textBuffer('Rockaway', 3).row(0), `Rockaway${' '.repeat(20)}`],
+  [
+    'statusBarBuffer',
+    pure
+      .statusBarBuffer(16, [
+        { text: 'NORMAL', variant: 'mode' },
+        { text: '1:1', align: 'end' },
+      ])
+      .row(0),
+    ' NORMAL     1:1 ',
+  ],
+  [
+    'tableBuffer',
+    pure.tableBuffer({ columns: [{ header: 'Name' }], rows: [{ cells: ['a.ts'] }] }).row(0),
+    '┌──────┐',
+  ],
+  [
+    'keymapHelpBuffer',
+    pure.keymapHelpBuffer([{ keys: 'mod+k', description: 'Palette' }], 'apple').row(0),
+    '⌘K  Palette',
+  ],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)

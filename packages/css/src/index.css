@@ -41,6 +41,7 @@
 @import "./components/frame.css";
 @import "./components/key-hint.css";
 @import "./components/keymap.css";
+@import "./components/link-tree.css";
 @import "./components/link.css";
 @import "./components/list.css";
 @import "./components/menu.css";
@@ -50,6 +51,7 @@
 @import "./components/radio-group.css";
 @import "./components/select.css";
 @import "./components/skip-link.css";
+@import "./components/status-bar.css";
 @import "./components/switch.css";
 @import "./components/table.css";
 @import "./components/tabs.css";
