@@ -1,10 +1,11 @@
 import { toText } from '@rockaway/grid';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
 import { linkBuffer } from './link.pure.ts';
 import type { LinkState } from './link.tsx';
 
-const cells = (label: string, state: LinkState): string =>
-  toText(linkBuffer(label, state), { trimEnd: false });
+const cells = (label: string, state: LinkState, glyphs?: Glyphs): string =>
+  toText(linkBuffer(label, state, glyphs), { trimEnd: false });
 
 export const linkMeta: ComponentMetaInput = defineMeta({
   name: 'Link',
@@ -34,6 +35,12 @@ export const linkMeta: ComponentMetaInput = defineMeta({
       role: 'link',
       description:
         'React Aria\'s Link: an anchor, or a span with role="link" when disabled. Navigation goes through a RouterProvider when there is one.',
+    },
+    {
+      kind: 'import',
+      name: 'LinkComponentProvider',
+      description:
+        "Renders every Link inside it through the app's own link (next/link, a router's Link), so the framework prefetches and follows it. Without it a Link is a plain anchor.",
     },
     {
       kind: 'element',
@@ -83,6 +90,7 @@ export const linkMeta: ComponentMetaInput = defineMeta({
       '"changelog, link", or "changelog (opens in a new tab), link". A current link is announced as the current page.',
     notes: [
       'A disabled link renders as a span with role="link", so it stays in the reading order.',
+      "To render every Link through a framework's own link, so it prefetches, wrap the app in LinkComponentProvider with that link as `component`. Use it or a RouterProvider for navigation, not both.",
       "For client-side routing, wrap the app in RouterProvider from @rockaway/react, given the router's navigate (and useHref for a base path). It is React Aria's, re-exported so it is the same instance Link reads.",
     ],
   },
@@ -91,11 +99,12 @@ export const linkMeta: ComponentMetaInput = defineMeta({
       title: 'In place, current, and opening a new tab',
       description:
         'The first cell is the one before the link. Hover, focus and pressed draw the same cells as rest: they are bold, an outline and reverse video, which text has no way to show.',
-      text: [
-        `rest     ${cells('docs', {})}`,
-        `current  ${cells('docs', { current: true })}`,
-        `new tab  ${cells('docs', { newTab: true })}`,
-      ].join('\n'),
+      draw: (glyphs) =>
+        [
+          `rest     ${cells('docs', {}, glyphs)}`,
+          `current  ${cells('docs', { current: true }, glyphs)}`,
+          `new tab  ${cells('docs', { newTab: true }, glyphs)}`,
+        ].join('\n'),
     },
   ],
 });
