@@ -33,6 +33,8 @@ const notUtilities: Readonly<Record<string, string>> = {
   'rk-row': "a painter's row",
   'rk-run': "a painter's run of cells in one style",
   'rk-scroll-marks': "the scroll position's own cells, drawn by the page script",
+  'rk-selection': "watchSelection's overlay of selection rows, drawn by the page script",
+  'rk-selection-row': "one row of watchSelection's overlay",
   'rk-frame': "Screen's chrome layer; documented as a part of the components that draw one",
   'rk-content': "Screen's content layer; documented as a part of the components that draw one",
   'rk-button': 'a component root, reported with the component',

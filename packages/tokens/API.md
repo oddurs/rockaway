@@ -27,8 +27,10 @@ type ColorValue
 type Conformance
 conformanceLevels
 contrast
+type Contrast
 contrastIn
 type ContrastResult
+contrasts
 controlRows
 defaultContexts
 defaultTheme
@@ -45,6 +47,8 @@ families
 fitContrast
 fittedPalette
 type FontFamilies
+type FrameWeights
+frameWeights
 fromHex
 type Gamut
 gamutMap
@@ -72,8 +76,12 @@ luminanceIn
 type MarkName
 markNames
 marks
+minimumIn
 type Mode
 modes
+moreContrast
+moreContrastColors
+moreContrastStrokeWeights
 motion
 type NeutralTemperature
 type Oklch
@@ -101,6 +109,7 @@ slotHue
 spaceSteps
 spinnerFrames
 strokes
+type StrokeWeights
 strokeWeights
 type SyntaxRole
 syntaxRoles
@@ -132,7 +141,10 @@ vars
 type View
 views
 type Weight
+type WeightName
+weightNames
 weights
+weightsFor
 worstContrast
 ```
 
@@ -157,6 +169,7 @@ default
 ice
 ink
 phosphor
+ascii
 catppuccin
 dracula
 nord
@@ -379,6 +392,17 @@ By name, as the custom property a stylesheet reads. The reference tier (`ansi.*`
 --rk-glyph-border-double-top-left
 --rk-glyph-border-double-top-right
 --rk-glyph-border-double-vertical
+--rk-glyph-border-emphasis-bottom-left
+--rk-glyph-border-emphasis-bottom-right
+--rk-glyph-border-emphasis-cross
+--rk-glyph-border-emphasis-horizontal
+--rk-glyph-border-emphasis-tee-down
+--rk-glyph-border-emphasis-tee-left
+--rk-glyph-border-emphasis-tee-right
+--rk-glyph-border-emphasis-tee-up
+--rk-glyph-border-emphasis-top-left
+--rk-glyph-border-emphasis-top-right
+--rk-glyph-border-emphasis-vertical
 --rk-glyph-border-heavy-bottom-left
 --rk-glyph-border-heavy-bottom-right
 --rk-glyph-border-heavy-cross
@@ -390,6 +414,28 @@ By name, as the custom property a stylesheet reads. The reference tier (`ansi.*`
 --rk-glyph-border-heavy-top-left
 --rk-glyph-border-heavy-top-right
 --rk-glyph-border-heavy-vertical
+--rk-glyph-border-modal-bottom-left
+--rk-glyph-border-modal-bottom-right
+--rk-glyph-border-modal-cross
+--rk-glyph-border-modal-horizontal
+--rk-glyph-border-modal-tee-down
+--rk-glyph-border-modal-tee-left
+--rk-glyph-border-modal-tee-right
+--rk-glyph-border-modal-tee-up
+--rk-glyph-border-modal-top-left
+--rk-glyph-border-modal-top-right
+--rk-glyph-border-modal-vertical
+--rk-glyph-border-raised-bottom-left
+--rk-glyph-border-raised-bottom-right
+--rk-glyph-border-raised-cross
+--rk-glyph-border-raised-horizontal
+--rk-glyph-border-raised-tee-down
+--rk-glyph-border-raised-tee-left
+--rk-glyph-border-raised-tee-right
+--rk-glyph-border-raised-tee-up
+--rk-glyph-border-raised-top-left
+--rk-glyph-border-raised-top-right
+--rk-glyph-border-raised-vertical
 --rk-glyph-border-rounded-bottom-left
 --rk-glyph-border-rounded-bottom-right
 --rk-glyph-border-rounded-cross
@@ -444,6 +490,7 @@ By name, as the custom property a stylesheet reads. The reference tier (`ansi.*`
 --rk-glyph-mark-external
 --rk-glyph-mark-overflow-end
 --rk-glyph-mark-overflow-start
+--rk-glyph-mark-prompt
 --rk-glyph-mark-radio
 --rk-glyph-mark-radio-empty
 --rk-glyph-mark-required

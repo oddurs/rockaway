@@ -82,6 +82,8 @@ right
 rows
 type Shape
 shapeOf
+type ShapeRun
+shapeRuns
 shapes
 type Side
 type Size
