@@ -615,6 +615,132 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "ComboBox": {
+    "file": "combobox.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The field's name, in the label column."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | ((item: T) => ReactNode)",
+        "required": false,
+        "description": "The options: `ComboBoxItem`s, or a function of each of `items`."
+      },
+      {
+        "name": "items",
+        "type": "Iterable<T>",
+        "required": false,
+        "description": "The items to render with a function child. The combobox filters them as you type."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The box's width in cells, its delimiters and its button included.",
+        "default": "24"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": "What the box says while nothing is typed."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help under the box, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
+        "required": false,
+        "description": "Words for the error under the box; the combobox's own validation's when not given."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the popover takes before its rows scroll.",
+        "default": "8"
+      },
+      {
+        "name": "empty",
+        "type": "string",
+        "required": false,
+        "description": "What the popover says when nothing matches.",
+        "default": "NO_MATCHES"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit< AriaComboBoxProps<T>, 'children' | 'className' | 'style' | 'items' | 'defaultItems' | 'allowsEmptyCollection' >"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "ComboBoxItem": {
+    "file": "combobox.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The option's words."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
   "Description": {
     "file": "field.tsx",
     "props": [
@@ -1464,6 +1590,107 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-x-3"
     ]
   },
+  "Meter": {
+    "file": "meter.tsx",
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "required": true,
+        "description": "The level, from `minValue` to `maxValue`."
+      },
+      {
+        "name": "minValue",
+        "type": "number",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "maxValue",
+        "type": "number",
+        "required": false,
+        "default": "100"
+      },
+      {
+        "name": "warning",
+        "type": "number",
+        "required": false,
+        "description": "At or past this the meter is a warning: its fill is fg.warning and its mark cell draws the theme's `!`. In the meter's own units."
+      },
+      {
+        "name": "danger",
+        "type": "number",
+        "required": false,
+        "description": "At or past this the meter is in danger: fg.danger and the theme's `✗`. Give it below `warning` for a meter where low is bad, like a battery."
+      },
+      {
+        "name": "tone",
+        "type": "MeterToneName",
+        "required": false,
+        "description": "The tone outright, in place of the thresholds: `neutral` draws no mark."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The words before the bar, and its accessible name."
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "valueLabel",
+        "type": "string",
+        "required": false,
+        "description": "What the value reads as, after the bar, and what a reader hears: `11.2/16G`. A percentage unless given. Keep it one width as the value changes, or the meter's width will change with it."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The bar's width in cells.",
+        "default": "20"
+      },
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof meterVariants>"
+    ],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-fg-success",
+      "--rk-fg-warning",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "OverlayLayer": {
     "file": "overlay.tsx",
     "props": [
@@ -1835,6 +2062,85 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": []
   },
+  "ProgressBar": {
+    "file": "progress.tsx",
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "required": false,
+        "description": "How far along, from `minValue` to `maxValue`. Leave it out, or set `isIndeterminate`, when nobody knows."
+      },
+      {
+        "name": "minValue",
+        "type": "number",
+        "required": false,
+        "default": "0"
+      },
+      {
+        "name": "maxValue",
+        "type": "number",
+        "required": false,
+        "default": "100"
+      },
+      {
+        "name": "isIndeterminate",
+        "type": "boolean",
+        "required": false,
+        "description": "Busy with no amount: the bar is shaded across, and a block crosses it on the progress tick."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The words before the bar, and its accessible name."
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "required": false,
+        "description": "The accessible name, when there are no words to show."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The bar's width in cells, not counting the label or the value.",
+        "default": "20"
+      },
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Radio": {
     "file": "radio-group.tsx",
     "props": [
@@ -2109,6 +2415,125 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-on-inverse"
+    ]
+  },
+  "Sparkline": {
+    "file": "sparkline.tsx",
+    "props": [
+      {
+        "name": "values",
+        "type": "readonly number[]",
+        "required": true,
+        "description": "The series, oldest first. The newest that fit are drawn, at the right."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What the series is, for the text a reader hears in its place: `Load, 1 minute`."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "Its width in cells: two values a cell in braille, one in bars.",
+        "default": "16"
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "Its height in rows: four levels a row in braille, eight in bars.",
+        "default": "1"
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "description": "The value at the bottom: the series' lowest, or 0 if that is lower."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "description": "The value at the top: the series' highest."
+      },
+      {
+        "name": "kind",
+        "type": "SparklineKind",
+        "required": false,
+        "description": "`braille`, two values a cell in dots, or `bars`, one a cell in eighths. An ASCII theme has no braille, and draws bars.",
+        "default": "'braille'"
+      },
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Spinner": {
+    "file": "spinner.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What is happening, shown after the frame and announced: `Indexing`."
+      },
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "StatusBar": {
@@ -2598,6 +3023,57 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
+    ]
+  },
+  "Text": {
+    "file": "text.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "TextSize",
+        "required": true,
+        "description": "How many rows tall the glyphs are: 2, 3 or 4, or 1.5 or 2.5, padded up to whole rows (0323). One row is ordinary text."
+      },
+      {
+        "name": "inline",
+        "type": "boolean",
+        "required": false,
+        "description": "Set it in a line of other text, its box rounded up to whole cells, rather than as a block the width of its container. It never wraps. Its words should be plain text: the cells it takes are counted from them.",
+        "default": "false"
+      },
+      {
+        "name": "as",
+        "type": "'div' | 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'",
+        "required": false,
+        "description": "The element: a heading's level, a paragraph. `div`, or `span` inline, by default."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<HTMLAttributes<HTMLElement>, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-line",
+      "--rk-cell-width",
+      "--rk-font-content",
+      "--rk-rhythm-gap",
+      "--rk-rhythm-section",
+      "--rk-step-y"
     ]
   },
   "TextField": {

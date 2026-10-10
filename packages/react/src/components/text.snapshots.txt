@@ -1,0 +1,39 @@
+── Size 2
+Rockaway     |
+             |
+Rockaway           |
+                   |
+Rockaway                 |
+                         |
+Rockaway                          |
+                                  |
+── Size 3
+Rockaway           |
+                   |
+                   |
+Rockaway                    |
+                            |
+                            |
+Rockaway                             |
+                                     |
+                                     |
+Rockaway                                           |
+                                                   |
+                                                   |
+── Size 4
+Rockaway                 |
+                         |
+                         |
+                         |
+Rockaway                             |
+                                     |
+                                     |
+                                     |
+Rockaway                                          |
+                                                  |
+                                                  |
+                                                  |
+Rockaway                                                            |
+                                                                    |
+                                                                    |
+                                                                    |

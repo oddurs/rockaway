@@ -194,7 +194,7 @@ export function Motion() {
   return (
     <Page
       title="Motion"
-      lead="Frames on a tick: how long each frame of a stepped animation holds. There are no durations to ease between and no curves. useTick() steps a frame counter on these intervals, one timer per interval for the whole page, and under reduced motion the frames stop on the first."
+      lead="Frames on a tick: how long each frame of a stepped animation holds. There are no durations to ease between and no curves. useTick() steps a frame counter on these intervals, one timer per interval for the whole page, and under reduced motion the frames stop on the first. The refresh tick is data, not motion: under reduced motion it keeps counting at its tick-reduced interval, so live numbers stay current."
     >
       <Table caption="Ticks" head={['Token', 'Frame holds for']}>
         {motion.map((t) => (

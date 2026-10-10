@@ -57,6 +57,7 @@ export {
   delimiterNames,
   delimiters,
   type FrameWeights,
+  fills,
   frameWeights,
   type Glyphs,
   glyphs,
@@ -93,7 +94,7 @@ export {
   type ThemeInputs,
   type TypePairing,
 } from './inputs.ts';
-export { motion, type TickName, tickNames, ticks } from './motion.ts';
+export { motion, reducedTicks, type TickName, tickNames, ticks } from './motion.ts';
 export { type TokenName, vars } from './names.ts';
 export { minimumIn, type Pair, pairs } from './pairs.ts';
 export { resolveTree, resolveValue } from './resolve.ts';
@@ -130,5 +131,5 @@ export {
   themeNames,
   themes,
 } from './themes.ts';
-export { type FontFamilies, families, type Weight, weights } from './type.ts';
+export { contentHeight, type FontFamilies, families, type Weight, weights } from './type.ts';
 export { parseTheme } from './validate.ts';

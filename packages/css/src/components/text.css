@@ -1,0 +1,110 @@
+/*
+ * Text sized in rows (cairn 0296, 0297).
+ *
+ * Size N fills N rows. A half-row size, 1.5 or 2.5 (0323), fills its rows
+ * and is padded up to the next whole one: a run above its glyphs, a block
+ * below its last line, as a seam. The glyph box is the face's ascent plus descent
+ * (`--rk-font-content`, in ems), so the font is that box divided into N line
+ * boxes of the density in force, and the line box is the glyph box: the
+ * glyphs fill the rows exactly, with no leading to share out, and the baseline
+ * sits as far down the rows as the face's ascent says.
+ *
+ *   font-size:   N × line × 1em / content     (1em: the ordinary size)
+ *   line-height: content × 1em                (1em: the scaled size) = N rows
+ *
+ * Across, the letters keep the scaled face's advance, which is not a whole
+ * number of columns. A block takes its container's width, which is, and wraps
+ * in it, each line N rows. It takes that width in a page of prose too, whose
+ * h1 and h2 otherwise shrink to their words: shrunk to scaled words, it would
+ * be a fraction of a cell wide. A run set inline is a box rounded up to whole
+ * cells, padded at its end:
+ *
+ *   width = round(up, max(chars × 1ch, chars × cell × N × line / content)
+ *                     − cell / 256, cell)
+ *
+ * `chars` is how many cells its words take at the ordinary size
+ * (`--rk-chars`, written at render). `1ch` is the scaled face's own advance,
+ * which is what the words are laid out at: where the face is hinted, as
+ * Chromium on Linux does, a scaled advance is rounded to a whole pixel and is
+ * not the ordinary advance scaled, and can be wider. The second term is the
+ * ordinary cell scaled, what `textCols` counts, so a box is never narrower
+ * than the cells a server says it takes. A 256th of a cell comes off before
+ * rounding, so a run that is whole cells by arithmetic does not gain one.
+ *
+ * The width is worked out inside the glyphs, where `1ch` is the scaled face's,
+ * but the cell it rounds to has to be the ordinary one. So the cell is taken
+ * on the outer element and carried in as a registered length, which computes
+ * to pixels where it is set: worked back from the scaled `1ch` it would be the
+ * engine's rounding of it, a 32nd of a pixel short in Chromium, and the next
+ * box would land off the grid.
+ *
+ * An inline run sits on the bottom of its line, so the ordinary text beside it
+ * is on the run's last row and the line is exactly N rows. It never wraps: a
+ * run that broke would be 2N rows in a box measured for N.
+ */
+@property --rk-text-cell {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* The ordinary row, carried into an inline run for the same reason. */
+@property --rk-text-row {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+@layer rk.components {
+  .rk-text {
+    display: block;
+    inline-size: auto;
+  }
+
+  .rk-text-glyphs {
+    display: block;
+    font-size: calc(
+      var(--rk-size, 1) *
+      var(--rk-cell-line, 1.5) *
+      1em /
+      var(--rk-font-content, 1.36)
+    );
+    line-height: calc(var(--rk-font-content, 1.36) * 1em);
+  }
+
+  .rk-text-inline {
+    display: inline-block;
+    vertical-align: bottom;
+    white-space: nowrap;
+    --rk-text-cell: var(--rk-cell-width);
+    --rk-text-row: var(--rk-cell-height);
+  }
+
+  /* A half-row size (0323) is padded above its glyphs up to the next whole
+   * row, so the run sits on the bottom of a line of whole rows. Nothing at a
+   * whole size: up is where it already is. */
+  .rk-text-inline > .rk-text-glyphs {
+    padding-block-start: calc(
+      (round(up, var(--rk-size, 1), 1) - var(--rk-size, 1)) *
+      var(--rk-text-row)
+    );
+  }
+
+  .rk-text-inline > .rk-text-glyphs {
+    inline-size: round(
+      up,
+      max(
+        var(--rk-chars, 0) *
+        1ch,
+        var(--rk-chars, 0) *
+        var(--rk-text-cell) *
+        var(--rk-size, 1) *
+        var(--rk-cell-line, 1.5) /
+        var(--rk-font-content, 1.36)
+      ) -
+      var(--rk-text-cell) /
+      256,
+      var(--rk-text-cell)
+    );
+  }
+}

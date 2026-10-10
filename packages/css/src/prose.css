@@ -7,7 +7,8 @@
  * Everything is spaced in whole rows and indented in whole cells, and the box
  * itself is a whole number of cells wide, so a page of prose stays on the grid
  * however long it runs. One size throughout (0075): a heading is weight, case
- * and a rule, never a bigger font.
+ * and a rule, never a bigger font. A heading set in rows with `.rk-text`
+ * (0296) is its own size, and takes the measure's width (text.css).
  *
  * The rules under headings, the quote gutter and `hr` are strokes drawn by the
  * cell (0116), the same geometry `shapes.css` gives a painted `═`, `─` or `│`,

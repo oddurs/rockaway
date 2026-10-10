@@ -156,6 +156,21 @@ export function ShellExtras({ bindings, say, helping, setHelping }: ShellExtrasP
       if (button) copy(button.dataset.siteCopy === 'ANSI' ? 'ANSI' : 'text');
     };
     document.addEventListener('click', copied);
+    // The toolbar asks; the shell does (ShellToolbar.tsx).
+    const asked = (event: Event): void => {
+      if (!(event instanceof CustomEvent)) return;
+      if (event.type === 'rk:copy') copy(event.detail === 'ANSI' ? 'ANSI' : 'text');
+      if (event.type === 'rk:help') setHelping((h) => !h);
+      if (event.type === 'rk:look-set') {
+        const { part, value } = event.detail as {
+          part: 'theme' | 'mode' | 'density';
+          value: string;
+        };
+        looks.current?.set(part, value);
+      }
+    };
+    for (const name of ['rk:copy', 'rk:help', 'rk:look-set'])
+      document.addEventListener(name, asked);
 
     const row = (): number => {
       const height = Number.parseFloat(
@@ -273,6 +288,9 @@ export function ShellExtras({ bindings, say, helping, setHelping }: ShellExtrasP
       document.removeEventListener('keydown', own);
       document.removeEventListener('rk:say', heard);
       document.removeEventListener('click', copied);
+      for (const name of ['rk:copy', 'rk:help', 'rk:look-set']) {
+        document.removeEventListener(name, asked);
+      }
       if (typeof detach === 'function') detach();
     };
   }, [bindings, router, say, setHelping]);

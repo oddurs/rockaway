@@ -31,7 +31,7 @@ import {
   useState,
 } from 'react';
 import { type CellMetrics, cellsIn, measureCell } from './cell-metrics.ts';
-import { chromeRows, type Stretch } from './paint/chrome.tsx';
+import { Cells, type Stretch } from './paint/render.tsx';
 
 export type PainterName = 'glyph' | 'rule';
 
@@ -175,7 +175,10 @@ export function Screen({
   }, [measured, cols, rows, buffer]);
   // Built once per buffer: a re-render that only measured the cell leaves the
   // chrome's nodes alone.
-  const chrome = useMemo(() => chromeRows(buffer, stretch), [buffer, stretch]);
+  const chrome = useMemo(
+    () => <Cells buffer={buffer} strokes={painter} {...(stretch ? { stretch } : {})} />,
+    [buffer, painter, stretch],
+  );
 
   const vars = {
     '--rk-cell-width': cell ? `${cell.width}px` : '1ch',
@@ -199,14 +202,7 @@ export function Screen({
       style={{ ...vars, ...gutterStyle(gutter), ...style }}
       {...rest}
     >
-      <div
-        className="rk-frame"
-        aria-hidden="true"
-        data-rk-painted={painter}
-        data-rk-elastic={stretch === undefined ? undefined : ''}
-      >
-        {chrome}
-      </div>
+      {chrome}
       {children === undefined ? null : (
         <div className="rk-content" style={insetStyle(contentInset)}>
           {typeof children === 'function' ? children(size) : children}

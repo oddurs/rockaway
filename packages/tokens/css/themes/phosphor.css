@@ -6,6 +6,8 @@
   [data-rk-theme='phosphor'] {
     /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
     --rk-conformance: standard;
+    /* The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296). */
+    --rk-font-content: 1.3;
     --rk-font-family-display: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-family-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
@@ -126,6 +128,14 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-fill-1: "▏";
+    --rk-glyph-fill-2: "▎";
+    --rk-glyph-fill-3: "▍";
+    --rk-glyph-fill-4: "▌";
+    --rk-glyph-fill-5: "▋";
+    --rk-glyph-fill-6: "▊";
+    --rk-glyph-fill-7: "▉";
+    --rk-glyph-fill-8: "█";
     --rk-glyph-key-alt: "⌥";
     --rk-glyph-key-backspace: "⌫";
     --rk-glyph-key-ctrl: "⌃";

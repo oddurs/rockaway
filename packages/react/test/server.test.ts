@@ -1,4 +1,4 @@
-import { fromText, toText } from '@rockaway/grid';
+import { Attr, Buffer, drawText, fromText, toText } from '@rockaway/grid';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
@@ -6,7 +6,9 @@ import { frameBuffer } from '../src/components/frame.pure.ts';
 import { Frame } from '../src/components/frame.tsx';
 import { KeyHint } from '../src/components/key-hint.tsx';
 import { List, ListItem } from '../src/components/list.tsx';
+import { StatusBar, StatusMessage, StatusSegment } from '../src/components/status-bar.tsx';
 import { Tab, TabList, TabPanel, Tabs } from '../src/components/tabs.tsx';
+import { Cells } from '../src/paint/render.tsx';
 import { Screen } from '../src/screen.tsx';
 
 /** The text of each painted row in some markup, entities decoded. */
@@ -81,6 +83,58 @@ describe('a screen rendered on a server (0126)', () => {
     expect(html).toContain('data-rk-dots="1 2 3 4 5 6 7 8"');
   });
 
+  test('sends a status bar’s words, placed, so a page with no script shows them', () => {
+    const html = renderToString(
+      createElement(
+        StatusBar,
+        { cols: 40 },
+        createElement(StatusSegment, { variant: 'mode' }, 'NORMAL'),
+        createElement(StatusSegment, null, 'src/list.tsx'),
+        createElement(StatusSegment, { align: 'end' }, 12, ':', 4),
+        createElement(
+          StatusSegment,
+          { align: 'end' },
+          createElement(KeyHint, { keys: '?' }, 'help'),
+        ),
+        createElement(StatusSegment, { align: 'end' }, createElement('b', null, 'Top')),
+        createElement(StatusMessage, null, 'Saved'),
+      ),
+    );
+    // Each segment's markup runs to the next segment, or to the end.
+    const segments = html.split('<span class="rk-status-segment"').slice(1);
+    const text = (segment: string): string =>
+      segment.replace(/<[^>]+>/g, '').replace(/^[^>]*>/, '');
+    const style = (segment: string): string => /^[^>]*style="([^"]*)"/.exec(segment)?.[1] ?? '';
+    const byText = (words: string) => segments.find((segment) => text(segment) === words);
+    // Text is placed at its own width, padded a cell either side, and shown.
+    for (const [words, x, cols] of [
+      ['NORMAL', 0, 8],
+      ['src/list.tsx', 8, 14],
+      ['12:4', 26, 6],
+    ] as const) {
+      const segment = byText(words);
+      expect(segment, words).toBeDefined();
+      if (!segment) continue;
+      expect(style(segment), words).toContain(`--rk-status-x:${x}`);
+      expect(style(segment), words).toContain(`--rk-status-cols:${cols}`);
+      expect(style(segment), words).not.toContain('visibility');
+    }
+    // A key hint's width is known from its props too: its legend, a cell, its
+    // label. `? help`, padded, in the end's last eight cells: the element after
+    // it, which only the page can measure, takes no room until then.
+    const hint = segments.find((segment) => segment.includes('rk-keyhint'));
+    expect(hint).toBeDefined();
+    expect(style(hint ?? '')).toContain('--rk-status-x:32');
+    expect(style(hint ?? '')).toContain('--rk-status-cols:8');
+    expect(hint).toContain('help');
+    // A segment whose width only the page knows waits for it, hidden.
+    const element = segments.find((segment) => segment.includes('<b>Top</b>'));
+    expect(style(element ?? '')).toBe('visibility:hidden');
+    // The message has not arrived until the page runs: an empty live region.
+    expect(html).toMatch(/role="status"/);
+    expect(html).not.toContain('Saved');
+  });
+
   test('sends tabs placed in their gaps, so a page with no script shows them', () => {
     const tabs = (labels: readonly (string | ReturnType<typeof createElement>)[]) =>
       renderToString(
@@ -107,5 +161,31 @@ describe('a screen rendered on a server (0126)', () => {
     // A label only the page can measure: the tabs wait for it, out of sight.
     const later = tabs(['files', createElement(KeyHint, { keys: 'mod+s' })]);
     expect(later).toContain('--rk-tab-shown:0;--rk-tab-clip:inset(50%)');
+  });
+});
+
+describe('one renderer for painted cells (0227)', () => {
+  const muted = Buffer.create({ width: 4, height: 1 }).draw((d) => {
+    drawText(d, { x: 0, y: 0 }, '├─ x', { style: { fg: 'fg.muted', attrs: Attr.none } });
+  });
+
+  test('writes a block of rows, each run with its colour and shape', () => {
+    const html = renderToString(createElement(Cells, { buffer: muted }));
+    expect(html).toMatch(/^<div class="rk-frame" aria-hidden="true" data-rk-painted="glyph">/);
+    expect(rows(html)).toEqual(['├─ x']);
+    expect(html).toContain('color:var(--rk-fg-muted)');
+    expect(html).toContain('data-rk-shape');
+  });
+
+  test('sets one row inline, its colour left to the stylesheet, as a tree row’s guides', () => {
+    const html = renderToString(
+      createElement(Cells, { buffer: muted, className: 'guides', inline: true, colours: false }),
+    );
+    expect(html).toMatch(/^<span class="guides" aria-hidden="true" data-rk-painted="glyph">/);
+    expect(html).not.toContain('rk-row');
+    expect(html).not.toContain('color:');
+    // Where each run starts and how long it is are still written.
+    expect(html).toContain('--rk-col');
+    expect(html).toContain('data-rk-shape');
   });
 });

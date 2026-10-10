@@ -220,12 +220,15 @@ export const StatusBarLikeTheComponent: Story = {
           expect(s.style.visibility).not.toBe('hidden');
         }
       });
-      // The server cannot measure a segment, so its bar arrives unplaced.
+      // The server cannot measure a segment, but it can count text: a segment
+      // of text arrives placed at its width (0098), and is not hidden.
       const bar = serve(
         canvas.getByTestId(`static ${cols}`),
         <Bar cols={cols} label={`Static, ${cols}`} />,
       );
-      expect(bar.querySelector<HTMLElement>('.rk-status-segment')?.style.visibility).toBe('hidden');
+      expect(bar.querySelector<HTMLElement>('.rk-status-segment')?.style.visibility).not.toBe(
+        'hidden',
+      );
       fitStatusBar(bar, SEGMENTS);
       expect(chromeOf(bar), `ground at ${cols}`).toBe(chromeOf(react));
       expect(screenshot(bar, { legend: false }), `text at ${cols}`).toBe(
