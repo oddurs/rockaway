@@ -3,8 +3,10 @@ id: 296
 uid: 70c467d6-ef2f-4a21-a5bc-69e658a75bcc
 title: Size type in whole rows, at its natural width
 type: decision
-status: ready
+status: doing
 milestone: grid
+assignee: Oddur Sigurdsson
+claimed: 2026-10-09
 created: 2026-10-09
 updated: 2026-10-09
 priority: p0
