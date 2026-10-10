@@ -193,9 +193,11 @@
     --rk-palette-dark-cursor: oklch(66.9% 0.1138 201.2);
     --rk-palette-dark-cyan: oklch(66.9% 0.1138 201.2);
     --rk-palette-dark-faint: oklch(46% 0.014 250);
+    --rk-palette-dark-focus: oklch(66.9% 0.1138 201.2);
     --rk-palette-dark-foreground: oklch(94% 0.0067 250);
     --rk-palette-dark-green: oklch(66% 0.16 150);
     --rk-palette-dark-hover: oklch(27% 0.014 250);
+    --rk-palette-dark-inverse: oklch(94% 0.0067 250);
     --rk-palette-dark-magenta: oklch(66% 0.16 320);
     --rk-palette-dark-muted: oklch(74% 0.014 250);
     --rk-palette-dark-red: oklch(66% 0.16 27);
@@ -227,9 +229,11 @@
     --rk-palette-light-cursor: oklch(52.89% 0.09 201.5);
     --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
     --rk-palette-light-faint: oklch(68% 0.014 250);
+    --rk-palette-light-focus: oklch(50.39% 0.0857 201.6);
     --rk-palette-light-foreground: oklch(21% 0.0128 250);
     --rk-palette-light-green: oklch(52.03% 0.152 147.6);
     --rk-palette-light-hover: oklch(93.5% 0.0069 250);
+    --rk-palette-light-inverse: oklch(21% 0.0128 250);
     --rk-palette-light-magenta: oklch(52% 0.16 320);
     --rk-palette-light-muted: oklch(47% 0.014 250);
     --rk-palette-light-red: oklch(52% 0.16 27);
@@ -255,6 +259,7 @@
       --rk-palette-dark-bright-red: oklch(78% 0.15 27);
       --rk-palette-dark-cursor: oklch(66.38% 0.1512 200.5);
       --rk-palette-dark-cyan: oklch(66.38% 0.1512 200.5);
+      --rk-palette-dark-focus: oklch(66.38% 0.1512 200.5);
       --rk-palette-dark-selection: oklch(26% 0.045 200);
       --rk-palette-dark-tint-blue: oklch(26% 0.045 200);
       --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
@@ -266,6 +271,7 @@
       --rk-palette-light-bright-yellow: oklch(43.16% 0.103 79.74);
       --rk-palette-light-cursor: oklch(52.76% 0.1202 201.4);
       --rk-palette-light-cyan: oklch(50.26% 0.1145 201.5);
+      --rk-palette-light-focus: oklch(50.26% 0.1145 201.5);
       --rk-palette-light-green: oklch(51.5% 0.16 150);
       --rk-palette-light-tint-red: oklch(94.41% 0.0365 29.35);
       --rk-palette-light-yellow: oklch(52.16% 0.1242 80.65);
@@ -282,6 +288,7 @@
       --rk-palette-dark-bright-red: oklch(78% 0.15 27);
       --rk-palette-dark-cursor: oklch(66% 0.16 200);
       --rk-palette-dark-cyan: oklch(66% 0.16 200);
+      --rk-palette-dark-focus: oklch(66% 0.16 200);
       --rk-palette-dark-selection: oklch(26% 0.045 200);
       --rk-palette-dark-tint-blue: oklch(26% 0.045 200);
       --rk-palette-dark-tint-cyan: oklch(26% 0.045 200);
@@ -293,6 +300,7 @@
       --rk-palette-light-bright-yellow: oklch(43.12% 0.1049 79.93);
       --rk-palette-light-cursor: oklch(52% 0.16 200);
       --rk-palette-light-cyan: oklch(49.5% 0.16 200);
+      --rk-palette-light-focus: oklch(49.5% 0.16 200);
       --rk-palette-light-green: oklch(51.5% 0.16 150);
       --rk-palette-light-tint-red: oklch(95% 0.045 27);
       --rk-palette-light-yellow: oklch(52.12% 0.1265 80.81);
