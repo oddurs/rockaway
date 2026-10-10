@@ -3,8 +3,10 @@ id: 142
 uid: 561d9fa4-c6f3-488c-b4e4-7b7f74223a51
 title: 'Make the design pass: every component, side by side, against the ten rules'
 type: chore
-status: backlog
+status: doing
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-09
 depends_on:
 - 34
 - 35
@@ -38,7 +40,7 @@ depends_on:
 - 139
 - 140
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-09
 priority: p0
 layer: components
 effort: l
