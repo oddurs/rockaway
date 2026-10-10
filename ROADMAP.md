@@ -196,13 +196,13 @@ The component contract, proven on a first set of components.
 - [ ] [`0292`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0292-keep-focus-in-a-modal-when-its-backdrop-is-pressed.md) Keep focus in a modal when its backdrop is pressed <sup>bug · components · p1</sup>
 - [ ] [`0293`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0293-carry-the-painter-to-every-component-through-a-provider.md) Carry the painter to every component through a provider <sup>feature · components · p2</sup>
 - [ ] [`0294`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0294-keep-list-s-cursor-cell-a-cell-inside-prose.md) Keep List's cursor cell a cell inside prose <sup>bug · css · p2</sup>
-- [ ] [`0295`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0295-set-the-system-in-ibm-plex-mono.md) Set the system in IBM Plex Mono <sup>decision · tokens · p0</sup>
 - [ ] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 - [ ] [`0299`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0299-select-text-the-way-a-terminal-does.md) Select text the way a terminal does <sup>feature · css · p0</sup>
 
 ### in progress
 
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
+- [ ] [`0295`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0295-set-the-system-in-ibm-plex-mono.md) Set the system in IBM Plex Mono <sup>decision · tokens · p0</sup>
 
 ### in review
 
