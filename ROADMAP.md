@@ -123,7 +123,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 45% · 66 of 148 done · due 2027-01-31
+`#####·····` 45% · 67 of 148 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -145,7 +145,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
 - [ ] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p2</sup>
 - [ ] [`0124`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0124-run-the-story-tests-in-firefox-and-webkit-as-well-as-chromium.md) Run the story tests in Firefox and WebKit as well as Chromium <sup>chore · tooling · p1</sup>
-- [ ] [`0138`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0138-codeblock.md) CodeBlock <sup>component · components · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0167`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0167-add-size-in-cells-and-conformance-level-to-component-metadata.md) Add size in cells and conformance level to component metadata <sup>feature · docs · p1</sup>
 - [ ] [`0169`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0169-give-inline-controls-a-full-cell-hit-area-and-ground.md) Give inline controls a full-cell hit area and ground <sup>feature · css · p3</sup>
@@ -251,6 +250,7 @@ The component contract, proven on a first set of components.
 - [x] [`0133`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0133-polish-list-against-the-contract-and-the-cell-renderer.md) Polish List against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
 - [x] [`0137`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0137-tree.md) Tree <sup>component · components · p1</sup>
+- [x] [`0138`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0138-codeblock.md) CodeBlock <sup>component · components · p1</sup>
 - [x] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
 - [x] [`0140`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0140-callout.md) Callout <sup>component · components · p2</sup>
 - [x] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
