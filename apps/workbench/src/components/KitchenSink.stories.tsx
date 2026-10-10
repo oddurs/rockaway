@@ -159,6 +159,20 @@ type Story = StoryObj<typeof meta>;
  */
 export const Everything: Story = {
   globals: { conformance: 'strict' },
+  // The examples are real usage, so they read the reader's keyboard: a chord
+  // is ⌘S on a Mac and Ctrl+S elsewhere, and the cells around it differ. The
+  // sink is drawn for the same keyboard on every machine, so its snapshot is
+  // the same wherever it is written: `usePlatform` reads the browser's hints
+  // on every render, and here they say Linux.
+  beforeEach: () => {
+    Object.defineProperty(navigator, 'userAgentData', {
+      configurable: true,
+      value: { platform: 'Linux' },
+    });
+    return () => {
+      delete (navigator as { userAgentData?: unknown }).userAgentData;
+    };
+  },
   play: async ({ canvasElement }) => {
     await measured(document.body);
     // Every component the registry knows is on the screen, with its example.
@@ -170,13 +184,10 @@ export const Everything: Story = {
     }
     const run = runner();
     if (!run) return;
-    // The examples are real usage, so they read the reader's platform: a chord
-    // is ⌘S on a Mac and Ctrl+S elsewhere, and the cells around it differ.
-    // The snapshot is the screen as CI draws it, in Chromium on Linux, and is
-    // held to that there; anywhere else the screen is checked by everything
-    // above and by the walk after.
+    // The screen as text, in Chromium, the engine the snapshot is written in;
+    // write it again with `vitest -u` on any machine.
     const text = screenshot(canvasElement.querySelector('.ks-sink') as HTMLElement);
-    if (!navigator.userAgent.includes('Linux')) return;
+    if (!navigator.userAgent.includes('Chrome')) return;
     await run.matchFile(text, './kitchen-sink.snapshot.txt');
   },
 };
