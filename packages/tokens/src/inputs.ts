@@ -8,6 +8,8 @@
  * padding step arrive with the glyph tokens (0091).
  */
 
+import type { FrameWeights } from './glyph.ts';
+
 /** The inputs that define a theme. A preset is one of these and nothing else. */
 export interface ThemeInputs {
   /** OKLCH hue of the accent, 0–360. */
@@ -18,6 +20,11 @@ export interface ThemeInputs {
   readonly typePairing: TypePairing;
   /** Which set the theme draws its chrome with (0091). */
   readonly borderSet: BorderSetName;
+  /**
+   * The sets heavier frames are drawn in, where the theme wants other than its
+   * repertoire's: heavy, heavy and double in Unicode, ascii in ASCII (0128).
+   */
+  readonly weights?: Partial<FrameWeights>;
   /** How strictly this theme holds the grid (0072). */
   readonly conformance: Conformance;
 }

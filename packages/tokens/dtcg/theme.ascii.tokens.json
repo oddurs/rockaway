@@ -958,6 +958,114 @@
         "cross": {
           "$value": "+"
         }
+      },
+      "emphasis": {
+        "$description": "A frame drawn heavier for a state: the ascii set (cairn 0128).",
+        "horizontal": {
+          "$value": "-"
+        },
+        "vertical": {
+          "$value": "|"
+        },
+        "top-left": {
+          "$value": "+"
+        },
+        "top-right": {
+          "$value": "+"
+        },
+        "bottom-left": {
+          "$value": "+"
+        },
+        "bottom-right": {
+          "$value": "+"
+        },
+        "tee-left": {
+          "$value": "+"
+        },
+        "tee-right": {
+          "$value": "+"
+        },
+        "tee-up": {
+          "$value": "+"
+        },
+        "tee-down": {
+          "$value": "+"
+        },
+        "cross": {
+          "$value": "+"
+        }
+      },
+      "raised": {
+        "$description": "A frame drawn above the page: the ascii set (cairn 0128).",
+        "horizontal": {
+          "$value": "-"
+        },
+        "vertical": {
+          "$value": "|"
+        },
+        "top-left": {
+          "$value": "+"
+        },
+        "top-right": {
+          "$value": "+"
+        },
+        "bottom-left": {
+          "$value": "+"
+        },
+        "bottom-right": {
+          "$value": "+"
+        },
+        "tee-left": {
+          "$value": "+"
+        },
+        "tee-right": {
+          "$value": "+"
+        },
+        "tee-up": {
+          "$value": "+"
+        },
+        "tee-down": {
+          "$value": "+"
+        },
+        "cross": {
+          "$value": "+"
+        }
+      },
+      "modal": {
+        "$description": "A frame drawn above everything: the ascii set (cairn 0128).",
+        "horizontal": {
+          "$value": "-"
+        },
+        "vertical": {
+          "$value": "|"
+        },
+        "top-left": {
+          "$value": "+"
+        },
+        "top-right": {
+          "$value": "+"
+        },
+        "bottom-left": {
+          "$value": "+"
+        },
+        "bottom-right": {
+          "$value": "+"
+        },
+        "tee-left": {
+          "$value": "+"
+        },
+        "tee-right": {
+          "$value": "+"
+        },
+        "tee-up": {
+          "$value": "+"
+        },
+        "tee-down": {
+          "$value": "+"
+        },
+        "cross": {
+          "$value": "+"
+        }
       }
     },
     "mark": {

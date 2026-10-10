@@ -82,6 +82,31 @@
     color: var(--rk-fg-default);
   }
 
+  /*
+   * Selection as a terminal draws it (0299): whole cells, a whole row tall.
+   * The browser paints its highlight on the text alone, as tall as the font,
+   * so a selection of several lines is striped wherever the line box is
+   * taller. Where `watchSelection` runs it marks the page, paints a row of
+   * the selection colour over each line, blended so the text keeps its own
+   * colour, and the browser's own highlight steps aside. The selection itself
+   * is still the browser's: copying and reading it are unchanged.
+   */
+  html[data-rk-selection] ::selection {
+    background: transparent;
+  }
+
+  .rk-selection {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    pointer-events: none;
+  }
+
+  .rk-selection-row {
+    position: absolute;
+    background: var(--rk-ansi-selection);
+  }
+
   :disabled,
   [aria-disabled="true"] {
     color: var(--rk-attribute-dim);

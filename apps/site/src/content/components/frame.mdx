@@ -1,0 +1,11 @@
+---
+name: Frame
+---
+
+import { Example } from '../../islands/examples/frame.tsx';
+import source from '../../islands/examples/frame.tsx?raw';
+import Source from '../../components/Source.astro';
+
+<Example client:load />
+
+<Source code={source} lang="tsx" />
