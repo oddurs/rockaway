@@ -14,7 +14,7 @@ effort: s
 
 ## What happens
 
-In WebKit, at a 16.4px font with the screen 0.13px in from a pixel, the right one-eighth block `▕` is drawn short of its cell: Continuity's "Marks set in from an edge" finds its north, east and south strokes stopping short (7,1 in the 16.4 / 0.13 grid). Chromium and Firefox draw it to the edges. It surfaced when the stories began running in WebKit (#162). The story names the case and expects exactly this break there, so it fails the day WebKit draws it whole.
+In WebKit, at a 16.4px font with the screen 0.13px or 0.41px in from a pixel (which offsets varies between macOS and Linux), the right one-eighth block `▕` is drawn short of its cell: Continuity's "Marks set in from an edge" finds its north, east and south strokes stopping short (7,1 in the 16.4 / 0.13 grid). Chromium and Firefox draw it to the edges. It surfaced when the stories began running in WebKit (#162). The story allows only this block's gap in WebKit at 16.4px, and holds every other mark.
 
 ## What should happen
 
