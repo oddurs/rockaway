@@ -263,15 +263,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "CheckboxGroup": {
@@ -318,15 +315,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "Column": {
@@ -1120,115 +1114,119 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Radio": {
-    "file": "radio-group.tsx",
+  "Pane": {
+    "file": "panes.tsx",
     "props": [
       {
-        "name": "children",
-        "type": "ReactNode",
+        "name": "size",
+        "type": "PaneSize",
         "required": false,
-        "description": "The label: the option's words, after its mark."
+        "description": "Cells, a share of what is left (`'2fr'`), or `'auto'`. `'auto'` by default."
       },
       {
-        "name": "className",
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "description": "The fewest cells of content it takes along the split before it collapses."
+      },
+      {
+        "name": "priority",
+        "type": "number",
+        "required": false,
+        "description": "When there is not room for every pane, the lowest priority collapses first. 0 by default."
+      },
+      {
+        "name": "title",
         "type": "string",
-        "required": false
-      }
-    ],
-    "inherits": [
-      "Omit<AriaRadioFieldProps, 'children' | 'className' | 'style'>"
-    ],
-    "tokens": [
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-border-focus",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-accent",
-      "--rk-fg-danger",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light",
-      "--rk-x-2"
-    ]
-  },
-  "RadioGroup": {
-    "file": "radio-group.tsx",
-    "props": [
+        "required": false,
+        "description": "Set into the pane's top edge, and its accessible name."
+      },
+      {
+        "name": "titleAlign",
+        "type": "'start' | 'center' | 'end'",
+        "required": false,
+        "description": "Where the title sits in the top edge: after the corner, by default."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the pane's borders, in cells. One across and none down by default, the proportions `Frame` uses."
+      },
       {
         "name": "label",
         "type": "string",
-        "required": true,
-        "description": "Set into the frame's top edge, and the group's accessible name."
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
         "required": false,
-        "description": "The radios."
-      },
-      {
-        "name": "description",
-        "type": "ReactNode",
-        "required": false,
-        "description": "Help under the group, dim, linked to it by `aria-describedby`."
-      },
-      {
-        "name": "errorMessage",
-        "type": "FieldErrorProps['children']",
-        "required": false,
-        "description": "Words for the error under the group; the group's own validation's when not given."
-      },
-      {
-        "name": "orientation",
-        "type": "RadioOrientation",
-        "required": false,
-        "description": "`vertical` puts a radio on each row; `horizontal` sets them across, two cells apart, wrapping whole radios to the next row when they do not fit. The arrow keys follow it."
-      },
-      {
-        "name": "painter",
-        "type": "PainterName",
-        "required": false,
-        "description": "How the frame's lines are stroked: weighted like the type, or hairlines."
+        "description": "The accessible name, when the title is not the right one to say."
       },
       {
         "name": "className",
         "type": "string",
         "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The pane's content, or a `Panes` of its own to split it further."
       }
     ],
-    "inherits": [
-      "VariantProps<typeof radioGroupVariants>",
-      "Omit<AriaRadioGroupProps, 'children' | 'className' | 'style' | 'orientation'>"
-    ],
+    "inherits": [],
     "tokens": [
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
-      "--rk-fg-accent",
-      "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light",
-      "--rk-x-2"
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Panes": {
+    "file": "panes.tsx",
+    "props": [
+      {
+        "name": "direction",
+        "type": "PanesDirection",
+        "required": false,
+        "description": "`row` puts the panes side by side, `column` stacks them."
+      },
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set draws every border; the theme's when not given."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The whole layout's accessible name, which makes it a group."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "`Pane`s, in order."
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
+    ],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Row": {

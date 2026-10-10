@@ -71,6 +71,35 @@ export const readWithoutScripts: BrowserCommand<[html: string]> = async (context
 };
 
 /**
+ * A watchdog on the page's main thread (the Tabs hang, 0216). A loop that
+ * never yields — a `waitFor` whose callback changes the document it watches,
+ * so it runs again in a microtask, for ever — starves every timer in the
+ * page, Vitest's test timeout among them, and the run hangs instead of
+ * failing. Ending the script it is stuck in is not enough: the next change
+ * runs the callback again. A timer here, in Node, is not starved, so if a
+ * test is still running when it fires, it says so and closes the page, and
+ * the run fails at once instead of eating CI.
+ */
+const watchdogs = new Map<string, ReturnType<typeof setTimeout>>();
+
+export const watchdog: BrowserCommand<[ms: number | null]> = (context, ms) => {
+  clearTimeout(watchdogs.get(context.sessionId));
+  watchdogs.delete(context.sessionId);
+  if (ms === null) return;
+  const test = context.testPath ?? 'a test';
+  watchdogs.set(
+    context.sessionId,
+    setTimeout(() => {
+      watchdogs.delete(context.sessionId);
+      console.error(
+        `\nwatchdog: ${test} was still running after ${ms / 1000}s, past its own timeout, so the page has stopped answering (a loop that never yields?). Closing the page.\n`,
+      );
+      void context.page.close();
+    }, ms),
+  );
+};
+
+/**
  * Known failures in use across the whole run (cairn 0125). Every story's walk
  * reports which entries it put in play and which it used; the reporter in
  * `vitest.config.ts` fails the run on any that was in play and never used.
