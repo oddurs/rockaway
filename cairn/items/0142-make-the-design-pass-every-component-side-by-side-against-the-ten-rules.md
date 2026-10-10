@@ -39,7 +39,7 @@ depends_on:
 - 139
 - 140
 created: 2026-10-03
-updated: 2026-10-09
+updated: 2026-10-10
 closed_at: 2026-10-09
 priority: p0
 layer: components
@@ -125,3 +125,7 @@ Criterion 6: waived by the CTO. The checked-in kitchen-sink snapshot (text) serv
 ## Result
 
 Design pass done: component x rule table on the item, spacing set in the recipe, no-pixel-lengths test, Painters stories for Form and Keymap; metadata gaps filed as 0310. Shipped in #228.
+
+## 2026-10-10
+
+Re-cut onto main after #219 (2026-10-10). The pass covered the components on main on 2026-10-09; those that landed after it (Card, Toolbar, Breadcrumbs, Picture, StatusBar, Tabs, Text, ComboBox, Dialog, Tooltip, the readings, SkipLink, RadioGroup, LinkTree) are in 0354. The sink it was made on is now held at standard, not strict: under the three tiers (0311) a comfortable form, the toolbar and type sized in rows rest on half-steps, and strict is structure only.

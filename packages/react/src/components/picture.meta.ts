@@ -57,7 +57,7 @@ export const pictureMeta: ComponentMetaInput = defineMeta({
     {
       title: 'Sixteen by nine, 24 cells wide',
       description:
-        'At normal density a cell is 9.6px by 24px, so 24 cells is 230px across, and 16:9 of that is 5.4 rows: five. A reader of the page as text sees the box as shade.',
+        'At normal density a cell is two and a half times as tall as it is wide, so 16:9 across 24 cells is 5.4 rows: five. A reader of the page as text sees the box as shade.',
       text: toText(
         pictureBuffer({
           cols: 24,
