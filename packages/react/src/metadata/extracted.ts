@@ -6,6 +6,52 @@
 import type { ExtractedPart } from './schema.ts';
 
 export const extracted: { readonly [component: string]: ExtractedPart } = {
+  "AlertDialog": {
+    "file": "dialog.tsx",
+    "props": [
+      {
+        "name": "actionLabel",
+        "type": "string",
+        "required": true,
+        "description": "The destructive action's label: \"Discard\", \"Delete\"."
+      },
+      {
+        "name": "onAction",
+        "type": "() => void",
+        "required": false,
+        "description": "What the destructive action does. The dialog closes after it."
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "required": false,
+        "description": "The safe action's label, focused first. \"Cancel\" by default.",
+        "default": "'Cancel'"
+      },
+      {
+        "name": "onCancel",
+        "type": "() => void",
+        "required": false,
+        "description": "Called when the safe action is pressed. The dialog closes after it."
+      }
+    ],
+    "inherits": [
+      "Omit<DialogProps, 'variant' | 'actions' | 'isDismissable'>"
+    ],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light",
+      "--rk-x-1"
+    ]
+  },
   "Badge": {
     "file": "badge.tsx",
     "props": [
@@ -633,6 +679,75 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-rhythm-help",
       "--rk-step-y",
       "--rk-x-2"
+    ]
+  },
+  "Dialog": {
+    "file": "dialog.tsx",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "The words in the top edge, and what a reader hears the dialog called."
+      },
+      {
+        "name": "variant",
+        "type": "DialogVariant",
+        "required": false,
+        "description": "`alert` for a destructive confirmation: `role=\"alertdialog\"` and the caution mark."
+      },
+      {
+        "name": "children",
+        "type": "DialogContent",
+        "required": false,
+        "description": "The content, or a function of `close` that returns it."
+      },
+      {
+        "name": "actions",
+        "type": "DialogContent",
+        "required": false,
+        "description": "The action row at the bottom right: Buttons, or a function of `close` that returns them."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the dialog may take before its content scrolls."
+      },
+      {
+        "name": "minCols",
+        "type": "number",
+        "required": false,
+        "description": "The fewest columns the dialog may be, its frame's two included."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "How the frame's lines are stroked. By default, as the screen it was opened from."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof dialogVariants>",
+      "Pick< OverlayModalProps, | 'isOpen' | 'defaultOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled' | 'padding' | 'dividers' >"
+    ],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light",
+      "--rk-x-1"
     ]
   },
   "Divider": {
@@ -1393,11 +1508,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -1432,11 +1549,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<OverlaySurfaceOptions, 'minCols'>"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -1480,6 +1599,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "The painter, `glyph` or `rule`. By default, the painter of the screen the overlay was opened from, so a popover from a ruled frame is ruled too."
       },
       {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Words set into the frame's top edge. Chrome: name the content for a reader as well."
+      },
+      {
         "name": "children",
         "type": "ReactNode",
         "required": false
@@ -1500,11 +1625,53 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'UNSTABLE_portalContainer' >"
     ],
     "tokens": [
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
+      "--rk-fg-on-inverse",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "OverlayTooltip": {
+    "file": "overlay.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "The painter. By default, the painter of the screen its trigger is in."
+      }
+    ],
+    "inherits": [
+      "Omit< TooltipProps, | 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'containerPadding' | 'UNSTABLE_portalContainer' >"
+    ],
+    "tokens": [
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -2466,6 +2633,26 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
     ]
+  },
+  "Tooltip": {
+    "file": "tooltip.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The hint: a few words, wrapping at 36 cells."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<OverlayTooltipProps, 'children' | 'className'>"
+    ],
+    "tokens": []
   },
   "Tree": {
     "file": "tree.tsx",

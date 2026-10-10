@@ -11,6 +11,7 @@ import { calloutMeta } from '../components/callout.meta.ts';
 import { cardMeta } from '../components/card.meta.ts';
 import { checkboxMeta } from '../components/checkbox.meta.ts';
 import { codeBlockMeta } from '../components/code-block.meta.ts';
+import { dialogMeta } from '../components/dialog.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
 import { formMeta } from '../components/field.meta.ts';
 import { fieldsetMeta } from '../components/fieldset.meta.ts';
@@ -30,6 +31,7 @@ import { tableMeta } from '../components/table.meta.ts';
 import { tabsMeta } from '../components/tabs.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
 import { toolbarMeta } from '../components/toolbar.meta.ts';
+import { tooltipMeta } from '../components/tooltip.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import type { ComponentMetaInput } from './schema.ts';
 
@@ -42,6 +44,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'card', meta: cardMeta },
   { file: 'checkbox', meta: checkboxMeta },
   { file: 'code-block', meta: codeBlockMeta },
+  { file: 'dialog', meta: dialogMeta },
   { file: 'divider', meta: dividerMeta },
   { file: 'field', meta: formMeta },
   { file: 'fieldset', meta: fieldsetMeta },
@@ -61,5 +64,6 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'tabs', meta: tabsMeta },
   { file: 'text-field', meta: textFieldMeta },
   { file: 'toolbar', meta: toolbarMeta },
+  { file: 'tooltip', meta: tooltipMeta },
   { file: 'tree', meta: treeMeta },
 ];
