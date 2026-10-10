@@ -27,7 +27,7 @@ export * from './entries/tree.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { Chrome, type ChromeProps, chromeRows, type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle, shapeAttributes } from './paint/index.ts';
 export { detectPlatform, type PlatformHints, usePlatform } from './platform.ts';
-export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenProps } from './screen.tsx';
+export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenProps, type Surface } from './screen.tsx';
 export { markOverflow, type OverflowMarkOptions, scrollStateQueries, watchOverflowMarks } from './scroll.ts';
 export { selectionLines, watchSelection } from './selection.ts';
 export { useTick } from './tick.ts';

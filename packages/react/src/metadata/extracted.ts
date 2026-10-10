@@ -697,6 +697,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "Padding inside the border, in cells. The border's own cell is added to it, so the default puts content one cell in from the left edge and hard against the rows above and below — the proportions a terminal uses."
       },
       {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground the frame sits on, border cells included: `sunken`, `base` (the default), `raised` or `overlay`. Unset, the frame is transparent and shows what is behind it."
+      },
+      {
         "name": "label",
         "type": "string",
         "required": false,
@@ -712,6 +718,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1154,6 +1162,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "Padding inside the pane's borders, in cells. One across and none down by default, the proportions `Frame` uses."
       },
       {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground under the pane's content and padding: `sunken`, `base` (the default), `raised` or `overlay`. The borders around it stay the screen's."
+      },
+      {
         "name": "label",
         "type": "string",
         "required": false,
@@ -1173,6 +1187,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1217,6 +1233,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
     ],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
