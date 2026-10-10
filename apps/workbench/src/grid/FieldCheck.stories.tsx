@@ -94,7 +94,7 @@ export const ForgotIsRequired: Story = {
       'it is required and its label draws no mark: pass the field’s isRequired to Label',
     ]);
     expect(() => expectField(canvasElement)).toThrow(/field contract is broken/);
-    expect(formatFields(checkField(canvasElement))).toContain('div.rk-field[Email]');
+    expect(formatFields(checkField(canvasElement))).toContain('div.rk-field.rk-seam[Email]');
   },
 };
 

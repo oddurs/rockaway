@@ -36,6 +36,8 @@ export interface Runner {
   readonly plan: Plan;
   /** Tells the run which known failures a story put in play and used, so a stale one fails it. */
   readonly record: (use: KnownUse) => Promise<void>;
+  /** The mouse wheel turned over the element the selector finds, by this many pixels down. */
+  readonly wheel: (selector: string, deltaY: number) => Promise<void>;
   /** Tells the run a story's screens are over the paint budget, to be named at its end (0113). */
   readonly paint: (over: OverBudget) => Promise<void>;
   /**

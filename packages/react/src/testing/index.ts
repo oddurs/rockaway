@@ -24,6 +24,8 @@ export {
   checkContinuity,
   expectContinuity,
   formatContinuity,
+  type OutsideShape,
+  proseShapes,
 } from './continuity.ts';
 export {
   checkField,

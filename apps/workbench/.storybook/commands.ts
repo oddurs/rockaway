@@ -80,6 +80,20 @@ export const readWithoutScripts: BrowserCommand<[html: string]> = async (context
 };
 
 /**
+ * Turn the mouse wheel over an element, as a reader's wheel or trackpad does
+ * (cairn 0115): the browser's own scroll, with its own snapping at the end,
+ * which setting `scrollTop` from script does not go through.
+ */
+export const wheel: BrowserCommand<[selector: string, deltaY: number]> = async (
+  context,
+  selector,
+  deltaY,
+) => {
+  await context.iframe.locator(selector).hover();
+  await context.page.mouse.wheel(0, deltaY);
+};
+
+/**
  * A watchdog on the page's main thread (the Tabs hang, 0216). A loop that
  * never yields — a `waitFor` whose callback changes the document it watches,
  * so it runs again in a microtask, for ever — starves every timer in the
