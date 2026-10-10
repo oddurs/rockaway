@@ -3066,6 +3066,53 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Text": {
+    "file": "text.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "TextSize",
+        "required": true,
+        "description": "How many rows tall the glyphs are: 2, 3 or 4. One row is ordinary text."
+      },
+      {
+        "name": "inline",
+        "type": "boolean",
+        "required": false,
+        "description": "Set it in a line of other text, its box rounded up to whole cells, rather than as a block the width of its container. It never wraps. Its words should be plain text: the cells it takes are counted from them.",
+        "default": "false"
+      },
+      {
+        "name": "as",
+        "type": "'div' | 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'",
+        "required": false,
+        "description": "The element: a heading's level, a paragraph. `div`, or `span` inline, by default."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<HTMLAttributes<HTMLElement>, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-cell-line",
+      "--rk-cell-width",
+      "--rk-font-content"
+    ]
+  },
   "TextField": {
     "file": "text-field.tsx",
     "props": [

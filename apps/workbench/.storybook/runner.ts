@@ -25,6 +25,13 @@ export interface Runner {
     readonly rows: readonly string[];
     readonly shapes: number;
     readonly ran: boolean;
+    /** Every `[data-measure]` element's box, in CSS pixels, keyed by the attribute. */
+    readonly boxes: Readonly<
+      Record<
+        string,
+        { readonly x: number; readonly y: number; readonly width: number; readonly height: number }
+      >
+    >;
   }>;
   /** Which densities and modes this project walks after every story, and what it checks in each (cairn 0125). */
   readonly plan: Plan;

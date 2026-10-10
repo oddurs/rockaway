@@ -68,14 +68,22 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     row: Math.floor((rect.top - box.top) / cellHeight + 0.5 + 1 / 16),
   });
 
-  // Text is placed by its middle. A range's rect is the font's content area,
-  // which can be taller than the row (Plex at dense is) and starts above the
-  // line box, but it is centred on the line box: a line on row n has its
-  // middle at n + ½, and a line half a row down has it at n + 1.
-  const textAt = (rect: DOMRect): { col: number; row: number } => ({
-    col: Math.round((rect.left - box.left) / cellWidth),
-    row: Math.floor(((rect.top + rect.bottom) / 2 - box.top) / cellHeight + 1 / 16),
-  });
+  // Text is placed by its line box. A range's rect is the font's content
+  // area, which can be taller than the row (Plex at dense is) and starts above
+  // the line box, but it is centred on the line box; the line box is the
+  // element's line height, a row for ordinary text and more for type sized in
+  // rows (0297). So the line box's top is the middle less half the line, and
+  // it reads as `at` reads an element: on a whole row, that row; half a row
+  // down, the row below.
+  const textAt = (rect: DOMRect, el: Element): { col: number; row: number } => {
+    const line = Number.parseFloat(getComputedStyle(el).lineHeight);
+    const height = Number.isFinite(line) && line > 0 ? line : cellHeight;
+    const top = (rect.top + rect.bottom) / 2 - height / 2;
+    return {
+      col: Math.round((rect.left - box.left) / cellWidth),
+      row: Math.floor((top - box.top) / cellHeight + 0.5 + 1 / 16),
+    };
+  };
 
   const attributes: { text: string; attrs: string; col: number; row: number }[] = [];
 
@@ -155,12 +163,12 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
       if (clip.right <= clip.left || clip.bottom <= clip.top) continue;
       const range = root.ownerDocument.createRange();
       range.selectNodeContents(node);
-      const start = textAt(range.getBoundingClientRect());
+      const start = textAt(range.getBoundingClientRect(), parent);
       if (range.getClientRects().length > 1) {
         // Text that wraps is on several rows: each line of it is written where
         // that line is, which only the line's own characters can say.
         for (const line of linesOf(node, root.ownerDocument)) {
-          const { col, row } = textAt(line.rect);
+          const { col, row } = textAt(line.rect, parent);
           if (row >= clip.top && row < clip.bottom) write(grid, col, row, line.text, clip);
         }
       } else {

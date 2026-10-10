@@ -77,6 +77,18 @@ A one-row control is one cell tall, so the line box *is* its target size
 The default meets AA. A system that sells accessibility as a feature does not
 fail it by default, so the tight terminal look is the one you choose.
 
+### Type larger than a cell is measured in rows
+
+Every element is one size: a heading is weight, case or reverse, never a
+bigger font (`0075`). Larger type is asked for, with `Text`, and it is
+measured in rows (`0296`). Size N scales the font so its glyph box, the face's
+ascent plus descent, is exactly N rows at the density in force. Across, its
+letters keep their own advance and do not snap to columns, and the run's box
+rounds up to whole cells. So a two-row heading is a rectangle of whole cells
+at every density, a frame's lines meet around it, and the stylesheet does it
+with no script. Sizes are 2, 3 and 4. A screen held to `strict` has one size
+and refuses them.
+
 ## 3. Four routes to a TUI on the web. We take the fourth
 
 | Route | Examples | What it costs |

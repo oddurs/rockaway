@@ -8,7 +8,12 @@ import { setRunner } from './runner.ts';
 declare module 'vitest/browser' {
   interface BrowserCommands {
     printToPdf: (html: string) => Promise<{ fills: number }>;
-    readWithoutScripts: (html: string) => Promise<{ rows: string[]; shapes: number; ran: boolean }>;
+    readWithoutScripts: (html: string) => Promise<{
+      rows: string[];
+      shapes: number;
+      ran: boolean;
+      boxes: Record<string, { x: number; y: number; width: number; height: number }>;
+    }>;
     recordKnown: (use: KnownUse) => Promise<void>;
     wheel: (selector: string, deltaY: number) => Promise<void>;
     emulateContrast: (contrast: 'more' | 'no-preference') => Promise<void>;
