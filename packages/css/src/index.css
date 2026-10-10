@@ -43,6 +43,7 @@
 @import "./components/overlay.css";
 @import "./components/radio-group.css";
 @import "./components/panes.css";
+@import "./components/select.css";
 @import "./components/table.css";
 @import "./components/text-field.css";
 @import "./components/tree.css";
