@@ -21,7 +21,7 @@ after them. `<name>` is kebab-case (`key-hint`); `<Name>` is the export.
 | `packages/react/src/components/<name>.tsx` | The component, with `'use client'` on its first line. |
 | `packages/react/src/components/<name>.meta.ts` | Its metadata: what it is for, its anatomy, states, keys and snapshots. |
 | `packages/react/src/components/<name>.fixture.ts` | The component rendered once, as small as it can be: `metadata.test.ts`'s evidence for its roles and attributes. |
-| `packages/react/src/components/<name>.example.tsx` | `Example()`: the component as a reader first meets it, importing only `@rockaway/*` and React. The site's page shows it with its source, and the workbench's kitchen sink lays it out with every other component (0064). `metadata.test.ts` fails a component without one; it is never published. |
+| `packages/react/src/components/<name>.example.tsx` | `Example()`: the component as a reader first meets it, importing only `@rockaway/*` and React, and no wider than 35 cells, a kitchen-sink pane's. The site's page shows it with its source, and the workbench's kitchen sink lays it out with every other component (0064). `metadata.test.ts` fails a component without one; it is never published. |
 | `packages/react/src/components/<name>.snapshots.txt` | Its metadata's snapshots as the site draws them, written by `metadata.test.ts` (`vitest -u`) and checked by it after. |
 | `packages/react/src/entries/<name>.ts` | `@rockaway/react/<name>`, and the one list of what it makes public. |
 | `packages/css/src/components/<name>.css` | Its stylesheet, inside `@layer rk.components`. |
