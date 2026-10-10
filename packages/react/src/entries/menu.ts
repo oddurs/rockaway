@@ -3,11 +3,13 @@
 // The pure half: no client boundary, so a server can call these (cairn 0126).
 export {
   type MenuBufferOptions,
+  type MenuLayout,
   type MenuRow,
   type MenuRowState,
   menuBuffer,
   menuCols,
   menuEnd,
+  menuLayout,
   menuMarks,
   menuRowStyle,
 } from '../components/menu.pure.ts';
