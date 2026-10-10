@@ -3,17 +3,17 @@ id: 128
 uid: fb73ba36-7208-484d-a759-adcdb2ed445f
 title: 'Build the overlay contract: layering, focus, dismissal and cell positioning'
 type: feature
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 96
 - 117
 - 118
 - 126
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p0
 layer: components
 effort: l
@@ -96,3 +96,7 @@ Review fixes before Popover builds on it: (1) the snap is a laid-out relative of
 ## 2026-10-03
 
 Added shift (cells along and across the placement, mirrored on a flip) for submenus, at overlays' request. Fixed gridOf: before a screen measures, --rk-cell-width is '1ch', which parseFloat read as a 1px cell; it now accepts px only and otherwise measures the screen's cell.
+
+## Result
+
+The overlay contract (overlay.tsx): OverlayLayer, OverlayPopover and OverlayModal on the cell grid of their trigger's screen, backdrop in cells, dismissal and focus return per the proposal; checkConformance holds each surface to its anchor's grid.
