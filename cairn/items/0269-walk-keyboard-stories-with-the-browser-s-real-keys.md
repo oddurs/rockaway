@@ -3,10 +3,12 @@ id: 269
 uid: d8da202d-66b2-4a06-8b56-83b02121502e
 title: Walk keyboard stories with the browser's real keys
 type: chore
-status: ready
+status: done
 milestone: primitives
+assignee: Oddur Sigurdsson
 created: 2026-10-09
 updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p2
 layer: tooling
 effort: s

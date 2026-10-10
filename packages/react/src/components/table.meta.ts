@@ -154,17 +154,17 @@ export const tableMeta: ComponentMetaInput = defineMeta({
       title: 'Three column kinds',
       description:
         'Name is as wide as its widest value and sorted; Size is six cells, right-aligned; Modified takes what is left. The cursor is on README.md, which is selected with src/index.ts (reverse video, which text cannot show).',
-      text: toText(tableBuffer({ ...FILES, title: 'files' })),
+      draw: (glyphs) => toText(tableBuffer({ ...FILES, title: 'files' }, glyphs)),
     },
     {
       title: 'Multi-select',
       description: 'A second reserved cell carries the check.',
-      text: toText(tableBuffer({ ...FILES, selectionMode: 'multiple' })),
+      draw: (glyphs) => toText(tableBuffer({ ...FILES, selectionMode: 'multiple' }, glyphs)),
     },
     {
       title: 'Empty',
       description: 'The words across the table, and the column rules stop at the header rule.',
-      text: toText(tableBuffer({ ...FILES, rows: [] })),
+      draw: (glyphs) => toText(tableBuffer({ ...FILES, rows: [] }, glyphs)),
     },
     {
       title: 'A window of rows',

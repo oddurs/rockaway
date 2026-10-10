@@ -16,6 +16,8 @@
  *    for Terrazzo, which leaves a one-character name bare (`-`, `x`) and does
  *    not escape a backslash, so ASCII's spinner frame `\` came out as `"\";`,
  *    a string that never closes, and took the rest of the sheet with it.
+ * 6. `data-rk-theme-only`, which shows an element only under the themes it
+ *    names (0171).
  */
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -61,6 +63,40 @@ export function quoteGlyphs(css: string): string {
   });
 }
 
+/**
+ * Content for some themes only (cairn 0171). An element marked
+ * `data-rk-theme-only="ink phosphor"` is shown only where the nearest theme
+ * context is one it names, and `default` names the page with none. A
+ * component's snapshot drawn in each theme's glyphs is one element per
+ * drawing, so the page shows the one its theme draws, with no script.
+ *
+ * Each rule hides an element whose nearest context is that theme and which
+ * does not name it; a theme context nested inside leaves the element to its
+ * own rule. Written here, in the sheet every page loads, so it holds whether
+ * or not a theme's own sheet has arrived.
+ */
+export function themeOnly(names: readonly string[]): string {
+  const only = '[data-rk-theme-only]';
+  const rules = [
+    `  ${only}:not([data-rk-theme-only~='default']):not([data-rk-theme] *)`,
+    ...names.map(
+      (name) =>
+        `  [data-rk-theme='${name}'] ${only}:not([data-rk-theme-only~='${name}']):not([data-rk-theme='${name}'] [data-rk-theme] *)`,
+    ),
+  ];
+  return `
+/*
+ * Content for some themes only (cairn 0171): an element marked
+ * data-rk-theme-only shows only under the themes it names.
+ */
+@layer rk.tokens {
+${rules.join(',\n')} {
+    display: none !important;
+  }
+}
+`;
+}
+
 /** The CSS for the tokens and every theme, finished. Pure, for the check. */
 export function finish(files: ReadonlyMap<string, string>): Map<string, string> {
   const out = new Map(files);
@@ -73,7 +109,10 @@ export function finish(files: ReadonlyMap<string, string>): Map<string, string> 
   if (/--rk-ansi-[\w-]+: var\(/.test(finished)) {
     throw new Error('an ansi.* alias was not rewritten to light-dark()');
   }
-  out.set('tokens.css', `${finished.trimEnd()}\n${MODES}`);
+  out.set(
+    'tokens.css',
+    `${finished.trimEnd()}\n${MODES}${themeOnly(themeContexts.map((t) => t.name))}`,
+  );
 
   for (const theme of themeContexts) {
     if (theme.name === 'default') continue;

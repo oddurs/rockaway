@@ -11,6 +11,7 @@
  * variant helpers and buffer functions. In a React Server Component graph
  * their exports are client references, so read `meta.json` there instead.
  */
+import { type ThemeName, themeGlyphs, themeNames } from '@rockaway/tokens';
 import { registry } from './components.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
@@ -19,6 +20,8 @@ import type {
   ComponentMetaInput,
   MetadataDocument,
   PropMeta,
+  Snapshot,
+  SnapshotInput,
   StateMeta,
   VariantMeta,
 } from './schema.ts';
@@ -34,6 +37,7 @@ export type {
   MetadataDocument,
   PropMeta,
   Snapshot,
+  SnapshotInput,
   StateMeta,
   VariantMeta,
 } from './schema.ts';
@@ -103,8 +107,26 @@ function assemble(input: ComponentMetaInput): ComponentMeta {
     states,
     accessibility: input.accessibility,
     tokens: [...tokens].sort(),
-    snapshots: input.snapshots,
+    snapshots: input.snapshots.map(drawn),
   };
+}
+
+/**
+ * A snapshot drawn in every theme (cairn 0171): `text` in the default, and
+ * each other theme only where its glyphs draw something different. A
+ * snapshot written as fixed text shows one set on purpose, and is left alone.
+ */
+function drawn(input: SnapshotInput): Snapshot {
+  const { title, description } = input;
+  const about = { title, ...(description === undefined ? {} : { description }) };
+  if (input.draw === undefined) return { ...about, text: input.text };
+  const text = input.draw(themeGlyphs.default);
+  const themes: Partial<Record<ThemeName, string>> = {};
+  for (const name of themeNames) {
+    const own = input.draw(themeGlyphs[name]);
+    if (own !== text) themes[name] = own;
+  }
+  return { ...about, text, ...(Object.keys(themes).length > 0 ? { themes } : {}) };
 }
 
 /**
