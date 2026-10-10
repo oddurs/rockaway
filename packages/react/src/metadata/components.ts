@@ -20,6 +20,7 @@ import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
 import { panesMeta } from '../components/panes.meta.ts';
+import { popoverMeta } from '../components/popover.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
 import { tooltipMeta } from '../components/tooltip.meta.ts';
@@ -44,6 +45,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'list', meta: listMeta },
   { file: 'overlay', meta: overlayMeta },
   { file: 'panes', meta: panesMeta },
+  { file: 'popover', meta: popoverMeta },
   { file: 'table', meta: tableMeta },
   { file: 'text-field', meta: textFieldMeta },
   { file: 'tooltip', meta: tooltipMeta },
