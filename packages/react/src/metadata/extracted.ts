@@ -263,15 +263,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "CheckboxGroup": {
@@ -318,15 +315,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "Column": {
@@ -1120,21 +1114,120 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Popover": {
-    "file": "popover.tsx",
+  "Pane": {
+    "file": "panes.tsx",
     "props": [
       {
-        "name": "minCols",
-        "type": "number | 'trigger'",
+        "name": "size",
+        "type": "PaneSize",
         "required": false,
-        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width in whole cells, or a count. `0` lets it be as narrow as what it holds.\n @default 'trigger'",
-        "default": "'trigger'"
+        "description": "Cells, a share of what is left (`'2fr'`), or `'auto'`. `'auto'` by default."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "description": "The fewest cells of content it takes along the split before it collapses."
+      },
+      {
+        "name": "priority",
+        "type": "number",
+        "required": false,
+        "description": "When there is not room for every pane, the lowest priority collapses first. 0 by default."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the pane's top edge, and its accessible name."
+      },
+      {
+        "name": "titleAlign",
+        "type": "'start' | 'center' | 'end'",
+        "required": false,
+        "description": "Where the title sits in the top edge: after the corner, by default."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the pane's borders, in cells. One across and none down by default, the proportions `Frame` uses."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The accessible name, when the title is not the right one to say."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The pane's content, or a `Panes` of its own to split it further."
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Panes": {
+    "file": "panes.tsx",
+    "props": [
+      {
+        "name": "direction",
+        "type": "PanesDirection",
+        "required": false,
+        "description": "`row` puts the panes side by side, `column` stacks them."
+      },
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set draws every border; the theme's when not given."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The whole layout's accessible name, which makes it a group."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "`Pane`s, in order."
       }
     ],
     "inherits": [
-      "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
     ],
-    "tokens": []
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
   },
   "Row": {
     "file": "table.tsx",
@@ -1169,106 +1262,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
-  },
-  "Select": {
-    "file": "select.tsx",
-    "props": [
-      {
-        "name": "label",
-        "type": "string",
-        "required": true,
-        "description": "The field's name, in the label column."
-      },
-      {
-        "name": "children",
-        "type": "ReactNode | ((item: T) => ReactNode)",
-        "required": false,
-        "description": "The options: `SelectItem`s, or a function of each of `items`."
-      },
-      {
-        "name": "items",
-        "type": "Iterable<T>",
-        "required": false,
-        "description": "The items to render with a function child."
-      },
-      {
-        "name": "cols",
-        "type": "number",
-        "required": false,
-        "description": "The trigger's width in cells, its delimiters included.",
-        "default": "24"
-      },
-      {
-        "name": "description",
-        "type": "ReactNode",
-        "required": false,
-        "description": "Help under the trigger, dim, linked to it by `aria-describedby`."
-      },
-      {
-        "name": "errorMessage",
-        "type": "FieldErrorProps['children']",
-        "required": false,
-        "description": "Words for the error under the trigger; the select's own validation's when not given."
-      },
-      {
-        "name": "maxRows",
-        "type": "number",
-        "required": false,
-        "description": "The most rows the popover takes before its rows scroll.",
-        "default": "8"
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      }
-    ],
-    "inherits": [
-      "Omit<AriaSelectProps<T>, 'children' | 'className' | 'style' | 'selectionMode'>"
-    ],
-    "tokens": [
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-bg-surface",
-      "--rk-border-control",
-      "--rk-border-danger",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-fg-muted"
-    ]
-  },
-  "SelectItem": {
-    "file": "select.tsx",
-    "props": [
-      {
-        "name": "children",
-        "type": "string",
-        "required": true,
-        "description": "The option's words."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      }
-    ],
-    "inherits": [
-      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
-    ],
-    "tokens": [
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-bg-surface",
-      "--rk-border-control",
-      "--rk-border-danger",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-fg-muted"
     ]
   },
   "Table": {
