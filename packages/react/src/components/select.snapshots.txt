@@ -1,0 +1,12 @@
+── Closed
+[ phosphor    ▾]
+[ Choose one  ▾]
+── Open
+[ phosphor    ▾]
+┏━━━━━━━━━━━━━━━┓
+┃   default     ┃
+┃ ▸ ink         ┃
+┃  ✓phosphor    ┃
+┃   ice         ┃
+┃   tokyo-night ┃
+┗━━━━━━━━━━━━━━━┛

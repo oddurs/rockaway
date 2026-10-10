@@ -1,13 +1,10 @@
 import { Buffer, drawText, toText } from '@rockaway/grid';
-import { themeGlyphs } from '@rockaway/tokens';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
 import { buttonBuffer } from './button.pure.ts';
 import { formBuffer } from './field.pure.ts';
 import type { FieldText } from './field.tsx';
 import { fieldFrameBuffer } from './fieldset.pure.ts';
-
-const glyphs = themeGlyphs.default;
-const [open, close] = glyphs.delimiter.control;
 
 /** A line of text as a one-row buffer: a stand-in for a control's own buffer. */
 function line(text: string): Buffer {
@@ -16,30 +13,35 @@ function line(text: string): Buffer {
   });
 }
 
-/** A one-row text box, the way Text field (0035) draws one. */
-const box = (value: string): Buffer => line(`${open}${value.padEnd(20)}${close}`);
-
-const FIELDS: readonly FieldText[] = [
-  { label: 'Name', control: box('Ada Lovelace'), box: true },
-  {
-    label: 'Email',
-    required: true,
-    control: box('ada@'),
-    box: true,
-    description: 'Where the receipts go.',
-    error: 'Enter an email address.',
-  },
-  { label: 'Repository', control: box('rockaway'), box: true },
-  { control: line(`${open}${glyphs.mark.check}${close} Sign commits`) },
-  {
-    control: (width) =>
-      fieldFrameBuffer({ width, height: 3 }, { label: 'Notify', required: true }).draw((draft) => {
-        const row = `${glyphs.mark.radio} always  ${glyphs.mark['radio-empty']} never`;
-        drawText(draft, { x: 2, y: 1 }, row);
-      }),
-  },
-  { control: buttonBuffer('Save') },
-];
+/** The form's fields, in a theme's glyphs. */
+function fields(glyphs: Glyphs): readonly FieldText[] {
+  const [open, close] = glyphs.delimiter.control;
+  /** A one-row text box, the way Text field (0035) draws one. */
+  const box = (value: string): Buffer => line(`${open}${value.padEnd(20)}${close}`);
+  return [
+    { label: 'Name', control: box('Ada Lovelace'), box: true },
+    {
+      label: 'Email',
+      required: true,
+      control: box('ada@'),
+      box: true,
+      description: 'Where the receipts go.',
+      error: 'Enter an email address.',
+    },
+    { label: 'Repository', control: box('rockaway'), box: true },
+    { control: line(`${open}${glyphs.mark.check}${close} Sign commits`) },
+    {
+      control: (width) =>
+        fieldFrameBuffer({ width, height: 3 }, { label: 'Notify', required: true }, glyphs).draw(
+          (draft) => {
+            const row = `${glyphs.mark.radio} always  ${glyphs.mark['radio-empty']} never`;
+            drawText(draft, { x: 2, y: 1 }, row);
+          },
+        ),
+    },
+    { control: buttonBuffer('Save', {}, glyphs) },
+  ];
+}
 
 export const formMeta: ComponentMetaInput = defineMeta({
   name: 'Form',
@@ -145,18 +147,20 @@ export const formMeta: ComponentMetaInput = defineMeta({
       title: 'A comfortable form',
       description:
         'The default (0316): each label over its control, a text box padded half a row above and below so it reads as two rows, help half a row under it, and a row between fields. The half-rows sit inside each field, which closes to whole rows.',
-      text: toText(formBuffer(FIELDS, { width: 64 })),
+      draw: (glyphs) => toText(formBuffer(fields(glyphs), { width: 64 }, glyphs)),
     },
     {
       title: 'A compact form',
       description:
         'The terminal\'s form, chosen with comfort="compact": every control starts in the same cell, after the longest label, its mark cell and two cells of air.',
-      text: toText(formBuffer(FIELDS, { comfort: 'compact', width: 64 })),
+      draw: (glyphs) =>
+        toText(formBuffer(fields(glyphs), { comfort: 'compact', width: 64 }, glyphs)),
     },
     {
       title: 'Compact, under 60 cells',
       description: 'The compact form, stacked: each label on the row above its control.',
-      text: toText(formBuffer(FIELDS, { comfort: 'compact', width: 40 })),
+      draw: (glyphs) =>
+        toText(formBuffer(fields(glyphs), { comfort: 'compact', width: 40 }, glyphs)),
     },
   ],
 });
