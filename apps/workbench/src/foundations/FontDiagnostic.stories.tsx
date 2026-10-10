@@ -1,4 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import a from '../fonts/diag/diag-a.woff2?url';
+import c from '../fonts/diag/diag-c.woff2?url';
+import d from '../fonts/diag/diag-d.woff2?url';
+import g from '../fonts/diag/diag-g.woff2?url';
 
 // TEMPORARY (cairn 0295): prints what each glyph measures on CI.
 function Probe() {
@@ -14,27 +18,39 @@ export const Measure: Story = {
     const probe = canvasElement.querySelector('#probe') as HTMLElement;
     const lines: string[] = [];
     lines.push(`ua=${navigator.userAgent}`);
-    lines.push(`family=${getComputedStyle(probe).fontFamily}`);
-    const faces: string[] = [];
-    for (const f of document.fonts) faces.push(`${f.family}/${f.weight}/${f.style}/${f.status}`);
-    lines.push(`faces=${faces.join(' | ')}`);
-    const width = (text: string, extra = ''): number => {
+    const candidates: Record<string, string> = { A: a, C: c, D: d, G: g };
+    for (const [name, url] of Object.entries(candidates)) {
+      const face = new FontFace(`Diag${name}`, `url(${url})`);
+      await face.load();
+      document.fonts.add(face);
+    }
+    await document.fonts.load('1em "IBM Plex Mono"', '0✓⌘');
+    const width = (text: string, css: string): number => {
       const s = document.createElement('span');
-      s.style.cssText = `white-space:pre;${extra}`;
+      s.style.cssText = `white-space:pre;${css}`;
       s.textContent = text.repeat(10);
       probe.append(s);
       const w = s.getBoundingClientRect().width / 10;
       s.remove();
       return w;
     };
-    const ch = document.createElement('span');
-    ch.style.cssText = 'display:inline-block;inline-size:1ch';
-    probe.append(ch);
-    lines.push(`1ch=${ch.getBoundingClientRect().width}`);
-    for (const c of ['0', 'a', 'W', ' ', '✓', '⌘', '●', '▸', '↗', '⏎', '─']) {
-      lines.push(
-        `${c}: 400=${width(c)} 700=${width(c, 'font-weight:700')} it=${width(c, 'font-style:italic')} mono=${width(c, 'font-family:monospace')}`,
-      );
+    const sample = ['✓', '⌘', '●', '▸'];
+    const row = (label: string, css: string, chars = sample): void => {
+      lines.push(`${label}: ${chars.map((ch) => `${ch}=${width(ch, css)}`).join(' ')}`);
+    };
+    row('plex-0 default', 'font-family:"IBM Plex Mono"', ['0', 'a']);
+    row('plex-0 geometric', 'font-family:"IBM Plex Mono";text-rendering:geometricPrecision', [
+      '0',
+      'a',
+    ]);
+    row('current symbols default', 'font-family:"IBM Plex Mono"');
+    row(
+      'current symbols geometric',
+      'font-family:"IBM Plex Mono";text-rendering:geometricPrecision',
+    );
+    for (const name of Object.keys(candidates)) {
+      row(`cand ${name} default`, `font-family:Diag${name}`);
+      row(`cand ${name} geometric`, `font-family:Diag${name};text-rendering:geometricPrecision`);
     }
     throw new Error(`FONTDIAG\n${lines.join('\n')}`);
   },
