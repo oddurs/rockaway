@@ -1,6 +1,7 @@
 import { Form, TextField } from '@rockaway/react';
+import type { ReactNode } from 'react';
 
-export function Example() {
+export function Example(): ReactNode {
   return (
     <Form>
       <TextField label="Name" />
