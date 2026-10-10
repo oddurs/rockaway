@@ -1,8 +1,15 @@
 import { Attr, type Buffer, hasAttr, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
+import { createElement } from 'react';
+import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { linkBuffer } from '../src/components/link.pure.ts';
-import type { LinkState } from '../src/components/link.tsx';
+import {
+  Link,
+  type LinkComponent,
+  LinkComponentProvider,
+  type LinkState,
+} from '../src/components/link.tsx';
 
 const STATES: ReadonlyArray<readonly [string, LinkState]> = [
   ['rest', {}],
@@ -97,5 +104,41 @@ describe('linkBuffer', () => {
 
   test('a wide label is measured in cells, not characters', () => {
     expect(linkBuffer('文档', {}).width).toBe(5);
+  });
+});
+
+describe("the app's own link (0300)", () => {
+  const framework: LinkComponent = ({ children, ...anchor }) =>
+    createElement('a', { ...anchor, 'data-framework': '' }, children);
+
+  test('a Link with no provider is a real anchor on a server', () => {
+    const html = renderToString(createElement(Link, { href: '/docs' }, 'docs'));
+    expect(html).toMatch(/<a [^>]*href="\/docs"/);
+    expect(html).not.toContain('data-framework');
+  });
+
+  test("a Link inside the provider renders through the app's link, still an anchor with its href", () => {
+    const html = renderToString(
+      createElement(
+        LinkComponentProvider,
+        { component: framework },
+        createElement(Link, { href: '/docs' }, 'docs'),
+      ),
+    );
+    expect(html).toMatch(/<a [^>]*href="\/docs"/);
+    expect(html).toContain('data-framework');
+    expect(html).toContain('rk-link');
+  });
+
+  test("a disabled Link is not given to the app's link", () => {
+    const html = renderToString(
+      createElement(
+        LinkComponentProvider,
+        { component: framework },
+        createElement(Link, { href: '/docs', isDisabled: true }, 'docs'),
+      ),
+    );
+    expect(html).not.toContain('data-framework');
+    expect(html).toContain('role="link"');
   });
 });
