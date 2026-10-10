@@ -3,10 +3,12 @@ id: 261
 uid: 6a72a156-95e8-4033-bdfd-9887bb293aec
 title: Read a screen without changing the document
 type: bug
-status: ready
+status: done
 milestone: primitives
+assignee: Oddur Sigurdsson
 created: 2026-10-04
-updated: 2026-10-04
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p1
 layer: tooling
 effort: s
