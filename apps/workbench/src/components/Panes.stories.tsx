@@ -18,6 +18,7 @@ import { type ReactNode, useState } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { cellsOf, cellsOfBuffer } from '../cells.ts';
+import { click, press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -256,12 +257,61 @@ export const Resize: Story = {
   play: async ({ canvas }) => {
     await settled();
     const note = canvas.getByRole('textbox', { name: 'note' });
-    await userEvent.type(note, 'keep me');
+    await click(note);
+    await press('keep me');
     await userEvent.click(canvas.getByRole('button', { name: 'Narrow' }));
     await waitFor(() => expect(canvas.queryByRole('region', { name: 'notes' })).toBeNull());
     await userEvent.click(canvas.getByRole('button', { name: 'Widen' }));
     await waitFor(() => expect(canvas.getByRole('region', { name: 'notes' })).toBeVisible());
     expect(canvas.getByRole('textbox', { name: 'note' })).toHaveValue('keep me');
+  },
+};
+
+/**
+ * A page's shell (cairn 0248): each pane frames a landmark of its own, so it
+ * says `landmark={false}` and is a plain container. The page's landmarks are
+ * then the nav, the main and the aside, each named once, with no region
+ * around them, and every title is still drawn in its edge.
+ */
+export const NotLandmarks: Story = {
+  name: 'Not landmarks',
+  render: () => (
+    <Panes cols={60} rows={6}>
+      <Pane title="site" size={16} landmark={false}>
+        <nav aria-label="Site">
+          <Link href="#guide">guide</Link>
+        </nav>
+      </Pane>
+      <Pane title="page" landmark={false}>
+        <main aria-label="Page">
+          <p style={{ margin: 0 }}>The page.</p>
+        </main>
+      </Pane>
+      <Pane title="outline" size={16} landmark={false}>
+        <aside aria-label="On this page">
+          <p style={{ margin: 0 }}>Sections</p>
+        </aside>
+      </Pane>
+    </Panes>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    await settled();
+    expect(canvas.queryAllByRole('region')).toEqual([]);
+    for (const pane of canvasElement.querySelectorAll('[data-rk-pane]')) {
+      expect(pane.tagName).toBe('DIV');
+      expect(pane).not.toHaveAttribute('aria-label');
+    }
+    const nav = canvas.getByRole('navigation', { name: 'Site' });
+    const main = canvas.getByRole('main', { name: 'Page' });
+    const aside = canvas.getByRole('complementary', { name: 'On this page' });
+    // Each landmark's nearest landmark ancestor is none: they are top level.
+    for (const landmark of [nav, main, aside]) {
+      expect(landmark.parentElement?.closest('section, nav, main, aside, [role]')).toBeNull();
+    }
+    const top = screenshot(canvasElement.querySelector('.rk-panes') as HTMLElement, {
+      legend: false,
+    }).split('\n')[0];
+    for (const title of ['site', 'page', 'outline']) expect(top).toContain(title);
   },
 };
 
@@ -274,11 +324,11 @@ export const Keyboard: Story = {
   play: async ({ canvas }) => {
     await settled();
     for (const pane of canvas.getAllByRole('region')) expect(pane.tabIndex).toBe(-1);
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Stage' }));
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('link', { name: 'ce9af26' }));
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Stage' }));
   },
 };
