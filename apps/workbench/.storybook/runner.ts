@@ -1,5 +1,6 @@
 import type { Capture } from '@rockaway/react/testing';
 import type { OverBudget } from './budget.ts';
+import type { Platform } from './known.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 
 /**
@@ -27,6 +28,10 @@ export interface Runner {
   }>;
   /** Which densities and modes this project walks after every story, and what it checks in each (cairn 0125). */
   readonly plan: Plan;
+  /** The Vitest project this run is (`storybook`, `firefox`, `forced-colors-firefox` …). */
+  readonly project: string;
+  /** The platform the browser runs on, as Node says it, for known failures confined to one. */
+  readonly platform: Platform;
   /** Tells the run which known failures a story put in play and used, so a stale one fails it. */
   readonly record: (use: KnownUse) => Promise<void>;
   /** The mouse wheel turned over the element the selector finds, by this many pixels down. */
