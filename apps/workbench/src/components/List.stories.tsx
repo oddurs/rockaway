@@ -12,7 +12,9 @@ import {
 import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
+import type { Selection } from 'react-aria-components';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { runner } from '../../.storybook/runner.ts';
 import { press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
@@ -53,6 +55,8 @@ interface FilesProps {
   readonly multiple?: boolean;
   readonly selected?: readonly string[];
   readonly disabled?: readonly string[];
+  /** Told the whole selection when it changes: keys, or `'all'`. */
+  readonly onSelectionChange?: (keys: Selection) => void;
 }
 
 /** A list of files, which is what a TUI list is most often of. No `total`: it counts its rows. */
@@ -63,6 +67,7 @@ function Files({
   multiple = false,
   selected = [],
   disabled = [],
+  onSelectionChange,
 }: FilesProps): ReactNode {
   return (
     <List
@@ -71,6 +76,7 @@ function Files({
       selectionMode={multiple ? 'multiple' : 'single'}
       defaultSelectedKeys={selected}
       disabledKeys={disabled}
+      {...(onSelectionChange === undefined ? {} : { onSelectionChange })}
     >
       {files.map((file) => (
         <ListItem key={file} id={file} textValue={file}>
@@ -335,10 +341,20 @@ export const CursorAndSelection: Story = {
  * every row; Escape clears; Home, End and the page keys reach the ends; and
  * type-ahead jumps by name.
  */
+/** The keyboard story's selection, as the list reports it. */
+const picked: { keys?: Selection } = {};
+
 export const Keyboard: Story = {
   render: () => (
     <Framed name="keyboard" width={24} rows={6}>
-      <Files label="Files" rows={6} multiple />
+      <Files
+        label="Files"
+        rows={6}
+        multiple
+        onSelectionChange={(keys) => {
+          picked.keys = keys;
+        }}
+      />
     </Framed>
   ),
   play: async ({ canvas }) => {
@@ -368,8 +384,17 @@ export const Keyboard: Story = {
     await press('{Escape}');
     await waitFor(() => expect(chosen()).toEqual([]));
 
+    // Every row is chosen, the ones out of view too. The list is virtualised,
+    // so the page holds only the rows near the viewport: the selection itself
+    // says it holds them all, and every row in the page draws it.
     await press(`{${MOD}>}a{/${MOD}}`);
-    await waitFor(() => expect(chosen()).toHaveLength(FILES.length));
+    await waitFor(() => {
+      const keys = picked.keys;
+      expect(keys === 'all' || (keys instanceof Set && keys.size === FILES.length)).toBe(true);
+      const options = [...box.querySelectorAll('[role="option"]')];
+      expect(options.length).toBeGreaterThan(0);
+      expect(chosen()).toHaveLength(options.length);
+    });
     await press('{Escape}');
 
     await press('{End}');
@@ -727,9 +752,69 @@ export const Touch: Story = {
   },
 };
 
+/** Where a scroll comes to rest: after its scrollend, once two frames agree. */
+async function rest(box: HTMLElement): Promise<number> {
+  const frame = (): Promise<number> =>
+    new Promise((resolve) => requestAnimationFrame(() => resolve(box.scrollTop)));
+  let last = -1;
+  let now = await frame();
+  while (now !== last) {
+    last = now;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    now = await frame();
+  }
+  return now;
+}
+
 /**
- * A thousand rows, all in the DOM for now (virtualisation is 0115). The
- * scrollbar counts them from the collection: there is no `total` here.
+ * A short list turned by the wheel, at every density (0115): a wheel notch and
+ * a trackpad's step of less than a row each come to rest on a whole row. Snapping is
+ * "proximity" so that a virtualised jump is not pulled back to the rendered
+ * rows; with rows one cell apart, every position is near one, so a short list
+ * snaps as it did under "mandatory". Only the test runner has a real wheel.
+ */
+export const Wheel: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', gap: 'var(--rk-x-2)' }}>
+      {DENSITIES.map((density) => (
+        <div key={density} data-density={density}>
+          <Framed name={`wheel, ${density}`} width={18} rows={4}>
+            <Files label={`Files, ${density}`} rows={4} />
+          </Framed>
+        </div>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const run = runner();
+    if (!run) return;
+    const lists = DENSITIES.map((density) => ({
+      density,
+      cell: cellOf(canvas.getByRole('group', { name: `wheel, ${density}` })),
+      box: canvas.getByRole('listbox', { name: `Files, ${density}` }),
+      selector: `[role="listbox"][aria-label="Files, ${density}"]`,
+    }));
+    // A notch, then a trackpad's step of less than a row. Each list is turned
+    // in turn and left to come to rest on its own, so they all settle at once.
+    for (const step of [() => 100, (cell: number) => Math.round(cell * 0.6)]) {
+      for (const { box } of lists) box.scrollTop = 0;
+      await Promise.all(lists.map(({ box }) => rest(box)));
+      for (const { cell, selector } of lists) await run.wheel(selector, step(cell.height));
+      const tops = await Promise.all(lists.map(({ box }) => rest(box)));
+      lists.forEach(({ density, cell }, i) => {
+        const top = tops[i] ?? 0;
+        expect(top, `${density}, a wheel of ${step(cell.height)}px`).toBeGreaterThan(0);
+        wholeCells(top, cell.height);
+      });
+    }
+  },
+};
+
+/**
+ * A thousand rows, virtualised (0115): the scrollbar counts them from the
+ * collection, not the page, so it shows the whole length. There is no `total`
+ * here.
  */
 export const LongList: Story = {
   name: 'A thousand rows',
@@ -748,6 +833,7 @@ export const LongList: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
+    await settled();
     const box = canvas.getByRole('listbox', { name: 'Lines' });
     expect(box.scrollHeight / box.clientHeight).toBeGreaterThan(50);
     const bar = box.parentElement?.querySelector('.rk-list-scrollbar');
@@ -758,6 +844,104 @@ export const LongList: Story = {
     await waitFor(() => expect(bar?.textContent).toBe(one(0)));
     box.scrollTop = box.scrollHeight;
     await waitFor(() => expect(bar?.textContent).toBe(one(990)));
+  },
+};
+
+/** Ten thousand lines of a log, as items: the collection, not the page, holds them. */
+const LOG = Array.from({ length: 10_000 }, (_, i) => ({
+  id: `entry-${i}`,
+  text: `${String(i).padStart(5, '0')} ${i % 7 === 0 ? 'warn' : 'info'} tick ${i}`,
+}));
+
+/**
+ * Ten thousand rows, virtualised (cairn 0115): only the rows near the viewport
+ * are in the page, every one on a whole cell, and the scrollbar still counts
+ * all ten thousand. The keyboard reaches either end, and type-ahead finds a
+ * row that was never rendered.
+ */
+export const TenThousand: Story = {
+  name: 'Ten thousand rows',
+  render: () => (
+    <Framed name="log" width={30} rows={10}>
+      <List aria-label="Log" rows={10} selectionMode="single" items={LOG}>
+        {(entry) => (
+          <ListItem id={entry.id} textValue={entry.text}>
+            {entry.text}
+          </ListItem>
+        )}
+      </List>
+    </Framed>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const box = canvas.getByRole('listbox', { name: 'Log' });
+    const bar = box.closest('.rk-list')?.querySelector('.rk-list-scrollbar');
+    const rendered = () => box.querySelectorAll('[role="option"]').length;
+    const cursorOn = (): string =>
+      box.querySelector('[data-focused="true"] .rk-list-label')?.textContent ?? '(none)';
+    const thumb = (offset: number): string =>
+      toText(scrollbarBuffer({ total: 10_000, visible: 10, offset }))
+        .split('\n')
+        .join('');
+
+    // Only the window and its overscan are in the page, and the sizer is the
+    // whole list tall, in whole cells.
+    await waitFor(() => expect(rendered()).toBeGreaterThan(0));
+    expect(rendered()).toBeLessThan(60);
+    const cell = Number.parseFloat(getComputedStyle(box).lineHeight);
+    expect(box.scrollHeight).toBeCloseTo(10_000 * cell, -1);
+    await waitFor(() => expect(bar?.textContent).toBe(thumb(0)));
+
+    // End: the last row of the collection, not of the window.
+    await userEvent.tab();
+    await waitFor(() => expect(cursorOn()).toBe(LOG[0]?.text));
+    await userEvent.keyboard('{End}');
+    await waitFor(() => expect(cursorOn()).toBe(LOG.at(-1)?.text));
+    expect(document.activeElement?.textContent).toContain(LOG.at(-1)?.text);
+    await waitFor(() => expect(bar?.textContent).toBe(thumb(9990)));
+    expect(rendered()).toBeLessThan(60);
+
+    // And the page reads back as the list's last ten rows, cursor on the
+    // last, and the scrollbar at the bottom: screenshot() reads the window.
+    const frame = canvas.getByRole('group', { name: 'log' });
+    const all = LOG.map((entry, i) => ({ label: entry.text, cursor: i === LOG.length - 1 }));
+    await waitFor(() =>
+      expect(inside(frame, 30)).toBe(
+        toText(listBuffer({ rows: all, width: 30, visible: 10, offset: 9990 }), {
+          trimEnd: false,
+        }),
+      ),
+    );
+
+    // Home: back to the first.
+    await userEvent.keyboard('{Home}');
+    await waitFor(() => expect(cursorOn()).toBe(LOG[0]?.text));
+    await waitFor(() => expect(box.scrollTop).toBe(0));
+
+    // Page down moves a page, not the window's last rendered row.
+    await userEvent.keyboard('{PageDown}');
+    await waitFor(() => expect(cursorOn()).not.toBe(LOG[0]?.text));
+
+    // Type-ahead to a row that has never been rendered.
+    await userEvent.keyboard('07777');
+    await waitFor(() => expect(cursorOn()).toBe(LOG[7777]?.text));
+
+    // Wherever the keyboard took it, the list stopped on a whole row, and the
+    // rows in the page sit on whole cells.
+    await waitFor(() => expect(box.scrollTop % cell).toBeCloseTo(0, 0));
+
+    // And scrolled to a fraction of a row far from anything rendered, it comes
+    // to rest on a whole one once the rows there are in the page.
+    box.scrollTo({ top: cell * 5000.4 });
+    await waitFor(() => {
+      expect(Math.abs(box.scrollTop - cell * 5000)).toBeLessThan(cell);
+      expect(box.scrollTop % cell).toBeCloseTo(0, 0);
+    });
+    await waitFor(() => expect(bar?.textContent).toBe(thumb(5000)));
+    for (const option of box.querySelectorAll<HTMLElement>('[role="option"]')) {
+      const top = option.getBoundingClientRect().top - box.getBoundingClientRect().top;
+      expect(Math.abs(top / cell - Math.round(top / cell)) * cell).toBeLessThan(0.5);
+    }
   },
 };
 
