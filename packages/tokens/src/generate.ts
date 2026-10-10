@@ -33,7 +33,7 @@ import {
 import { motion } from './motion.ts';
 import { contrasts, moreContrastColors, semanticColors } from './semantic.ts';
 import { type ThemeContext, themeContexts } from './themes.ts';
-import { families, weights } from './type.ts';
+import { contentHeight, families, weights } from './type.ts';
 
 export type GeneratedFiles = ReadonlyMap<string, unknown>;
 
@@ -117,6 +117,12 @@ function theme(t: ThemeContext): Group {
       weight: {
         $type: 'fontWeight',
         ...Object.fromEntries(Object.entries(weights).map(([k, w]) => [k, { $value: w }])),
+      },
+      content: {
+        $type: 'number',
+        $description:
+          "The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296).",
+        $value: contentHeight[t.inputs.typePairing],
       },
     },
     ...glyphs(t.inputs.borderSet),

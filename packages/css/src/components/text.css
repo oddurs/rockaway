@@ -1,0 +1,58 @@
+/*
+ * Text sized in rows (cairn 0296, 0297).
+ *
+ * Size N fills N rows. The glyph box is the face's ascent plus descent
+ * (`--rk-font-content`, in ems), so the font is that box divided into N line
+ * boxes of the density in force, and the line box is the glyph box: the
+ * glyphs fill the rows exactly, with no leading to share out, and the baseline
+ * sits as far down the rows as the face's ascent says.
+ *
+ *   font-size:   N × line × 1em / content     (1em: the ordinary size)
+ *   line-height: content × 1em                (1em: the scaled size) = N rows
+ *
+ * Across, the letters keep the scaled face's advance, which is not a whole
+ * number of columns. A block takes its container's width, which is. A run set
+ * inline is told how many cells its text takes at the ordinary size
+ * (`--rk-chars`), and its box is that scaled and rounded up to whole cells, a
+ * 256th of a cell taken off first so a run that is whole cells by arithmetic
+ * does not gain one. The box is measured in the ordinary font, outside the
+ * glyphs, where a cell is the cell: inside, `1ch` is the scaled face's and a
+ * cell computed back from it is off by the engine's rounding of it.
+ *
+ * An inline run sits on the bottom of its line, so the ordinary text beside it
+ * is on the run's last row and the line is exactly N rows.
+ */
+@layer rk.components {
+  .rk-text {
+    display: block;
+  }
+
+  .rk-text-glyphs {
+    display: block;
+    font-size: calc(
+      var(--rk-size, 1) *
+      var(--rk-cell-line, 1.5) *
+      1em /
+      var(--rk-font-content, 1.32)
+    );
+    line-height: calc(var(--rk-font-content, 1.32) * 1em);
+  }
+
+  .rk-text-inline {
+    display: inline-block;
+    vertical-align: bottom;
+    inline-size: round(
+      up,
+      calc(
+        var(--rk-chars, 0) *
+        var(--rk-cell-width) *
+        var(--rk-size, 1) *
+        var(--rk-cell-line, 1.5) /
+        var(--rk-font-content, 1.32) -
+        var(--rk-cell-width) /
+        256
+      ),
+      var(--rk-cell-width)
+    );
+  }
+}

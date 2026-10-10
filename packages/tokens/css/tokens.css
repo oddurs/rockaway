@@ -443,6 +443,12 @@
   initial-value: 2px;
 }
 
+@property --rk-font-content {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1.36;
+}
+
 @property --rk-font-family-display {
   syntax: '*';
   inherits: true;
@@ -2078,6 +2084,8 @@
     --rk-fg-warning: var(--rk-ansi-yellow);
     --rk-focus-offset: 2px;
     --rk-focus-width: 2px;
+    /* The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296). */
+    --rk-font-content: 1.36;
     --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
@@ -2798,6 +2806,8 @@
   [data-rk-theme='default'] {
     /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
     --rk-conformance: standard;
+    /* The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296). */
+    --rk-font-content: 1.36;
     --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;

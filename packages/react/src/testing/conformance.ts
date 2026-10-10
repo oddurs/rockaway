@@ -30,6 +30,12 @@
  * line box, because that is what an inline box is. Its width is still a sum of
  * character advances, so that half is checked. The line box it sits in belongs
  * to the block that holds it, and that block is checked like any other.
+ *
+ * Text sized in rows (cairn 0296) is measured as its block: whole rows down
+ * and whole cells across. What is inside it is in the scaled face, whose
+ * advance is not a cell, so an inline box in a two-row heading, an emphasis or
+ * a link, is not measured; the block that holds it is. At `strict` sized text
+ * is a violation of its own: a terminal has one size.
  */
 import { cellOf } from './cell.ts';
 
@@ -77,7 +83,14 @@ export interface UnknownLevel {
   readonly declared: string;
 }
 
-export type Violation = OffGrid | WrongPainter | Unexplained | UnknownLevel;
+/** Text sized in rows on a screen held to `strict`, where there is one size. */
+export interface SizedText {
+  readonly what: 'size';
+  readonly element: string;
+  readonly level: ConformanceLevel;
+}
+
+export type Violation = OffGrid | WrongPainter | Unexplained | UnknownLevel | SizedText;
 
 export interface Exception {
   readonly element: string;
@@ -252,6 +265,11 @@ export function checkConformance(
         painted.add(owner);
         violations.push({ what: 'painter', element: describe(owner), level, painter });
       }
+      for (const el of screen.querySelectorAll<HTMLElement>('.rk-text')) {
+        if (reported.has(el) || excusedBy(el, level)) continue;
+        reported.add(el);
+        violations.push({ what: 'size', element: describe(el), level });
+      }
     }
 
     const { width: cellWidth, height: cellHeight } = cellOf(screen);
@@ -284,6 +302,8 @@ export function checkConformance(
       // screen's own box, which the page sizes rather than the grid.
       if (el.closest('[data-rk-painted]')) continue;
       if (el.classList.contains('rk-content')) continue;
+      // Inside sized text, a box is in the scaled face; the block is measured.
+      if (el.parentElement?.closest('.rk-text-glyphs')) continue;
       const step = stepFor(el, screen, level);
       if (step === undefined) continue;
       // Visually hidden text — a spoken form beside a glyph, a live region —
@@ -338,6 +358,8 @@ function line(v: Violation): string {
       return `  ${v.element}  painted by the ${v.painter} painter, and ${v.level} allows only the glyph painter`;
     case 'reason':
       return `  ${v.element}  data-rk-offgrid=${JSON.stringify(v.reason)} gives no reason, and an exception has to say why`;
+    case 'size':
+      return `  ${v.element}  text sized in rows, and ${v.level} allows one size`;
     case 'level':
       return `  ${v.element}  data-rk-conformance=${JSON.stringify(v.declared)} is not a level (${conformanceLevels.join(', ')}), so it was held to ${v.level}`;
     default: {
