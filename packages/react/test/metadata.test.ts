@@ -53,12 +53,18 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  KeymapEngine:
+    "Keymap's engine as a class, for a page with no React (cairn 0237). It draws nothing, and is documented with Keymap.",
   RouterProvider:
     "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
   DialogTrigger:
     "React Aria's DialogTrigger, re-exported beside Dialog so it is the instance Dialog and OverlayPopover read, and so copied code needs no import from React Aria. It draws nothing, and is documented in Dialog's anatomy.",
   TooltipTrigger:
     "React Aria's TooltipTrigger, re-exported beside Tooltip for the reason DialogTrigger is. It draws nothing, and is documented in Tooltip's description.",
+  MenuTrigger:
+    "React Aria's menu trigger, re-exported beside Menu so it is the instance Menu's popover reads, and so copied-in code can open a menu. It draws nothing, and is documented in Menu's notes.",
+  SubmenuTrigger:
+    "React Aria's submenu trigger, re-exported beside Menu for the same reasons as MenuTrigger. It draws nothing, and is documented in Menu's notes.",
   Chrome:
     "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
