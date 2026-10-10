@@ -3,16 +3,16 @@ id: 127
 uid: 42e4d9a8-b404-45ca-b14e-2ce12dfb25c0
 title: 'Build the field contract: label, description, error, required, disabled'
 type: feature
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 32
 - 117
 - 118
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p0
 layer: components
 effort: m
@@ -51,7 +51,7 @@ with `aria` available; server errors go through `Form`'s `validationErrors`.
 
 ## Acceptance criteria
 
-- [ ] Label, Description, FieldError, Form and Fieldset exist, are exported, and are used by every field component that follows
+- [x] Label, Description, FieldError, Form and Fieldset exist, are exported, and are used by every field component that follows
 - [x] A Form of mixed fields lines its controls up in one column of cells, asserted by a text snapshot, and stacks under 60 cells
 - [x] Description and error are linked by `aria-describedby`; the error is announced on submit, once
 - [x] Required, disabled and invalid are drawn per 0118, and none changes the control's size in cells
@@ -89,3 +89,11 @@ Also in this PR: screenshot() now reads nested screens (a fieldset's chrome insi
 ## 2026-10-03
 
 Criterion 6: the recipe (0134) does not exist yet, so the field section is in CONTRIBUTING.md under 'Building a field', marked as an interim home to move into docs/component-recipe.md; noted on 0134. Criterion 1 is left unticked: the parts exist and are exported, but 'used by every field component that follows' becomes true only as 0035-0038 and 0042 land.
+
+## 2026-10-10
+
+Criterion 1 holds now: TextField, Checkbox, Switch, Radio group, Select and ComboBox are all built on Label, Description, FieldError and Form.
+
+## Result
+
+Label, Description, FieldError, Form and Fieldset (field.tsx, fieldset.tsx): every field is built from them, formBuffer is the text model, and forms are comfortable by default since 0316.
