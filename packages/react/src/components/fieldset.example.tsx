@@ -1,7 +1,8 @@
 import { Fieldset, fieldClass, useGlyphs } from '@rockaway/react';
+import type { ReactNode } from 'react';
 import { Radio, RadioGroup } from 'react-aria-components';
 
-export function Example() {
+export function Example(): ReactNode {
   const { delimiter, mark } = useGlyphs();
   const [open, close] = delimiter.control;
   const option = (value: string) => (
