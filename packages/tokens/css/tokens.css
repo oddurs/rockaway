@@ -92,6 +92,11 @@
   inherits: true;
 }
 
+@property --rk-ansi-focus {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-ansi-foreground {
   syntax: '*';
   inherits: true;
@@ -103,6 +108,11 @@
 }
 
 @property --rk-ansi-hover {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-inverse {
   syntax: '*';
   inherits: true;
 }
@@ -1466,6 +1476,12 @@
   initial-value: oklch(50.5% 0.0393 274.8);
 }
 
+@property --rk-palette-dark-focus {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(71.9% 0.1322 264.2);
+}
+
 @property --rk-palette-dark-foreground {
   syntax: '<color>';
   inherits: true;
@@ -1482,6 +1498,12 @@
   syntax: '<color>';
   inherits: true;
   initial-value: oklch(30.7% 0.0266 280.5);
+}
+
+@property --rk-palette-dark-inverse {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(84.6% 0.0611 274.8);
 }
 
 @property --rk-palette-dark-magenta {
@@ -1782,6 +1804,26 @@
   initial-value: oklch(73.3% 0.0741 264.1);
 }
 
+@property --rk-palette-light-focus {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-focus-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-focus-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-focus-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-palette-light-foreground {
   syntax: '<color>';
   inherits: true;
@@ -1798,6 +1840,12 @@
   syntax: '<color>';
   inherits: true;
   initial-value: oklch(86.1% 0.0262 277.2);
+}
+
+@property --rk-palette-light-inverse {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(35.7% 0.1563 264.1);
 }
 
 @property --rk-palette-light-magenta {
@@ -2183,9 +2231,11 @@
     --rk-ansi-cursor: light-dark(var(--rk-palette-light-cursor), var(--rk-palette-dark-cursor));
     --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
     --rk-ansi-faint: light-dark(var(--rk-palette-light-faint), var(--rk-palette-dark-faint));
+    --rk-ansi-focus: light-dark(var(--rk-palette-light-focus), var(--rk-palette-dark-focus));
     --rk-ansi-foreground: light-dark(var(--rk-palette-light-foreground), var(--rk-palette-dark-foreground));
     --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
     --rk-ansi-hover: light-dark(var(--rk-palette-light-hover), var(--rk-palette-dark-hover));
+    --rk-ansi-inverse: light-dark(var(--rk-palette-light-inverse), var(--rk-palette-dark-inverse));
     --rk-ansi-magenta: light-dark(var(--rk-palette-light-magenta), var(--rk-palette-dark-magenta));
     --rk-ansi-muted: light-dark(var(--rk-palette-light-muted), var(--rk-palette-dark-muted));
     --rk-ansi-red: light-dark(var(--rk-palette-light-red), var(--rk-palette-dark-red));
@@ -2215,7 +2265,7 @@
     --rk-bg-info-solid: var(--rk-ansi-cyan);
     --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
     --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-    --rk-bg-inverse: var(--rk-ansi-foreground);
+    --rk-bg-inverse: var(--rk-ansi-inverse);
     --rk-bg-page: var(--rk-ansi-background);
     --rk-bg-subtle: var(--rk-ansi-subtle);
     --rk-bg-success-solid: var(--rk-ansi-green);
@@ -2229,7 +2279,7 @@
     --rk-border-control: var(--rk-ansi-border-strong);
     --rk-border-danger: var(--rk-ansi-red);
     --rk-border-default: var(--rk-ansi-border);
-    --rk-border-focus: var(--rk-ansi-blue);
+    --rk-border-focus: var(--rk-ansi-focus);
     --rk-border-info: var(--rk-ansi-cyan);
     --rk-border-subtle: var(--rk-ansi-border-subtle);
     --rk-border-success: var(--rk-ansi-green);
@@ -2446,9 +2496,11 @@
     --rk-palette-dark-cursor: oklch(66% 0.16 262);
     --rk-palette-dark-cyan: oklch(66.9% 0.1138 201.2);
     --rk-palette-dark-faint: oklch(46% 0.006 262);
+    --rk-palette-dark-focus: oklch(66% 0.16 262);
     --rk-palette-dark-foreground: oklch(94% 0.0029 262);
     --rk-palette-dark-green: oklch(66% 0.16 150);
     --rk-palette-dark-hover: oklch(27% 0.006 262);
+    --rk-palette-dark-inverse: oklch(94% 0.0029 262);
     --rk-palette-dark-magenta: oklch(66% 0.16 320);
     --rk-palette-dark-muted: oklch(74% 0.006 262);
     --rk-palette-dark-red: oklch(66% 0.16 27);
@@ -2480,9 +2532,11 @@
     --rk-palette-light-cursor: oklch(52% 0.16 262);
     --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
     --rk-palette-light-faint: oklch(68% 0.006 262);
+    --rk-palette-light-focus: oklch(52% 0.16 262);
     --rk-palette-light-foreground: oklch(21% 0.0055 262);
     --rk-palette-light-green: oklch(52.03% 0.152 147.6);
     --rk-palette-light-hover: oklch(93.5% 0.003 262);
+    --rk-palette-light-inverse: oklch(21% 0.0055 262);
     --rk-palette-light-magenta: oklch(52% 0.16 320);
     --rk-palette-light-muted: oklch(47% 0.006 262);
     --rk-palette-light-red: oklch(52% 0.16 27);
@@ -2691,9 +2745,11 @@
     --rk-ansi-cursor: light-dark(var(--rk-palette-light-cursor), var(--rk-palette-dark-cursor));
     --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
     --rk-ansi-faint: light-dark(var(--rk-palette-light-faint), var(--rk-palette-dark-faint));
+    --rk-ansi-focus: light-dark(var(--rk-palette-light-focus), var(--rk-palette-dark-focus));
     --rk-ansi-foreground: light-dark(var(--rk-palette-light-foreground), var(--rk-palette-dark-foreground));
     --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
     --rk-ansi-hover: light-dark(var(--rk-palette-light-hover), var(--rk-palette-dark-hover));
+    --rk-ansi-inverse: light-dark(var(--rk-palette-light-inverse), var(--rk-palette-dark-inverse));
     --rk-ansi-magenta: light-dark(var(--rk-palette-light-magenta), var(--rk-palette-dark-magenta));
     --rk-ansi-muted: light-dark(var(--rk-palette-light-muted), var(--rk-palette-dark-muted));
     --rk-ansi-red: light-dark(var(--rk-palette-light-red), var(--rk-palette-dark-red));
@@ -2719,7 +2775,7 @@
     --rk-bg-info-solid: var(--rk-ansi-cyan);
     --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
     --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-    --rk-bg-inverse: var(--rk-ansi-foreground);
+    --rk-bg-inverse: var(--rk-ansi-inverse);
     --rk-bg-page: var(--rk-ansi-background);
     --rk-bg-subtle: var(--rk-ansi-subtle);
     --rk-bg-success-solid: var(--rk-ansi-green);
@@ -2733,7 +2789,7 @@
     --rk-border-control: var(--rk-ansi-border-strong);
     --rk-border-danger: var(--rk-ansi-red);
     --rk-border-default: var(--rk-ansi-border);
-    --rk-border-focus: var(--rk-ansi-blue);
+    --rk-border-focus: var(--rk-ansi-focus);
     --rk-border-info: var(--rk-ansi-cyan);
     --rk-border-subtle: var(--rk-ansi-border-subtle);
     --rk-border-success: var(--rk-ansi-green);
@@ -2802,7 +2858,7 @@
     --rk-bg-info-solid-hover: var(--rk-ansi-foreground);
     /* Tinted info backgrounds: callouts, rows. */
     --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-    /* Reverse video: the foreground becomes the ground. */
+    /* Reverse video: the foreground becomes the ground. The foreground itself, unless the theme reverses to a colour. */
     --rk-bg-inverse: var(--rk-ansi-foreground);
     /* The page behind everything: the terminal background. */
     --rk-bg-page: var(--rk-ansi-background);
@@ -2826,8 +2882,8 @@
     --rk-border-danger: var(--rk-ansi-red);
     /* The ordinary edge: frames, dividers, tables. A boundary a reader can see, at least 3:1 against every ground it is drawn on (WCAG 1.4.11, cairn 0178). */
     --rk-border-default: var(--rk-ansi-border-strong);
-    /* The focus ring, and the cursor (0061). */
-    --rk-border-focus: var(--rk-ansi-blue);
+    /* The focus ring, and the cursor (0061). The accent, unless the theme focuses in a colour of its own. */
+    --rk-border-focus: var(--rk-ansi-focus);
     --rk-border-info: var(--rk-ansi-cyan);
     /* Decorative separation only, below 3:1: a rule inside a surface that something else already bounds. Never the only edge of anything (cairn 0178). */
     --rk-border-subtle: var(--rk-ansi-border);
@@ -2916,7 +2972,7 @@
       --rk-bg-info-solid-hover: var(--rk-ansi-foreground);
       /* Tinted info backgrounds: callouts, rows. */
       --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-      /* Reverse video: the foreground becomes the ground. */
+      /* Reverse video: the foreground becomes the ground. The foreground itself, unless the theme reverses to a colour. */
       --rk-bg-inverse: var(--rk-ansi-foreground);
       /* The page behind everything: the terminal background. */
       --rk-bg-page: var(--rk-ansi-background);
@@ -2940,8 +2996,8 @@
       --rk-border-danger: var(--rk-ansi-red);
       /* The ordinary edge: frames, dividers, tables. A boundary a reader can see, at least 3:1 against every ground it is drawn on (WCAG 1.4.11, cairn 0178). */
       --rk-border-default: var(--rk-ansi-border-strong);
-      /* The focus ring, and the cursor (0061). */
-      --rk-border-focus: var(--rk-ansi-blue);
+      /* The focus ring, and the cursor (0061). The accent, unless the theme focuses in a colour of its own. */
+      --rk-border-focus: var(--rk-ansi-focus);
       --rk-border-info: var(--rk-ansi-cyan);
       /* Decorative separation only, below 3:1: a rule inside a surface that something else already bounds. Never the only edge of anything (cairn 0178). */
       --rk-border-subtle: var(--rk-ansi-border);
@@ -3199,9 +3255,11 @@
     --rk-palette-dark-cursor: oklch(66% 0.16 262);
     --rk-palette-dark-cyan: oklch(66.9% 0.1138 201.2);
     --rk-palette-dark-faint: oklch(46% 0.006 262);
+    --rk-palette-dark-focus: oklch(66% 0.16 262);
     --rk-palette-dark-foreground: oklch(94% 0.0029 262);
     --rk-palette-dark-green: oklch(66% 0.16 150);
     --rk-palette-dark-hover: oklch(27% 0.006 262);
+    --rk-palette-dark-inverse: oklch(94% 0.0029 262);
     --rk-palette-dark-magenta: oklch(66% 0.16 320);
     --rk-palette-dark-muted: oklch(74% 0.006 262);
     --rk-palette-dark-red: oklch(66% 0.16 27);
@@ -3233,9 +3291,11 @@
     --rk-palette-light-cursor: oklch(52% 0.16 262);
     --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
     --rk-palette-light-faint: oklch(68% 0.006 262);
+    --rk-palette-light-focus: oklch(52% 0.16 262);
     --rk-palette-light-foreground: oklch(21% 0.0055 262);
     --rk-palette-light-green: oklch(52.03% 0.152 147.6);
     --rk-palette-light-hover: oklch(93.5% 0.003 262);
+    --rk-palette-light-inverse: oklch(21% 0.0055 262);
     --rk-palette-light-magenta: oklch(52% 0.16 320);
     --rk-palette-light-muted: oklch(47% 0.006 262);
     --rk-palette-light-red: oklch(52% 0.16 27);
@@ -3537,6 +3597,7 @@
   [data-rk-theme='ink'] [data-rk-theme-only]:not([data-rk-theme-only~='ink']):not([data-rk-theme='ink'] [data-rk-theme] *),
   [data-rk-theme='phosphor'] [data-rk-theme-only]:not([data-rk-theme-only~='phosphor']):not([data-rk-theme='phosphor'] [data-rk-theme] *),
   [data-rk-theme='ascii'] [data-rk-theme-only]:not([data-rk-theme-only~='ascii']):not([data-rk-theme='ascii'] [data-rk-theme] *),
+  [data-rk-theme='sunset'] [data-rk-theme-only]:not([data-rk-theme-only~='sunset']):not([data-rk-theme='sunset'] [data-rk-theme] *),
   [data-rk-theme='catppuccin'] [data-rk-theme-only]:not([data-rk-theme-only~='catppuccin']):not([data-rk-theme='catppuccin'] [data-rk-theme] *),
   [data-rk-theme='dracula'] [data-rk-theme-only]:not([data-rk-theme-only~='dracula']):not([data-rk-theme='dracula'] [data-rk-theme] *),
   [data-rk-theme='nord'] [data-rk-theme-only]:not([data-rk-theme-only~='nord']):not([data-rk-theme='nord'] [data-rk-theme] *),

@@ -304,6 +304,26 @@
           ]
         }
       },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.52,
+            0.16,
+            75
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.21,
+            0.0128,
+            75
+          ]
+        }
+      },
       "tint-blue": {
         "$value": {
           "colorSpace": "oklch",
@@ -643,6 +663,26 @@
           "components": [
             0.26,
             0.045,
+            75
+          ]
+        }
+      },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.66,
+            0.16,
+            75
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.94,
+            0.0067,
             75
           ]
         }

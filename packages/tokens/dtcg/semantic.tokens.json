@@ -23,8 +23,8 @@
       "$description": "An element being pressed, or selected."
     },
     "inverse": {
-      "$value": "{ansi.foreground}",
-      "$description": "Reverse video: the foreground becomes the ground."
+      "$value": "{ansi.inverse}",
+      "$description": "Reverse video: the foreground becomes the ground. The foreground itself, unless the theme reverses to a colour."
     },
     "accent": {
       "solid": {
@@ -163,8 +163,8 @@
       "$description": "The edge of a resting surface. On a grid, a surface is its border, so it is border.default."
     },
     "focus": {
-      "$value": "{ansi.blue}",
-      "$description": "The focus ring, and the cursor (0061)."
+      "$value": "{ansi.focus}",
+      "$description": "The focus ring, and the cursor (0061). The accent, unless the theme focuses in a colour of its own."
     },
     "accent": {
       "$value": "{ansi.blue}"

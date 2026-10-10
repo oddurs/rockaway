@@ -44,6 +44,11 @@
             "$ref": "theme.ascii.tokens.json"
           }
         ],
+        "sunset": [
+          {
+            "$ref": "theme.sunset.tokens.json"
+          }
+        ],
         "catppuccin": [
           {
             "$ref": "theme.catppuccin.tokens.json"

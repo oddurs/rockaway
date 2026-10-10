@@ -1,9 +1,10 @@
 {
-  "$description": "Nord (cairn 0052). Imported from https://github.com/nordtheme/alacritty under MIT (Copyright (c) 2016-present Sven Greb). Fitted to the contrast gate: dark foreground: #d8dee9 → #e5ebf6 (for fg.default on bg.hover); dark muted: #a1a7b3 → #b8bfcb (for fg.muted on bg.subtle); dark blue: #81a1c1 → #90b1d1 (for fg.accent on bg.surface); dark red: #bf616a → #f49098 (for fg.danger on bg.page); dark bright-red: #bf616a → #ffd5d7 (for fg.on-danger on bg.danger.solid-hover); dark border: #757b87 → #858c98 (for border.default on bg.page); dark magenta: #b48ead → #c9a2c2 (for syntax.keyword on bg.surface); dark bright-blue: #81a1c1 → #b9dbfc (for fg.accent on bg.page, in more contrast); dark bright-cyan: #8fbcbb → #b6e5e3 (for fg.info on bg.page, in more contrast); dark bright-green: #a3be8c → #c7e3b0 (for fg.success on bg.page, in more contrast); dark bright-yellow: #ebcb8b → #fddd9c (for fg.warning on bg.warning.subtle, in more contrast); dark bright-magenta: #b48ead → #f4cbec (for syntax.keyword on bg.surface, in more contrast).",
+  "$description": "Sunset (cairn 0052). Generated from the theme inputs.",
   "$extensions": {
     "dev.rockaway": {
-      "kind": "imported",
+      "kind": "preset",
       "modes": [
+        "light",
         "dark"
       ]
     }
@@ -12,14 +13,14 @@
     "$type": "color",
     "$description": "Raw colours, both modes. Read through `ansi.*`, which the mode points here.",
     "light": {
-      "$description": "Nord has no light mode, so this is its dark palette: the theme pins its mode.",
+      "$description": "Sunset, light: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
       "black": {
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.379,
-            0.029,
-            266.5
+            0.29,
+            0.045,
+            258
           ]
         }
       },
@@ -27,9 +28,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.761,
-            0.1206,
-            15.3
+            0.48,
+            0.145,
+            22
           ]
         }
       },
@@ -37,9 +38,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.768,
-            0.0749,
-            131.1
+            0.47,
+            0.075,
+            182
           ]
         }
       },
@@ -47,9 +48,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.855,
-            0.0892,
-            84.1
+            0.48,
+            0.09,
+            70
           ]
         }
       },
@@ -57,9 +58,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.747,
-            0.0591,
-            248.7
+            0.49,
+            0.115,
+            40
           ]
         }
       },
@@ -67,9 +68,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.757,
-            0.0625,
-            332.7
+            0.47,
+            0.115,
+            352
           ]
         }
       },
@@ -77,9 +78,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.775,
-            0.0622,
-            217.5
+            0.46,
+            0.085,
+            248
           ]
         }
       },
@@ -87,9 +88,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.933,
-            0.0104,
-            261.8
+            0.92,
+            0.02,
+            75
           ]
         }
       },
@@ -97,9 +98,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.452,
-            0.0352,
-            264.1
+            0.455,
+            0.04,
+            262
           ]
         }
       },
@@ -107,9 +108,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.921,
-            0.1206,
-            15.3
+            0.4,
+            0.13,
+            22
           ]
         }
       },
@@ -117,9 +118,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.883,
-            0.0749,
-            131.1
+            0.39,
+            0.065,
+            182
           ]
         }
       },
@@ -127,9 +128,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.91,
-            0.0892,
-            84.1
+            0.4,
+            0.08,
+            68
           ]
         }
       },
@@ -137,9 +138,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.877,
-            0.0591,
-            248.7
+            0.41,
+            0.1,
+            40
           ]
         }
       },
@@ -147,9 +148,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.887,
-            0.0625,
-            332.7
+            0.39,
+            0.1,
+            352
           ]
         }
       },
@@ -157,9 +158,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.888,
-            0.0477,
-            194.5
+            0.38,
+            0.075,
+            248
           ]
         }
       },
@@ -167,9 +168,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.951,
-            0.0074,
-            260.7
+            0.99,
+            0.006,
+            80
           ]
         }
       },
@@ -177,9 +178,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.324,
-            0.0229,
-            264.2
+            0.965,
+            0.018,
+            78
           ]
         }
       },
@@ -187,9 +188,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.353,
-            0.0226,
-            264.2
+            0.98,
+            0.012,
+            80
           ]
         }
       },
@@ -197,9 +198,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.376,
-            0.0223,
-            264.2
+            0.94,
+            0.022,
+            75
           ]
         }
       },
@@ -207,9 +208,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.399,
-            0.0221,
-            264.2
+            0.915,
+            0.026,
+            72
           ]
         }
       },
@@ -217,9 +218,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.422,
-            0.0218,
-            264.2
+            0.89,
+            0.03,
+            70
           ]
         }
       },
@@ -227,9 +228,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.939,
-            0.0164,
-            262.7
+            0.29,
+            0.045,
+            258
           ]
         }
       },
@@ -237,9 +238,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.802,
-            0.0184,
-            262.7
+            0.455,
+            0.04,
+            262
           ]
         }
       },
@@ -247,9 +248,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.583,
-            0.02,
-            262.7
+            0.68,
+            0.03,
+            262
           ]
         }
       },
@@ -257,9 +258,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.382,
-            0.0223,
-            264.2
+            0.9,
+            0.025,
+            72
           ]
         }
       },
@@ -267,9 +268,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.638,
-            0.02,
-            264.2
+            0.62,
+            0.035,
+            258
           ]
         }
       },
@@ -277,9 +278,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.669,
-            0.019,
-            264.2
+            0.53,
+            0.045,
+            258
           ]
         }
       },
@@ -287,9 +288,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.899,
-            0.0164,
-            262.7
+            0.57,
+            0.11,
+            62
           ]
         }
       },
@@ -297,9 +298,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.452,
-            0.0352,
-            264.1
+            0.88,
+            0.045,
+            32
           ]
         }
       },
@@ -307,9 +308,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.747,
-            0.0591,
-            248.7
+            0.57,
+            0.11,
+            62
           ]
         }
       },
@@ -317,9 +318,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.939,
-            0.0164,
-            262.7
+            0.52,
+            0.105,
+            36
           ]
         }
       },
@@ -327,9 +328,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.376,
-            0.028,
-            264.2
+            0.935,
+            0.03,
+            42
           ]
         }
       },
@@ -337,9 +338,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.387,
-            0.0284,
-            264.2
+            0.935,
+            0.025,
+            248
           ]
         }
       },
@@ -347,9 +348,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.386,
-            0.0302,
-            264.2
+            0.935,
+            0.025,
+            182
           ]
         }
       },
@@ -357,9 +358,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.398,
-            0.0322,
-            264.2
+            0.94,
+            0.035,
+            80
           ]
         }
       },
@@ -367,22 +368,22 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.363,
-            0.0366,
-            264.2
+            0.93,
+            0.03,
+            22
           ]
         }
       }
     },
     "dark": {
-      "$description": "Nord, dark: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
+      "$description": "Sunset, dark: the terminal's sixteen, plus the role slots a design system needs (cairn 0089).",
       "black": {
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.379,
-            0.029,
-            266.5
+            0.285,
+            0.039,
+            256
           ]
         }
       },
@@ -390,9 +391,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.761,
-            0.1206,
-            15.3
+            0.74,
+            0.12,
+            22
           ]
         }
       },
@@ -400,9 +401,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.768,
-            0.0749,
-            131.1
+            0.78,
+            0.07,
+            178
           ]
         }
       },
@@ -410,9 +411,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.855,
-            0.0892,
-            84.1
+            0.86,
+            0.09,
+            88
           ]
         }
       },
@@ -420,9 +421,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.747,
-            0.0591,
-            248.7
+            0.78,
+            0.1,
+            42
           ]
         }
       },
@@ -430,9 +431,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.757,
-            0.0625,
-            332.7
+            0.76,
+            0.09,
+            345
           ]
         }
       },
@@ -440,9 +441,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.775,
-            0.0622,
-            217.5
+            0.78,
+            0.065,
+            238
           ]
         }
       },
@@ -450,9 +451,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.933,
-            0.0104,
-            261.8
+            0.86,
+            0.022,
+            80
           ]
         }
       },
@@ -460,9 +461,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.452,
-            0.0352,
-            264.1
+            0.47,
+            0.035,
+            262
           ]
         }
       },
@@ -470,9 +471,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.921,
-            0.1206,
-            15.3
+            0.81,
+            0.1,
+            22
           ]
         }
       },
@@ -480,9 +481,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.883,
-            0.0749,
-            131.1
+            0.85,
+            0.06,
+            178
           ]
         }
       },
@@ -491,8 +492,8 @@
           "colorSpace": "oklch",
           "components": [
             0.91,
-            0.0892,
-            84.1
+            0.075,
+            88
           ]
         }
       },
@@ -500,9 +501,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.877,
-            0.0591,
-            248.7
+            0.85,
+            0.085,
+            45
           ]
         }
       },
@@ -510,9 +511,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.887,
-            0.0625,
-            332.7
+            0.83,
+            0.075,
+            345
           ]
         }
       },
@@ -520,9 +521,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.888,
-            0.0477,
-            194.5
+            0.85,
+            0.055,
+            238
           ]
         }
       },
@@ -530,9 +531,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.951,
-            0.0074,
-            260.7
+            0.97,
+            0.012,
+            82
           ]
         }
       },
@@ -540,9 +541,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.324,
-            0.0229,
-            264.2
+            0.23,
+            0.036,
+            250
           ]
         }
       },
@@ -550,9 +551,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.353,
-            0.0226,
-            264.2
+            0.255,
+            0.037,
+            253
           ]
         }
       },
@@ -560,9 +561,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.376,
-            0.0223,
-            264.2
+            0.285,
+            0.039,
+            256
           ]
         }
       },
@@ -570,9 +571,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.399,
-            0.0221,
-            264.2
+            0.315,
+            0.04,
+            260
           ]
         }
       },
@@ -580,9 +581,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.422,
-            0.0218,
-            264.2
+            0.345,
+            0.042,
+            264
           ]
         }
       },
@@ -590,9 +591,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.939,
-            0.0164,
-            262.7
+            0.93,
+            0.026,
+            82
           ]
         }
       },
@@ -600,9 +601,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.802,
-            0.0184,
-            262.7
+            0.77,
+            0.032,
+            268
           ]
         }
       },
@@ -610,9 +611,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.583,
-            0.02,
-            262.7
+            0.54,
+            0.03,
+            265
           ]
         }
       },
@@ -620,9 +621,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.382,
-            0.0223,
-            264.2
+            0.31,
+            0.038,
+            258
           ]
         }
       },
@@ -630,9 +631,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.638,
-            0.02,
-            264.2
+            0.57,
+            0.038,
+            262
           ]
         }
       },
@@ -640,9 +641,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.669,
-            0.019,
-            264.2
+            0.64,
+            0.042,
+            266
           ]
         }
       },
@@ -650,9 +651,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.899,
-            0.0164,
-            262.7
+            0.83,
+            0.09,
+            75
           ]
         }
       },
@@ -660,9 +661,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.452,
-            0.0352,
-            264.1
+            0.43,
+            0.065,
+            25
           ]
         }
       },
@@ -670,9 +671,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.747,
-            0.0591,
-            248.7
+            0.83,
+            0.09,
+            75
           ]
         }
       },
@@ -680,9 +681,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.939,
-            0.0164,
-            262.7
+            0.77,
+            0.095,
+            38
           ]
         }
       },
@@ -690,9 +691,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.376,
-            0.028,
-            264.2
+            0.29,
+            0.035,
+            42
           ]
         }
       },
@@ -700,9 +701,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.387,
-            0.0284,
-            264.2
+            0.29,
+            0.035,
+            238
           ]
         }
       },
@@ -710,9 +711,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.386,
-            0.0302,
-            264.2
+            0.29,
+            0.03,
+            178
           ]
         }
       },
@@ -720,9 +721,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.398,
-            0.0322,
-            264.2
+            0.3,
+            0.03,
+            88
           ]
         }
       },
@@ -730,9 +731,9 @@
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.363,
-            0.0366,
-            264.2
+            0.29,
+            0.04,
+            22
           ]
         }
       }
@@ -781,18 +782,13 @@
       "bold": {
         "$value": 700
       }
-    },
-    "content": {
-      "$type": "number",
-      "$description": "The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296).",
-      "$value": 1.3
     }
   },
   "glyph": {
     "$type": "fontFamily",
     "$description": "The characters chrome is drawn with (cairn 0091, 0119). Every one is a single cell; the junction table in @rockaway/grid resolves the seams between them.",
     "border": {
-      "$description": "The theme draws with the single set; the others are here to be switched to.",
+      "$description": "The theme draws with the rounded set; the others are here to be switched to.",
       "single": {
         "horizontal": {
           "$value": "─"
@@ -976,16 +972,16 @@
           "$value": "│"
         },
         "top-left": {
-          "$value": "┌"
+          "$value": "╭"
         },
         "top-right": {
-          "$value": "┐"
+          "$value": "╮"
         },
         "bottom-left": {
-          "$value": "└"
+          "$value": "╰"
         },
         "bottom-right": {
-          "$value": "┘"
+          "$value": "╯"
         },
         "tee-left": {
           "$value": "┤"
