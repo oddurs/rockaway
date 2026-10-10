@@ -1,7 +1,9 @@
 /*
  * Text sized in rows (cairn 0296, 0297).
  *
- * Size N fills N rows. The glyph box is the face's ascent plus descent
+ * Size N fills N rows. A half-row size, 1.5 or 2.5 (0323), fills its rows
+ * and is padded up to the next whole one: a run above its glyphs, a block
+ * below its last line, as a seam. The glyph box is the face's ascent plus descent
  * (`--rk-font-content`, in ems), so the font is that box divided into N line
  * boxes of the density in force, and the line box is the glyph box: the
  * glyphs fill the rows exactly, with no leading to share out, and the baseline
@@ -46,6 +48,13 @@
   initial-value: 0px;
 }
 
+/* The ordinary row, carried into an inline run for the same reason. */
+@property --rk-text-row {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
 @layer rk.components {
   .rk-text {
     display: block;
@@ -68,6 +77,17 @@
     vertical-align: bottom;
     white-space: nowrap;
     --rk-text-cell: var(--rk-cell-width);
+    --rk-text-row: var(--rk-cell-height);
+  }
+
+  /* A half-row size (0323) is padded above its glyphs up to the next whole
+   * row, so the run sits on the bottom of a line of whole rows. Nothing at a
+   * whole size: up is where it already is. */
+  .rk-text-inline > .rk-text-glyphs {
+    padding-block-start: calc(
+      (round(up, var(--rk-size, 1), 1) - var(--rk-size, 1)) *
+      var(--rk-text-row)
+    );
   }
 
   .rk-text-inline > .rk-text-glyphs {

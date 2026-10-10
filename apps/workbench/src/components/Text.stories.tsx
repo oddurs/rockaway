@@ -3,10 +3,12 @@ import {
   Frame,
   frameBuffer,
   GlyphProvider,
+  halfTextSizes,
   type PainterName,
   Text,
   type TextSize,
   textCols,
+  textRows,
   textScale,
   textSizes,
 } from '@rockaway/react';
@@ -493,4 +495,63 @@ export const ForcedColors: Story = {
       </Text>
     </Frame>
   ),
+};
+
+/**
+ * Half-row sizes (0323): the glyphs a row and a half, or two and a half, tall,
+ * padded up to whole rows. A run set inline is padded above its glyphs, so the
+ * line it sits on is whole rows; a block is a seam, so a one-line heading at
+ * 1.5 is two rows and a two-line one is three, whatever the density.
+ */
+export const HalfSizes: Story = {
+  name: 'Half-row sizes',
+  args: { size: 1.5 },
+  render: () => (
+    <Frame title="half" cols={30} rows={12} data-testid="half">
+      {halfTextSizes.map((size) => (
+        <div key={size}>
+          <Text size={size} inline data-testid={`inline ${size}`}>
+            Go
+          </Text>
+        </div>
+      ))}
+      <Text size={1.5} as="h2" data-testid="one line">
+        Start
+      </Text>
+      <div style={{ inlineSize: 'calc(var(--rk-cell-width) * 12)', whiteSpace: 'normal' }}>
+        <Text size={1.5} as="h2" data-testid="two lines">
+          Start here
+        </Text>
+      </div>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    for (const size of halfTextSizes) {
+      const run = canvas.getByTestId(`inline ${size}`);
+      const m = metricsOf(run);
+      expect(cells(run.getBoundingClientRect().height, m.height), `inline ${size}`).toBe(
+        textRows(size),
+      );
+      // The glyphs are their size, at the bottom of the padded box.
+      const glyphs = run.querySelector<HTMLElement>('.rk-text-glyphs');
+      const line = Number.parseFloat(getComputedStyle(glyphs as HTMLElement).lineHeight);
+      expect(cells(line, m.height), `glyphs ${size}`).toBe(size);
+    }
+    // A block closes to whole rows, however many lines it wrapped to: its
+    // lines are a row and a half each, and the seam rounds them up.
+    for (const id of ['one line', 'two lines']) {
+      const block = canvas.getByTestId(id);
+      const m = metricsOf(block);
+      const glyphs = block.querySelector<HTMLElement>('.rk-text-glyphs') as HTMLElement;
+      const lines = Math.round(
+        glyphs.getBoundingClientRect().height /
+          Number.parseFloat(getComputedStyle(glyphs).lineHeight),
+      );
+      expect(lines, id).toBe(id === 'one line' ? 1 : 2);
+      expect(cells(block.getBoundingClientRect().height, m.height), id).toBe(
+        Math.ceil(lines * 1.5),
+      );
+    }
+  },
 };
