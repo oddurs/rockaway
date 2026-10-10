@@ -22,6 +22,7 @@
     "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm packages:check && pnpm test && pnpm roadmap:check && pnpm changeset:check",
     "changeset": "changeset",
     "changeset:check": "node scripts/check-changeset.ts",
+    "api:write": "RK_SOURCE=1 pnpm -r --filter './packages/*' exec vitest run test/public-api.test.ts -u",
     "release": "pnpm build && pnpm packages:check && changeset publish"
   },
   "devDependencies": {
