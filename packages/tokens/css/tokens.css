@@ -3580,6 +3580,7 @@
   [data-rk-theme='ink'] [data-rk-theme-only]:not([data-rk-theme-only~='ink']):not([data-rk-theme='ink'] [data-rk-theme] *),
   [data-rk-theme='phosphor'] [data-rk-theme-only]:not([data-rk-theme-only~='phosphor']):not([data-rk-theme='phosphor'] [data-rk-theme] *),
   [data-rk-theme='ascii'] [data-rk-theme-only]:not([data-rk-theme-only~='ascii']):not([data-rk-theme='ascii'] [data-rk-theme] *),
+  [data-rk-theme='sunset'] [data-rk-theme-only]:not([data-rk-theme-only~='sunset']):not([data-rk-theme='sunset'] [data-rk-theme] *),
   [data-rk-theme='catppuccin'] [data-rk-theme-only]:not([data-rk-theme-only~='catppuccin']):not([data-rk-theme='catppuccin'] [data-rk-theme] *),
   [data-rk-theme='dracula'] [data-rk-theme-only]:not([data-rk-theme-only~='dracula']):not([data-rk-theme='dracula'] [data-rk-theme] *),
   [data-rk-theme='nord'] [data-rk-theme-only]:not([data-rk-theme-only~='nord']):not([data-rk-theme='nord'] [data-rk-theme] *),
