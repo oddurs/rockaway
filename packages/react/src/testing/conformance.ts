@@ -233,6 +233,8 @@ function isSeam(el: HTMLElement): boolean {
   return (
     el.hasAttribute('data-rk-rhythm') ||
     el.hasAttribute('data-rk-free') ||
+    // Prose set for reading (0322) is a free zone by definition.
+    el.hasAttribute('data-rk-reading') ||
     el.classList.contains('rk-seam')
   );
 }

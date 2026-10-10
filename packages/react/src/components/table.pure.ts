@@ -26,6 +26,7 @@ import {
 } from '@rockaway/grid';
 import { type Glyphs, marks, themeGlyphs } from '@rockaway/tokens';
 import { drawRule } from './divider.pure.ts';
+import { scrollbarBuffer } from './list.pure.ts';
 import type {
   ColumnAlign,
   ColumnShape,
@@ -51,16 +52,22 @@ function shareOf(width: ColumnWidth | undefined): number | undefined {
 /**
  * Solves the columns in whole cells. `values` are each column's widest value
  * in cells, for `auto`. `room` is the frame's width; left out, every share
- * column takes its minimum and the table is as narrow as it can be.
+ * column takes its minimum and the table is as narrow as it can be. With
+ * `scrollbar`, a cell inside the right edge holds the body's scrollbar (0281).
  */
 export function tableLayout(
   columns: readonly ColumnShape[],
   values: readonly number[],
-  options: { readonly room?: number; readonly selectionMode?: SelectionMode } = {},
+  options: {
+    readonly room?: number;
+    readonly selectionMode?: SelectionMode;
+    readonly scrollbar?: boolean;
+  } = {},
 ): TableLayout {
+  const bar = options.scrollbar ? 1 : 0;
   const lead = columns.map((_, i) => (i === 0 ? markCells(options.selectionMode) : 1));
   const chrome =
-    2 + Math.max(0, columns.length - 1) + lead.reduce((a, b) => a + b, 0) + columns.length;
+    2 + bar + Math.max(0, columns.length - 1) + lead.reduce((a, b) => a + b, 0) + columns.length;
   const tracks: Track[] = columns.map((column, i) => {
     const header = stringWidth(column.header);
     const share = shareOf(column.width);
@@ -89,13 +96,14 @@ export function tableLayout(
       x += 1;
     }
   });
-  const width = 2 + sizes.reduce((a, b) => a + b, 0) + Math.max(0, sizes.length - 1);
+  const width = 2 + bar + sizes.reduce((a, b) => a + b, 0) + Math.max(0, sizes.length - 1);
   return {
     content,
     lead,
     tracks: sizes,
     rules,
     width,
+    scrollbar: bar === 1,
     overflows: options.room !== undefined && room < narrowest,
   };
 }
@@ -179,24 +187,38 @@ function widest(columns: number, rows: readonly RowText[]): number[] {
   );
 }
 
-/** How tall a table is: the frame, the header, its rule, and a row each (or one, empty). */
+/**
+ * How tall a table is: the frame, the header, its rule, and a row each (or
+ * one, empty). Given the rows it shows at once, as tall as those.
+ */
 export function tableHeight(rows: number): number {
   return 4 + Math.max(1, rows);
+}
+
+/** The first row a window of `visible` rows can start on, kept inside the rows there are. */
+export function windowOffset(total: number, visible: number, offset: number): number {
+  return Math.max(0, Math.min(Math.trunc(offset), total - visible));
 }
 
 /**
  * The whole table as cells: chrome, header, rows and marks. Its text
  * snapshot, and the model a story holds the page to. The attributes are
  * `table.css`'s, restated: reverse video for a selected row, dim for a
- * disabled one, the header muted.
+ * disabled one, the header muted. Given `visible`, it shows that many rows
+ * from `offset`, and the scrollbar in the cell inside its right edge.
  */
 export function tableBuffer(table: TableText, glyphs: Glyphs = themeGlyphs.default): Buffer {
   const mode = table.selectionMode ?? 'none';
+  const windowed = table.visible !== undefined;
+  const visible = Math.max(1, Math.trunc(table.visible ?? table.rows.length));
+  const offset = windowed ? windowOffset(table.rows.length, visible, table.offset ?? 0) : 0;
+  const shown = windowed ? table.rows.slice(offset, offset + visible) : table.rows;
   const layout = tableLayout(table.columns, widest(table.columns.length, table.rows), {
     ...(table.width === undefined ? {} : { room: table.width }),
     selectionMode: mode,
+    scrollbar: windowed,
   });
-  const size = { width: layout.width, height: tableHeight(table.rows.length) };
+  const size = { width: layout.width, height: tableHeight(windowed ? visible : table.rows.length) };
   return Buffer.create(size).draw((draft) => {
     drawChrome(
       draft,
@@ -236,7 +258,15 @@ export function tableBuffer(table: TableText, glyphs: Glyphs = themeGlyphs.defau
         style: { fg: 'fg.muted', attrs: Attr.none },
       });
     }
-    table.rows.forEach((row, r) => {
+    if (windowed) {
+      const bar = scrollbarBuffer({ total: table.rows.length, visible, offset }, glyphs);
+      for (let y = 0; y < visible; y++) {
+        drawText(draft, { x: layout.width - 2, y: 3 + y }, bar.at({ x: 0, y })?.ch ?? ' ', {
+          style: { fg: 'fg.muted', attrs: Attr.none },
+        });
+      }
+    }
+    shown.forEach((row, r) => {
       const y = 3 + r;
       let attrs = Attr.none;
       if (row.selected) attrs |= Attr.reverse;
