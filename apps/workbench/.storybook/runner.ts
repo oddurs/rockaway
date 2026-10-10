@@ -1,4 +1,5 @@
 import type { Capture } from '@rockaway/react/testing';
+import type { OverBudget } from './budget.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 
 /**
@@ -28,6 +29,8 @@ export interface Runner {
   readonly plan: Plan;
   /** Tells the run which known failures a story put in play and used, so a stale one fails it. */
   readonly record: (use: KnownUse) => Promise<void>;
+  /** Tells the run a story's screens are over the paint budget, to be named at its end (0113). */
+  readonly paint: (over: OverBudget) => Promise<void>;
   /**
    * Resizes the frame the story runs in, in CSS pixels; with no size, back to
    * the project's own. A story that resizes puts it back before it ends, so
