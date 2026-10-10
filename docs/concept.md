@@ -156,7 +156,7 @@ A box only reads as a box if its lines meet, and a font's `│` is as tall as th
 font says, not as tall as the cell. Measured in the workbench (system mono,
 16px), it has 21px of ink at every line height:
 
-| density | cell | font `│` | |
+| density | cell | font `│` | what that leaves |
 | --- | --- | --- | --- |
 | dense | 16px | 21px | bleeds 3px into the row above and 2px into the row below |
 | normal | 24px | 21px | a 3px gap between rows |

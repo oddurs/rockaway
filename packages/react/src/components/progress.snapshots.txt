@@ -1,0 +1,11 @@
+── From empty to done
+Installing ░░░░░░░░░░░░░░░░   0%
+Installing ▌░░░░░░░░░░░░░░░   3%
+Installing █████▉░░░░░░░░░░  37%
+Installing █████████▉░░░░░░  62%
+Installing ████████████████ 100%
+── Indeterminate
+Resolving ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒     
+Resolving ████░░░░░░░░░░░░     
+Resolving ░░░░████░░░░░░░░     
+Resolving ░░░░░░░░░░░░████     

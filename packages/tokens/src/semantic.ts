@@ -61,12 +61,29 @@ export function semanticColors(): Group {
         ...p('surface'),
         $description: 'A raised surface. On a grid it is its border that raises it.',
       },
+      'surface-sunken': {
+        ...p('surface-sunken'),
+        $description: 'A layer below its neighbours: a well a panel sits in (0307).',
+      },
+      'surface-base': {
+        ...p('surface-base'),
+        $description: 'The ordinary panel layer (0307).',
+      },
+      'surface-raised': {
+        ...p('surface-raised'),
+        $description: 'A panel above the base layer (0307).',
+      },
+      'surface-overlay': {
+        ...p('surface-overlay'),
+        $description: 'The topmost layer: what floats above a panel (0307).',
+      },
       subtle: { ...p('subtle'), $description: 'Quiet element backgrounds: inputs, wells, code.' },
       hover: { ...p('hover'), $description: 'An element under the pointer.' },
       active: { ...p('active'), $description: 'An element being pressed, or selected.' },
       inverse: {
-        ...p('foreground'),
-        $description: 'Reverse video: the foreground becomes the ground.',
+        ...p('inverse'),
+        $description:
+          'Reverse video: the foreground becomes the ground. The foreground itself, unless the theme reverses to a colour.',
       },
       ...perIntent((intent) => ({
         solid: { ...p(intentSlot[intent].solid), $description: `Filled ${intent} backgrounds.` },
@@ -120,7 +137,11 @@ export function semanticColors(): Group {
         $description:
           'The edge of a resting surface. On a grid, a surface is its border, so it is border.default.',
       },
-      focus: { ...p('blue'), $description: 'The focus ring, and the cursor (0061).' },
+      focus: {
+        ...p('focus'),
+        $description:
+          'The focus ring, and the cursor (0061). The accent, unless the theme focuses in a colour of its own.',
+      },
       accent: p('blue'),
       info: p('cyan'),
       success: p('green'),
@@ -162,6 +183,7 @@ export type Contrast = (typeof contrasts)[number];
  * than with a third palette: the same slots, read differently.
  *
  *   - muted text and the dim attribute become the foreground
+ *   - reverse video is the foreground, in a theme that reverses to a colour
  *   - coloured text takes the bright slot, as a terminal's bold text does
  *   - a filled control is reverse video: a foreground ground, background text
  *   - every edge steps up a weight: subtle becomes the ordinary edge, the
@@ -175,6 +197,9 @@ export type Contrast = (typeof contrasts)[number];
 export const moreContrast: Readonly<Record<string, PaletteSlot>> = {
   'fg.muted': 'foreground',
   'fg.disabled': 'muted',
+  // Reverse video is the ink itself: a theme that reverses to a colour
+  // (sunset's coral) gives it up for the strongest ground it has.
+  'bg.inverse': 'foreground',
   ...Object.fromEntries(
     intents.flatMap((i) => [
       [`fg.${i}`, intentSlot[i].bright],

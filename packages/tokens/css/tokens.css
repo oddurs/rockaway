@@ -92,6 +92,11 @@
   inherits: true;
 }
 
+@property --rk-ansi-focus {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-ansi-foreground {
   syntax: '*';
   inherits: true;
@@ -103,6 +108,11 @@
 }
 
 @property --rk-ansi-hover {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-inverse {
   syntax: '*';
   inherits: true;
 }
@@ -133,6 +143,26 @@
 }
 
 @property --rk-ansi-surface {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-surface-base {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-surface-overlay {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-surface-raised {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-ansi-surface-sunken {
   syntax: '*';
   inherits: true;
 }
@@ -281,6 +311,26 @@
 }
 
 @property --rk-bg-surface {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-bg-surface-base {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-bg-surface-overlay {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-bg-surface-raised {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-bg-surface-sunken {
   syntax: '*';
   inherits: true;
 }
@@ -446,7 +496,7 @@
 @property --rk-font-content {
   syntax: '<number>';
   inherits: true;
-  initial-value: 1.36;
+  initial-value: 1.3;
 }
 
 @property --rk-font-family-display {
@@ -1053,6 +1103,46 @@
   inherits: true;
 }
 
+@property --rk-glyph-fill-1 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-2 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-4 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-5 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-6 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-7 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-fill-8 {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-key-alt {
   syntax: '*';
   inherits: true;
@@ -1223,6 +1313,11 @@
   inherits: true;
 }
 
+@property --rk-glyph-mark-separator {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-sort-ascending {
   syntax: '*';
   inherits: true;
@@ -1293,6 +1388,12 @@
   inherits: true;
 }
 
+@property --rk-motion-tick-reduced-refresh {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 5000ms;
+}
+
 @property --rk-motion-tick-blink {
   syntax: '<time>';
   inherits: true;
@@ -1303,6 +1404,12 @@
   syntax: '<time>';
   inherits: true;
   initial-value: 100ms;
+}
+
+@property --rk-motion-tick-refresh {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 1000ms;
 }
 
 @property --rk-motion-tick-spinner {
@@ -1461,6 +1568,12 @@
   initial-value: oklch(50.5% 0.0393 274.8);
 }
 
+@property --rk-palette-dark-focus {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(71.9% 0.1322 264.2);
+}
+
 @property --rk-palette-dark-foreground {
   syntax: '<color>';
   inherits: true;
@@ -1477,6 +1590,12 @@
   syntax: '<color>';
   inherits: true;
   initial-value: oklch(30.7% 0.0266 280.5);
+}
+
+@property --rk-palette-dark-inverse {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(84.6% 0.0611 274.8);
 }
 
 @property --rk-palette-dark-magenta {
@@ -1513,6 +1632,30 @@
   syntax: '<color>';
   inherits: true;
   initial-value: oklch(25.7% 0.0234 280.5);
+}
+
+@property --rk-palette-dark-surface-base {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(24.8% 0.0228 280.5);
+}
+
+@property --rk-palette-dark-surface-overlay {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(29.1% 0.0256 280.5);
+}
+
+@property --rk-palette-dark-surface-raised {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(26.9% 0.0242 280.5);
+}
+
+@property --rk-palette-dark-surface-sunken {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(22.6% 0.0214 280.5);
 }
 
 @property --rk-palette-dark-tint-blue {
@@ -1777,6 +1920,26 @@
   initial-value: oklch(73.3% 0.0741 264.1);
 }
 
+@property --rk-palette-light-focus {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-focus-srgb {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-focus-p3 {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-palette-light-focus-rec2020 {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-palette-light-foreground {
   syntax: '<color>';
   inherits: true;
@@ -1793,6 +1956,12 @@
   syntax: '<color>';
   inherits: true;
   initial-value: oklch(86.1% 0.0262 277.2);
+}
+
+@property --rk-palette-light-inverse {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(35.7% 0.1563 264.1);
 }
 
 @property --rk-palette-light-magenta {
@@ -1843,6 +2012,30 @@
   syntax: '<color>';
   inherits: true;
   initial-value: oklch(89.3% 0.0143 277.2);
+}
+
+@property --rk-palette-light-surface-base {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(88.5% 0.0173 277.2);
+}
+
+@property --rk-palette-light-surface-overlay {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(91.3% 0.0068 277.2);
+}
+
+@property --rk-palette-light-surface-raised {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(89.9% 0.012 277.2);
+}
+
+@property --rk-palette-light-surface-sunken {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: oklch(88.1% 0.0225 277.2);
 }
 
 @property --rk-palette-light-tint-blue {
@@ -2178,15 +2371,21 @@
     --rk-ansi-cursor: light-dark(var(--rk-palette-light-cursor), var(--rk-palette-dark-cursor));
     --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
     --rk-ansi-faint: light-dark(var(--rk-palette-light-faint), var(--rk-palette-dark-faint));
+    --rk-ansi-focus: light-dark(var(--rk-palette-light-focus), var(--rk-palette-dark-focus));
     --rk-ansi-foreground: light-dark(var(--rk-palette-light-foreground), var(--rk-palette-dark-foreground));
     --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
     --rk-ansi-hover: light-dark(var(--rk-palette-light-hover), var(--rk-palette-dark-hover));
+    --rk-ansi-inverse: light-dark(var(--rk-palette-light-inverse), var(--rk-palette-dark-inverse));
     --rk-ansi-magenta: light-dark(var(--rk-palette-light-magenta), var(--rk-palette-dark-magenta));
     --rk-ansi-muted: light-dark(var(--rk-palette-light-muted), var(--rk-palette-dark-muted));
     --rk-ansi-red: light-dark(var(--rk-palette-light-red), var(--rk-palette-dark-red));
     --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
     --rk-ansi-subtle: light-dark(var(--rk-palette-light-subtle), var(--rk-palette-dark-subtle));
     --rk-ansi-surface: light-dark(var(--rk-palette-light-surface), var(--rk-palette-dark-surface));
+    --rk-ansi-surface-base: light-dark(var(--rk-palette-light-surface-base), var(--rk-palette-dark-surface-base));
+    --rk-ansi-surface-overlay: light-dark(var(--rk-palette-light-surface-overlay), var(--rk-palette-dark-surface-overlay));
+    --rk-ansi-surface-raised: light-dark(var(--rk-palette-light-surface-raised), var(--rk-palette-dark-surface-raised));
+    --rk-ansi-surface-sunken: light-dark(var(--rk-palette-light-surface-sunken), var(--rk-palette-dark-surface-sunken));
     --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
     --rk-ansi-tint-cyan: light-dark(var(--rk-palette-light-tint-cyan), var(--rk-palette-dark-tint-cyan));
     --rk-ansi-tint-green: light-dark(var(--rk-palette-light-tint-green), var(--rk-palette-dark-tint-green));
@@ -2210,13 +2409,17 @@
     --rk-bg-info-solid: var(--rk-ansi-cyan);
     --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
     --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-    --rk-bg-inverse: var(--rk-ansi-foreground);
+    --rk-bg-inverse: var(--rk-ansi-inverse);
     --rk-bg-page: var(--rk-ansi-background);
     --rk-bg-subtle: var(--rk-ansi-subtle);
     --rk-bg-success-solid: var(--rk-ansi-green);
     --rk-bg-success-solid-hover: var(--rk-ansi-bright-green);
     --rk-bg-success-subtle: var(--rk-ansi-tint-green);
     --rk-bg-surface: var(--rk-ansi-surface);
+    --rk-bg-surface-base: var(--rk-ansi-surface-base);
+    --rk-bg-surface-overlay: var(--rk-ansi-surface-overlay);
+    --rk-bg-surface-raised: var(--rk-ansi-surface-raised);
+    --rk-bg-surface-sunken: var(--rk-ansi-surface-sunken);
     --rk-bg-warning-solid: var(--rk-ansi-yellow);
     --rk-bg-warning-solid-hover: var(--rk-ansi-bright-yellow);
     --rk-bg-warning-subtle: var(--rk-ansi-tint-yellow);
@@ -2224,7 +2427,7 @@
     --rk-border-control: var(--rk-ansi-border-strong);
     --rk-border-danger: var(--rk-ansi-red);
     --rk-border-default: var(--rk-ansi-border);
-    --rk-border-focus: var(--rk-ansi-blue);
+    --rk-border-focus: var(--rk-ansi-focus);
     --rk-border-info: var(--rk-ansi-cyan);
     --rk-border-subtle: var(--rk-ansi-border-subtle);
     --rk-border-success: var(--rk-ansi-green);
@@ -2250,9 +2453,9 @@
     --rk-focus-offset: 2px;
     --rk-focus-width: 2px;
     /* The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296). */
-    --rk-font-content: 1.36;
-    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
-    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-content: 1.3;
+    --rk-font-family-display: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
     --rk-font-weight-medium: 500;
     --rk-font-weight-regular: 400;
@@ -2371,6 +2574,14 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-fill-1: "▏";
+    --rk-glyph-fill-2: "▎";
+    --rk-glyph-fill-3: "▍";
+    --rk-glyph-fill-4: "▌";
+    --rk-glyph-fill-5: "▋";
+    --rk-glyph-fill-6: "▊";
+    --rk-glyph-fill-7: "▉";
+    --rk-glyph-fill-8: "█";
     --rk-glyph-key-alt: "⌥";
     --rk-glyph-key-backspace: "⌫";
     --rk-glyph-key-ctrl: "⌃";
@@ -2405,6 +2616,7 @@
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-separator: "›";
     --rk-glyph-mark-sort-ascending: "▴";
     --rk-glyph-mark-sort-descending: "▾";
     --rk-glyph-mark-switch-thumb: "●";
@@ -2421,6 +2633,8 @@
     --rk-glyph-spinner-10: "⠏";
     --rk-motion-tick-blink: 500ms;
     --rk-motion-tick-progress: 100ms;
+    --rk-motion-tick-reduced-refresh: 5000ms;
+    --rk-motion-tick-refresh: 1000ms;
     --rk-motion-tick-spinner: 80ms;
     --rk-palette-dark-active: oklch(29.5% 0.006 262);
     --rk-palette-dark-background: oklch(16.5% 0.0048 262);
@@ -2440,15 +2654,21 @@
     --rk-palette-dark-cursor: oklch(66% 0.16 262);
     --rk-palette-dark-cyan: oklch(66.9% 0.1138 201.2);
     --rk-palette-dark-faint: oklch(46% 0.006 262);
+    --rk-palette-dark-focus: oklch(66% 0.16 262);
     --rk-palette-dark-foreground: oklch(94% 0.0029 262);
     --rk-palette-dark-green: oklch(66% 0.16 150);
     --rk-palette-dark-hover: oklch(27% 0.006 262);
+    --rk-palette-dark-inverse: oklch(94% 0.0029 262);
     --rk-palette-dark-magenta: oklch(66% 0.16 320);
     --rk-palette-dark-muted: oklch(74% 0.006 262);
     --rk-palette-dark-red: oklch(66% 0.16 27);
     --rk-palette-dark-selection: oklch(26% 0.045 262);
     --rk-palette-dark-subtle: oklch(24.5% 0.0059 262);
     --rk-palette-dark-surface: oklch(20.5% 0.0054 262);
+    --rk-palette-dark-surface-base: oklch(20% 0.0053 262);
+    --rk-palette-dark-surface-overlay: oklch(25% 0.006 262);
+    --rk-palette-dark-surface-raised: oklch(22.5% 0.0057 262);
+    --rk-palette-dark-surface-sunken: oklch(17.5% 0.005 262);
     --rk-palette-dark-tint-blue: oklch(26% 0.045 262);
     --rk-palette-dark-tint-cyan: oklch(26.04% 0.0443 200.1);
     --rk-palette-dark-tint-green: oklch(26% 0.045 150);
@@ -2474,15 +2694,21 @@
     --rk-palette-light-cursor: oklch(52% 0.16 262);
     --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
     --rk-palette-light-faint: oklch(68% 0.006 262);
+    --rk-palette-light-focus: oklch(52% 0.16 262);
     --rk-palette-light-foreground: oklch(21% 0.0055 262);
     --rk-palette-light-green: oklch(52.03% 0.152 147.6);
     --rk-palette-light-hover: oklch(93.5% 0.003 262);
+    --rk-palette-light-inverse: oklch(21% 0.0055 262);
     --rk-palette-light-magenta: oklch(52% 0.16 320);
     --rk-palette-light-muted: oklch(47% 0.006 262);
     --rk-palette-light-red: oklch(52% 0.16 27);
     --rk-palette-light-selection: oklch(94.54% 0.0278 246);
     --rk-palette-light-subtle: oklch(95.8% 0.0025 262);
     --rk-palette-light-surface: oklch(100% 0 262);
+    --rk-palette-light-surface-base: oklch(97.4% 0.0021 262);
+    --rk-palette-light-surface-overlay: oklch(100% 0 262);
+    --rk-palette-light-surface-raised: oklch(98.7% 0.0018 262);
+    --rk-palette-light-surface-sunken: oklch(96.2% 0.0024 262);
     --rk-palette-light-tint-blue: oklch(94.54% 0.0278 246);
     --rk-palette-light-tint-cyan: oklch(95% 0.045 200);
     --rk-palette-light-tint-green: oklch(95% 0.045 150);
@@ -2685,15 +2911,21 @@
     --rk-ansi-cursor: light-dark(var(--rk-palette-light-cursor), var(--rk-palette-dark-cursor));
     --rk-ansi-cyan: light-dark(var(--rk-palette-light-cyan), var(--rk-palette-dark-cyan));
     --rk-ansi-faint: light-dark(var(--rk-palette-light-faint), var(--rk-palette-dark-faint));
+    --rk-ansi-focus: light-dark(var(--rk-palette-light-focus), var(--rk-palette-dark-focus));
     --rk-ansi-foreground: light-dark(var(--rk-palette-light-foreground), var(--rk-palette-dark-foreground));
     --rk-ansi-green: light-dark(var(--rk-palette-light-green), var(--rk-palette-dark-green));
     --rk-ansi-hover: light-dark(var(--rk-palette-light-hover), var(--rk-palette-dark-hover));
+    --rk-ansi-inverse: light-dark(var(--rk-palette-light-inverse), var(--rk-palette-dark-inverse));
     --rk-ansi-magenta: light-dark(var(--rk-palette-light-magenta), var(--rk-palette-dark-magenta));
     --rk-ansi-muted: light-dark(var(--rk-palette-light-muted), var(--rk-palette-dark-muted));
     --rk-ansi-red: light-dark(var(--rk-palette-light-red), var(--rk-palette-dark-red));
     --rk-ansi-selection: light-dark(var(--rk-palette-light-selection), var(--rk-palette-dark-selection));
     --rk-ansi-subtle: light-dark(var(--rk-palette-light-subtle), var(--rk-palette-dark-subtle));
     --rk-ansi-surface: light-dark(var(--rk-palette-light-surface), var(--rk-palette-dark-surface));
+    --rk-ansi-surface-base: light-dark(var(--rk-palette-light-surface-base), var(--rk-palette-dark-surface-base));
+    --rk-ansi-surface-overlay: light-dark(var(--rk-palette-light-surface-overlay), var(--rk-palette-dark-surface-overlay));
+    --rk-ansi-surface-raised: light-dark(var(--rk-palette-light-surface-raised), var(--rk-palette-dark-surface-raised));
+    --rk-ansi-surface-sunken: light-dark(var(--rk-palette-light-surface-sunken), var(--rk-palette-dark-surface-sunken));
     --rk-ansi-tint-blue: light-dark(var(--rk-palette-light-tint-blue), var(--rk-palette-dark-tint-blue));
     --rk-ansi-tint-cyan: light-dark(var(--rk-palette-light-tint-cyan), var(--rk-palette-dark-tint-cyan));
     --rk-ansi-tint-green: light-dark(var(--rk-palette-light-tint-green), var(--rk-palette-dark-tint-green));
@@ -2713,13 +2945,17 @@
     --rk-bg-info-solid: var(--rk-ansi-cyan);
     --rk-bg-info-solid-hover: var(--rk-ansi-bright-cyan);
     --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-    --rk-bg-inverse: var(--rk-ansi-foreground);
+    --rk-bg-inverse: var(--rk-ansi-inverse);
     --rk-bg-page: var(--rk-ansi-background);
     --rk-bg-subtle: var(--rk-ansi-subtle);
     --rk-bg-success-solid: var(--rk-ansi-green);
     --rk-bg-success-solid-hover: var(--rk-ansi-bright-green);
     --rk-bg-success-subtle: var(--rk-ansi-tint-green);
     --rk-bg-surface: var(--rk-ansi-surface);
+    --rk-bg-surface-base: var(--rk-ansi-surface-base);
+    --rk-bg-surface-overlay: var(--rk-ansi-surface-overlay);
+    --rk-bg-surface-raised: var(--rk-ansi-surface-raised);
+    --rk-bg-surface-sunken: var(--rk-ansi-surface-sunken);
     --rk-bg-warning-solid: var(--rk-ansi-yellow);
     --rk-bg-warning-solid-hover: var(--rk-ansi-bright-yellow);
     --rk-bg-warning-subtle: var(--rk-ansi-tint-yellow);
@@ -2727,7 +2963,7 @@
     --rk-border-control: var(--rk-ansi-border-strong);
     --rk-border-danger: var(--rk-ansi-red);
     --rk-border-default: var(--rk-ansi-border);
-    --rk-border-focus: var(--rk-ansi-blue);
+    --rk-border-focus: var(--rk-ansi-focus);
     --rk-border-info: var(--rk-ansi-cyan);
     --rk-border-subtle: var(--rk-ansi-border-subtle);
     --rk-border-success: var(--rk-ansi-green);
@@ -2796,7 +3032,7 @@
     --rk-bg-info-solid-hover: var(--rk-ansi-foreground);
     /* Tinted info backgrounds: callouts, rows. */
     --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-    /* Reverse video: the foreground becomes the ground. */
+    /* Reverse video: the foreground becomes the ground. The foreground itself, unless the theme reverses to a colour. */
     --rk-bg-inverse: var(--rk-ansi-foreground);
     /* The page behind everything: the terminal background. */
     --rk-bg-page: var(--rk-ansi-background);
@@ -2809,6 +3045,14 @@
     --rk-bg-success-subtle: var(--rk-ansi-tint-green);
     /* A raised surface. On a grid it is its border that raises it. */
     --rk-bg-surface: var(--rk-ansi-surface);
+    /* The ordinary panel layer (0307). */
+    --rk-bg-surface-base: var(--rk-ansi-surface-base);
+    /* The topmost layer: what floats above a panel (0307). */
+    --rk-bg-surface-overlay: var(--rk-ansi-surface-overlay);
+    /* A panel above the base layer (0307). */
+    --rk-bg-surface-raised: var(--rk-ansi-surface-raised);
+    /* A layer below its neighbours: a well a panel sits in (0307). */
+    --rk-bg-surface-sunken: var(--rk-ansi-surface-sunken);
     /* Filled warning backgrounds. */
     --rk-bg-warning-solid: var(--rk-ansi-foreground);
     --rk-bg-warning-solid-hover: var(--rk-ansi-foreground);
@@ -2820,8 +3064,8 @@
     --rk-border-danger: var(--rk-ansi-red);
     /* The ordinary edge: frames, dividers, tables. A boundary a reader can see, at least 3:1 against every ground it is drawn on (WCAG 1.4.11, cairn 0178). */
     --rk-border-default: var(--rk-ansi-border-strong);
-    /* The focus ring, and the cursor (0061). */
-    --rk-border-focus: var(--rk-ansi-blue);
+    /* The focus ring, and the cursor (0061). The accent, unless the theme focuses in a colour of its own. */
+    --rk-border-focus: var(--rk-ansi-focus);
     --rk-border-info: var(--rk-ansi-cyan);
     /* Decorative separation only, below 3:1: a rule inside a surface that something else already bounds. Never the only edge of anything (cairn 0178). */
     --rk-border-subtle: var(--rk-ansi-border);
@@ -2910,7 +3154,7 @@
       --rk-bg-info-solid-hover: var(--rk-ansi-foreground);
       /* Tinted info backgrounds: callouts, rows. */
       --rk-bg-info-subtle: var(--rk-ansi-tint-cyan);
-      /* Reverse video: the foreground becomes the ground. */
+      /* Reverse video: the foreground becomes the ground. The foreground itself, unless the theme reverses to a colour. */
       --rk-bg-inverse: var(--rk-ansi-foreground);
       /* The page behind everything: the terminal background. */
       --rk-bg-page: var(--rk-ansi-background);
@@ -2923,6 +3167,14 @@
       --rk-bg-success-subtle: var(--rk-ansi-tint-green);
       /* A raised surface. On a grid it is its border that raises it. */
       --rk-bg-surface: var(--rk-ansi-surface);
+      /* The ordinary panel layer (0307). */
+      --rk-bg-surface-base: var(--rk-ansi-surface-base);
+      /* The topmost layer: what floats above a panel (0307). */
+      --rk-bg-surface-overlay: var(--rk-ansi-surface-overlay);
+      /* A panel above the base layer (0307). */
+      --rk-bg-surface-raised: var(--rk-ansi-surface-raised);
+      /* A layer below its neighbours: a well a panel sits in (0307). */
+      --rk-bg-surface-sunken: var(--rk-ansi-surface-sunken);
       /* Filled warning backgrounds. */
       --rk-bg-warning-solid: var(--rk-ansi-foreground);
       --rk-bg-warning-solid-hover: var(--rk-ansi-foreground);
@@ -2934,8 +3186,8 @@
       --rk-border-danger: var(--rk-ansi-red);
       /* The ordinary edge: frames, dividers, tables. A boundary a reader can see, at least 3:1 against every ground it is drawn on (WCAG 1.4.11, cairn 0178). */
       --rk-border-default: var(--rk-ansi-border-strong);
-      /* The focus ring, and the cursor (0061). */
-      --rk-border-focus: var(--rk-ansi-blue);
+      /* The focus ring, and the cursor (0061). The accent, unless the theme focuses in a colour of its own. */
+      --rk-border-focus: var(--rk-ansi-focus);
       --rk-border-info: var(--rk-ansi-cyan);
       /* Decorative separation only, below 3:1: a rule inside a surface that something else already bounds. Never the only edge of anything (cairn 0178). */
       --rk-border-subtle: var(--rk-ansi-border);
@@ -3005,9 +3257,9 @@
     /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
     --rk-conformance: standard;
     /* The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296). */
-    --rk-font-content: 1.36;
-    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
-    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-content: 1.3;
+    --rk-font-family-display: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
     --rk-font-weight-medium: 500;
     --rk-font-weight-regular: 400;
@@ -3126,6 +3378,14 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-fill-1: "▏";
+    --rk-glyph-fill-2: "▎";
+    --rk-glyph-fill-3: "▍";
+    --rk-glyph-fill-4: "▌";
+    --rk-glyph-fill-5: "▋";
+    --rk-glyph-fill-6: "▊";
+    --rk-glyph-fill-7: "▉";
+    --rk-glyph-fill-8: "█";
     --rk-glyph-key-alt: "⌥";
     --rk-glyph-key-backspace: "⌫";
     --rk-glyph-key-ctrl: "⌃";
@@ -3160,6 +3420,7 @@
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-separator: "›";
     --rk-glyph-mark-sort-ascending: "▴";
     --rk-glyph-mark-sort-descending: "▾";
     --rk-glyph-mark-switch-thumb: "●";
@@ -3192,15 +3453,21 @@
     --rk-palette-dark-cursor: oklch(66% 0.16 262);
     --rk-palette-dark-cyan: oklch(66.9% 0.1138 201.2);
     --rk-palette-dark-faint: oklch(46% 0.006 262);
+    --rk-palette-dark-focus: oklch(66% 0.16 262);
     --rk-palette-dark-foreground: oklch(94% 0.0029 262);
     --rk-palette-dark-green: oklch(66% 0.16 150);
     --rk-palette-dark-hover: oklch(27% 0.006 262);
+    --rk-palette-dark-inverse: oklch(94% 0.0029 262);
     --rk-palette-dark-magenta: oklch(66% 0.16 320);
     --rk-palette-dark-muted: oklch(74% 0.006 262);
     --rk-palette-dark-red: oklch(66% 0.16 27);
     --rk-palette-dark-selection: oklch(26% 0.045 262);
     --rk-palette-dark-subtle: oklch(24.5% 0.0059 262);
     --rk-palette-dark-surface: oklch(20.5% 0.0054 262);
+    --rk-palette-dark-surface-base: oklch(20% 0.0053 262);
+    --rk-palette-dark-surface-overlay: oklch(25% 0.006 262);
+    --rk-palette-dark-surface-raised: oklch(22.5% 0.0057 262);
+    --rk-palette-dark-surface-sunken: oklch(17.5% 0.005 262);
     --rk-palette-dark-tint-blue: oklch(26% 0.045 262);
     --rk-palette-dark-tint-cyan: oklch(26.04% 0.0443 200.1);
     --rk-palette-dark-tint-green: oklch(26% 0.045 150);
@@ -3226,15 +3493,21 @@
     --rk-palette-light-cursor: oklch(52% 0.16 262);
     --rk-palette-light-cyan: oklch(50.39% 0.0857 201.6);
     --rk-palette-light-faint: oklch(68% 0.006 262);
+    --rk-palette-light-focus: oklch(52% 0.16 262);
     --rk-palette-light-foreground: oklch(21% 0.0055 262);
     --rk-palette-light-green: oklch(52.03% 0.152 147.6);
     --rk-palette-light-hover: oklch(93.5% 0.003 262);
+    --rk-palette-light-inverse: oklch(21% 0.0055 262);
     --rk-palette-light-magenta: oklch(52% 0.16 320);
     --rk-palette-light-muted: oklch(47% 0.006 262);
     --rk-palette-light-red: oklch(52% 0.16 27);
     --rk-palette-light-selection: oklch(94.54% 0.0278 246);
     --rk-palette-light-subtle: oklch(95.8% 0.0025 262);
     --rk-palette-light-surface: oklch(100% 0 262);
+    --rk-palette-light-surface-base: oklch(97.4% 0.0021 262);
+    --rk-palette-light-surface-overlay: oklch(100% 0 262);
+    --rk-palette-light-surface-raised: oklch(98.7% 0.0018 262);
+    --rk-palette-light-surface-sunken: oklch(96.2% 0.0024 262);
     --rk-palette-light-tint-blue: oklch(94.54% 0.0278 246);
     --rk-palette-light-tint-cyan: oklch(95% 0.045 200);
     --rk-palette-light-tint-green: oklch(95% 0.045 150);
@@ -3530,6 +3803,7 @@
   [data-rk-theme='ink'] [data-rk-theme-only]:not([data-rk-theme-only~='ink']):not([data-rk-theme='ink'] [data-rk-theme] *),
   [data-rk-theme='phosphor'] [data-rk-theme-only]:not([data-rk-theme-only~='phosphor']):not([data-rk-theme='phosphor'] [data-rk-theme] *),
   [data-rk-theme='ascii'] [data-rk-theme-only]:not([data-rk-theme-only~='ascii']):not([data-rk-theme='ascii'] [data-rk-theme] *),
+  [data-rk-theme='sunset'] [data-rk-theme-only]:not([data-rk-theme-only~='sunset']):not([data-rk-theme='sunset'] [data-rk-theme] *),
   [data-rk-theme='catppuccin'] [data-rk-theme-only]:not([data-rk-theme-only~='catppuccin']):not([data-rk-theme='catppuccin'] [data-rk-theme] *),
   [data-rk-theme='dracula'] [data-rk-theme-only]:not([data-rk-theme-only~='dracula']):not([data-rk-theme='dracula'] [data-rk-theme] *),
   [data-rk-theme='nord'] [data-rk-theme-only]:not([data-rk-theme-only~='nord']):not([data-rk-theme='nord'] [data-rk-theme] *),

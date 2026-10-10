@@ -5,6 +5,7 @@
  * regenerate. A test fails when this is stale.
  */
 import { badgeMeta } from '../components/badge.meta.ts';
+import { breadcrumbsMeta } from '../components/breadcrumbs.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
 import { cardMeta } from '../components/card.meta.ts';
@@ -16,24 +17,35 @@ import { fieldsetMeta } from '../components/fieldset.meta.ts';
 import { frameMeta } from '../components/frame.meta.ts';
 import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { keymapMeta } from '../components/keymap.meta.ts';
+import { linkTreeMeta } from '../components/link-tree.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
 import { menuMeta } from '../components/menu.meta.ts';
+import { meterMeta } from '../components/meter.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
 import { panesMeta } from '../components/panes.meta.ts';
 import { pictureMeta } from '../components/picture.meta.ts';
 import { popoverMeta } from '../components/popover.meta.ts';
+import { progressBarMeta } from '../components/progress.meta.ts';
+import { radioGroupMeta } from '../components/radio-group.meta.ts';
 import { selectMeta } from '../components/select.meta.ts';
+import { skipLinkMeta } from '../components/skip-link.meta.ts';
+import { sparklineMeta } from '../components/sparkline.meta.ts';
+import { spinnerMeta } from '../components/spinner.meta.ts';
+import { statusBarMeta } from '../components/status-bar.meta.ts';
 import { switchMeta } from '../components/switch.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
+import { tabsMeta } from '../components/tabs.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
 import { textMeta } from '../components/text.meta.ts';
+import { toolbarMeta } from '../components/toolbar.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import type { ComponentMetaInput } from './schema.ts';
 
 /** Every component's metadata, by the file it is written in. */
 export const registry: readonly { readonly file: string; readonly meta: ComponentMetaInput }[] = [
   { file: 'badge', meta: badgeMeta },
+  { file: 'breadcrumbs', meta: breadcrumbsMeta },
   { file: 'button', meta: buttonMeta },
   { file: 'callout', meta: calloutMeta },
   { file: 'card', meta: cardMeta },
@@ -45,17 +57,27 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'frame', meta: frameMeta },
   { file: 'key-hint', meta: keyHintMeta },
   { file: 'keymap', meta: keymapMeta },
+  { file: 'link-tree', meta: linkTreeMeta },
   { file: 'link', meta: linkMeta },
   { file: 'list', meta: listMeta },
   { file: 'menu', meta: menuMeta },
+  { file: 'meter', meta: meterMeta },
   { file: 'overlay', meta: overlayMeta },
   { file: 'panes', meta: panesMeta },
   { file: 'picture', meta: pictureMeta },
   { file: 'popover', meta: popoverMeta },
+  { file: 'progress', meta: progressBarMeta },
+  { file: 'radio-group', meta: radioGroupMeta },
   { file: 'select', meta: selectMeta },
+  { file: 'skip-link', meta: skipLinkMeta },
+  { file: 'sparkline', meta: sparklineMeta },
+  { file: 'spinner', meta: spinnerMeta },
+  { file: 'status-bar', meta: statusBarMeta },
   { file: 'switch', meta: switchMeta },
   { file: 'table', meta: tableMeta },
+  { file: 'tabs', meta: tabsMeta },
   { file: 'text-field', meta: textFieldMeta },
   { file: 'text', meta: textMeta },
+  { file: 'toolbar', meta: toolbarMeta },
   { file: 'tree', meta: treeMeta },
 ];

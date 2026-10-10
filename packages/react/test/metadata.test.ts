@@ -62,8 +62,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     "React Aria's menu trigger, re-exported beside Menu so it is the instance Menu's popover reads, and so copied-in code can open a menu. It draws nothing, and is documented in Menu's notes.",
   SubmenuTrigger:
     "React Aria's submenu trigger, re-exported beside Menu for the same reasons as MenuTrigger. It draws nothing, and is documented in Menu's notes.",
-  Chrome:
-    "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
+  Cells:
+    "A painted layer: a buffer's cells as elements, which Screen's chrome, List's scrollbar and Tree's guides render. Part of the cell renderer, documented with the grid.",
 };
 
 /** A component rendered once, as small as it can be. */
@@ -99,6 +99,8 @@ const fileOf = (name: string): string => {
 const IMPLICIT: Readonly<Record<string, RegExp>> = {
   button: /<button[\s>]/,
   link: /<a [^>]*href=/,
+  list: /<ul[\s>]/,
+  radio: /<input [^>]*type="radio"/,
 };
 
 const FOCUSABLE = /<(?:button|input|select|textarea)[\s>]|<a [^>]*href=|tabindex="0"/;

@@ -8,6 +8,7 @@ import {
   borderSetNames,
   borderSets,
   delimiters,
+  fills,
   type Glyphs,
   glyphs,
   glyphsFor,
@@ -119,6 +120,16 @@ describe('glyphs', () => {
     }
   });
 
+  test('the fill has eight steps across a cell, ending full, and Unicode’s are drawn by the cell', () => {
+    for (const r of repertoires) {
+      expect(fills[r], r).toHaveLength(8);
+      expect(fills[r].at(-1), r).toBe(blocks[r].full);
+    }
+    // Each Unicode step is a block the cell draws, one eighth wider than the last.
+    for (const ch of fills.unicode) expect(shapeOf(ch)?.kind, ch).toBe('block');
+    expect(new Set(fills.unicode).size).toBe(8);
+  });
+
   test('key legends are symbols of one cell in Unicode, and words in ASCII', () => {
     for (const r of repertoires) expect(Object.keys(keyLegends[r]), r).toEqual([...keyNames]);
     for (const legend of Object.values(keyLegends.ascii)) expect(legend).toMatch(/^[A-Z][a-z]+$/i);
@@ -212,6 +223,7 @@ function everyCharacter(g: Glyphs): string[] {
     ...Object.values(g.mark),
     ...Object.values(g.block),
     ...g.bar,
+    ...g.fill,
     ...g.spinner,
     ...Object.values(g.delimiter).flat(),
     ...Object.values(g.key).flatMap((legend) => [...legend]),
@@ -231,6 +243,7 @@ function expectedTokens(g: Glyphs): Map<string, string> {
   const numbered = (frames: readonly string[]): [string, string][] =>
     frames.map((ch, i) => [String(i + 1), ch]);
   put('bar', numbered(g.bar));
+  put('fill', numbered(g.fill));
   put('spinner', numbered(g.spinner));
   for (const [name, [open, close]] of Object.entries(g.delimiter)) {
     out.set(`glyph.delimiter.${name}.open`, open);

@@ -1,0 +1,82 @@
+/*
+ * LinkTree (cairn 0104).
+ *
+ * Tree's rows, as a list of links: the cursor's cell, the guides, the expand
+ * cell, a cell of air and the label, every one a whole cell, so a row is
+ * indented in whole cells and nothing here sets an indent.
+ *
+ * Nothing here needs a script. The cursor mark is drawn on the row whose link
+ * has keyboard focus, by `:focus-visible`; the row you are on is reverse
+ * video, by `aria-current`, as Tree draws a selected row.
+ */
+@layer rk.components {
+  .rk-link-tree,
+  .rk-link-tree-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rk-link-tree {
+    /* Whole cells across, so a row's ground ends on a cell. */
+    inline-size: round(down, 100%, var(--rk-cell-width));
+    color: var(--rk-fg-default);
+  }
+
+  .rk-link-tree-row {
+    display: flex;
+    align-items: center;
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+  }
+
+  /* The reserved cells: cursor, expand, air. */
+  .rk-link-tree-mark {
+    inline-size: var(--rk-cell-width);
+    block-size: var(--rk-cell-height);
+    flex: none;
+  }
+
+  .rk-link-tree-guides {
+    display: inline-flex;
+    flex: none;
+    color: var(--rk-fg-muted);
+  }
+
+  .rk-link-tree-link {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .rk-link-tree-link:hover {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* The cursor: the theme's mark in the first cell of the row the keyboard is on. */
+  .rk-link-tree-row:has(> .rk-link-tree-link:focus-visible) > .rk-link-tree-cursor::before {
+    content: var(--rk-glyph-mark-cursor) / "";
+  }
+
+  /* Current: reverse video, as Tree draws a selected row, guides and all. */
+  .rk-link-tree-row:has(> .rk-link-tree-link[aria-current]) {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-surface);
+  }
+
+  .rk-link-tree-row:has(> .rk-link-tree-link[aria-current]) > .rk-link-tree-guides {
+    color: inherit;
+  }
+
+  @media (forced-colors: active) {
+    /* Out of the backplate, which would hide canvas-coloured words (0181). */
+    .rk-link-tree-row:has(> .rk-link-tree-link[aria-current]) {
+      forced-color-adjust: none;
+      /* A shape in it, a guide, is inked in the reversed figure (screen.css, 0236). */
+      --rk-forced-ink: Canvas;
+    }
+  }
+}

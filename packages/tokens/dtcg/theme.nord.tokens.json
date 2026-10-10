@@ -1,5 +1,5 @@
 {
-  "$description": "Nord (cairn 0052). Imported from https://github.com/nordtheme/alacritty under MIT (Copyright (c) 2016-present Sven Greb). Fitted to the contrast gate: dark foreground: #d8dee9 → #e5ebf6 (for fg.default on bg.hover); dark muted: #a1a7b3 → #b8bfcb (for fg.muted on bg.subtle); dark blue: #81a1c1 → #90b1d1 (for fg.accent on bg.surface); dark red: #bf616a → #f49098 (for fg.danger on bg.page); dark bright-red: #bf616a → #ffd5d7 (for fg.on-danger on bg.danger.solid-hover); dark border: #757b87 → #858c98 (for border.default on bg.page); dark magenta: #b48ead → #c9a2c2 (for syntax.keyword on bg.surface); dark bright-blue: #81a1c1 → #b9dbfc (for fg.accent on bg.page, in more contrast); dark bright-cyan: #8fbcbb → #b6e5e3 (for fg.info on bg.page, in more contrast); dark bright-green: #a3be8c → #c7e3b0 (for fg.success on bg.page, in more contrast); dark bright-yellow: #ebcb8b → #fddd9c (for fg.warning on bg.warning.subtle, in more contrast); dark bright-magenta: #b48ead → #f4cbec (for syntax.keyword on bg.surface, in more contrast).",
+  "$description": "Nord (cairn 0052). Imported from https://github.com/nordtheme/alacritty under MIT (Copyright (c) 2016-present Sven Greb). Fitted to the contrast gate: dark foreground: #d8dee9 → #e5ebf6 (for fg.default on bg.hover); dark muted: #a1a7b3 → #b8bfcb (for fg.muted on bg.subtle); dark blue: #81a1c1 → #90b1d1 (for fg.accent on bg.surface); dark red: #bf616a → #f49098 (for fg.danger on bg.page); dark bright-red: #bf616a → #ffd5d7 (for fg.on-danger on bg.danger.solid-hover); dark border: #757b87 → #858c98 (for border.default on bg.page); dark magenta: #b48ead → #c9a2c2 (for syntax.keyword on bg.surface); dark bright-blue: #81a1c1 → #b9dbfc (for fg.accent on bg.page, in more contrast); dark bright-cyan: #8fbcbb → #b6e5e3 (for fg.info on bg.page, in more contrast); dark bright-green: #a3be8c → #c7e3b0 (for fg.success on bg.page, in more contrast); dark bright-yellow: #ebcb8b → #fddd9c (for fg.warning on bg.warning.subtle, in more contrast); dark bright-magenta: #b48ead → #f4cbec (for syntax.keyword on bg.surface, in more contrast); dark surface-overlay: #3d4450 → #3b414d (for fg.accent on bg.surface-overlay).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "imported",
@@ -193,6 +193,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.324,
+            0.0229,
+            264.2
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.344,
+            0.0227,
+            264.2
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.364,
+            0.0224,
+            264.2
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.374,
+            0.0222,
+            264.2
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -300,6 +340,26 @@
             0.452,
             0.0352,
             264.1
+          ]
+        }
+      },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.747,
+            0.0591,
+            248.7
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.939,
+            0.0164,
+            262.7
           ]
         }
       },
@@ -536,6 +596,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.324,
+            0.0229,
+            264.2
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.344,
+            0.0227,
+            264.2
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.364,
+            0.0224,
+            264.2
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.374,
+            0.0222,
+            264.2
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -646,6 +746,26 @@
           ]
         }
       },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.747,
+            0.0591,
+            248.7
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.939,
+            0.0164,
+            262.7
+          ]
+        }
+      },
       "tint-blue": {
         "$value": {
           "colorSpace": "oklch",
@@ -704,6 +824,7 @@
       "$type": "fontFamily",
       "mono": {
         "$value": [
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "SF Mono",
@@ -715,6 +836,7 @@
       },
       "display": {
         "$value": [
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "SF Mono",
@@ -743,7 +865,7 @@
     "content": {
       "$type": "number",
       "$description": "The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296).",
-      "$value": 1.36
+      "$value": 1.3
     }
   },
   "glyph": {
@@ -1133,6 +1255,9 @@
       },
       "external": {
         "$value": "↗"
+      },
+      "separator": {
+        "$value": "›"
       }
     },
     "block": {
@@ -1173,6 +1298,32 @@
       },
       "7": {
         "$value": "▇"
+      },
+      "8": {
+        "$value": "█"
+      }
+    },
+    "fill": {
+      "1": {
+        "$value": "▏"
+      },
+      "2": {
+        "$value": "▎"
+      },
+      "3": {
+        "$value": "▍"
+      },
+      "4": {
+        "$value": "▌"
+      },
+      "5": {
+        "$value": "▋"
+      },
+      "6": {
+        "$value": "▊"
+      },
+      "7": {
+        "$value": "▉"
       },
       "8": {
         "$value": "█"

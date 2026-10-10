@@ -154,6 +154,9 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
       if (text.trim() === '') continue;
       const parent = node.parentElement;
       if (!parent || parent.closest('.rk-frame')) continue;
+      // Hidden is seen by no one, a folded toolbar command or a probe alike.
+      // Visibility inherits, so the parent's answer is its ancestors' too.
+      if (getComputedStyle(parent).visibility !== 'visible') continue;
 
       const clip = clipOf(parent);
       // Seen by no one: not written, and not in the legend either.

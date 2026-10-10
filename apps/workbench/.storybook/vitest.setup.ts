@@ -1,6 +1,7 @@
-import { afterEach, beforeEach, inject } from 'vitest';
+import { afterEach, beforeAll, beforeEach, inject } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
 import type { OverBudget } from './budget.ts';
+import type { Platform } from './known.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
 
@@ -24,6 +25,8 @@ declare module 'vitest/browser' {
 declare module 'vitest' {
   interface ProvidedContext {
     plan: Plan;
+    project: string;
+    platform: Platform;
     /** Milliseconds a test may run before the page is taken to have stopped answering. */
     watchdog: number;
   }
@@ -49,6 +52,8 @@ setRunner({
   withoutScripts: (html) => commands.readWithoutScripts(html),
   // Each project says what it walks; see `vitest.config.ts`.
   plan: inject('plan'),
+  project: inject('project'),
+  platform: inject('platform'),
   record: (use) => commands.recordKnown(use),
   wheel: (selector, deltaY) => commands.wheel(selector, deltaY),
   // The provider's keyboard: trusted events, as a reader's keys are.
@@ -71,6 +76,24 @@ setRunner({
  * stopped answering.
  */
 const watchdog = inject('watchdog');
+
+/**
+ * The default face is a web font (IBM Plex Mono), which arrives after the
+ * first paint. A story that measured a cell before then would measure the
+ * fallback's advance (Menlo's is 0.602em, not 0.6) and then find every word
+ * off the grid. So every face the stories draw with is loaded before any of
+ * them runs: the four weights, the true italics, and the symbol face that
+ * gives the marks and key glyphs Plex lacks the same advance.
+ */
+beforeAll(async () => {
+  // With a check mark and a ⌘ in the text, so the symbol face loads too.
+  await Promise.all(
+    ['400', '500', '600', '700', 'italic 400', 'italic 700'].map((face) =>
+      document.fonts.load(`${face} 1em "IBM Plex Mono"`, '0✓⌘'),
+    ),
+  );
+});
+
 beforeEach(async () => {
   await commands.watchdog(watchdog);
 });
