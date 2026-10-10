@@ -172,7 +172,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0257`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0257-line-a-form-up-at-exactly-the-sixty-cell-threshold-in-every-engine.md) Line a form up at exactly the sixty-cell threshold in every engine <sup>bug · css · p2</sup>
 - [ ] [`0259`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0259-draw-site-navigation-as-a-static-tree-of-links.md) Draw site navigation as a static tree of links <sup>component · components · p2</sup>
 - [ ] [`0268`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0268-read-what-a-pseudo-element-draws-when-copying-a-screen.md) Read what a pseudo-element draws when copying a screen <sup>feature · tooling · p3</sup>
-- [ ] [`0269`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0269-walk-keyboard-stories-with-the-browser-s-real-keys.md) Walk keyboard stories with the browser's real keys <sup>chore · tooling · p2</sup>
 - [ ] [`0275`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0275-keep-a-focused-tall-scroll-region-s-top-in-view.md) Keep a focused tall scroll region's top in view <sup>bug · components · p3</sup>
 - [ ] [`0279`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0279-share-a-hook-for-a-screen-s-width-in-cells.md) Share a hook for a screen's width in cells <sup>feature · components · p3</sup>
 - [ ] [`0280`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0280-space-a-statussegment-s-keyhints.md) Space a StatusSegment's KeyHints <sup>bug · components · p3</sup>
@@ -281,6 +280,7 @@ The component contract, proven on a first set of components.
 - [x] [`0264`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0264-judge-an-inset-mark-against-its-own-geometry-in-the-leak-rule.md) Judge an inset mark against its own geometry in the leak rule <sup>bug · grid · p2</sup>
 - [x] [`0265`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0265-settle-one-layout-tolerance-in-cellsin.md) Settle one layout tolerance in cellsIn <sup>chore · grid · p2</sup>
 - [x] [`0266`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0266-announce-a-server-rendered-button-s-chord.md) Announce a server-rendered Button's chord <sup>bug · components · p2</sup>
+- [x] [`0269`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0269-walk-keyboard-stories-with-the-browser-s-real-keys.md) Walk keyboard stories with the browser's real keys <sup>chore · tooling · p2</sup>
 - [x] [`0270`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0270-dim-a-disabled-fill-button-s-reversal.md) Dim a disabled fill Button's reversal <sup>bug · components · p2</sup>
 - [x] [`0276`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0276-keep-codeblock-s-overflow-marks-under-a-modal.md) Keep CodeBlock's overflow marks under a modal <sup>bug · components · p1</sup>
 - [x] [`0277`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0277-draw-a-codeblock-without-its-own-frame.md) Draw a CodeBlock without its own frame <sup>feature · components · p2</sup>
