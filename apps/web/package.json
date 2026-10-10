@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node scripts/themes.ts && next dev --turbopack",
-    "build": "node scripts/themes.ts && tsc -p tsconfig.json && next build --turbopack",
-    "typecheck": "tsc -p tsconfig.json",
+    "dev": "node scripts/themes.ts && node scripts/routes.ts && next dev --turbopack",
+    "build": "node scripts/themes.ts && node scripts/routes.ts && tsc -p tsconfig.json && next build --turbopack",
+    "typecheck": "node scripts/routes.ts && tsc -p tsconfig.json",
     "test": "vitest run"
   },
   "dependencies": {

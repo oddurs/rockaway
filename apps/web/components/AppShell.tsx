@@ -26,7 +26,15 @@ import { StatusBar, StatusMessage, StatusSegment } from '@rockaway/react/status-
 import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import type { Route } from 'next';
 import { usePathname, useRouter } from 'next/navigation';
-import { type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { DEFAULT_LOOK, type Look } from '../lib/look.ts';
 import { lookSwitch } from '../lib/look-switch.ts';
 import { modeOf, type NavNode, trail } from '../lib/nav.ts';
@@ -37,6 +45,8 @@ import {
   STACK_BELOW,
   STATUS_SEGMENTS,
   shellSplit,
+  sideBySide,
+  stackedPage,
 } from '../lib/shell.ts';
 
 export interface AppShellProps {
@@ -318,12 +328,34 @@ export function AppShell({ nav, bindings, outline, children }: AppShellProps): R
   }, [bindings, router, say]);
 
   const split = shellSplit({ stacked, title, outline: sections && !helping });
+  // Where each pane goes before the script has measured the window (globals.css).
+  const side = sideBySide({ title, outline: true });
+  const narrow = sideBySide({ title, outline: false });
+  const phone = stackedPage({ title, outline: true });
+  const early = {
+    '--site-early-x': phone.x,
+    '--site-early-y': phone.y,
+    '--site-early-less-cols': phone.lessCols,
+    '--site-early-less-rows': phone.lessRows,
+    '--site-side-y': side.page.y,
+    '--site-side-less-rows': side.page.lessRows,
+    '--site-side-map-x': side.map.x,
+    '--site-side-map-cols': side.map.cols,
+    '--site-side-page-x': side.page.x,
+    '--site-side-page-less-cols': side.page.lessCols,
+    '--site-side-outline-from-end': side.outline?.fromEnd,
+    '--site-side-outline-cols': side.outline?.cols,
+    '--site-narrow-page-less-cols': narrow.page.lessCols,
+  } as CSSProperties;
   const [mapSpec, pageSpec, outlineSpec] = split.panes;
 
   return (
     <GlyphProvider glyphs={glyphs}>
-      <div className="site-shell" ref={shell}>
-        <Panes direction={stacked ? 'column' : 'row'} fallback={{ width: 120, height: 40 }}>
+      <div className="site-shell" ref={shell} style={early}>
+        <Panes
+          direction={stacked ? 'column' : 'row'}
+          fallback={{ width: side.from, height: side.rows }}
+        >
           <Pane {...mapSpec} label="" pad={0}>
             <nav aria-label="Site" className="rk-scroll site-scroll" data-site-map>
               <LinkTree items={items(nav)} current={`${BASE}${pathname}`} />

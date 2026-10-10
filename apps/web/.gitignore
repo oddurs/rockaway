@@ -3,3 +3,7 @@ out/
 next-env.d.ts
 # Copied from @rockaway/tokens at build (scripts/themes.ts).
 public/themes/
+
+# Written by scripts/routes.ts before every build.
+app/components/(each)/
+app/@outline/components/(each)/

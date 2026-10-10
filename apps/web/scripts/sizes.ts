@@ -32,7 +32,11 @@ const size = (url: string): number => {
 };
 
 const assetsOf = (html: string, kind: 'js' | 'css'): string[] => {
-  const re = kind === 'js' ? /<script[^>]+src="([^"]+\.js)"/g : /<link[^>]+href="([^"]+\.css)"/g;
+  // Not the polyfills a browser with modules skips (`nomodule`).
+  const re =
+    kind === 'js'
+      ? /<script(?![^>]*noModule)[^>]+src="([^"]+\.js)"/gi
+      : /<link[^>]+href="([^"]+\.css)"/g;
   return [...new Set([...html.matchAll(re)].map((m) => m[1] as string))].filter((u) =>
     u.startsWith(`${base}/_next/`),
   );

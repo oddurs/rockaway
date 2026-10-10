@@ -1,5 +1,5 @@
 /** Every component, by name, with what it is. */
-import type { Metadata } from 'next';
+import type { Metadata, Route } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { components, inline, slugOf } from '../../lib/components.ts';
@@ -17,7 +17,7 @@ export default function Components(): ReactNode {
       <ul>
         {components.map((c) => (
           <li key={c.name}>
-            <Link href={`/components/${slugOf(c.name)}`}>{c.name}</Link>
+            <Link href={`/components/${slugOf(c.name)}` as Route}>{c.name}</Link>
             {': '}
             {/* biome-ignore lint/security/noDangerouslySetInnerHtml: the package's own summary, with its code marked. */}
             <span dangerouslySetInnerHTML={{ __html: inline(c.summary) }} />

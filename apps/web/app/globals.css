@@ -120,6 +120,100 @@
 }
 
 /*
+ * And on anything wider (0273): the panes side by side, the map and the
+ * outline fixed and the page between them taking the room, so every pane is
+ * the same distance from one edge or the other at every width
+ * (`sideBySide`, src/lib/shell.ts). The server draws the panes' frame at the
+ * smallest such width and the frame stretches inside the page's pane; each
+ * pane's content is placed here. So a desktop is shown the whole shell at
+ * first paint, and when the script measures it, nothing moves. Only the
+ * status bar's words wait for it: where they fit is measured.
+ */
+@container site-shell (inline-size >= 64ch) {
+  [data-rk-script]:not([data-rk-shell]) .site-shell > * {
+    visibility: visible;
+  }
+
+  [data-rk-script]:not([data-rk-shell]) .site-shell .rk-status-segment {
+    visibility: hidden;
+  }
+
+  [data-rk-script]:not([data-rk-shell]) .site-shell > .rk-panes > .rk-content > .rk-pane {
+    inset-block-start: calc(var(--site-side-y) * var(--rk-cell-height));
+    block-size: calc(100% - var(--site-side-less-rows) * var(--rk-cell-height));
+  }
+
+  [data-rk-script]:not([data-rk-shell])
+    .site-shell
+    > .rk-panes
+    > .rk-content
+    > .rk-pane:has(> [data-site-map]) {
+    inset-inline-start: calc(var(--site-side-map-x) * var(--rk-cell-width));
+    inline-size: calc(var(--site-side-map-cols) * var(--rk-cell-width));
+  }
+
+  [data-rk-script]:not([data-rk-shell])
+    .site-shell
+    > .rk-panes
+    > .rk-content
+    > .rk-pane:has(> main#content) {
+    inset-inline-start: calc(var(--site-side-page-x) * var(--rk-cell-width));
+    inline-size: calc(
+      round(down, 100%, var(--rk-cell-width)) -
+      var(--site-side-page-less-cols) *
+      var(--rk-cell-width)
+    );
+  }
+
+  [data-rk-script]:not([data-rk-shell])
+    .site-shell
+    > .rk-panes
+    > .rk-content
+    > .rk-pane:has(> [data-site-outline]) {
+    inset-inline-start: calc(
+      round(down, 100%, var(--rk-cell-width)) -
+      var(--site-side-outline-from-end) *
+      var(--rk-cell-width)
+    );
+    inline-size: calc(var(--site-side-outline-cols) * var(--rk-cell-width));
+  }
+}
+
+/*
+ * Between the two, the outline is the pane that goes: its borders were drawn
+ * for the wider layout, so they wait for the script, and the page takes the
+ * room the outline leaves.
+ */
+@container site-shell (inline-size >= 64ch) and (inline-size < 94ch) {
+  [data-rk-script]:not([data-rk-shell]) .site-shell > .rk-panes > .rk-frame,
+  [data-rk-script]:not([data-rk-shell])
+    .site-shell
+    > .rk-panes
+    > .rk-content
+    > .rk-pane:has(> [data-site-outline]) {
+    visibility: hidden;
+  }
+
+  [data-rk-script]:not([data-rk-shell])
+    .site-shell
+    > .rk-panes
+    > .rk-content
+    > .rk-pane:has(> main#content) {
+    inline-size: calc(
+      round(down, 100%, var(--rk-cell-width)) -
+      var(--site-narrow-page-less-cols) *
+      var(--rk-cell-width)
+    );
+  }
+}
+
+/* The panes are a whole number of cells wide, as the script lays them out. */
+.site-shell > .rk-panes,
+.site-shell > .rk-statusbar {
+  inline-size: round(down, 100%, var(--rk-cell-width));
+}
+
+/*
  * The landing page's drawing (0108) is as wide as the room it has, which only
  * its script knows; the server draws it for one phone. So with script, it is
  * hidden until it has been drawn at its width, rather than shown at the
