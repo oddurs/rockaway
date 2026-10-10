@@ -470,7 +470,12 @@ export const Dismiss: Story = {
     expect(dialog('Fixed')).not.toBeNull();
     // The press took no focus: still in the dialog, where Escape reaches it.
     // Firefox used to put it on the body, and Escape then closed nothing.
-    expect(dialog('Fixed')?.contains(document.activeElement)).toBe(true);
+    // WebKit blurs on the press and React Aria's focus scope brings focus back
+    // a frame later, so it is waited for.
+    await waitFor(
+      () => expect(dialog('Fixed')?.contains(document.activeElement)).toBe(true),
+      CLOSE,
+    );
     await press('{Escape}');
     await waitFor(() => expect(dialog('Fixed')).toBeNull(), CLOSE);
     await waitFor(() => expect(open('Fixed')).toHaveFocus(), CLOSE);
@@ -777,17 +782,22 @@ export const Densities: Story = {
         await measured(document.body);
         const [surface] = surfaces();
         if (!surface) throw new Error('no popover');
-        await waitFor(() => {
-          expect(surface.closest('[data-density]')?.getAttribute('data-density')).toBe(density);
-          // The trigger's screen has caught up with the new cell: the trigger
-          // is one row tall in it.
-          expect(trigger.getBoundingClientRect().height).toBeCloseTo(gridOf(trigger).height, 1);
-          const [col, row] = cornerOf(trigger);
-          const [x, y] = cornerOf(surface);
-          expect(y, `${density}: on the row under the trigger`).toBe(row + 1);
-          // At touch a popover is a sheet, on the viewport's columns.
-          if (density !== 'touch') expect(x, `${density}: from its column`).toBe(col);
-        });
+        await waitFor(
+          () => {
+            expect(surface.closest('[data-density]')?.getAttribute('data-density')).toBe(density);
+            // The trigger's screen has caught up with the new cell: the trigger
+            // is one row tall in it.
+            expect(trigger.getBoundingClientRect().height).toBeCloseTo(gridOf(trigger).height, 1);
+            const [col, row] = cornerOf(trigger);
+            const [x, y] = cornerOf(surface);
+            expect(y, `${density}: on the row under the trigger`).toBe(row + 1);
+            // At touch a popover is a sheet, on the viewport's columns.
+            if (density !== 'touch') expect(x, `${density}: from its column`).toBe(col);
+            // React Aria places again a frame after the trigger moves (0246), and
+            // a loaded WebKit runner took longer than waitFor's default second.
+          },
+          { timeout: 5000 },
+        );
       }
     } finally {
       if (was === null) root.removeAttribute('data-density');
