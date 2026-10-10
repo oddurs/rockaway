@@ -304,11 +304,11 @@ export const Painters: Story = {
     const model = toText(keymapHelpBuffer(HELP, keyboard()));
     await waitFor(() => expect(inside('glyph')).toBe(model));
     expect(inside('rule')).toBe(model);
+    // The same box, to well under a pixel: an engine sums a layout in floating
+    // point, so the two can differ in the fifth decimal (Firefox).
     const box = (name: string) => canvas.getByRole('group', { name }).getBoundingClientRect();
-    expect([box('rule').width, box('rule').height]).toEqual([
-      box('glyph').width,
-      box('glyph').height,
-    ]);
+    expect(box('rule').width).toBeCloseTo(box('glyph').width, 2);
+    expect(box('rule').height).toBeCloseTo(box('glyph').height, 2);
   },
 };
 
