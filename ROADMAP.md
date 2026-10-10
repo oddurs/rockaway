@@ -137,14 +137,13 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#######···` 64% · 116 of 180 done · due 2027-01-31
+`#######···` 66% · 119 of 180 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
 ### backlog
 
 - [ ] [`0044`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p1</sup>
-- [ ] [`0055`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0055-combobox.md) Combobox <sup>component · components · p2</sup>
 - [ ] [`0064`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0064-build-the-kitchen-sink-screen-every-component-with-the-theme-inputs-as-controls.md) Build the kitchen-sink screen: every component, with the theme inputs as controls <sup>feature · docs · p1</sup>
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
@@ -182,8 +181,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0259`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0259-draw-site-navigation-as-a-static-tree-of-links.md) Draw site navigation as a static tree of links <sup>component · components · p2</sup>
 - [ ] [`0268`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0268-read-what-a-pseudo-element-draws-when-copying-a-screen.md) Read what a pseudo-element draws when copying a screen <sup>feature · tooling · p3</sup>
 - [ ] [`0275`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0275-keep-a-focused-tall-scroll-region-s-top-in-view.md) Keep a focused tall scroll region's top in view <sup>bug · components · p3</sup>
-- [ ] [`0280`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0280-space-a-statussegment-s-keyhints.md) Space a StatusSegment's KeyHints <sup>bug · components · p3</sup>
-- [ ] [`0285`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0285-place-a-keyhint-status-segment-on-the-server.md) Place a KeyHint status segment on the server <sup>feature · components · p2</sup>
 - [ ] [`0289`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0289-hold-the-remaining-components-at-strict.md) Hold the remaining components at strict <sup>chore · tooling · p2</sup>
 - [ ] [`0290`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0290-point-the-recipe-s-reverse-video-paragraph-at-each-component-s-own-block.md) Point the recipe's reverse-video paragraph at each component's own block <sup>docs · docs · p3</sup>
 - [ ] [`0291`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0291-move-switch-s-and-radio-group-s-buffers-into-their-pure-halves.md) Move Switch's and Radio group's buffers into their pure halves <sup>chore · components · p3</sup>
@@ -225,6 +222,7 @@ The component contract, proven on a first set of components.
 - [x] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [x] [`0043`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0043-tooltip.md) Tooltip <sup>component · components · p1</sup>
 - [x] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
+- [x] [`0055`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0055-combobox.md) Combobox <sup>component · components · p2</sup>
 - [x] [`0057`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0057-table.md) Table <sup>component · components · p1</sup>
 - [x] [`0065`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0065-answer-prefers-contrast-with-attributes-not-a-third-palette.md) Answer prefers-contrast with attributes, not a third palette <sup>feature · tokens · p2</sup>
 - [x] [`0076`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0076-define-the-tui-component-contract.md) Define the TUI component contract <sup>decision · components · p0</sup>
@@ -314,8 +312,10 @@ The component contract, proven on a first set of components.
 - [x] [`0276`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0276-keep-codeblock-s-overflow-marks-under-a-modal.md) Keep CodeBlock's overflow marks under a modal <sup>bug · components · p1</sup>
 - [x] [`0277`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0277-draw-a-codeblock-without-its-own-frame.md) Draw a CodeBlock without its own frame <sup>feature · components · p2</sup>
 - [x] [`0279`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0279-share-a-hook-for-a-screen-s-width-in-cells.md) Share a hook for a screen's width in cells <sup>feature · components · p3</sup>
+- [x] [`0280`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0280-space-a-statussegment-s-keyhints.md) Space a StatusSegment's KeyHints <sup>bug · components · p3</sup>
 - [x] [`0281`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0281-show-a-table-s-rows-in-a-window-that-follows-the-cursor.md) Show a Table's rows in a window that follows the cursor <sup>feature · components · p2</sup>
 - [x] [`0282`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0282-hand-a-textfield-s-input-to-a-ref.md) Hand a TextField's input to a ref <sup>feature · components · p3</sup>
+- [x] [`0285`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0285-place-a-keyhint-status-segment-on-the-server.md) Place a KeyHint status segment on the server <sup>feature · components · p2</sup>
 - [x] [`0295`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0295-set-the-system-in-ibm-plex-mono.md) Set the system in IBM Plex Mono <sup>decision · tokens · p0</sup>
 - [x] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 - [x] [`0299`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0299-select-text-the-way-a-terminal-does.md) Select text the way a terminal does <sup>feature · css · p0</sup>
