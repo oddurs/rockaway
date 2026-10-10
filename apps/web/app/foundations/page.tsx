@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function Foundations(): ReactNode {
   return (
     <PageBody title="foundations">
-      <article className="rk-prose">
+      <article className="rk-prose" data-rk-reading="" data-rk-conformance="loose">
         <h1>Foundations</h1>
         <p>
           What every component stands on. Each page is drawn by the system it describes: the frames

@@ -77,10 +77,11 @@ body {
     calc(var(--site-outline) * var(--rk-cell-width))
     calc(var(--site-gx) * var(--rk-cell-width));
   grid-template-rows:
+    var(--rk-cell-height)
     calc(var(--site-gy) * var(--rk-cell-height))
     round(
       down,
-      calc(100% - (2 * var(--site-gy) + 1) * var(--rk-cell-height)),
+      calc(100% - (2 * var(--site-gy) + 2) * var(--rk-cell-height)),
       var(--rk-cell-height)
     )
     calc(var(--site-gy) * var(--rk-cell-height))
@@ -122,7 +123,7 @@ body {
 
   :root[data-site-drawer="open"] .site-map {
     display: block;
-    grid-area: 2 / 4;
+    grid-area: 3 / 4;
     z-index: 2;
     inline-size: min(100%, calc(var(--site-drawer-cols, 32) * var(--rk-cell-width)));
   }
@@ -170,7 +171,7 @@ body {
   position: relative;
   min-inline-size: 0;
   min-block-size: 0;
-  grid-row: 2;
+  grid-row: 3;
 }
 
 .site-pane::before {
@@ -301,8 +302,22 @@ body {
  * whole cells; the message takes what is left in the middle, so a message
  * coming and going never moves a segment.
  */
+/*
+ * The toolbar (0324): a row along the top, over the panes and inside the
+ * gutter, raised as the status bar is. The system's Toolbar is drawn in it,
+ * on the server, and comes alive when the browser is idle.
+ */
+.site-toolbar {
+  grid-row: 1;
+  grid-column: 2 / -2;
+  min-inline-size: 0;
+  block-size: var(--rk-cell-height);
+  overflow: clip;
+  background: var(--rk-bg-surface-raised, var(--rk-bg-subtle));
+}
+
 .site-status {
-  grid-row: 4;
+  grid-row: 5;
   grid-column: 1 / -1;
   display: flex;
   min-inline-size: 0;
@@ -348,19 +363,7 @@ body {
   text-underline-offset: var(--rk-attribute-underline-offset);
 }
 
-/* What gives way first as the window narrows: the look, then the copy. */
-@container site (inline-size < 66em) {
-  .site-status > .site-status-look {
-    display: none;
-  }
-}
-
-@container site (inline-size < 48em) {
-  .site-status > .site-status-copy {
-    display: none;
-  }
-}
-
+/* What gives way first as the window narrows: the keys. */
 @container site (inline-size < 28.8em) {
   .site-status > .site-status-keys {
     display: none;

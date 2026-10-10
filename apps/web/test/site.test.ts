@@ -291,15 +291,35 @@ describe('the shell (0104)', () => {
         (window as unknown as { early: unknown }).early = {
           theme: document.documentElement.dataset.rkTheme,
           sheet: document.querySelector('link[data-rk-look]') !== null,
-          button: document.querySelector('[data-site-look="theme"] [data-site-look-value]')
-            ?.textContent,
         };
       });
     });
     await page.reload();
     const early = await page.evaluate(() => (window as unknown as { early: unknown }).early);
-    expect(early).toEqual({ theme: chosen, sheet: true, button: chosen });
+    expect(early).toEqual({ theme: chosen, sheet: true });
     await context.close();
+  });
+
+  test('switches the look from the toolbar: a sectioned menu, the choice checked (0324)', async () => {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    await page.goto(`${site.url}concept/`);
+    await live(page);
+    await page
+      .getByRole('toolbar', { name: 'Screen' })
+      .getByRole('button', { name: 'Look' })
+      .click();
+    const menu = page.getByRole('menu', { name: 'Look' });
+    await expect.poll(() => menu.isVisible()).toBe(true);
+    const sections = await menu.locator('.rk-menu-title').allTextContents();
+    expect(sections).toEqual(['Theme', 'Mode', 'Density']);
+    await menu.getByRole('menuitemradio', { name: 'nord' }).click();
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.dataset.rkTheme))
+      .toBe('nord');
+    await expect
+      .poll(() => page.locator('.site-status-message').textContent())
+      .toBe('Theme: nord.');
+    await page.close();
   });
 
   test('copies the page as text, and says so', async () => {
