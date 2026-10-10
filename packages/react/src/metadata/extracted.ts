@@ -6,52 +6,6 @@
 import type { ExtractedPart } from './schema.ts';
 
 export const extracted: { readonly [component: string]: ExtractedPart } = {
-  "AlertDialog": {
-    "file": "dialog.tsx",
-    "props": [
-      {
-        "name": "actionLabel",
-        "type": "string",
-        "required": true,
-        "description": "The destructive action's label: \"Discard\", \"Delete\"."
-      },
-      {
-        "name": "onAction",
-        "type": "() => void",
-        "required": false,
-        "description": "What the destructive action does. The dialog closes after it."
-      },
-      {
-        "name": "cancelLabel",
-        "type": "string",
-        "required": false,
-        "description": "The safe action's label, focused first. \"Cancel\" by default.",
-        "default": "'Cancel'"
-      },
-      {
-        "name": "onCancel",
-        "type": "() => void",
-        "required": false,
-        "description": "Called when the safe action is pressed. The dialog closes after it."
-      }
-    ],
-    "inherits": [
-      "Omit<DialogProps, 'variant' | 'actions' | 'isDismissable'>"
-    ],
-    "tokens": [
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light",
-      "--rk-x-1"
-    ]
-  },
   "Badge": {
     "file": "badge.tsx",
     "props": [
@@ -103,6 +57,56 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-fg-success",
       "--rk-fg-warning"
+    ]
+  },
+  "Breadcrumbs": {
+    "file": "breadcrumbs.tsx",
+    "props": [
+      {
+        "name": "items",
+        "type": "readonly BreadcrumbItem[]",
+        "required": true,
+        "description": "The path, from the top: each level a label and where it is. The last is the current page."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "What the `nav` is called. \"Breadcrumbs\" by default.",
+        "default": "'Breadcrumbs'"
+      },
+      {
+        "name": "maxItems",
+        "type": "number",
+        "required": false,
+        "description": "Fold the middle of a longer path into a menu, keeping the first level and the last ones."
+      },
+      {
+        "name": "moreLabel",
+        "type": "string",
+        "required": false,
+        "description": "What the folded middle's button says to a screen reader. \"More levels\" by default.",
+        "default": "'More levels'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-bg-page",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-muted"
     ]
   },
   "Button": {
@@ -629,75 +633,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-rhythm-help",
       "--rk-step-y",
       "--rk-x-2"
-    ]
-  },
-  "Dialog": {
-    "file": "dialog.tsx",
-    "props": [
-      {
-        "name": "title",
-        "type": "string",
-        "required": true,
-        "description": "The words in the top edge, and what a reader hears the dialog called."
-      },
-      {
-        "name": "variant",
-        "type": "DialogVariant",
-        "required": false,
-        "description": "`alert` for a destructive confirmation: `role=\"alertdialog\"` and the caution mark."
-      },
-      {
-        "name": "children",
-        "type": "DialogContent",
-        "required": false,
-        "description": "The content, or a function of `close` that returns it."
-      },
-      {
-        "name": "actions",
-        "type": "DialogContent",
-        "required": false,
-        "description": "The action row at the bottom right: Buttons, or a function of `close` that returns them."
-      },
-      {
-        "name": "maxRows",
-        "type": "number",
-        "required": false,
-        "description": "The most rows the dialog may take before its content scrolls."
-      },
-      {
-        "name": "minCols",
-        "type": "number",
-        "required": false,
-        "description": "The fewest columns the dialog may be, its frame's two included."
-      },
-      {
-        "name": "painter",
-        "type": "PainterName",
-        "required": false,
-        "description": "How the frame's lines are stroked. By default, as the screen it was opened from."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      }
-    ],
-    "inherits": [
-      "VariantProps<typeof dialogVariants>",
-      "Pick< OverlayModalProps, | 'isOpen' | 'defaultOpen' | 'onOpenChange' | 'isDismissable' | 'isKeyboardDismissDisabled' | 'padding' | 'dividers' >"
-    ],
-    "tokens": [
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light",
-      "--rk-x-1"
     ]
   },
   "Divider": {
@@ -1323,6 +1258,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "file": "menu.tsx",
     "props": [
       {
+        "name": "comfort",
+        "type": "Comfort",
+        "required": false,
+        "description": "The air beside its rules and section titles (0317): none when compact, a terminal's menu and the default; half a row after each when comfortable; a row when spacious. A rule is always on a whole row.",
+        "default": "'compact'"
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -1340,6 +1282,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1370,6 +1314,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1406,6 +1352,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1428,6 +1376,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1443,13 +1393,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -1484,13 +1432,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<OverlaySurfaceOptions, 'minCols'>"
     ],
     "tokens": [
-      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -1534,12 +1480,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "The painter, `glyph` or `rule`. By default, the painter of the screen the overlay was opened from, so a popover from a ruled frame is ruled too."
       },
       {
-        "name": "title",
-        "type": "string",
-        "required": false,
-        "description": "Words set into the frame's top edge. Chrome: name the content for a reader as well."
-      },
-      {
         "name": "children",
         "type": "ReactNode",
         "required": false
@@ -1560,53 +1500,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit< PopoverProps, 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'UNSTABLE_portalContainer' >"
     ],
     "tokens": [
-      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-fg-on-inverse",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
-  },
-  "OverlayTooltip": {
-    "file": "overlay.tsx",
-    "props": [
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      },
-      {
-        "name": "painter",
-        "type": "PainterName",
-        "required": false,
-        "description": "The painter. By default, the painter of the screen its trigger is in."
-      }
-    ],
-    "inherits": [
-      "Omit< TooltipProps, | 'children' | 'className' | 'style' | 'offset' | 'crossOffset' | 'containerPadding' | 'UNSTABLE_portalContainer' >"
-    ],
-    "tokens": [
-      "--rk-bg-inverse",
-      "--rk-bg-page",
-      "--rk-bg-surface",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-fg-on-inverse",
       "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
@@ -2039,6 +1937,48 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Tab": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "id",
+        "type": "Key",
+        "required": true,
+        "description": "The tab's key: its `TabPanel` takes the same `id`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The tab's label."
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabProps, 'className' | 'style' | 'children' | 'id'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Table": {
     "file": "table.tsx",
     "props": [
@@ -2183,6 +2123,115 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "TabList": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabListProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "TabPanel": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabPanelProps, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Tabs": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set draws the frame; the theme's when not given."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the frame, in cells: one across by default, as `Frame` has."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "A `TabList` and its `TabPanel`s."
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabsProps, 'className' | 'style' | 'children'>",
+      "Pick<ScreenProps, 'painter' | 'cols' | 'rows' | 'fallback'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "TextField": {
     "file": "text-field.tsx",
     "props": [
@@ -2276,14 +2325,64 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Tooltip": {
-    "file": "tooltip.tsx",
+  "Toolbar": {
+    "file": "toolbar.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What the toolbar is called, for a reader."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "moreLabel",
+        "type": "string",
+        "required": false,
+        "description": "What the ellipsis that holds the folded items is called. \"More\" by default.",
+        "default": "'More'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono",
+      "--rk-step-x",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "ToolbarButton": {
+    "file": "toolbar.tsx",
     "props": [
       {
         "name": "children",
         "type": "ReactNode",
-        "required": false,
-        "description": "The hint: a few words, wrapping at 36 cells."
+        "required": true
       },
       {
         "name": "className",
@@ -2292,9 +2391,81 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       }
     ],
     "inherits": [
-      "Omit<OverlayTooltipProps, 'children' | 'className'>"
+      "Omit<AriaButtonProps, 'className' | 'style' | 'children'>"
     ],
-    "tokens": []
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono",
+      "--rk-step-x",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "ToolbarGroup": {
+    "file": "toolbar.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What the group is called, for a reader: \"History\", \"Format\"."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono",
+      "--rk-step-x",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "ToolbarSeparator": {
+    "file": "toolbar.tsx",
+    "props": [],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono",
+      "--rk-step-x",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
   },
   "Tree": {
     "file": "tree.tsx",

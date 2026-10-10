@@ -6,6 +6,7 @@ import {
   menuBuffer,
   menuCols,
   menuEnd,
+  menuLayout,
   menuMarks,
   menuRowStyle,
 } from '../src/components/menu.pure.ts';
@@ -109,5 +110,32 @@ describe('menuCols', () => {
       2 + 1 + 'Cut'.length + 2 + 'Ctrl+X'.length + 1,
     );
     expect(menuCols([{ label: 'Cut' }, { section: 'Clipboard' }], false)).toBe(2 + 2 + 9 + 3);
+  });
+});
+
+describe('menuLayout (0317)', () => {
+  const ROWS = [
+    { label: 'Undo' },
+    { section: 'Clipboard' },
+    { label: 'Cut' },
+    { label: 'Copy' },
+    { section: 'Find' },
+    { label: 'Find' },
+  ] as const;
+
+  test('compact is a row each, nothing between', () => {
+    expect(menuLayout(ROWS)).toEqual({ tops: [0, 2, 4, 6, 8, 10], rows: 6 });
+  });
+
+  test('comfortable: half a row after a rule, and every rule on a whole row', () => {
+    const { tops, rows } = menuLayout(ROWS, 'comfortable');
+    // Cut rests on a half-row; the Find rule takes the half before it too.
+    expect(tops).toEqual([0, 2, 5, 7, 10, 13]);
+    for (const i of [1, 4]) expect((tops[i] ?? 1) % 2).toBe(0);
+    expect(rows).toBe(8);
+  });
+
+  test('spacious: a row after each rule', () => {
+    expect(menuLayout(ROWS, 'spacious').tops).toEqual([0, 2, 6, 8, 10, 14]);
   });
 });

@@ -1,0 +1,59 @@
+/*
+ * Breadcrumbs (cairn 0319).
+ *
+ * One row of text, every character a cell. The separator is the theme's,
+ * muted, with a cell of air either side; the current page is bold in the body
+ * colour; the folded middle is the theme's ellipsis, a button one cell wide.
+ * Nothing wraps: a path too long for its row folds its middle (`maxItems`).
+ */
+@layer rk.components {
+  .rk-breadcrumbs-list {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    white-space: pre;
+  }
+
+  .rk-breadcrumb {
+    display: inline-flex;
+  }
+
+  .rk-breadcrumb-separator {
+    padding-inline: var(--rk-cell-width);
+    color: var(--rk-fg-muted);
+  }
+
+  .rk-breadcrumb-current {
+    color: var(--rk-fg-default);
+    font-weight: var(--rk-attribute-bold);
+  }
+
+  /* The folded middle: a cell, in the link colour, pressed in reverse video
+   * as a link is. Its focus ring is the system's (focus.css). */
+  .rk-breadcrumb-more {
+    inline-size: var(--rk-cell-width);
+    margin: 0;
+    border: none;
+    padding: 0;
+    background: none;
+    color: var(--rk-fg-accent);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .rk-breadcrumb-more[data-pressed] {
+    background: var(--rk-fg-accent);
+    color: var(--rk-bg-page);
+  }
+
+  /* Reversed words are drawn in a ground colour, which under forced colors is
+   * the canvas the browser paints behind text unless told not to (0181). */
+  @media (forced-colors: active) {
+    .rk-breadcrumb-more[data-pressed] {
+      forced-color-adjust: none;
+      --rk-forced-ink: Canvas;
+    }
+  }
+}
