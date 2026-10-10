@@ -3,15 +3,15 @@ id: 125
 uid: d60e49e2-c842-4c6a-9bf1-3779ce6a4203
 title: Check every story at every density and in both modes
 type: chore
-status: doing
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 88
 - 117
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p1
 layer: tooling
 effort: m
@@ -34,9 +34,9 @@ geometry is checked eight times.
 
 ## Acceptance criteria
 
-- [ ] Conformance and continuity run at dense, normal, airy and touch, in light and dark, after every story
+- [x] Conformance and continuity run at dense, normal, airy and touch, in light and dark, after every story
 - [x] A failure names the density and mode it failed at
-- [ ] Every interactive element is at least 24px square at every density, and at least 44px tall at touch (WCAG 2.5.8, and the README's claim)
+- [x] Every interactive element is at least 24px square at every density, and at least 44px tall at touch (WCAG 2.5.8, and the README's claim)
 - [x] A story can opt out of one cell of the matrix only with a reason, printed in the run
 - [x] CI time before and after is recorded here
 
