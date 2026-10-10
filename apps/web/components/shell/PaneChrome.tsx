@@ -11,7 +11,7 @@
  * reader's (`glyph-sets.ts`).
  */
 import { frameBuffer } from '@rockaway/react/frame';
-import { chromeRows } from '@rockaway/react/paint';
+import { Cells } from '@rockaway/react/paint';
 import type { ReactNode } from 'react';
 import { GLYPH_SETS } from '../../lib/glyph-sets.ts';
 
@@ -19,20 +19,16 @@ export function PaneChrome({ title }: { readonly title?: string }): ReactNode {
   // The title, a cell of air either side, a corner and a run of edge after
   // it, so the column that stretches is a plain run of the top edge.
   const width = Math.max(4, (title === undefined ? 0 : [...title].length + 2) + 4);
+  // A set of glyphs to a layer, which the stylesheet shows one of. The layer
+  // places nothing: each frame is inset in the screen, its positioned box.
   return (
     <div className="rk-screen site-chrome" aria-hidden="true">
       {GLYPH_SETS.map(({ name, glyphs }) => (
-        <div
-          key={name}
-          className="rk-frame"
-          data-rk-painted="glyph"
-          data-rk-elastic=""
-          data-site-glyphs={name}
-        >
-          {chromeRows(
-            frameBuffer({ width, height: 3 }, title === undefined ? {} : { title }, glyphs),
-            { row: 1, col: width - 2 },
-          )}
+        <div key={name} data-site-glyphs={name}>
+          <Cells
+            buffer={frameBuffer({ width, height: 3 }, title === undefined ? {} : { title }, glyphs)}
+            stretch={{ row: 1, col: width - 2 }}
+          />
         </div>
       ))}
     </div>
