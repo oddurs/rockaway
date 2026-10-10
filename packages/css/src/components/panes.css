@@ -23,4 +23,31 @@
     overflow: clip;
     overflow-clip-margin: calc(var(--rk-cell-height) / 2);
   }
+
+  /*
+   * Surfaces (cairn 0308): the ground under a pane's content and padding. The
+   * borders around it are the screen's and keep its ground. Fallbacks are the
+   * roles that exist today.
+   */
+  .rk-pane[data-rk-surface="sunken"] {
+    background-color: var(--rk-bg-surface-sunken, var(--rk-bg-subtle));
+  }
+
+  .rk-pane[data-rk-surface="base"] {
+    background-color: var(--rk-bg-surface-base, var(--rk-bg-surface));
+  }
+
+  .rk-pane[data-rk-surface="raised"] {
+    background-color: var(--rk-bg-surface-raised, var(--rk-bg-surface));
+  }
+
+  .rk-pane[data-rk-surface="overlay"] {
+    background-color: var(--rk-bg-surface-overlay, var(--rk-bg-surface));
+  }
+
+  @media (forced-colors: active) {
+    .rk-pane[data-rk-surface] {
+      background-color: Canvas;
+    }
+  }
 }
