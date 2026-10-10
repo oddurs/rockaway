@@ -35,7 +35,7 @@
  * inside it in this order: the label, the control, the description, the
  * error. CONTRIBUTING.md has the whole recipe, under "Building a field".
  */
-import type { Buffer } from '@rockaway/grid';
+import type { Buffer, Comfort } from '@rockaway/grid';
 import type { CSSProperties, ReactNode } from 'react';
 import {
   FieldError as AriaFieldError,
@@ -57,7 +57,9 @@ import { useGlyphs } from '../glyphs.tsx';
  * finds to line it up.
  */
 export function fieldClass(...names: ReadonlyArray<string | false | null | undefined>): string {
-  return cx('rk-field', ...names);
+  // A field is a seam (0311): its control's padding and its help rest on
+  // half-steps, and its own box closes to whole rows.
+  return cx('rk-field', 'rk-seam', ...names);
 }
 
 export interface LabelProps extends Omit<AriaLabelProps, 'className' | 'children'> {
@@ -147,6 +149,13 @@ export interface FormProps extends Omit<AriaFormProps, 'className' | 'style'> {
    * column wraps inside it.
    */
   readonly labelWidth?: number;
+  /**
+   * How generous the form's spacing is (0313, 0316). Comfortable, the
+   * default, puts each label over its control in a padded two-row box;
+   * compact is the terminal's form, two columns of cells and no padding.
+   * Inherited from the region when not given.
+   */
+  readonly comfort?: Comfort;
   readonly className?: string;
   readonly style?: CSSProperties;
 }
@@ -160,7 +169,14 @@ export interface FormProps extends Omit<AriaFormProps, 'className' | 'style'> {
  * The form answers to its own width, so it takes the width its container
  * gives it rather than sizing itself to its fields.
  */
-export function Form({ labelWidth, className, style, children, ...aria }: FormProps): ReactNode {
+export function Form({
+  labelWidth,
+  comfort,
+  className,
+  style,
+  children,
+  ...aria
+}: FormProps): ReactNode {
   const columns =
     labelWidth === undefined
       ? undefined
@@ -169,6 +185,7 @@ export function Form({ labelWidth, className, style, children, ...aria }: FormPr
     <AriaForm
       {...aria}
       className={cx('rk-form', className)}
+      {...(comfort === undefined ? {} : { 'data-rk-comfort': comfort })}
       {...(style === undefined ? {} : { style })}
     >
       {/* The form is the container its width is asked of; a container cannot
@@ -193,14 +210,21 @@ export interface FieldText {
    * column's width for a control that fills it, as a framed one does.
    */
   readonly control: Buffer | ((width: number) => Buffer);
+  /**
+   * The control is a text box, padded by the comfort's half-steps above and
+   * below (0316). A checkbox, a framed group or a button is not.
+   */
+  readonly box?: boolean;
   readonly description?: string;
   /** The message `FieldError` shows; the field is invalid when it is set. */
   readonly error?: string;
 }
 
 export interface FormTextOptions {
-  /** The form's width, in cells. Under 60 it stacks. */
+  /** The form's width, in cells. A compact form under 60 stacks. */
   readonly width: number;
+  /** As `Form`'s `comfort`: comfortable when not given (0316). */
+  readonly comfort?: Comfort;
   /** As `Form`'s `labelWidth`. */
   readonly labelWidth?: number;
 }
