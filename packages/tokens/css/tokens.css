@@ -1267,6 +1267,11 @@
   inherits: true;
 }
 
+@property --rk-glyph-mark-separator {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-sort-ascending {
   syntax: '*';
   inherits: true;
@@ -2389,8 +2394,8 @@
     --rk-fg-warning: var(--rk-ansi-yellow);
     --rk-focus-offset: 2px;
     --rk-focus-width: 2px;
-    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
-    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-display: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
     --rk-font-weight-medium: 500;
     --rk-font-weight-regular: 400;
@@ -2543,6 +2548,7 @@
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-separator: "›";
     --rk-glyph-mark-sort-ascending: "▴";
     --rk-glyph-mark-sort-descending: "▾";
     --rk-glyph-mark-switch-thumb: "●";
@@ -3180,8 +3186,8 @@
   [data-rk-theme='default'] {
     /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
     --rk-conformance: standard;
-    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
-    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-display: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
     --rk-font-weight-medium: 500;
     --rk-font-weight-regular: 400;
@@ -3334,6 +3340,7 @@
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-separator: "›";
     --rk-glyph-mark-sort-ascending: "▴";
     --rk-glyph-mark-sort-descending: "▾";
     --rk-glyph-mark-switch-thumb: "●";

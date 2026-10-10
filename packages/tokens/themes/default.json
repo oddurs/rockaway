@@ -1,7 +1,7 @@
 {
   "accentHue": 262,
   "neutralTemperature": "neutral",
-  "typePairing": "system",
+  "typePairing": "ibm-plex",
   "conformance": "standard",
   "borderSet": "single"
 }

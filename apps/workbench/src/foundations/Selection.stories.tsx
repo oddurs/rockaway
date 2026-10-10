@@ -98,6 +98,22 @@ async function decode(png: string | Blob): Promise<ImageData> {
 const frames = (): Promise<void> =>
   new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() => done())));
 
+/**
+ * The browser says a selection changed in a task of its own, and the painting
+ * waits a frame after that: two frames from the selection were enough in
+ * Chromium and not always in Firefox, where the rows were still to come. So
+ * wait for the event, with a limit in case an engine sends none, then the
+ * frames.
+ */
+const afterSelectionChange = async (change: () => void): Promise<void> => {
+  const heard = new Promise<void>((done) =>
+    document.addEventListener('selectionchange', () => done(), { once: true }),
+  );
+  change();
+  await Promise.race([heard, new Promise((done) => setTimeout(done, 1000))]);
+  await frames();
+};
+
 export const ThreeLines: Story = {
   name: 'Three lines, no stripes',
   render: () => <Samples />,
@@ -162,8 +178,7 @@ export const ThreeLines: Story = {
 
       for (const [name, pick] of cases) {
         const root = canvas.getByTestId(name);
-        pick(root);
-        await frames();
+        await afterSelectionChange(() => pick(root));
         // The boxes are painted from `selectionchange`, a task after the
         // selection is made: wait for them rather than count frames, which
         // is not enough on every engine and runner.

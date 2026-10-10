@@ -253,6 +253,7 @@ export const vars = {
   'glyph.mark.radio': 'var(--rk-glyph-mark-radio)',
   'glyph.mark.radio-empty': 'var(--rk-glyph-mark-radio-empty)',
   'glyph.mark.required': 'var(--rk-glyph-mark-required)',
+  'glyph.mark.separator': 'var(--rk-glyph-mark-separator)',
   'glyph.mark.sort-ascending': 'var(--rk-glyph-mark-sort-ascending)',
   'glyph.mark.sort-descending': 'var(--rk-glyph-mark-sort-descending)',
   'glyph.mark.switch-thumb': 'var(--rk-glyph-mark-switch-thumb)',
