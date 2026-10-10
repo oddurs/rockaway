@@ -50,7 +50,7 @@ generated. Each page has, in this order:
 - [x] Props, states, keyboard map and tokens come from the metadata, not from hand-written tables
 - [x] Every live example also renders as its snapshot with JavaScript disabled
 - [x] Every page passes axe, conformance and continuity in the built site
-- [ ] Every page can be copied as text (0105)
+- [x] Every page can be copied as text (0105)
 
 ## 2026-10-03
 
@@ -75,3 +75,7 @@ After merging main (#88 server-painted chrome, Tree, Keymap): Tree and Keymap ha
 ## 2026-10-03
 
 Criterion 5 stays open: copying a page as text and as ANSI is 0105's button, which depends on the shell (0104) and the status bar (0098). Selection already copies every snapshot as its text.
+
+## 2026-10-03
+
+Criterion 5 is true on feat/copy-screens (0105): every snapshot on every component page copies as its text, checked one by one in the site test, and the page itself copies as the screen it is.

@@ -56,6 +56,18 @@
     "surface": {
       "$value": "{palette.dark.surface}"
     },
+    "surface-sunken": {
+      "$value": "{palette.dark.surface-sunken}"
+    },
+    "surface-base": {
+      "$value": "{palette.dark.surface-base}"
+    },
+    "surface-raised": {
+      "$value": "{palette.dark.surface-raised}"
+    },
+    "surface-overlay": {
+      "$value": "{palette.dark.surface-overlay}"
+    },
     "subtle": {
       "$value": "{palette.dark.subtle}"
     },

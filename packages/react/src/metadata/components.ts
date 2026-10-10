@@ -17,6 +17,7 @@ import { fieldsetMeta } from '../components/fieldset.meta.ts';
 import { frameMeta } from '../components/frame.meta.ts';
 import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { keymapMeta } from '../components/keymap.meta.ts';
+import { linkTreeMeta } from '../components/link-tree.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
 import { menuMeta } from '../components/menu.meta.ts';
@@ -51,6 +52,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'frame', meta: frameMeta },
   { file: 'key-hint', meta: keyHintMeta },
   { file: 'keymap', meta: keymapMeta },
+  { file: 'link-tree', meta: linkTreeMeta },
   { file: 'link', meta: linkMeta },
   { file: 'list', meta: listMeta },
   { file: 'menu', meta: menuMeta },

@@ -8,6 +8,10 @@
     "dark": {
       "background": "oklch(0.23 0.036 250)",
       "surface": "oklch(0.255 0.037 253)",
+      "surface-sunken": "oklch(0.2 0.034 248)",
+      "surface-base": "oklch(0.235 0.036 251)",
+      "surface-raised": "oklch(0.265 0.038 254)",
+      "surface-overlay": "oklch(0.295 0.04 257)",
       "subtle": "oklch(0.285 0.039 256)",
       "hover": "oklch(0.315 0.04 260)",
       "active": "oklch(0.345 0.042 264)",
@@ -46,6 +50,10 @@
     "light": {
       "background": "oklch(0.965 0.018 78)",
       "surface": "oklch(0.98 0.012 80)",
+      "surface-sunken": "oklch(0.935 0.026 74)",
+      "surface-base": "oklch(0.953 0.021 76)",
+      "surface-raised": "oklch(0.971 0.016 78)",
+      "surface-overlay": "oklch(0.988 0.01 82)",
       "subtle": "oklch(0.94 0.022 75)",
       "hover": "oklch(0.915 0.026 72)",
       "active": "oklch(0.89 0.03 70)",

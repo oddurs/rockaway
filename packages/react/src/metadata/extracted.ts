@@ -286,6 +286,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-bg-subtle",
       "--rk-bg-surface",
+      "--rk-bg-surface-base",
+      "--rk-bg-surface-overlay",
+      "--rk-bg-surface-raised",
+      "--rk-bg-surface-sunken",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -959,6 +963,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-bg-subtle",
       "--rk-bg-surface",
+      "--rk-bg-surface-base",
+      "--rk-bg-surface-overlay",
+      "--rk-bg-surface-raised",
+      "--rk-bg-surface-sunken",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1062,6 +1070,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "Which keyboard to draw the chords for. The reader's by default.",
         "default": "'auto'"
+      },
+      {
+        "name": "bindings",
+        "type": "readonly Pick<Binding, 'keys' | 'description'>[]",
+        "required": false,
+        "description": "The shortcuts to list, instead of the ones active where it is rendered. For a server, which runs no effects and so registers no bindings: a page that binds its keys without React renders its help from the same list it binds, and needs no `Keymap` around it."
       },
       {
         "name": "className",
@@ -1178,6 +1192,70 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-fg-disabled"
+    ]
+  },
+  "LinkTree": {
+    "file": "link-tree.tsx",
+    "props": [
+      {
+        "name": "items",
+        "type": "readonly LinkTreeItem[]",
+        "required": true,
+        "description": "The rows, and the rows under them."
+      },
+      {
+        "name": "current",
+        "type": "string",
+        "required": false,
+        "description": "The `href` of the row you are on: drawn in reverse video, and `aria-current`."
+      },
+      {
+        "name": "currentKind",
+        "type": "'page' | 'location'",
+        "required": false,
+        "description": "What `current` is, for a reader: `page` for a site's map (the default), `location` for a page's outline, where it is the section you are in.",
+        "default": "'page'"
+      },
+      {
+        "name": "painter",
+        "type": "StrokeStyle",
+        "required": false,
+        "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "glyphs",
+        "type": "Glyphs",
+        "required": false,
+        "description": "The theme's glyphs, for the guides: a server has no provider to ask.",
+        "default": "themeGlyphs.default"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "aria-label",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-glyph-mark-cursor",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "List": {
@@ -1591,6 +1669,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-bg-subtle",
       "--rk-bg-surface",
+      "--rk-bg-surface-base",
+      "--rk-bg-surface-overlay",
+      "--rk-bg-surface-raised",
+      "--rk-bg-surface-sunken",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1637,6 +1719,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-bg-subtle",
       "--rk-bg-surface",
+      "--rk-bg-surface-base",
+      "--rk-bg-surface-overlay",
+      "--rk-bg-surface-raised",
+      "--rk-bg-surface-sunken",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",

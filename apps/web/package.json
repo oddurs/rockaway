@@ -1,0 +1,44 @@
+{
+  "name": "web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/themes.ts && node scripts/routes.ts && next dev --turbopack",
+    "build": "node scripts/themes.ts && node scripts/routes.ts && tsc -p tsconfig.json && next build --turbopack",
+    "test": "vitest run",
+    "font": "node scripts/font.ts",
+    "budget": "vitest run test/budget.test.ts",
+    "quickstart": "node scripts/quickstart.ts"
+  },
+  "dependencies": {
+    "@rockaway/css": "workspace:*",
+    "@rockaway/grid": "workspace:*",
+    "@rockaway/react": "workspace:*",
+    "@rockaway/tokens": "workspace:*",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-aria-components": "1.21.1",
+    "react-dom": "19.3.0",
+    "rehype-raw": "7.0.0",
+    "rehype-stringify": "10.0.1",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "remark-rehype": "11.1.2",
+    "shiki": "4.5.0",
+    "unified": "11.0.5"
+  },
+  "devDependencies": {
+    "@types/hast": "3.0.5",
+    "@types/node": "26.6.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "axe-core": "4.13.0",
+    "babel-plugin-react-compiler": "1.0.0",
+    "fontverter": "2.0.0",
+    "harfbuzzjs": "1.6.2",
+    "playwright": "1.63.0",
+    "sharp": "0.35.5",
+    "subset-font": "2.9.0",
+    "vitest": "4.1.11"
+  }
+}

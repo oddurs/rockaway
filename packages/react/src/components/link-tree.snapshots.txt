@@ -1,0 +1,8 @@
+── A site's map
+   Home                 
+ ▾ Foundations          
+ ├── The grid           
+ └── Glyphs             
+ ▾ Components           
+ ├── Frame              
+ └── Tree               
