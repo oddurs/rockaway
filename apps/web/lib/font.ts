@@ -151,10 +151,35 @@ export function fontFaces(web: readonly string[], measured: Metrics = metrics): 
   // fallback's kept it on one line: the paragraph grew a row when Plex
   // arrived. With a cell a few thousandths of a pixel wider than a letter,
   // a line that fills its measure fits in either font.
+  //
+  // And the web faces join the stack all at once (`fontsTogether`): until
+  // then the page is set in the fallbacks alone. One face in before the
+  // others, the regular before the bold, set a bold run in a bold the browser
+  // made up or borrowed, of another width, so a paragraph wrapped a row longer
+  // and back as the faces came in (Linux, Slow 4G). With no script, the stack
+  // is whole from the start, and each face swaps in as it comes.
   const stack = fontStack(web);
+  const fallback = fontStack([]);
   const cell = `calc(1ch + ${SLACK}px)`;
-  faces.push(
-    `:root{--rk-font-family-mono:${stack};--rk-font-family-display:${stack};--rk-cell-width:${cell}}`,
-  );
+  const set = (families: string) =>
+    `--rk-font-family-mono:${families};--rk-font-family-display:${families}`;
+  faces.push(`:root{${set(fallback)};--rk-cell-width:${cell}}`);
+  faces.push(`:root[data-site-fonts]{${set(stack)}}`);
+  faces.push(`@media (scripting: none){:root{${set(stack)}}}`);
   return faces.join('\n');
+}
+
+/**
+ * The script that brings the web faces in together: it asks for every face
+ * of the family, and only once all of them have arrived marks `<html>`, so
+ * the stylesheet puts the family at the head of the stack in one step.
+ */
+export function fontsTogether(family: string): string {
+  const faces = ['normal 400', 'normal 700', 'italic 400'].map(
+    (face) => `${face} 1em ${JSON.stringify(family)}`,
+  );
+  return `(() => {
+  const all = ${JSON.stringify(faces)}.map((face) => document.fonts.load(face));
+  Promise.all(all).then(() => { document.documentElement.dataset.siteFonts = ''; }, () => {});
+})();`;
 }

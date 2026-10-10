@@ -21,7 +21,7 @@ import './globals.css';
 import { PaneChrome } from '../components/shell/PaneChrome.tsx';
 import { Shell } from '../components/shell/Shell.tsx';
 import { SiteTree } from '../components/shell/SiteTree.tsx';
-import { fontFaces } from '../lib/font.ts';
+import { fontFaces, fontsTogether } from '../lib/font.ts';
 import { glyphSetCss } from '../lib/glyph-sets.ts';
 import { prePaint, SITE_THEME, STORAGE_KEY } from '../lib/look.ts';
 import { asset } from '../lib/paths.ts';
@@ -110,6 +110,12 @@ export default function RootLayout({
           // biome-ignore lint/security/noDangerouslySetInnerHtml: the faces and the glyph sets, written at build.
           dangerouslySetInnerHTML={{
             __html: `${fontFaces(webFamilies)}\n${glyphSetCss()}\n${sectionCss}`,
+          }}
+        />
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: the site's own script, written at build.
+          dangerouslySetInnerHTML={{
+            __html: fontsTogether((webFamilies[0] ?? '').replace(/^['"]|['"]$/g, '')),
           }}
         />
       </head>
