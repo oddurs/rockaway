@@ -19,6 +19,11 @@ function Card({ label }: { label: string }) {
   );
 }
 
+/**
+ * Two spaces of a fixed width, which do not shrink: a narrow window, or a
+ * wider cell in the padding, must not take the main column under its
+ * breakpoint.
+ */
 function Containers() {
   return (
     <div
@@ -29,10 +34,10 @@ function Containers() {
         alignItems: 'flex-start',
       }}
     >
-      <div className="rk-container" style={{ inlineSize: 280 }}>
+      <div className="rk-container" style={{ inlineSize: 280, flexShrink: 0 }}>
         <Card label="In a sidebar" />
       </div>
-      <div className="rk-container" style={{ inlineSize: 640 }}>
+      <div className="rk-container" style={{ inlineSize: 640, flexShrink: 0 }}>
         <Card label="In a main column" />
       </div>
     </div>
