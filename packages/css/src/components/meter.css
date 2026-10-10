@@ -1,0 +1,23 @@
+/*
+ * Meter (cairn 0101): ProgressBar's bar (progress.css) and a mark cell. Its
+ * tone colours the fill and the mark, and the mark says it without colour.
+ */
+@layer rk.components {
+  /* A meter's tone colours its fill and its mark; the mark says it without colour. */
+  .rk-meter-mark {
+    display: inline-block;
+    inline-size: var(--rk-cell-width);
+  }
+
+  .rk-meter[data-tone="success"] :is(.rk-progress-fill, .rk-meter-mark) {
+    color: var(--rk-fg-success);
+  }
+
+  .rk-meter[data-tone="warning"] :is(.rk-progress-fill, .rk-meter-mark) {
+    color: var(--rk-fg-warning);
+  }
+
+  .rk-meter[data-tone="danger"] :is(.rk-progress-fill, .rk-meter-mark) {
+    color: var(--rk-fg-danger);
+  }
+}

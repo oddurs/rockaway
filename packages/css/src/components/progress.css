@@ -1,0 +1,56 @@
+/*
+ * ProgressBar (cairn 0101), and the bar Meter shares with it.
+ *
+ * Each is one row of whole cells (a sparkline as many rows as it is given),
+ * set as text: `white-space: pre`, so the cell of air between the label, the
+ * bar and the value is a cell. The bar's blocks and eighths, the sparkline's
+ * dots and the spinner's braille are runs the cell draws (0117, 0166); this
+ * only colours them.
+ *
+ * A colour is never the only signal (0118): the fill and the track are
+ * different glyphs, a meter's tone is also a mark in its own cell, and an
+ * indeterminate bar is a different shade. Under forced colors every part is
+ * the reader's text colour, and those glyphs still tell them apart.
+ */
+@layer rk.components {
+  .rk-progress,
+  .rk-meter {
+    display: inline-block;
+    vertical-align: top;
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+    color: var(--rk-fg-default);
+  }
+
+  /*
+   * A meter is a line of its own: meters come in a stack, a core or a kind
+   * of memory each, and one after another is a column, not a run of text.
+   */
+  .rk-meter {
+    display: block;
+  }
+
+  /* A painted layer of one row; each run is its own cells, coloured by its part. */
+  .rk-progress-bar,
+  .rk-progress-bar > .rk-row {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .rk-progress-fill {
+    color: var(--rk-fg-accent);
+  }
+
+  .rk-progress-track {
+    color: var(--rk-fg-muted);
+  }
+
+  .rk-progress-value {
+    color: var(--rk-fg-muted);
+  }
+
+  /* Busy: the medium shade across, which is a texture and not an amount. */
+  .rk-progress-busy {
+    color: var(--rk-fg-accent);
+  }
+}
