@@ -112,6 +112,7 @@ const checks: [string, unknown, unknown][] = [
     pure.formBuffer([{ label: 'Name', control: pure.buttonBuffer('Go') }], { width: 64 }).row(0),
     `Name   [ Go ]${' '.repeat(51)}`,
   ],
+  ['pictureBuffer', pure.pictureBuffer({ cols: 4, rows: 1 }).row(0), '░░░░'],
   [
     'calloutBuffer',
     pure.calloutBuffer({ width: 14, height: 3 }, { tone: 'tip' }).row(0),
