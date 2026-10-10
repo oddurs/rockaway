@@ -200,3 +200,39 @@ describe('focus and reverse video, as role slots of their own', () => {
     },
   );
 });
+
+describe('surface levels (0307)', () => {
+  const levels = ['surface-sunken', 'surface-base', 'surface-raised', 'surface-overlay'] as const;
+
+  test.each(themeContexts.flatMap((t) => t.modes.map((mode) => [t.name, mode, t] as const)))(
+    '%s %s: four distinct layers, each lifting toward the next',
+    (_, mode, theme) => {
+      const p = theme.palettes[mode];
+      const ls = levels.map((slot) => p[slot].l);
+      // Dark themes lift each layer; a light theme's layers rise toward white.
+      // Fitting may close a gap but never reverse one.
+      for (let i = 1; i < ls.length; i++) {
+        expect(ls[i] as number).toBeGreaterThanOrEqual(ls[i - 1] as number);
+      }
+      expect(new Set(levels.map((slot) => JSON.stringify(p[slot]))).size).toBe(4);
+    },
+  );
+
+  test('forced colours collapse all four to Canvas', async () => {
+    const css = await readFile(path.join(root, '..', 'css', 'src', 'forced-colors.css'), 'utf8');
+    for (const level of levels) {
+      expect(css).toContain(`--rk-bg-${level}: Canvas;`);
+      expect(css).toContain(`--rk-ansi-${level}: Canvas;`);
+    }
+  });
+
+  test('the gate moves a layer, never a text colour, to hold text on a layer', () => {
+    for (const theme of themeContexts) {
+      for (const adjustment of theme.adjustments) {
+        if (/ on bg\.surface-/.test(adjustment.because)) {
+          expect(adjustment.slot).toMatch(/^surface-/);
+        }
+      }
+    }
+  });
+});
