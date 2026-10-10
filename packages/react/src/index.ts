@@ -23,6 +23,7 @@ export * from './entries/list.ts';
 export * from './entries/menu.ts';
 export * from './entries/overlay.ts';
 export * from './entries/panes.ts';
+export * from './entries/picture.ts';
 export * from './entries/popover.ts';
 export * from './entries/select.ts';
 export * from './entries/table.ts';

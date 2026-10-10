@@ -1498,6 +1498,90 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Picture": {
+    "file": "picture.tsx",
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "required": true,
+        "description": "What the image shows, for a reader who cannot see it. Empty for a picture that is decoration."
+      },
+      {
+        "name": "ratio",
+        "type": "number",
+        "required": false,
+        "description": "The image's width over its height (`16 / 9`). With `width` and `height` instead, the ratio is theirs. One or the other is needed: it is what sizes the box before the image arrives."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "required": false,
+        "description": "The image's own width, in pixels, when `ratio` is not given."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "required": false,
+        "description": "The image's own height, in pixels, when `ratio` is not given."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "Its width in cells. Every whole cell its container gives it when not given."
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "Its height in rows, cropping the image to it. From the ratio when not given."
+      },
+      {
+        "name": "position",
+        "type": "string",
+        "required": false,
+        "description": "Which part of the image to keep when it is cropped, as `object-position`."
+      },
+      {
+        "name": "caption",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Text on the rows under the image."
+      },
+      {
+        "name": "loading",
+        "type": "'lazy' | 'eager'",
+        "required": false,
+        "description": "Load it when it is near the viewport (the default) or straight away.",
+        "default": "'lazy'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Pick< ImgHTMLAttributes<HTMLImageElement>, 'srcSet' | 'sizes' | 'crossOrigin' | 'referrerPolicy' | 'fetchPriority' >"
+    ],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-muted"
+    ]
+  },
   "Popover": {
     "file": "popover.tsx",
     "props": [
