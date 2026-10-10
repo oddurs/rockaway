@@ -57,7 +57,11 @@
         "**/*.config.ts",
         "**/.storybook/**",
         "**/*.stories.tsx",
-        "apps/site/scripts/subset-font.d.ts"
+        "apps/site/scripts/subset-font.d.ts",
+        "apps/web/app/**/page.tsx",
+        "apps/web/app/**/layout.tsx",
+        "apps/web/app/**/default.tsx",
+        "apps/web/app/**/not-found.tsx"
       ],
       "linter": {
         "rules": {

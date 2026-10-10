@@ -1,0 +1,5 @@
+.next/
+out/
+next-env.d.ts
+# Copied from @rockaway/tokens at build (scripts/themes.ts).
+public/themes/
