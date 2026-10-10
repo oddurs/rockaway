@@ -10,6 +10,7 @@ declare module 'vitest/browser' {
     printToPdf: (html: string) => Promise<{ fills: number }>;
     readWithoutScripts: (html: string) => Promise<{ rows: string[]; shapes: number; ran: boolean }>;
     recordKnown: (use: KnownUse) => Promise<void>;
+    wheel: (selector: string, deltaY: number) => Promise<void>;
     emulateContrast: (contrast: 'more' | 'no-preference') => Promise<void>;
     recordPaint: (over: OverBudget) => Promise<void>;
     watchdog: (ms: number | null) => Promise<void>;
@@ -26,6 +27,18 @@ declare module 'vitest' {
   }
 }
 
+/**
+ * Virtualisation on (cairn 0115). Under `NODE_ENV=test`, react-stately's
+ * virtualiser renders the whole collection on purpose, because jsdom has no
+ * layout, and reads `process.env.VIRT_ON` at run time to turn that off. A
+ * browser has layout, and has no `process`: without this, a virtualised list
+ * throws, and with only a `define` it was not replaced in every project's
+ * pre-bundled copy. A story asserting that only the visible rows are in the
+ * page has to see what a reader's browser does.
+ */
+const env = { VIRT_ON: '1' };
+(globalThis as { process?: { env: Record<string, string> } }).process ??= { env };
+
 setRunner({
   // Real pixels for the continuity check: a PNG of exactly the element asked
   // for, kept in memory rather than written to disk.
@@ -37,6 +50,7 @@ setRunner({
   project: inject('project'),
   platform: inject('platform'),
   record: (use) => commands.recordKnown(use),
+  wheel: (selector, deltaY) => commands.wheel(selector, deltaY),
   // The provider's keyboard: trusted events, as a reader's keys are.
   type: (keys) => userEvent.keyboard(keys),
   // At a point, the press goes to whatever a reader would hit there, without

@@ -11,6 +11,7 @@ import {
   readWithoutScripts,
   recordKnown,
   watchdog,
+  wheel,
 } from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
 import type { Platform } from './.storybook/known.ts';
@@ -102,7 +103,15 @@ const browser = (
     contextOptions: { ...context, viewport: { width: 1600, height: 2400 } },
   }),
   instances: [{ browser: engine }] satisfies BrowserInstanceOption[],
-  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown, recordPaint, watchdog },
+  commands: {
+    emulateContrast,
+    printToPdf,
+    readWithoutScripts,
+    recordKnown,
+    recordPaint,
+    watchdog,
+    wheel,
+  },
 });
 
 /**
