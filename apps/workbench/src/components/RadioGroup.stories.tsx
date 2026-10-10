@@ -319,7 +319,13 @@ const STATES_TEXT = [
 export const States: Story = {
   name: 'Every state',
   render: () => (
-    <Frame title="states" cols={COLS} rows={STATES_TEXT.split('\n').length + 2}>
+    // The states, in the terminal's spacing: the help sits on the row under its group.
+    <Frame
+      title="states"
+      cols={COLS}
+      rows={STATES_TEXT.split('\n').length + 2}
+      data-rk-comfort="compact"
+    >
       <Branches label="Required" orientation="horizontal" isRequired />
       <Branches
         label="Invalid"

@@ -121,7 +121,7 @@ describe('radioBuffer', () => {
     expect(html).toMatch(/<span aria-hidden="true" class="rk-radio-indicator">/);
     expect(html).toMatch(/role="radiogroup"/);
     expect(html).toMatch(/type="radio"/);
-    expect(html).toMatch(/class="rk-field rk-radio-group"/);
+    expect(html).toMatch(/class="rk-field rk-seam rk-radio-group"/);
     expect(html).toMatch(/class="rk-radio-options" data-orientation="vertical"/);
   });
 });
