@@ -182,6 +182,78 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Card": {
+    "file": "card.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the top edge, and what a reader hears the card called."
+      },
+      {
+        "name": "comfort",
+        "type": "Comfort",
+        "required": false,
+        "description": "How generous the padding inside and the gaps between blocks are (0313): comfortable by default; inherited from the region when it sets one."
+      },
+      {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground inside the frame, border cells included: `raised` by default.",
+        "default": "'raised'"
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "How the frame's lines are stroked. The same cells either way."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The accessible name, when the title is not the right one to say."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-rhythm-gap",
+      "--rk-rhythm-pad-x",
+      "--rk-rhythm-pad-y",
+      "--rk-rhythm-section",
+      "--rk-step-x",
+      "--rk-step-y",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Cell": {
     "file": "table.tsx",
     "props": [
@@ -2037,6 +2109,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "PainterName",
         "required": false,
         "default": "'glyph'"
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "The body rows shown at once: the table is exactly this tall, and its body scrolls in whole rows, following the cursor, with a scrollbar in cells. Every row, and no scrollbar, when not given."
       },
       {
         "name": "className",
