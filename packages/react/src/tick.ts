@@ -17,23 +17,40 @@
  * Reduced motion is the system setting, or `data-motion="reduced"` on the
  * root, with `data-motion="full"` overriding the system: the same two signals
  * the base CSS reads.
+ *
+ * The exception is a tick that is data rather than motion: `refresh`, how
+ * often live numbers are read again. Under reduced motion it keeps counting,
+ * at its `motion.tick-reduced` interval, so the numbers stay true while
+ * nothing animates (0101, 0151). `useReducedMotion` is the setting itself,
+ * for anything else that has to choose.
  */
-import { type TickName, ticks } from '@rockaway/tokens';
+import { reducedTicks, type TickName, ticks } from '@rockaway/tokens';
 import { useCallback, useSyncExternalStore } from 'react';
 
 interface Clock {
+  /** Its interval, and its interval under reduced motion: none if it stops. */
+  readonly ms: number;
+  readonly reducedMs: number | undefined;
   frame: number;
   readonly listeners: Set<() => void>;
   timer: ReturnType<typeof setInterval> | undefined;
+  /** The interval the timer is running at, when it is. */
+  running: number | undefined;
 }
 
 const QUERY = '(prefers-reduced-motion: reduce)';
 
-/** Every running clock, by its interval in milliseconds. */
-const clocks = new Map<number, Clock>();
+/** Every running clock, by its interval and its interval under reduced motion. */
+const clocks = new Map<string, Clock>();
+
+/** Everyone following the reduced-motion setting itself. */
+const followers = new Set<() => void>();
 
 let reduced = false;
 let unwatch: (() => void) | undefined;
+
+const keyOf = (ms: number, reducedMs: number | undefined): string =>
+  reducedMs === undefined ? String(ms) : `${ms}/${reducedMs}`;
 
 function readReduced(): boolean {
   if (typeof document === 'undefined') return false;
@@ -51,26 +68,30 @@ function notify(clock: Clock): void {
   for (const listener of clock.listeners) listener();
 }
 
-/** Start or stop a clock to match whether anything may move. */
-function schedule(ms: number, clock: Clock): void {
-  const run = clock.listeners.size > 0 && !reduced && !hidden();
-  if (run && clock.timer === undefined) {
+/** Start, stop or retime a clock to match whether, and how fast, it may move. */
+function schedule(clock: Clock): void {
+  const interval = reduced ? clock.reducedMs : clock.ms;
+  const run = clock.listeners.size > 0 && interval !== undefined && !hidden();
+  const want = run ? interval : undefined;
+  if (want === clock.running) return;
+  if (clock.timer !== undefined) clearInterval(clock.timer);
+  clock.timer = undefined;
+  clock.running = want;
+  if (want !== undefined) {
     clock.timer = setInterval(() => {
       clock.frame += 1;
       notify(clock);
-    }, ms);
-  } else if (!run && clock.timer !== undefined) {
-    clearInterval(clock.timer);
-    clock.timer = undefined;
+    }, want);
   }
 }
 
 function update(): void {
   reduced = readReduced();
-  for (const [ms, clock] of clocks) {
-    schedule(ms, clock);
+  for (const clock of clocks.values()) {
+    schedule(clock);
     notify(clock);
   }
+  for (const follower of followers) follower();
 }
 
 /** Listen for the three things that start and stop every clock. */
@@ -92,38 +113,59 @@ function watch(): () => void {
   };
 }
 
+/** The first one in starts watching the setting. */
+function retain(): void {
+  if (unwatch !== undefined) return;
+  unwatch = watch();
+  reduced = readReduced();
+}
+
+/** The last one out stops. */
+function release(): void {
+  if (clocks.size > 0 || followers.size > 0) return;
+  unwatch?.();
+  unwatch = undefined;
+}
+
 /**
  * Follow the clock for an interval. The first subscriber starts it and the
- * last one stops it; everyone in between shares it. Exported for tests.
+ * last one stops it; everyone in between shares it. Given `reducedMs`, it
+ * keeps counting under reduced motion, that often. Exported for tests.
  */
-export function subscribeTick(ms: number, listener: () => void): () => void {
-  if (unwatch === undefined) {
-    unwatch = watch();
-    reduced = readReduced();
-  }
-  let clock = clocks.get(ms);
+export function subscribeTick(ms: number, listener: () => void, reducedMs?: number): () => void {
+  retain();
+  const key = keyOf(ms, reducedMs);
+  let clock = clocks.get(key);
   if (!clock) {
-    clock = { frame: 0, listeners: new Set(), timer: undefined };
-    clocks.set(ms, clock);
+    clock = {
+      ms,
+      reducedMs,
+      frame: 0,
+      listeners: new Set(),
+      timer: undefined,
+      running: undefined,
+    };
+    clocks.set(key, clock);
   }
   clock.listeners.add(listener);
-  schedule(ms, clock);
+  schedule(clock);
 
   const own = clock;
   return () => {
     own.listeners.delete(listener);
-    schedule(ms, own);
-    if (own.listeners.size === 0 && clocks.get(ms) === own) clocks.delete(ms);
-    if (clocks.size === 0) {
-      unwatch?.();
-      unwatch = undefined;
-    }
+    schedule(own);
+    if (own.listeners.size === 0 && clocks.get(key) === own) clocks.delete(key);
+    release();
   };
 }
 
-/** The current frame for an interval: 0 under reduced motion, or before anything ticks. */
-export function tickFrame(ms: number): number {
-  return reduced ? 0 : (clocks.get(ms)?.frame ?? 0);
+/**
+ * The current frame for an interval: 0 before anything ticks, and 0 under
+ * reduced motion unless the clock keeps counting there.
+ */
+export function tickFrame(ms: number, reducedMs?: number): number {
+  if (reduced && reducedMs === undefined) return 0;
+  return clocks.get(keyOf(ms, reducedMs))?.frame ?? 0;
 }
 
 const onServer = (): number => 0;
@@ -131,12 +173,39 @@ const onServer = (): number => 0;
 /**
  * The frame for a named tick. Given `frames`, it wraps: `useTick('spinner',
  * 10)` counts 0 to 9 and round again, which is an index into the spinner's
- * glyphs.
+ * glyphs. `useTick('refresh')` keeps counting under reduced motion, slower.
  */
 export function useTick(name: TickName, frames?: number): number {
   const ms = ticks[name];
-  const subscribe = useCallback((listener: () => void) => subscribeTick(ms, listener), [ms]);
-  const snapshot = useCallback(() => tickFrame(ms), [ms]);
+  const reducedMs = reducedTicks[name];
+  const subscribe = useCallback(
+    (listener: () => void) => subscribeTick(ms, listener, reducedMs),
+    [ms, reducedMs],
+  );
+  const snapshot = useCallback(() => tickFrame(ms, reducedMs), [ms, reducedMs]);
   const frame = useSyncExternalStore(subscribe, snapshot, onServer);
   return frames === undefined || frames <= 0 ? frame : frame % frames;
+}
+
+function followReduced(listener: () => void): () => void {
+  followers.add(listener);
+  retain();
+  return () => {
+    followers.delete(listener);
+    release();
+  };
+}
+
+/** The setting now: what was last read while watching, or read afresh when nothing is. */
+const reducedNow = (): boolean => (unwatch === undefined ? readReduced() : reduced);
+
+const notOnServer = (): boolean => false;
+
+/**
+ * Whether the reader asked for less motion: the system setting, or
+ * `data-motion` on the root, `full` overriding the system. The same signals
+ * `useTick` and the base CSS read. False on the server, so hydration agrees.
+ */
+export function useReducedMotion(): boolean {
+  return useSyncExternalStore(followReduced, reducedNow, notOnServer);
 }

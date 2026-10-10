@@ -44,7 +44,7 @@ export default async function FoundationPage({
             <link key={theme} rel="stylesheet" href={href} precedence="themes" />
           ))
         : null}
-      <article className="rk-prose">
+      <article className="rk-prose" data-rk-reading="" data-rk-conformance="loose">
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: the site's own Markdown and the engine's drawings, rendered at build. */}
         <div className="site-html" dangerouslySetInnerHTML={{ __html: html }} />
         <hr />

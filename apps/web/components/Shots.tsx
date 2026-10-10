@@ -11,7 +11,17 @@
  * Every screen is a fixed number of cells, so the server draws it at exactly
  * its size and nothing moves when the page's script arrives.
  */
-import { Badge, Button, Frame, KeyHint, Screen, useGlyphs } from '@rockaway/react';
+import {
+  Badge,
+  Button,
+  Form,
+  Frame,
+  KeyHint,
+  Screen,
+  Switch,
+  TextField,
+  useGlyphs,
+} from '@rockaway/react';
 import { LinkTree } from '@rockaway/react/link-tree';
 import { Pane, Panes } from '@rockaway/react/panes';
 import { StatusBar, StatusMessage, StatusSegment } from '@rockaway/react/status-bar';
@@ -84,23 +94,29 @@ export function GitClient(): ReactNode {
   );
 }
 
-/** A settings screen: choices, two checkboxes and the buttons that keep them. */
+/** How tall the settings screen is, in rows: its comfortable form, and the buttons under it. */
+export const SETTINGS_ROWS = 15;
+
+/**
+ * A settings screen (0324): a real Form, comfortable as forms are by default
+ * (0316), each label over its control and the text box two rows tall, and
+ * the switches and buttons that keep the choice.
+ */
 export function Settings(): ReactNode {
-  const { mark, delimiter } = useGlyphs();
-  const [open, close] = delimiter.control;
-  const box = (on: boolean) => `${open}${on ? mark.check : mark.blank}${close}`;
-  const radio = (on: boolean) => (on ? mark.radio : mark['radio-empty']);
   return (
-    <Frame title="settings" cols={SHOT_COLS} rows={11} pad={{ x: 2, y: 1 }}>
-      <div>{`Theme     ${open} sunset ${close}`}</div>
-      <div>{`Density   ${radio(false)} dense  ${radio(true)} normal  ${radio(false)} airy`}</div>
-      <div> </div>
-      <div>{`${box(true)} Sign commits`}</div>
-      <div>{`${box(false)} Push on save`}</div>
-      <div> </div>
-      <div className="site-shot-actions">
-        <Button>Cancel</Button> <Button variant="fill">Save</Button>
-      </div>
+    <Frame title="settings" cols={SHOT_COLS} rows={SETTINGS_ROWS} pad={{ x: 2, y: 1 }}>
+      <Form aria-label="Settings">
+        <TextField
+          label="Name"
+          defaultValue="Ada Lovelace"
+          description="As it appears on a commit."
+        />
+        <Switch defaultSelected>Sign commits</Switch>
+        <Switch>Push on save</Switch>
+        <p className="site-shot-actions">
+          <Button>Cancel</Button> <Button variant="fill">Save</Button>
+        </p>
+      </Form>
     </Frame>
   );
 }

@@ -1,0 +1,6 @@
+── Below, at and past the thresholds
+cpu ██████▊░░░░░░░░░  42%
+cpu ████████████▏░░░! 76%
+cpu ███████████████░✗ 94%
+── A value of its own
+mem ███████████▎░░░░ 11.2/16G
