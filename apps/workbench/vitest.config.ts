@@ -329,6 +329,10 @@ const engineProjects = others.map((engine) => ({
           FORCED_COLORS,
           P3,
           'print',
+          // A story too large to run in every engine within its timeout on
+          // CI, whose parts run everywhere: the kitchen sink's whole-sink
+          // variants, whose parts are walked in every engine.
+          'chromium-only',
           // Playwright's Firefox gives every box `scrollbar-width: none`, and
           // its emulated `prefers-contrast` never reaches the style sheets.
           ...(engine === 'firefox' ? ['native-scrollbars', 'contrast-emulation'] : []),
