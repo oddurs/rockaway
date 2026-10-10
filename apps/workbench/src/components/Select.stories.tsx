@@ -66,7 +66,7 @@ function model(select: Omit<SelectText, 'cols' | 'options'>, width = WIDE - 4): 
       }),
     },
   ];
-  return toText(formBuffer(fields, { width }));
+  return toText(formBuffer(fields, { comfort: 'compact', width }));
 }
 
 /** The inside of a frame's screenshot: its rows and columns within the border and the pad. */
@@ -119,7 +119,7 @@ const box = (el: Element): readonly number[] => {
 export const Closed: Story = {
   render: () => (
     <Frame title="settings" cols={WIDE} rows={5}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="phosphor" />
         <Themes label="Font" />
       </Form>
@@ -138,7 +138,7 @@ export const Closed: Story = {
         control: selectBuffer({ cols: COLS, options: options(), placeholder: 'Choose one' }),
       },
     ];
-    expect(inside(frame)).toBe(toText(formBuffer(fields, { width: WIDE - 4 })));
+    expect(inside(frame)).toBe(toText(formBuffer(fields, { comfort: 'compact', width: WIDE - 4 })));
 
     // The trigger is a button named by the label and the value; its chrome is hidden.
     const theme = canvas.getByRole('button', { name: /Theme/ });
@@ -161,7 +161,7 @@ export const Closed: Story = {
 export const Open: Story = {
   render: () => (
     <Frame title="settings" cols={WIDE} rows={10}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="phosphor" defaultOpen />
       </Form>
     </Frame>
@@ -200,7 +200,7 @@ export const AsWideAsTrigger: Story = {
   name: 'At least as wide as its trigger',
   render: () => (
     <Frame title="wide" cols={WIDE} rows={10}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="ink" cols={30} defaultOpen />
       </Form>
     </Frame>
@@ -233,7 +233,7 @@ export const AsWideAsTrigger: Story = {
               }),
             },
           ],
-          { width: WIDE - 4 },
+          { comfort: 'compact', width: WIDE - 4 },
         ),
       ),
     );
@@ -245,7 +245,7 @@ function painted(painter: 'glyph' | 'rule'): Story {
   return {
     render: () => (
       <Frame title={painter} painter={painter} cols={WIDE} rows={10}>
-        <Form>
+        <Form comfort="compact">
           <Themes defaultSelectedKey="phosphor" defaultOpen />
         </Form>
       </Frame>
@@ -276,7 +276,7 @@ export const PainterRule: Story = { ...painted('rule'), name: 'Painted, rule' };
 export const Keyboard: Story = {
   render: () => (
     <Frame title="keyboard" cols={WIDE} rows={10}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="ink" disabled="ice" />
         <Button>after</Button>
       </Form>
@@ -329,7 +329,7 @@ export const HoverAndPress: Story = {
   name: 'Hover and press',
   render: () => (
     <Frame title="pointer" cols={WIDE} rows={3}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="ink" />
       </Form>
     </Frame>
@@ -413,7 +413,7 @@ export const InAForm: Story = {
 export const Disabled: Story = {
   render: () => (
     <Frame title="disabled" cols={WIDE} rows={3}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="ink" isDisabled />
       </Form>
     </Frame>
@@ -435,7 +435,7 @@ export const Densities: Story = {
       {(['dense', 'normal', 'airy', 'touch'] as const).map((density) => (
         <div key={density} data-density={density}>
           <Frame title={density} cols={WIDE} rows={3}>
-            <Form>
+            <Form comfort="compact">
               <Themes defaultSelectedKey="phosphor" />
             </Form>
           </Frame>
@@ -459,7 +459,7 @@ export const Zoom: Story = {
   tags: ['zoom'],
   render: () => (
     <Frame title="zoom" cols={WIDE} rows={10}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="phosphor" defaultOpen />
       </Form>
     </Frame>
@@ -475,7 +475,7 @@ export const Touch: Story = {
   render: () => (
     <div data-density="touch">
       <Frame title="touch" cols={WIDE} rows={3}>
-        <Form>
+        <Form comfort="compact">
           <Themes defaultSelectedKey="ink" />
         </Form>
       </Frame>
@@ -499,7 +499,7 @@ export const Ascii: Story = {
   render: () => (
     <GlyphProvider glyphs={glyphsFor({ borderSet: 'ascii' })}>
       <Frame title="ascii" cols={WIDE} rows={3}>
-        <Form>
+        <Form comfort="compact">
           <Themes defaultSelectedKey="ink" />
         </Form>
       </Frame>
@@ -520,7 +520,7 @@ export const Ascii: Story = {
               ),
             },
           ],
-          { width: WIDE - 4 },
+          { comfort: 'compact', width: WIDE - 4 },
         ),
       ),
     );
@@ -532,7 +532,7 @@ export const Dark: Story = {
   globals: { mode: 'dark' },
   render: () => (
     <Frame title="dark" cols={WIDE} rows={10}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="phosphor" defaultOpen />
       </Form>
     </Frame>
@@ -550,7 +550,7 @@ export const ForcedColors: Story = {
   tags: ['forced-colors'],
   render: () => (
     <Frame title="forced" cols={WIDE} rows={10}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="phosphor" defaultOpen />
       </Form>
     </Frame>
@@ -568,7 +568,7 @@ export const Strict: Story = {
   globals: { conformance: 'strict' },
   render: () => (
     <Frame title="strict" cols={WIDE} rows={3}>
-      <Form>
+      <Form comfort="compact">
         <Themes defaultSelectedKey="ink" />
       </Form>
     </Frame>
