@@ -16,9 +16,16 @@
  *
  *   strict    every box whole cells; the glyph painter only
  *   standard  every box whole cells, except half a cell inside a control
- *             (`[data-rk-control]`); either painter
+ *             (`[data-rk-control]`) or a rhythm block (`[data-rk-rhythm]`);
+ *             either painter
  *   loose     panes whole cells (`[data-rk-pane]`, or a screen inside the
  *             screen); anything else is free
+ *
+ * These are the three tiers of 0311: structure, rhythm and free. Whatever the
+ * level, a seam is whole cells: the outer box of a rhythm block or a free zone
+ * (`[data-rk-free]`), so fractional spacing never escapes the block that uses
+ * it. Every box that rests on a half-step is listed in the report's `rhythm`
+ * audit, which is not a failure but a map of where the grid bends.
  *
  * The level belongs to a screen, not to a box inside it, so a component cannot
  * loosen the app it is placed in by declaring a level of its own. A screen
@@ -119,6 +126,12 @@ export interface ConformanceReport {
   readonly exceptions: readonly Exception[];
   /** The exceptions grouped by reason, the most used first. */
   readonly reasons: readonly ExceptionGroup[];
+  /**
+   * The rhythm audit (0311): every box that rests on a half-step rather than a
+   * whole cell, inside a control or a rhythm block. None of these is a
+   * violation; the list is there so review can see where the grid bends.
+   */
+  readonly rhythm: readonly string[];
 }
 
 export interface ConformanceOptions {
@@ -183,17 +196,28 @@ function stepFor(
   screen: HTMLElement,
   level: ConformanceLevel,
 ): number | undefined {
+  // A seam (0311) is whole cells at every level: the outer box of a block
+  // whose inside is rhythm or free, so what it holds never moves its
+  // neighbours off the grid.
+  if (isSeam(el)) return 1;
   if (level === 'loose') {
     // Panes hold the grid; what is inside one is the app's business.
     return el.hasAttribute('data-rk-pane') || el.classList.contains('rk-screen') ? 1 : undefined;
   }
   if (level === 'standard') {
-    // Half a cell inside a control, for the padding that makes it read as one.
-    // The control's own box is still whole cells.
-    const control = el.parentElement?.closest('[data-rk-control]');
-    if (control && screen.contains(control)) return 0.5;
+    // The rhythm tier (0311): half a cell, across and down, inside a control
+    // (the padding that makes it read as one) or inside a rhythm block (the
+    // spacing between fields, menu sections, toolbar items). The block's own
+    // box is still whole cells: it is a seam.
+    const rhythm = el.parentElement?.closest('[data-rk-control], [data-rk-rhythm]');
+    if (rhythm && screen.contains(rhythm)) return 0.5;
   }
   return 1;
+}
+
+/** The outer box of a rhythm block or a free zone (0311). */
+function isSeam(el: HTMLElement): boolean {
+  return el.hasAttribute('data-rk-rhythm') || el.hasAttribute('data-rk-free');
 }
 
 function group(exceptions: readonly Exception[]): ExceptionGroup[] {
@@ -222,6 +246,7 @@ export function checkConformance(
 
   const violations: Violation[] = [];
   const exceptions: Exception[] = [];
+  const rhythm: string[] = [];
   const levels: ConformanceLevel[] = [];
   // Counted by identity, not by description: two `div`s are two exceptions,
   // and a box inside nested screens is one. The same goes for an empty
@@ -332,14 +357,18 @@ export function checkConformance(
         if (!inline) measurements.push(['y', box.top - origin.top, cellHeight]);
       }
 
+      let bent = false;
       for (const [what, pixels, cell] of measurements) {
         const cells = pixels / cell;
         const steps = cells / step;
         const off = Math.abs(steps - Math.round(steps)) * step * cell;
         if (off > tolerance) {
           violations.push({ what, element: describe(el), level, cells, pixels, step });
+        } else if (step < 1 && Math.abs(cells - Math.round(cells)) * cell > tolerance) {
+          bent = true;
         }
       }
+      if (bent) rhythm.push(describe(el));
     }
   }
 
@@ -350,6 +379,7 @@ export function checkConformance(
     violations,
     exceptions,
     reasons: group(exceptions),
+    rhythm,
   };
 }
 

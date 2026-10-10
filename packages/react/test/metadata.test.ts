@@ -54,6 +54,7 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
   RouterProvider:
     "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
+  Flow: 'Layout, not a widget: blocks down the page on rhythm half-steps, closed to whole rows (0312). Documented with the grid.',
   Chrome:
     "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };
