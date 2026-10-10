@@ -1,0 +1,53 @@
+/*
+ * Panes (cairn 0136).
+ *
+ * The borders are painted by the screen; each pane is a real element laid
+ * over the cells they enclose. `Panes` writes where, in cells, as custom
+ * properties, and this turns the counts into lengths, so a pane is whole cells
+ * at every density.
+ *
+ * A pane clips what does not fit, the way a terminal pane does, but lets a
+ * focus ring through into the border around it: the ring costs no cell, and
+ * clipping it would hide where focus is.
+ */
+@layer rk.components {
+  .rk-pane {
+    position: absolute;
+    box-sizing: border-box;
+    inset-inline-start: calc(var(--rk-pane-x) * var(--rk-cell-width));
+    inset-block-start: calc(var(--rk-pane-y) * var(--rk-cell-height));
+    inline-size: calc(var(--rk-pane-cols) * var(--rk-cell-width));
+    block-size: calc(var(--rk-pane-rows) * var(--rk-cell-height));
+    padding-inline: calc(var(--rk-pane-pad-x) * var(--rk-cell-width));
+    padding-block: calc(var(--rk-pane-pad-y) * var(--rk-cell-height));
+    overflow: clip;
+    overflow-clip-margin: calc(var(--rk-cell-height) / 2);
+  }
+
+  /*
+   * Surfaces (cairn 0308): the ground under a pane's content and padding. The
+   * borders around it are the screen's and keep its ground. Fallbacks are the
+   * roles that exist today.
+   */
+  .rk-pane[data-rk-surface="sunken"] {
+    background-color: var(--rk-bg-surface-sunken, var(--rk-bg-subtle));
+  }
+
+  .rk-pane[data-rk-surface="base"] {
+    background-color: var(--rk-bg-surface-base, var(--rk-bg-surface));
+  }
+
+  .rk-pane[data-rk-surface="raised"] {
+    background-color: var(--rk-bg-surface-raised, var(--rk-bg-surface));
+  }
+
+  .rk-pane[data-rk-surface="overlay"] {
+    background-color: var(--rk-bg-surface-overlay, var(--rk-bg-surface));
+  }
+
+  @media (forced-colors: active) {
+    .rk-pane[data-rk-surface] {
+      background-color: Canvas;
+    }
+  }
+}

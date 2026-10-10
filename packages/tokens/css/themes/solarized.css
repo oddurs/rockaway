@@ -28,7 +28,7 @@
     --rk-glyph-border-ascii-bottom-left: "+";
     --rk-glyph-border-ascii-bottom-right: "+";
     --rk-glyph-border-ascii-cross: "+";
-    --rk-glyph-border-ascii-horizontal: -;
+    --rk-glyph-border-ascii-horizontal: "-";
     --rk-glyph-border-ascii-tee-down: "+";
     --rk-glyph-border-ascii-tee-left: "+";
     --rk-glyph-border-ascii-tee-right: "+";
@@ -58,6 +58,17 @@
     --rk-glyph-border-double-top-left: "╔";
     --rk-glyph-border-double-top-right: "╗";
     --rk-glyph-border-double-vertical: "║";
+    --rk-glyph-border-emphasis-bottom-left: "┗";
+    --rk-glyph-border-emphasis-bottom-right: "┛";
+    --rk-glyph-border-emphasis-cross: "╋";
+    --rk-glyph-border-emphasis-horizontal: "━";
+    --rk-glyph-border-emphasis-tee-down: "┳";
+    --rk-glyph-border-emphasis-tee-left: "┫";
+    --rk-glyph-border-emphasis-tee-right: "┣";
+    --rk-glyph-border-emphasis-tee-up: "┻";
+    --rk-glyph-border-emphasis-top-left: "┏";
+    --rk-glyph-border-emphasis-top-right: "┓";
+    --rk-glyph-border-emphasis-vertical: "┃";
     --rk-glyph-border-heavy-bottom-left: "┗";
     --rk-glyph-border-heavy-bottom-right: "┛";
     --rk-glyph-border-heavy-cross: "╋";
@@ -69,6 +80,28 @@
     --rk-glyph-border-heavy-top-left: "┏";
     --rk-glyph-border-heavy-top-right: "┓";
     --rk-glyph-border-heavy-vertical: "┃";
+    --rk-glyph-border-modal-bottom-left: "╚";
+    --rk-glyph-border-modal-bottom-right: "╝";
+    --rk-glyph-border-modal-cross: "╬";
+    --rk-glyph-border-modal-horizontal: "═";
+    --rk-glyph-border-modal-tee-down: "╦";
+    --rk-glyph-border-modal-tee-left: "╣";
+    --rk-glyph-border-modal-tee-right: "╠";
+    --rk-glyph-border-modal-tee-up: "╩";
+    --rk-glyph-border-modal-top-left: "╔";
+    --rk-glyph-border-modal-top-right: "╗";
+    --rk-glyph-border-modal-vertical: "║";
+    --rk-glyph-border-raised-bottom-left: "┗";
+    --rk-glyph-border-raised-bottom-right: "┛";
+    --rk-glyph-border-raised-cross: "╋";
+    --rk-glyph-border-raised-horizontal: "━";
+    --rk-glyph-border-raised-tee-down: "┳";
+    --rk-glyph-border-raised-tee-left: "┫";
+    --rk-glyph-border-raised-tee-right: "┣";
+    --rk-glyph-border-raised-tee-up: "┻";
+    --rk-glyph-border-raised-top-left: "┏";
+    --rk-glyph-border-raised-top-right: "┓";
+    --rk-glyph-border-raised-vertical: "┃";
     --rk-glyph-border-rounded-bottom-left: "╰";
     --rk-glyph-border-rounded-bottom-right: "╯";
     --rk-glyph-border-rounded-cross: "┼";
@@ -123,6 +156,7 @@
     --rk-glyph-mark-external: "↗";
     --rk-glyph-mark-overflow-end: "›";
     --rk-glyph-mark-overflow-start: "‹";
+    --rk-glyph-mark-prompt: "›";
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
@@ -148,13 +182,13 @@
     --rk-palette-dark-border-strong: oklch(57.4% 0.0313 219.8);
     --rk-palette-dark-border-subtle: oklch(30.6% 0.0457 219.8);
     --rk-palette-dark-bright-black: oklch(26.7% 0.0486 219.8);
-    --rk-palette-dark-bright-blue: oklch(65.4% 0.0197 205.3);
-    --rk-palette-dark-bright-cyan: oklch(69.8% 0.0159 196.8);
-    --rk-palette-dark-bright-green: oklch(64.3% 0.0283 219.1);
-    --rk-palette-dark-bright-magenta: oklch(58.2% 0.1261 279.1);
-    --rk-palette-dark-bright-red: oklch(66.1% 0.1732 39.5);
+    --rk-palette-dark-bright-blue: oklch(81.4% 0.0197 205.3);
+    --rk-palette-dark-bright-cyan: oklch(81.3% 0.0159 196.8);
+    --rk-palette-dark-bright-green: oklch(81.8% 0.0283 219.1);
+    --rk-palette-dark-bright-magenta: oklch(80.09% 0.1016 278.8);
+    --rk-palette-dark-bright-red: oklch(86.28% 0.0783 43.32);
     --rk-palette-dark-bright-white: oklch(97.4% 0.0261 90.1);
-    --rk-palette-dark-bright-yellow: oklch(64.3% 0.0285 221.9);
+    --rk-palette-dark-bright-yellow: oklch(81.8% 0.0285 221.9);
     --rk-palette-dark-cursor: oklch(61.5% 0.1394 244.9);
     --rk-palette-dark-cyan: oklch(67.9% 0.1019 187.4);
     --rk-palette-dark-faint: oklch(44.1% 0.0356 205.3);
@@ -182,13 +216,13 @@
     --rk-palette-light-border-strong: oklch(62% 0.0275 90.1);
     --rk-palette-light-border-subtle: oklch(93.3% 0.0263 90.1);
     --rk-palette-light-bright-black: oklch(26.7% 0.0486 219.8);
-    --rk-palette-light-bright-blue: oklch(54.4% 0.0197 205.3);
-    --rk-palette-light-bright-cyan: oklch(54.8% 0.0159 196.8);
-    --rk-palette-light-bright-green: oklch(52.3% 0.0283 219.1);
-    --rk-palette-light-bright-magenta: oklch(58.2% 0.1261 279.1);
-    --rk-palette-light-bright-red: oklch(56.6% 0.1732 39.5);
+    --rk-palette-light-bright-blue: oklch(40.9% 0.0197 205.3);
+    --rk-palette-light-bright-cyan: oklch(41.3% 0.0159 196.8);
+    --rk-palette-light-bright-green: oklch(40.8% 0.0283 219.1);
+    --rk-palette-light-bright-magenta: oklch(42.7% 0.1261 279.1);
+    --rk-palette-light-bright-red: oklch(42.28% 0.1576 32.62);
     --rk-palette-light-bright-white: oklch(97.4% 0.0261 90.1);
-    --rk-palette-light-bright-yellow: oklch(54.3% 0.0285 221.9);
+    --rk-palette-light-bright-yellow: oklch(41.3% 0.0285 221.9);
     --rk-palette-light-cursor: oklch(61.5% 0.1394 244.9);
     --rk-palette-light-cyan: oklch(50.59% 0.0884 186.7);
     --rk-palette-light-faint: oklch(79.1% 0.0272 221.9);
@@ -214,6 +248,8 @@
 @media (color-gamut: p3) {
   @layer rk.tokens {
     [data-rk-theme='solarized'] {
+      --rk-palette-dark-bright-magenta: oklch(80.18% 0.1105 278.9);
+      --rk-palette-dark-bright-red: oklch(86.36% 0.0995 42.76);
       --rk-palette-dark-red: oklch(74.06% 0.2018 27.15);
       --rk-palette-dark-selection: oklch(31.6% 0.0613 219.8);
       --rk-palette-dark-tint-blue: oklch(31.6% 0.0613 219.8);
@@ -221,6 +257,7 @@
       --rk-palette-dark-tint-red: oklch(31.2% 0.0707 219.8);
       --rk-palette-dark-tint-yellow: oklch(32.1% 0.0606 219.8);
       --rk-palette-light-blue: oklch(51% 0.1394 244.9);
+      --rk-palette-light-bright-red: oklch(42.23% 0.1691 34.35);
       --rk-palette-light-cyan: oklch(49.9% 0.1019 187.4);
       --rk-palette-light-green: oklch(50.51% 0.1383 119);
       --rk-palette-light-yellow: oklch(52% 0.1232 83.05);
@@ -231,6 +268,8 @@
 @media (color-gamut: rec2020) {
   @layer rk.tokens {
     [data-rk-theme='solarized'] {
+      --rk-palette-dark-bright-magenta: oklch(80.34% 0.1116 279.5);
+      --rk-palette-dark-bright-red: oklch(86.43% 0.1472 42.14);
       --rk-palette-dark-red: oklch(74.6% 0.2064 27.1);
       --rk-palette-dark-selection: oklch(31.6% 0.0613 219.8);
       --rk-palette-dark-tint-blue: oklch(31.6% 0.0613 219.8);
@@ -238,6 +277,7 @@
       --rk-palette-dark-tint-red: oklch(31.2% 0.0707 219.8);
       --rk-palette-dark-tint-yellow: oklch(32.1% 0.0606 219.8);
       --rk-palette-light-blue: oklch(51% 0.1394 244.9);
+      --rk-palette-light-bright-red: oklch(42.2% 0.1691 34.29);
       --rk-palette-light-cyan: oklch(49.9% 0.1019 187.4);
       --rk-palette-light-green: oklch(50.45% 0.1423 118.9);
       --rk-palette-light-yellow: oklch(51.96% 0.1255 83.73);

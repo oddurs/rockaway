@@ -79,7 +79,11 @@ export const buttonMeta: ComponentMetaInput = defineMeta({
       part: 'Button',
       note: '`fill` reverses back to the page colours, so a press always shows; `danger` presses to bg.danger-solid.',
     },
-    { state: 'disabled', part: 'Button' },
+    {
+      state: 'disabled',
+      part: 'Button',
+      note: '`fill` stays reversed and dims its block: fg.disabled behind bg.page, a light grey in greyscale and GrayText in forced colors, where an enabled fill is the text colour. The same cells either way.',
+    },
   ],
   accessibility: {
     name: "The label's text. The delimiters, the mark and the key hint are aria-hidden, so the name never contains a glyph.",
@@ -88,7 +92,7 @@ export const buttonMeta: ComponentMetaInput = defineMeta({
     announces:
       '"Publish, button". With `keys`, a reader that supports aria-keyshortcuts gives the shortcut as well, for the same keyboard the hint is drawn for.',
     notes: [
-      '`keys` describes the shortcut; it does not bind it. The application listens for the chord.',
+      '`keys` describes the shortcut, and inside a Keymap it binds it too: the chord presses the button, and KeymapHelp lists it. Outside a Keymap the application listens for the chord.',
       "A danger button's `!` is not announced: say what is destructive in the label.",
     ],
   },

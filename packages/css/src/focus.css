@@ -14,6 +14,20 @@
     outline-offset: var(--rk-focus-offset);
   }
 
+  /*
+   * A control whose focus is on an input no one sees: a switch, a checkbox, a
+   * radio (0226). React Aria keeps the native input, visually hidden, and the
+   * keyboard focuses that; the ring goes round what a reader sees instead,
+   * the label it wraps round the input and marks `data-focus-visible`. A text
+   * field's label wraps nothing and a list row holds no input, so neither is
+   * touched; a native label round a native checkbox is never marked, and the
+   * checkbox wears its own ring.
+   */
+  label[data-focus-visible]:has(input:is([type="checkbox"], [type="radio"])) {
+    outline: var(--rk-focus-width) solid var(--rk-border-focus);
+    outline-offset: var(--rk-focus-offset);
+  }
+
   [data-rk-fill]:focus-visible {
     background: var(--rk-fg-default);
     color: var(--rk-bg-page);

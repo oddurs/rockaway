@@ -1,4 +1,4 @@
-import { measureCell } from '@rockaway/react';
+import { measureCell, scrollStateQueries, watchOverflowMarks } from '@rockaway/react';
 import {
   checkContinuity,
   expectConformance,
@@ -200,36 +200,100 @@ export const OverflowMarks: Story = {
     const pre = screen.querySelector<HTMLElement>('pre') as HTMLElement;
     const table = screen.querySelector<HTMLElement>('.rk-scroll-marks') as HTMLElement;
     await expect(table.querySelector('table')).not.toBeNull();
+    // As a page does: nothing where the query shows the marks, the fallback
+    // where it does not (0218).
+    const stop = watchOverflowMarks(screen);
+    try {
+      for (const scroller of [pre, table]) {
+        await expect(getComputedStyle(scroller).getPropertyValue('scrollbar-width')).toBe('none');
+        // The theme's marks, with no text for a reader.
+        await expect(getComputedStyle(scroller, '::before').content).toContain(
+          getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-start').trim(),
+        );
+        await expect(getComputedStyle(scroller, '::after').content).toContain(
+          getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-end').trim(),
+        );
 
-    for (const scroller of [pre, table]) {
-      await expect(getComputedStyle(scroller).getPropertyValue('scrollbar-width')).toBe('none');
-      // The theme's marks, with no text for a reader.
-      await expect(getComputedStyle(scroller, '::before').content).toContain(
-        getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-start').trim(),
-      );
-      await expect(getComputedStyle(scroller, '::after').content).toContain(
-        getComputedStyle(scroller).getPropertyValue('--rk-glyph-mark-overflow-end').trim(),
-      );
+        await marksFollow(scroller, (more) => more);
+      }
+    } finally {
+      stop();
+    }
+  },
+};
 
-      // At the start: more to the end only.
-      await scrollTo(scroller, 0);
-      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
-        false,
-        true,
-      ]);
-      // Part way: more both ways.
-      await scrollTo(scroller, Math.round((scroller.scrollWidth - scroller.clientWidth) / 2));
-      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
-        true,
-        true,
-      ]);
-      // At the end: more to the start only.
-      await scrollTo(scroller, scroller.scrollWidth);
-      await expect([markShows(scroller, '::before'), markShows(scroller, '::after')]).toEqual([
-        true,
-        false,
-      ]);
-      await scrollTo(scroller, 0);
+/**
+ * Scroll a region to its start, part way and its end, and expect its marks to
+ * show as `shown` says for each place, given where there is more to see.
+ */
+async function marksFollow(
+  scroller: HTMLElement,
+  shown: (more: [start: boolean, end: boolean]) => [boolean, boolean],
+): Promise<void> {
+  const marks = () => [markShows(scroller, '::before'), markShows(scroller, '::after')];
+  // At the start: more to the end only.
+  await scrollTo(scroller, 0);
+  await expect(marks()).toEqual(shown([false, true]));
+  // Part way: more both ways.
+  await scrollTo(scroller, Math.round((scroller.scrollWidth - scroller.clientWidth) / 2));
+  await expect(scroller.scrollLeft).toBeGreaterThan(0);
+  await expect(marks()).toEqual(shown([true, true]));
+  // At the end: more to the start only.
+  await scrollTo(scroller, scroller.scrollWidth);
+  await expect(marks()).toEqual(shown([true, false]));
+  await scrollTo(scroller, 0);
+}
+
+/**
+ * Where the browser has no scroll-state queries (Firefox and Safari today),
+ * the stylesheet cannot tell a region has more past its edge. A small script,
+ * `watchOverflowMarks`, writes the same state for it (0218). This story takes
+ * the query away in any browser, by making the regions plain containers, so
+ * the fallback is all there is:
+ *
+ *   - with no script, no mark shows, and the region still scrolls: the page
+ *     degrades to what it was before the marks, never to a wrong mark
+ *   - with the script, the marks follow the scroll exactly as the query's do
+ *   - stopped, it leaves nothing behind
+ */
+export const OverflowMarksFallback: Story = {
+  name: 'Overflow marks, without the query',
+  tags: ['classic-scrollbars'],
+  args: { cols: 40 },
+  play: async ({ canvas }) => {
+    const screen = canvas.getByTestId('prose');
+    const pre = screen.querySelector<HTMLElement>('pre') as HTMLElement;
+    const table = screen.querySelector<HTMLElement>('.rk-scroll-marks') as HTMLElement;
+    const scrollers = [pre, table];
+    // No scroll-state container, so no scroll-state query can match.
+    for (const scroller of scrollers) scroller.style.containerType = 'normal';
+    try {
+      for (const scroller of scrollers) await marksFollow(scroller, () => [false, false]);
+
+      const stop = watchOverflowMarks(screen, { force: true });
+      try {
+        for (const scroller of scrollers) await marksFollow(scroller, (more) => more);
+      } finally {
+        stop();
+      }
+      for (const scroller of scrollers) {
+        await expect(scroller.hasAttribute('data-rk-more')).toBe(false);
+      }
+      if (scrollStateQueries()) {
+        // Where the query exists, the script stands aside unless forced.
+        watchOverflowMarks(screen)();
+        await expect(pre.hasAttribute('data-rk-more')).toBe(false);
+      } else {
+        // Where it does not, as in Firefox, it needs no asking.
+        const stopped = watchOverflowMarks(screen);
+        try {
+          for (const scroller of scrollers) await marksFollow(scroller, (more) => more);
+        } finally {
+          stopped();
+        }
+      }
+    } finally {
+      for (const scroller of scrollers) scroller.style.containerType = '';
     }
   },
 };

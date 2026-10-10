@@ -3,8 +3,10 @@ id: 147
 uid: c5ee5aaa-8795-4d69-bfe6-a78604d615b5
 title: Document every component on its own page, generated from its metadata
 type: feature
-status: backlog
+status: review
 milestone: site
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 47
 - 104
@@ -44,8 +46,32 @@ generated. Each page has, in this order:
 
 ## Acceptance criteria
 
-- [ ] Every component in `@rockaway/react` has a page, and a build check fails if one is missing
-- [ ] Props, states, keyboard map and tokens come from the metadata, not from hand-written tables
-- [ ] Every live example also renders as its snapshot with JavaScript disabled
-- [ ] Every page passes axe, conformance and continuity in the built site
+- [x] Every component in `@rockaway/react` has a page, and a build check fails if one is missing
+- [x] Props, states, keyboard map and tokens come from the metadata, not from hand-written tables
+- [x] Every live example also renders as its snapshot with JavaScript disabled
+- [x] Every page passes axe, conformance and continuity in the built site
 - [ ] Every page can be copied as text (0105)
+
+## 2026-10-03
+
+A page per component at /components/<slug>/, generated from @rockaway/react/meta.json (the JSON, so no component module is imported to build a page). In the proposal's order: summary; the snapshots, painted as rowRuns() markup with no script, by the same Painted component the foundations use (it becomes CodeBlock's snapshot when 0138 lands, a one-file change); the description; a live example and its source; when to use and when not, with links to the instead component; anatomy; variants; states, each with its selectors, how it is drawn and what carries it without colour; props per imported part, plus what it inherits; the keyboard map with keys drawn by formatKeys and spoken by spokenKeys; the name, what a reader hears and the notes; tokens, each linked to its row in the token reference (rows now have ids); related. Only the example is written by hand: src/islands/examples/<slug>.tsx, one module per island, and an MDX file that hydrates it and shows its source. Form and Fieldset sketch their fields from React Aria, because Text field and Radio group are not built yet; the MDX says so.
+
+## 2026-10-03
+
+Checks. getStaticPaths fails the build if a component in the metadata has no MDX, or an MDX names a component the metadata does not have; the react package's own test already fails on an exported component without metadata. The site test opens every component page at both bases, hydrates every island, then runs axe (WCAG 2.2 AA tags) and the published checkConformance and checkContinuity from @rockaway/react/testing in the page, loaded from the installed package (test/checks.ts serves it under /__rk/, and Playwright takes continuity's screenshots through a binding). With JavaScript off, every page shows every snapshot, painted, reading back as exactly the metadata's text. Continuity found one real seam: Divider's 'Every border set' snapshot stacked joined rules with no row between them, so their tees met. Fixed in divider.meta.ts, with a patch changeset.
+
+## 2026-10-03
+
+Not ticked: (3) a live example renders as its snapshot without JavaScript. The page shows the snapshots without JavaScript, but an example built on Screen (Frame, Divider, List) has no chrome until the client paints it; server-painted chrome is 0126 (#88). Once that lands, the examples need nothing more. (5) Copy as text (0105): every snapshot copies as its text by selection, but the copy button 0105 describes does not exist yet. Also not on the pages: size in cells and conformance level, because the metadata schema has no field for them (0047's proposal named them). Live rows per state, which would need a way to render a component in a state without interacting with it.
+
+## 2026-10-03
+
+Proved itself on the merge: main brought Callout (#115), and the build failed with 'Callout has no page' until its example was added.
+
+## 2026-10-03
+
+After merging main (#88 server-painted chrome, Tree, Keymap): Tree and Keymap have pages. Examples hydrate on load, not when visible, because an island with no box (Keymap's help, before it has bindings) is never seen and so never hydrates. Criterion 3 now holds: with JavaScript off, every example shows the same words as it does hydrated, and its chrome, painted on the server. Two allowed differences, both printed in the test: a measured screen is drawn at its fallback size on the server and fitted on the client (0126), so line lengths can differ; and Keymap's help lists shortcuts that only exist once script registers them. Found: Callout's server render uses Screen's 80x24 fallback, because its height is measured from its prose, so without JavaScript a one-line callout is drawn about twenty rows tall and shrinks on hydration. Reported to the CTO.
+
+## 2026-10-03
+
+Criterion 5 stays open: copying a page as text and as ANSI is 0105's button, which depends on the shell (0104) and the status bar (0098). Selection already copies every snapshot as its text.

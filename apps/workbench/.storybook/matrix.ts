@@ -64,6 +64,8 @@ export interface Parameters {
   readonly targets?: boolean;
   /** `false` for a story that breaks the field contract on purpose, to show the check. */
   readonly fields?: boolean;
+  /** `false` for a story that puts a glyph in a name on purpose, to show the check (0252). */
+  readonly names?: boolean;
   readonly matrix?: { readonly skip?: readonly Skip[] };
 }
 
@@ -154,20 +156,64 @@ function signature(root: HTMLElement): string {
     .join('|');
 }
 
+/** How `Screen` writes a cell before it has measured: the line box it sits in, in CSS units. */
+const UNMEASURED = { width: '1ch', height: '1lh' } as const;
+
+const describeScreen = (screen: HTMLElement): string => {
+  const testId = screen.dataset.testid ? `[${screen.dataset.testid}]` : '';
+  return `div.${screen.className.trim().split(/\s+/).join('.')}${testId}`;
+};
+
+/** Screens `Screen` drew (it says how many cells it has): what the remeasure check is about. */
+const screensOf = (root: HTMLElement): HTMLElement[] => [
+  ...root.querySelectorAll<HTMLElement>('.rk-screen[data-rk-cols]'),
+];
+
+const declaredCell = (screen: HTMLElement) => ({
+  width: screen.style.getPropertyValue('--rk-cell-width').trim(),
+  height: screen.style.getPropertyValue('--rk-cell-height').trim(),
+});
+
+/**
+ * Screens that have not measured, and so are not judged: the server's markup
+ * before it hydrates, or a page with no script (cairn 0126, 0238). Exactly
+ * `1ch` by `1lh`, which are the line box the screen sits in whatever the
+ * context, so such a screen follows a change by construction.
+ */
+function unmeasured(root: HTMLElement): HTMLElement[] {
+  return screensOf(root).filter((screen) => {
+    const cell = declaredCell(screen);
+    return cell.width === UNMEASURED.width && cell.height === UNMEASURED.height;
+  });
+}
+
 /**
  * Screens whose cell is not the line box they now sit in: they kept the cell
- * they measured before the context changed. Only a screen `Screen` measured
- * (it says how many cells it has); a story that builds one by hand sets its
- * cell on purpose.
+ * they measured before the context changed. It fails closed: a cell in
+ * pixels is judged, the unmeasured `1ch` by `1lh` is not, and a cell written
+ * any other way is a failure of its own, because the check cannot say
+ * whether it is stale, and a new form must not quietly drop every screen
+ * out of it. A story that builds a screen by hand sets its cell on purpose,
+ * and has no `data-rk-cols`.
  */
 function stale(root: HTMLElement): Failure[] {
   const found: Failure[] = [];
-  for (const screen of root.querySelectorAll<HTMLElement>('.rk-screen[data-rk-cols]')) {
-    const cell = Number.parseFloat(screen.style.getPropertyValue('--rk-cell-height'));
+  const skipped = new Set(unmeasured(root));
+  for (const screen of screensOf(root)) {
+    if (skipped.has(screen)) continue;
+    const element = describeScreen(screen);
+    const declared = declaredCell(screen);
+    if (!declared.width.endsWith('px') || !declared.height.endsWith('px')) {
+      found.push({
+        check: 'remeasure',
+        element,
+        text: `${element} has its cell written as ${declared.width || '(nothing)'} × ${declared.height || '(nothing)'}, which the remeasure check cannot judge: a measured cell is in pixels, an unmeasured one is ${UNMEASURED.width} × ${UNMEASURED.height}`,
+      });
+      continue;
+    }
+    const cell = Number.parseFloat(declared.height);
     const line = Number.parseFloat(getComputedStyle(screen).lineHeight);
     if (Number.isFinite(cell) && Number.isFinite(line) && Math.abs(cell - line) > 0.01) {
-      const testId = screen.dataset.testid ? `[${screen.dataset.testid}]` : '';
-      const element = `div.${screen.className.trim().split(/\s+/).join('.')}${testId}`;
       found.push({
         check: 'remeasure',
         element,
@@ -362,6 +408,14 @@ export async function walk(
       if (cell !== own) await switchTo(root, canvas, cell);
       const pixels = plan && readsPixels(plan, own, cell) ? capture : undefined;
       const { failures, ran } = await checkCell(canvas, cell, parameters, pixels);
+      if (cell === own) {
+        const skipped = unmeasured(canvas);
+        if (skipped.length > 0) {
+          console.info(
+            `${skipped.length} screen(s) not measured (${UNMEASURED.width} × ${UNMEASURED.height}), so not judged for remeasuring: ${skipped.map(describeScreen).join(', ')}`,
+          );
+        }
+      }
       sort(cell, ran, failures);
     }
 

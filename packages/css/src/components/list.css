@@ -49,6 +49,11 @@
     align-items: center;
     block-size: var(--rk-cell-height);
     scroll-snap-align: start;
+    /* At dense the line box is shorter than the font's ascent and descent,
+     * and text that runs past a row is scrollable overflow: three rows in a
+     * box of three then had a pixel to scroll, and bringing the last into
+     * view took every row off the grid (0211). A row clips what it holds. */
+    overflow: clip;
   }
 
   .rk-list-item {
@@ -63,6 +68,9 @@
   .rk-list-mark {
     inline-size: var(--rk-cell-width);
     flex: none;
+    /* A blank is a cell too: in prose, where whitespace collapses, a mark with
+     * no cursor would otherwise have no height, and sit half a row down. */
+    white-space: pre;
   }
 
   .rk-list-label {
@@ -101,6 +109,8 @@
   @media (forced-colors: active) {
     .rk-list-item[data-selected] {
       forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
     }
   }
 }

@@ -69,6 +69,40 @@ export const ReadsTheScreenBack: Story = {
   },
 };
 
+/**
+ * Reading changes nothing (the Tabs hang, 0216). A story checks a screen
+ * inside `waitFor`, which runs its callback again on every change to the
+ * document: a screenshot that changed the page, even for an instant, called
+ * itself again in a microtask, for ever, while its assertion failed, and the
+ * run hung instead of failing. So reading a measured screen leaves no change
+ * behind, and a `waitFor` that cannot pass fails on its timeout.
+ */
+export const ChangesNothing: Story = {
+  name: 'Reading changes nothing',
+  play: async ({ canvas }) => {
+    const host = canvas.getByTestId('host');
+    const screen = host.firstElementChild as HTMLElement;
+    await waitFor(() => expect(screen.dataset.rkCols).toBe('30'));
+    await waitFor(() =>
+      expect(getComputedStyle(screen).getPropertyValue('--rk-cell-width')).toMatch(/px$/),
+    );
+
+    const changes: MutationRecord[] = [];
+    const observer = new MutationObserver((records) => changes.push(...records));
+    observer.observe(document, { subtree: true, childList: true, attributes: true });
+    screenshot(screen);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    observer.disconnect();
+    expect(changes).toEqual([]);
+
+    // A wait that can never pass fails on its timeout. Before, this did not
+    // return at all, and only the watchdog in the Vitest setup ended it.
+    await expect(
+      waitFor(() => expect(screenshot(screen)).toBe('never'), { timeout: 300 }),
+    ).rejects.toThrow();
+  },
+};
+
 export const ListsAttributes: Story = {
   name: 'Lists the attributes it saw',
   play: async ({ canvas }) => {
@@ -185,6 +219,48 @@ export const ClipsToTheScrollContainer: Story = {
         '└──────────────────┘',
       ].join('\n'),
     );
+  },
+};
+
+/** The visually hidden pattern, as a skip link wears it at rest. */
+const CLIPPED = { position: 'absolute', insetBlockStart: 0, clipPath: 'inset(50%)' } as const;
+
+/** The older spelling of the same pattern, which React Aria writes as well. */
+const RECT = { position: 'absolute', clip: 'rect(0 0 0 0)' } as const;
+
+/**
+ * An element clipped to nothing is in the DOM and seen by no one, so the
+ * screenshot does not read it back: not its words, not the words of anything
+ * inside it, and not its attributes in the legend. Once the clip comes off, it
+ * is read where it is, like any other element.
+ */
+export const SkipsTheVisuallyHidden: Story = {
+  name: 'Skips what is visually hidden',
+  render: () => (
+    <Frame title="hidden" cols={24} rows={4}>
+      <a href="#seen" data-testid="skip" style={CLIPPED}>
+        <strong>skip it</strong>
+      </a>
+      <span style={RECT}>rect</span>
+      <div style={{ marginBlockStart: 'var(--rk-y-1)' }}>seen</div>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    const frame = canvas.getByRole('group', { name: 'hidden' });
+    await waitFor(() => expect(frame.querySelector('.rk-row')).not.toBeNull());
+
+    expect(`\n${screenshot(frame)}`).toBe(`
+┌ hidden ──────────────┐
+│                      │
+│ seen                 │
+└──────────────────────┘`);
+
+    // Unclipped, as a skip link is once it has focus, it is read where it sits.
+    canvas.getByTestId('skip').style.clipPath = 'none';
+    const shown = screenshot(frame);
+    expect(shown.split('\n')[0]).toBe('┌ skip it──────────────┐');
+    expect(shown).toMatch(/bold underline\s+2,0\s+skip it/);
+    expect(shown).not.toContain('rect');
   },
 };
 

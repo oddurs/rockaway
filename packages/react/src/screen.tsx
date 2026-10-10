@@ -13,6 +13,10 @@
  * is measured, the cell is `1ch` by `1lh` — the font's own cell, which is what
  * the measurement will find — so a screen with a fixed size in cells does not
  * change size when it hydrates.
+ *
+ * A screen that fills a box with CSS `resize` shares its last cell with the
+ * browser's resize grip, which some engines draw over the box's corner: size
+ * such a box some other way, or a cell larger than the screen.
  */
 import type { Buffer, Size } from '@rockaway/grid';
 import {
@@ -37,6 +41,13 @@ export interface Inset {
   readonly y: number;
 }
 
+/**
+ * A panel's ground. `sunken` sits back from the page, `raised` and `overlay`
+ * come forward of it; `base` is the page's own. Components that take a
+ * `surface` read the `--rk-bg-surface-*` roles, never a palette slot.
+ */
+export type Surface = 'sunken' | 'base' | 'raised' | 'overlay';
+
 export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'color'> {
   /** Draw the screen at the size it has been given, in cells. */
   draw: (size: Size) => Buffer;
@@ -59,8 +70,18 @@ export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
    * measured screen is not a whole number of cells wide.
    */
   contentInset?: Inset;
-  /** Real elements, laid over the chrome. */
-  children?: ReactNode;
+  /**
+   * Space left empty around the screen, in whole cells: one number for every
+   * side, or `{ x, y }`. It is margin, so the page shows through it and the
+   * chrome is never drawn into it. The measured size is the box inside it.
+   */
+  gutter?: number | Inset;
+  /**
+   * Real elements, laid over the chrome. A function is given the size the
+   * screen drew at, in cells, for content placed by the same layout as the
+   * chrome: a pane's content in the cells its borders enclose.
+   */
+  children?: ReactNode | ((size: Size) => ReactNode);
 }
 
 const FALLBACK: Size = { width: 80, height: 24 };
@@ -75,12 +96,14 @@ export function Screen({
   rows,
   fallback = FALLBACK,
   contentInset,
+  gutter,
   className,
   style,
   children,
   ...rest
 }: ScreenProps): ReactNode {
   const host = useRef<HTMLDivElement>(null);
+  const probe = useRef<HTMLSpanElement>(null);
   // Unmeasured on the server and in the first client render, which have to
   // agree; the layout effect measures before the browser paints.
   const [cell, setCell] = useState<CellMetrics | undefined>(undefined);
@@ -122,6 +145,12 @@ export function Screen({
       frameId = requestAnimationFrame(remeasure);
     });
     observer.observe(el);
+    // A screen given its size in cells sizes its own box from the cell it
+    // measured, so a new density, a font that loads late or a reader's larger
+    // text changes the cell without resizing that box, and the observer above
+    // never hears of it (cairn 0199). The probe is one cell, in the units that
+    // are one cell, so it resizes whenever the cell does.
+    if (probe.current) observer.observe(probe.current);
     return () => {
       cancelAnimationFrame(frameId);
       observer.disconnect();
@@ -167,7 +196,7 @@ export function Screen({
       data-rk-painter={painter}
       data-rk-cols={size.width}
       data-rk-rows={size.height}
-      style={{ ...vars, ...style }}
+      style={{ ...vars, ...gutterStyle(gutter), ...style }}
       {...rest}
     >
       <div
@@ -180,12 +209,24 @@ export function Screen({
       </div>
       {children === undefined ? null : (
         <div className="rk-content" style={insetStyle(contentInset)}>
-          {children}
+          {typeof children === 'function' ? children(size) : children}
         </div>
       )}
+      <span ref={probe} aria-hidden="true" style={PROBE} />
     </div>
   );
 }
+
+/** One cell, in the units that are one cell: `1ch` by `1lh`. Unseen, and on the grid at the origin. */
+const PROBE: CSSProperties = {
+  position: 'absolute',
+  insetBlockStart: 0,
+  insetInlineStart: 0,
+  inlineSize: '1ch',
+  blockSize: '1lh',
+  visibility: 'hidden',
+  pointerEvents: 'none',
+};
 
 const sameCell = (a: CellMetrics, b: CellMetrics): boolean =>
   a.width === b.width && a.height === b.height;
@@ -195,6 +236,15 @@ function insetStyle(inset: Inset | undefined): CSSProperties | undefined {
   return {
     paddingInline: `calc(var(--rk-cell-width) * ${inset.x})`,
     paddingBlock: `calc(var(--rk-cell-height) * ${inset.y})`,
+  };
+}
+
+function gutterStyle(gutter: number | Inset | undefined): CSSProperties | undefined {
+  if (gutter === undefined) return undefined;
+  const { x, y } = typeof gutter === 'number' ? { x: gutter, y: gutter } : gutter;
+  return {
+    marginInline: `calc(var(--rk-cell-width) * ${x})`,
+    marginBlock: `calc(var(--rk-cell-height) * ${y})`,
   };
 }
 

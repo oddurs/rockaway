@@ -38,15 +38,6 @@ const TARGETS = '.rk-button, .rk-link, .rk-list-item, button, a[href], [role="op
 
 export const known: readonly Known[] = [
   {
-    id: 'screen-remeasure',
-    check: 'remeasure',
-    element: /rk-screen/,
-    present: '.rk-screen[data-rk-cols]',
-    reason:
-      'Screen observes only its own box, which a screen sized in cells sizes from the cell it last measured, so a new density never reaches it; conformance and continuity cannot be read in a cell it has not caught up with',
-    ticket: 'Screen remeasures on a context change (the 1ch × 1lh probe, after #88)',
-  },
-  {
     id: 'dense-one-row',
     check: 'targets',
     rule: 'size',

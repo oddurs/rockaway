@@ -72,6 +72,37 @@ jobs:
       - name: Production build of the workbench (a minifier sees the CSS)
         run: pnpm --filter workbench build
 
+  # The site's budget (cairn 0109): its first page's JavaScript, a first paint
+  # with no script, axe on every page in both modes at touch, the grid and its
+  # lines on the built pages, and no layout shift through first load. A job of
+  # its own, beside the others, so it adds nothing to their wall clock.
+  site-budget:
+    name: Site budget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The site is built from the packages' dist, as a consumer's app would be.
+      - name: Build packages
+        run: pnpm -r --filter './packages/*' build
+
+      - name: Install Chromium
+        run: pnpm --filter site exec playwright install --with-deps chromium
+
+      - name: Hold the built site to its budget
+        run: pnpm --filter site budget
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
+
   changeset:
     name: Changeset for every package change
     if: github.event_name == 'pull_request'
