@@ -17,6 +17,7 @@ import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
+import { menuMeta } from '../components/menu.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
 import { panesMeta } from '../components/panes.meta.ts';
 import { popoverMeta } from '../components/popover.meta.ts';
@@ -41,6 +42,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'keymap', meta: keymapMeta },
   { file: 'link', meta: linkMeta },
   { file: 'list', meta: listMeta },
+  { file: 'menu', meta: menuMeta },
   { file: 'overlay', meta: overlayMeta },
   { file: 'panes', meta: panesMeta },
   { file: 'popover', meta: popoverMeta },

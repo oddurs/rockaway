@@ -1122,6 +1122,119 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Menu": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaMenuProps<T>, 'className' | 'style'>",
+      "Pick<PopoverProps, 'placement' | 'maxRows' | 'shouldFlip' | 'boundaryElement'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuItem": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "keys",
+        "type": "string",
+        "required": false,
+        "description": "A chord, `mod+s`: drawn right-aligned as a KeyHint, announced as `aria-keyshortcuts`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaMenuItemProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuSection": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The items. For items from data, a React Aria `Collection` among them."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "The section's title, set into the rule above it in the frame, and the name its group is announced by."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaMenuSectionProps<T>, 'className' | 'style' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuSeparator": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
   "OverlayLayer": {
     "file": "overlay.tsx",
     "props": [
