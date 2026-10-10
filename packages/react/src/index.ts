@@ -5,8 +5,11 @@
 // lists its names here. A new component adds one line and touches no other; `merge=union` in
 // .gitattributes joins lines that parallel branches add, and test/barrels.test.ts fails if a
 // component is missing, has no entry, or is listed twice.
+
 export { CELL_COVER_GRACE, CELL_SNAP, CELL_TIE, type CellMetrics, cellsCovering, cellsIn, DEFAULT_CELL, floorCell, measureCell, nearestCell } from './cell-metrics.ts';
+export { readScreen, screenAnsi, screenPalette, screenText } from './copy.ts';
 export { cx } from './cx.ts';
+export { fitStatusBar, type Measured, measureScreen, relayoutPanes, type StatusSegmentFit } from './dom.ts';
 export * from './entries/badge.ts';
 export * from './entries/breadcrumbs.ts';
 export * from './entries/button.ts';
@@ -22,6 +25,7 @@ export * from './entries/frame.ts';
 export * from './entries/key-hint.ts';
 export * from './entries/keymap.ts';
 export * from './entries/link.ts';
+export * from './entries/link-tree.ts';
 export * from './entries/list.ts';
 export * from './entries/menu.ts';
 export * from './entries/overlay.ts';
@@ -31,6 +35,7 @@ export * from './entries/popover.ts';
 export * from './entries/radio-group.ts';
 export * from './entries/select.ts';
 export * from './entries/skip-link.ts';
+export * from './entries/status-bar.ts';
 export * from './entries/switch.ts';
 export * from './entries/table.ts';
 export * from './entries/tabs.ts';

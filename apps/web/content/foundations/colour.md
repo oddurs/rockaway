@@ -1,0 +1,62 @@
+# Colour
+
+The palette is the one a terminal has: sixteen colours, eight and their bright
+pairs. A rockaway theme is a terminal theme, which means it is something a
+reader already has, already curates, and already has opinions about.
+
+## The sixteen, and the roles
+
+The sixteen are generated in OKLCH from a theme's inputs. Beside them are role
+slots a design system needs and a terminal does not name: a surface, a muted
+text, three borders, a tint per intent. A terminal theme file leaves them out.
+
+The swatches are live: each is drawn in its slot's custom property, so they
+follow the mode and any theme around them. The values beside them are the
+default theme's, in light and in dark.
+
+<!-- part: palette -->
+
+## What components read
+
+No component reads a slot. They read semantic tokens, each an alias to a slot,
+named for what it is for: `fg.default`, `fg.muted`, `bg.surface`,
+`border.control`, an intent's `fg.danger` and `bg.danger.subtle`, and the code
+roles, `syntax.keyword` and the rest. A theme swaps the slots underneath and
+every alias follows. The [token reference](../tokens/) lists them all.
+
+Sixteen colours is also a constraint on design. Hue cannot be the only thing
+that tells two states apart, so state is always carried by an attribute (bold,
+dim, reverse, underline) or a mark as well. That is also why the system works in
+forced colors, where the reader's palette replaces every colour on the page.
+
+## The contrast gate
+
+Every foreground the system promises is readable is declared with the grounds it
+may sit on and the ratio it has to reach there: 7:1 for body text, 4.5:1 for
+other text, 3:1 for the edges of controls and for focus. The gate measures every
+pair in every way a browser can show the colour, including the wide-gamut
+version on a wide-gamut screen, and takes the worst.
+
+Across the {{themes}} shipped themes and their modes, that is {{pairs}}
+measurements, and every one passes. A theme whose palette does not pass is
+fitted: the failing colour moves in lightness, keeping its hue, until it does,
+and the move is recorded with the theme.
+
+This is the default theme, worst case for each foreground over the grounds it is
+promised, measured as the site was built:
+
+<!-- part: contrast -->
+
+## From a terminal theme
+
+The imported themes, Catppuccin, Dracula, Nord, Solarized and Tokyo Night, were
+made from the terminal files their authors publish: sixteen colours, a
+background, a foreground, a cursor and a selection per mode. The role slots are
+derived from those, the gate is run, and anything that fails is fitted and
+recorded. Each keeps its source and its licence beside it.
+
+Today, adding one is a change to the repository: a file in
+`packages/tokens/themes/terminal/` with the colours, where they came from and the
+licence, and a line naming it. Going the other way is already done for you:
+every theme, imported or not, is exported back to Ghostty, kitty, Alacritty and
+iTerm2. They are on [the themes page](../themes/).

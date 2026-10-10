@@ -1,0 +1,542 @@
+/*
+ * The site's stylesheet: the system's, as a consumer imports it (cairn 0103),
+ * and sunset, the site's own theme (0286), always loaded because it is the
+ * default. Every other theme is a file of its own, loaded only when it is the
+ * reader's choice. Pages bring no CSS of their own; what the site needs, the
+ * system grows.
+ *
+ * What is here is the shell's layout (cairn 0104): where the screen goes in
+ * the window, and which of its panes scroll. Nothing here draws.
+ */
+@import "@rockaway/css";
+@import "@rockaway/tokens/tokens.css";
+@import "@rockaway/tokens/themes/sunset.css";
+
+/*
+ * The shell (cairn 0104, 0309): one CSS grid, the window's size, every track
+ * a whole number of cells. The map, the page and its outline side by side,
+ * a gutter round them, and the status bar along the bottom. Nothing in it is
+ * measured by a script: the grid is the same in the first frame as in every
+ * frame after, before the script arrives and once it has, so hydrating moves
+ * nothing (0273). What the script may change, a hidden pane or a shut section
+ * of the map, it changes as an attribute on `<html>`, which the head's script
+ * restores before the first frame.
+ *
+ * The window is the query container: its width in cells decides which panes
+ * there is room for. A query is written in ems, a cell being Plex's 0.6em,
+ * so it asks the same question before the font arrives as after: 72em is
+ * 120 cells, 43.2em is 72 (a little fewer where letters are whole pixels).
+ */
+body {
+  margin: 0;
+  container: site / inline-size;
+}
+
+.site-shell {
+  /* The gutter round the panes and between them, in cells (0309). */
+  --site-gx: 2;
+  --site-gy: 1;
+  /* The map's and the outline's widths in cells, and the gutter after each. */
+  --site-map: 28;
+  --site-map-gap: var(--site-gx);
+  --site-outline: 28;
+  --site-outline-gap: var(--site-gx);
+  --site-drawer: 0;
+
+  display: grid;
+  box-sizing: border-box;
+  block-size: 100dvh;
+  overflow: clip;
+  grid-template-columns:
+    calc(var(--site-gx) * var(--rk-cell-width))
+    calc(var(--site-map) * var(--rk-cell-width))
+    calc(var(--site-map-gap) * var(--rk-cell-width))
+    /* The page's track takes the whole cells left, give or take a pixel: the
+     * cell is the font's, and a scaled fallback's is a hair off Plex's, so at
+     * a width that is exactly a whole number of cells the count would round
+     * one way before the font arrives and the other after, and every pane
+     * would move a cell (Slow 4G, 1440 wide). */
+    round(
+      down,
+      calc(
+        100% +
+        1px -
+        (
+          2 *
+          var(--site-gx) +
+          var(--site-map) +
+          var(--site-map-gap) +
+          var(--site-outline-gap) +
+          var(--site-outline)
+        ) *
+        var(--rk-cell-width)
+      ),
+      var(--rk-cell-width)
+    )
+    calc(var(--site-outline-gap) * var(--rk-cell-width))
+    calc(var(--site-outline) * var(--rk-cell-width))
+    calc(var(--site-gx) * var(--rk-cell-width));
+  grid-template-rows:
+    calc(var(--site-gy) * var(--rk-cell-height))
+    round(
+      down,
+      calc(100% - (2 * var(--site-gy) + 1) * var(--rk-cell-height)),
+      var(--rk-cell-height)
+    )
+    calc(var(--site-gy) * var(--rk-cell-height))
+    var(--rk-cell-height);
+  /* What is left over, less than a cell each way, goes round the outside. */
+  justify-content: center;
+  align-content: end;
+  background: var(--rk-bg-page);
+}
+
+/* Narrower than this, the outline goes, and the page takes its room. */
+@container site (inline-size < 72em) {
+  .site-shell {
+    --site-outline: 0;
+    --site-outline-gap: 0;
+  }
+
+  .site-outline {
+    display: none;
+  }
+}
+
+/*
+ * A phone (0152): the page is the whole window, with no gutter, and the map
+ * is a drawer over it, opened from the status bar or with `[`.
+ */
+@container site (inline-size < 43.2em) {
+  .site-shell {
+    --site-gx: 0;
+    --site-gy: 0;
+    --site-map: 0;
+    --site-map-gap: 0;
+    --site-drawer: 1;
+  }
+
+  .site-map {
+    display: none;
+  }
+
+  :root[data-site-drawer="open"] .site-map {
+    display: block;
+    grid-area: 2 / 4;
+    z-index: 2;
+    inline-size: min(100%, calc(var(--site-drawer-cols, 32) * var(--rk-cell-width)));
+  }
+
+  /* Over the page, a drawer's ground is the whole box: no half cell of the
+   * page's border shows through round its own. */
+  :root[data-site-drawer="open"] .site-map::before {
+    inset: 0;
+  }
+
+  :root .site-status > .site-status-drawer {
+    display: block;
+  }
+}
+
+/* A pane the reader hid, and the outline of a page with no sections. */
+:root[data-site-map="hidden"] .site-shell {
+  --site-map: 0;
+  --site-map-gap: 0;
+}
+
+:root[data-site-outline="hidden"] .site-shell,
+.site-shell:has(> .site-outline > [data-site-scroll]:empty) {
+  --site-outline: 0;
+  --site-outline-gap: 0;
+}
+
+:root[data-site-map="hidden"] .site-map,
+:root[data-site-outline="hidden"] .site-outline,
+.site-outline:has(> [data-site-scroll]:empty) {
+  display: none;
+}
+
+/*
+ * A pane: its border, drawn on the server and stretched to the box, and its
+ * scroller inside the border. The box is the grid's, so it is whole cells.
+ * Its ground is its surface (0307): the map and the outline sunken, below the
+ * page; the page the base; the status bar raised. The ground fills the box
+ * up to the border's line, which runs down the middle of its cells, so the
+ * half cell outside the line is the gutter's.
+ */
+.site-pane {
+  --site-surface: var(--rk-bg-surface-base, var(--rk-bg-surface));
+
+  position: relative;
+  min-inline-size: 0;
+  min-block-size: 0;
+  grid-row: 2;
+}
+
+.site-pane::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--rk-cell-height) / 2) calc(var(--rk-cell-width) / 2);
+  background: var(--site-surface);
+}
+
+.site-map {
+  --site-surface: var(--rk-bg-surface-sunken, var(--rk-bg-subtle));
+
+  grid-column: 2;
+}
+
+.site-main {
+  grid-column: 4;
+}
+
+.site-outline {
+  --site-surface: var(--rk-bg-surface-sunken, var(--rk-bg-subtle));
+
+  grid-column: 6;
+}
+
+.site-main:focus {
+  outline: none;
+}
+
+.site-chrome {
+  position: absolute;
+  inset: 0;
+}
+
+/*
+ * The scroller sits inside the border, a cell in from each side, with no
+ * native bar (0207): the status bar says where you are instead. Padding
+ * inside every pane (0309): a cell across in the map and the outline, two
+ * across and a row down in the page.
+ */
+.site-scroll {
+  position: absolute;
+  inset: var(--rk-cell-height) var(--rk-cell-width);
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-inline: var(--rk-cell-width);
+}
+
+.site-page {
+  padding: var(--rk-cell-height) calc(2 * var(--rk-cell-width));
+}
+
+/* The keys, over the page they stand in for. */
+.site-help {
+  z-index: 1;
+  background: var(--rk-bg-surface-base, var(--rk-bg-surface));
+  padding: var(--rk-cell-height) calc(2 * var(--rk-cell-width));
+}
+
+/* The map: a section's count at the end of its row, its toggle a cell. */
+.site-map .rk-link-tree-row,
+.site-outline .rk-link-tree-row {
+  padding-inline-end: var(--rk-cell-width);
+}
+
+.site-tree-count {
+  margin-inline-start: auto;
+  padding-inline-start: var(--rk-cell-width);
+  color: var(--rk-fg-muted);
+}
+
+.site-tree-toggle {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-tree-shut {
+  display: none;
+}
+
+.site-tree-label {
+  font-weight: var(--rk-attribute-bold);
+}
+
+/* The path to the page you are on: each section above it in bold. */
+.rk-link-tree-item:has(.rk-link-tree-link[aria-current]) > .rk-link-tree-row > .rk-link-tree-link {
+  font-weight: var(--rk-attribute-bold);
+}
+
+/* Finding a page: what does not match is not there. */
+.site-map [data-site-filtered] {
+  display: none;
+}
+
+.site-map[data-site-filtering] .rk-link-tree-group,
+:root .site-map[data-site-filtering] [data-site-section] > .rk-link-tree-group {
+  display: block;
+}
+
+.site-filter {
+  display: flex;
+  block-size: var(--rk-cell-height);
+  gap: var(--rk-cell-width);
+  color: var(--rk-fg-accent);
+}
+
+.site-filter > input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  block-size: var(--rk-cell-height);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--rk-fg-default);
+  font: inherit;
+  line-height: inherit;
+  outline: none;
+}
+
+/*
+ * The status bar (0098): one row, raised, along the window's bottom edge.
+ * Every segment is its words and a cell of air either side, so every one is
+ * whole cells; the message takes what is left in the middle, so a message
+ * coming and going never moves a segment.
+ */
+.site-status {
+  grid-row: 4;
+  grid-column: 1 / -1;
+  display: flex;
+  min-inline-size: 0;
+  block-size: var(--rk-cell-height);
+  overflow: clip;
+  white-space: pre;
+  background: var(--rk-bg-surface-raised, var(--rk-bg-subtle));
+  color: var(--rk-fg-default);
+}
+
+.site-status > .rk-status-segment {
+  position: static;
+  display: block;
+  flex: none;
+  inline-size: auto;
+}
+
+.site-status .site-status-where {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  text-overflow: ellipsis;
+}
+
+.site-status-message {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  overflow: clip;
+  padding-inline: var(--rk-cell-width);
+  color: var(--rk-fg-muted);
+}
+
+.site-status > .site-status-drawer {
+  display: none;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-status .rk-button:hover .rk-button-label {
+  text-decoration: underline;
+  text-underline-offset: var(--rk-attribute-underline-offset);
+}
+
+/* What gives way first as the window narrows: the look, then the copy. */
+@container site (inline-size < 66em) {
+  .site-status > .site-status-look {
+    display: none;
+  }
+}
+
+@container site (inline-size < 48em) {
+  .site-status > .site-status-copy {
+    display: none;
+  }
+}
+
+@container site (inline-size < 28.8em) {
+  .site-status > .site-status-keys {
+    display: none;
+  }
+}
+
+/* Said to a reader, not seen. */
+.site-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The skip link: off the screen until it has focus, then over the map's top row. */
+.site-skip {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  padding-inline: 1ch;
+  background: var(--rk-fg-default);
+  color: var(--rk-bg-page);
+  translate: 0 -100%;
+}
+
+.site-skip:focus {
+  translate: none;
+}
+
+/*
+ * The landing page's drawing (0108) is as wide as the room it has, which only
+ * its script knows; the server draws it for one phone. So with script, it is
+ * hidden until it has been drawn at its width, rather than shown at the
+ * server's in the first frame above and then redrawn. With no script, the
+ * server's drawing is the drawing.
+ */
+@keyframes site-reveal {
+  to {
+    visibility: visible;
+  }
+}
+
+[data-rk-script] [data-site-drawing]:not([data-site-drawn]) > .rk-screen {
+  visibility: hidden;
+  animation: site-reveal 0s 3s forwards;
+}
+
+/*
+ * A part React writes after the page (an example larger than its progressive
+ * chunk) leaves an empty box, a <template>, where it goes until the script
+ * beside it moves it in. On a slow connection the browser can paint before
+ * then, and when the part arrives everything under it moves. So whatever
+ * follows a part still on its way is not shown until it is in: nothing seen
+ * moves. With no script the part never moves in, so this waits for script.
+ */
+@media (scripting: enabled) {
+  .site-page > article > :has(.site-deferred > template) ~ *,
+  .site-page > article > .site-deferred:has(> template) ~ * {
+    visibility: hidden;
+  }
+}
+
+/*
+ * With no script, the shell is a document: the map, the page and its outline
+ * one after another, every link in them working, and no chrome drawn at a
+ * size the window is not.
+ */
+@media (scripting: none) {
+  .site-shell,
+  .site-pane,
+  .site-scroll {
+    display: block;
+    position: static;
+    block-size: auto;
+    overflow: visible;
+  }
+
+  .site-chrome,
+  .site-status {
+    display: none;
+  }
+}
+
+/*
+ * The landing page (0108): a product page, not an app. One column of whole
+ * cells, the prose measure wide, in the middle of the window, under a top
+ * bar that sets the same column. Everything in it is the system's; what is
+ * here is only where things go.
+ */
+.site-landing {
+  padding-block: var(--rk-cell-height);
+  padding-inline: calc(2 * var(--rk-cell-width));
+}
+
+.site-landing > * {
+  margin-inline: auto;
+}
+
+/* The brand, where to go, a message, and the look, on one row that wraps. */
+.site-topbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: calc(2 * var(--rk-cell-width));
+}
+
+.site-brand {
+  padding-inline: var(--rk-cell-width);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.site-topbar-links,
+.site-topbar-look,
+.site-hero-actions,
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: calc(2 * var(--rk-cell-width));
+}
+
+/* The message takes what is left of the row, and pushes the look to its end. */
+.site-topbar-message {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  color: var(--rk-fg-muted);
+}
+
+/* The page's sections, two blank rows apart: a product page breathes more than prose. */
+.site-landing-page > section + section {
+  margin-block-start: calc(2 * var(--rk-cell-height));
+}
+
+/* A product shot: a screen of software, scrolled across in its own box on a phone. */
+.site-shot {
+  margin-inline: 0;
+}
+
+.site-shot > figcaption {
+  margin-block-start: var(--rk-cell-height);
+  color: var(--rk-fg-muted);
+}
+
+.site-shot-stack {
+  display: grid;
+  justify-content: start;
+}
+
+/* The buttons and badges under a shot's fields, a cell apart. */
+.site-shot-actions {
+  white-space: pre;
+}
+
+/* A wrapper for markup written at build: its children are the page's blocks. */
+.site-html,
+.site-code {
+  display: contents;
+}
+
+/* Where to go next, on one row that wraps, two cells apart. */
+.site-actions {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: calc(2 * var(--rk-cell-width));
+}
+
+/*
+ * The foundations pages (0106). A theme's card is an island of that theme in
+ * one of its modes: its own ground and text, a row and two cells in.
+ */
+.site-theme-card {
+  margin-inline: 0;
+  padding: var(--rk-y-1) var(--rk-x-2);
+  background: var(--rk-bg-page);
+  color: var(--rk-fg-default);
+}
