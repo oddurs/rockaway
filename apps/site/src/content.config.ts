@@ -22,4 +22,10 @@ export const collections = {
       order: z.number(),
     }),
   }),
+  // What a component page cannot generate (0147): its live example, and any
+  // words its metadata has no place for. One per component, by name.
+  components: defineCollection({
+    loader: glob({ pattern: '*.mdx', base: './src/content/components' }),
+    schema: z.object({ name: z.string() }),
+  }),
 };

@@ -34,6 +34,7 @@ follows.
         { label: 'For' },
       ]}
       rows={g.tokens.map((t) => [t.css, t.value, t.description])}
+      ids={g.tokens.map((t) => t.css.replace(/^--/, ''))}
     />
   </>
 ))}
