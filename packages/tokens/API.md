@@ -26,6 +26,7 @@ checkContrast
 type ColorValue
 type Conformance
 conformanceLevels
+contentHeight
 contrast
 type Contrast
 contrastIn
@@ -44,6 +45,7 @@ describeAdjustment
 describeFailure
 type DimensionValue
 families
+fills
 fitContrast
 fittedPalette
 type FontFamilies
@@ -94,6 +96,7 @@ parseGhostty
 parseTheme
 type PresetName
 presetNames
+reducedTicks
 type Repertoire
 repertoireOf
 type ResolverDocument
@@ -170,6 +173,7 @@ ice
 ink
 phosphor
 ascii
+sunset
 catppuccin
 dracula
 nord
@@ -202,6 +206,10 @@ By name, as the custom property a stylesheet reads. The reference tier (`ansi.*`
 --rk-bg-success-solid-hover
 --rk-bg-success-subtle
 --rk-bg-surface
+--rk-bg-surface-base
+--rk-bg-surface-overlay
+--rk-bg-surface-raised
+--rk-bg-surface-sunken
 --rk-bg-warning-solid
 --rk-bg-warning-solid-hover
 --rk-bg-warning-subtle
@@ -277,8 +285,10 @@ By name, as the custom property a stylesheet reads. The reference tier (`ansi.*`
 ### motion
 
 ```
+--rk-motion-tick-reduced-refresh
 --rk-motion-tick-blink
 --rk-motion-tick-progress
+--rk-motion-tick-refresh
 --rk-motion-tick-spinner
 ```
 
@@ -460,6 +470,14 @@ By name, as the custom property a stylesheet reads. The reference tier (`ansi.*`
 --rk-glyph-border-single-vertical
 --rk-glyph-delimiter-control-close
 --rk-glyph-delimiter-control-open
+--rk-glyph-fill-1
+--rk-glyph-fill-2
+--rk-glyph-fill-3
+--rk-glyph-fill-4
+--rk-glyph-fill-5
+--rk-glyph-fill-6
+--rk-glyph-fill-7
+--rk-glyph-fill-8
 --rk-glyph-key-alt
 --rk-glyph-key-backspace
 --rk-glyph-key-ctrl
@@ -494,6 +512,7 @@ By name, as the custom property a stylesheet reads. The reference tier (`ansi.*`
 --rk-glyph-mark-radio
 --rk-glyph-mark-radio-empty
 --rk-glyph-mark-required
+--rk-glyph-mark-separator
 --rk-glyph-mark-sort-ascending
 --rk-glyph-mark-sort-descending
 --rk-glyph-mark-switch-thumb

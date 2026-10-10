@@ -35,6 +35,8 @@ clusterWidth
 type ColorDepth
 colorDepth
 columns
+type Comfort
+comforts
 contains
 containsRect
 contentArea
@@ -52,8 +54,11 @@ type Edges
 edgesFromKey
 EMPTY_STYLE
 expandTabs
+fieldSteps
 fillArea
 fixed
+flow
+type FlowLayout
 frame
 fromText
 glyphFor
@@ -78,8 +83,11 @@ type Rect
 rect
 type RectMark
 resolve
+type Rhythm
+rhythm
 right
 rows
+seamRows
 type Shape
 shapeOf
 type ShapeRun
@@ -95,10 +103,13 @@ type SolveOptions
 stringWidth
 type Style
 styleEquals
+type SvgCell
 type Terms
 type TextOptions
 toAnsi
 type ToAnsiOptions
+toSvg
+type ToSvgOptions
 toText
 type ToTextOptions
 type Track

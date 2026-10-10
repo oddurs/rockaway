@@ -23,6 +23,8 @@ const utilities: Readonly<Record<string, string>> = {
   'rk-rows': 'a box sized in rows: --rk-rows down',
   'rk-container': 'a container query context counted in cells (0074)',
   'rk-prose': 'running text set on the grid (0143)',
+  'rk-flow': 'blocks down the page a rhythm gap apart, closed to whole rows (0312)',
+  'rk-seam': 'a block whose outer box closes up to whole rows, whatever is inside it (0314)',
   'rk-scroll': 'a scrolling box whose position is drawn in cells, not by a native scrollbar (0208)',
   'rk-screen': 'the root of Screen, which is exported',
   'rk-syntax-*': 'one highlighting role each, for code (0144)',
@@ -51,6 +53,10 @@ const contexts: Readonly<Record<string, string>> = {
   'data-rk-theme': 'a theme, by name (0052)',
   'data-rk-fill': 'marks a control of your own as filled, so its focus is reverse video (0093)',
   'data-rk-contrast': 'more or standard, over the system setting, on the root or any region',
+  'data-rk-comfort':
+    'compact, comfortable or spacious: the spacing of a region, separate from the cell (0313)',
+  'data-rk-reading':
+    'prose set for reading: its leading free, its block closed to whole rows (0319)',
 };
 
 /** Attributes the stylesheets read that a page does not set. */
