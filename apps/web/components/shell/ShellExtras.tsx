@@ -8,7 +8,7 @@
  */
 import { attachKeymap, detectPlatform, KeymapEngine } from '@rockaway/react/keymap';
 import type { Route } from 'next';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { lazy, type ReactNode, Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { type LookSwitch, lookSwitch } from '../../lib/look-switch.ts';
@@ -53,6 +53,45 @@ export function ShellExtras({ bindings, say, helping, setHelping }: ShellExtrasP
   const router = useRouter();
   const looks = useRef<LookSwitch | null>(null);
   const [filtering, setFiltering] = useState(false);
+  const pathname = usePathname();
+
+  // ── The outline marks the section you are reading ───────────────────────
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a new page is new sections.
+  useEffect(() => {
+    const page = pageScroller();
+    const outline = document.querySelector<HTMLElement>('.site-outline');
+    if (!page || !outline) return;
+    const links = new Map(
+      [...outline.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')].map((a) => [
+        decodeURIComponent(a.getAttribute('href')?.slice(1) ?? ''),
+        a,
+      ]),
+    );
+    const headings = [...page.querySelectorAll<HTMLElement>('h2[id], h3[id]')].filter((h) =>
+      links.has(h.id),
+    );
+    if (headings.length === 0) return;
+    let frame = 0;
+    const mark = (): void => {
+      // The last section to have started above the top third of the pane.
+      const line = page.getBoundingClientRect().top + page.clientHeight / 3;
+      const at = headings.filter((h) => h.getBoundingClientRect().top <= line).at(-1);
+      for (const [id, link] of links) {
+        if (id === at?.id) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    const scrolled = (): void => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(mark);
+    };
+    mark();
+    page.addEventListener('scroll', scrolled, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      page.removeEventListener('scroll', scrolled);
+    };
+  }, [pathname]);
 
   // ── The look, the copy, the map's sections ──────────────────────────────
   useEffect(() => {
@@ -318,9 +357,12 @@ function Filter({
             done();
           } else if (event.key === 'Enter') {
             event.preventDefault();
-            const first = mapLinks().find((link) => link.tagName === 'A') as
-              | HTMLAnchorElement
-              | undefined;
+            // The first page whose own name matches, not a section shown for one inside it.
+            const needle = query.trim().toLowerCase();
+            const first = mapLinks().find(
+              (link) =>
+                link.tagName === 'A' && (link.textContent ?? '').toLowerCase().includes(needle),
+            ) as HTMLAnchorElement | undefined;
             if (first) {
               done();
               first.click();

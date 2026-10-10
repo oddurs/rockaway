@@ -121,6 +121,12 @@ body {
     inline-size: min(100%, calc(var(--site-drawer-cols, 32) * var(--rk-cell-width)));
   }
 
+  /* Over the page, a drawer's ground is the whole box: no half cell of the
+   * page's border shows through round its own. */
+  :root[data-site-drawer="open"] .site-map::before {
+    inset: 0;
+  }
+
   :root .site-status > .site-status-drawer {
     display: block;
   }

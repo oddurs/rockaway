@@ -333,7 +333,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0258`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0258-run-the-site-s-chrome-on-the-system-s-pure-halves-not-react.md) Run the site's chrome on the system's pure halves, not React <sup>decision · site · p1</sup>
 - [ ] [`0271`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0271-check-prose-rules-on-the-built-site.md) Check prose rules on the built site <sup>chore · tooling · p3</sup>
 - [ ] [`0284`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0284-give-the-registry-page-s-scrolling-install-lines-a-tab-stop.md) Give the registry page's scrolling install lines a tab stop <sup>bug · site · p2</sup>
-- [ ] [`0287`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0287-make-the-docs-left-navigation-a-sidebar-worth-using.md) Make the docs' left navigation a sidebar worth using <sup>feature · site · p0</sup>
 - [ ] [`0288`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0288-lay-the-site-out-as-two-layouts-from-one-system.md) Lay the site out as two layouts from one system <sup>decision · site · p0</sup>
 
 ### in progress
@@ -346,6 +345,7 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0150`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0150-give-every-page-a-title-a-description-and-a-social-card-drawn-by-the-engine.md) Give every page a title, a description and a social card drawn by the engine <sup>feature · site · p1</sup>
 - [ ] [`0152`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0152-review-the-site-end-to-end-phone-zoom-keyboard-screen-reader-slow-network.md) Review the site end to end: phone, zoom, keyboard, screen reader, slow network <sup>chore · site · p0</sup>
 - [ ] [`0273`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0273-show-a-phone-its-page-before-the-shell-s-script.md) Show a phone its page before the shell's script <sup>bug · site · p1</sup>
+- [ ] [`0287`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0287-make-the-docs-left-navigation-a-sidebar-worth-using.md) Make the docs' left navigation a sidebar worth using <sup>feature · site · p0</sup>
 
 ### in review
 

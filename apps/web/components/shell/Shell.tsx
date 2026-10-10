@@ -151,8 +151,18 @@ export function Shell({ nav, bindings }: ShellProps): ReactNode {
     for (const link of document.querySelectorAll<HTMLAnchorElement>(
       '.site-map a.rk-link-tree-link',
     )) {
-      if (link.getAttribute('href') === here) link.setAttribute('aria-current', 'page');
-      else link.removeAttribute('aria-current');
+      if (link.getAttribute('href') !== here) {
+        link.removeAttribute('aria-current');
+        continue;
+      }
+      link.setAttribute('aria-current', 'page');
+      // A page reached by a key or a link elsewhere may be out of the map's view.
+      const map = link.closest<HTMLElement>('[data-site-scroll]');
+      const row = link.getBoundingClientRect();
+      const view = map?.getBoundingClientRect();
+      if (map && view && (row.bottom > view.bottom || row.top < view.top)) {
+        map.scrollTop += row.top - view.top - view.height / 2;
+      }
     }
     setHelping(false);
     toggleDrawer(false);

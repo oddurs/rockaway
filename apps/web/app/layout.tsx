@@ -60,8 +60,15 @@ const sectionCss = NAV.filter((node) => (node.children?.length ?? 0) > 0)
  */
 const markCurrent = `(() => {
   const here = location.pathname.replace(/\\/?$/, '/');
-  for (const a of document.querySelectorAll('.site-map a.rk-link-tree-link'))
-    if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page');
+  for (const a of document.querySelectorAll('.site-map a.rk-link-tree-link')) {
+    if (a.getAttribute('href') !== here) continue;
+    a.setAttribute('aria-current', 'page');
+    // And scrolled into the map's view, if it is below it: a scroll, not a shift.
+    const map = a.closest('[data-site-scroll]');
+    const row = a.getBoundingClientRect();
+    const view = map && map.getBoundingClientRect();
+    if (view && row.bottom > view.bottom) map.scrollTop += row.bottom - view.bottom + view.height / 2;
+  }
 })();`;
 
 /** And the look's buttons say the reader's look, which only the browser knows. */
