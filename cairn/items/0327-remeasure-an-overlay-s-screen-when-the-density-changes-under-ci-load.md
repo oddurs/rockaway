@@ -6,7 +6,7 @@ type: bug
 status: backlog
 milestone: runtime
 created: 2026-10-09
-updated: 2026-10-09
+updated: 2026-10-10
 priority: p2
 layer: behaviour
 effort: m
@@ -32,5 +32,9 @@ Every Screen's cell follows the line box it sits in within a frame or two of a c
 
 ## Acceptance criteria
 
-- [ ] The cause is found and named in a note.
+- [x] The cause is found and named in a note.
 - [ ] Overlay's Densities passes 20 runs in a row under `--repeat` with CPU throttling.
+
+## 2026-10-10
+
+The cause: the matrix read the story's own cell at once, while every other cell waits for the page to be still, so a story that walked the densities itself handed over a popover a frame from remeasuring. #251 settles the own cell too. Criterion 2, twenty throttled runs, is not yet shown.
