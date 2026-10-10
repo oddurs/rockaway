@@ -69,6 +69,40 @@ export const ReadsTheScreenBack: Story = {
   },
 };
 
+/**
+ * Reading changes nothing (the Tabs hang, 0216). A story checks a screen
+ * inside `waitFor`, which runs its callback again on every change to the
+ * document: a screenshot that changed the page, even for an instant, called
+ * itself again in a microtask, for ever, while its assertion failed, and the
+ * run hung instead of failing. So reading a measured screen leaves no change
+ * behind, and a `waitFor` that cannot pass fails on its timeout.
+ */
+export const ChangesNothing: Story = {
+  name: 'Reading changes nothing',
+  play: async ({ canvas }) => {
+    const host = canvas.getByTestId('host');
+    const screen = host.firstElementChild as HTMLElement;
+    await waitFor(() => expect(screen.dataset.rkCols).toBe('30'));
+    await waitFor(() =>
+      expect(getComputedStyle(screen).getPropertyValue('--rk-cell-width')).toMatch(/px$/),
+    );
+
+    const changes: MutationRecord[] = [];
+    const observer = new MutationObserver((records) => changes.push(...records));
+    observer.observe(document, { subtree: true, childList: true, attributes: true });
+    screenshot(screen);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    observer.disconnect();
+    expect(changes).toEqual([]);
+
+    // A wait that can never pass fails on its timeout. Before, this did not
+    // return at all, and only the watchdog in the Vitest setup ended it.
+    await expect(
+      waitFor(() => expect(screenshot(screen)).toBe('never'), { timeout: 300 }),
+    ).rejects.toThrow();
+  },
+};
+
 export const ListsAttributes: Story = {
   name: 'Lists the attributes it saw',
   play: async ({ canvas }) => {
