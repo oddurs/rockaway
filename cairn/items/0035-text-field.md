@@ -3,15 +3,15 @@ id: 35
 uid: f8a9f69d-752c-41ef-b10a-28a0f8da41ca
 title: Text field
 type: component
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 127
 - 129
 created: 2026-09-22
-updated: 2026-10-04
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p1
 layer: components
 effort: m
@@ -111,3 +111,7 @@ Criterion 22 ticked after #107: the classic-scrollbars browser now runs Overflow
 ## 2026-10-04
 
 Fixed a dropped-keystroke bug found by the tokens engineer building the settings app: useCellScroll's native input/keyup/... listeners on the input itself called setState during the event; on a real (trusted) key the browser calls each listener from an empty stack, so React flushed that render between the input's listener and React's root one, restored the controlled value, and never called onChange. The work now runs on the next frame. The workbench's synthetic userEvent dispatches every listener in one stack and hid it; the runner gained type(keys), the provider's trusted keyboard, and the story 'Typing' (controlled row, controlled box of rows, uncontrolled) fails without the fix.
+
+## 2026-10-10
+
+On main; every criterion ticked, and the dropped-keystroke fix with it. Closed from review.

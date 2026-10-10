@@ -3,17 +3,17 @@ id: 107
 uid: f5d795c4-6718-4dee-b191-f9e3ae015abf
 title: Write the getting-started guide
 type: docs
-status: review
+status: done
 milestone: site
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 104
 - 121
 - 138
 - 143
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p0
 layer: docs
 effort: m
@@ -25,7 +25,7 @@ effort: m
 - [x] Says plainly what the system will not do: no arbitrary sizes, no radii, no emoji
 - [x] The code on the page is the code the quickstart job (0155) extracts and runs from a clean install
 - [x] Covers Vite and Next.js (app router, server components), and where the CSS import goes in each
-- [ ] Links to the recipe for anyone building their own component on the grid
+- [x] Links to the recipe for anyone building their own component on the grid
 
 ## 2026-10-03
 
@@ -42,3 +42,7 @@ Found by the quickstart: a fresh Vite app failed tsc on its first line, import '
 ## 2026-10-03
 
 Criterion 3: the extraction and run that 0155 is to put in CI is scripts/quickstart.ts, and it passes for both apps against this branch. 0155 still owns the CI job (packing on every PR that touches packages/ or the guide). Criterion 5 stays unticked: there is no recipe to link to yet (0134). For now the guide points readers who want to build a component at the concept's ten rules (concept.md#the-contract-a-component-is-held-to), and says a recipe is being written. When 0134 lands, link docs/component-recipe.md from the guide's Next section and tick it.
+
+## 2026-10-10
+
+Criterion 5: the guide links the component recipe (0134) under Build your own component, where it said the recipe was being written.

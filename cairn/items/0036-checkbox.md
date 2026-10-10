@@ -3,15 +3,15 @@ id: 36
 uid: 6d078271-c0b8-4a1a-9dc4-f616c3e6433b
 title: Checkbox
 type: component
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 119
 - 127
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p1
 layer: components
 effort: s
@@ -82,3 +82,7 @@ Criteria 11 and 19 left open on the same ground as Text field: keyboard alone an
 ## 2026-10-03
 
 Criteria 11 and 19 ticked after merging 0198 (#112): touch's line box is 2.75, so a row is 44px at touch, and the Touch story asserts it. Also fixed what CI caught: the box's three cells were text, and a mark the font lacks comes from a fallback whose advance is a hair off the cell, so the box was 0.03px wider checked than unchecked. Each of the three is now an inline-block exactly a cell wide.
+
+## 2026-10-10
+
+On main; every criterion ticked. Closed from review.

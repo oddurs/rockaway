@@ -3,14 +3,14 @@ id: 34
 uid: 7b8c9403-b317-424a-9871-6c665fdf99d8
 title: Popover
 type: component
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 128
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p0
 layer: components
 effort: m
@@ -94,3 +94,7 @@ Found in #149: useCellSnap's translate leaves a sub-pixel transform whenever Rea
 ## 2026-10-03
 
 Criterion 18 is checked by the stories, not by checkConformance itself: checkConformance measures each screen from its own origin, and an overlay's screen is not inside its trigger's, so it cannot see the offset between them. The Dense/Normal/Airy/Touch stories render at their density from the start and assert, in whole cells of the trigger's screen, the popover's corner and size (placeOf fails on any fraction over half a pixel), and conformance plus continuity run on each after the story. A follow-up could teach checkConformance to hold overlay surfaces to their anchor's grid.
+
+## 2026-10-10
+
+On main since #181; every criterion ticked. Closed from review.
