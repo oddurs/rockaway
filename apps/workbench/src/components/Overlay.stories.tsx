@@ -500,6 +500,10 @@ export const Nested: Story = {
   ),
   play: async ({ canvas }) => {
     await measured(document.body);
+    // Focus goes back a frame after an overlay unmounts, and on a loaded runner
+    // that frame outlasted waitFor's default second: the check then saw focus
+    // on the dialog, where React Aria parks it until the restore runs.
+    const SETTLE = { timeout: 5000 };
     const settings = canvas.getByRole('button', { name: 'Settings' });
     // Opened from the keyboard, so the trigger has focus to be given back:
     // WebKit, like Safari, does not focus a button it presses.
@@ -509,10 +513,10 @@ export const Nested: Story = {
       const button = document.querySelector<HTMLElement>('[role="dialog"] button');
       expect(button).not.toBeNull();
       return button as HTMLElement;
-    });
+    }, SETTLE);
     actions.focus();
     await userEvent.keyboard('{Enter}');
-    await waitFor(() => expect(document.querySelector('[role="menu"]')).not.toBeNull());
+    await waitFor(() => expect(document.querySelector('[role="menu"]')).not.toBeNull(), SETTLE);
     // Three surfaces' worth of layer: backdrop and dialog, then the menu above them.
     const [dialogSurface, menuSurface] = surfaces();
     expect(edgeOf(dialogSurface as Element)).toMatch(/^╔/);
@@ -523,14 +527,14 @@ export const Nested: Story = {
     ).toBeTruthy();
 
     await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(document.querySelector('[role="menu"]')).toBeNull());
+    await waitFor(() => expect(document.querySelector('[role="menu"]')).toBeNull(), SETTLE);
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
     // Focus goes back a frame after the menu unmounts.
-    await waitFor(() => expect(actions).toHaveFocus());
+    await waitFor(() => expect(actions).toHaveFocus(), SETTLE);
 
     await userEvent.keyboard('{Escape}');
-    await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
-    await waitFor(() => expect(settings).toHaveFocus());
+    await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull(), SETTLE);
+    await waitFor(() => expect(settings).toHaveFocus(), SETTLE);
   },
 };
 
