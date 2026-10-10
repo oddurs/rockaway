@@ -3,14 +3,14 @@ id: 115
 uid: d279648b-33e5-4215-9379-5d2dcc564978
 title: Virtualise the list by row
 type: feature
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 133
 created: 2026-09-23
-updated: 2026-10-03
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p2
 layer: components
 effort: m
