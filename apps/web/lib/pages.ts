@@ -5,6 +5,7 @@
  * does not. Server only.
  */
 import type { Metadata } from 'next';
+import { items } from '../registry/items.ts';
 import { components, slugOf } from './components.ts';
 import { docs } from './docs.ts';
 import { absolute, asset } from './paths.ts';
@@ -54,6 +55,13 @@ export function allPages(): readonly Page[] {
       description: doc.description,
     })),
     fixed.registry,
+    ...items
+      .filter((item) => item.example === true)
+      .map((item) => ({
+        path: `examples/${item.name}/`,
+        title: item.title,
+        description: item.description,
+      })),
     fixed.components,
     ...components.map((meta) => ({
       path: `components/${slugOf(meta.name)}/`,

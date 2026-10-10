@@ -19,6 +19,16 @@ const live: Readonly<Record<string, () => ReactNode>> = {
   'file-browser': deferred(() =>
     import('../registry/file-browser/file-browser.tsx').then((m) => m.FileBrowser),
   ),
+  'confirm-destructive': deferred(() =>
+    import('../registry/confirm-destructive/confirm-destructive.tsx').then(
+      (m) => m.ConfirmDestructive,
+    ),
+  ),
+  'git-client': deferred(() =>
+    import('../registry/git-client/git-client.tsx').then((m) => m.GitClient),
+  ),
+  top: deferred(() => import('../registry/top/top.tsx').then((m) => m.SystemMonitor)),
+  settings: deferred(() => import('../registry/settings/settings.tsx').then((m) => m.Settings)),
 };
 
 export function RegistryItem({ name }: { readonly name: string }): ReactNode {
