@@ -112,6 +112,7 @@ const checks: [string, unknown, unknown][] = [
     pure.formBuffer([{ label: 'Name', control: pure.buttonBuffer('Go') }], { width: 64 }).row(0),
     `Name   [ Go ]${' '.repeat(51)}`,
   ],
+  ['pictureBuffer', pure.pictureBuffer({ cols: 4, rows: 1 }).row(0), '░░░░'],
   [
     'calloutBuffer',
     pure.calloutBuffer({ width: 14, height: 3 }, { tone: 'tip' }).row(0),
@@ -131,6 +132,16 @@ const checks: [string, unknown, unknown][] = [
     ' └── a.ts ',
   ],
   ['codeBlockText', pure.codeBlockText('a', { cols: 8 }).row(1), '│ a    │'],
+  [
+    'tableBuffer',
+    pure.tableBuffer({ columns: [{ header: 'Name' }], rows: [{ cells: ['a.ts'] }] }).row(0),
+    '┌──────┐',
+  ],
+  [
+    'keymapHelpBuffer',
+    pure.keymapHelpBuffer([{ keys: 'mod+k', description: 'Palette' }], 'apple').row(0),
+    '⌘K  Palette',
+  ],
   [
     'panesBuffer',
     pure

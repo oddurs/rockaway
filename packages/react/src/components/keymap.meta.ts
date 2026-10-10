@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { keymapHelpBuffer } from './keymap.tsx';
+import { keymapHelpBuffer } from './keymap.pure.ts';
 
 const BINDINGS = [
   { keys: 'mod+k', description: 'Open the palette' },

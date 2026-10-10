@@ -9,8 +9,19 @@
 import { stringWidth } from '@rockaway/grid';
 import type { Glyphs, KeyName } from '@rockaway/tokens';
 import { themeGlyphs } from '@rockaway/tokens';
-import type { Platform } from '../platform.ts';
-import type { KeyNotation, KeySpec } from './key-hint.tsx';
+import type { Platform } from '../platform.pure.ts';
+
+/** How a chord is written: the platform's own way, or a terminal's (`^S`, `M-x`). */
+export type KeyNotation = 'platform' | 'terminal';
+
+/** A chord, parsed: which modifiers it holds, and its one key. */
+export interface KeySpec {
+  readonly ctrl: boolean;
+  readonly alt: boolean;
+  readonly shift: boolean;
+  readonly meta: boolean;
+  readonly key: string;
+}
 
 type Modifier = 'ctrl' | 'alt' | 'shift' | 'meta';
 
