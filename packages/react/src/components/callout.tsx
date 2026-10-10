@@ -85,6 +85,8 @@ export function Callout({
     <Screen
       draw={draw}
       {...(painter === undefined ? {} : { painter })}
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
       className={cx('rk-callout', className)}
       contentInset={INSET}
       fallback={fallback}

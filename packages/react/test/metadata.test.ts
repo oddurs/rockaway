@@ -8,7 +8,8 @@
  * reading its stylesheets and its source and by rendering it on the server —
  * and that nothing exported from the package goes without metadata.
  */
-import { readdirSync, readFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { themeGlyphs, themeNames, themes } from '@rockaway/tokens';
 import Ajv2020 from 'ajv/dist/2020.js';
@@ -18,6 +19,7 @@ import { describe, expect, test } from 'vitest';
 import {
   type Analysis,
   analyse,
+  levelsFromStories,
   metaFiles,
   owns,
   packageRoot,
@@ -31,8 +33,10 @@ import { components, metadata, stateVocabulary } from '../src/metadata/index.ts'
 import schema from '../src/metadata/meta.schema.json' with { type: 'json' };
 import type {
   Accessibility,
+  CellSize,
   ComponentMeta,
   ElementPart,
+  GridMeta,
   ImportedPart,
   KeyBinding,
   PropMeta,
@@ -53,14 +57,21 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     'A hook: the frame counter that spinners and other stepped motion read. It draws nothing, and is documented with motion.',
   GlyphProvider:
     "Context that hands a theme's glyphs to every component under it. It draws nothing, and is documented with the theme.",
+  KeymapEngine:
+    "Keymap's engine as a class, for a page with no React (cairn 0237). It draws nothing, and is documented with Keymap.",
   RouterProvider:
     "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
+  DialogTrigger:
+    "React Aria's DialogTrigger, re-exported beside Dialog so it is the instance Dialog and OverlayPopover read, and so copied code needs no import from React Aria. It draws nothing, and is documented in Dialog's anatomy.",
+  TooltipTrigger:
+    "React Aria's TooltipTrigger, re-exported beside Tooltip for the reason DialogTrigger is. It draws nothing, and is documented in Tooltip's description.",
+  Flow: 'Layout, not a widget: blocks down the page on rhythm half-steps, closed to whole rows (0312). Documented with the grid.',
   MenuTrigger:
     "React Aria's menu trigger, re-exported beside Menu so it is the instance Menu's popover reads, and so copied-in code can open a menu. It draws nothing, and is documented in Menu's notes.",
   SubmenuTrigger:
     "React Aria's submenu trigger, re-exported beside Menu for the same reasons as MenuTrigger. It draws nothing, and is documented in Menu's notes.",
-  Chrome:
-    "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
+  Cells:
+    "A painted layer: a buffer's cells as elements, which Screen's chrome, List's scrollbar and Tree's guides render. Part of the cell renderer, documented with the grid.",
 };
 
 /** A component rendered once, as small as it can be. */
@@ -96,6 +107,8 @@ const fileOf = (name: string): string => {
 const IMPLICIT: Readonly<Record<string, RegExp>> = {
   button: /<button[\s>]/,
   link: /<a [^>]*href=/,
+  list: /<ul[\s>]/,
+  radio: /<input [^>]*type="radio"/,
 };
 
 const FOCUSABLE = /<(?:button|input|select|textarea)[\s>]|<a [^>]*href=|tabindex="0"/;
@@ -408,10 +421,11 @@ describe('the checks fail when the metadata is wrong', () => {
       ...button.accessibility,
       keyboard: [{ keys: ['return'], action: 'Not a key KeyHint knows.' }],
     };
-    const related = [{ name: 'Tooltip', why: 'Not written yet.' }];
+    // A name no component will take, so the case outlives the components.
+    const related = [{ name: 'NoSuchComponent', why: 'Not written.' }];
     expect(problems({ ...button, accessibility, related }, found)).toEqual([
       'key return is not a chord KeyHint can draw',
-      'it names Tooltip, which has no metadata',
+      'it names NoSuchComponent, which has no metadata',
     ]);
   });
 });
@@ -505,6 +519,112 @@ describe('the snapshots, in every theme (0171)', () => {
 });
 
 /**
+ * Components that are neither a control nor a pane, and why (0182). Every
+ * other component marks itself one or the other, so a new component cannot
+ * go unseen by the levels without being listed here.
+ */
+const NEITHER: Readonly<Record<string, string>> = {
+  Badge: 'A label in a line of text: nothing to press, nothing it holds.',
+  Divider: 'A rule between panes, one row or one column: not a pane itself.',
+  Form: 'Lays out fields in rows and a column of labels; each control is its own.',
+  KeyHint: 'Words in a line of text, or inside a control that is marked itself.',
+  Keymap: 'Binds keys; its help screen is drawn inside whatever pane shows it.',
+  Menu: 'Draws nothing of its own: its surface is OverlayPopover’s, which marks itself a pane.',
+  Picture:
+    'An image in a box of whole cells: nothing to press, and nothing it holds but the picture.',
+  Popover: 'Draws nothing of its own: its surface is OverlayPopover’s, which marks itself a pane.',
+  Dialog: 'Draws nothing of its own: its surface is OverlayModal’s, which marks itself a pane.',
+  Tooltip: 'Draws nothing of its own: its surface is OverlayTooltip’s, which marks itself a pane.',
+  LinkTree:
+    'A tree of links in the pane that holds it: each row is a Link, which marks itself a control.',
+  Meter: 'A reading in a line of text: nothing to press, nothing it holds.',
+  ProgressBar: 'A reading in a line of text: nothing to press, nothing it holds.',
+  Sparkline: 'A reading in a line of text: nothing to press, nothing it holds.',
+  Spinner: 'One cell in a line of text: nothing to press, nothing it holds.',
+  Text: 'Words sized in rows: nothing to press, nothing it holds.',
+};
+
+describe('how it sits on the grid (0167, 0182)', () => {
+  test('every component is a control, a pane, or listed as neither with its reason', () => {
+    const unclassified = components
+      .filter((meta) => meta.grid.is.length === 0 && NEITHER[meta.name] === undefined)
+      .map((meta) => meta.name);
+    expect(unclassified).toEqual([]);
+    // And a listed one that has since been marked comes off the list.
+    const stale = components
+      .filter((meta) => meta.grid.is.length > 0 && NEITHER[meta.name] !== undefined)
+      .map((meta) => meta.name);
+    expect(stale).toEqual([]);
+  });
+
+  test('read from the attributes the source writes', () => {
+    expect(byName('Button').grid.is).toEqual(['control']);
+    expect(byName('Checkbox').grid.is).toEqual(['control']);
+    expect(byName('Frame').grid.is).toEqual(['pane']);
+    expect(byName('List').grid.is).toEqual(['pane']);
+    expect(byName('Badge').grid.is).toEqual([]);
+    // And it is on the element: the attribute is what the levels read.
+    const html = renderToStaticMarkup(FIXTURES.button?.() ?? '');
+    expect(html).toContain('data-rk-control=""');
+  });
+
+  test('its smallest size is no larger than its default', () => {
+    for (const meta of components) {
+      const { min, default: usual } = meta.grid.size;
+      expect(min.width, meta.name).toBeLessThanOrEqual(usual.width);
+      expect(min.height, meta.name).toBeLessThanOrEqual(usual.height);
+    }
+    expect(byName('Frame').grid.size.min).toEqual({ width: 3, height: 3 });
+    expect(byName('Button').grid.size).toEqual({
+      min: { width: 4, height: 1 },
+      default: { width: 11, height: 1 },
+    });
+  });
+
+  test('the level is the strictest a story renders it at, with the check on', () => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'rockaway-levels-'));
+    try {
+      writeFileSync(
+        path.join(dir, 'A.stories.tsx'),
+        `
+          const meta = { title: 'A', component: Aye, globals: { conformance: 'loose' } } satisfies Meta;
+          export default meta;
+          // No render of its own: the meta's component, at the meta's level.
+          export const Plain: Story = {};
+          export const Strict: Story = { globals: { conformance: 'strict' }, render: () => <Bee /> };
+          // The check is off, so it proves nothing.
+          export const Off: Story = {
+            globals: { conformance: 'strict' },
+            parameters: { conformance: false },
+            render: () => <Sea />,
+          };
+          export const Standard: Story = { globals: { conformance: 'standard' }, render: () => <Sea><Div /></Sea> };
+          // Through a wrapper the file defines: what the wrapper renders.
+          function Page() { return <Frame><Dee /></Frame>; }
+          export const Wrapped: Story = { globals: { conformance: 'strict' }, render: () => <Page /> };
+        `,
+      );
+      const held = levelsFromStories(new Set(['Aye', 'Bee', 'Sea', 'Dee']), dir);
+      expect(Object.fromEntries(held)).toEqual({
+        Aye: 'loose',
+        Bee: 'strict',
+        Sea: 'standard',
+        Dee: 'strict',
+      });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test('read from the workbench', () => {
+    // Table, Tree, Callout and Checkbox each have a story at strict.
+    for (const name of ['Table', 'Tree', 'Callout', 'Checkbox']) {
+      expect(byName(name).grid.level, name).toBe('strict');
+    }
+  });
+});
+
+/**
  * Each component's snapshots as the site draws them, in a file beside it,
  * `<name>.snapshots.txt`: one file each, so two components added at once do
  * not both edit this one (0262).
@@ -545,6 +665,8 @@ const schemaMatchesTypes: readonly true[] = [
   true satisfies Same<keyof Accessibility, Keys<'accessibility'>>,
   true satisfies Same<keyof KeyBinding, Keys<'keyBinding'>>,
   true satisfies Same<keyof Snapshot, Keys<'snapshot'>>,
+  true satisfies Same<keyof GridMeta, Keys<'grid'>>,
+  true satisfies Same<keyof CellSize, Keys<'cellSize'>>,
 ];
 test('the schema and the types agree', () => {
   expect(schemaMatchesTypes.every(Boolean)).toBe(true);

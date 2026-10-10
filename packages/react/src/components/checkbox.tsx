@@ -69,7 +69,8 @@ export function Checkbox({
       className={fieldClass('rk-checkbox', className)}
       {...(style === undefined ? {} : { style })}
     >
-      <CheckboxButton className="rk-checkbox-row">
+      {/* The row is the control (0182); the description and error sit outside it. */}
+      <CheckboxButton className="rk-checkbox-row" data-rk-control="">
         {(render) => {
           const mark = markOf(
             render.isIndeterminate ? 'indeterminate' : render.isSelected ? 'checked' : 'unchecked',

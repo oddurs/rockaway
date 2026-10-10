@@ -163,6 +163,7 @@ export const markNames = [
   'required',
   'danger',
   'external',
+  'separator',
 ] as const;
 export type MarkName = (typeof markNames)[number];
 
@@ -171,7 +172,9 @@ export type MarkName = (typeof markNames)[number];
  * checkbox is `check`, `dash` or `blank` between the control delimiters; a
  * radio is `radio` or `radio-empty` on its own, so its empty state is still a
  * visible mark. `prompt` starts an input row that takes a command, as a
- * shell's does; it is not `overflow-end`, though in Unicode it is drawn alike. Tree guides are not here: they are edges, and the junction
+ * shell's does; it is not `overflow-end`, though in Unicode it is drawn alike.
+ * `separator` stands between the levels of a path, as Breadcrumbs draws one
+ * (0319). Tree guides are not here: they are edges, and the junction
  * table draws them.
  */
 export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string>>>> = {
@@ -197,6 +200,7 @@ export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string
     required: '*',
     danger: '!',
     external: '↗',
+    separator: '›',
   },
   ascii: {
     check: 'x',
@@ -220,6 +224,7 @@ export const marks: Readonly<Record<Repertoire, Readonly<Record<MarkName, string
     required: '*',
     danger: '!',
     external: '^',
+    separator: '>',
   },
 };
 
@@ -236,6 +241,17 @@ export const blocks: Readonly<Record<Repertoire, Readonly<Record<BlockName, stri
 export const bars: Readonly<Record<Repertoire, readonly string[]>> = {
   unicode: ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'],
   ascii: ['_', '_', '.', '-', '-', '=', '=', '#'],
+};
+
+/**
+ * The eight-step fill, from one eighth of a cell to all of it, left to right:
+ * a progress bar's or a meter's leading edge, so a bar grows in eighths of a
+ * cell rather than whole cells (cairn 0101). ASCII cannot draw part of a cell,
+ * so its steps are coarser marks that still read as more and less.
+ */
+export const fills: Readonly<Record<Repertoire, readonly string[]>> = {
+  unicode: ['▏', '▎', '▍', '▌', '▋', '▊', '▉', '█'],
+  ascii: ['-', '-', '-', '=', '=', '=', '=', '#'],
 };
 
 /** Braille frames, the spinner every terminal has agreed on. ASCII has four. */
@@ -343,6 +359,8 @@ export interface Glyphs {
   readonly mark: Readonly<Record<MarkName, string>>;
   readonly block: Readonly<Record<BlockName, string>>;
   readonly bar: readonly string[];
+  /** A bar's leading edge across a cell, in eighths: see `fills`. */
+  readonly fill: readonly string[];
   readonly spinner: readonly string[];
   readonly delimiter: Readonly<Record<DelimiterName, Delimiters>>;
   /** Key legends. A word in ASCII, so the one group whose entries may be wider than a cell. */
@@ -362,6 +380,7 @@ export function glyphsFor(theme: {
     mark: marks[r],
     block: blocks[r],
     bar: bars[r],
+    fill: fills[r],
     spinner: spinnerFrames[r],
     delimiter: delimiters,
     key: keyLegends[r],
@@ -480,6 +499,7 @@ export function glyphs(set: BorderSetName, weights?: Partial<FrameWeights>): Gro
       mark: table(resolved.mark),
       block: table(resolved.block),
       bar: sequence(resolved.bar),
+      fill: sequence(resolved.fill),
       spinner: sequence(resolved.spinner),
       delimiter: Object.fromEntries(
         Object.entries(resolved.delimiter).map(([name, [open, close]]) => [

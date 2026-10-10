@@ -117,4 +117,11 @@ export const switchMeta: ComponentMetaInput = defineMeta({
       text: [cells({ readOnly: true }), cells({ selected: true, readOnly: true })].join('\n'),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: the track with no words.
+    min: cells({}, ''),
+    // The default: off, with words like these.
+    default: cells(),
+  },
 });

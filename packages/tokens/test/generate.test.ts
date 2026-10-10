@@ -109,11 +109,14 @@ describe('generated files', () => {
     // duration to transition over or a curve to transition along.
     const semantic = files.get('semantic.tokens.json') as Node;
     const motion = semantic.motion as Node;
-    expect(Object.keys(motion).filter((k) => !k.startsWith('$'))).toEqual(['tick']);
+    // Refresh is data rather than motion: under reduced motion it slows, and keeps counting.
+    expect(Object.keys(motion).filter((k) => !k.startsWith('$'))).toEqual(['tick', 'tick-reduced']);
     expect(Object.fromEntries([...tokens(motion)].map(([id, t]) => [id, t.$value]))).toEqual({
       'tick.spinner': { value: 80, unit: 'ms' },
       'tick.blink': { value: 500, unit: 'ms' },
       'tick.progress': { value: 100, unit: 'ms' },
+      'tick.refresh': { value: 1000, unit: 'ms' },
+      'tick-reduced.refresh': { value: 5000, unit: 'ms' },
     });
     for (const [name, doc] of files) {
       if (name === resolverFile) continue;

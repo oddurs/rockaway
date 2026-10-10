@@ -121,6 +121,8 @@ export function Select<T extends object>({
           <Label isRequired={isRequired}>{label}</Label>
           <AriaSelectButton
             className="rk-select-trigger"
+            // A control, to the conformance levels: half a cell inside it at `standard` (0182).
+            data-rk-control=""
             style={{ '--rk-select-cols': cols } as CSSProperties}
           >
             <SelectValue className="rk-select-value-slot">

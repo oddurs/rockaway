@@ -19,6 +19,13 @@
  * `rk.tokens` layer of `@rockaway/css`. A component's own custom properties
  * (`--rk-button-end`) are not tokens and are left out.
  *
+ * What the conformance levels see a component as is read from the attributes
+ * its source writes: `data-rk-control`, `data-rk-pane` (0182). The level it
+ * holds is read from the workbench's stories (0167): the strictest level of
+ * any story that renders it with the conformance check on. Every story's
+ * check must pass in CI, so a component in a passing `strict` story has been
+ * held to `strict`, and the level cannot claim more than the stories prove.
+ *
  * This runs in Node, so the published metadata cannot call it: the generator
  * writes its results to `src/metadata/extracted.ts`, and a test fails if that
  * file is stale.
@@ -29,13 +36,19 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseSync } from 'oxc-parser';
 import postcss, { type AtRule, type Node as CssNode, type Rule } from 'postcss';
-import type { ExtractedPart, PropMeta } from '../src/metadata/schema.ts';
+import type {
+  ConformanceLevel,
+  ExtractedPart,
+  GridMark,
+  PropMeta,
+} from '../src/metadata/schema.ts';
 
 const require = createRequire(import.meta.url);
 
 export const packageRoot: string = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = path.join(packageRoot, 'src');
 const componentsDir = path.join(sourceRoot, 'components');
+const storiesRoot = path.join(packageRoot, '..', '..', 'apps', 'workbench', 'src');
 const cssRoot = path.join(path.dirname(require.resolve('@rockaway/css/package.json')), 'src');
 const tokensCss = require.resolve('@rockaway/tokens/tokens.css');
 
@@ -496,12 +509,180 @@ export function analyse(): Map<string, Analysis> {
         }),
         inherits: members.inherits,
         tokens: consumed,
+        marks: marksOf(hooks.attributes),
         classes,
         selectors,
       });
     }
   }
+  const held = levelsFromStories(new Set(found.keys()));
+  for (const [name, part] of found) {
+    const level = held.get(name);
+    if (level !== undefined) found.set(name, { ...part, level });
+  }
   return found;
+}
+
+/** What the conformance levels see a component as, by the attributes it writes (0182). */
+function marksOf(attributes: ReadonlySet<string>): GridMark[] {
+  return (['control', 'pane'] as const).filter((mark) => attributes.has(`data-rk-${mark}`));
+}
+
+const LEVELS: readonly ConformanceLevel[] = ['loose', 'standard', 'strict'];
+
+/** A property of an object literal, by name. */
+function property(object: AstNode | undefined, name: string): AstNode | undefined {
+  if (object?.type !== 'ObjectExpression') return undefined;
+  for (const prop of object.properties as AstNode[]) {
+    if (prop.type !== 'Property') continue;
+    const key = prop.key as { name?: string; value?: unknown };
+    if (key.name === name || key.value === name) return prop.value as AstNode;
+  }
+  return undefined;
+}
+
+/** An initialiser with its `satisfies` or `as` taken off. */
+function bare(node: AstNode | undefined): AstNode | undefined {
+  let at = node;
+  while (at && (at.type === 'TSSatisfiesExpression' || at.type === 'TSAsExpression')) {
+    at = at.expression as AstNode;
+  }
+  return at;
+}
+
+/** A story's (or a meta's) settings for the conformance check. */
+function conformanceOf(object: AstNode | undefined): {
+  readonly level?: ConformanceLevel;
+  readonly off?: boolean;
+} {
+  const level = property(property(object, 'globals'), 'conformance') as
+    | { value?: unknown }
+    | undefined;
+  const check = property(property(object, 'parameters'), 'conformance') as
+    | { value?: unknown }
+    | undefined;
+  return {
+    ...(LEVELS.includes(level?.value as ConformanceLevel)
+      ? { level: level?.value as ConformanceLevel }
+      : {}),
+    ...(typeof check?.value === 'boolean' ? { off: check.value === false } : {}),
+  };
+}
+
+/**
+ * The components a piece of a story file renders, by their JSX names,
+ * following a component the file defines itself (`<RealPage />`) into its body.
+ */
+function rendered(
+  node: AstNode | undefined,
+  components: ReadonlySet<string>,
+  locals: ReadonlyMap<string, AstNode> = new Map(),
+  seen: Set<string> = new Set(),
+): Set<string> {
+  const found = new Set<string>();
+  for (const at of walk(node)) {
+    if (at.type !== 'JSXOpeningElement') continue;
+    const name = (at.name as { type: string; name?: string }).name;
+    if (name === undefined) continue;
+    if (components.has(name)) found.add(name);
+    const local = locals.get(name);
+    if (local !== undefined && !seen.has(name)) {
+      seen.add(name);
+      for (const inner of rendered(local, components, locals, seen)) found.add(inner);
+    }
+  }
+  return found;
+}
+
+/** The functions a story file defines at its top level, by name: its own wrappers. */
+function localFunctions(parsed: Parsed): Map<string, AstNode> {
+  const found = new Map<string, AstNode>();
+  for (const statement of parsed.body) {
+    const declaration =
+      statement.type === 'ExportNamedDeclaration'
+        ? (statement.declaration as AstNode | null)
+        : statement;
+    if (declaration?.type === 'FunctionDeclaration') {
+      const name = (declaration.id as { name?: string } | null)?.name;
+      if (name !== undefined) found.set(name, declaration);
+    }
+    if (declaration?.type === 'VariableDeclaration') {
+      for (const d of declaration.declarations as AstNode[]) {
+        const init = d.init as AstNode | undefined;
+        const name = (d.id as { name?: string }).name;
+        if (
+          name !== undefined &&
+          (init?.type === 'ArrowFunctionExpression' || init?.type === 'FunctionExpression')
+        ) {
+          found.set(name, init);
+        }
+      }
+    }
+  }
+  return found;
+}
+
+function storyFiles(dir: string): string[] {
+  return readdirSync(dir, { withFileTypes: true })
+    .flatMap((entry) => {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) return storyFiles(full);
+      return entry.name.endsWith('.stories.tsx') ? [full] : [];
+    })
+    .sort();
+}
+
+/**
+ * The strictest level each component is rendered at, with the conformance
+ * check on, in any story in the workbench (0167). A story that turns the
+ * check off proves nothing, and is skipped. A story with no render of its own
+ * renders its meta's, or its meta's component.
+ */
+export function levelsFromStories(
+  components: ReadonlySet<string>,
+  root: string = storiesRoot,
+): Map<string, ConformanceLevel> {
+  const held = new Map<string, ConformanceLevel>();
+  for (const file of storyFiles(root)) {
+    const parsed = parse(file);
+    const declarators = parsed.body.flatMap((statement) => {
+      const declaration =
+        statement.type === 'ExportNamedDeclaration'
+          ? (statement.declaration as AstNode | null)
+          : statement;
+      if (declaration?.type !== 'VariableDeclaration') return [];
+      return (declaration.declarations as AstNode[]).map((d) => ({
+        exported: statement.type === 'ExportNamedDeclaration',
+        name: (d.id as { name?: string }).name,
+        init: bare(d.init as AstNode | undefined),
+      }));
+    });
+    const meta = declarators.find((d) => !d.exported && d.name === 'meta')?.init;
+    const metaCheck = conformanceOf(meta);
+    const metaComponent = (property(meta, 'component') as { name?: string } | undefined)?.name;
+    const locals = localFunctions(parsed);
+    const metaRenders = rendered(property(meta, 'render'), components, locals);
+    for (const story of declarators) {
+      if (!story.exported || story.init?.type !== 'ObjectExpression') continue;
+      const own = conformanceOf(story.init);
+      if (own.off ?? metaCheck.off ?? false) continue;
+      const level = own.level ?? metaCheck.level ?? 'standard';
+      let shown = rendered(story.init, components, locals);
+      if (shown.size === 0) shown = metaRenders;
+      if (shown.size === 0 && metaComponent !== undefined) {
+        shown = components.has(metaComponent)
+          ? new Set([metaComponent])
+          : rendered(locals.get(metaComponent), components, locals);
+      }
+      for (const name of shown) {
+        const before = held.get(name);
+        if (before === undefined || LEVELS.indexOf(level) > LEVELS.indexOf(before)) {
+          held.set(name, level);
+        }
+      }
+    }
+  }
+  return held;
 }
 
 /**
@@ -522,9 +703,16 @@ export function extract(): Record<string, ExtractedPart> {
   return Object.fromEntries(
     [...analyse()]
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([name, { file, props, inherits, tokens: consumed }]) => [
+      .map(([name, { file, props, inherits, tokens: consumed, marks, level }]) => [
         name,
-        { file, props, inherits, tokens: consumed },
+        {
+          file,
+          props,
+          inherits,
+          tokens: consumed,
+          marks,
+          ...(level === undefined ? {} : { level }),
+        },
       ]),
   );
 }

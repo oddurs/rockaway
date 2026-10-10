@@ -1,8 +1,8 @@
-import { ticks } from '@rockaway/tokens';
+import { reducedTicks, ticks } from '@rockaway/tokens';
 import { createElement, type ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { subscribeTick, tickFrame, useTick } from '../src/tick.ts';
+import { subscribeTick, tickFrame, useReducedMotion, useTick } from '../src/tick.ts';
 
 describe('useTick', () => {
   beforeEach(() => {
@@ -56,5 +56,95 @@ describe('useTick', () => {
     }
     expect(renderToStaticMarkup(createElement(Spinner))).toBe('frame 0');
     expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+/**
+ * A root element whose `data-motion` a test sets, and the observer the hook
+ * watches it with, which the test fires by hand.
+ */
+function fakeDocument(motion: 'reduced' | 'full' | undefined): {
+  set: (motion: 'reduced' | 'full' | undefined) => void;
+} {
+  const dataset: { motion?: string } = motion === undefined ? {} : { motion };
+  const observers: (() => void)[] = [];
+  vi.stubGlobal('document', {
+    documentElement: { dataset },
+    visibilityState: 'visible',
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  });
+  vi.stubGlobal(
+    'MutationObserver',
+    class {
+      constructor(callback: () => void) {
+        observers.push(callback);
+      }
+      observe(): void {}
+      disconnect(): void {}
+    },
+  );
+  return {
+    set: (next) => {
+      if (next === undefined) delete dataset.motion;
+      else dataset.motion = next;
+      for (const observer of observers) observer();
+    },
+  };
+}
+
+describe('under reduced motion (0101)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  test('a spinner stops on its first frame, and live data keeps refreshing, slower', () => {
+    const refresh = reducedTicks.refresh as number;
+    expect(refresh).toBeGreaterThan(ticks.refresh);
+    fakeDocument('reduced');
+    const intervals = vi.spyOn(globalThis, 'setInterval');
+    const spinner = subscribeTick(ticks.spinner, () => {});
+    const data = subscribeTick(ticks.refresh, () => {}, refresh);
+
+    // Only the refresh clock runs, at its reduced interval.
+    expect(intervals.mock.calls.map(([, ms]) => ms)).toEqual([refresh]);
+    vi.advanceTimersByTime(refresh * 2);
+    expect(tickFrame(ticks.spinner)).toBe(0);
+    expect(tickFrame(ticks.refresh, refresh)).toBe(2);
+
+    spinner();
+    data();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  test('changing the setting retimes the refresh clock, and keeps its count', () => {
+    const refresh = reducedTicks.refresh as number;
+    const root = fakeDocument('full');
+    const stop = subscribeTick(ticks.refresh, () => {}, refresh);
+    vi.advanceTimersByTime(ticks.refresh * 3);
+    expect(tickFrame(ticks.refresh, refresh)).toBe(3);
+
+    root.set('reduced');
+    vi.advanceTimersByTime(ticks.refresh * 3);
+    expect(tickFrame(ticks.refresh, refresh)).toBe(3);
+    vi.advanceTimersByTime(refresh);
+    expect(tickFrame(ticks.refresh, refresh)).toBe(4);
+
+    root.set('full');
+    vi.advanceTimersByTime(ticks.refresh);
+    expect(tickFrame(ticks.refresh, refresh)).toBe(5);
+    stop();
+  });
+
+  test('useReducedMotion is false on the server, so hydration agrees', () => {
+    function Motion(): ReactNode {
+      return useReducedMotion() ? 'reduced' : 'full';
+    }
+    expect(renderToStaticMarkup(createElement(Motion))).toBe('full');
   });
 });

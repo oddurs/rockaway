@@ -93,4 +93,11 @@ export const popoverMeta: ComponentMetaInput = defineMeta({
       ),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one line of one character in its frame, with no trigger.
+    min: toText(popoverBuffer({ lines: ['x'] }), { trimEnd: false }),
+    // The default: three branches under the button that opens it.
+    default: toText(popoverBuffer({ lines: BRANCHES, trigger: 'Branches' }), { trimEnd: false }),
+  },
 });

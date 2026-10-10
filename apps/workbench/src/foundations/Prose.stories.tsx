@@ -19,7 +19,7 @@ import fixture from './prose.fixture.md?raw';
  * The wrapper is a screen only in the sense conformance needs: a box that says
  * how big a cell is, so every box inside can be measured in cells.
  */
-function ProseOnTheGrid({ cols }: { cols?: number }) {
+function ProseOnTheGrid({ cols, reading = false }: { cols?: number; reading?: boolean }) {
   // A box that scrolls has to be reachable by keyboard, so code and tables
   // take a tab stop, as the site's pipeline gives them. A table is wrapped,
   // and the wrapper scrolls, so it can show its overflow marks (0208).
@@ -36,10 +36,16 @@ function ProseOnTheGrid({ cols }: { cols?: number }) {
     <div
       className="rk-screen"
       data-testid="prose"
+      // Prose set for reading is a free zone, which only `loose` allows (0311).
+      {...(reading ? { 'data-rk-conformance': 'loose' } : {})}
       style={cols === undefined ? undefined : { inlineSize: `calc(${cols} * 1ch)` }}
     >
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: the fixture is ours, rendered from Markdown */}
-      <article className="rk-prose" dangerouslySetInnerHTML={{ __html: html }} />
+      <article
+        className="rk-prose"
+        {...(reading ? { 'data-rk-reading': '' } : {})}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: the fixture is ours, rendered from Markdown
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
     </div>
   );
 }
@@ -155,6 +161,89 @@ export const Fixture: Story = {
   },
 };
 
+/**
+ * The default face is IBM Plex Mono, and its italic is a face of its own: an
+ * `em` in prose is set in it, never in a slant the browser fakes, which would
+ * lean a glyph over the edge of its cell. Its advance is the upright's.
+ */
+export const TrueItalic: Story = {
+  play: async ({ canvas }) => {
+    const screen = canvas.getByTestId('prose');
+    const em = screen.querySelector('em') as HTMLElement;
+    const style = getComputedStyle(em);
+    await expect(style.fontStyle).toBe('italic');
+    // WebKit serialises the family without its quotes.
+    await expect(style.fontFamily.replace(/"/g, '').startsWith('IBM Plex Mono')).toBe(true);
+    // WebKit has no `font-synthesis-style`: it reads back empty there.
+    const synthesis = getComputedStyle(document.body).getPropertyValue('font-synthesis-style');
+    if (synthesis !== '') await expect(synthesis).toBe('none');
+
+    // The italic face is a real file, and it loaded for this text.
+    await document.fonts.load(`italic ${style.fontWeight} ${style.fontSize} "IBM Plex Mono"`);
+    const faces = [...document.fonts].filter(
+      (f) => f.family.replaceAll('"', '') === 'IBM Plex Mono' && f.style === 'italic',
+    );
+    await expect(faces.some((f) => f.status === 'loaded')).toBe(true);
+    await expect(document.fonts.check(`italic 400 1em "IBM Plex Mono"`)).toBe(true);
+
+    // On the grid upright or italic: eighty italic zeros are eighty cells.
+    const probe = document.createElement('em');
+    probe.textContent = '0'.repeat(80);
+    probe.style.cssText = 'position: absolute; visibility: hidden; white-space: pre';
+    screen.append(probe);
+    const italic = probe.getBoundingClientRect().width / 80;
+    probe.remove();
+    await expect(italic).toBeCloseTo(cellOf(screen).width, 3);
+  },
+};
+
+/**
+ * Set for reading (0322): running text a quarter row looser than the cell,
+ * blocks a row and a half apart, headings and code still on the cell's line.
+ * A free zone, so the screen is `loose`; the block is a seam, so its outer box
+ * is whole rows at every density and the page after it stays on the grid.
+ */
+export const Reading: Story = {
+  args: { reading: true },
+  play: async ({ canvas }) => {
+    const screen = canvas.getByTestId('prose');
+    const article = screen.querySelector<HTMLElement>('.rk-prose');
+    if (!article) throw new Error('no prose');
+    const root = document.documentElement;
+    const was = root.dataset.density;
+    try {
+      for (const density of DENSITIES) {
+        root.dataset.density = density;
+        await frame();
+        measure(screen);
+        await frame();
+        const cell = cellOf(screen).height;
+        const line = (el: Element | null) =>
+          el ? Number.parseFloat(getComputedStyle(el).lineHeight) : Number.NaN;
+        // Running text is looser; a heading and code keep the cell's line.
+        expect(line(article.querySelector(':scope > p')), density).toBeCloseTo(cell * 1.25, 1);
+        expect(line(article.querySelector(':scope > ul li')), density).toBeCloseTo(cell * 1.25, 1);
+        expect(line(article.querySelector(':scope > h2')), density).toBeCloseTo(cell, 1);
+        expect(line(article.querySelector(':scope > pre')), density).toBeCloseTo(cell, 1);
+        // Blocks are a row and a half apart.
+        expect(Number.parseFloat(getComputedStyle(article).rowGap) / cell, density).toBeCloseTo(
+          1.5,
+          2,
+        );
+        // The seam: the block is whole rows, however its inside is spaced.
+        const rows = article.getBoundingClientRect().height / cell;
+        expect(Math.abs(rows - Math.round(rows)), `${density}: ${rows} rows`).toBeLessThan(1 / 32);
+        expectConformance(screen);
+      }
+    } finally {
+      if (was === undefined) delete root.dataset.density;
+      else root.dataset.density = was;
+      await frame();
+      measure(screen);
+    }
+  },
+};
+
 export const FortyCells: Story = {
   name: 'At forty cells',
   tags: ['classic-scrollbars'],
@@ -167,7 +256,10 @@ export const FortyCells: Story = {
     // table scrolls in its wrapper, which can mark its edges.
     const article = screen.querySelector<HTMLElement>('.rk-prose');
     await expect(article?.scrollWidth).toBe(article?.clientWidth);
+    // An inline box cannot scroll. Its clientWidth is 0 in every engine, and
+    // Firefox also gives it a scrollWidth, so it is left out (cairn 0124).
     const scrolls = [...screen.querySelectorAll<HTMLElement>('*')]
+      .filter((el) => getComputedStyle(el).display !== 'inline')
       .filter((el) => el.scrollWidth > el.clientWidth + 1)
       .map((el) => (el.matches('.rk-scroll-marks') ? 'table' : el.tagName.toLowerCase()));
     await expect(new Set(scrolls)).toEqual(new Set(['pre', 'table']));

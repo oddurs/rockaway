@@ -24,12 +24,12 @@
  * `ListItem` draws its marks with the same function, so the list's text
  * snapshot is the component and not a picture of it.
  *
- * Not virtualised yet (cairn 0115). React Aria's `Virtualizer` renders only the
- * rows near the viewport, but a keyboard jump to a row it has not rendered —
- * `End`, or type-ahead across a long list — leaves focus nowhere, and a list
- * you cannot reach the end of is worse than one that renders too many rows.
- * The scrollbar is built for it either way: it takes the row count from the
- * collection, not from the DOM.
+ * Virtualised by row (cairn 0115): React Aria's `Virtualizer` with a
+ * `ListLayout` whose row height is the measured cell, so only the rows near
+ * the viewport are in the page, every one on a whole cell. The keyboard is
+ * still the collection's: Home, End, the page keys and type-ahead reach rows
+ * that were never rendered. The scrollbar takes its count from the
+ * collection, not from the page, so it shows the whole length.
  */
 import {
   type CSSProperties,
@@ -38,6 +38,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -48,12 +49,14 @@ import {
   type ListBoxItemProps,
   type ListBoxProps,
   type ListBoxRenderProps,
+  ListLayout,
   ListStateContext,
+  Virtualizer,
 } from 'react-aria-components';
-import { measureCell } from '../cell-metrics.ts';
+import { DEFAULT_CELL, measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { Chrome } from '../paint/chrome.tsx';
+import { Cells } from '../paint/render.tsx';
 import { EMPTY, listMarks, scrollbarBuffer } from './list.pure.ts';
 
 export interface ScrollbarState {
@@ -106,7 +109,7 @@ function Scrollbar({ state }: { state: ScrollbarState }): ReactNode {
   // Painted chrome, rendered rather than painted in an effect, so a server
   // sends it too (0126). A reader is told the list's position by the rows,
   // not by a column of blocks.
-  return <Chrome buffer={buffer} className="rk-list-scrollbar" />;
+  return <Cells buffer={buffer} className="rk-list-scrollbar" />;
 }
 
 /**
@@ -143,6 +146,9 @@ export interface ListProps<T extends object> extends Omit<ListBoxProps<T>, 'clas
 
 const DEFAULT_ROWS = 8;
 
+/** Runs before paint in a browser, and not at all on a server. */
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
 export function List<T extends object>({
   rows = DEFAULT_ROWS,
   total,
@@ -156,19 +162,75 @@ export function List<T extends object>({
   const [count, setCount] = useState<number | undefined>(undefined);
   const report = useCallback((size: number) => setCount(size), []);
 
-  // The scroll position, in rows. Read with a native listener rather than an
-  // onScroll prop, which would replace the one React Aria passes this element.
-  // The row height is measured when it is needed rather than assumed, because
-  // density decides how tall a row is.
+  // The scroll position, in whole rows from the top. Read with a native
+  // listener rather than an onScroll prop, which would replace the one the
+  // virtualiser passes this element: it would never learn the position, and
+  // render the wrong rows.
   const box = useRef<HTMLDivElement>(null);
+  const top = useRef(0);
+  const height = useRef<number>(DEFAULT_CELL.height);
+  // While the rows change height, the browser moves the scroll position on
+  // its own (the content grows or shrinks under it); those moves are not the
+  // reader's, and must not move the top row.
+  const settling = useRef(false);
+
+  // The row height is the cell's, measured the way Screen measures it, and
+  // again whenever the list's box changes size: a new density changes the
+  // line box, and the list is a number of rows tall, so its box changes too.
+  // Measured before the first paint, and a fallback before that (and on a
+  // server), so the virtualiser never lays out rows of no height and renders
+  // the whole collection at once.
+  const host = useRef<HTMLDivElement>(null);
+  const [rowHeight, setRowHeight] = useState<number>(DEFAULT_CELL.height);
+  useIsomorphicLayoutEffect(() => {
+    const el = host.current;
+    if (!el) return;
+    const measure = (): void => {
+      const next = measureCell(el).height;
+      if (next === height.current) return;
+      settling.current = true;
+      height.current = next;
+      setRowHeight(next);
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     const el = box.current;
     if (!el) return;
-    const read = (): void => setOffset(Math.round(el.scrollTop / measureCell(el).height));
+    const read = (): void => {
+      if (settling.current) return;
+      top.current = Math.round(el.scrollTop / height.current);
+      setOffset(top.current);
+    };
     read();
     el.addEventListener('scroll', read, { passive: true });
     return () => el.removeEventListener('scroll', read);
   }, []);
+
+  // A new density makes every row a new height, and the same row stays at the
+  // top, on a whole cell. Snapping is "proximity", so that a jump far past the
+  // rendered rows is not pulled back to them, and proximity does not re-snap
+  // after a change of layout the way "mandatory" does: so the list puts the
+  // row back itself, once the rows have their new height.
+  useIsomorphicLayoutEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    el.scrollTop = top.current * rowHeight;
+    const frame = requestAnimationFrame(() => {
+      el.scrollTop = top.current * rowHeight;
+      settling.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [rowHeight]);
+
+  // Only the rows near the viewport are in the page (0115). The layout is in
+  // whole cells, so a row lands on a whole cell however far down it is.
+  const layout = useMemo(() => ({ rowHeight }), [rowHeight]);
 
   const glyphs = useGlyphs();
   const multiple = list.selectionMode === 'multiple';
@@ -189,15 +251,23 @@ export function List<T extends object>({
 
   return (
     <RowCount.Provider value={report}>
-      <div className={cx('rk-list', className)} style={{ '--rk-list-rows': rows } as CSSProperties}>
-        <ListBox
-          {...list}
-          ref={box}
-          className="rk-list-box rk-scroll"
-          renderEmptyState={emptyState}
-        >
-          {children}
-        </ListBox>
+      <div
+        ref={host}
+        className={cx('rk-list', className)}
+        style={{ '--rk-list-rows': rows } as CSSProperties}
+        // A pane, to the conformance levels: whole cells even at `loose` (0182).
+        data-rk-pane=""
+      >
+        <Virtualizer layout={ListLayout} layoutOptions={layout}>
+          <ListBox
+            {...list}
+            ref={box}
+            className="rk-list-box rk-scroll"
+            renderEmptyState={emptyState}
+          >
+            {children}
+          </ListBox>
+        </Virtualizer>
         <Scrollbar state={{ total: total ?? count ?? 0, visible: rows, offset }} />
       </div>
     </RowCount.Provider>

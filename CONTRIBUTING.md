@@ -24,12 +24,21 @@ Node 24 (see `.nvmrc`) and pnpm 12.
 
 ```sh
 pnpm install
-pnpm --filter workbench exec playwright install chromium   # once, for story tests
+pnpm --filter workbench exec playwright install chromium firefox webkit   # once, for story tests
 pnpm check
 ```
 
 `pnpm check` is what CI runs: Biome, TypeScript, the package builds, every
-story as a browser test with axe, and the roadmap.
+story as a browser test with axe, in Chromium, Firefox and WebKit, and the
+roadmap. `ENGINES=chromium pnpm check` runs the stories in Chromium alone,
+which is quicker and is how CI's main job runs them; Firefox and WebKit have a
+job of their own.
+
+Every story is checked again at all four densities and in both modes after it
+runs (cairn 0125). A failure is named by the cell it failed in. Failures that
+are decided but not yet fixed are declared in
+`apps/workbench/.storybook/known.ts`, printed in every run, and an entry that
+no longer fails fails the run, so remove it when its ticket lands.
 
 ## Where work comes from
 

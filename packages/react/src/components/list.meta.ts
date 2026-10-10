@@ -13,17 +13,14 @@ export const listMeta: ComponentMetaInput = defineMeta({
   name: 'List',
   summary: 'Rows to move through and choose from, with a cursor and a scrollbar drawn in cells.',
   description:
-    "The selection primitive a TUI leans on. The viewport is exactly as many rows tall as it says and scrolls in whole rows, so a list never ends mid-row. The cursor and the selection are two signals: the cursor is a mark in a cell every row reserves, and a selected row is reverse video, with a check mark in a second reserved cell under multi-select. The keyboard is React Aria's ListBox. The scrollbar is drawn by the engine into a one-cell column, from the collection's row count.",
+    "The selection primitive a TUI leans on. The viewport is exactly as many rows tall as it says and scrolls in whole rows, so a list never ends mid-row. The cursor and the selection are two signals: the cursor is a mark in a cell every row reserves, and a selected row is reverse video, with a check mark in a second reserved cell under multi-select. The keyboard is React Aria's ListBox. Only the rows near the viewport are in the page, virtualised by row in whole cells, and the keyboard and type-ahead still reach every row. The scrollbar is drawn by the engine into a one-cell column, from the collection's row count, so it shows the whole length.",
   whenToUse: [
     'To choose one item, or several, from a set: files, commands, results.',
-    'To move through a long collection a row at a time from the keyboard.',
+    'To move through a long collection a row at a time from the keyboard: a log of ten thousand lines renders only the rows in view.',
   ],
   whenNotToUse: [
     { text: 'To perform a single action.', instead: 'Button' },
     { text: 'For a row of places to go.', instead: 'Link' },
-    {
-      text: 'For thousands of rows. List renders every row until it is virtualised (0115).',
-    },
   ],
   related: [{ name: 'Frame', why: 'A list usually fills a pane of a frame, under its title.' }],
   anatomy: [
@@ -180,5 +177,15 @@ export const listMeta: ComponentMetaInput = defineMeta({
       draw: (glyphs) =>
         toText(listBuffer({ rows: [], width: 18, visible: 3 }, glyphs), { trimEnd: false }),
     },
+  ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(listBuffer({ rows: [{ label: '' }], width: 2, visible: 1 }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(listBuffer({ rows: files({}), width: 18, visible: 5 }), { trimEnd: false }),
+  },
+  knownIssues: [
+    "Under NODE_ENV=test, React Aria's virtualiser reads process.env.VIRT_ON (react-stately 3.50.0, Virtualizer.mjs line 144 and Rect.mjs line 61), and a browser has no process, so List throws when its tests run in a real browser. Before the tests, give the page one: globalThis.process ??= { env: { VIRT_ON: '1' } }. Under jsdom nothing is needed: there the virtualiser renders every row on purpose, since jsdom has no layout. Reporting it upstream is cairn 0239.",
   ],
 });

@@ -60,10 +60,30 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     cells: Array.from({ length: rows }, () => Array.from({ length: cols }, () => ' ')),
   };
 
+  // An element on a whole row reads as that row; one resting on a half-step
+  // (the rhythm tier, 0311) reads as the row below it, whichever way layout's
+  // subpixel snapping nudged it: half a row is never left to Math.round.
   const at = (rect: DOMRect): { col: number; row: number } => ({
     col: Math.round((rect.left - box.left) / cellWidth),
-    row: Math.round((rect.top - box.top) / cellHeight),
+    row: Math.floor((rect.top - box.top) / cellHeight + 0.5 + 1 / 16),
   });
+
+  // Text is placed by its line box. A range's rect is the font's content
+  // area, which can be taller than the row (Plex at dense is) and starts above
+  // the line box, but it is centred on the line box; the line box is the
+  // element's line height, a row for ordinary text and more for type sized in
+  // rows (0297). So the line box's top is the middle less half the line, and
+  // it reads as `at` reads an element: on a whole row, that row; half a row
+  // down, the row below.
+  const textAt = (rect: DOMRect, el: Element): { col: number; row: number } => {
+    const line = Number.parseFloat(getComputedStyle(el).lineHeight);
+    const height = Number.isFinite(line) && line > 0 ? line : cellHeight;
+    const top = (rect.top + rect.bottom) / 2 - height / 2;
+    return {
+      col: Math.round((rect.left - box.left) / cellWidth),
+      row: Math.floor((top - box.top) / cellHeight + 0.5 + 1 / 16),
+    };
+  };
 
   const attributes: { text: string; attrs: string; col: number; row: number }[] = [];
 
@@ -134,18 +154,21 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
       if (text.trim() === '') continue;
       const parent = node.parentElement;
       if (!parent || parent.closest('.rk-frame')) continue;
+      // Hidden is seen by no one, a folded toolbar command or a probe alike.
+      // Visibility inherits, so the parent's answer is its ancestors' too.
+      if (getComputedStyle(parent).visibility !== 'visible') continue;
 
       const clip = clipOf(parent);
       // Seen by no one: not written, and not in the legend either.
       if (clip.right <= clip.left || clip.bottom <= clip.top) continue;
       const range = root.ownerDocument.createRange();
       range.selectNodeContents(node);
-      const start = at(range.getBoundingClientRect());
+      const start = textAt(range.getBoundingClientRect(), parent);
       if (range.getClientRects().length > 1) {
         // Text that wraps is on several rows: each line of it is written where
         // that line is, which only the line's own characters can say.
         for (const line of linesOf(node, root.ownerDocument)) {
-          const { col, row } = at(line.rect);
+          const { col, row } = textAt(line.rect, parent);
           if (row >= clip.top && row < clip.bottom) write(grid, col, row, line.text, clip);
         }
       } else {

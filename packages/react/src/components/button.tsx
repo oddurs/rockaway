@@ -121,6 +121,8 @@ export function Button({
     <AriaButton
       {...aria}
       ref={refs}
+      // A control, to the conformance levels: half a cell inside it at `standard` (0182).
+      data-rk-control=""
       render={render}
       className={cx('rk-button', className)}
       {...buttonVariants.dataAttributes(chosen)}

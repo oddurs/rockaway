@@ -3,15 +3,15 @@ id: 47
 uid: 7f329bd1-d9fc-44c9-ae6e-678cd7131d61
 title: 'Publish component metadata as data: props, anatomy, when to use, when not to'
 type: feature
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 32
 - 76
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-04
+closed_at: 2026-10-04
 priority: p0
 layer: docs
 effort: m
@@ -52,7 +52,7 @@ The site (component pages, 0147) and the agent surfaces (0048) both read it.
 - [x] Tokens consumed are extracted from CSS, and variant values from the variant helper, not restated
 - [x] A test fails if a component exported from `@rockaway/react` has no metadata
 - [x] `@rockaway/react/meta.json` is built and exported
-- [ ] The recipe (0134) says how to write a component's metadata
+- [x] The recipe (0134) says how to write a component's metadata
 
 ## 2026-10-03
 
@@ -73,3 +73,7 @@ The test renders each component with react-dom/server and reads its stylesheets:
 ## 2026-10-03
 
 Rebased over Link (0135) and motion ticks (0120). Link has link.meta.ts; useTick and GlyphProvider are listed as not components. Link's stylesheet selects [data-current], which React Aria writes from aria-current, so the vocabulary's current row now lists both selectors.
+
+## 2026-10-04
+
+Criterion 5 is true: the recipe (0134, #155) has a Metadata section saying how to write a component's .meta.ts, generate what is extracted, and what the test fails. Closed alongside 0167, which it blocked.

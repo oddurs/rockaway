@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { keymapHelpBuffer } from './keymap.tsx';
+import { keymapHelpBuffer } from './keymap.pure.ts';
 
 const BINDINGS = [
   { keys: 'mod+k', description: 'Open the palette' },
@@ -86,4 +86,11 @@ export const keymapMeta: ComponentMetaInput = defineMeta({
       draw: (glyphs) => toText(keymapHelpBuffer(BINDINGS, 'apple', glyphs)),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(keymapHelpBuffer([{ keys: 'a', description: '' }], 'other'), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(keymapHelpBuffer(BINDINGS, 'other'), { trimEnd: false }),
+  },
 });

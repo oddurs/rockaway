@@ -170,6 +170,8 @@ export function Link({
       {...aria}
       ref={ref}
       className={cx('rk-link', className)}
+      // A control, to the conformance levels: half a cell inside it at `standard` (0182).
+      data-rk-control=""
       {...(Anchor === undefined
         ? {}
         : {

@@ -1,7 +1,7 @@
-import { toText } from '@rockaway/grid';
+import { stringWidth, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
-import { calloutBuffer, calloutVariants } from './callout.pure.ts';
+import { calloutBuffer, calloutChrome, calloutVariants } from './callout.pure.ts';
 
 const SIZE = { width: 30, height: 3 };
 
@@ -98,4 +98,14 @@ export const calloutMeta: ComponentMetaInput = defineMeta({
         .join('\n'),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(
+      calloutBuffer({ width: stringWidth(calloutChrome({}).heading) + 6, height: 3 }, {}),
+      { trimEnd: false },
+    ),
+    // The default variant, with words like these.
+    default: toText(calloutBuffer(SIZE, {}), { trimEnd: false }),
+  },
 });

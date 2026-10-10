@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type TableText, tableBuffer } from './table.tsx';
+import { tableBuffer } from './table.pure.ts';
+import type { TableText } from './table.tsx';
 
 const FILES: TableText = {
   columns: [
@@ -165,5 +166,18 @@ export const tableMeta: ComponentMetaInput = defineMeta({
       description: 'The words across the table, and the column rules stop at the header rule.',
       draw: (glyphs) => toText(tableBuffer({ ...FILES, rows: [] }, glyphs)),
     },
+    {
+      title: 'A window of rows',
+      description:
+        '`rows={2}`: two rows shown at once, scrolled down one, and the scrollbar in the cell inside the right edge (0281).',
+      text: toText(tableBuffer({ ...FILES, visible: 2, offset: 1 })),
+    },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(tableBuffer({ columns: [{ header: '' }], rows: [] }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(tableBuffer({ ...FILES, title: 'files' }), { trimEnd: false }),
+  },
 });

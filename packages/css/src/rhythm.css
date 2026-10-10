@@ -1,0 +1,74 @@
+/*
+ * Rhythm: the grid's second tier (cairn 0311, 0313, 0314).
+ *
+ * Structure is whole cells. Rhythm is spacing in half-steps — half a row
+ * down, half a cell across — and it lives inside a block whose outer box is a
+ * seam on whole cells, so a half-step never moves anything outside it.
+ *
+ * `--rk-step-x` and `--rk-step-y` are the half-steps. The `--rk-rhythm-*`
+ * counts are in half-steps and follow the comfort context, set per region with
+ * `data-rk-comfort` (compact, comfortable, spacious); comfortable is the
+ * default (0311). The counts mirror `rhythm` in @rockaway/grid, and
+ * packages/css/test/rhythm.test.ts holds the two together.
+ */
+@layer rk.tokens {
+  :root {
+    --rk-step-x: calc(var(--rk-cell-width) / 2);
+    --rk-step-y: calc(var(--rk-cell-height) / 2);
+  }
+
+  :root,
+  [data-rk-comfort="comfortable"] {
+    --rk-rhythm-gap: 3;
+    --rk-rhythm-section: 4;
+    --rk-rhythm-pad-y: 1;
+    --rk-rhythm-pad-x: 2;
+    --rk-rhythm-help: 1;
+    --rk-rhythm-field: 2;
+    --rk-rhythm-group: 1;
+  }
+
+  [data-rk-comfort="compact"] {
+    --rk-rhythm-gap: 2;
+    --rk-rhythm-section: 2;
+    --rk-rhythm-pad-y: 0;
+    --rk-rhythm-pad-x: 2;
+    --rk-rhythm-help: 0;
+    --rk-rhythm-field: 2;
+    --rk-rhythm-group: 0;
+  }
+
+  [data-rk-comfort="spacious"] {
+    --rk-rhythm-gap: 4;
+    --rk-rhythm-section: 6;
+    --rk-rhythm-pad-y: 2;
+    --rk-rhythm-pad-x: 4;
+    --rk-rhythm-help: 2;
+    --rk-rhythm-field: 4;
+    --rk-rhythm-group: 2;
+  }
+}
+
+@layer rk.utilities {
+  /*
+   * A flow (0312): blocks down the page, a rhythm gap between them. The flow is
+   * a rhythm block, so its own box is a seam: see `.rk-seam`.
+   */
+  .rk-flow {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--rk-flow-gap, var(--rk-rhythm-gap)) * var(--rk-step-y));
+  }
+
+  /*
+   * A seam (0314): a block's outer box closed up to whole rows. Where the
+   * engine can round an auto height (calc-size, in Chromium today) CSS does it
+   * with no script; elsewhere `useSeam` in @rockaway/react sets a min-height
+   * once the block has laid out. A seam's width is the cells it is given.
+   */
+  @supports (block-size: calc-size(auto, size)) {
+    .rk-seam {
+      block-size: calc-size(auto, round(up, size, var(--rk-cell-height)));
+    }
+  }
+}

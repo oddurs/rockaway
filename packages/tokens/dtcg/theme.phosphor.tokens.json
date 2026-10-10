@@ -194,6 +194,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.962,
+            0.0055,
+            75
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.974,
+            0.0049,
+            75
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.987,
+            0.0042,
+            75
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            1,
+            0,
+            75
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -300,6 +340,26 @@
           "components": [
             0.95,
             0.045,
+            75
+          ]
+        }
+      },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.52,
+            0.16,
+            75
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.21,
+            0.0128,
             75
           ]
         }
@@ -537,6 +597,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.175,
+            0.0116,
+            75
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.2,
+            0.0125,
+            75
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.225,
+            0.0133,
+            75
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.25,
+            0.014,
+            75
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -647,6 +747,26 @@
           ]
         }
       },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.66,
+            0.16,
+            75
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.94,
+            0.0067,
+            75
+          ]
+        }
+      },
       "tint-blue": {
         "$value": {
           "colorSpace": "oklch",
@@ -742,6 +862,11 @@
       "bold": {
         "$value": 700
       }
+    },
+    "content": {
+      "$type": "number",
+      "$description": "The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296).",
+      "$value": 1.3
     }
   },
   "glyph": {
@@ -1131,6 +1256,9 @@
       },
       "external": {
         "$value": "↗"
+      },
+      "separator": {
+        "$value": "›"
       }
     },
     "block": {
@@ -1171,6 +1299,32 @@
       },
       "7": {
         "$value": "▇"
+      },
+      "8": {
+        "$value": "█"
+      }
+    },
+    "fill": {
+      "1": {
+        "$value": "▏"
+      },
+      "2": {
+        "$value": "▎"
+      },
+      "3": {
+        "$value": "▍"
+      },
+      "4": {
+        "$value": "▌"
+      },
+      "5": {
+        "$value": "▋"
+      },
+      "6": {
+        "$value": "▊"
+      },
+      "7": {
+        "$value": "▉"
       },
       "8": {
         "$value": "█"

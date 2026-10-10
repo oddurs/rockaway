@@ -203,7 +203,8 @@ export function Switch({
   const [open, close] = glyphs.delimiter.control;
   return (
     <AriaSwitchField {...aria} className={fieldClass('rk-switch', className)}>
-      <AriaSwitchButton className="rk-switch-button">
+      {/* The button is the control (0182); the description and error sit outside it. */}
+      <AriaSwitchButton className="rk-switch-button" data-rk-control="">
         {({ isSelected, isReadOnly }) => (
           <>
             {/* Chrome: the name is the label alone. */}

@@ -93,6 +93,11 @@ exports[`the palette > the default palette matches its snapshot 1`] = `
       "h": 262,
       "l": 0.46,
     },
+    "focus": {
+      "c": 0.16,
+      "h": 262,
+      "l": 0.66,
+    },
     "foreground": {
       "c": 0.0029,
       "h": 262,
@@ -107,6 +112,11 @@ exports[`the palette > the default palette matches its snapshot 1`] = `
       "c": 0.006,
       "h": 262,
       "l": 0.27,
+    },
+    "inverse": {
+      "c": 0.0029,
+      "h": 262,
+      "l": 0.94,
     },
     "magenta": {
       "c": 0.16,
@@ -137,6 +147,26 @@ exports[`the palette > the default palette matches its snapshot 1`] = `
       "c": 0.0054,
       "h": 262,
       "l": 0.205,
+    },
+    "surface-base": {
+      "c": 0.0053,
+      "h": 262,
+      "l": 0.2,
+    },
+    "surface-overlay": {
+      "c": 0.006,
+      "h": 262,
+      "l": 0.25,
+    },
+    "surface-raised": {
+      "c": 0.0057,
+      "h": 262,
+      "l": 0.225,
+    },
+    "surface-sunken": {
+      "c": 0.005,
+      "h": 262,
+      "l": 0.175,
     },
     "tint-blue": {
       "c": 0.045,
@@ -265,6 +295,11 @@ exports[`the palette > the default palette matches its snapshot 1`] = `
       "h": 262,
       "l": 0.68,
     },
+    "focus": {
+      "c": 0.16,
+      "h": 262,
+      "l": 0.52,
+    },
     "foreground": {
       "c": 0.0055,
       "h": 262,
@@ -279,6 +314,11 @@ exports[`the palette > the default palette matches its snapshot 1`] = `
       "c": 0.003,
       "h": 262,
       "l": 0.935,
+    },
+    "inverse": {
+      "c": 0.0055,
+      "h": 262,
+      "l": 0.21,
     },
     "magenta": {
       "c": 0.16,
@@ -309,6 +349,26 @@ exports[`the palette > the default palette matches its snapshot 1`] = `
       "c": 0,
       "h": 262,
       "l": 1,
+    },
+    "surface-base": {
+      "c": 0.0021,
+      "h": 262,
+      "l": 0.974,
+    },
+    "surface-overlay": {
+      "c": 0,
+      "h": 262,
+      "l": 1,
+    },
+    "surface-raised": {
+      "c": 0.0018,
+      "h": 262,
+      "l": 0.987,
+    },
+    "surface-sunken": {
+      "c": 0.0024,
+      "h": 262,
+      "l": 0.962,
     },
     "tint-blue": {
       "c": 0.045,
