@@ -27,6 +27,7 @@ import { popoverMeta } from '../components/popover.meta.ts';
 import { selectMeta } from '../components/select.meta.ts';
 import { switchMeta } from '../components/switch.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
+import { tabsMeta } from '../components/tabs.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import type { ComponentMetaInput } from './schema.ts';
@@ -56,6 +57,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'select', meta: selectMeta },
   { file: 'switch', meta: switchMeta },
   { file: 'table', meta: tableMeta },
+  { file: 'tabs', meta: tabsMeta },
   { file: 'text-field', meta: textFieldMeta },
   { file: 'tree', meta: treeMeta },
 ];

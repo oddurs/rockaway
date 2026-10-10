@@ -142,6 +142,7 @@ const checks: [string, unknown, unknown][] = [
       .row(1),
     ' └── a.ts ',
   ],
+  ['tabsText', pure.tabsText({ width: 16, height: 2 }, ['a', 'b'], 0).row(0), '┌ a ─ b ───────┐'],
   ['codeBlockText', pure.codeBlockText('a', { cols: 8 }).row(1), '│ a    │'],
   [
     'tableBuffer',
