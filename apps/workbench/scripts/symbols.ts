@@ -139,6 +139,10 @@ const subset = (font: Buffer, text: readonly string[]): Promise<Buffer> =>
     targetFormat: 'woff2',
     variationAxes: { wght: { min: 400, max: 700, default: 400 } },
     noLayoutClosure: true,
+    // No instructions, no hinting tables (0295): hinted, Chromium on Linux rounds
+    // each advance to a whole pixel, 10px for the grid's 9.6, and every badge and
+    // key hint with a mark in it lands a fraction of a cell off.
+    noHinting: true,
     preserveNameIds: [0, 13, 14],
   });
 
