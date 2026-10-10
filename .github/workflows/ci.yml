@@ -54,6 +54,9 @@ jobs:
       - name: Packed packages (contents, publint, attw, server components)
         run: pnpm packages:check
 
+      # The site's tests load the built pages in a browser.
+      - uses: ./.github/actions/playwright
+
       - name: Tests (tokens, grid, css, react, the built site)
         run: pnpm -r --filter './packages/*' --filter site test
         env:
