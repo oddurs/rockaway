@@ -3,12 +3,12 @@ id: 244
 uid: dffa6e36-89b3-4863-afc2-4988d44101ee
 title: Give a link alone in a frame the touch line box
 type: bug
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p2
 layer: components
 effort: s
