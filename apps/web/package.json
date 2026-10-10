@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "node scripts/themes.ts && node scripts/routes.ts && next dev --turbopack",
     "build": "node scripts/themes.ts && node scripts/routes.ts && tsc -p tsconfig.json && next build --turbopack",
-    "typecheck": "node scripts/routes.ts && tsc -p tsconfig.json",
     "test": "vitest run",
     "font": "node scripts/font.ts",
     "budget": "vitest run test/budget.test.ts"
