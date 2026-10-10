@@ -64,7 +64,10 @@ test('loads every page from the site itself, under its base, without an error', 
   const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const page = await context.newPage();
   const failures: string[] = [];
-  page.on('requestfailed', (r) => failures.push(`${r.url()}: failed`));
+  page.on('requestfailed', (r) => {
+    // A prefetch the next page's load cancels is not a failure.
+    if (r.failure()?.errorText !== 'net::ERR_ABORTED') failures.push(`${r.url()}: failed`);
+  });
   page.on('response', (r) => {
     if (!r.ok()) failures.push(`${r.url()}: ${r.status()}`);
   });
@@ -173,7 +176,7 @@ describe('with no script', () => {
     expect(failures).toEqual([]);
   }, 120_000);
 
-  test('shows every component as its snapshots, and its example with its chrome (0147)', async () => {
+  test('shows every component as its snapshots, and its example in the page (0147)', async () => {
     const off = await browser.newContext({ javaScriptEnabled: false });
     const page = await off.newPage();
     const trimmed = (text: string) =>
@@ -191,7 +194,12 @@ describe('with no script', () => {
               .map((row) => row.textContent?.trimEnd())
               .join('\n'),
         ),
-        example: (document.querySelector('[data-site-deferred]')?.textContent ?? '').trim(),
+        // In place, or, for an example larger than React's progressive chunk,
+        // written after the page for a script to move in: with no script
+        // that one is not seen (the follow-up the handoff names).
+        example:
+          (document.querySelector('[data-site-deferred]')?.textContent ?? '').trim() ||
+          (document.querySelector('div[hidden][id^="S:"]')?.textContent ?? '').trim(),
       }));
       const want = component.snapshots.map((s) => trimmed(s.text));
       if (JSON.stringify(found.painted) !== JSON.stringify(want)) {
@@ -312,7 +320,7 @@ describe('the shell (0104)', () => {
       );
     expect(await across()).toBe(0);
     expect(await page.locator('.site-map').isVisible()).toBe(false);
-    await page.getByRole('button', { name: '[ map' }).click();
+    await page.getByRole('button', { name: 'map', exact: true }).click();
     await expect.poll(() => page.locator('.site-map').isVisible()).toBe(true);
     await page.locator('.site-map').getByRole('link', { name: 'Tree', exact: true }).click();
     await page.waitForURL(/\/components\/tree\/$/);
