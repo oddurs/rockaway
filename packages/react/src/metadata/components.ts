@@ -8,6 +8,7 @@ import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
 import { checkboxMeta } from '../components/checkbox.meta.ts';
+import { codeBlockMeta } from '../components/code-block.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
 import { formMeta } from '../components/field.meta.ts';
 import { fieldsetMeta } from '../components/fieldset.meta.ts';
@@ -16,8 +17,8 @@ import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
-import { menuMeta } from '../components/menu.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
+import { panesMeta } from '../components/panes.meta.ts';
 import { popoverMeta } from '../components/popover.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
@@ -30,6 +31,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'button', meta: buttonMeta },
   { file: 'callout', meta: calloutMeta },
   { file: 'checkbox', meta: checkboxMeta },
+  { file: 'code-block', meta: codeBlockMeta },
   { file: 'divider', meta: dividerMeta },
   { file: 'field', meta: formMeta },
   { file: 'fieldset', meta: fieldsetMeta },
@@ -38,8 +40,8 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'keymap', meta: keymapMeta },
   { file: 'link', meta: linkMeta },
   { file: 'list', meta: listMeta },
-  { file: 'menu', meta: menuMeta },
   { file: 'overlay', meta: overlayMeta },
+  { file: 'panes', meta: panesMeta },
   { file: 'popover', meta: popoverMeta },
   { file: 'table', meta: tableMeta },
   { file: 'text-field', meta: textFieldMeta },
