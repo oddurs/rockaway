@@ -52,6 +52,7 @@ const report = (): string =>
         elements: ['div.brand', 'div.badge'],
       },
     ],
+    rhythm: [],
   });
 
 /** Every part a page can name, as the markup it stands for. */
