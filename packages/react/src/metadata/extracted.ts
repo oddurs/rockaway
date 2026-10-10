@@ -1197,6 +1197,121 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "level": "standard"
   },
+  "Pane": {
+    "file": "panes.tsx",
+    "props": [
+      {
+        "name": "size",
+        "type": "PaneSize",
+        "required": false,
+        "description": "Cells, a share of what is left (`'2fr'`), or `'auto'`. `'auto'` by default."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "description": "The fewest cells of content it takes along the split before it collapses."
+      },
+      {
+        "name": "priority",
+        "type": "number",
+        "required": false,
+        "description": "When there is not room for every pane, the lowest priority collapses first. 0 by default."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the pane's top edge, and its accessible name."
+      },
+      {
+        "name": "titleAlign",
+        "type": "'start' | 'center' | 'end'",
+        "required": false,
+        "description": "Where the title sits in the top edge: after the corner, by default."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the pane's borders, in cells. One across and none down by default, the proportions `Frame` uses."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The accessible name, when the title is not the right one to say."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The pane's content, or a `Panes` of its own to split it further."
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Panes": {
+    "file": "panes.tsx",
+    "props": [
+      {
+        "name": "direction",
+        "type": "PanesDirection",
+        "required": false,
+        "description": "`row` puts the panes side by side, `column` stacks them."
+      },
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set draws every border; the theme's when not given."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The whole layout's accessible name, which makes it a group."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "`Pane`s, in order."
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
+    ],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Row": {
     "file": "table.tsx",
     "props": [
