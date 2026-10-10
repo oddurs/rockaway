@@ -24,6 +24,7 @@ import { panesMeta } from '../components/panes.meta.ts';
 import { pictureMeta } from '../components/picture.meta.ts';
 import { popoverMeta } from '../components/popover.meta.ts';
 import { selectMeta } from '../components/select.meta.ts';
+import { statusBarMeta } from '../components/status-bar.meta.ts';
 import { switchMeta } from '../components/switch.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
@@ -52,6 +53,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'picture', meta: pictureMeta },
   { file: 'popover', meta: popoverMeta },
   { file: 'select', meta: selectMeta },
+  { file: 'status-bar', meta: statusBarMeta },
   { file: 'switch', meta: switchMeta },
   { file: 'table', meta: tableMeta },
   { file: 'text-field', meta: textFieldMeta },
