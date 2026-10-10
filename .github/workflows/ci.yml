@@ -13,20 +13,16 @@ permissions:
   contents: read
 
 jobs:
-  check:
-    name: Lint, typecheck, build, test
+  # The checks that need no browser. Lint, types, the packages and the site
+  # built as a consumer would build them, the packed packages, every Node test
+  # and the contrast report. The stories run beside it, in `stories` below.
+  static:
+    name: Lint, typecheck, build, package tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Lint and format
         run: pnpm lint
@@ -58,19 +54,81 @@ jobs:
       - name: Packed packages (contents, publint, attw, server components)
         run: pnpm packages:check
 
-      - name: Install Chromium
-        run: pnpm --filter workbench exec playwright install --with-deps chromium
-
-      - name: Tests (tokens, stories in Vitest browser mode with axe, the built site)
-        run: pnpm test
+      - name: Tests (tokens, grid, css, react, the built site)
+        run: pnpm -r --filter './packages/*' --filter site test
         env:
           ASTRO_TELEMETRY_DISABLED: '1'
 
       - name: Contrast report (every declared pair, both modes)
         run: pnpm --filter @rockaway/tokens contrast
 
-      - name: Production build of the workbench (a minifier sees the CSS)
+  # A minifier sees the CSS here. Storybook's build needs nothing from the
+  # other jobs, so it runs beside them.
+  workbench-build:
+    name: Production build of the workbench
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Build the packages the workbench imports
+        run: pnpm -r --filter './packages/*' build
+
+      - name: Production build of the workbench
         run: pnpm --filter workbench build
+
+  # The stories, one Vitest project per job, and the busiest projects cut again
+  # with --shard (apps/workbench/vitest.config.ts). The packages are built
+  # first because the config imports @rockaway/tokens. Every shard is a
+  # separate runner, so CI wall clock is the slowest shard, not the sum.
+  stories:
+    name: Stories, ${{ matrix.project }} ${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { project: storybook, shard: 1/3 }
+          - { project: storybook, shard: 2/3 }
+          - { project: storybook, shard: 3/3 }
+          - { project: p3, shard: 1/2 }
+          - { project: p3, shard: 2/2 }
+          - { project: forced-colors, shard: 1/1 }
+          - { project: zoom, shard: 1/1 }
+          - { project: classic-scrollbars, shard: 1/1 }
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Build the packages the workbench imports
+        run: pnpm -r --filter './packages/*' build
+
+      - uses: ./.github/actions/playwright
+
+      - name: Stories in Vitest browser mode with axe
+        run: >-
+          pnpm --filter workbench exec vitest run
+          --project ${{ matrix.project }} --shard ${{ matrix.shard }}
+
+  # The required check. Its name is what branch protection asks for, so it stays
+  # when the work behind it is split up; it passes when every job it stands for
+  # has, and `always()` makes it fail, rather than skip, when one does not.
+  check:
+    name: Lint, typecheck, build, test
+    if: always()
+    needs: [static, workbench-build, stories]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every job it stands for passed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "results: $RESULTS"
+          for result in $RESULTS; do
+            [ "$result" = success ] || exit 1
+          done
 
   # The site's budget (cairn 0109): its first page's JavaScript, a first paint
   # with no script, axe on every page in both modes at touch, the grid and its
@@ -82,21 +140,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       # The site is built from the packages' dist, as a consumer's app would be.
       - name: Build packages
         run: pnpm -r --filter './packages/*' build
 
-      - name: Install Chromium
-        run: pnpm --filter site exec playwright install --with-deps chromium
+      - uses: ./.github/actions/playwright
+        with:
+          filter: site
 
       - name: Hold the built site to its budget
         run: pnpm --filter site budget

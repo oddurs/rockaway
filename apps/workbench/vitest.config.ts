@@ -147,8 +147,18 @@ const staleKnown = (): Reporter => {
     },
     async onTestRunStart(specifications) {
       if (!vitest) return;
-      const every = await vitest.globTestSpecifications();
-      partial = specifications.length < every.length || vitest.config.testNamePattern !== undefined;
+      // CI runs one project per job, and cuts the busiest with --shard, so
+      // "the whole workbench" is the whole of each project the run names: a
+      // run of every file of a project can still find a stale entry, a shard
+      // of it cannot.
+      const projects = new Set(specifications.map((s) => s.project.name));
+      const every = (await vitest.globTestSpecifications()).filter((s) =>
+        projects.has(s.project.name),
+      );
+      partial =
+        specifications.length < every.length ||
+        vitest.config.testNamePattern !== undefined ||
+        vitest.config.shard !== undefined;
     },
     onTestRunEnd() {
       const ledger = knownLedger();
