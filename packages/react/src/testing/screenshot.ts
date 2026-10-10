@@ -13,6 +13,7 @@
 
 import { Buffer, clusterWidth, graphemes, toText } from '@rockaway/grid';
 import { cellOf } from './cell.ts';
+import { visuallyHidden } from './hidden.ts';
 
 export interface ScreenshotOptions {
   /** List the cells carrying an attribute underneath the screen. Default true. */
@@ -72,17 +73,23 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     // What a reader sees of an element: the screen, cut down by every ancestor
     // that clips its overflow. A scrolled list's rows are in the DOM above and
     // below its box, and drawing them would write over the frame (cairn 0160).
+    // An element in the visually hidden pattern clips to nothing: a skip link
+    // at rest, or the native input inside a checkbox, is in the DOM and seen by
+    // no one, so neither it nor anything inside it is read back.
     const everything: Clip = { left: 0, top: 0, right: cols, bottom: rows };
+    const nothing: Clip = { left: 0, top: 0, right: 0, bottom: 0 };
     const clips = new Map<Element, Clip>();
     const clipOf = (element: Element | null): Clip => {
       if (element === null || !root.contains(element)) return everything;
       const known = clips.get(element);
       if (known) return known;
       const outer = clipOf(element === root ? null : element.parentElement);
-      const { overflowX = 'visible', overflowY = 'visible' } =
-        element.ownerDocument.defaultView?.getComputedStyle(element) ?? {};
+      const style = element.ownerDocument.defaultView?.getComputedStyle(element);
+      const { overflowX = 'visible', overflowY = 'visible' } = style ?? {};
       let clip = outer;
-      if (overflowX !== 'visible' || overflowY !== 'visible') {
+      if (style && visuallyHidden(style)) {
+        clip = nothing;
+      } else if (overflowX !== 'visible' || overflowY !== 'visible') {
         // The padding box: what scrolls into view, without borders or scrollbars.
         const r = element.getBoundingClientRect();
         const left = r.left + element.clientLeft - box.left;
@@ -128,9 +135,11 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
       const parent = node.parentElement;
       if (!parent || parent.closest('.rk-frame')) continue;
 
+      const clip = clipOf(parent);
+      // Seen by no one: not written, and not in the legend either.
+      if (clip.right <= clip.left || clip.bottom <= clip.top) continue;
       const range = root.ownerDocument.createRange();
       range.selectNodeContents(node);
-      const clip = clipOf(parent);
       const start = at(range.getBoundingClientRect());
       if (range.getClientRects().length > 1) {
         // Text that wraps is on several rows: each line of it is written where
