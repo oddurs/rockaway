@@ -96,6 +96,13 @@ export const dialogMeta: ComponentMetaInput = defineMeta({
       'There is no motion: data-entering and data-exiting are not used.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: a one-row dialog.
+    min: toText(dialogBuffer({ width: 12, height: 3 }, { title: 'x' })),
+    // The default: the dialog in its snapshot.
+    default: toText(dialogBuffer(SIZE, { title: 'Rename file' })),
+  },
   snapshots: [
     {
       title: 'A dialog and an alert',

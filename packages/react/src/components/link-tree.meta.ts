@@ -115,6 +115,13 @@ export const linkTreeMeta: ComponentMetaInput = defineMeta({
       'There is nothing to expand or select, so it is not a treegrid and needs no script to keep the promises one makes.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one row.
+    min: toText(linkTreeBuffer(SITE.slice(0, 1), 12), { trimEnd: false }),
+    // The default: a site's map.
+    default: toText(linkTreeBuffer(SITE, 24, '/foundations/grid/'), { trimEnd: false }),
+  },
   snapshots: [
     {
       title: "A site's map",

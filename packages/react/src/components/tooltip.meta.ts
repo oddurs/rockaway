@@ -53,6 +53,13 @@ export const tooltipMeta: ComponentMetaInput = defineMeta({
       'There is no motion: data-entering and data-exiting are not used.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: a word in one row.
+    min: toText(tooltipBuffer({ width: 4, height: 1 }), { trimEnd: false }),
+    // The default: a line of twenty cells.
+    default: toText(tooltipBuffer({ width: 20, height: 1 }), { trimEnd: false }),
+  },
   snapshots: [
     {
       title: 'One row, and wrapped',

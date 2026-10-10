@@ -64,6 +64,13 @@ export const cardMeta: ComponentMetaInput = defineMeta({
       'A card grows with its content and never scrolls, so it draws no scrollbar (0207).',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one block of one cell.
+    min: toText(cardText(['x'], { cols: 8 }), { trimEnd: false }),
+    // The default: a titled card of three blocks.
+    default: toText(cardText(BLOCKS, { cols: 36, title: 'Deploys' }), { trimEnd: false }),
+  },
   snapshots: [
     {
       title: 'Comfortable',

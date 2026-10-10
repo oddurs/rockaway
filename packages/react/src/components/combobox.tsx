@@ -158,7 +158,11 @@ export function ComboBox<T extends object>({
       {({ isRequired }) => (
         <>
           <Label isRequired={isRequired}>{label}</Label>
-          <Group className="rk-combobox-box">
+          <Group
+            className="rk-combobox-box"
+            // A control, to the conformance levels: half a cell inside it at `standard` (0182).
+            data-rk-control=""
+          >
             <Box placeholder={placeholder} />
           </Group>
           {description === undefined ? null : <Description>{description}</Description>}

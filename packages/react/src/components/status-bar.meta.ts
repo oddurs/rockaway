@@ -99,6 +99,13 @@ export const statusBarMeta: ComponentMetaInput = defineMeta({
       "A cut segment's full text stays in the page, so a reader hears all of it; only what is drawn is cut.",
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: the mode alone.
+    min: cells(8, [{ text: 'NORMAL', variant: 'mode' }]),
+    // The default: a bar of forty cells.
+    default: cells(40),
+  },
   snapshots: [
     {
       title: 'Start, centre and end',

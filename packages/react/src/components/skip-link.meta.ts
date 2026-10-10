@@ -63,6 +63,13 @@ export const skipLinkMeta: ComponentMetaInput = defineMeta({
       'Without a script, the anchor still moves where the next Tab starts from, which every current browser does.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: a one-word label, focused.
+    min: cells('Skip'),
+    // The default: its usual label, focused.
+    default: cells('Skip to content'),
+  },
   snapshots: [
     {
       title: 'Focused',

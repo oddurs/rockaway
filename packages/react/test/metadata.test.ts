@@ -533,6 +533,15 @@ const NEITHER: Readonly<Record<string, string>> = {
   Picture:
     'An image in a box of whole cells: nothing to press, and nothing it holds but the picture.',
   Popover: 'Draws nothing of its own: its surface is OverlayPopover’s, which marks itself a pane.',
+  Dialog: 'Draws nothing of its own: its surface is OverlayModal’s, which marks itself a pane.',
+  Tooltip: 'Draws nothing of its own: its surface is OverlayTooltip’s, which marks itself a pane.',
+  LinkTree:
+    'A tree of links in the pane that holds it: each row is a Link, which marks itself a control.',
+  Meter: 'A reading in a line of text: nothing to press, nothing it holds.',
+  ProgressBar: 'A reading in a line of text: nothing to press, nothing it holds.',
+  Sparkline: 'A reading in a line of text: nothing to press, nothing it holds.',
+  Spinner: 'One cell in a line of text: nothing to press, nothing it holds.',
+  Text: 'Words sized in rows: nothing to press, nothing it holds.',
 };
 
 describe('how it sits on the grid (0167, 0182)', () => {

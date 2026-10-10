@@ -236,7 +236,13 @@ function TabsScreen({
   );
 
   return (
-    <Screen {...screen} draw={draw} className="rk-tabs-screen">
+    <Screen
+      {...screen}
+      draw={draw}
+      className="rk-tabs-screen"
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
+    >
       {(size: Size) => {
         const layout = known
           ? layoutTabs(
