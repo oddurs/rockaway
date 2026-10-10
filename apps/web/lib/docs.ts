@@ -27,6 +27,11 @@ export const docs: Readonly<Record<string, Doc>> = {
     description:
       'Install rockaway, import its CSS and render a screen, with Vite or with Next.js, in under twenty lines.',
   },
+  'public-api': {
+    title: 'What is public',
+    description:
+      'What you can rely on across a release, what counts as breaking it, and how a breaking change ships before 1.0.',
+  },
 };
 
 export function docFor(id: string): Doc {

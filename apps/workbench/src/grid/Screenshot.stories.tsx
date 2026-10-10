@@ -87,13 +87,24 @@ export const ChangesNothing: Story = {
       expect(getComputedStyle(screen).getPropertyValue('--rk-cell-width')).toMatch(/px$/),
     );
 
-    const changes: MutationRecord[] = [];
-    const observer = new MutationObserver((records) => changes.push(...records));
-    observer.observe(document, { subtree: true, childList: true, attributes: true });
-    screenshot(screen);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    observer.disconnect();
-    expect(changes).toEqual([]);
+    // The changes in the document while `act` runs and a task after it.
+    const changesDuring = async (act: () => void): Promise<MutationRecord[]> => {
+      const changes: MutationRecord[] = [];
+      const observer = new MutationObserver((records) => changes.push(...records));
+      observer.observe(document, { subtree: true, childList: true, attributes: true });
+      act();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      observer.disconnect();
+      return changes;
+    };
+    // First a page at rest: the screen's own late work (a repaint after it
+    // measures, a resize) is not the reading's, and in WebKit and Firefox it
+    // could land in the window and be blamed on it (0342).
+    await waitFor(async () => {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      expect(await changesDuring(() => {})).toEqual([]);
+    });
+    expect(await changesDuring(() => screenshot(screen))).toEqual([]);
 
     // A wait that can never pass fails on its timeout. Before, this did not
     // return at all, and only the watchdog in the Vitest setup ended it.

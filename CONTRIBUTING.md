@@ -100,6 +100,9 @@ and touches no other line:
   `src/metadata/components.ts`.
   `test/metadata.test.ts` fails for a component exported without metadata, and
   for metadata that names a part, variant or state the component does not have.
+  Then run `pnpm api:write`, which rewrites every package's `API.md` from
+  source in a few seconds, and read the diff: a new component adds its entry
+  point, its classes and its attributes there (cairn 0153).
 - Anything that scrolls takes `rk-scroll`, so the browser draws no scrollbar of
   its own (decision 0207), and shows its position in cells: a scrollbar column
   drawn by the engine for a viewport that scrolls by rows (see List), or
@@ -148,6 +151,11 @@ pnpm changeset --empty   # then write the reason in its body
 ```
 
 An empty changeset with no reason in it does not pass.
+
+What counts as public is decided in [docs/public-api.md](docs/public-api.md)
+(cairn 0153), and each package's tests write its `API.md` from the code. If
+your change moves an `API.md`, it changes the public API. Read that diff, and
+say so in the changeset.
 
 Every package is below 1.0, and versions follow pre-1.0 semver (cairn 0172):
 
