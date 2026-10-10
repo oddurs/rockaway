@@ -1,4 +1,4 @@
-import { Button, Frame, GlyphProvider, List, ListItem } from '@rockaway/react';
+import { Badge, Button, Frame, GlyphProvider, List, ListItem } from '@rockaway/react';
 import { checkConformance, expectContinuity } from '@rockaway/react/testing';
 import { type Mode, type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -239,5 +239,144 @@ export const Nested: Story = {
     expect(getComputedStyle(canvas.getByTestId('dracula, asked for light')).colorScheme).toBe(
       'dark',
     );
+  },
+};
+
+/** The sixteen, in terminal order: what code blocks and the terminal files are drawn in. */
+const SIXTEEN = [
+  'black',
+  'red',
+  'green',
+  'yellow',
+  'blue',
+  'magenta',
+  'cyan',
+  'white',
+  'bright-black',
+  'bright-red',
+  'bright-green',
+  'bright-yellow',
+  'bright-blue',
+  'bright-magenta',
+  'bright-cyan',
+  'bright-white',
+] as const;
+
+/** One cell of a role's colour, read back by the play function. */
+function Probe({ token, label }: { token: string; label: string }) {
+  return (
+    <span
+      data-probe={label}
+      aria-hidden="true"
+      style={{
+        display: 'inline-block',
+        inlineSize: 'var(--rk-cell-width)',
+        blockSize: 'var(--rk-cell-height)',
+        background: `var(${token})`,
+      }}
+    />
+  );
+}
+
+function Dusk({ theme, mode }: { theme: ThemeName; mode: Mode }) {
+  const label = `${theme} ${mode}`;
+  return (
+    <GlyphProvider glyphs={themeGlyphs[theme]}>
+      <section
+        aria-label={label}
+        data-rk-theme={theme}
+        data-theme={mode}
+        style={{
+          background: 'var(--rk-bg-page)',
+          color: 'var(--rk-fg-default)',
+          padding: 'calc(var(--rk-cell-height) * 1) calc(var(--rk-cell-width) * 2)',
+        }}
+      >
+        <Frame title={label} cols={36} rows={8}>
+          <div style={{ inlineSize: 'calc(var(--rk-cell-width) * 32)' }}>
+            <List
+              aria-label={`${label} files`}
+              rows={2}
+              selectionMode="single"
+              defaultSelectedKeys={['a']}
+            >
+              <ListItem id="a" textValue="src/index.ts">
+                src/index.ts
+              </ListItem>
+              <ListItem id="b" textValue="README.md">
+                README.md
+              </ListItem>
+            </List>
+          </div>
+          <div>
+            <Badge tone="accent">accent</Badge> <Badge tone="success">ok</Badge>{' '}
+            <Badge tone="warning">warn</Badge> <Badge tone="danger">fail</Badge>
+          </div>
+          <div style={{ color: 'var(--rk-fg-muted)' }}>muted words, dusty</div>
+          <div aria-label={`${label}: the sixteen`} role="img" style={{ display: 'flex' }}>
+            {SIXTEEN.map((slot) => (
+              <Probe key={slot} token={`--rk-ansi-${slot}`} label={slot} />
+            ))}
+          </div>
+        </Frame>
+        <div style={{ display: 'flex' }}>
+          <Probe token="--rk-bg-inverse" label="inverse" />
+          <Probe token="--rk-fg-default" label="ink" />
+          <Probe token="--rk-border-focus" label="focus" />
+          <Probe token="--rk-fg-accent" label="accent" />
+        </div>
+      </section>
+    </GlyphProvider>
+  );
+}
+
+/**
+ * Sunset beside the default, at dusk and at golden hour: a beach sunset at
+ * Rockaway. Its reverse is coral and its focus amber, apart from its faded
+ * coral accent and its sand ink; the
+ * default reverses to its ink and focuses in its accent, as it always has.
+ * Increased contrast takes the coral back: reverse video is the ink.
+ */
+export const Sunset: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)' }}>
+      {(['dark', 'light'] as const).flatMap((mode) =>
+        (['default', 'sunset'] as const).map((theme) => (
+          <Dusk key={`${theme} ${mode}`} theme={theme} mode={mode} />
+        )),
+      )}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const probe = (island: HTMLElement, label: string): string =>
+      background(island.querySelector(`[data-probe="${label}"]`) as Element);
+    for (const mode of ['dark', 'light'] as const) {
+      const sunset = canvas.getByRole('region', { name: `sunset ${mode}` });
+      const plain = canvas.getByRole('region', { name: `default ${mode}` });
+
+      // Sunset reverses to coral and focuses in amber, neither its ink nor its accent.
+      expect(probe(sunset, 'inverse'), mode).not.toBe(probe(sunset, 'ink'));
+      expect(probe(sunset, 'focus'), mode).not.toBe(probe(sunset, 'accent'));
+      // The default is as it was: reverse is the ink, focus the accent.
+      expect(probe(plain, 'inverse'), mode).toBe(probe(plain, 'ink'));
+      expect(probe(plain, 'focus'), mode).toBe(probe(plain, 'accent'));
+
+      // A selected row is reverse video, so in sunset it is the coral.
+      const selected = sunset.querySelector('.rk-list-item[data-selected]') as Element;
+      expect(background(selected), mode).toBe(probe(sunset, 'inverse'));
+
+      // Sixteen colours, all different: the sky is a gradient, not a grey ramp.
+      const sixteen = SIXTEEN.map((slot) => probe(sunset, slot));
+      expect(new Set(sixteen).size, mode).toBe(16);
+
+      // Rounded corners, on the grid like every other set.
+      expect(screenOf(sunset).textContent).toContain('╭');
+      expect(checkConformance(sunset).violations, mode).toEqual([]);
+
+      // Increased contrast gives the coral up for the ink.
+      sunset.dataset.rkContrast = 'more';
+      await waitFor(() => expect(probe(sunset, 'inverse')).toBe(probe(sunset, 'ink')));
+      delete sunset.dataset.rkContrast;
+    }
   },
 };
