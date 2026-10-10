@@ -262,16 +262,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-on-inverse",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-on-inverse"
     ]
   },
   "CheckboxGroup": {
@@ -318,16 +315,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-on-inverse",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-on-inverse"
     ]
   },
   "Column": {
@@ -1707,6 +1701,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
         "default": "'glyph'"
+      },
+      {
+        "name": "disallowTypeAhead",
+        "type": "boolean",
+        "required": false,
+        "description": "No type-ahead: a printable key moves nothing, and reaches the page, for a tree beside single-letter shortcuts (`j`, `k`, `/`). The arrows, Home and End still move. React Aria's own option, which its GridList offers and its Tree honours."
+      },
+      {
+        "name": "onFocusedKeyChange",
+        "type": "(key: Key | null) => void",
+        "required": false,
+        "description": "Called with the row that has focus whenever it changes, and with `null` when focus leaves the tree: what a keymap beside the tree acts on, or what a status bar shows."
       },
       {
         "name": "className",

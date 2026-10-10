@@ -51,11 +51,8 @@
     text-underline-offset: var(--rk-attribute-underline-offset);
   }
 
-  /* Focus: the ring, around the row. The native checkbox it is on is hidden. */
-  .rk-checkbox-row[data-focus-visible] {
-    outline: var(--rk-focus-width) solid var(--rk-border-focus);
-    outline-offset: var(--rk-focus-offset);
-  }
+  /* Focus: the ring, round the row, from focus.css's rule for a control
+   * focused in a hidden input (0226). */
 
   /* Pressed: the box reverses, its own figure and ground swapped (0181). */
   .rk-checkbox-row[data-pressed] .rk-checkbox-box {

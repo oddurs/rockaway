@@ -10,7 +10,8 @@
     "test": "vitest run",
     "font": "node scripts/font.ts",
     "quickstart": "node scripts/quickstart.ts",
-    "repo-card": "node scripts/repo-card.ts"
+    "repo-card": "node scripts/repo-card.ts",
+    "budget": "vitest run -c vitest.budget.config.ts"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "7.3.1",

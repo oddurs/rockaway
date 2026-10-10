@@ -717,6 +717,61 @@
   inherits: true;
 }
 
+@property --rk-glyph-border-emphasis-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-emphasis-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-border-heavy-bottom-left {
   syntax: '*';
   inherits: true;
@@ -768,6 +823,116 @@
 }
 
 @property --rk-glyph-border-heavy-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-modal-vertical {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-bottom-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-bottom-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-cross {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-horizontal {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-tee-down {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-tee-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-tee-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-tee-up {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-top-left {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-top-right {
+  syntax: '*';
+  inherits: true;
+}
+
+@property --rk-glyph-border-raised-vertical {
   syntax: '*';
   inherits: true;
 }
@@ -2180,6 +2345,17 @@
     --rk-glyph-border-double-top-left: "╔";
     --rk-glyph-border-double-top-right: "╗";
     --rk-glyph-border-double-vertical: "║";
+    --rk-glyph-border-emphasis-bottom-left: "┗";
+    --rk-glyph-border-emphasis-bottom-right: "┛";
+    --rk-glyph-border-emphasis-cross: "╋";
+    --rk-glyph-border-emphasis-horizontal: "━";
+    --rk-glyph-border-emphasis-tee-down: "┳";
+    --rk-glyph-border-emphasis-tee-left: "┫";
+    --rk-glyph-border-emphasis-tee-right: "┣";
+    --rk-glyph-border-emphasis-tee-up: "┻";
+    --rk-glyph-border-emphasis-top-left: "┏";
+    --rk-glyph-border-emphasis-top-right: "┓";
+    --rk-glyph-border-emphasis-vertical: "┃";
     --rk-glyph-border-heavy-bottom-left: "┗";
     --rk-glyph-border-heavy-bottom-right: "┛";
     --rk-glyph-border-heavy-cross: "╋";
@@ -2191,6 +2367,28 @@
     --rk-glyph-border-heavy-top-left: "┏";
     --rk-glyph-border-heavy-top-right: "┓";
     --rk-glyph-border-heavy-vertical: "┃";
+    --rk-glyph-border-modal-bottom-left: "╚";
+    --rk-glyph-border-modal-bottom-right: "╝";
+    --rk-glyph-border-modal-cross: "╬";
+    --rk-glyph-border-modal-horizontal: "═";
+    --rk-glyph-border-modal-tee-down: "╦";
+    --rk-glyph-border-modal-tee-left: "╣";
+    --rk-glyph-border-modal-tee-right: "╠";
+    --rk-glyph-border-modal-tee-up: "╩";
+    --rk-glyph-border-modal-top-left: "╔";
+    --rk-glyph-border-modal-top-right: "╗";
+    --rk-glyph-border-modal-vertical: "║";
+    --rk-glyph-border-raised-bottom-left: "┗";
+    --rk-glyph-border-raised-bottom-right: "┛";
+    --rk-glyph-border-raised-cross: "╋";
+    --rk-glyph-border-raised-horizontal: "━";
+    --rk-glyph-border-raised-tee-down: "┳";
+    --rk-glyph-border-raised-tee-left: "┫";
+    --rk-glyph-border-raised-tee-right: "┣";
+    --rk-glyph-border-raised-tee-up: "┻";
+    --rk-glyph-border-raised-top-left: "┏";
+    --rk-glyph-border-raised-top-right: "┓";
+    --rk-glyph-border-raised-vertical: "┃";
     --rk-glyph-border-rounded-bottom-left: "╰";
     --rk-glyph-border-rounded-bottom-right: "╯";
     --rk-glyph-border-rounded-cross: "┼";
@@ -2906,6 +3104,17 @@
     --rk-glyph-border-double-top-left: "╔";
     --rk-glyph-border-double-top-right: "╗";
     --rk-glyph-border-double-vertical: "║";
+    --rk-glyph-border-emphasis-bottom-left: "┗";
+    --rk-glyph-border-emphasis-bottom-right: "┛";
+    --rk-glyph-border-emphasis-cross: "╋";
+    --rk-glyph-border-emphasis-horizontal: "━";
+    --rk-glyph-border-emphasis-tee-down: "┳";
+    --rk-glyph-border-emphasis-tee-left: "┫";
+    --rk-glyph-border-emphasis-tee-right: "┣";
+    --rk-glyph-border-emphasis-tee-up: "┻";
+    --rk-glyph-border-emphasis-top-left: "┏";
+    --rk-glyph-border-emphasis-top-right: "┓";
+    --rk-glyph-border-emphasis-vertical: "┃";
     --rk-glyph-border-heavy-bottom-left: "┗";
     --rk-glyph-border-heavy-bottom-right: "┛";
     --rk-glyph-border-heavy-cross: "╋";
@@ -2917,6 +3126,28 @@
     --rk-glyph-border-heavy-top-left: "┏";
     --rk-glyph-border-heavy-top-right: "┓";
     --rk-glyph-border-heavy-vertical: "┃";
+    --rk-glyph-border-modal-bottom-left: "╚";
+    --rk-glyph-border-modal-bottom-right: "╝";
+    --rk-glyph-border-modal-cross: "╬";
+    --rk-glyph-border-modal-horizontal: "═";
+    --rk-glyph-border-modal-tee-down: "╦";
+    --rk-glyph-border-modal-tee-left: "╣";
+    --rk-glyph-border-modal-tee-right: "╠";
+    --rk-glyph-border-modal-tee-up: "╩";
+    --rk-glyph-border-modal-top-left: "╔";
+    --rk-glyph-border-modal-top-right: "╗";
+    --rk-glyph-border-modal-vertical: "║";
+    --rk-glyph-border-raised-bottom-left: "┗";
+    --rk-glyph-border-raised-bottom-right: "┛";
+    --rk-glyph-border-raised-cross: "╋";
+    --rk-glyph-border-raised-horizontal: "━";
+    --rk-glyph-border-raised-tee-down: "┳";
+    --rk-glyph-border-raised-tee-left: "┫";
+    --rk-glyph-border-raised-tee-right: "┣";
+    --rk-glyph-border-raised-tee-up: "┻";
+    --rk-glyph-border-raised-top-left: "┏";
+    --rk-glyph-border-raised-top-right: "┓";
+    --rk-glyph-border-raised-vertical: "┃";
     --rk-glyph-border-rounded-bottom-left: "╰";
     --rk-glyph-border-rounded-bottom-right: "╯";
     --rk-glyph-border-rounded-cross: "┼";

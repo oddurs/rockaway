@@ -67,6 +67,9 @@
      * row, half a row off the grid (found by the site's shell, 0104). */
     block-size: var(--rk-cell-height);
     flex: none;
+    /* A blank is a cell too: in prose, where whitespace collapses, a mark with
+     * no cursor would otherwise have no height, and sit half a row down. */
+    white-space: pre;
   }
 
   .rk-list-label {
