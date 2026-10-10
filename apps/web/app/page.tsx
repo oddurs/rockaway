@@ -4,14 +4,19 @@
  * system shown as software, three screens built from its real components,
  * then the rules, ten lines of code and the install.
  */
-import { Button, Frame } from '@rockaway/react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Code } from '../components/Code.tsx';
 import { Drawing } from '../components/Drawing.tsx';
+import {
+  DeploysShot,
+  GitClientShot,
+  HelloScreen,
+  InstallScreen,
+  SettingsShot,
+} from '../components/HomeLive.tsx';
 import { ScrollRegion } from '../components/ScrollRegion.tsx';
-import { Deploys, GitClient, Settings } from '../components/Shots.tsx';
 import { PageBody } from '../components/shell/PageBody.tsx';
 import { drawing, SERVER_SIZE } from '../lib/drawing.ts';
 import { screenHtml } from '../lib/painted.ts';
@@ -20,8 +25,7 @@ export const metadata: Metadata = {
   title: { absolute: 'rockaway — terminal interfaces on the web' },
 };
 
-const app = `import { Button, Frame } from '@rockaway/react';
-
+const app = `
 export function App() {
   return (
     <Frame title="hello" cols={32} rows={5}>
@@ -30,8 +34,6 @@ export function App() {
     </Frame>
   );
 }`;
-
-const install = 'npm install @rockaway/react @rockaway/css @rockaway/tokens';
 
 const first = screenHtml(drawing(SERVER_SIZE, { boxes: [], weight: 'light' }), {
   role: 'application',
@@ -73,7 +75,7 @@ export default function Home(): ReactNode {
         <figure className="site-shot">
           <ScrollRegion label="A git client">
             <div inert>
-              <GitClient />
+              <GitClientShot />
             </div>
           </ScrollRegion>
           <figcaption>
@@ -92,7 +94,7 @@ export default function Home(): ReactNode {
         <figure className="site-shot">
           <ScrollRegion label="A settings screen">
             <div inert>
-              <Settings />
+              <SettingsShot />
             </div>
           </ScrollRegion>
           <figcaption>
@@ -109,7 +111,7 @@ export default function Home(): ReactNode {
         <figure className="site-shot">
           <ScrollRegion label="A deploys dashboard">
             <div inert>
-              <Deploys />
+              <DeploysShot />
             </div>
           </ScrollRegion>
           <figcaption>
@@ -138,17 +140,12 @@ export default function Home(): ReactNode {
         <Code code={app} lang="tsx" />
         <p>Which draws this, rendered by the component on the server:</p>
         <ScrollRegion label="What it draws">
-          <Frame title="hello" cols={32} rows={5}>
-            <p>A screen, in cells.</p>
-            <Button>Continue</Button>
-          </Frame>
+          <HelloScreen />
         </ScrollRegion>
 
         <h2 id="install">Install</h2>
         <ScrollRegion label="The install line">
-          <Frame title="install" cols={install.length + 6} rows={3} pad={{ x: 2, y: 0 }}>
-            <code>{install}</code>
-          </Frame>
+          <InstallScreen />
         </ScrollRegion>
         <p>
           <strong>Not on npm yet.</strong> The first release, 0.1.0, is being made; until then{' '}

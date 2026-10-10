@@ -195,6 +195,7 @@ export function Shell({ nav, bindings }: ShellProps): ReactNode {
       const { scrollTop, scrollHeight, clientHeight } = page;
       scrolls.set(pathname, scrollTop);
       const room = scrollHeight - clientHeight;
+      // Always three cells, as vim's ruler is, so the segments beside it never move.
       setPosition(
         room <= 1
           ? 'All'
@@ -202,7 +203,7 @@ export function Shell({ nav, bindings }: ShellProps): ReactNode {
             ? 'Top'
             : scrollTop >= room - 1
               ? 'Bot'
-              : `${Math.round((scrollTop / room) * 100)}%`,
+              : `${Math.min(99, Math.max(1, Math.round((scrollTop / room) * 100)))}%`.padStart(3),
       );
     };
     const scrolled = (): void => {

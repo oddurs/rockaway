@@ -6,11 +6,10 @@
  * when the browser is idle or at the first key or press, so no page waits
  * for any of it; nothing here changes where anything is.
  */
-import { screenAnsi, screenText } from '@rockaway/react/copy';
-import { attachKeymap, detectPlatform, KeymapEngine, KeymapHelp } from '@rockaway/react/keymap';
+import { attachKeymap, detectPlatform, KeymapEngine } from '@rockaway/react/keymap';
 import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { lazy, type ReactNode, Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { type LookSwitch, lookSwitch } from '../../lib/look-switch.ts';
 import type { Action, ShellBinding } from '../../lib/shell.ts';
@@ -22,6 +21,11 @@ import {
   toggleSection,
 } from '../../lib/shell-state.ts';
 import { pageScroller } from './Shell.tsx';
+
+/** The help draws with the system's components: loaded at the first `?`. */
+const HelpScreen = lazy(() =>
+  import('./HelpScreen.tsx').then((module) => ({ default: module.HelpScreen })),
+);
 
 export interface ShellExtrasProps {
   readonly bindings: readonly ShellBinding[];
@@ -93,14 +97,17 @@ export function ShellExtras({ bindings, say, helping, setHelping }: ShellExtrasP
     const copy = (as: 'text' | 'ANSI'): void => {
       const screen = pointed?.isConnected ? pointed : undefined;
       const from = screen ?? shell;
-      const text = screenText(from);
-      const lines = text.split('\n');
-      const cols = Math.max(0, ...lines.map((line) => [...line].length));
-      const what = `${screen ? 'the screen' : 'the page'} as ${as}, ${lines.length} rows of ${cols} cells`;
-      navigator.clipboard?.writeText(as === 'text' ? text : screenAnsi(from)).then(
-        () => say(`Copied ${what}.`),
-        () => say(`Could not copy ${what}: the browser did not allow it.`),
-      );
+      // The reader of screens is loaded the first time something is copied.
+      void import('@rockaway/react/copy').then(({ screenAnsi, screenText }) => {
+        const text = screenText(from);
+        const lines = text.split('\n');
+        const cols = Math.max(0, ...lines.map((line) => [...line].length));
+        const what = `${screen ? 'the screen' : 'the page'} as ${as}, ${lines.length} rows of ${cols} cells`;
+        navigator.clipboard?.writeText(as === 'text' ? text : screenAnsi(from)).then(
+          () => say(`Copied ${what}.`),
+          () => say(`Could not copy ${what}: the browser did not allow it.`),
+        );
+      });
     };
     const copied = (event: MouseEvent): void => {
       const button =
@@ -238,13 +245,9 @@ export function ShellExtras({ bindings, say, helping, setHelping }: ShellExtrasP
     <>
       {helping && content
         ? createPortal(
-            <section
-              aria-labelledby="site-keys"
-              className="rk-prose rk-scroll site-scroll site-help"
-            >
-              <h1 id="site-keys">Keys</h1>
-              <KeymapHelp bindings={bindings} platform="other" />
-            </section>,
+            <Suspense fallback={null}>
+              <HelpScreen bindings={bindings} />
+            </Suspense>,
             content,
           )
         : null}

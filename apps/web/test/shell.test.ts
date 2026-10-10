@@ -110,6 +110,51 @@ describe('nothing moves while a page loads', () => {
   }
 });
 
+describe('nothing moves as a page comes alive further down', () => {
+  for (const [width, height] of [
+    [390, 844],
+    [1280, 800],
+  ] as const) {
+    test(`${width}×${height}: scrolled to the end, every example hydrated`, async () => {
+      const failures: string[] = [];
+      for (const route of ['', 'components/table/', 'components/tree/', 'components/list/']) {
+        const context = await browser.newContext({ viewport: { width, height } });
+        const page = await context.newPage();
+        await page.addInitScript(recordShifts);
+        await page.goto(site.url + route);
+        await settled(page);
+        // A reader's scroll, a screenful at a time, so each part nears the view in turn.
+        await page.evaluate(async () => {
+          const scroller = document.querySelector<HTMLElement>('[data-site-scroll="page"]');
+          if (!scroller) return;
+          while (scroller.scrollTop + scroller.clientHeight < scroller.scrollHeight - 1) {
+            scroller.scrollBy({ top: scroller.clientHeight / 2 });
+            await new Promise((done) => setTimeout(done, 150));
+          }
+        });
+        await page.waitForTimeout(1000);
+        const parts = await page.evaluate(() =>
+          [...document.querySelectorAll('[data-site-deferred] > *')].map((el) =>
+            Object.keys(el).some((key) => key.startsWith('__react')),
+          ),
+        );
+        const shifts = await page.evaluate(
+          () => (window as unknown as { shifts: { value: number; sources: string[] }[] }).shifts,
+        );
+        const total = shifts.reduce((sum, s) => sum + s.value, 0);
+        if (total > 0) {
+          failures.push(
+            `/${route}: CLS ${total.toFixed(4)}\n${shifts.flatMap((s) => s.sources.map((x) => `    ${x}`)).join('\n')}`,
+          );
+        }
+        if (parts.some((live) => !live)) failures.push(`/${route}: a part never hydrated`);
+        await context.close();
+      }
+      expect(failures.join('\n')).toBe('');
+    }, 120_000);
+  }
+});
+
 describe('the page never loads again', () => {
   test('ten routes by click and by key keep the window and the shell', async () => {
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });

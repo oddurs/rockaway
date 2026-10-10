@@ -6,12 +6,14 @@
  * the cell renderer's DOM painter, so React never reconciles what it drew.
  */
 import { type ReactNode, useEffect, useRef } from 'react';
-import { live } from '../lib/drawing-live.ts';
 
 export function Drawing({ html }: { readonly html: string }): ReactNode {
   const figure = useRef<HTMLElement>(null);
+  // The drawing's own script, which is the engine's: fetched after the page
+  // is up, so no page waits for it.
   useEffect(() => {
-    if (figure.current) live(figure.current);
+    const at = figure.current;
+    if (at) void import('../lib/drawing-live.ts').then(({ live }) => live(at));
   }, []);
   return (
     <figure

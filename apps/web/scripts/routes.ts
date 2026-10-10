@@ -29,12 +29,25 @@ for (const { name } of meta.components) {
     throw new Error(`${name} has no example: add apps/web/examples/${slug}.tsx`);
   }
   mkdirSync(path.join(pages, slug), { recursive: true });
+  // The example's module, loaded only when the example nears the view: its
+  // own client file, so the import is the client's to make, not the page's.
+  writeFileSync(
+    path.join(pages, slug, 'example.tsx'),
+    `'use client';
+
+${header}import { deferred } from '../../../../components/Deferred.tsx';
+
+export const Example = deferred(() =>
+  import('../../../../examples/${slug}.tsx').then((module) => module.Example),
+);
+`,
+  );
   writeFileSync(
     path.join(pages, slug, 'page.tsx'),
     `${header}import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Example } from '../../../../examples/${slug}.tsx';
 import { ComponentPage, componentMetadata } from '../../../../lib/component-route.tsx';
+import { Example } from './example.tsx';
 
 export const metadata: Metadata = componentMetadata('${slug}');
 
