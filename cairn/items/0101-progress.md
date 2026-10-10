@@ -3,16 +3,16 @@ id: 101
 uid: d98b4d5a-3c78-44cc-82af-92bd2e826c5a
 title: Progress
 type: component
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 117
 - 118
 - 120
 created: 2026-09-22
-updated: 2026-10-09
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p1
 layer: components
 effort: s
@@ -90,3 +90,11 @@ The check found one class of break, and it is the checker's, not the drawing's. 
 ## 2026-10-09
 
 CTO ruling (2026-10-04): live data refreshing is not motion. Added ticks.refresh (1s) and reducedTicks.refresh (5s, token motion.tick-reduced.refresh): under reduced motion it keeps counting at the slower rate while every other tick stops on frame 0, and a clock is retimed rather than stopped when the setting changes, keeping its count. useReducedMotion() exports the setting itself. Meter is now display: block so meters stack without wrappers. After #202, progress.meta.ts split into meter, progress, sparkline and spinner .meta.ts, each with a fixture and snapshots file.
+
+## 2026-10-10
+
+Landed in #188: ProgressBar, Meter, Sparkline and Spinner, drawn by the cell.
+
+## 2026-10-10
+
+Closed with criterion 22 (Button's isPending) unmet: Button has no isPending on main. Moved to 0341 rather than ticked.
