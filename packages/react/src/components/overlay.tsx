@@ -480,6 +480,10 @@ function Surface({
     const observer =
       typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(settled);
     observer?.observe(el);
+    // And what it holds: content that shrinks inside a body held at `maxRows`
+    // (a combobox's options, filtered) changes the scroll without changing
+    // the body's own size, so the body alone would leave a thumb behind.
+    for (const child of el.children) observer?.observe(child);
     // The cell can change without the body changing size, when the rows it
     // shows are held by `maxRows`: the context attributes say when.
     const unobserve = observeContexts(settled);

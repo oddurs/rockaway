@@ -17,6 +17,7 @@ export * from './entries/callout.ts';
 export * from './entries/card.ts';
 export * from './entries/checkbox.ts';
 export * from './entries/code-block.ts';
+export * from './entries/combobox.ts';
 export * from './entries/divider.ts';
 export * from './entries/field.ts';
 export * from './entries/fieldset.ts';

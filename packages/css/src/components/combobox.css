@@ -1,0 +1,143 @@
+/*
+ * ComboBox (cairn 0055).
+ *
+ * A field (field.css places it): the box in the control column, one row,
+ * exactly `--rk-combobox-cols` cells: the opening delimiter, a cell for the
+ * start's overflow mark, the input, a cell for the end's, the open mark and
+ * the closing delimiter. The last three are the button. No state changes a
+ * size (0118).
+ *
+ * The popover's rows are List's, drawn by list.css, the list filling the
+ * popover as Select's does (select.css). This adds the match: what the typed
+ * text matches in a row is underlined, bold and in the accent.
+ */
+@layer rk.components {
+  .rk-combobox {
+    --rk-combobox-end: var(--rk-border-control);
+  }
+
+  .rk-combobox-box {
+    display: inline-flex;
+    inline-size: calc(var(--rk-combobox-cols) * var(--rk-cell-width));
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+  }
+
+  .rk-combobox-end,
+  .rk-combobox-cell,
+  .rk-combobox-mark {
+    flex: none;
+    inline-size: var(--rk-cell-width);
+    block-size: var(--rk-cell-height);
+  }
+
+  .rk-combobox-end {
+    color: var(--rk-combobox-end);
+  }
+
+  .rk-combobox-cell {
+    color: var(--rk-border-control);
+  }
+
+  .rk-combobox-input {
+    box-sizing: border-box;
+    flex: none;
+    inline-size: calc(var(--rk-cell-width) * var(--rk-combobox-input-cols));
+    block-size: var(--rk-cell-height);
+    margin: 0;
+    border: none;
+    padding: 0;
+    background: var(--rk-bg-subtle);
+    color: var(--rk-fg-default);
+    font: inherit;
+    line-height: var(--rk-cell-height);
+    outline-offset: 0;
+    /* No native scrollbar: the overflow marks show where (0207). */
+    scrollbar-width: none;
+  }
+
+  .rk-combobox-input::-webkit-scrollbar {
+    display: none;
+  }
+
+  @supports (caret-shape: block) {
+    .rk-combobox-input {
+      caret-shape: block;
+    }
+  }
+
+  /* The button is cells the box already has: no box of its own. */
+  .rk-combobox-button {
+    display: inline-flex;
+    flex: none;
+    margin: 0;
+    border: none;
+    padding: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  /* The open mark is the control's own, in its text colour. */
+  .rk-combobox-mark {
+    color: var(--rk-fg-default);
+  }
+
+  .rk-combobox-button[data-hovered] .rk-combobox-mark {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* Pressed: the mark in reverse video, as a button goes down. */
+  .rk-combobox-button[data-pressed] .rk-combobox-mark {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-page);
+  }
+
+  .rk-combobox[data-invalid] {
+    --rk-combobox-end: var(--rk-border-danger);
+  }
+
+  .rk-combobox[data-disabled] {
+    --rk-combobox-end: var(--rk-fg-disabled);
+  }
+
+  .rk-combobox[data-disabled] .rk-combobox-input,
+  .rk-combobox[data-disabled] .rk-combobox-mark {
+    color: var(--rk-fg-disabled);
+  }
+
+  .rk-combobox[data-disabled] .rk-combobox-button {
+    cursor: default;
+  }
+
+  /* What the typed text matches: three ways, so it reads without the hue. */
+  .rk-combobox-match {
+    color: var(--rk-fg-accent);
+    font-weight: var(--rk-attribute-bold);
+    text-decoration-line: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  /* In a reversed row the accent would be on the text colour: keep the row's. */
+  .rk-combobox-item[data-selected] .rk-combobox-match {
+    color: inherit;
+  }
+
+  /* Nothing matches: one muted row, in the labels' column, after the marks' cells. */
+  .rk-combobox-empty {
+    display: block;
+    padding-inline-start: calc(var(--rk-cell-width) * 2);
+    color: var(--rk-fg-muted);
+  }
+
+  /* A reversed mark is the reader's text and canvas swapped (0181). */
+  @media (forced-colors: active) {
+    .rk-combobox-button[data-pressed] .rk-combobox-mark {
+      forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
+    }
+  }
+}
