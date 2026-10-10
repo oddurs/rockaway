@@ -10,6 +10,7 @@
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { themeGlyphs, themeNames, themes } from '@rockaway/tokens';
 import Ajv2020 from 'ajv/dist/2020.js';
 import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -467,6 +468,37 @@ describe('what is extracted', () => {
       description: 'How many rows the viewport shows. The list is exactly this tall.',
     } satisfies PropMeta);
     expect(list?.inherits).toEqual(["Omit<ListBoxProps<T>, 'className' | 'style'>"]);
+  });
+});
+
+describe('the snapshots, in every theme (0171)', () => {
+  const drawn = components.flatMap((c) => c.snapshots.map((s) => [c.name, s] as const));
+
+  test('list only the themes that draw them differently, by name', () => {
+    for (const [name, snapshot] of drawn) {
+      for (const [theme, text] of Object.entries(snapshot.themes ?? {})) {
+        expect(themeNames, `${name}: ${snapshot.title}`).toContain(theme);
+        expect(text, `${name}: ${snapshot.title} in ${theme}`).not.toBe(snapshot.text);
+      }
+    }
+  });
+
+  test('a theme drawn in another border set draws its frames in it', () => {
+    const frame = byName('Frame').snapshots[0];
+    const set = (theme: keyof typeof themes) => themes[theme].borderSet;
+    for (const theme of themeNames.filter((t) => set(t) !== set('default'))) {
+      const corner = themeGlyphs[theme].border['top-left'];
+      expect(frame?.themes?.[theme]?.[0], theme).toBe(corner);
+    }
+    // A theme in the default's set draws what the default draws, so it is not listed.
+    for (const theme of themeNames.filter((t) => set(t) === set('default'))) {
+      expect(frame?.themes?.[theme], theme).toBeUndefined();
+    }
+  });
+
+  test('a snapshot that shows one set on purpose is the same in every theme', () => {
+    const everySet = byName('Frame').snapshots.find((s) => s.title === 'Every border set');
+    expect(everySet?.themes).toBeUndefined();
   });
 });
 
