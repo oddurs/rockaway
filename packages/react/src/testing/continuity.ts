@@ -34,6 +34,15 @@
  * wholly inside it are read. The cells it hides are counted as `unseen`, so a
  * check of a scrolled table says how much of it was looked at.
  *
+ * A shape can also be drawn outside a painted layer, on a box that holds no
+ * character to look up: prose draws the rule under a heading and the quote's
+ * gutter on pseudo-elements (0143), which have no box of their own to find.
+ * The caller says where such a shape is, in `shapes`: the element it is drawn
+ * on, the pseudo-element if any, the character it draws as, and which cells of
+ * the element's box it fills. Each is photographed alone, as a layer is, and
+ * its cells are read exactly as painted ones are. `proseShapes` lists every
+ * one a block of prose draws (0177).
+ *
  * Only a test runner can take a screenshot, so the caller supplies one:
  * `capture` gets an element and returns a PNG of it, as base64 or a Blob.
  * Under Vitest's browser mode that is
@@ -49,6 +58,7 @@ import {
   type Side,
   shapeOf,
 } from '@rockaway/grid';
+import { measureCell } from '../cell-metrics.ts';
 
 export type Capture = (element: HTMLElement) => Promise<string | Blob>;
 
@@ -57,6 +67,33 @@ export interface ContinuityOptions {
   readonly capture: Capture;
   /** How much of the ink a pixel needs to count as inked. Default 0.5. */
   readonly threshold?: number;
+  /** Shapes drawn outside a painted layer, checked like painted cells (0177). */
+  readonly shapes?: readonly OutsideShape[];
+}
+
+/**
+ * A shape drawn on a box that is not a painted cell: a pseudo-element, or an
+ * element whose background the cell's strokes are drawn on, like prose's `hr`.
+ */
+export interface OutsideShape {
+  /** The element the shape is drawn on, or whose pseudo-element draws it. */
+  readonly element: HTMLElement;
+  readonly pseudo?: '::before' | '::after';
+  /** The character the shape draws as, the one a painted cell would hold: `─`, `═`, `│`. */
+  readonly shape: string;
+  /**
+   * Which cells of the element's box it fills, in whole cells from the
+   * top-left corner. A negative `col` or `row` counts from the far edge, so
+   * `{ row: -1, rows: 1 }` is the last row. The whole box when left out.
+   */
+  readonly cells?: {
+    readonly col?: number;
+    readonly row?: number;
+    readonly cols?: number;
+    readonly rows?: number;
+  };
+  /** What a break is reported in. The element and the pseudo-element by default. */
+  readonly name?: string;
 }
 
 export interface Break {
@@ -81,6 +118,8 @@ export interface ContinuityReport {
   readonly fills: number;
   /** Cells that draw their own shape but are scrolled or clipped out of view, so not checked. */
   readonly unseen: number;
+  /** Shapes drawn outside a painted layer, looked at. */
+  readonly outside: number;
   readonly breaks: readonly Break[];
 }
 
@@ -207,14 +246,15 @@ export async function checkContinuity(
   let fills = 0;
   let unseen = 0;
 
-  for (const layer of layers) {
+  const outside = options.shapes ?? [];
+  const sources: readonly Source[] = [...layers.map(paintedSource), ...outside.map(outsideSource)];
+
+  for (const { target: layer, name, runs, count, alone } of sources) {
     const bounds = layer.getBoundingClientRect();
     if (bounds.width === 0 || bounds.height === 0) continue;
     const shown = shownPart(layer);
     if (shown && (shown.width <= 0 || shown.height <= 0)) {
-      for (const run of layer.querySelectorAll('[data-rk-shape]')) {
-        unseen += [...graphemes(run.textContent ?? '')].length;
-      }
+      unseen += count();
       continue;
     }
     // A clipped layer is photographed through a window over the part it
@@ -223,7 +263,7 @@ export async function checkContinuity(
     let image: Image;
     let frame: DOMRect;
     try {
-      image = await decode(await chromeOnly(layer, options.capture, pane ?? layer));
+      image = await decode(await chromeOnly(layer, options.capture, pane ?? layer, alone));
       // The screenshot was taken after any scrolling it needed, so it is all
       // measured again: only positions relative to what was taken are used.
       frame = (pane ?? layer).getBoundingClientRect();
@@ -245,7 +285,6 @@ export async function checkContinuity(
       const i = (y * image.width + x) * 4;
       return [image.data[i] ?? 0, image.data[i + 1] ?? 0, image.data[i + 2] ?? 0];
     };
-    const name = describe(layer);
     const cells = new Map<string, Checked>();
     /**
      * Edges a shape does not reach, read for ink at each depth in from the
@@ -269,17 +308,16 @@ export async function checkContinuity(
     // how many lines in from the edge that allows, the outermost included.
     const slack = Math.floor(dpr / 2) + 1;
 
-    const rows = [...layer.children].filter((el) => el.classList.contains('rk-row'));
-    rows.forEach((rowEl, row) => {
+    runs().forEach((rowRuns, row) => {
       let col = 0;
-      for (const run of [...rowEl.children] as HTMLElement[]) {
-        const text = run.textContent ?? '';
+      for (const run of rowRuns) {
+        const text = run.text;
         const clusters = [...graphemes(text)];
         const widths = clusters.map((c) => clusterWidth(c) as number);
         const span = widths.reduce((n, w) => n + w, 0);
-        const rect = run.getBoundingClientRect();
+        const rect = run.rect;
         const cellWidth = span === 0 ? 0 : rect.width / span;
-        const shape = run.dataset.rkShape ? shapeOf(clusters[0] ?? '') : undefined;
+        const shape = run.shaped ? shapeOf(clusters[0] ?? '') : undefined;
         const inside = (left: number, top: number, right: number, bottom: number): Box => ({
           x0: Math.ceil(left * dpr - originX - 1e-3),
           y0: Math.ceil(top * dpr - originY - 1e-3),
@@ -295,7 +333,7 @@ export async function checkContinuity(
         });
 
         if (!shape) {
-          const bg = getComputedStyle(run).backgroundColor;
+          const bg = run.background();
           if (opaque(bg) && seen(rect.left, rect.top, rect.right, rect.bottom)) {
             fills += 1;
             const want = rgb(bg);
@@ -322,8 +360,8 @@ export async function checkContinuity(
           continue;
         }
 
-        const inkColour = ink(run);
-        const groundColour = ground(run);
+        const inkColour = run.ink();
+        const groundColour = run.ground();
         const contrast = distance(inkColour, groundColour);
         const alpha = Math.max(...shape.marks.map((m) => (m.kind === 'rect' ? m.alpha : 1)));
 
@@ -410,7 +448,7 @@ export async function checkContinuity(
               // pixels from the cell's true edge, and how far the cell's own
               // outermost line already is from that edge. A line is clear when
               // a whole pixel of antialiasing still separates it from the mark.
-              strokes ??= strokeWidths(run);
+              strokes ??= run.strokes();
               const metrics: Metrics = { width: cellWidth, height: rect.height, ...strokes };
               const inset = insetOf(shape, side, metrics) * dpr;
               const edge =
@@ -553,7 +591,212 @@ export async function checkContinuity(
     }
   }
 
-  return { layers: layers.length, shapes, joins, fills, unseen, breaks };
+  return { layers: layers.length, shapes, joins, fills, unseen, outside: outside.length, breaks };
+}
+
+/** A box in CSS pixels, as `getBoundingClientRect` gives one. */
+interface Rect {
+  readonly left: number;
+  readonly top: number;
+  readonly right: number;
+  readonly bottom: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+/** One run of cells in a row: a painted run, or a row of a shape drawn outside a layer. */
+interface Run {
+  readonly text: string;
+  readonly rect: Rect;
+  /** Whether it draws its own shape, looked up from its first character. */
+  readonly shaped: boolean;
+  readonly background: () => string;
+  readonly ink: () => RGB;
+  readonly ground: () => RGB;
+  /** The stroke widths it is painted with, for resolving its shape's marks to pixels. */
+  readonly strokes: () => Pick<Metrics, 'light' | 'heavy' | 'gap'>;
+}
+
+/** What is photographed, what its breaks are reported in, and its runs, row by row. */
+interface Source {
+  readonly target: HTMLElement;
+  readonly name: string;
+  /** Read after the screenshot, which may have scrolled the page. */
+  readonly runs: () => readonly (readonly Run[])[];
+  /** Its shaped cells, counted as unseen when the whole of it is clipped away. */
+  readonly count: () => number;
+  /**
+   * Whether the shape is a pseudo-element of an element with words of its
+   * own, which are left out of its screenshot as other layers are (0245).
+   */
+  readonly alone: boolean;
+}
+
+function paintedSource(layer: HTMLElement): Source {
+  return {
+    target: layer,
+    name: describe(layer),
+    runs: () =>
+      [...layer.children]
+        .filter((el) => el.classList.contains('rk-row'))
+        .map((row) =>
+          ([...row.children] as HTMLElement[]).map((run) => ({
+            text: run.textContent ?? '',
+            rect: run.getBoundingClientRect(),
+            shaped: Boolean(run.dataset.rkShape),
+            background: () => getComputedStyle(run).backgroundColor,
+            ink: () => ink(run),
+            ground: () => ground(run),
+            strokes: () => strokeWidths(run),
+          })),
+        ),
+    alone: false,
+    count: () =>
+      [...layer.querySelectorAll('[data-rk-shape]')].reduce(
+        (n, run) => n + [...graphemes(run.textContent ?? '')].length,
+        0,
+      ),
+  };
+}
+
+/** Elements that hold no children a page shows, so cannot be measured from inside. */
+const VOID = new Set([
+  'AREA',
+  'BR',
+  'COL',
+  'EMBED',
+  'HR',
+  'IMG',
+  'INPUT',
+  'SOURCE',
+  'TRACK',
+  'WBR',
+]);
+
+function outsideSource(spec: OutsideShape): Source {
+  const { element, pseudo, shape } = spec;
+  if (shapeOf(shape) === undefined) {
+    throw new Error(`checkContinuity: ${shape} is not a shape the cell draws`);
+  }
+  /** The cells it fills, in the element's box as it is now. */
+  const place = () => {
+    const box = element.getBoundingClientRect();
+    const host = VOID.has(element.tagName) ? (element.parentElement ?? element) : element;
+    const cell = measureCell(host);
+    const across = Math.max(1, Math.round(box.width / cell.width));
+    const down = Math.max(1, Math.round(box.height / cell.height));
+    const from = (at: number | undefined, total: number): number =>
+      at === undefined ? 0 : at < 0 ? total + at : at;
+    const col = from(spec.cells?.col, across);
+    const row = from(spec.cells?.row, down);
+    return {
+      // The element's own box, cut into the cells it holds: a box a hair off
+      // whole cells is conformance's question, not this one's.
+      width: box.width / across,
+      height: box.height / down,
+      left: box.left + (col * box.width) / across,
+      top: box.top + (row * box.height) / down,
+      cols: Math.max(0, Math.min(spec.cells?.cols ?? across - col, across - col)),
+      rows: Math.max(0, Math.min(spec.cells?.rows ?? down - row, down - row)),
+    };
+  };
+  return {
+    target: element,
+    name: spec.name ?? `${describe(element)}${pseudo ?? ''}`,
+    runs: () => {
+      const at = place();
+      return Array.from({ length: at.rows }, (_, r) => {
+        const top = at.top + r * at.height;
+        const width = at.cols * at.width;
+        return [
+          {
+            text: shape.repeat(at.cols),
+            rect: {
+              left: at.left,
+              top,
+              right: at.left + width,
+              bottom: top + at.height,
+              width,
+              height: at.height,
+            },
+            shaped: true,
+            background: () => '',
+            ink: () => inkOf(element, pseudo),
+            ground: () => ground(element),
+            strokes: () =>
+              strokeWidths(
+                VOID.has(element.tagName) ? (element.parentElement ?? element) : element,
+              ),
+          },
+        ];
+      });
+    },
+    count: () => {
+      const at = place();
+      return at.cols * at.rows;
+    },
+    alone: pseudo !== undefined,
+  };
+}
+
+/**
+ * The colour a shape outside a layer is drawn in: its `--rk-ink-colour`, or its
+ * own colour where that is `currentColor`, as `ink` reads a painted cell's.
+ */
+function inkOf(element: HTMLElement, pseudo: string | undefined): RGB {
+  if (pseudo === undefined) return ink(element);
+  const style = getComputedStyle(element, pseudo);
+  const value = style.getPropertyValue('--rk-ink-colour').trim();
+  if (value === '' || value.toLowerCase() === 'currentcolor') return rgb(style.color);
+  // A system colour or a token: resolved where it is drawn, as the cell would.
+  const probe = element.ownerDocument.createElement('span');
+  probe.style.color = value;
+  probe.style.setProperty('forced-color-adjust', 'none');
+  element.append(probe);
+  const colour = getComputedStyle(probe).color;
+  probe.remove();
+  return rgb(colour);
+}
+
+/**
+ * Every shape a block of prose draws outside a cell (0143): the double rule
+ * under `h1`, the rule under `h2` and under each header cell of a table, `hr`,
+ * and the quote's gutter. Pass them as `shapes`.
+ */
+export function proseShapes(root: HTMLElement): OutsideShape[] {
+  const all = (selector: string): HTMLElement[] =>
+    [
+      ...(root.matches(selector) ? [root] : []),
+      ...root.querySelectorAll<HTMLElement>(selector),
+    ].filter((el) => el.parentElement?.closest('.rk-prose') != null);
+  const lastRow = { row: -1, rows: 1 };
+  return [
+    ...all('h1').map((element) => ({
+      element,
+      pseudo: '::after' as const,
+      shape: '\u2550',
+      cells: lastRow,
+    })),
+    ...all('h2').map((element) => ({
+      element,
+      pseudo: '::after' as const,
+      shape: '\u2500',
+      cells: lastRow,
+    })),
+    ...all('thead th').map((element) => ({
+      element,
+      pseudo: '::after' as const,
+      shape: '\u2500',
+      cells: lastRow,
+    })),
+    ...all('hr').map((element) => ({ element, shape: '\u2500' })),
+    ...all('blockquote').map((element) => ({
+      element,
+      pseudo: '::before' as const,
+      shape: '\u2502',
+      cells: { col: 0, cols: 1 },
+    })),
+  ];
 }
 
 /**
@@ -623,6 +866,9 @@ function strokeWidths(run: HTMLElement): Pick<Metrics, 'light' | 'heavy' | 'gap'
 /** Marks a region whose overflow marks are hidden for a screenshot. */
 const UNMARKED = 'data-rk-continuity-unmarked';
 
+/** Marks an element whose own words are hidden while its pseudo-element is photographed. */
+const ALONE = 'data-rk-continuity-alone';
+
 /**
  * A screenshot of this chrome alone. A screen's content layer sits over its
  * chrome on purpose — a button may stand on a rule — and what it covers is the
@@ -642,11 +888,18 @@ const UNMARKED = 'data-rk-continuity-unmarked';
  * not this layer's, and is not read as this layer's. Neither layer is moved,
  * and the ground a cell is compared with is read from its own ancestors,
  * which this leaves alone.
+ *
+ * A shape drawn on a pseudo-element is photographed without its element's own
+ * words for the same reason (`alone`). At dense the `y` of a table header's
+ * `Layout` reaches into the rule's row below it; that is the header's ink, not
+ * the rule's. The words are made transparent, and anything inside the element
+ * hidden; the pseudo-element names its own colour, so it keeps it.
  */
 async function chromeOnly(
   layer: HTMLElement,
   capture: Capture,
   target: HTMLElement,
+  alone = false,
 ): Promise<string | Blob> {
   // Not the content layer the chrome is itself inside, like a list's scrollbar
   // in a frame: only the ones laid over it.
@@ -665,9 +918,14 @@ async function chromeOnly(
     if (el.matches('.rk-scroll-marks, .rk-prose pre')) regions.push(el);
   }
   const hide = doc.createElement('style');
-  hide.textContent = `[${UNMARKED}]::before, [${UNMARKED}]::after { visibility: hidden !important; }`;
-  if (regions.length > 0) doc.head.append(hide);
+  hide.textContent = [
+    `[${UNMARKED}]::before, [${UNMARKED}]::after { visibility: hidden !important; }`,
+    `[${ALONE}] { color: transparent !important; -webkit-text-fill-color: transparent !important; text-shadow: none !important; forced-color-adjust: none !important; }`,
+    `[${ALONE}] * { visibility: hidden !important; }`,
+  ].join('\n');
+  if (regions.length > 0 || alone) doc.head.append(hide);
   for (const el of regions) el.setAttribute(UNMARKED, '');
+  if (alone) layer.setAttribute(ALONE, '');
   // Nor any letter, anywhere: a letter is as tall as the font says, not as
   // the cell (0116), so at dense a descender in the line above a screen, or
   // in a title row of its own, reaches into the cell below it. Letters are
@@ -693,6 +951,7 @@ async function chromeOnly(
       el.style.opacity = before[i] ?? '';
     });
     for (const el of regions) el.removeAttribute(UNMARKED);
+    layer.removeAttribute(ALONE);
     hide.remove();
     letters.remove();
     layers.forEach((el, i) => {
@@ -898,7 +1157,7 @@ function joinless(
 /** The report as text: what was checked, then every break. */
 export function formatContinuity(report: ContinuityReport): string {
   const lines = [
-    `${report.shapes} shaped cells, ${report.joins} joins and ${report.fills} fills in ${report.layers} painted layer(s)`,
+    `${report.shapes} shaped cells, ${report.joins} joins and ${report.fills} fills in ${report.layers} painted layer(s)${report.outside > 0 ? ` and ${report.outside} shape(s) outside one` : ''}`,
   ];
   if (report.breaks.length > 0) {
     lines.push('', `${report.breaks.length} break(s):`);

@@ -13,7 +13,12 @@ import {
   shapeOf,
 } from '@rockaway/grid';
 import { type PainterName, Screen } from '@rockaway/react';
-import { checkContinuity, expectContinuity, formatContinuity } from '@rockaway/react/testing';
+import {
+  checkContinuity,
+  expectContinuity,
+  formatContinuity,
+  proseShapes,
+} from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
@@ -503,6 +508,58 @@ export const StrokeWidth: Story = {
       }
     }
     console.info(`strokes at ${devicePixelRatio}x\n${report.join('\n')}`);
+  },
+};
+
+/**
+ * Shapes drawn outside a painted layer (0177). Prose draws the rule under a
+ * heading and a quote's gutter on pseudo-elements, which hold no character to
+ * look up, so the caller says where each is (`proseShapes` does it for prose)
+ * and they are read cell by cell as a painted `─` or `│` is. The same rule
+ * drawn half as long is caught where it stops, and a heading's descenders in
+ * the row above the rule are the heading's, not the rule's.
+ */
+export const Outside: Story = {
+  name: 'Shapes outside a painted layer',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}>
+      <style>
+        {'.short h2::after { background-size: 50% var(--rk-stroke-light) !important; }'}
+      </style>
+      <article
+        className="rk-prose"
+        data-testid="whole"
+        style={{ inlineSize: 'calc(30 * var(--rk-cell-width))' }}
+      >
+        <h2>Spacing, glyphs</h2>
+        <blockquote>
+          <p>A quote two rows tall in a box this narrow, so its gutter runs on.</p>
+        </blockquote>
+      </article>
+      <article className="rk-prose short" data-testid="short">
+        <h2>Spacing, glyphs</h2>
+      </article>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    const whole = canvas.getByTestId('whole');
+    const shapes = proseShapes(whole);
+    expect(shapes.map((s) => s.shape)).toEqual(['\u2500', '\u2502']);
+    const report = await expectContinuity(whole, { capture: run.capture, shapes });
+    expect(report.outside).toBe(2);
+    // Fifteen cells of rule, and the gutter's rows: every one read, and joined.
+    expect(report.shapes).toBeGreaterThan(16);
+    expect(report.joins).toBeGreaterThan(14);
+
+    const short = canvas.getByTestId('short');
+    const cut = await checkContinuity(short, { capture: run.capture, shapes: proseShapes(short) });
+    const gaps = cut.breaks.filter((b) => b.what === 'gap');
+    expect(gaps.length, formatContinuity(cut)).toBeGreaterThan(3);
+    // Where the rule stops, past the middle of the heading.
+    expect(Math.min(...gaps.map((b) => b.col))).toBeGreaterThan(5);
   },
 };
 
