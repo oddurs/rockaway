@@ -9,10 +9,11 @@
  * field with no label (a checkbox, a framed control) is simply a field whose
  * label column is empty.
  *
- * A form lines its fields up: each field is a subgrid of the form's two
- * columns, so the label column is as wide as the form's longest label and
- * every control starts in the same cell. Under 60 cells the two columns
- * become one, and each label sits on the row above its control.
+ * A comfortable form (the default, 0316) puts each label on the row above
+ * its control. A compact form lines its fields up: each field is a subgrid of
+ * the form's two columns, so the label column is as wide as the form's
+ * longest label and every control starts in the same cell; under 60 cells the
+ * two columns become one.
  *
  * `formBuffer` in `@rockaway/react` is the text model of this layout; change
  * one and the workbench fails until the other follows.
@@ -96,13 +97,15 @@
     container: rk-form / inline-size;
   }
 
+  /*
+   * Comfortable, the default (0311, 0316): one column, each label over its
+   * control, and the comfort's field gap between fields. A compact form,
+   * below, keeps the terminal's two columns.
+   */
   .rk-form-grid {
     display: grid;
-    grid-template-columns:
-      [label-start] var(--rk-form-label, max-content)
-      [label-end control-start] minmax(0, 1fr)
-      [control-end];
-    row-gap: var(--rk-y-1);
+    grid-template-columns: [label-start control-start] minmax(0, 1fr) [label-end control-end];
+    row-gap: calc(var(--rk-rhythm-field) * var(--rk-step-y));
     align-items: start;
     justify-items: start;
     /* A sixteenth of a cell's grace, for layout's 1/64px snapping: see fieldset.css. */
@@ -128,9 +131,37 @@
    * between 59 and 60 cells ever happens, so the midpoint asks the question
    * exactly, whatever the snapping (cairn 0124; see cellsIn).
    */
+  [data-rk-comfort="compact"] .rk-form-grid,
+  .rk-form[data-rk-comfort="compact"] > .rk-form-grid {
+    grid-template-columns:
+      [label-start] var(--rk-form-label, max-content)
+      [label-end control-start] minmax(0, 1fr)
+      [control-end];
+  }
+
+  /* A comfortable or spacious form inside a compact region is comfortable again. */
+  .rk-form:is([data-rk-comfort="comfortable"], [data-rk-comfort="spacious"]) > .rk-form-grid {
+    grid-template-columns: [label-start control-start] minmax(0, 1fr) [label-end control-end];
+  }
+
   @container rk-form (width < 59.5ch) {
-    .rk-form-grid {
+    [data-rk-comfort="compact"] .rk-form-grid,
+    .rk-form[data-rk-comfort="compact"] > .rk-form-grid {
       grid-template-columns: [label-start control-start] minmax(0, 1fr) [label-end control-end];
     }
+  }
+
+  /*
+   * The help under a control starts the comfort's help gap below it, and a
+   * field with help closes to whole rows by adding back the odd half-step:
+   * every other part of a field is whole rows, so this is the field's seam
+   * with no script, in every engine (0314).
+   */
+  .rk-field > :is(.rk-description, .rk-field-error):not(:is(.rk-description, .rk-field-error) + *) {
+    margin-block-start: calc(var(--rk-rhythm-help) * var(--rk-step-y));
+  }
+
+  .rk-field:has(> .rk-description, > .rk-field-error) {
+    padding-block-end: calc(mod(var(--rk-rhythm-help), 2) * var(--rk-step-y));
   }
 }
