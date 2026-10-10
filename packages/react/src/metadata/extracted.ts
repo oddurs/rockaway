@@ -1374,6 +1374,117 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "tokens": []
   },
+  "Radio": {
+    "file": "radio-group.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The label: the option's words, after its mark."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaRadioFieldProps, 'children' | 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-focus-offset",
+      "--rk-focus-width",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light",
+      "--rk-x-2"
+    ]
+  },
+  "RadioGroup": {
+    "file": "radio-group.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Set into the frame's top edge, and the group's accessible name."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The radios."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help under the group, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
+        "required": false,
+        "description": "Words for the error under the group; the group's own validation's when not given."
+      },
+      {
+        "name": "orientation",
+        "type": "RadioOrientation",
+        "required": false,
+        "description": "`vertical` puts a radio on each row; `horizontal` sets them across, two cells apart, wrapping whole radios to the next row when they do not fit. The arrow keys follow it."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "How the frame's lines are stroked: weighted like the type, or hairlines."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "VariantProps<typeof radioGroupVariants>",
+      "Omit<AriaRadioGroupProps, 'children' | 'className' | 'style' | 'orientation'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-danger",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-focus-offset",
+      "--rk-focus-width",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light",
+      "--rk-x-2"
+    ]
+  },
   "Row": {
     "file": "table.tsx",
     "props": [
