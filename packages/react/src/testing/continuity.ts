@@ -42,6 +42,7 @@
 import {
   clusterWidth,
   graphemes,
+  type Measure,
   type Metrics,
   resolve,
   type Shape,
@@ -558,22 +559,47 @@ export async function checkContinuity(
 /**
  * How far in from one side of its cell a shape's nearest mark starts, in CSS
  * pixels: its own geometry from `shape.ts`, resolved at this cell's size and
- * strokes. Infinity for a shape with no marks.
+ * strokes, and placed as the stylesheet places it. Infinity for a shape with
+ * no marks.
  */
 function insetOf(shape: Shape, side: Side, metrics: Metrics): number {
   let nearest = Number.POSITIVE_INFINITY;
   for (const mark of shape.marks) {
-    const d =
-      side === 'west'
-        ? resolve(mark.x0, metrics.width, metrics)
-        : side === 'east'
-          ? metrics.width - resolve(mark.x1, metrics.width, metrics)
-          : side === 'north'
-            ? resolve(mark.y0, metrics.height, metrics)
-            : metrics.height - resolve(mark.y1, metrics.height, metrics);
+    const across = side === 'west' || side === 'east';
+    const [start, end] = across ? [mark.x0, mark.x1] : [mark.y0, mark.y1];
+    const extent = across ? metrics.width : metrics.height;
+    const [s, e] =
+      mark.kind === 'rect'
+        ? drawn(start, end, extent, metrics)
+        : [resolve(start, extent, metrics), resolve(end, extent, metrics)];
+    const d = side === 'west' || side === 'north' ? s : extent - e;
     nearest = Math.min(nearest, d);
   }
   return nearest;
+}
+
+/** A measure on the cell's edge, with nothing added to it. */
+const onEdge = (m: Measure, cell: 0 | 1): boolean =>
+  m.cell === cell &&
+  Object.entries(m).every(([name, value]) => name === 'cell' || (value ?? 0) === 0);
+
+/**
+ * Where a rectangle's two ends are drawn along one axis, from the cell's
+ * start, in CSS pixels. The stylesheet (`packages/css/scripts/shapes.ts`,
+ * cairn 0274) starts every layer that does not run the cell's length on a
+ * whole pixel, and ends it a whole number of pixels on: by its own size
+ * rounded, at least a pixel, when that is strokes alone, or on the pixel of
+ * its fractional end. A dot an eighth of a cell in at 9.84px is drawn a whole
+ * pixel in, not 1.23px, and the check has to read the edge it was drawn at.
+ */
+function drawn(start: Measure, end: Measure, extent: number, metrics: Metrics): [number, number] {
+  const s = resolve(start, extent, metrics);
+  const e = resolve(end, extent, metrics);
+  if (onEdge(start, 0) && onEdge(end, 1)) return [s, e];
+  const position = Math.round(s);
+  const size =
+    end.cell - start.cell === 0 ? Math.max(1, Math.round(e - s)) : Math.round(e) - position;
+  return [position, position + size];
 }
 
 /** The stroke widths a run is painted with, in CSS pixels, read through a probe. */
