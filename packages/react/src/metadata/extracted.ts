@@ -323,6 +323,111 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled"
     ]
   },
+  "CodeBlock": {
+    "file": "code-block.tsx",
+    "props": [
+      {
+        "name": "code",
+        "type": "string",
+        "required": true,
+        "description": "The code, exactly: what is shown, what is copied."
+      },
+      {
+        "name": "tokens",
+        "type": "readonly CodeLine[]",
+        "required": false,
+        "description": "The same code, highlighted: one line of tokens per line, each token a role from the syntax tokens (0144). Joined, it must be `code`."
+      },
+      {
+        "name": "lang",
+        "type": "string",
+        "required": false,
+        "description": "The language, for a reader, and the title when there is none."
+      },
+      {
+        "name": "copyable",
+        "type": "boolean",
+        "required": false,
+        "description": "A copy button in the top edge. On by default; a block with no frame has none.",
+        "default": "true"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The block's accessible name, when the title is not the right one."
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows' | 'title'>",
+      "Omit<CodeBlockOptions, 'copyable'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "CodeSnapshot": {
+    "file": "code-block.tsx",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "description": "The text snapshot, as `toText` writes it."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What the snapshot shows, said in words: a reader hears this, not the box characters one by one."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the top edge: what it is a snapshot of."
+      },
+      {
+        "name": "copyable",
+        "type": "boolean",
+        "required": false,
+        "description": "A copy button in the top edge. On by default.",
+        "default": "true"
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows' | 'title'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Column": {
     "file": "table.tsx",
     "props": [
@@ -1557,6 +1662,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
         "default": "'glyph'"
+      },
+      {
+        "name": "disallowTypeAhead",
+        "type": "boolean",
+        "required": false,
+        "description": "No type-ahead: a printable key moves nothing, and reaches the page, for a tree beside single-letter shortcuts (`j`, `k`, `/`). The arrows, Home and End still move. React Aria's own option, which its GridList offers and its Tree honours."
+      },
+      {
+        "name": "onFocusedKeyChange",
+        "type": "(key: Key | null) => void",
+        "required": false,
+        "description": "Called with the row that has focus whenever it changes, and with `null` when focus leaves the tree: what a keymap beside the tree acts on, or what a status bar shows."
       },
       {
         "name": "className",

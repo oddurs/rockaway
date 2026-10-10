@@ -185,3 +185,60 @@ export const Targets: Story = {
     });
   },
 };
+
+/**
+ * The remeasure check fails closed: a cell in pixels is judged, the
+ * unmeasured `1ch` by `1lh` is not, and any other form is a failure of its
+ * own, so a change in how a screen writes its cell cannot quietly drop every
+ * screen out of the check.
+ */
+export const CannotJudge: Story = {
+  name: 'A cell the remeasure check cannot judge',
+  play: async ({ canvasElement }) => {
+    const odd = document.createElement('div');
+    odd.className = 'rk-screen';
+    odd.dataset.rkCols = '10';
+    odd.dataset.rkRows = '1';
+    odd.style.setProperty('--rk-cell-width', '0.6rem');
+    odd.style.setProperty('--rk-cell-height', '1.25rem');
+    canvasElement.append(odd);
+    try {
+      const walked = walk(
+        'grid-matrix--cannot-judge',
+        canvasElement,
+        {},
+        {
+          plan: { densities: [], modes: [], continuity: 'own', axe: false },
+          axe: async () => {},
+        },
+      );
+      await expect(walked).rejects.toThrow(
+        /cell written as 0\.6rem × 1\.25rem, which the remeasure check cannot judge/,
+      );
+    } finally {
+      odd.remove();
+    }
+
+    // The unmeasured pair is not judged, and not a failure.
+    const server = document.createElement('div');
+    server.className = 'rk-screen';
+    server.dataset.rkCols = '10';
+    server.dataset.rkRows = '1';
+    server.style.setProperty('--rk-cell-width', '1ch');
+    server.style.setProperty('--rk-cell-height', '1lh');
+    canvasElement.append(server);
+    try {
+      await walk(
+        'grid-matrix--cannot-judge',
+        canvasElement,
+        { conformance: false },
+        {
+          plan: { densities: [], modes: [], continuity: 'own', axe: false },
+          axe: async () => {},
+        },
+      );
+    } finally {
+      server.remove();
+    }
+  },
+};
