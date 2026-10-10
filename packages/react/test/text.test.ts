@@ -2,7 +2,14 @@ import { toText } from '@rockaway/grid';
 import { contentHeight, lineBox } from '@rockaway/tokens';
 import { createElement } from 'react';
 import { describe, expect, test } from 'vitest';
-import { textBuffer, textCols, textScale, textSizes } from '../src/components/text.pure.ts';
+import {
+  halfTextSizes,
+  textBuffer,
+  textCols,
+  textRows,
+  textScale,
+  textSizes,
+} from '../src/components/text.pure.ts';
 import { cellsOf } from '../src/components/text.tsx';
 
 const densities = ['dense', 'normal', 'airy', 'touch'] as const;
@@ -78,5 +85,18 @@ describe('cellsOf', () => {
     expect(cellsOf(['Rock', createElement('em', null, 'away'), 2026])).toBe(12);
     expect(cellsOf('日本')).toBe(4);
     expect(cellsOf(null)).toBe(0);
+  });
+});
+
+describe('half-row sizes (0323)', () => {
+  test('a line takes the next whole row', () => {
+    expect(halfTextSizes).toEqual([1.5, 2.5]);
+    expect(halfTextSizes.map(textRows)).toEqual([2, 3]);
+    expect(textSizes.map(textRows)).toEqual([2, 3, 4]);
+  });
+
+  test('its text model is its whole rows', () => {
+    expect(textBuffer('Go', 1.5).height).toBe(2);
+    expect(textBuffer('Go', 2.5).height).toBe(3);
   });
 });
