@@ -11,6 +11,19 @@ const FILE: readonly MenuRow[] = [
   { label: 'Delete', disabled: true },
 ];
 
+/** An editor's Edit menu, in sections, as a toolbar's dropdown would hold it. */
+const EDIT: readonly MenuRow[] = [
+  { label: 'Undo', keys: 'mod+z', cursor: true },
+  { label: 'Redo', keys: 'shift+mod+z' },
+  { section: 'Clipboard' },
+  { label: 'Cut', keys: 'mod+x' },
+  { label: 'Copy', keys: 'mod+c' },
+  { label: 'Paste', keys: 'mod+v' },
+  { section: 'Find' },
+  { label: 'Find', keys: 'mod+f' },
+  { label: 'Replace' },
+];
+
 export const menuMeta: ComponentMetaInput = defineMeta({
   name: 'Menu',
   summary:
@@ -155,6 +168,12 @@ export const menuMeta: ComponentMetaInput = defineMeta({
     ],
   },
   snapshots: [
+    {
+      title: 'Comfortable sections',
+      description:
+        'comfort="comfortable" (0317): half a row of air after each section\'s title, beside its rule and never in it. The first section\'s items rest on half-rows, so the second title takes the half-row before it as well and stays on a whole row, where the frame draws it; the menu closes to whole rows. An item on a half-row reads as the row below it.',
+      text: toText(menuBuffer({ rows: EDIT, comfort: 'comfortable' })),
+    },
     {
       title: 'A menu',
       description:
