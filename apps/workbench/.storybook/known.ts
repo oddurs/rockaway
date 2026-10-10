@@ -75,14 +75,4 @@ export const known: readonly Known[] = [
       'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented. A permanent entry, never a silent pass',
     ticket: '0197: the default density meets AA; dense is the documented opt-in that does not',
   },
-  {
-    id: 'webkit-form-at-sixty',
-    check: 'play',
-    projects: ['webkit'],
-    stories: ['components-form--label-width'],
-    element: /./,
-    reason:
-      'a form exactly sixty cells wide stacks in WebKit: measured, the form is 593.4375px and a 60ch box inside it is 593.4375px, yet `@container rk-form (width < 60ch)` matches there and the label column goes; Chromium and Firefox line it up',
-    ticket: '0257: a form exactly at the sixty-cell threshold lines up in every engine',
-  },
 ];

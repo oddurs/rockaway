@@ -9,6 +9,7 @@ import {
   printToPdf,
   readWithoutScripts,
   recordKnown,
+  watchdog,
 } from './.storybook/commands.ts';
 import { densities, modes } from './.storybook/contexts.ts';
 import type { Platform } from './.storybook/known.ts';
@@ -35,6 +36,16 @@ const setupFiles = [path.join(configDir, 'vitest.setup.ts')];
  * every density now that each screen follows its context, needs more on CI.
  */
 const testTimeout = 60_000;
+
+/**
+ * How long a test may run before the watchdog decides the page has stopped
+ * answering and closes it (see `.storybook/commands.ts`): a project's own
+ * timeout and fifteen seconds more, so a slow test fails on its timeout and
+ * only a page that cannot run its timers is closed. Derived, so a timeout
+ * raised for one project raises its watchdog with it. Vitest's default
+ * timeout is fifteen seconds.
+ */
+const watchdogAfter = (timeout = 15_000): number => timeout + 15_000;
 
 /**
  * Stories tagged `zoom` run again at 200%: the continuity matrix, prose, and
@@ -90,7 +101,7 @@ const browser = (
     contextOptions: { ...context, viewport: { width: 1600, height: 2400 } },
   }),
   instances: [{ browser: engine }] satisfies BrowserInstanceOption[],
-  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown },
+  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown, watchdog },
 });
 
 /**
@@ -223,7 +234,12 @@ const chromiumProjects = [
       name: 'storybook',
       setupFiles,
       testTimeout,
-      provide: { platform, plan: plans.storybook, project: 'storybook' },
+      provide: {
+        platform,
+        plan: plans.storybook,
+        project: 'storybook',
+        watchdog: watchdogAfter(testTimeout),
+      },
       browser: browser(),
     },
   },
@@ -233,7 +249,7 @@ const chromiumProjects = [
       name: P3,
       setupFiles,
       testTimeout,
-      provide: { platform, plan: plans[P3], project: P3 },
+      provide: { platform, plan: plans[P3], project: P3, watchdog: watchdogAfter(testTimeout) },
       browser: browser({}, 'display-p3-d65'),
     },
   },
@@ -243,7 +259,12 @@ const chromiumProjects = [
       name: FORCED_COLORS,
       setupFiles,
       testTimeout,
-      provide: { platform, plan: plans[FORCED_COLORS], project: FORCED_COLORS },
+      provide: {
+        platform,
+        plan: plans[FORCED_COLORS],
+        project: FORCED_COLORS,
+        watchdog: watchdogAfter(testTimeout),
+      },
       browser: browser({ forcedColors: 'active' }),
     },
   },
@@ -255,7 +276,7 @@ const chromiumProjects = [
       name: ZOOM,
       setupFiles,
       testTimeout,
-      provide: { platform, plan: plans.zoom, project: ZOOM },
+      provide: { platform, plan: plans.zoom, project: ZOOM, watchdog: watchdogAfter(testTimeout) },
       browser: browser({ deviceScaleFactor: 2 }),
     },
   },
@@ -272,6 +293,7 @@ const chromiumProjects = [
       name: CLASSIC_SCROLLBARS,
       setupFiles,
       testTimeout,
+      provide: { watchdog: watchdogAfter(testTimeout) },
       browser: browser({}, 'srgb', true),
     },
   },
@@ -298,7 +320,12 @@ const engineProjects = others.map((engine) => ({
     name: engine,
     setupFiles,
     testTimeout,
-    provide: { platform, plan: plans.engine, project: engine },
+    provide: {
+      platform,
+      plan: plans.engine,
+      project: engine,
+      watchdog: watchdogAfter(testTimeout),
+    },
     browser: browser({}, 'srgb', false, engine),
   },
 }));
@@ -312,7 +339,12 @@ const firefoxForcedColors = others.includes('firefox')
           name: `${FORCED_COLORS}-firefox`,
           setupFiles,
           testTimeout,
-          provide: { platform, plan: plans[FORCED_COLORS], project: `${FORCED_COLORS}-firefox` },
+          provide: {
+            platform,
+            plan: plans[FORCED_COLORS],
+            project: `${FORCED_COLORS}-firefox`,
+            watchdog: watchdogAfter(testTimeout),
+          },
           browser: browser({ forcedColors: 'active' }, 'srgb', false, 'firefox'),
         },
       },
