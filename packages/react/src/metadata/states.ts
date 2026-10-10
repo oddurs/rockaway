@@ -138,7 +138,9 @@ const ROWS = [
   },
   {
     name: 'placeholder',
-    selectors: [':placeholder-shown'],
+    // An input's placeholder is the platform's pseudo-class; React Aria marks
+    // a Select's value that is still its placeholder with data-placeholder.
+    selectors: [':placeholder-shown', '[data-placeholder]'],
     drawnAs: 'dim',
     withoutColour: 'dim',
     global: false,
