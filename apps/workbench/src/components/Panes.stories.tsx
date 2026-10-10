@@ -18,6 +18,7 @@ import { type ReactNode, useState } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { cellsOf, cellsOfBuffer } from '../cells.ts';
+import { click, press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -256,12 +257,61 @@ export const Resize: Story = {
   play: async ({ canvas }) => {
     await settled();
     const note = canvas.getByRole('textbox', { name: 'note' });
-    await userEvent.type(note, 'keep me');
+    await click(note);
+    await press('keep me');
     await userEvent.click(canvas.getByRole('button', { name: 'Narrow' }));
     await waitFor(() => expect(canvas.queryByRole('region', { name: 'notes' })).toBeNull());
     await userEvent.click(canvas.getByRole('button', { name: 'Widen' }));
     await waitFor(() => expect(canvas.getByRole('region', { name: 'notes' })).toBeVisible());
     expect(canvas.getByRole('textbox', { name: 'note' })).toHaveValue('keep me');
+  },
+};
+
+/**
+ * A page's shell (cairn 0248): each pane frames a landmark of its own, so it
+ * says `landmark={false}` and is a plain container. The page's landmarks are
+ * then the nav, the main and the aside, each named once, with no region
+ * around them, and every title is still drawn in its edge.
+ */
+export const NotLandmarks: Story = {
+  name: 'Not landmarks',
+  render: () => (
+    <Panes cols={60} rows={6}>
+      <Pane title="site" size={16} landmark={false}>
+        <nav aria-label="Site">
+          <Link href="#guide">guide</Link>
+        </nav>
+      </Pane>
+      <Pane title="page" landmark={false}>
+        <main aria-label="Page">
+          <p style={{ margin: 0 }}>The page.</p>
+        </main>
+      </Pane>
+      <Pane title="outline" size={16} landmark={false}>
+        <aside aria-label="On this page">
+          <p style={{ margin: 0 }}>Sections</p>
+        </aside>
+      </Pane>
+    </Panes>
+  ),
+  play: async ({ canvas, canvasElement }) => {
+    await settled();
+    expect(canvas.queryAllByRole('region')).toEqual([]);
+    for (const pane of canvasElement.querySelectorAll('[data-rk-pane]')) {
+      expect(pane.tagName).toBe('DIV');
+      expect(pane).not.toHaveAttribute('aria-label');
+    }
+    const nav = canvas.getByRole('navigation', { name: 'Site' });
+    const main = canvas.getByRole('main', { name: 'Page' });
+    const aside = canvas.getByRole('complementary', { name: 'On this page' });
+    // Each landmark's nearest landmark ancestor is none: they are top level.
+    for (const landmark of [nav, main, aside]) {
+      expect(landmark.parentElement?.closest('section, nav, main, aside, [role]')).toBeNull();
+    }
+    const top = screenshot(canvasElement.querySelector('.rk-panes') as HTMLElement, {
+      legend: false,
+    }).split('\n')[0];
+    for (const title of ['site', 'page', 'outline']) expect(top).toContain(title);
   },
 };
 
@@ -274,11 +324,11 @@ export const Keyboard: Story = {
   play: async ({ canvas }) => {
     await settled();
     for (const pane of canvas.getAllByRole('region')) expect(pane.tabIndex).toBe(-1);
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Stage' }));
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('link', { name: 'ce9af26' }));
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Stage' }));
   },
 };
@@ -500,6 +550,113 @@ export const ForcedColors: Story = {
     expect(cells.length).toBeGreaterThan(0);
     for (const cell of cells) {
       expect(getComputedStyle(cell).getPropertyValue('--rk-ink-colour').trim()).toBe('CanvasText');
+    }
+  },
+};
+
+const SURFACES = ['sunken', 'base', 'raised', 'overlay'] as const;
+
+/** A row of four panes, one per surface, each named by its surface. */
+function SurfaceRow(): ReactNode {
+  return (
+    <Panes label="surfaces" cols={60} rows={5}>
+      {SURFACES.map((surface) => (
+        <Pane key={surface} surface={surface} title={surface}>
+          <p style={{ margin: 0 }}>{surface}</p>
+        </Pane>
+      ))}
+    </Panes>
+  );
+}
+
+const surfacesPlay: NonNullable<Story['play']> = async ({ canvas }) => {
+  await settled();
+  for (const surface of SURFACES) {
+    const pane = canvas.getByRole('region', { name: surface });
+    expect(pane.dataset.rkSurface).toBe(surface);
+    expect(getComputedStyle(pane).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  }
+};
+
+/**
+ * Each pane takes a ground of its own (cairn 0308): the content and padding
+ * are painted, the shared borders stay the screen's, and every line still
+ * meets (the check after the story).
+ */
+export const Surfaces: Story = {
+  render: () => <SurfaceRow />,
+  play: surfacesPlay,
+};
+
+/** The same surfaces on two other themes: the roles are the theme's, not ours. */
+export const SurfacesNord: Story = {
+  globals: { theme: 'nord', mode: 'dark' },
+  render: () => <SurfaceRow />,
+  play: surfacesPlay,
+};
+
+export const SurfacesPhosphor: Story = {
+  globals: { theme: 'phosphor' },
+  render: () => <SurfaceRow />,
+  play: surfacesPlay,
+};
+
+/** Pads, as [name, pad, columns in, rows down]. */
+const PADS = [
+  ['default', undefined, 1, 0],
+  ['none', 0, 0, 0],
+  ['two', 2, 2, 2],
+  ['wide', { x: 3, y: 1 }, 3, 1],
+] as const;
+
+/**
+ * Padding is whole cells, one across and none down by default, so text never
+ * touches a border. The first line starts `pad` cells in from the pane.
+ */
+export const Padding: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)' }}>
+      {PADS.map(([name, pad]) => (
+        <Panes key={name} label={`${name} pad`} cols={30} rows={6}>
+          <Pane surface="raised" title={name} {...(pad === undefined ? {} : { pad })}>
+            <p style={{ margin: 0 }}>{name}</p>
+          </Pane>
+        </Panes>
+      ))}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    for (const [name, , x, y] of PADS) {
+      const pane = canvas.getByRole('region', { name });
+      const text = pane.querySelector('p') as HTMLElement;
+      const cell = cellOf(pane.closest('.rk-screen') as Element);
+      const at = text.getBoundingClientRect();
+      const from = pane.getBoundingClientRect();
+      expect((at.left - from.left) / cell.width).toBeCloseTo(x, 1);
+      expect((at.top - from.top) / cell.height).toBeCloseTo(y, 1);
+    }
+  },
+};
+
+/**
+ * Surfaces under forced colours collapse to Canvas: no ground is a different
+ * colour from any other, and the borders carry the structure.
+ */
+export const SurfacesForcedColors: Story = {
+  name: 'Surfaces, forced colors',
+  tags: ['forced-colors'],
+  render: () => <SurfaceRow />,
+  play: async ({ canvas }) => {
+    expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    const probe = document.createElement('span');
+    probe.style.backgroundColor = 'Canvas';
+    document.body.append(probe);
+    const canvasColour = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    for (const surface of SURFACES) {
+      const pane = canvas.getByRole('region', { name: surface });
+      expect(getComputedStyle(pane).backgroundColor).toBe(canvasColour);
     }
   },
 };

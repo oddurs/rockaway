@@ -11,6 +11,7 @@ import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useRef, useState } from 'react';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
+import { press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -179,6 +180,130 @@ export const Greyscale: Story = {
   },
 };
 
+/** One fill button enabled and one disabled, side by side, and the same pair under default. */
+function DisabledFills(): ReactNode {
+  const row = { display: 'flex', gap: 'var(--rk-x-2)' };
+  return (
+    <Frame title="disabled" cols={COLS} rows={4}>
+      <div style={row}>
+        <Button variant="fill">Save</Button>
+        <Button variant="fill" isDisabled>
+          Publish
+        </Button>
+      </div>
+      <div style={row}>
+        <Button>Save</Button>
+        <Button isDisabled>Publish</Button>
+      </div>
+    </Frame>
+  );
+}
+
+/** What a colour resolves to here, as a computed colour. */
+function resolvedColour(colour: string, within: Element): string {
+  const probe = document.createElement('span');
+  probe.style.color = colour.startsWith('--') ? `var(${colour})` : colour;
+  within.append(probe);
+  const value = getComputedStyle(probe).color;
+  probe.remove();
+  return value;
+}
+
+/**
+ * A computed colour's luminance, 0 to 1. Painted to a pixel and read back, so
+ * an oklch or a color() value is read as the sRGB it is drawn in.
+ */
+function luminance(colour: string): number {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1;
+  canvas.height = 1;
+  const context = canvas.getContext('2d', { willReadFrequently: true });
+  if (!context) throw new Error('no 2d context');
+  context.fillStyle = colour;
+  context.fillRect(0, 0, 1, 1);
+  const [r = 0, g = 0, b = 0] = context.getImageData(0, 0, 1, 1).data;
+  const lin = (c: number) => {
+    const v = c / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+/**
+ * A disabled fill stays reversed and dims its block (0118: no geometry): the
+ * block in fg.disabled, the words in bg.page. It reads without hue, as a
+ * lighter block than the enabled fill's, and it takes the same cells.
+ */
+export const DisabledFill: Story = {
+  name: 'Disabled fill',
+  render: () => <DisabledFills />,
+  play: async ({ canvas }) => {
+    await settled();
+    const [save, publish] = canvas
+      .getAllByRole('button')
+      .filter((b) => b.dataset.variant === 'fill');
+    if (!save || !publish) throw new Error('two fill buttons');
+    expect(publish).toBeDisabled();
+    const on = getComputedStyle(save);
+    const off = getComputedStyle(publish);
+    expect(off.backgroundColor).toBe(resolvedColour('--rk-fg-disabled', publish));
+    expect(off.color).toBe(resolvedColour('--rk-bg-page', publish));
+    // Still a block, and not the enabled one's: apart by luminance, not hue.
+    expect(off.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    expect(
+      Math.abs(luminance(off.backgroundColor) - luminance(on.backgroundColor)),
+    ).toBeGreaterThan(0.1);
+    // The same cells as the enabled fill and as the disabled default.
+    const frame = canvas.getByRole('group', { name: 'disabled' });
+    const rows = screenshot(frame, { legend: false }).split('\n');
+    expect(rows[1]).toBe(rows[2]);
+    expect(publish.getBoundingClientRect().height).toBe(save.getBoundingClientRect().height);
+  },
+};
+
+/** The same in dark mode: the dark palette's disabled colour behind its page colour. */
+export const DisabledFillDark: Story = {
+  name: 'Disabled fill, dark',
+  globals: { mode: 'dark' },
+  render: () => <DisabledFills />,
+  play: async ({ canvas }) => {
+    await settled();
+    const [save, publish] = canvas
+      .getAllByRole('button')
+      .filter((b) => b.dataset.variant === 'fill');
+    if (!save || !publish) throw new Error('two fill buttons');
+    const off = getComputedStyle(publish);
+    expect(off.backgroundColor).toBe(resolvedColour('--rk-fg-disabled', publish));
+    expect(off.color).toBe(resolvedColour('--rk-bg-page', publish));
+    expect(off.backgroundColor).not.toBe(getComputedStyle(save).backgroundColor);
+  },
+};
+
+/**
+ * Forced colors: an enabled fill is CanvasText behind Canvas, a disabled one
+ * GrayText behind Canvas, both over the backplate they opt out of.
+ */
+export const DisabledFillForced: Story = {
+  name: 'Disabled fill, forced colors',
+  tags: ['forced-colors'],
+  render: () => <DisabledFills />,
+  play: async ({ canvas }) => {
+    expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    await settled();
+    const [save, publish] = canvas
+      .getAllByRole('button')
+      .filter((b) => b.dataset.variant === 'fill');
+    if (!save || !publish) throw new Error('two fill buttons');
+    const on = getComputedStyle(save);
+    const off = getComputedStyle(publish);
+    expect(on.forcedColorAdjust).toBe('none');
+    expect(off.forcedColorAdjust).toBe('none');
+    expect(on.backgroundColor).toBe(resolvedColour('CanvasText', save));
+    expect(off.backgroundColor).toBe(resolvedColour('GrayText', publish));
+    expect(off.color).toBe(resolvedColour('Canvas', publish));
+  },
+};
+
 /**
  * Keyboard walkthrough: Tab reaches each button in turn and skips the
  * disabled one, Enter and Space both press, and a chord is drawn and announced
@@ -202,7 +327,7 @@ export const Keyboard: Story = {
     const discard = canvas.getByRole('button', { name: 'Discard' });
     const before = save.getBoundingClientRect();
 
-    await userEvent.tab();
+    await tab();
     expect(save).toHaveFocus();
     // Focus is only ever shown to the keyboard, as the ring, which costs no cell.
     expect(save.dataset.focusVisible).toBe('true');
@@ -217,14 +342,14 @@ export const Keyboard: Story = {
     );
 
     // Enter fires on the way down, Space on the way up: React Aria's onPress.
-    await userEvent.keyboard('{Enter}');
-    await userEvent.keyboard(' ');
+    await press('{Enter}');
+    await press(' ');
     await waitFor(() => expect(args.onPress).toHaveBeenCalledTimes(2));
 
     // The disabled button is not a stop.
-    await userEvent.tab();
+    await tab();
     expect(discard).toHaveFocus();
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(save).toHaveFocus();
   },
 };
@@ -367,7 +492,7 @@ export const StatesEverywhere: Story = {
 
     // Focus: Tab walks every enabled button, the ring shows, nothing moves.
     for (const button of buttons.filter((b) => !b.disabled)) {
-      await userEvent.tab();
+      await tab();
       expect(button).toHaveFocus();
       expect(button.dataset.focusVisible).toBe('true');
       expect(getComputedStyle(button).outlineStyle).toBe('solid');
