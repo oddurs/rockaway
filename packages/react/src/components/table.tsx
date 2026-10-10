@@ -75,7 +75,7 @@ import {
 import { cellsIn, measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { Chrome } from '../paint/chrome.tsx';
+import { Cells } from '../paint/render.tsx';
 import { type PainterName, Screen } from '../screen.tsx';
 import { watchOverflowMarks } from '../scroll.ts';
 import { scrollbarBuffer } from './list.pure.ts';
@@ -477,7 +477,7 @@ export function Table({
             className="rk-table-scrollbar"
             style={{ '--rk-table-bar-x': layout.width - 2 } as CSSProperties}
           >
-            <Chrome buffer={bar} />
+            <Cells buffer={bar} />
           </span>
         )}
       </Screen>

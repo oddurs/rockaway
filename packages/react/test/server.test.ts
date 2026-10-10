@@ -6,8 +6,8 @@ import { frameBuffer } from '../src/components/frame.pure.ts';
 import { Frame } from '../src/components/frame.tsx';
 import { KeyHint } from '../src/components/key-hint.tsx';
 import { List, ListItem } from '../src/components/list.tsx';
-import { Cells } from '../src/paint/render.tsx';
 import { Tab, TabList, TabPanel, Tabs } from '../src/components/tabs.tsx';
+import { Cells } from '../src/paint/render.tsx';
 import { Screen } from '../src/screen.tsx';
 
 /** The text of each painted row in some markup, entities decoded. */
