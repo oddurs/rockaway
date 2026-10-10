@@ -1,6 +1,7 @@
 import { Checkbox, CheckboxGroup, Form } from '@rockaway/react';
+import type { ReactNode } from 'react';
 
-export function Example() {
+export function Example(): ReactNode {
   return (
     <Form>
       <CheckboxGroup label="Branches" defaultValue={['main']} description="Where the hooks run.">

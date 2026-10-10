@@ -13,6 +13,7 @@ import { screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const FILES = [
@@ -247,7 +248,7 @@ export const AsText: Story = {
 
     // The keyboard comes in on the selected row: now it has the cursor too.
     await userEvent.click(row(single, 'src/index.ts'));
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() =>
       expect(inside(single, 20)).toBe(
         drawn(
@@ -306,7 +307,7 @@ export const CursorAndSelection: Story = {
     expect(getComputedStyle(buffer).color).toBe(ground);
 
     // Both: the cursor mark, the check, and reverse video.
-    await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+    await press('{ArrowDown}{ArrowDown}');
     await waitFor(() => expect(junction.dataset.focused).toBe('true'));
     expect(markOf(junction, 'cursor')).not.toBe(' ');
     expect(markOf(junction, 'check')).not.toBe(' ');
@@ -351,35 +352,35 @@ export const Keyboard: Story = {
         (l) => l.textContent ?? '',
       );
 
-    await userEvent.tab();
+    await tab();
     await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() => expect(cursorOn()).toBe('src/buffer.ts'));
     expect(chosen()).toEqual([]);
 
-    await userEvent.keyboard(' ');
+    await press(' ');
     await waitFor(() => expect(chosen()).toEqual(['src/buffer.ts']));
     expect(markOf(row(frame, 'src/buffer.ts'), 'check')).not.toBe(' ');
 
-    await userEvent.keyboard('{Shift>}{ArrowDown}{/Shift}');
+    await press('{Shift>}{ArrowDown}{/Shift}');
     await waitFor(() => expect(chosen()).toEqual(['src/buffer.ts', 'src/junction.ts']));
 
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(chosen()).toEqual([]));
 
-    await userEvent.keyboard(`{${MOD}>}a{/${MOD}}`);
+    await press(`{${MOD}>}a{/${MOD}}`);
     await waitFor(() => expect(chosen()).toHaveLength(FILES.length));
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
 
-    await userEvent.keyboard('{End}');
+    await press('{End}');
     await waitFor(() => expect(cursorOn()).toBe('biome.json'));
-    await userEvent.keyboard('{Home}');
+    await press('{Home}');
     await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
     expect(box.scrollTop).toBe(0);
-    await userEvent.keyboard('{PageDown}');
+    await press('{PageDown}');
     await waitFor(() => expect(cursorOn()).not.toBe('src/index.ts'));
 
-    await userEvent.keyboard('rea');
+    await press('rea');
     await waitFor(() => expect(cursorOn()).toBe('README.md'));
 
     // Wherever the keyboard took it, the list stopped on a whole row.
@@ -482,9 +483,9 @@ export const Disabled: Story = {
 
     const cursorOn = (): string =>
       frame.querySelector('[role="option"][data-focused] .rk-list-label')?.textContent ?? '(none)';
-    await userEvent.tab();
+    await tab();
     await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() => expect(cursorOn()).toBe('src/junction.ts'));
   },
 };
@@ -518,7 +519,7 @@ export const DisabledAndSelected: Story = {
     const cursorOn = (): string =>
       box.querySelector('[role="option"][data-focused] .rk-list-label')?.textContent ?? '(none)';
 
-    await userEvent.tab();
+    await tab();
     await waitFor(() => expect(box).toHaveFocus());
     expect(cursorOn()).toBe('(none)');
     // The focus is on the list, and it shows.
@@ -526,11 +527,11 @@ export const DisabledAndSelected: Story = {
     expect(getComputedStyle(box).outlineStyle).toBe('solid');
 
     // The first arrow enters the rows; the ring gives way to the cursor.
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
     expect(getComputedStyle(box).outlineStyle).toBe('none');
     // And the next steps over the disabled row.
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() => expect(cursorOn()).toBe('src/junction.ts'));
   },
 };
@@ -568,7 +569,7 @@ export const Empty: Story = {
     // With no rows to put the cursor on, the list itself holds focus, and
     // shows it with the focus ring (0184).
     const nothing = canvas.getByRole('listbox', { name: 'Nothing' });
-    await userEvent.tab();
+    await tab();
     await waitFor(() => expect(nothing).toHaveFocus());
     expect(getComputedStyle(nothing).outlineStyle).toBe('solid');
   },

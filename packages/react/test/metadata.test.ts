@@ -280,6 +280,18 @@ describe('every component has metadata', () => {
     expect(Object.keys(FIXTURES).sort()).toEqual(registry.map(({ file }) => file).sort());
   });
 
+  // The component as a reader first meets it, `<name>.example.tsx`: the
+  // site's page shows it, and the workbench's kitchen sink finds it and lays
+  // it out with every other (0064). Beside the component, so a new one brings
+  // its own and edits no list.
+  test('every component has an example beside it, and every example a component', () => {
+    const examples = readdirSync(componentsDir)
+      .filter((file) => file.endsWith('.example.tsx'))
+      .map((file) => file.replace(/\.example\.tsx$/, ''))
+      .sort();
+    expect(examples).toEqual(registry.map(({ file }) => file).sort());
+  });
+
   test('the extracted props and tokens are up to date', () => {
     const written = readFileSync(path.join(packageRoot, 'src/metadata/extracted.ts'), 'utf8');
     // Regenerate with `pnpm --filter @rockaway/react metadata`.
