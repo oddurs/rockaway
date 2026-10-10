@@ -15,8 +15,14 @@ import { measure } from '../scripts/sizes.ts';
 import { checkPage, servePackageFile } from './checks.ts';
 
 const out = path.join(import.meta.dirname, '..', 'out');
-const components = (meta as { components: { name: string; snapshots: { text: string }[] }[] })
-  .components;
+const components = (
+  meta as {
+    components: {
+      name: string;
+      snapshots: { text: string; themes?: Record<string, string> }[];
+    }[];
+  }
+).components;
 const slugOf = (name: string): string => name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
 let browser: Browser;
@@ -188,12 +194,14 @@ describe('with no script', () => {
     for (const component of components) {
       await page.goto(`${site.url}components/${slugOf(component.name)}/`);
       const found = await page.evaluate(() => ({
-        painted: [...document.querySelectorAll('figure[role="img"] [data-rk-painted]')].map(
-          (layer) =>
+        // The drawing the page's theme shows (0171): each other theme's is there, hidden.
+        painted: [...document.querySelectorAll('figure[role="img"] [data-rk-painted]')]
+          .filter((layer) => layer.checkVisibility())
+          .map((layer) =>
             [...layer.querySelectorAll('.rk-row')]
               .map((row) => row.textContent?.trimEnd())
               .join('\n'),
-        ),
+          ),
         // In place, or, for an example larger than React's progressive chunk,
         // written after the page for a script to move in: with no script
         // that one is not seen (the follow-up the handoff names).
@@ -201,7 +209,8 @@ describe('with no script', () => {
           (document.querySelector('[data-site-deferred]')?.textContent ?? '').trim() ||
           (document.querySelector('div[hidden][id^="S:"]')?.textContent ?? '').trim(),
       }));
-      const want = component.snapshots.map((s) => trimmed(s.text));
+      // In the site's own theme, which the page with no script is drawn in.
+      const want = component.snapshots.map((s) => trimmed(s.themes?.sunset ?? s.text));
       if (JSON.stringify(found.painted) !== JSON.stringify(want)) {
         failures.push(`${component.name}: snapshots differ`);
       }

@@ -5,12 +5,13 @@
  */
 import { fromText, shapeOf } from '@rockaway/grid';
 import { formatKeys, spokenKeys } from '@rockaway/react';
-import type { ComponentMeta } from '@rockaway/react/metadata';
+import type { ComponentMeta, Snapshot } from '@rockaway/react/metadata';
 import { componentNamed, inline, slugOf, tokenAnchor } from './components.ts';
 import { escapeHtml } from './html.ts';
 import { columnCells } from './markdown.ts';
 import { paintedRows } from './painted.ts';
 import { BASE } from './paths.ts';
+import { drawings } from './snapshots.ts';
 
 export interface Column {
   readonly label: string;
@@ -80,12 +81,28 @@ const componentLink = (name: string): string =>
 const keys = (spec: string): string =>
   `<kbd aria-label="${escapeHtml(spokenKeys(spec))}">${escapeHtml(formatKeys(spec))}</kbd>`;
 
+/**
+ * A snapshot in the reader's theme (0171): painted once per drawing, each
+ * marked with the themes that draw it, and `tokens.css` shows the reader's.
+ * One that every theme draws alike is painted once, unmarked.
+ */
+function themed(snapshot: Snapshot, label: string): string {
+  const all = drawings(snapshot);
+  if (all.length === 1) return paintedHtml(snapshot.text, label);
+  return all
+    .map(
+      (drawing) =>
+        `<div data-rk-theme-only="${drawing.themes.join(' ')}">${paintedHtml(drawing.text, label)}</div>`,
+    )
+    .join('');
+}
+
 /** The page above the example: its name, what it is, its snapshots. */
 export function headHtml(meta: ComponentMeta): string {
   const snapshots = meta.snapshots
     .map(
       (s) =>
-        `<p><strong>${escapeHtml(s.title)}.</strong> ${s.description ? inline(s.description) : ''}</p>${paintedHtml(s.text, `${meta.name}, ${s.title}, as text`)}`,
+        `<p><strong>${escapeHtml(s.title)}.</strong> ${s.description ? inline(s.description) : ''}</p>${themed(s, `${meta.name}, ${s.title}, as text`)}`,
     )
     .join('');
   return `<h1>${escapeHtml(meta.name)}</h1><p>${inline(meta.summary)}</p>${snapshots}<p>${inline(meta.description)}</p><h2 id="example">Example</h2>`;
