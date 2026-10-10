@@ -73,7 +73,7 @@ function control(
 /** A one-field form's model: the label column, and the combobox in the control column. */
 function model(text: Omit<ComboBoxText, 'cols' | 'options'>, glyphs = themeGlyphs.default): string {
   const fields: FieldText[] = [{ label: 'Author', control: control(text, glyphs) }];
-  return toText(formBuffer(fields, { width: WIDE - 4 }));
+  return toText(formBuffer(fields, { comfort: 'compact', width: WIDE - 4 }));
 }
 
 /** The inside of a frame's screenshot: its rows and columns within the border and the pad. */
@@ -125,7 +125,7 @@ const box = (el: Element): readonly number[] => {
 export const Closed: Story = {
   render: () => (
     <Frame title="closed" cols={WIDE} rows={5}>
-      <Form>
+      <Form comfort="compact">
         <Authors />
         <Authors label="Editor" defaultSelectedKey="grace" />
       </Form>
@@ -138,7 +138,7 @@ export const Closed: Story = {
       { label: 'Author', control: control({ placeholder: 'Find an author' }) },
       { label: 'Editor', control: control({ input: 'Grace Hopper' }) },
     ];
-    expect(inside(frame)).toBe(toText(formBuffer(fields, { width: WIDE - 4 })));
+    expect(inside(frame)).toBe(toText(formBuffer(fields, { comfort: 'compact', width: WIDE - 4 })));
     // What the boxes hold, which a screenshot cannot read.
     expect(canvas.getByRole('combobox', { name: 'Author' })).toHaveAttribute(
       'placeholder',
@@ -166,7 +166,7 @@ export const Closed: Story = {
 export const Keyboard: Story = {
   render: () => (
     <Frame title="keyboard" cols={WIDE} rows={9}>
-      <Form>
+      <Form comfort="compact">
         <Authors />
         <Button>after</Button>
       </Form>
@@ -223,7 +223,7 @@ export const NothingMatches: Story = {
   name: 'Nothing matches',
   render: () => (
     <Frame title="none" cols={WIDE} rows={7}>
-      <Form>
+      <Form comfort="compact">
         <Authors />
       </Form>
     </Frame>
@@ -253,7 +253,7 @@ export const OpenButton: Story = {
   render: () => (
     <div data-density="touch">
       <Frame title="button" cols={WIDE} rows={3}>
-        <Form>
+        <Form comfort="compact">
           <Authors defaultSelectedKey="grace" />
         </Form>
       </Frame>
@@ -371,7 +371,7 @@ export const CustomValue: Story = {
 export const Disabled: Story = {
   render: () => (
     <Frame title="disabled" cols={WIDE} rows={3}>
-      <Form>
+      <Form comfort="compact">
         <Authors defaultSelectedKey="ada" isDisabled />
       </Form>
     </Frame>
@@ -392,7 +392,7 @@ function painted(painter: 'glyph' | 'rule'): Story {
   return {
     render: () => (
       <Frame title={painter} painter={painter} cols={WIDE} rows={9}>
-        <Form>
+        <Form comfort="compact">
           <Authors />
         </Form>
       </Frame>
@@ -420,7 +420,7 @@ export const Zoom: Story = {
   tags: ['zoom'],
   render: () => (
     <Frame title="zoom" cols={WIDE} rows={3}>
-      <Form>
+      <Form comfort="compact">
         <Authors defaultSelectedKey="laurent" />
       </Form>
     </Frame>
@@ -436,7 +436,7 @@ export const Ascii: Story = {
   render: () => (
     <GlyphProvider glyphs={glyphsFor({ borderSet: 'ascii' })}>
       <Frame title="ascii" cols={WIDE} rows={3}>
-        <Form>
+        <Form comfort="compact">
           <Authors defaultSelectedKey="ada" />
         </Form>
       </Frame>
@@ -456,7 +456,7 @@ export const Dark: Story = {
   globals: { mode: 'dark' },
   render: () => (
     <Frame title="dark" cols={WIDE} rows={9}>
-      <Form>
+      <Form comfort="compact">
         <Authors />
       </Form>
     </Frame>
@@ -484,7 +484,7 @@ export const ForcedColors: Story = {
   tags: ['forced-colors'],
   render: () => (
     <Frame title="forced" cols={WIDE} rows={9}>
-      <Form>
+      <Form comfort="compact">
         <Authors />
       </Form>
     </Frame>
@@ -509,7 +509,7 @@ export const Strict: Story = {
   globals: { conformance: 'strict' },
   render: () => (
     <Frame title="strict" cols={WIDE} rows={9}>
-      <Form>
+      <Form comfort="compact">
         <Authors />
       </Form>
     </Frame>
