@@ -5,18 +5,11 @@ import { VisuallyHidden } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { type Platform, usePlatform } from '../platform.ts';
+import type { KeyNotation } from './key-hint.pure.ts';
 import { formatKeys, spokenKeys } from './key-hint.pure.ts';
 
 export type { Platform } from '../platform.ts';
-export type KeyNotation = 'platform' | 'terminal';
-
-export interface KeySpec {
-  readonly ctrl: boolean;
-  readonly alt: boolean;
-  readonly shift: boolean;
-  readonly meta: boolean;
-  readonly key: string;
-}
+export type { KeyNotation, KeySpec } from './key-hint.pure.ts';
 
 export interface KeyHintProps {
   /** `mod+s`, `ctrl+shift+k`, `esc`. `mod` follows the keyboard. */
