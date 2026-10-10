@@ -1229,6 +1229,22 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Popover": {
+    "file": "popover.tsx",
+    "props": [
+      {
+        "name": "minCols",
+        "type": "number | 'trigger'",
+        "required": false,
+        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width in whole cells, or a count. `0` lets it be as narrow as what it holds.\n @default 'trigger'",
+        "default": "'trigger'"
+      }
+    ],
+    "inherits": [
+      "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
+    ],
+    "tokens": []
+  },
   "Row": {
     "file": "table.tsx",
     "props": [
@@ -1262,6 +1278,106 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
+    ]
+  },
+  "Select": {
+    "file": "select.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The field's name, in the label column."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | ((item: T) => ReactNode)",
+        "required": false,
+        "description": "The options: `SelectItem`s, or a function of each of `items`."
+      },
+      {
+        "name": "items",
+        "type": "Iterable<T>",
+        "required": false,
+        "description": "The items to render with a function child."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The trigger's width in cells, its delimiters included.",
+        "default": "24"
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help under the trigger, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
+        "required": false,
+        "description": "Words for the error under the trigger; the select's own validation's when not given."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the popover takes before its rows scroll.",
+        "default": "8"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaSelectProps<T>, 'children' | 'className' | 'style' | 'selectionMode'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "SelectItem": {
+    "file": "select.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The option's words."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
     ]
   },
   "Table": {
