@@ -17,6 +17,12 @@ Resolver.
 | `conformance` | `strict`, `standard`, `loose` |
 | `weights` (optional) | Any of `emphasis`, `raised`, `modal`, each a border set |
 
+The default is set in IBM Plex Mono (`ibm-plex`), and so is every preset and
+imported theme: a face with a true italic, so emphasis and comments are never
+a slant the browser fakes. The tokens name the family; the app loads the font,
+its italic included, for example from `@fontsource/ibm-plex-mono`. Until it
+arrives the stack falls back to the system's monospace.
+
 The others under `themes/` are presets, and `themes/terminal/` holds imported
 terminal palettes, each with its source and its licence beside it.
 `themeContexts` lists every theme with the modes it declares; `themes` and

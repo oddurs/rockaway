@@ -154,15 +154,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { project: storybook, shard: 1/4 }
-          - { project: storybook, shard: 2/4 }
-          - { project: storybook, shard: 3/4 }
-          - { project: storybook, shard: 4/4 }
-          - { project: p3, shard: 1/2 }
-          - { project: p3, shard: 2/2 }
-          - { project: forced-colors, shard: 1/1 }
-          - { project: zoom, shard: 1/1 }
-          - { project: classic-scrollbars, shard: 1/1 }
+          - { project: storybook, shard: 1/4, browser: chromium }
+          - { project: storybook, shard: 2/4, browser: chromium }
+          - { project: storybook, shard: 3/4, browser: chromium }
+          - { project: storybook, shard: 4/4, browser: chromium }
+          - { project: p3, shard: 1/2, browser: chromium }
+          - { project: p3, shard: 2/2, browser: chromium }
+          - { project: forced-colors, shard: 1/1, browser: chromium }
+          - { project: zoom, shard: 1/1, browser: chromium }
+          - { project: classic-scrollbars, shard: 1/1, browser: chromium }
+          # Every story again in Firefox and WebKit (cairn 0124): the cell is
+          # `1ch` by `1lh`, which is exactly where engines differ.
+          - { project: firefox, shard: 1/2, browser: firefox }
+          - { project: firefox, shard: 2/2, browser: firefox }
+          - { project: webkit, shard: 1/2, browser: webkit }
+          - { project: webkit, shard: 2/2, browser: webkit }
+          - { project: forced-colors-firefox, shard: 1/1, browser: firefox }
     steps:
       - uses: actions/checkout@v7
 
@@ -171,7 +178,12 @@ jobs:
       - name: Build the packages the workbench imports
         run: pnpm -r --filter './packages/*' build
 
-      - uses: ./.github/actions/playwright
+      - if: matrix.browser == 'chromium'
+        uses: ./.github/actions/playwright
+
+      - if: matrix.browser != 'chromium'
+        name: Install ${{ matrix.browser }}
+        run: pnpm --filter workbench exec playwright install --with-deps ${{ matrix.browser }}
 
       - name: Stories in Vitest browser mode with axe
         run: >-
