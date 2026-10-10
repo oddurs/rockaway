@@ -779,6 +779,9 @@ export const LinkWithoutScript: Story = {
     // The server's links are the framework's, so they hydrate into it.
     expect(through.querySelector('a')?.hasAttribute('data-framework')).toBe(true);
   },
+};
+
+/**
  * Held to `strict` (rule 7): every box in whole cells, drawn by the glyph
  * painter. The check after the story is the test, at every density and in
  * both modes, and this story is what lets the metadata say Link holds
