@@ -162,6 +162,7 @@
     --rk-glyph-mark-radio: "*";
     --rk-glyph-mark-radio-empty: "o";
     --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-separator: ">";
     --rk-glyph-mark-sort-ascending: "^";
     --rk-glyph-mark-sort-descending: "v";
     --rk-glyph-mark-switch-thumb: "O";
