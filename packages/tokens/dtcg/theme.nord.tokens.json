@@ -1130,6 +1130,9 @@
       },
       "external": {
         "$value": "↗"
+      },
+      "separator": {
+        "$value": "›"
       }
     },
     "block": {

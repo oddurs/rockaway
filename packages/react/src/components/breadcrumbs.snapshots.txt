@@ -1,0 +1,4 @@
+── A path
+rockaway › docs › components › Breadcrumbs
+── Folded
+rockaway › … › Breadcrumbs
