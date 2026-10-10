@@ -127,4 +127,11 @@ export const panesMeta: ComponentMetaInput = defineMeta({
       })(),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one pane, with no title, at the least room its border needs.
+    min: cells(3, 3, { panes: [{}] }),
+    // Three panes, one split again, at the size its first snapshot draws.
+    default: cells(48, 8, THREE),
+  },
 });
