@@ -23,7 +23,7 @@ import {
   type SortColumn,
   type SortDirection,
   sortOrder,
-} from './data.ts';
+} from './top-data.ts';
 
 /** Under this many cells across, one meter of each, and three columns. */
 const NARROW = 60;

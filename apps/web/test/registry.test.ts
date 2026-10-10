@@ -63,6 +63,19 @@ describe.each(items.map((item) => [item.name, item] as const))('%s', (name, item
   });
 });
 
+test('no two items have a file of the same name, since shadcn puts them in one directory', () => {
+  const seen = new Map<string, string>();
+  const clashes: string[] = [];
+  for (const item of items) {
+    for (const { name } of filesOf(item.name)) {
+      const before = seen.get(name);
+      if (before !== undefined) clashes.push(`${name}: ${before} and ${item.name}`);
+      seen.set(name, item.name);
+    }
+  }
+  expect(clashes).toEqual([]);
+});
+
 test('the index lists every item, with its files but not their content', () => {
   const index = registryIndex(
     'https://example.test/',

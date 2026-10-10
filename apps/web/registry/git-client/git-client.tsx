@@ -24,7 +24,7 @@ import {
   roleOf,
   stageOnly,
   toggleStaged,
-} from './data.ts';
+} from './git-client-data.ts';
 
 /** Under this many cells across, one pane at a time, in tabs. */
 const NARROW = 60;

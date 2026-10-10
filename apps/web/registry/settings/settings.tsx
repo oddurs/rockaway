@@ -31,7 +31,7 @@ import {
   SAVED,
   save,
   type Settings as Values,
-} from './data.ts';
+} from './settings-data.ts';
 
 export interface SettingsProps {
   /** What the account holds now. */

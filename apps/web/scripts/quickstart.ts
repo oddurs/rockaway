@@ -231,10 +231,16 @@ async function readScreen(url: string, modules: string): Promise<string> {
 }
 
 /**
- * Every screen on a page that is not inside another, read back as text, once
- * `count` frames have painted.
+ * Each named registry item's screens, read back as text: every screen in its
+ * `[data-registry-item]` section that is not inside another, once each named
+ * section has rendered and its screens have painted. An item that draws none
+ * reads as empty.
  */
-async function readScreens(url: string, modules: string, count: number): Promise<string[]> {
+async function readScreens(
+  url: string,
+  modules: string,
+  names: readonly string[],
+): Promise<string[]> {
   const browser = await chromium.launch();
   try {
     const page = await browser.newPage();
@@ -250,11 +256,18 @@ async function readScreens(url: string, modules: string, count: number): Promise
     );
     await page.goto(url);
     await page.waitForFunction(
-      (n) =>
-        (document.querySelector('#content') ?? document).querySelectorAll(
-          '.rk-screen:not(.site-chrome) > .rk-frame[data-rk-painted]',
-        ).length >= n,
-      count,
+      (wanted) =>
+        wanted.every((name) => {
+          // Rendered, and every screen in it painted: an item that is only a
+          // trigger draws no screen until it is opened.
+          const section = document.querySelector(`[data-registry-item="${name}"]`);
+          const screens = [...(section?.querySelectorAll('.rk-screen') ?? [])];
+          return (
+            (section?.querySelector('*') ?? null) !== null &&
+            screens.every((screen) => screen.querySelector(':scope > .rk-frame[data-rk-painted]'))
+          );
+        }),
+      names,
     );
     // On the site, each item comes alive as it nears the view: read it live,
     // as the app's is, so both draw the reader's keyboard and glyphs.
@@ -267,16 +280,25 @@ async function readScreens(url: string, modules: string, count: number): Promise
       }
       await new Promise((done) => setTimeout(done, 1000));
     });
-    const texts = await page.evaluate(async (from) => {
-      const { screenshot } = await import(
-        `${from}/node_modules/@rockaway/react/dist/testing/index.js`
-      );
-      // The page's screens, not the site's own chrome round them.
-      const from_ = document.querySelector('#content') ?? document;
-      return [...from_.querySelectorAll<HTMLElement>('.rk-screen:not(.site-chrome)')]
-        .filter((screen) => !screen.parentElement?.closest('.rk-screen'))
-        .map((screen) => screenshot(screen, { legend: false }) as string);
-    }, modules);
+    const texts = await page.evaluate(
+      async ({ from, wanted }) => {
+        const { screenshot } = await import(
+          `${from}/node_modules/@rockaway/react/dist/testing/index.js`
+        );
+        // Each item's own screens, not the site's chrome round them.
+        return wanted.map((name) =>
+          [
+            ...(document
+              .querySelector(`[data-registry-item="${name}"]`)
+              ?.querySelectorAll<HTMLElement>('.rk-screen') ?? []),
+          ]
+            .filter((screen) => !screen.parentElement?.closest('.rk-screen'))
+            .map((screen) => screenshot(screen, { legend: false }) as string)
+            .join('\n'),
+        );
+      },
+      { from: modules, wanted: names },
+    );
     if (errors.length > 0) throw new Error(`the page threw:\n  ${errors.join('\n  ')}`);
     return texts;
   } finally {
@@ -379,7 +401,10 @@ async function proveRegistry(work: string, tarballs: string[], guideText: string
       'export function App() {',
       '  return (',
       '    <>',
-      ...items.map((item) => `      <${item.component} />`),
+      ...items.map(
+        (item) =>
+          `      <section data-registry-item="${item.name}"><${item.component} /></section>`,
+      ),
       '    </>',
       '  );',
       '}',
@@ -390,19 +415,29 @@ async function proveRegistry(work: string, tarballs: string[], guideText: string
 
     modules = await serve(dir, dir);
     page = await serve(path.join(dir, 'dist'), dir);
-    const got = await readScreens(address(page), address(modules), items.length);
+    // A composition is a fixed size, so it draws cell for cell what the
+    // registry page draws. An example app (0151) fills the width it is given
+    // and is live, so it is held to drawing at all, with no error.
+    const fixed = items.filter((item) => item.example !== true).map((item) => item.name);
+    const apps = items.filter((item) => item.example === true).map((item) => item.name);
+    const got = await readScreens(address(page), address(modules), fixed);
     const want = await readScreens(
       `${address(site)}${DEFAULT_BASE}registry/`,
       address(modules),
-      items.length,
+      fixed,
     );
-    if (got.length !== items.length || got.join('\n\n') !== want.join('\n\n')) {
+    if (got.join('\n\n') !== want.join('\n\n')) {
       throw new Error(
         `registry: the copied items do not draw what the registry page draws.\n\n` +
           `site:\n${want.join('\n\n')}\n\napp:\n${got.join('\n\n')}`,
       );
     }
-    console.log(`\nregistry: ${items.length} items copied in, drawn as on the site\n`);
+    const live = await readScreens(address(page), address(modules), apps);
+    const blank = apps.filter((_, i) => (live[i] ?? '').trim() === '');
+    if (blank.length > 0) throw new Error(`registry: ${blank.join(', ')} drew nothing`);
+    console.log(
+      `\nregistry: ${items.length} items copied in; ${fixed.length} drawn as on the site, ${apps.length} apps drawn\n`,
+    );
     console.log(got.join('\n\n'));
   } finally {
     page?.close();
