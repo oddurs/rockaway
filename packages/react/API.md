@@ -953,4 +953,4 @@ Variants, and the states each component draws.
 
 - Tooltip: none
 
-- Tree: `[data-hovered]`, `[data-focused]`, `[data-selected]`, `[data-expanded]`, `[data-disabled]`
+- Tree: `:focus-visible`, `[data-focus-visible]`, `[data-hovered]`, `[data-focused]`, `[data-selected]`, `[data-expanded]`, `[data-disabled]`

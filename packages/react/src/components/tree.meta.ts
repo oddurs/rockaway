@@ -86,6 +86,11 @@ export const treeMeta: ComponentMetaInput = defineMeta({
     },
   ],
   states: [
+    {
+      state: 'focus-unframed',
+      part: 'Tree',
+      note: 'Only while the tree itself holds focus with no row under the cursor, as List’s does. Once a row has focus, the cursor shows it.',
+    },
     { state: 'hover', part: 'TreeItem' },
     {
       state: 'cursor',

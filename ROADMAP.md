@@ -131,7 +131,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`########··` 73% · 131 of 180 done · due 2027-01-31
+`########··` 73% · 132 of 180 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -139,7 +139,6 @@ The component contract, proven on a first set of components.
 
 - [ ] [`0044`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p1</sup>
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
-- [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0169`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0169-give-inline-controls-a-full-cell-hit-area-and-ground.md) Give inline controls a full-cell hit area and ground <sup>feature · css · p3</sup>
 - [ ] [`0179`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0179-namespace-every-context-attribute-as-data-rk.md) Namespace every context attribute as data-rk-* <sup>decision · css · p1</sup>
 - [ ] [`0180`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0180-rename-the-context-attributes-to-data-rk-and-fail-on-the-old-ones.md) Rename the context attributes to data-rk-*, and fail on the old ones <sup>chore · css · p1</sup>
@@ -250,6 +249,7 @@ The component contract, proven on a first set of components.
 - [x] [`0139`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0139-badge.md) Badge <sup>component · components · p2</sup>
 - [x] [`0140`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0140-callout.md) Callout <sup>component · components · p2</sup>
 - [x] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
+- [x] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [x] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
 - [x] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
@@ -411,7 +411,7 @@ A website built out of the system it documents, which is the only honest way
 
 ## v0.1 — v0.1 — first release
 
-`#####·····` 43% · 9 of 21 done · due 2027-03-21
+`#####·····` 41% · 9 of 22 done · due 2027-03-21
 
 Something another project can install and build on.
 
@@ -426,6 +426,7 @@ Something another project can install and build on.
 - [ ] [`0344`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0344-audit-single-probe-measurements-for-the-1-64px-bias.md) Audit single-probe measurements for the 1/64px bias <sup>chore · grid · p2</sup>
 - [ ] [`0346`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0346-pin-text-rendering-geometricprecision-on-buttons-and-fields.md) Pin text-rendering: geometricPrecision on buttons and fields <sup>chore · css · p3</sup>
 - [ ] [`0353`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0353-hold-the-components-that-landed-since-0289-at-strict-or-declare-standard.md) Hold the components that landed since 0289 at strict, or declare standard <sup>chore · components · p2</sup>
+- [ ] [`0354`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0354-design-pass-over-the-components-that-landed-after-0142.md) Design pass over the components that landed after 0142 <sup>chore · components · p1</sup>
 
 ### ready
 
