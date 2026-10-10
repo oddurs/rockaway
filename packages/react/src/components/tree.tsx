@@ -27,22 +27,34 @@
  *
  * Behaviour is React Aria's `Tree`: arrows move, right expands, left collapses
  * or goes to the parent, Home and End, type-ahead, and `href` items that
- * navigate on Enter or a press. The expand mark is React Aria's chevron button,
+ * navigate on Enter or a press. `disallowTypeAhead` gives the printable keys
+ * back to the page, for a tree that sits in a keymap of single-letter
+ * shortcuts (0278); `onFocusedKeyChange` says which row has focus. The expand mark is React Aria's chevron button,
  * so pressing it expands the row and never follows its link. Guides and marks
  * are `aria-hidden`; the level, the expanded state and the position in the set
  * are the treegrid's to announce.
  */
 import type { Buffer } from '@rockaway/grid';
-import { type CSSProperties, createContext, type ReactNode, useContext } from 'react';
+import {
+  type CSSProperties,
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import {
   Tree as AriaTree,
   TreeItem as AriaTreeItem,
   type TreeItemProps as AriaTreeItemProps,
   type TreeProps as AriaTreeProps,
   Button,
+  type Key,
   TreeItemContent,
   type TreeItemContentRenderProps,
 } from 'react-aria-components';
+import { useCut } from '../cut.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { rowRuns, type StrokeStyle } from '../paint/cells.ts';
@@ -54,25 +66,91 @@ const Strokes = createContext<StrokeStyle>('glyph');
 export interface TreeProps<T extends object> extends Omit<AriaTreeProps<T>, 'className' | 'style'> {
   /** How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in. */
   readonly painter?: StrokeStyle;
+  /**
+   * No type-ahead: a printable key moves nothing, and reaches the page, for
+   * a tree beside single-letter shortcuts (`j`, `k`, `/`). The arrows, Home
+   * and End still move. React Aria's own option, which its GridList offers
+   * and its Tree honours.
+   */
+  readonly disallowTypeAhead?: boolean;
+  /**
+   * Called with the row that has focus whenever it changes, and with `null`
+   * when focus leaves the tree: what a keymap beside the tree acts on, or
+   * what a status bar shows.
+   */
+  readonly onFocusedKeyChange?: (key: Key | null) => void;
   readonly className?: string;
   readonly style?: CSSProperties;
 }
 
+/**
+ * Where the rows report their focus, and the row last reported. A row knows
+ * it has focus from React Aria's render props; the tree does not, so the
+ * rows tell it.
+ */
+interface Focus {
+  readonly report: (key: Key, focused: boolean) => void;
+}
+const FocusReport = createContext<Focus | null>(null);
+
 export function Tree<T extends object>({
   painter = 'glyph',
+  disallowTypeAhead,
+  onFocusedKeyChange,
   className,
   style,
   ...tree
 }: TreeProps<T>): ReactNode {
+  // The latest callback, so a new one each render does not re-report.
+  const callback = useRef(onFocusedKeyChange);
+  callback.current = onFocusedKeyChange;
+  const focus = useMemo<Focus>(() => {
+    let current: Key | null = null;
+    return {
+      report: (key, focused) => {
+        if (focused) {
+          if (current === key) return;
+          current = key;
+          callback.current?.(key);
+          return;
+        }
+        // A row losing focus may only be the moment before the next row gains
+        // it: wait for that, and report null only if nothing did.
+        if (current !== key) return;
+        queueMicrotask(() => {
+          if (current !== key) return;
+          current = null;
+          callback.current?.(null);
+        });
+      },
+    };
+  }, []);
   return (
     <Strokes.Provider value={painter}>
-      <AriaTree
-        {...tree}
-        className={cx('rk-tree', className)}
-        {...(style === undefined ? {} : { style })}
-      />
+      <FocusReport.Provider value={onFocusedKeyChange === undefined ? null : focus}>
+        <AriaTree
+          {...tree}
+          // React Aria's Tree honours this through the grid list it is built
+          // on, as its GridList does, but its props do not declare it.
+          {...((disallowTypeAhead === undefined ? {} : { disallowTypeAhead }) as object)}
+          className={cx('rk-tree', className)}
+          {...(style === undefined ? {} : { style })}
+        />
+      </FocusReport.Provider>
     </Strokes.Provider>
   );
+}
+
+/** Tells the tree when this row gains or loses focus, from React Aria's render props. */
+function ReportFocus({ id, isFocused }: { id: Key; isFocused: boolean }): null {
+  const focus = useContext(FocusReport);
+  const was = useRef(false);
+  useEffect(() => {
+    if (focus === null || was.current === isFocused) return;
+    was.current = isFocused;
+    focus.report(id, isFocused);
+  }, [focus, id, isFocused]);
+  return null;
 }
 
 /** A row's place in the collection: its level, and which of it and its ancestors are last. */
@@ -121,6 +199,20 @@ function Guides({ buffer }: { buffer: Buffer }): ReactNode {
   );
 }
 
+/**
+ * A row's label: its whole title, cut to the row in the theme's ellipsis when
+ * it does not fit (0231), as `treeBuffer` cuts it.
+ */
+function Label({ title, ellipsis }: { title: string; ellipsis: string }): ReactNode {
+  const label = useRef<HTMLSpanElement>(null);
+  useCut(label, title);
+  return (
+    <span ref={label} className="rk-tree-label" data-rk-ellipsis={ellipsis}>
+      <span className="rk-tree-text">{title}</span>
+    </span>
+  );
+}
+
 export interface TreeItemProps<T extends object>
   extends Omit<AriaTreeItemProps<T>, 'className' | 'children' | 'textValue'> {
   /** The row's label, and the text type-ahead matches. */
@@ -164,6 +256,7 @@ export function TreeItem<T extends object>({
           const mark = treeExpandMark(!leaf, render.isExpanded, glyphs);
           return (
             <>
+              <ReportFocus id={render.id} isFocused={render.isFocused} />
               <span aria-hidden="true" className="rk-tree-mark rk-tree-cursor">
                 {cursor}
               </span>
@@ -183,7 +276,7 @@ export function TreeItem<T extends object>({
                 <span aria-hidden="true" className="rk-tree-mark" />
               ) : null}
               <span aria-hidden="true" className="rk-tree-mark" />
-              <span className="rk-tree-label">{title}</span>
+              <Label title={title} ellipsis={glyphs.mark.ellipsis} />
             </>
           );
         }}

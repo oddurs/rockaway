@@ -4,12 +4,15 @@
 #   blue: #268bd2 -> #41a1ea
 #   cyan: #2aa198 -> #39aca3
 #   green: #859900 -> #92a722
-#   bright-green: #586e75 -> #7b9299
+#   bright-green: #586e75 -> #b0c8d0
 #   yellow: #b58900 -> #c39722
-#   bright-yellow: #657b83 -> #7b919a
+#   bright-yellow: #657b83 -> #b0c8d1
 #   red: #dc322f -> #ff796c
-#   bright-red: #cb4b16 -> #e76536
+#   bright-red: #cb4b16 -> #ffc2a9
 #   magenta: #d33682 -> #fa5da3
+#   bright-blue: #839496 -> #b4c6c8
+#   bright-cyan: #93a1a1 -> #b7c5c5
+#   bright-magenta: #6c71c4 -> #afb8ff
 #
 # MIT licence. Copyright (c) 2011 Ethan Schoonover.
 #
@@ -43,12 +46,12 @@ palette = 5=#fa5da3
 palette = 6=#39aca3
 palette = 7=#eee8d5
 palette = 8=#002b36
-palette = 9=#e76536
-palette = 10=#7b9299
-palette = 11=#7b919a
-palette = 12=#839496
-palette = 13=#6c71c4
-palette = 14=#93a1a1
+palette = 9=#ffc2a9
+palette = 10=#b0c8d0
+palette = 11=#b0c8d1
+palette = 12=#b4c6c8
+palette = 13=#afb8ff
+palette = 14=#b7c5c5
 palette = 15=#fdf6e3
 background = #002b36
 foreground = #b9cbcd

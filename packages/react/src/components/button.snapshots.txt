@@ -1,0 +1,10 @@
+── Variants
+default [ Publish ]
+fill    [ Publish ]
+danger  [!Publish ]
+── Without delimiters
+default Publish
+danger  [!Discard ]
+── With a shortcut
+[ Save Ctrl+S ]
+[ Save ⌘S ]

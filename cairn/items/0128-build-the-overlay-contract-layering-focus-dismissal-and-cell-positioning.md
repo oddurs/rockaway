@@ -3,8 +3,10 @@ id: 128
 uid: fb73ba36-7208-484d-a759-adcdb2ed445f
 title: 'Build the overlay contract: layering, focus, dismissal and cell positioning'
 type: feature
-status: backlog
+status: review
 milestone: primitives
+assignee: Oddur Sigurdsson
+claimed: 2026-10-03
 depends_on:
 - 96
 - 117
@@ -62,11 +64,35 @@ four more problems no item owns:
 
 ## Acceptance criteria
 
-- [ ] An open popover and an open dialog pass conformance, at all four densities, with their position checked as well as their size
-- [ ] A popover opened from a pane at touch density renders at touch density, in a story
-- [ ] Placement flips in whole cells when the overlay would leave the viewport, asserted at 40 cells wide
-- [ ] The backdrop is drawn in cells, is `aria-hidden`, survives forced colors, and dismisses only when allowed
-- [ ] Escape and outside press dismiss per the proposal, and focus returns to the trigger, in a keyboard story
-- [ ] `screenshot()` of a screen with an open dialog shows the backdrop and the dialog, as a checked-in snapshot
-- [ ] Nested overlays (a menu in a dialog) stack, dismiss innermost first, and restore focus correctly
-- [ ] `docs/concept.md` gains an "Overlays" section stating the contract
+- [x] An open popover and an open dialog pass conformance, at all four densities, with their position checked as well as their size
+- [x] A popover opened from a pane at touch density renders at touch density, in a story
+- [x] Placement flips in whole cells when the overlay would leave the viewport, asserted at 40 cells wide
+- [x] The backdrop is drawn in cells, is `aria-hidden`, survives forced colors, and dismisses only when allowed
+- [x] Escape and outside press dismiss per the proposal, and focus returns to the trigger, in a keyboard story
+- [x] `screenshot()` of a screen with an open dialog shows the backdrop and the dialog, as a checked-in snapshot
+- [x] Nested overlays (a menu in a dialog) stack, dismiss innermost first, and restore focus correctly
+- [x] `docs/concept.md` gains an "Overlays" section stating the contract
+
+## 2026-10-03
+
+Built on React Aria, not beside it: OverlayPopover is Popover and OverlayModal is ModalOverlay+Modal, each with a Surface that is a Screen of its own. React Aria keeps placement, flip, focus containment and return, scroll lock and dismissal; the contract translates its pixel position onto the cell grid of the trigger's nearest .rk-screen (round, re-snapped on the wrapper's style mutating, resize and scroll), with offset 0 and containerPadding 0 so a popover sits on the next row with no gap.
+
+## 2026-10-03
+
+Contexts cross the portal by copying the trigger's nearest data-rk-theme, data-theme, data-density, data-motion and data-rk-conformance onto the overlay; OverlayLayer is the portal root, mounted in the workbench decorator so every afterEach check sees open overlays. A modal's anchor is PopoverContext.triggerRef, which DialogTrigger provides even for modals; document.activeElement was body by then.
+
+## 2026-10-03
+
+Elevation by weight (0075): popover heavy, modal double, ASCII bold (0183). Backdrop is a Screen of block.light in fg.muted on bg.page, aria-hidden; under forced colors the cell renderer keeps it (forcedColorAdjust none on the run). Under 60 cells or at touch density a modal is a sheet floored to the viewport's whole cells, bottom-start, and a popover is viewport-wide. Scrolling content uses rk-scroll and the frame's right edge carries the thumb (0207).
+
+## 2026-10-03
+
+screenshot() composes .rk-overlay-layer children over the screen (overlays: false to opt out); checkContinuity hides the overlay layer while reading a page's layers, and hides everything else in the layer while reading an overlay's own, so a dialog is not a break in the frame beneath it.
+
+## 2026-10-03
+
+Review fixes before Popover builds on it: (1) the snap is a laid-out relative offset, not a translate; a sub-pixel translate parted the frame's strokes beside a trigger at a fractional pixel (found by overlays; story 'Beside a trigger off the pixel grid' fails continuity with translate). (2) minCols: number | 'trigger' (CSS round(up) of --trigger-width less 1/32px). (3) The painter crosses the portal from the trigger's screen; painter prop overrides. Also: padding (default {x:1,y:0}) and dividers at content rows, shifted by scroll, for Menu; frame lines in border.default like Frame (fg.default was an oversight); contexts and painter kept current while open via a document MutationObserver, and the snap re-runs on context changes and the trigger screen's resize. Per-density placement of an open popover still waits on 0199 (a cols/rows screen keeps its first cell).
+
+## 2026-10-03
+
+Added shift (cells along and across the placement, mirrored on a flip) for submenus, at overlays' request. Fixed gridOf: before a screen measures, --rk-cell-width is '1ch', which parseFloat read as a 1px cell; it now accepts px only and otherwise measures the screen's cell.

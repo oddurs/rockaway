@@ -14,8 +14,11 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { frameBuffer } from '@rockaway/react';
-import { type Browser, chromium, type Page } from 'playwright';
+import meta from '@rockaway/react/meta.json' with { type: 'json' };
+import { type Browser, chromium, type Page, type Response } from 'playwright';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
+import { items } from '../src/registry/items.ts';
+import { checkPage, servePackageFile } from './checks.ts';
 
 const site = path.join(import.meta.dirname, '..');
 
@@ -24,12 +27,21 @@ const types: Record<string, string> = {
   '.js': 'text/javascript',
   '.css': 'text/css',
   '.woff2': 'font/woff2',
+  '.txt': 'text/plain; charset=utf-8',
+  '.md': 'text/markdown; charset=utf-8',
+  '.json': 'application/json',
 };
 
 /** Serve `dir` at `base`, and nothing anywhere else, as Pages would. */
 function serve(dir: string, base: string): Promise<Server> {
   const server = createServer((request, response) => {
     const url = new URL(request.url ?? '/', 'http://localhost');
+    // The installed packages, for the checks a page runs on itself.
+    const module = servePackageFile(url.pathname);
+    if (module !== undefined) {
+      response.writeHead(200, { 'content-type': 'text/javascript' }).end(module);
+      return;
+    }
     if (!url.pathname.startsWith(base)) {
       response.writeHead(404).end();
       return;
@@ -49,6 +61,88 @@ function serve(dir: string, base: string): Promise<Server> {
   return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)));
 }
 
+/**
+ * Wait until the page has stopped moving, as the workbench's `measured()`
+ * does (cairn 0164): the face the page is set in loaded, then every screen
+ * measured and drawn at its own size.
+ *
+ * Not the painted frame's arrival: the server sends the chrome (0126), drawn
+ * at its smallest and stretched to fit until the screen has measured (0238),
+ * so `.rk-frame` is there before any script runs. A screen has measured when
+ * its cell is written in pixels rather than `1ch`, and its columns fill its
+ * box. On a slow CI runner that is well after the page loads; reading the
+ * columns before it got the smallest frame's 14.
+ */
+async function settled(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const { font } = getComputedStyle(document.documentElement);
+    if (font !== '') await document.fonts.load(font);
+    await document.fonts.ready;
+  });
+  await page.waitForFunction(() => {
+    const screens = [...document.querySelectorAll<HTMLElement>('.rk-screen')];
+    return (
+      screens.length > 0 &&
+      screens.every((screen) => {
+        const written = getComputedStyle(screen).getPropertyValue('--rk-cell-width').trim();
+        if (!written.endsWith('px')) return false;
+        const cell = Number.parseFloat(written);
+        const cols = Number(screen.dataset.rkCols);
+        return Math.abs(screen.getBoundingClientRect().width - cols * cell) < cell;
+      })
+    );
+  });
+}
+
+/**
+ * The site's JavaScript budget (0077, 0109): under 100 kB on the first page.
+ * Counted here as served, uncompressed, so it is stricter than the wire.
+ */
+const JS_BUDGET = 100 * 1024;
+
+/** A script a page loaded: where from, what it weighs, and what is in it. */
+interface Shipped {
+  readonly url: string;
+  readonly bytes: number;
+  readonly text: string;
+}
+
+/** Record the scripts `page` loads; call what it returns, before closing it, to read them. */
+function scriptsOf(page: Page): () => Promise<Shipped[]> {
+  const responses: Response[] = [];
+  page.on('response', (response) => {
+    if (response.request().resourceType() === 'script') responses.push(response);
+  });
+  return () =>
+    Promise.all(
+      responses.map(async (response) => {
+        const body = await response.body();
+        return { url: response.url(), bytes: body.length, text: body.toString('utf8') };
+      }),
+    );
+}
+
+/** React DOM's client: the fiber key it stamps on nodes, and its error links. */
+const REACT = /__reactFiber|react\.dev\/errors/;
+/** A highlighter that runs in the page, rather than at build time. */
+const HIGHLIGHTER = /shiki|vscode-textmate|oniguruma/i;
+
+/**
+ * What a page of prose may run: what matters, not how many files it comes
+ * in. A small chunk shared with a component, cached once, is fine (0218's
+ * overflow marks share `scroll` with Table). React and a highlighter are not,
+ * and neither is anything over the budget. That it works with no script at
+ * all is asserted by loading it with scripting off.
+ */
+function expectProse(shipped: readonly Shipped[], where: string): void {
+  for (const { url, text } of shipped) {
+    expect(text, `${where}: ${url} is React`).not.toMatch(REACT);
+    expect(text, `${where}: ${url} is a highlighter`).not.toMatch(HIGHLIGHTER);
+  }
+  const total = shipped.reduce((sum, { bytes }) => sum + bytes, 0);
+  expect(total, `${where}: ${total} bytes of JavaScript`).toBeLessThan(JS_BUDGET);
+}
+
 let browser: Browser;
 beforeAll(async () => {
   browser = await chromium.launch();
@@ -56,6 +150,8 @@ beforeAll(async () => {
 afterAll(async () => {
   await browser?.close();
 });
+
+const components = (meta as { components: unknown[] }).components;
 
 describe.each(['/rockaway/', '/'])('served at %s', (base) => {
   let out: string;
@@ -91,8 +187,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     });
     page.on('pageerror', (error) => failures.push(`page: ${error.message}`));
     await page.goto(`${origin}${base}`);
-    await page.waitForSelector('.rk-frame[data-rk-painted]');
-    await page.evaluate(() => document.fonts.ready);
+    await settled(page);
   });
 
   afterAll(async () => {
@@ -182,12 +277,112 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.styled).toBe(0);
   });
 
+  test('documents every component on a page that passes axe, conformance and continuity (0147)', async () => {
+    const reader = await browser.newPage();
+    const index = await reader.goto(`${origin}${base}components/`);
+    expect(index?.ok()).toBe(true);
+    const pages = await reader.evaluate(() =>
+      [...document.querySelectorAll<HTMLAnchorElement>('article li > a')].map((a) => a.href),
+    );
+    expect(pages.length).toBe(components.length);
+    for (const url of pages) {
+      await reader.goto(url);
+      await reader.evaluate(() => document.fonts.ready);
+      await reader.waitForFunction(
+        () => document.querySelectorAll('astro-island[ssr]').length === 0,
+      );
+      const report = await checkPage(reader);
+      expect(report.axe, url).toEqual([]);
+      expect(report.offGrid, `${url}\n${report.conformance}`).toBe(0);
+      expect(report.breaks, `${url}\n${report.continuity}`).toBe(0);
+    }
+    await reader.close();
+    // Nine pages, each hydrated, screenshotted and checked: well past the default five seconds.
+  }, 120_000);
+
+  test('shows every component as its snapshots with JavaScript off (0147)', async () => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const reader = await context.newPage();
+    for (const component of components as { name: string; snapshots: { text: string }[] }[]) {
+      const slug = component.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      await reader.goto(`${origin}${base}components/${slug}/`);
+      // Each snapshot is painted, and copies as the text it was drawn from.
+      const painted = await reader.evaluate(() =>
+        [...document.querySelectorAll('figure[role="img"] [data-rk-painted]')].map((layer) =>
+          [...layer.querySelectorAll('.rk-row')]
+            .map((row) => row.textContent?.trimEnd())
+            .join('\n'),
+        ),
+      );
+      const trimmed = (text: string) =>
+        text
+          .split('\n')
+          .map((line) => line.trimEnd())
+          .join('\n');
+      expect(painted, component.name).toEqual(component.snapshots.map((s) => trimmed(s.text)));
+    }
+    await context.close();
+  });
+
+  test('renders every live example without JavaScript, chrome included (0147)', async () => {
+    // What an example shows: the words it holds, and whether a server painted
+    // its chrome. A measured screen is drawn at its fallback size on the
+    // server and fitted on the client (0126), so its lines may be longer or
+    // shorter; what it says, and that it is framed, may not differ.
+    const shown = () => {
+      const island = document.querySelector<HTMLElement>(
+        'astro-island[component-export="Example"]',
+      );
+      const text = island?.innerText ?? '';
+      return {
+        words: text
+          .replace(/[\u2500-\u259f]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim(),
+        chrome: /[\u2500-\u259f]/.test(text),
+      };
+    };
+    // The server draws a chord for a keyboard it cannot see; the client
+    // redraws it for the reader's. The same chord either way.
+    const chord = (text: string) => text.replaceAll('⌘', 'Ctrl+').replaceAll('Command', 'Control');
+    const off = await browser.newContext({ javaScriptEnabled: false });
+    const on = await browser.newContext();
+    const [still, live] = [await off.newPage(), await on.newPage()];
+    let react: boolean | undefined;
+    for (const component of components as { name: string }[]) {
+      const slug = component.name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+      const url = `${origin}${base}components/${slug}/`;
+      await still.goto(url);
+      // The first page's scripts, read before the next page takes their bodies away.
+      const shipped = react === undefined ? scriptsOf(live) : undefined;
+      await live.goto(url);
+      await live.waitForFunction(() => document.querySelectorAll('astro-island[ssr]').length === 0);
+      if (shipped) react = (await shipped()).some(({ text }) => REACT.test(text));
+      const [before, after] = [await still.evaluate(shown), await live.evaluate(shown)];
+      expect(before.words.length, component.name).toBeGreaterThan(0);
+      if (component.name === 'Keymap') {
+        // Shortcuts are registered by script, so without it there are none to
+        // list: the help screen is the one thing that only exists with it.
+        expect(chord(after.words).startsWith(chord(before.words)), component.name).toBe(true);
+      } else {
+        expect(chord(before.words), component.name).toBe(chord(after.words));
+      }
+      expect(before.chrome, `${component.name} has no chrome without JavaScript`).toBe(
+        after.chrome,
+      );
+    }
+    // The examples are React: what prose is held to finds it here, so it is not vacuous there.
+    expect(react).toBe(true);
+    await off.close();
+    await on.close();
+  }, 120_000);
+
   test('draws the foundations with the system, for a phone, with no script (0106)', async () => {
-    const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
-    const scripts: string[] = [];
-    phone.on('request', (r) => {
-      if (r.resourceType() === 'script') scripts.push(r.url());
+    const context = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      javaScriptEnabled: false,
     });
+    const phone = await context.newPage();
     const pages = [
       '',
       'grid/',
@@ -219,13 +414,22 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
       islands: document.querySelectorAll('figure[data-rk-theme]').length,
       files: [...document.querySelectorAll<HTMLAnchorElement>('a[download]')].map((a) => a.href),
     }));
-    expect(themes.islands).toBe(16);
-    expect(themes.files).toHaveLength(16 * 4);
+    expect(themes.islands).toBe(18);
+    expect(themes.files).toHaveLength(18 * 4);
     const file = await phone.request.get(themes.files[0] ?? '');
     expect(file.ok()).toBe(true);
     expect((await file.text()).length).toBeGreaterThan(100);
-    await phone.close();
-    expect(scripts).toEqual([]);
+    await context.close();
+
+    // With scripting on, what each page runs is prose's: no React, no highlighter, in budget.
+    const reader = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    for (const p of pages) {
+      const shipped = scriptsOf(reader);
+      await reader.goto(`${origin}${base}foundations/${p}`, { waitUntil: 'load' });
+      expect(await reader.locator('astro-island').count(), p).toBe(0);
+      expectProse(await shipped(), `foundations/${p}`);
+    }
+    await reader.close();
   });
 
   test('publishes every document in docs/, linked to each other on the site (0107)', async () => {
@@ -293,12 +497,65 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     expect(found.content).toBeGreaterThan(row);
   });
 
-  test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
+  test('serves the registry: each item as its source, and drawn on its page (0046)', async () => {
+    const json = async (url: string) => {
+      const response = await fetch(url);
+      expect(response.status, url).toBe(200);
+      return response.json();
+    };
+    const index = await json(`${origin}${base}r/registry.json`);
+    expect(index.items.map((i: { name: string }) => i.name)).toEqual(items.map((i) => i.name));
+    for (const { name } of items) {
+      const item = await json(`${origin}${base}r/${name}.json`);
+      for (const file of item.files) {
+        const source = path.join(site, 'src/registry', name, path.basename(file.path));
+        expect(file.content).toBe(readFileSync(source, 'utf8'));
+      }
+    }
+
     const reader = await browser.newPage();
-    const scripts: string[] = [];
-    reader.on('request', (request) => {
-      if (request.resourceType() === 'script') scripts.push(request.url());
+    const errors: string[] = [];
+    reader.on('pageerror', (error) => errors.push(error.message));
+    reader.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
     });
+    await reader.goto(`${origin}${base}registry/`);
+    for (const { name } of items) {
+      await reader.waitForSelector(`[data-registry-item="${name}"] .rk-frame[data-rk-painted]`);
+    }
+    const shown = await reader.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('[data-registry-item]')].map((section) => ({
+        name: section.dataset.registryItem,
+        install: section.querySelector('pre')?.textContent,
+        // The frame's content stays inside it: nothing wider than the screen.
+        overflow: [...section.querySelectorAll<HTMLElement>('.rk-screen .rk-content')].some(
+          (content) => content.scrollWidth > Math.ceil(content.clientWidth),
+        ),
+      })),
+    );
+    await reader.close();
+    expect(errors).toEqual([]);
+    expect(shown.map((s) => s.name)).toEqual(items.map((i) => i.name));
+    for (const s of shown) {
+      expect(s.install).toMatch(
+        new RegExp(`^npx shadcn@latest add https?://\\S+${base}r/${s.name}\\.json$`),
+      );
+      expect(s.overflow, s.name).toBe(false);
+    }
+  });
+
+  test('highlights code at build time, in the ANSI 16, and ships no highlighter', async () => {
+    // The page's own script, and a highlighter if one shipped, would load here.
+    const live = await browser.newPage();
+    const shipped = scriptsOf(live);
+    await live.goto(`${origin}${base}concept/`, { waitUntil: 'load' });
+    expect(await live.locator('astro-island').count()).toBe(0);
+    expectProse(await shipped(), 'concept/');
+    await live.close();
+
+    // The highlighting is in the HTML: read it with scripting off.
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const reader = await context.newPage();
     await reader.goto(`${origin}${base}concept/`);
     const found = await reader.evaluate(() => {
       const colour = (el: Element | null) => (el ? getComputedStyle(el).color : '');
@@ -317,9 +574,7 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
         blocks: document.querySelectorAll('pre[style], pre[class]').length,
       };
     });
-    await reader.close();
-    // A page of prose runs no script at all.
-    expect(scripts).toEqual([]);
+    await context.close();
     // The colour is the theme's, so changing the mode recolours code in place.
     expect(found.light).not.toBe('');
     expect(found.dark).not.toBe(found.light);
@@ -328,6 +583,35 @@ describe.each(['/rockaway/', '/'])('served at %s', (base) => {
     // No colour is written into the page: roles are classes.
     expect(found.styled).toBe(0);
     expect(found.blocks).toBe(0);
+  });
+
+  test('serves llms.txt, and every link in it, as text an agent can read (0048)', async () => {
+    const read = async (url: string) => {
+      const response = await fetch(url);
+      expect(response.status, url).toBe(200);
+      return response.text();
+    };
+    const index = await read(`${origin}${base}llms.txt`);
+    expect(index.startsWith('# rockaway\n\n> ')).toBe(true);
+    // The links are absolute, where SITE_URL places the site; here, they are
+    // followed on the site as built, under its base.
+    const links = [...index.matchAll(/\]\((https?:[^)]+)\)/g)].map(([, url]) => new URL(url ?? ''));
+    const own = links.filter((url) => url.hostname !== 'github.com');
+    expect(own.filter((url) => !url.pathname.startsWith(base)).map(String)).toEqual([]);
+    const names = meta.components.map((c) => c.name);
+    expect(own.filter((url) => url.pathname.startsWith(`${base}components/`))).toHaveLength(
+      names.length,
+    );
+    for (const url of own) {
+      const body = await read(`${origin}${url.pathname}`);
+      if (url.pathname.endsWith('.md')) expect(body).toMatch(/^# \S/);
+    }
+    const full = await read(`${origin}${base}llms-full.txt`);
+    for (const name of names) expect(full).toContain(`\n# ${name}\n`);
+    const button = await read(`${origin}${base}components/button.md`);
+    for (const snapshot of meta.components.find((c) => c.name === 'Button')?.snapshots ?? []) {
+      expect(button).toContain(`\n${snapshot.text}\n`);
+    }
   });
 
   test('the cell is the font, and the fallback has the same cell', async () => {
