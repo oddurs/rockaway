@@ -124,7 +124,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`######····` 56% · 87 of 155 done · due 2027-01-31
+`######····` 57% · 89 of 155 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -132,7 +132,6 @@ The component contract, proven on a first set of components.
 
 - [ ] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
 - [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
-- [ ] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
 - [ ] [`0043`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0043-tooltip.md) Tooltip <sup>component · components · p1</sup>
 - [ ] [`0044`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p1</sup>
 - [ ] [`0064`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0064-build-the-kitchen-sink-screen-every-component-with-the-theme-inputs-as-controls.md) Build the kitchen-sink screen: every component, with the theme inputs as controls <sup>feature · docs · p1</sup>
@@ -152,7 +151,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0193`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0193-rename-screen-s-chrome-layer-from-rk-frame-to-rk-chrome.md) Rename Screen's chrome layer from rk-frame to rk-chrome <sup>chore · components · p3</sup>
 - [ ] [`0207`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0207-no-native-scrollbars-a-scroll-position-is-drawn-in-cells.md) No native scrollbars: a scroll position is drawn in cells <sup>decision · css · p0</sup>
 - [ ] [`0213`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0213-tolerate-float-error-in-cellsin.md) Tolerate float error in cellsIn <sup>bug · grid · p1</sup>
-- [ ] [`0216`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0216-keep-a-focused-tab-in-view-under-manual-activation.md) Keep a focused tab in view under manual activation <sup>bug · components · p2</sup>
 - [ ] [`0217`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0217-scroll-codeblock-vertically-with-a-drawn-scrollbar.md) Scroll CodeBlock vertically with a drawn scrollbar <sup>feature · components · p2</sup>
 - [ ] [`0220`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0220-check-the-page-chrome-for-native-scrollbars-too.md) Check the page chrome for native scrollbars too <sup>chore · tooling · p3</sup>
 - [ ] [`0227`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0227-render-painted-cells-through-one-shared-component.md) Render painted cells through one shared component <sup>chore · components · p3</sup>
@@ -210,6 +208,7 @@ The component contract, proven on a first set of components.
 - [x] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p0</sup>
 - [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
 - [x] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
+- [x] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
 - [x] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [x] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
 - [x] [`0055`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0055-combobox.md) Combobox <sup>component · components · p2</sup>
@@ -268,6 +267,7 @@ The component contract, proven on a first set of components.
 - [x] [`0210`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0210-make-the-continuity-stories-readable.md) Make the continuity stories readable <sup>chore · tooling · p1</sup>
 - [x] [`0211`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0211-list-rows-stay-on-the-grid-at-dense-after-keyboard-navigation.md) List rows stay on the grid at dense after keyboard navigation <sup>bug · components · p2</sup>
 - [x] [`0215`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0215-decide-what-a-solid-control-draws-when-the-system-colour-pair-is-weak.md) Decide what a solid control draws when the system colour pair is weak <sup>decision · css · p2</sup>
+- [x] [`0216`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0216-keep-a-focused-tab-in-view-under-manual-activation.md) Keep a focused tab in view under manual activation <sup>bug · components · p2</sup>
 - [x] [`0224`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0224-button-forwards-a-ref.md) Button forwards a ref <sup>bug · components · p2</sup>
 - [x] [`0225`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0225-bind-button-s-keys-through-the-keymap-when-one-is-present.md) Bind Button's keys through the Keymap when one is present <sup>feature · components · p2</sup>
 - [x] [`0228`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0228-re-check-cellsin-s-snap-at-the-new-line-boxes.md) Re-check cellsIn's snap at the new line boxes <sup>chore · grid · p2</sup>
