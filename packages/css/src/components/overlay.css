@@ -34,26 +34,9 @@
   /* The screen grows with what it holds, as a field frame's does. */
   .rk-overlay > .rk-screen {
     background: var(--rk-bg-surface);
-    min-inline-size: max(
-      calc(var(--rk-overlay-min-cols, 0) * var(--rk-cell-width)),
-      var(--rk-overlay-min-trigger, 0px)
-    );
-  }
-
-  /*
-   * As wide as the trigger, in whole cells: React Aria sets --trigger-width on
-   * the popover. A trigger on the grid is a whole number of cells already, but
-   * measured in the font's true advance, and the cell is that advance rounded
-   * to a sixty-fourth of a pixel (0117): up to a hundred-and-twenty-eighth
-   * per cell, which across thirty cells of IBM Plex Mono's 9.6px is a fifth
-   * of a pixel over. That is measurement, not another cell.
-   */
-  .rk-overlay-min-trigger > .rk-screen {
-    --rk-overlay-min-trigger: round(
-      up,
-      max(0px, var(--trigger-width, 0px) * 127 / 128 - 1px / 32),
-      var(--rk-cell-width)
-    );
+    /* The fewest cells across: a count, or the trigger's width in cells,
+     * which the component reads with cellsCovering (0228). */
+    min-inline-size: calc(var(--rk-overlay-min-cols, 0) * var(--rk-cell-width));
   }
 
   .rk-overlay > .rk-screen > .rk-content {
