@@ -1,7 +1,16 @@
 import { shapeAttributes, useGlyphs, useTick } from '@rockaway/react';
 import { themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, waitFor } from 'storybook/test';
+import {
+  Checkbox,
+  Input,
+  Label,
+  Radio,
+  RadioGroup,
+  Switch,
+  TextField,
+} from 'react-aria-components';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { tab } from '../keys.ts';
 import { text } from '../text.ts';
 
@@ -113,6 +122,59 @@ export const Focus: Story = {
 
     // The ring is the focus token, not the inherited text colour.
     await expect(focusColor).not.toBe(getComputedStyle(document.body).color);
+  },
+};
+
+/**
+ * Controls whose focus is on an input no one sees (0226): React Aria keeps a
+ * switch's, a checkbox's and a radio's native input, visually hidden, and the
+ * keyboard focuses that. The ring goes round the label a reader sees, from one
+ * rule in focus.css, which none of them declares for itself. A pointer gives
+ * no ring, and a text field keeps what it had: the ring on its input.
+ */
+export const HiddenInputs: Story = {
+  name: 'Focus in a hidden input',
+  render: () => (
+    <div style={{ display: 'grid', gap: 'var(--rk-y-1)', justifyItems: 'start' }}>
+      <Switch data-testid="switch">Wrap lines</Switch>
+      <Checkbox data-testid="checkbox">Show hidden files</Checkbox>
+      <RadioGroup aria-label="Sort by">
+        <Radio value="name" data-testid="radio">
+          Name
+        </Radio>
+        <Radio value="date">Date</Radio>
+      </RadioGroup>
+      <TextField data-testid="field">
+        <Label>Name</Label>
+        <Input />
+      </TextField>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const ring = (el: Element) => {
+      const style = getComputedStyle(el);
+      return { style: style.outlineStyle, width: style.outlineWidth, offset: style.outlineOffset };
+    };
+    const want = { style: 'solid', width: '2px', offset: '2px' };
+    for (const id of ['switch', 'checkbox', 'radio']) {
+      const control = canvas.getByTestId(id);
+      await userEvent.tab();
+      await waitFor(() => expect(control).toHaveAttribute('data-focus-visible'));
+      // The focus is on the hidden input, and the ring is on the label round it.
+      expect(document.activeElement?.tagName).toBe('INPUT');
+      expect(control.contains(document.activeElement)).toBe(true);
+      expect(ring(control), id).toEqual(want);
+    }
+    // The text field's own input wears the ring; its label does not.
+    await userEvent.tab();
+    const field = canvas.getByTestId('field');
+    expect(ring(field.querySelector('label') as Element).style).toBe('none');
+    expect(ring(field).style).toBe('none');
+    // A pointer focuses the input but shows no ring.
+    await userEvent.click(canvas.getByText('Show hidden files'));
+    const checkbox = canvas.getByTestId('checkbox');
+    expect(checkbox).not.toHaveAttribute('data-focus-visible');
+    expect(ring(checkbox).style).toBe('none');
   },
 };
 

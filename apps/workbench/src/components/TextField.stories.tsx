@@ -69,6 +69,18 @@ function inside(shot: string, cols: number): string {
     .join('\n');
 }
 
+/**
+ * A scroll position as whole cells, to within a device pixel. Chromium keeps
+ * a scroll position in fractions of a pixel, so the field puts it exactly on
+ * a cell; WebKit keeps it in whole device pixels, so the nearest it can be to
+ * a cell that starts on a fraction of a pixel is within one.
+ */
+function scrolledCells(px: number, cell: number): number {
+  const n = Math.round(px / cell);
+  expect(Math.abs(px - n * cell)).toBeLessThan(1 / window.devicePixelRatio + 1e-3);
+  return n;
+}
+
 /** A scroll the browser was asked for, once the field has had a frame to round it. */
 async function scrollTo(el: HTMLElement, axis: 'x' | 'y', px: number): Promise<void> {
   if (axis === 'x') el.scrollLeft = px;
@@ -303,9 +315,14 @@ export const Overflow: Story = {
       expect(ends(field)).toEqual([open, mark['overflow-end']]);
 
       // In the middle, wherever the browser was asked to put it, a whole cell.
+      // The field reads its scroll on the next frame, and its own rounding is
+      // a scroll of its own, so the marks are waited for rather than read at
+      // a fixed frame: a slower engine is a frame or two behind.
       await scrollTo(input, 'x', cell * 3.4);
-      expect(cells(input.scrollLeft, cell)).toBe(3);
-      expect(ends(field)).toEqual([mark['overflow-start'], mark['overflow-end']]);
+      await waitFor(() => {
+        expect(scrolledCells(input.scrollLeft, cell)).toBe(3);
+        expect(ends(field)).toEqual([mark['overflow-start'], mark['overflow-end']]);
+      });
 
       // At the end: more to the left only.
       await scrollTo(input, 'x', 10_000);

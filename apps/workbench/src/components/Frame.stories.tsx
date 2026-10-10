@@ -11,6 +11,7 @@ import {
 import { expectContinuity, screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ReactNode } from 'react';
 import { expect, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { cellsOf, cellsOfBuffer } from '../cells.ts';
@@ -433,6 +434,94 @@ export const ForcedColors: Story = {
         );
         expect(getComputedStyle(cell).color).toBe(text);
       }
+    }
+  },
+};
+
+const SURFACES = ['sunken', 'base', 'raised', 'overlay'] as const;
+
+function SurfaceFrames({ painter = 'glyph' }: { readonly painter?: PainterName }): ReactNode {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)' }}>
+      {SURFACES.map((surface) => (
+        <Frame key={surface} title={surface} surface={surface} painter={painter} cols={20} rows={4}>
+          <p style={{ margin: 0 }}>{surface}</p>
+        </Frame>
+      ))}
+    </div>
+  );
+}
+
+const surfacesPlay: NonNullable<Story['play']> = async ({ canvas }) => {
+  for (const surface of SURFACES) {
+    const frame = canvas.getByRole('group', { name: surface });
+    expect(frame.dataset.rkSurface).toBe(surface);
+    expect(getComputedStyle(frame).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+    const text = frame.querySelector('p') as HTMLElement;
+    const cell = Number.parseFloat(getComputedStyle(frame).getPropertyValue('--rk-cell-width'));
+    const dx = text.getBoundingClientRect().left - frame.getBoundingClientRect().left;
+    // The border's cell and the default pad's cell: text never touches a side.
+    expect(dx / cell).toBeCloseTo(2, 1);
+  }
+};
+
+/**
+ * A frame fills its whole box, border cells included, with its surface
+ * (cairn 0308). Content starts one cell in, so text never touches a border.
+ */
+export const Surfaces: Story = {
+  render: () => <SurfaceFrames />,
+  play: surfacesPlay,
+};
+
+export const SurfacesRule: Story = {
+  render: () => <SurfaceFrames painter="rule" />,
+  play: surfacesPlay,
+};
+
+export const SurfacesDracula: Story = {
+  globals: { theme: 'dracula', mode: 'dark' },
+  render: () => <SurfaceFrames />,
+  play: surfacesPlay,
+};
+
+/** A gutter is whole cells of the page's own ground around the screen. */
+export const Gutter: Story = {
+  render: () => (
+    <div data-testid="gutter-host" style={{ display: 'flow-root' }}>
+      <Frame title="gutter" surface="raised" cols={24} rows={4} gutter={{ x: 2, y: 1 }}>
+        <p style={{ margin: 0 }}>two across, one down</p>
+      </Frame>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const frame = canvas.getByRole('group', { name: 'gutter' });
+    const style = getComputedStyle(frame);
+    const width = Number.parseFloat(style.getPropertyValue('--rk-cell-width'));
+    const height = Number.parseFloat(style.getPropertyValue('--rk-cell-height'));
+    const host = canvas.getByTestId('gutter-host').getBoundingClientRect();
+    const box = frame.getBoundingClientRect();
+    expect((box.left - host.left) / width).toBeCloseTo(2, 1);
+    expect((box.top - host.top) / height).toBeCloseTo(1, 1);
+    expect((host.bottom - box.bottom) / height).toBeCloseTo(1, 1);
+  },
+};
+
+/** Surfaces under forced colours collapse to Canvas. */
+export const SurfacesForcedColors: Story = {
+  name: 'Surfaces, forced colors',
+  tags: ['forced-colors'],
+  render: () => <SurfaceFrames />,
+  play: async ({ canvas }) => {
+    expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    const probe = document.createElement('span');
+    probe.style.backgroundColor = 'Canvas';
+    document.body.append(probe);
+    const canvasColour = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    for (const surface of SURFACES) {
+      const frame = canvas.getByRole('group', { name: surface });
+      expect(getComputedStyle(frame).backgroundColor).toBe(canvasColour);
     }
   },
 };

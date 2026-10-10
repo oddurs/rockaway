@@ -458,6 +458,9 @@ export const Dismiss: Story = {
     const scrim = document.querySelector('.rk-overlay-scrim') as HTMLElement;
     await click(scrim, { x: 4, y: 4 });
     expect(dialog('Fixed')).not.toBeNull();
+    // The press took no focus: still in the dialog, where Escape reaches it.
+    // Firefox used to put it on the body, and Escape then closed nothing.
+    expect(dialog('Fixed')?.contains(document.activeElement)).toBe(true);
     await press('{Escape}');
     await waitFor(() => expect(dialog('Fixed')).toBeNull(), CLOSE);
     await waitFor(() => expect(open('Fixed')).toHaveFocus(), CLOSE);
@@ -500,7 +503,10 @@ export const Nested: Story = {
   play: async ({ canvas }) => {
     await measured(document.body);
     const settings = canvas.getByRole('button', { name: 'Settings' });
-    await userEvent.click(settings);
+    // Opened from the keyboard, so the trigger has focus to be given back:
+    // WebKit, like Safari, does not focus a button it presses.
+    settings.focus();
+    await userEvent.keyboard('{Enter}');
     const actions = await waitFor(() => {
       const button = document.querySelector<HTMLElement>('[role="dialog"] button');
       expect(button).not.toBeNull();
@@ -521,11 +527,12 @@ export const Nested: Story = {
     await press('{Escape}');
     await waitFor(() => expect(document.querySelector('[role="menu"]')).toBeNull());
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
-    expect(actions).toHaveFocus();
+    // Focus goes back a frame after the menu unmounts.
+    await waitFor(() => expect(actions).toHaveFocus());
 
     await press('{Escape}');
     await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
-    expect(settings).toHaveFocus();
+    await waitFor(() => expect(settings).toHaveFocus());
   },
 };
 
@@ -615,7 +622,9 @@ export const ForcedColors: Story = {
 
 /**
  * A minimum width: as wide as the trigger, in whole cells (a select's list),
- * or a number of columns, the frame's two included.
+ * or a number of columns, the frame's two included. A trigger a few
+ * hundredths of a pixel over its cells, as a select's five runs came out on
+ * CI, takes those cells and not one more (0228).
  */
 export const MinCols: Story = {
   name: 'Minimum width',
@@ -627,6 +636,14 @@ export const MinCols: Story = {
           <OverlayPopover minCols="trigger">
             <Dialog aria-label="Trigger wide">
               <p style={{ margin: 0 }}>one</p>
+            </Dialog>
+          </OverlayPopover>
+        </DialogTrigger>
+        <DialogTrigger defaultOpen>
+          <Button style={{ inlineSize: 'calc(var(--rk-cell-width) * 12 + 0.04px)' }}>Hair</Button>
+          <OverlayPopover minCols="trigger">
+            <Dialog aria-label="Hair over">
+              <p style={{ margin: 0 }}>three</p>
             </Dialog>
           </OverlayPopover>
         </DialogTrigger>
@@ -645,11 +662,13 @@ export const MinCols: Story = {
     await measured(document.body);
     const wide = canvas.getByRole('button', { name: 'A wide trigger of a button' });
     const open = canvas.getByRole('button', { name: 'Open' });
-    const [first, second] = surfaces();
-    if (!first || !second) throw new Error('no popovers');
+    const hair = canvas.getByRole('button', { name: 'Hair' });
+    const [first, third, second] = surfaces();
+    if (!first || !second || !third) throw new Error('no popovers');
     const [, , triggerWidth] = placeOf(wide, wide);
     expect(placeOf(first, wide)[2]).toBe(triggerWidth);
     expect(edgeOf(first)).toBe(`┏${'━'.repeat(triggerWidth - 2)}┓`);
+    expect(placeOf(third, hair)[2]).toBe(12);
     expect(placeOf(second, open)[2]).toBe(24);
   },
 };
