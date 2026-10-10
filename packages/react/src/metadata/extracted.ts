@@ -1019,6 +1019,33 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled"
     ]
   },
+  "LinkComponentProvider": {
+    "file": "link.tsx",
+    "props": [
+      {
+        "name": "component",
+        "type": "LinkComponent",
+        "required": true,
+        "description": "The framework's link, which every link the system draws renders through."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-attribute-underline-thickness",
+      "--rk-bg-page",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled"
+    ]
+  },
   "List": {
     "file": "list.tsx",
     "props": [
