@@ -35,4 +35,5 @@ export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenPr
 export { markOverflow, type OverflowMarkOptions, scrollStateQueries, watchOverflowMarks } from './scroll.ts';
 export { selectionLines, watchSelection } from './selection.ts';
 export { useTick } from './tick.ts';
+export { useCellsWide } from './use-cells-wide.ts';
 export { defineVariants, type VariantAttributes, type VariantDefinition, type VariantInput, type VariantProps, type VariantSelection, type Variants, type VariantValue, type VariantValues } from './variants.ts';
