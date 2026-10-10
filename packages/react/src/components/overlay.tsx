@@ -301,7 +301,12 @@ function usePlaceOnMove(anchor: () => Element | null | undefined): boolean {
   const at = useRef<{ left: number; top: number } | undefined>(undefined);
   useIsomorphicLayoutEffect(() => {
     const el = anchor();
-    if (!el) return;
+    // A trigger inside another overlay, a submenu's item, moves only when its
+    // own surface snaps, by under a cell, and this surface's snap lands it on
+    // the grid. Placed again there, React Aria reads its container as the
+    // document rather than the overlay layer, and a submenu flipped to the
+    // left lands off the page.
+    if (!el || el.closest('.rk-overlay')) return;
     let frame = 0;
     const check = (): void => {
       const box = anchor()?.getBoundingClientRect();
@@ -597,6 +602,7 @@ export function OverlayPopover({
   const container = useContext(LayerContext);
   const context = useSlottedContext(PopoverContext);
   const triggerRef = aria.triggerRef ?? context?.triggerRef;
+  const nested = (aria.trigger ?? context?.trigger) === 'SubmenuTrigger';
   const anchor = useCallback(() => triggerRef?.current, [triggerRef]);
   const sheet = useSheet(anchor);
   const origin = useOrigin(anchor);
@@ -623,7 +629,11 @@ export function OverlayPopover({
       crossOffset={crossOffset}
       containerPadding={0}
       className={cx('rk-overlay-popover', sheet && 'rk-overlay-popover-sheet', className)}
-      {...(container === null ? {} : { UNSTABLE_portalContainer: container })}
+      // A submenu, or a dialog opened from a menu, goes where React Aria puts
+      // it: inside its root popover's own container, which is already in the
+      // layer. Sent to the layer itself, it is outside the root popover, which
+      // then takes focus back from it as from anything outside.
+      {...(container === null || nested ? {} : { UNSTABLE_portalContainer: container })}
     >
       <Surface
         kind="popover"
