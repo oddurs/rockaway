@@ -31,6 +31,10 @@ function scroller(within: HTMLElement, className: string, style: Partial<CSSStyl
 /** The check catches a native bar, and lets every way of not drawing one through. */
 export const TheCheck: Story = {
   name: 'The check',
+  // Under Playwright, Firefox computes `scrollbar-width: none` for every box,
+  // a plain `overflow: auto` one included (measured), so there is no native
+  // bar there for the check to catch (cairn 0124).
+  tags: ['native-scrollbars'],
   render: () => <div data-testid="here" />,
   play: async ({ canvas }) => {
     const here = canvas.getByTestId('here');
