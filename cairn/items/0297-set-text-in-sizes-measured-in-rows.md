@@ -3,12 +3,12 @@ id: 297
 uid: 4ab6cc01-4c94-4816-8ca8-0e0cb4537289
 title: Set text in sizes measured in rows
 type: component
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-09
 created: 2026-10-09
 updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p0
 layer: components
 effort: m
@@ -64,3 +64,7 @@ Rule 7 is left open on purpose: sized text does not conform at strict and is not
 ## 2026-10-09
 
 CI green on Linux at ad70ca96: every Text story passes in the storybook, zoom, p3 and forced-colors projects, including Glyphs fill their rows and A heading in prose, and the site test passes with the new page. Status is review rather than done because rule 7 is still open (see the note above).
+
+## 2026-10-09
+
+Closed with rule 7 unticked, at the CTO's request to close items on their branches. Sized text is refused at strict by decision 0296, and the SizedText violation says why.

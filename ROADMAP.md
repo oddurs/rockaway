@@ -123,7 +123,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#####·····` 48% · 71 of 148 done · due 2027-01-31
+`#####·····` 49% · 72 of 148 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -214,7 +214,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0226`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0226-draw-the-focus-ring-for-controls-whose-focus-is-on-a-hidden-input.md) Draw the focus ring for controls whose focus is on a hidden input <sup>feature · css · p2</sup>
 - [ ] [`0244`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0244-give-a-link-alone-in-a-frame-the-touch-line-box.md) Give a link alone in a frame the touch line box <sup>bug · components · p2</sup>
 - [ ] [`0278`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0278-let-a-focused-tree-take-single-letter-shortcuts-and-say-which-row-has-focus.md) Let a focused Tree take single-letter shortcuts, and say which row has focus <sup>feature · components · p2</sup>
-- [ ] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 
 ### done
 
@@ -289,6 +288,7 @@ The component contract, proven on a first set of components.
 - [x] [`0265`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0265-settle-one-layout-tolerance-in-cellsin.md) Settle one layout tolerance in cellsIn <sup>chore · grid · p2</sup>
 - [x] [`0266`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0266-announce-a-server-rendered-button-s-chord.md) Announce a server-rendered Button's chord <sup>bug · components · p2</sup>
 - [x] [`0270`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0270-dim-a-disabled-fill-button-s-reversal.md) Dim a disabled fill Button's reversal <sup>bug · components · p2</sup>
+- [x] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 
 ## retheme — Tokens on the grid
 
