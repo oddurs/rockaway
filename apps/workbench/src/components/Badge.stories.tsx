@@ -1,7 +1,8 @@
 import { Badge, type BadgeTone, Button, badgeBuffer, Frame } from '@rockaway/react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
-import { expect, userEvent } from 'storybook/test';
+import { expect } from 'storybook/test';
+import { tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -145,11 +146,11 @@ export const Keyboard: Story = {
   play: async ({ canvas, canvasElement }) => {
     const run = canvas.getByRole('button', { name: 'Run' });
     const retry = canvas.getByRole('button', { name: 'Retry' });
-    await userEvent.tab();
+    await tab();
     expect(run).toHaveFocus();
-    await userEvent.tab();
+    await tab();
     expect(retry).toHaveFocus();
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(run).toHaveFocus();
     const el = badge(canvasElement, 'failing');
     expect(el.tabIndex).toBe(-1);

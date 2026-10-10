@@ -18,6 +18,7 @@ import { type ReactNode, useState } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { cellsOf, cellsOfBuffer } from '../cells.ts';
+import { click, press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -256,7 +257,8 @@ export const Resize: Story = {
   play: async ({ canvas }) => {
     await settled();
     const note = canvas.getByRole('textbox', { name: 'note' });
-    await userEvent.type(note, 'keep me');
+    await click(note);
+    await press('keep me');
     await userEvent.click(canvas.getByRole('button', { name: 'Narrow' }));
     await waitFor(() => expect(canvas.queryByRole('region', { name: 'notes' })).toBeNull());
     await userEvent.click(canvas.getByRole('button', { name: 'Widen' }));
@@ -322,11 +324,11 @@ export const Keyboard: Story = {
   play: async ({ canvas }) => {
     await settled();
     for (const pane of canvas.getAllByRole('region')) expect(pane.tabIndex).toBe(-1);
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Stage' }));
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('link', { name: 'ce9af26' }));
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Stage' }));
   },
 };

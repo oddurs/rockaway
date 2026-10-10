@@ -15,7 +15,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { createElement, type ReactNode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
+import { tab } from '../keys.ts';
 
 const meta = {
   title: 'Components/KeyHint',
@@ -190,7 +191,7 @@ export const Keyboard: Story = {
     const save = canvas.getByRole('button', { name: 'Save' });
     const cancel = canvas.getByRole('button', { name: 'Cancel' });
 
-    await userEvent.tab();
+    await tab();
     expect(save).toHaveFocus();
     // Drawn and announced for one keyboard: ⌘S with Meta+S, or Ctrl+S with Control+S.
     await waitFor(() =>
@@ -199,9 +200,9 @@ export const Keyboard: Story = {
     expect(save.textContent).toContain(formatKeys('mod+s', keyboard));
 
     // The hint between them is not a stop.
-    await userEvent.tab();
+    await tab();
     expect(cancel).toHaveFocus();
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(save).toHaveFocus();
   },
 };

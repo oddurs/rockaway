@@ -14,6 +14,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { createRef, type ReactNode, useState } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
+import { press, tab } from '../keys.ts';
 import { measured } from '../settled.ts';
 
 const meta = {
@@ -191,15 +192,15 @@ export const Keyboard: Story = {
     await measured(document.body);
     const name = canvas.getByRole('textbox', { name: 'Name' });
     const repository = canvas.getByRole('textbox', { name: 'Repository' });
-    await userEvent.tab();
+    await tab();
     expect(name).toHaveFocus();
-    await userEvent.keyboard('Ada');
+    await press('Ada');
     expect(name).toHaveValue('Ada');
     expect(edge(fieldOf(repository))).toMatch(/^┌ Repository ─+┐$/);
-    await userEvent.tab();
+    await tab();
     expect(repository).toHaveFocus();
     await waitFor(() => expect(edge(fieldOf(repository))).toMatch(/^┏ Repository ━+┓$/));
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(name).toHaveFocus();
     await waitFor(() => expect(edge(fieldOf(repository))).toMatch(/^┌ Repository ─+┐$/));
   },
