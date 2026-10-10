@@ -1,10 +1,11 @@
 import { toText } from '@rockaway/grid';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
 import { linkBuffer } from './link.pure.ts';
 import type { LinkState } from './link.tsx';
 
-const cells = (label: string, state: LinkState): string =>
-  toText(linkBuffer(label, state), { trimEnd: false });
+const cells = (label: string, state: LinkState, glyphs?: Glyphs): string =>
+  toText(linkBuffer(label, state, glyphs), { trimEnd: false });
 
 export const linkMeta: ComponentMetaInput = defineMeta({
   name: 'Link',
@@ -91,11 +92,12 @@ export const linkMeta: ComponentMetaInput = defineMeta({
       title: 'In place, current, and opening a new tab',
       description:
         'The first cell is the one before the link. Hover, focus and pressed draw the same cells as rest: they are bold, an outline and reverse video, which text has no way to show.',
-      text: [
-        `rest     ${cells('docs', {})}`,
-        `current  ${cells('docs', { current: true })}`,
-        `new tab  ${cells('docs', { newTab: true })}`,
-      ].join('\n'),
+      draw: (glyphs) =>
+        [
+          `rest     ${cells('docs', {}, glyphs)}`,
+          `current  ${cells('docs', { current: true }, glyphs)}`,
+          `new tab  ${cells('docs', { newTab: true }, glyphs)}`,
+        ].join('\n'),
     },
   ],
 });
