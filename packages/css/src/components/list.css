@@ -110,7 +110,7 @@
    * reversed words are exactly the list's ground. In forced colors that is the
    * reader's text behind their canvas, opted out of the backplate below. */
   .rk-list-item[data-selected] {
-    background: var(--rk-fg-default);
+    background: var(--rk-bg-inverse);
     color: var(--rk-bg-surface);
   }
 

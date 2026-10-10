@@ -30,6 +30,10 @@
     }
   },
   "bg": {
+    "inverse": {
+      "$type": "color",
+      "$value": "{ansi.foreground}"
+    },
     "accent": {
       "solid": {
         "$type": "color",

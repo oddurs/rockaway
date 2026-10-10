@@ -1,0 +1,18 @@
+── Vertical
+┌ Branch ──────────────────────┐
+│ ● main                       │
+│ ○ develop                    │
+│ ○ release                    │
+└──────────────────────────────┘
+── Horizontal
+┌ Branch ──────────────────────┐
+│ ● main  ○ develop  ○ release │
+└──────────────────────────────┘
+── Required and invalid
+┏ Branch* ━━━━━━━━━━━━━━━━━━━━━┓
+┃ ● main  ○ develop  ○ release ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+── Read-only
+┌ Branch ──────────────────────┐
+│ ● main    develop    release │
+└──────────────────────────────┘

@@ -81,6 +81,21 @@ function slotIn(slots: ReadonlyMap<string, PaletteSlot>, path: string): PaletteS
 }
 
 const STEP = 0.005;
+
+const same = (a: Oklch, b: Oklch): boolean => a.l === b.l && a.c === b.c && a.h === b.h;
+
+/**
+ * The role slots that are another slot unless a theme writes them itself: a
+ * generated or imported theme focuses in its accent and reverses to its ink.
+ * While they are the same colour they are fitted as one, so moving the accent
+ * for a link moves the focus ring with it, exactly as when they were one slot.
+ */
+function linksOf(palette: Palette): ReadonlyMap<PaletteSlot, PaletteSlot> {
+  const links = new Map<PaletteSlot, PaletteSlot>();
+  if (same(palette.focus, palette.blue)) links.set('focus', 'blue');
+  if (same(palette.inverse, palette.foreground)) links.set('inverse', 'foreground');
+  return links;
+}
 const clampL = (l: number): number => Math.min(1, Math.max(0, l));
 
 /**
@@ -94,6 +109,8 @@ export function fitContrast(
 ): { palette: Palette; adjustments: Adjustment[] } {
   const fitted: Record<PaletteSlot, Oklch> = { ...palette };
   const moved = new Map<PaletteSlot, string>();
+  const links = linksOf(palette);
+  const own = (slot: PaletteSlot): PaletteSlot => links.get(slot) ?? slot;
   // Away from the page: lighter on a dark background, darker on a light one.
   const direction = fitted.background.l < 0.5 ? 1 : -1;
 
@@ -103,7 +120,7 @@ export function fitContrast(
       for (const pair of pairs) {
         const min = minimumIn(pair, reading.name);
         for (const bg of pair.bg) {
-          const [f, b] = [slotIn(reading.slots, pair.fg), slotIn(reading.slots, bg)];
+          const [f, b] = [own(slotIn(reading.slots, pair.fg)), own(slotIn(reading.slots, bg))];
           if (f === b || contrast(fitted[f], fitted[b]) >= min) continue;
           failing += 1;
           const target = grounds.has(f) ? b : f;
@@ -123,6 +140,7 @@ export function fitContrast(
     if (failing === 0) break;
     if (pass === 399) throw new Error(`the ${mode} palette could not be fitted to the gate`);
   }
+  for (const [slot, to] of links) fitted[slot] = fitted[to];
 
   // Fitting can bring two edges to the same 3:1 from different starts, and a
   // control's edge must never end up quieter than the ordinary one (0178).

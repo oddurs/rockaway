@@ -86,7 +86,7 @@
   /* Selected: reverse video, as List draws it, the guides reversed with the
    * row so the row is one bar. */
   .rk-tree-item[data-selected] {
-    background: var(--rk-fg-default);
+    background: var(--rk-bg-inverse);
     color: var(--rk-bg-surface);
   }
 
