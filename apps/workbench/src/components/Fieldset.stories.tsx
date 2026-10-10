@@ -25,7 +25,8 @@ import {
   TextArea,
   TextField,
 } from 'react-aria-components';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
+import { tab } from '../keys.ts';
 import { measured } from '../settled.ts';
 
 /*
@@ -291,7 +292,7 @@ export const FramedControl: Story = {
     expect(edge(frame)).toMatch(/^┌ Message\* ─+┐$/);
     const size = frame.getBoundingClientRect();
 
-    await userEvent.tab();
+    await tab();
     expect(message).toHaveFocus();
     await waitFor(() => expect(edge(frame)).toMatch(/^┏ Message\* ━+┓$/));
     const ink = frame.querySelector('.rk-frame') as Element;
@@ -299,7 +300,7 @@ export const FramedControl: Story = {
     // Heavier, and not one cell bigger.
     const focused = frame.getBoundingClientRect();
     expect([focused.width, focused.height]).toEqual([size.width, size.height]);
-    await userEvent.tab();
+    await tab();
     await waitFor(() => expect(edge(frame)).toMatch(/^┌ Message\* ─+┐$/));
   },
 };
