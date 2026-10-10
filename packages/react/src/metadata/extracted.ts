@@ -1364,6 +1364,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "The accessible name, when the title is not the right one to say."
       },
       {
+        "name": "landmark",
+        "type": "boolean",
+        "required": false,
+        "description": "Whether a named pane is a region landmark. True by default. False makes it a plain container with no name, its title still drawn in its top edge: for a pane whose content is a landmark of its own, a `nav`, `main` or `aside`, which should stay at the top of a reader's list of landmarks."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -1444,6 +1450,24 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "pane"
     ],
     "level": "standard"
+  },
+  "Popover": {
+    "file": "popover.tsx",
+    "props": [
+      {
+        "name": "minCols",
+        "type": "number | 'trigger'",
+        "required": false,
+        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width in whole cells, or a count. `0` lets it be as narrow as what it holds.\n @default 'trigger'",
+        "default": "'trigger'"
+      }
+    ],
+    "inherits": [
+      "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
+    ],
+    "tokens": [],
+    "marks": [],
+    "level": "strict"
   },
   "Row": {
     "file": "table.tsx",
@@ -1689,6 +1713,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "How many rows a `multiline` box shows.",
         "default": "DEFAULT_ROWS"
+      },
+      {
+        "name": "inputRef",
+        "type": "Ref<HTMLInputElement | HTMLTextAreaElement>",
+        "required": false,
+        "description": "The text box itself, `<input>` or, `multiline`, `<textarea>`: for an app to focus it, select its text or read its caret. An object or a callback; the field keeps its own beside it. `ref` is the field around it."
       },
       {
         "name": "className",

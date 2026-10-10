@@ -31,6 +31,7 @@ export const panesMeta: ComponentMetaInput = defineMeta({
   whenToUse: [
     'To lay a screen out as panes: a sidebar, a main pane, a log, details.',
     'For a layout that has to keep working from a phone to a wide monitor, dropping its least important panes as it narrows.',
+    "For a page's shell, with `landmark={false}` on each pane and a named `nav`, `main` or `aside` inside it, so the page's landmarks are its own and not wrapped in regions.",
   ],
   whenNotToUse: [
     { text: 'For one box with a title.', instead: 'Frame' },
@@ -72,7 +73,7 @@ export const panesMeta: ComponentMetaInput = defineMeta({
       className: 'rk-pane',
       chrome: false,
       description:
-        "A leaf pane's content, a `section` named by its title (a region) or a `div` without one, positioned in whole cells inside its borders. It clips what does not fit. It carries `data-rk-pane`, and `data-collapsed` with `hidden` when it has collapsed.",
+        "A leaf pane's content, a `section` named by its title (a region) or a `div` without one or with `landmark={false}`, positioned in whole cells inside its borders. It clips what does not fit. It carries `data-rk-pane`, and `data-collapsed` with `hidden` when it has collapsed.",
     },
   ],
   variants: describeVariants(panesVariants, {
@@ -86,7 +87,7 @@ export const panesMeta: ComponentMetaInput = defineMeta({
   }),
   states: [],
   accessibility: {
-    name: 'Each titled pane is a region named by its title, or by its `label`; the glyphs around the title are never part of it. The whole layout is a group only when given a `label`.',
+    name: 'Each titled pane is a region named by its title, or by its `label`; the glyphs around the title are never part of it. A pane with `landmark={false}` has no name and is no region. The whole layout is a group only when given a `label`.',
     keyboard: [],
     typeAhead: false,
     announces: '"files, region", as a reader moves into a titled pane.',
@@ -94,6 +95,7 @@ export const panesMeta: ComponentMetaInput = defineMeta({
       "Panes add no keyboard of their own: Tab moves through the panes' content in document order, and a pane is never a tab stop.",
       'A collapsed pane is hidden, so nothing in it can be reached or heard until there is room for it again. Its content stays mounted and keeps its state.',
       'The borders, rules and titles as drawn are aria-hidden.',
+      "`landmark={false}` is for a pane that only frames a landmark of its own. Its content should then carry that landmark, a `nav`, `main` or `aside`, each with its own name: without one, the pane's content is in no landmark at all, and its title is never heard. With one, a reader's list of landmarks names each part of the page once, rather than as a region with the same landmark inside it.",
     ],
   },
   snapshots: [

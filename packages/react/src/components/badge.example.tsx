@@ -1,6 +1,7 @@
 import { Badge } from '@rockaway/react';
+import type { ReactNode } from 'react';
 
-export function Example() {
+export function Example(): ReactNode {
   return (
     <p>
       The build is <Badge tone="success">passing</Badge> on main and{' '}

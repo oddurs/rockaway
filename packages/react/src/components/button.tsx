@@ -21,19 +21,12 @@
  * `data-focus-visible` and `data-disabled`, and the CSS reads nothing else:
  * there is no state in here that is not in the DOM.
  */
-import {
-  type JSX,
-  type ReactElement,
-  type ReactNode,
-  type Ref,
-  type RefCallback,
-  useCallback,
-  useRef,
-} from 'react';
+import { type JSX, type ReactElement, type ReactNode, type Ref, useCallback, useRef } from 'react';
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { usePlatform } from '../platform.ts';
+import { useBothRefs } from '../refs.ts';
 import type { VariantProps, VariantValue } from '../variants.ts';
 import { buttonVariants, chromeOf } from './button.pure.ts';
 import { keyShortcut } from './key-hint.pure.ts';
@@ -77,31 +70,6 @@ export interface ButtonProps
    * beside it.
    */
   readonly ref?: Ref<HTMLButtonElement>;
-}
-
-/**
- * One ref callback that sets every ref given: Button's own and the caller's.
- * A callback ref's cleanup, React 19's, is passed back so it still runs.
- */
-function useBothRefs<T>(own: { current: T | null }, given: Ref<T> | undefined): RefCallback<T> {
-  return useCallback(
-    (el: T | null) => {
-      own.current = el;
-      if (typeof given === 'function') {
-        const cleanup = given(el);
-        if (typeof cleanup === 'function') {
-          return () => {
-            own.current = null;
-            cleanup();
-          };
-        }
-      } else if (given) {
-        given.current = el;
-      }
-      return undefined;
-    },
-    [own, given],
-  );
 }
 
 export interface ButtonTextOptions extends Pick<ButtonProps, 'variant' | 'delimiters' | 'keys'> {

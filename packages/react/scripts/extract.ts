@@ -453,7 +453,9 @@ export function owns(
 export function analyse(): Map<string, Analysis> {
   const found = new Map<string, Analysis>();
   const files = readdirSync(componentsDir)
-    .filter((name) => name.endsWith('.tsx'))
+    // Component files only: `<name>.tsx`. An example beside one exports an
+    // `Example` of its own, which is not a component of the package.
+    .filter((name) => /^[a-z0-9-]+\.tsx$/.test(name))
     .sort();
   // Aliases are shared: Button's `platform` is typed by KeyHint's `Platform`.
   const aliases = new Map(
