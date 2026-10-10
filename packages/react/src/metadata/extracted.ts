@@ -265,15 +265,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "CheckboxGroup": {
@@ -320,15 +317,117 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
+    ]
+  },
+  "CodeBlock": {
+    "file": "code-block.tsx",
+    "props": [
+      {
+        "name": "code",
+        "type": "string",
+        "required": true,
+        "description": "The code, exactly: what is shown, what is copied."
+      },
+      {
+        "name": "tokens",
+        "type": "readonly CodeLine[]",
+        "required": false,
+        "description": "The same code, highlighted: one line of tokens per line, each token a role from the syntax tokens (0144). Joined, it must be `code`."
+      },
+      {
+        "name": "lang",
+        "type": "string",
+        "required": false,
+        "description": "The language, for a reader, and the title when there is none."
+      },
+      {
+        "name": "copyable",
+        "type": "boolean",
+        "required": false,
+        "description": "A copy button in the top edge. On by default; a block with no frame has none.",
+        "default": "true"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The block's accessible name, when the title is not the right one."
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows' | 'title'>",
+      "Omit<CodeBlockOptions, 'copyable'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "CodeSnapshot": {
+    "file": "code-block.tsx",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "description": "The text snapshot, as `toText` writes it."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What the snapshot shows, said in words: a reader hears this, not the box characters one by one."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the top edge: what it is a snapshot of."
+      },
+      {
+        "name": "copyable",
+        "type": "boolean",
+        "required": false,
+        "description": "A copy button in the top edge. On by default.",
+        "default": "true"
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows' | 'title'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
     ]
   },
   "Column": {
@@ -705,6 +804,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "Padding inside the border, in cells. The border's own cell is added to it, so the default puts content one cell in from the left edge and hard against the rows above and below — the proportions a terminal uses."
       },
       {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground the frame sits on, border cells included: `sunken`, `base` (the default), `raised` or `overlay`. Unset, the frame is transparent and shows what is behind it."
+      },
+      {
         "name": "label",
         "type": "string",
         "required": false,
@@ -720,6 +825,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1162,10 +1269,22 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "Padding inside the pane's borders, in cells. One across and none down by default, the proportions `Frame` uses."
       },
       {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground under the pane's content and padding: `sunken`, `base` (the default), `raised` or `overlay`. The borders around it stay the screen's."
+      },
+      {
         "name": "label",
         "type": "string",
         "required": false,
         "description": "The accessible name, when the title is not the right one to say."
+      },
+      {
+        "name": "landmark",
+        "type": "boolean",
+        "required": false,
+        "description": "Whether a named pane is a region landmark. True by default. False makes it a plain container with no name, its title still drawn in its top edge: for a pane whose content is a landmark of its own, a `nav`, `main` or `aside`, which should stay at the top of a reader's list of landmarks."
       },
       {
         "name": "className",
@@ -1181,6 +1300,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1225,6 +1346,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
     ],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1467,6 +1590,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "default": "DEFAULT_ROWS"
       },
       {
+        "name": "inputRef",
+        "type": "Ref<HTMLInputElement | HTMLTextAreaElement>",
+        "required": false,
+        "description": "The text box itself, `<input>` or, `multiline`, `<textarea>`: for an app to focus it, select its text or read its caret. An object or a callback; the field keeps its own beside it. `ref` is the field around it."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -1507,6 +1636,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
         "default": "'glyph'"
+      },
+      {
+        "name": "disallowTypeAhead",
+        "type": "boolean",
+        "required": false,
+        "description": "No type-ahead: a printable key moves nothing, and reaches the page, for a tree beside single-letter shortcuts (`j`, `k`, `/`). The arrows, Home and End still move. React Aria's own option, which its GridList offers and its Tree honours."
+      },
+      {
+        "name": "onFocusedKeyChange",
+        "type": "(key: Key | null) => void",
+        "required": false,
+        "description": "Called with the row that has focus whenever it changes, and with `null` when focus leaves the tree: what a keymap beside the tree acts on, or what a status bar shows."
       },
       {
         "name": "className",

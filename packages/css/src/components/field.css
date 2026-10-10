@@ -120,7 +120,15 @@
     justify-self: stretch;
   }
 
-  @container rk-form (width < 60ch) {
+  /*
+   * Fewer than sixty whole cells: asked at the midpoint, 59.5ch. The form is
+   * a whole number of cells wide, but layout snaps every box to 1/64px while
+   * the cell is the font's true advance, so a form exactly sixty cells wide
+   * can lay out a hair under 60ch, and WebKit stacked one that way. No width
+   * between 59 and 60 cells ever happens, so the midpoint asks the question
+   * exactly, whatever the snapping (cairn 0124; see cellsIn).
+   */
+  @container rk-form (width < 59.5ch) {
     .rk-form-grid {
       grid-template-columns: [label-start control-start] minmax(0, 1fr) [label-end control-end];
     }
