@@ -96,7 +96,15 @@ export function AppShell({ nav, bindings, outline, children }: AppShellProps): R
   const main = useRef<HTMLElement>(null);
   const aside = useRef<HTMLElement>(null);
 
-  const [stacked, setStacked] = useState(false);
+  // Initialize stacked based on the viewport width measured in the head script,
+  // so hydration does not change the layout and cause shifts. The width is in
+  // pixels; convert to cells assuming a 10px cell width (the standard for monospace).
+  const initialStacked = (): boolean => {
+    const width = typeof window !== 'undefined' && (window as any).rockawayViewportWidthPx;
+    const cellWidth = 10; // Standard advance width for monospace at 16px font.
+    return width ? Math.floor(width / cellWidth) < STACK_BELOW : false;
+  };
+  const [stacked, setStacked] = useState(initialStacked);
   const [sections, setSections] = useState(true);
   const [helping, setHelping] = useState(false);
   const [look, setLook] = useState<Look>(DEFAULT_LOOK);
@@ -110,18 +118,22 @@ export function AppShell({ nav, bindings, outline, children }: AppShellProps): R
   const glyphs: Glyphs =
     (themeGlyphs as Readonly<Record<string, Glyphs>>)[look.theme] ?? themeGlyphs.default;
 
-  // ── Layout: stacked under STACK_BELOW cells, measured before paint ──────
+  // ── Layout: stacked under STACK_BELOW cells, measured on resize ────────
   useLayoutEffect(() => {
     const el = shell.current;
     if (!el) return;
     const layOut = (): void => {
-      setStacked(cellsIn(el.getBoundingClientRect().width, measureCell(el).width) < STACK_BELOW);
+      const newStacked = cellsIn(el.getBoundingClientRect().width, measureCell(el).width) < STACK_BELOW;
+      // Only update stacked if it actually changed; this avoids unnecessary renders.
+      setStacked((prev) => (prev !== newStacked ? newStacked : prev));
       setSections(aside.current?.querySelector('a[href]') !== null);
     };
-    layOut();
-    document.documentElement.dataset.rkShell = 'live';
     const observer = new ResizeObserver(layOut);
     observer.observe(el);
+    // Mark the shell as live, so the CSS pre-paint layout rules stop applying
+    // and the React-rendered layout takes over. This happens after the initial
+    // measure, so React has already rendered with the correct stacked value.
+    document.documentElement.dataset.rkShell = 'live';
     return () => observer.disconnect();
   }, []);
 

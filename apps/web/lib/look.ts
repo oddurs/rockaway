@@ -71,10 +71,12 @@ export function next<T>(list: readonly T[], at: T, step = 1): T {
 
 /**
  * The script at the top of the head: it marks that script runs, reads the
- * reader's look and sets it on `<html>` before the body is parsed, and writes
- * the chosen theme's stylesheet into the head, so the first frame is drawn in
- * it. Written as a string, because it runs before any module could load;
- * `themeUrls` are the built stylesheets, by theme.
+ * reader's look and sets it on `<html>` before the body is parsed, writes
+ * the chosen theme's stylesheet into the head so the first frame is drawn in
+ * it, and measures the viewport width so the shell's layout (stacked vs
+ * side-by-side) is determined before first paint, with no shift during
+ * hydration (cairn 0104, 0273). Written as a string, because it runs before
+ * any module could load; `themeUrls` are the built stylesheets, by theme.
  *
  * `document.write` is deliberate; do not replace it. A stylesheet the parser
  * inserts blocks the first frame in every engine. One a script inserts with
@@ -103,5 +105,9 @@ export function prePaint(themeUrls: Readonly<Record<string, string>>): string {
   }
   if (modes.includes(look.mode)) root.dataset.theme = look.mode;
   if (densities.includes(look.density)) root.dataset.density = look.density;
+  // Store the viewport width so React can determine the layout without remeasuring
+  // during hydration, which would cause shifts. CSS container queries need no help
+  // from JavaScript; this is for React's layout state initialization.
+  self.rockawayViewportWidthPx = window.innerWidth;
 })();`;
 }
