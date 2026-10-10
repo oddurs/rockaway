@@ -1,5 +1,3 @@
-'use client';
-
 import { List, ListItem } from '@rockaway/react';
 import type { ReactNode } from 'react';
 

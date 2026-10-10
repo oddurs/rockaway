@@ -123,13 +123,12 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`######····` 54% · 80 of 148 done · due 2027-01-31
+`######····` 55% · 81 of 148 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
 ### backlog
 
-- [ ] [`0034`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0034-popover.md) Popover <sup>component · components · p0</sup>
 - [ ] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
 - [ ] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
 - [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
@@ -171,7 +170,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0257`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0257-line-a-form-up-at-exactly-the-sixty-cell-threshold-in-every-engine.md) Line a form up at exactly the sixty-cell threshold in every engine <sup>bug · css · p2</sup>
 - [ ] [`0259`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0259-draw-site-navigation-as-a-static-tree-of-links.md) Draw site navigation as a static tree of links <sup>component · components · p2</sup>
 - [ ] [`0268`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0268-read-what-a-pseudo-element-draws-when-copying-a-screen.md) Read what a pseudo-element draws when copying a screen <sup>feature · tooling · p3</sup>
-- [ ] [`0269`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0269-walk-keyboard-stories-with-the-browser-s-real-keys.md) Walk keyboard stories with the browser's real keys <sup>chore · tooling · p2</sup>
 - [ ] [`0275`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0275-keep-a-focused-tall-scroll-region-s-top-in-view.md) Keep a focused tall scroll region's top in view <sup>bug · components · p3</sup>
 - [ ] [`0279`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0279-share-a-hook-for-a-screen-s-width-in-cells.md) Share a hook for a screen's width in cells <sup>feature · components · p3</sup>
 - [ ] [`0280`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0280-space-a-statussegment-s-keyhints.md) Space a StatusSegment's KeyHints <sup>bug · components · p3</sup>
@@ -188,6 +186,7 @@ The component contract, proven on a first set of components.
 
 ### in review
 
+- [ ] [`0034`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0034-popover.md) Popover <sup>component · components · p0</sup>
 - [ ] [`0035`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0035-text-field.md) Text field <sup>component · components · p1</sup>
 - [ ] [`0036`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0036-checkbox.md) Checkbox <sup>component · components · p1</sup>
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
@@ -281,6 +280,7 @@ The component contract, proven on a first set of components.
 - [x] [`0264`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0264-judge-an-inset-mark-against-its-own-geometry-in-the-leak-rule.md) Judge an inset mark against its own geometry in the leak rule <sup>bug · grid · p2</sup>
 - [x] [`0265`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0265-settle-one-layout-tolerance-in-cellsin.md) Settle one layout tolerance in cellsIn <sup>chore · grid · p2</sup>
 - [x] [`0266`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0266-announce-a-server-rendered-button-s-chord.md) Announce a server-rendered Button's chord <sup>bug · components · p2</sup>
+- [x] [`0269`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0269-walk-keyboard-stories-with-the-browser-s-real-keys.md) Walk keyboard stories with the browser's real keys <sup>chore · tooling · p2</sup>
 - [x] [`0270`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0270-dim-a-disabled-fill-button-s-reversal.md) Dim a disabled fill Button's reversal <sup>bug · components · p2</sup>
 - [x] [`0276`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0276-keep-codeblock-s-overflow-marks-under-a-modal.md) Keep CodeBlock's overflow marks under a modal <sup>bug · components · p1</sup>
 - [x] [`0277`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0277-draw-a-codeblock-without-its-own-frame.md) Draw a CodeBlock without its own frame <sup>feature · components · p2</sup>
@@ -416,6 +416,7 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0233`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0233-resize-table-columns-in-whole-cells-and-edit-cells.md) Resize table columns in whole cells, and edit cells <sup>feature · p3</sup>
 - [ ] [`0234`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0234-import-a-terminal-theme-without-forking.md) Import a terminal theme without forking <sup>feature · p3</sup>
 - [ ] [`0235`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0235-file-the-react-aria-entry-focus-issue-upstream.md) File the React Aria entry-focus issue upstream <sup>feature · p3</sup>
+- [ ] [`0298`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0298-draw-block-letter-display-type-with-the-cell-renderer.md) Draw block-letter display type with the cell renderer <sup>feature · grid · p2</sup>
 
 ### ready
 
@@ -423,5 +424,4 @@ Worth doing, not yet worth scheduling.
 - [ ] [`0263`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0263-repeat-the-paint-figures-in-firefox-webkit-and-on-a-low-end-phone.md) Repeat the paint figures in Firefox, WebKit and on a low-end phone <sup>chore · grid · p3</sup>
 - [ ] [`0267`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0267-share-overlay-row-measurement.md) Share overlay row measurement <sup>chore · components · p3</sup>
 - [ ] [`0272`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0272-compare-the-step-between-table-header-rules.md) Compare the step between table-header rules <sup>chore · tooling · p3</sup>
-- [ ] [`0298`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0298-draw-block-letter-display-type-with-the-cell-renderer.md) Draw block-letter display type with the cell renderer <sup>feature · grid · p2</sup>
 

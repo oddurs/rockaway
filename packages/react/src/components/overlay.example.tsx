@@ -1,5 +1,3 @@
-'use client';
-
 import { Button, OverlayLayer, OverlayPopover } from '@rockaway/react';
 import type { ReactNode } from 'react';
 import { Dialog, DialogTrigger } from 'react-aria-components';

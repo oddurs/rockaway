@@ -6,7 +6,6 @@
  * module could reach).
  */
 import { readFileSync } from 'node:fs';
-import path from 'node:path';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Code } from '../components/Code.tsx';
@@ -15,6 +14,7 @@ import { ScrollRegion } from '../components/ScrollRegion.tsx';
 import { PageBody } from '../components/shell/PageBody.tsx';
 import { headHtml, restHtml, sectionsOf } from './component-page.ts';
 import { components, slugOf } from './components.ts';
+import { examplePath } from './examples.ts';
 import { pageMetadata } from './pages.ts';
 
 const metaOf = (slug: string) => {
@@ -36,7 +36,7 @@ export function ComponentPage({
   readonly children: ReactNode;
 }): ReactNode {
   const meta = metaOf(slug);
-  const source = readFileSync(path.join(process.cwd(), 'examples', `${slug}.tsx`), 'utf8');
+  const source = readFileSync(examplePath(meta.name), 'utf8');
   return (
     <PageBody title={meta.name}>
       <article className="rk-prose">

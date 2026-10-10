@@ -12,6 +12,8 @@ import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
+import { exampleFile } from '../lib/examples.ts';
+
 const require = createRequire(import.meta.url);
 const meta = require('@rockaway/react/meta.json') as { components: { name: string }[] };
 const app = path.join(import.meta.dirname, '..', 'app');
@@ -26,8 +28,11 @@ const header =
   '// Written by scripts/routes.ts. Do not edit: it is written again before every build.\n';
 for (const { name } of meta.components) {
   const slug = slugOf(name);
-  if (!existsSync(path.join(import.meta.dirname, '..', 'examples', `${slug}.tsx`))) {
-    throw new Error(`${name} has no example: add apps/web/examples/${slug}.tsx`);
+  // Beside the component, keyed by the file its metadata is in (lib/examples.ts).
+  const file = exampleFile(name);
+  const example = `packages/react/src/components/${file}.example.tsx`;
+  if (!existsSync(path.join(process.cwd(), '..', '..', example))) {
+    throw new Error(`${name} has no example: add ${example}`);
   }
   mkdirSync(path.join(pages, slug), { recursive: true });
   // The example's module, loaded only when the example nears the view: its
@@ -39,7 +44,7 @@ for (const { name } of meta.components) {
 ${header}import { deferred } from '../../../../components/Deferred.tsx';
 
 export const Example = deferred(() =>
-  import('../../../../examples/${slug}.tsx').then((module) => module.Example),
+  import('../../../../../../${example}').then((module) => module.Example),
 );
 `,
   );

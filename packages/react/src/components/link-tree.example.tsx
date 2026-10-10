@@ -1,5 +1,3 @@
-'use client';
-
 import { LinkTree } from '@rockaway/react';
 import type { ReactNode } from 'react';
 

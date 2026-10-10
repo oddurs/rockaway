@@ -1,5 +1,3 @@
-'use client';
-
 import { KeyHint, StatusBar, StatusSegment } from '@rockaway/react';
 import type { ReactNode } from 'react';
 

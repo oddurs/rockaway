@@ -1,5 +1,3 @@
-'use client';
-
 import { Fieldset, fieldClass, useGlyphs } from '@rockaway/react';
 import type { ReactNode } from 'react';
 import { Radio, RadioGroup } from 'react-aria-components';

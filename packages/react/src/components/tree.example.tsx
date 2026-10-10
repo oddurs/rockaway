@@ -1,5 +1,3 @@
-'use client';
-
 import { Tree, TreeItem } from '@rockaway/react';
 import type { ReactNode } from 'react';
 

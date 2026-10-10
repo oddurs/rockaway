@@ -12,9 +12,10 @@ import { expectContinuity, screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { cellsOf, cellsOfBuffer } from '../cells.ts';
+import { tab } from '../keys.ts';
 
 const meta = {
   title: 'Components/Frame',
@@ -314,13 +315,13 @@ export const Keyboard: Story = {
     expect(frame.tabIndex).toBe(-1);
     expect(frame.querySelector('.rk-frame [tabindex], .rk-frame a, .rk-frame button')).toBeNull();
 
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Publish' }));
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Cancel' }));
-    await userEvent.tab();
+    await tab();
     expect(document.activeElement).toBe(canvas.getByRole('link', { name: 'the guide' }));
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(document.activeElement).toBe(canvas.getByRole('button', { name: 'Cancel' }));
 
     // The ring is drawn outside the control, and nothing between the control

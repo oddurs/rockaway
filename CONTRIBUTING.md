@@ -85,7 +85,8 @@ and touches no other line:
   or an event handler. CI fails the packed build without it.
 - `packages/react/src/components/<name>.meta.ts`: its metadata (cairn 0047),
   and `<name>.fixture.ts` beside it, the component rendered once for the
-  metadata test. Then run `pnpm --filter @rockaway/react metadata`, which reads
+  metadata test, and `<name>.example.tsx`, the component as a reader first
+  meets it, which its site page and the kitchen sink both show. Then run `pnpm --filter @rockaway/react metadata`, which reads
   its props and tokens and lists it in the generated registry,
   `src/metadata/components.ts`.
   `test/metadata.test.ts` fails for a component exported without metadata, and

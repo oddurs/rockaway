@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@rockaway/react';
 import type { ReactNode } from 'react';
 

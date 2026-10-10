@@ -1,5 +1,3 @@
-'use client';
-
 import { Checkbox, CheckboxGroup, Form } from '@rockaway/react';
 import type { ReactNode } from 'react';
 

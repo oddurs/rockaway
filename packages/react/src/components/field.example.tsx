@@ -1,5 +1,3 @@
-'use client';
-
 import { Form, TextField } from '@rockaway/react';
 import type { ReactNode } from 'react';
 

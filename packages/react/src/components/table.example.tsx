@@ -1,8 +1,5 @@
-'use client';
-
 import { Cell, Column, Row, Table, TableBody, TableHeader } from '@rockaway/react';
-import type { ReactNode } from 'react';
-import { useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import type { SortDescriptor } from 'react-aria-components';
 
 const FILES = [
