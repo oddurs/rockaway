@@ -12,7 +12,7 @@ depends_on:
 - 104
 - 180
 created: 2026-10-03
-updated: 2026-10-04
+updated: 2026-10-09
 priority: p0
 layer: site
 effort: m
@@ -48,3 +48,7 @@ document.write in the pre-paint script is deliberate, agreed with the CTO: a sty
 ## 2026-10-04
 
 Criterion 3, covered axis by axis as the CTO asked: every theme in both modes at normal density (18 looks) and every density in the default theme (5), 23 in all, each checked with axe and conformance, plus continuity in one look of each kind (ink dark, phosphor light, default touch). It runs once, at the /rockaway/ base, in about five seconds of the site test. Dense's target-size failures are asserted, as documented (0197).
+
+## 2026-10-09
+
+apps/web (#245): theme, mode and density switch from the status bar and from t / m / d, persist, and the head's script applies them and the theme's sheet before first paint (test: the next load's <html> and status bar carry the reader's look at DOMContentLoaded). Criterion 1 stays open for the command palette, which the system does not have yet.

@@ -3,15 +3,15 @@ id: 105
 uid: 51487277-f66a-4dd7-8e09-836ddb4602b0
 title: Make every screen copyable as text and as ANSI
 type: feature
-status: doing
+status: done
 milestone: site
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 98
 - 104
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p1
 layer: site
 effort: m
@@ -39,3 +39,7 @@ Built on the shell (0104), on feat/copy-screens, stacked on feat/site-shell. The
 ## 2026-10-03
 
 On the site: y copies the screen you are on as text, Shift+Y as ANSI; two Buttons in the status bar do the same (keys y and shift+y, so aria-keyshortcuts), and the message line says what was copied and its size. The screen is the one last pointed at or moved into (a snapshot figure, an example's screen), or else the whole page. Proved in the site test: the page as text is the screen as drawn; every snapshot on every component page copies as its metadata text; and the ANSI, written into @xterm/headless (a dev dependency of the site), reads back line for line as the text, with the mode in reverse video and the success mark in slot 2 of the sixteen. Small finding: Button's keys="shift+y" announces aria-keyshortcuts="Shift+y", where ARIA wants the key as typed, Shift+Y.
+
+## 2026-10-09
+
+apps/web (#245): y and Y in the status bar and as keys copy the page, or the screen last pointed at, as text or ANSI, and say what they copied on the message line; the copier loads at first use. Tested in test/site.test.ts.

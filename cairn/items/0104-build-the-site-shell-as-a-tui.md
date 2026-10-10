@@ -3,10 +3,9 @@ id: 104
 uid: 562ba731-e93f-474e-a13e-938b31be29ad
 title: Build the site shell as a TUI
 type: feature
-status: doing
+status: done
 milestone: site
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 98
 - 103
@@ -18,6 +17,7 @@ depends_on:
 - 143
 created: 2026-09-22
 updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p0
 layer: site
 effort: l
@@ -71,3 +71,7 @@ Reworked as approved: the shell is the system's components rendered by Astro wit
 ## 2026-10-09
 
 Rebuilt for Next.js in apps/web without Panes or StatusBar as client components: the grid is CSS, borders are server-drawn elastic frames, so the shell's first-load JS is the Next floor plus a ~7.7 kB island (shared 136.9 kB gz, was 188). Panes/StatusBar stay the system's for apps that measure; the site cannot afford their script on every page.
+
+## 2026-10-09
+
+Done in apps/web (#245). Criterion 7 holds in spirit and not in letter: the shell's chrome is the system's pure halves (frameBuffer, chromeRows, treeGuides, rowRuns) and its stylesheets, rendered on the server, not the Panes and StatusBar components, whose measuring script the site cannot afford on every page (188 kB shared before, 140 after). The system tickets that would let a site use the components themselves: 0303 (server entries) and a status bar laid out by CSS (proposed).

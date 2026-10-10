@@ -3,15 +3,15 @@ id: 150
 uid: cd10055c-c532-4d49-812d-c3836f3a0842
 title: Give every page a title, a description and a social card drawn by the engine
 type: feature
-status: doing
+status: done
 milestone: site
 assignee: Oddur Sigurdsson
-claimed: 2026-10-04
 depends_on:
 - 103
 - 126
 created: 2026-10-03
-updated: 2026-10-04
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p1
 layer: site
 effort: m
@@ -33,3 +33,7 @@ by the engine, not a designed image.
 ## 2026-10-04
 
 Built on feat/cards, stacked on the switcher. Every page's head now has a unique title and description, a canonical link, Open Graph and Twitter tags, and the favicon. Titles and descriptions come from src/lib/pages.ts, which reads the same collections and metadata the pages do, and holds the four pages whose words were written in their own .astro files, so a card never says what its page does not. Cards: the engine draws each page's title and description in a frame (src/lib/card.ts). The engine's new SVG painter (@rockaway/grid toSvg, with a changeset) paints it, drawing every line from the cell renderer's shapes. The letters are the site's own JetBrains Mono subset as outlines read by HarfBuzz, so no font has to be installed. sharp makes the 1200x630 PNG. The criterion names the text or ANSI painter; an SVG painter in the engine is the same idea done directly, and it is reusable. sitemap.xml and robots.txt are endpoints; robots.txt only counts at a domain's root, so it matters once the site has a domain of its own. The 404 page is a screen in the shell, with the map and a link home. The favicon is two panes and their rule (┌┬┐ / └┴┘) drawn by the same painter, in SVG and as a 180px PNG. New dev dependencies of the site, all build-time: sharp, harfbuzzjs and fontverter (pinned; sharp was already in the tree through Astro).
+
+## 2026-10-09
+
+apps/web (#245): per-page titles, descriptions, canonical, og and twitter tags from lib/pages.ts; a 1200x630 card per page drawn at build in the site's faces; sitemap.xml, robots.txt, a 404 inside the shell, and an SVG favicon with a PNG beside it.
