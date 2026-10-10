@@ -647,6 +647,7 @@ export const ForcedColors: Story = {
     expect(focused.forcedColorAdjust).toBe('none');
     expect(focused.backgroundColor).toBe(probe('CanvasText'));
     expect(focused.color).toBe(probe('Canvas'));
-    expect(edges(surface)[4]).toMatch(/^┠─+┨$/);
+    // The frame is drawn again once the menu has measured itself.
+    await waitFor(() => expect(edges(surface)[4]).toMatch(/^┠─+┨$/));
   },
 };

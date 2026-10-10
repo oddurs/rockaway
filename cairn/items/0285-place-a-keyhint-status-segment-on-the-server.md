@@ -3,10 +3,12 @@ id: 285
 uid: 0edd3d0c-3927-4415-885d-12a40050d43b
 title: Place a KeyHint status segment on the server
 type: feature
-status: ready
+status: done
 milestone: primitives
+assignee: Oddur Sigurdsson
 created: 2026-10-09
 updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p2
 layer: components
 effort: s

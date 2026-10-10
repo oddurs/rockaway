@@ -216,3 +216,19 @@ export function keyShortcut(spec: string, platform: Platform = 'other'): string 
   const names = { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
   return [...held(keys, names), ariaKey(keys.key)].join('+');
 }
+
+/**
+ * How many cells a hint takes, from its props alone: the legend, and a cell
+ * and the label after it when there is one (key-hint.css puts a cell between
+ * them). Known without a page, so a status bar can place a hint on a server.
+ */
+export function keyHintCells(
+  spec: string,
+  label: string | undefined,
+  platform: Platform = 'other',
+  notation: KeyNotation = 'platform',
+  glyphs: Glyphs = themeGlyphs.default,
+): number {
+  const legend = stringWidth(formatKeys(spec, platform, notation, glyphs));
+  return label === undefined || label === '' ? legend : legend + 1 + stringWidth(label);
+}
