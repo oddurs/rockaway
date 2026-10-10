@@ -16,6 +16,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useRef, useState } from 'react';
 import { Dialog, Heading, Input, Label, Modal, TextField } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { click, press } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -77,32 +78,32 @@ export const ChordsAndSequences: Story = {
   ),
   play: async ({ canvas }) => {
     await settled();
-    await userEvent.keyboard(mod('k'));
+    await press(mod('k'));
     expect(text('last')).toBe('palette');
 
-    await userEvent.keyboard('gh');
+    await press('gh');
     expect(text('last')).toBe('home');
-    await userEvent.keyboard('gi');
+    await press('gi');
     expect(text('last')).toBe('issues');
 
     // The second key a second and more after the first is only itself.
-    await userEvent.keyboard('g');
+    await press('g');
     await new Promise((done) => setTimeout(done, 1100));
-    await userEvent.keyboard('h');
+    await press('h');
     expect(text('last')).toBe('issues');
 
-    await userEvent.keyboard('jjk');
+    await press('jjk');
     expect(text('row')).toBe('row 1');
 
     // In a text field, `g h` and `j` are letters.
     const field = canvas.getByRole('textbox', { name: 'Message' });
-    await userEvent.click(field);
-    await userEvent.keyboard('ghj');
+    await click(field);
+    await press('ghj');
     expect(field).toHaveValue('ghj');
     expect(text('last')).toBe('issues');
     expect(text('row')).toBe('row 1');
     // A chord with a modifier is not typing, and fires there too.
-    await userEvent.keyboard(mod('k'));
+    await press(mod('k'));
     expect(text('last')).toBe('palette');
     expect(field).toHaveValue('ghj');
   },
@@ -152,17 +153,17 @@ export const Scopes: Story = {
   },
   play: async ({ canvas }) => {
     await settled();
-    await userEvent.keyboard('j');
+    await press('j');
     expect(text('row')).toBe('row 1');
 
     await userEvent.click(canvas.getByRole('button', { name: 'Rename' }));
     const dialog = await waitFor(() => document.querySelector<HTMLElement>('[role="dialog"]'));
     expect(dialog).not.toBeNull();
-    await userEvent.keyboard('j');
+    await press('j');
     expect(text('suggestion')).toBe('suggestion 1');
     expect(text('row')).toBe('row 1');
     // The page's palette is not the dialog's.
-    await userEvent.keyboard(mod('k'));
+    await press(mod('k'));
     expect(text('last')).toBe('nothing yet');
     // The dialog's help lists the dialog's keys, and only those.
     const help = dialog?.querySelector('.rk-keymap-help');
@@ -174,9 +175,9 @@ export const Scopes: Story = {
     );
     await userEvent.click(done as HTMLElement);
     await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
-    await userEvent.keyboard('j');
+    await press('j');
     expect(text('row')).toBe('row 2');
-    await userEvent.keyboard(mod('k'));
+    await press(mod('k'));
     expect(text('last')).toBe('palette');
   },
 };
@@ -260,7 +261,7 @@ export const Help: Story = {
     await waitFor(() => expect(inside()).toBe(model(shadowed)));
 
     // `?` is a binding like any other: it hides the help it is listed in.
-    await userEvent.keyboard('?');
+    await press('?');
     await waitFor(() => expect(frame.querySelector('.rk-keymap-help')).toBeNull());
   },
 };
@@ -299,7 +300,7 @@ export const OnItsTarget: Story = {
     await waitFor(() =>
       expect(save.getAttribute('aria-keyshortcuts')).toBe(keyShortcut('mod+s', keyboard())),
     );
-    await userEvent.keyboard(mod('s'));
+    await press(mod('s'));
     await waitFor(() => expect(text('saved')).toBe('saved 1'));
   },
 };
@@ -354,10 +355,10 @@ export const ButtonKeys: Story = {
     await settled();
     const save = canvas.getByRole('button', { name: 'Save' });
     expect(save.getAttribute('aria-keyshortcuts')).toBe(keyShortcut('mod+s', keyboard()));
-    await userEvent.keyboard(mod('s'));
+    await press(mod('s'));
     await waitFor(() => expect(text('log')).toBe('saved'));
     // The disabled button's chord is not bound, and not listed.
-    await userEvent.keyboard(mod('e'));
+    await press(mod('e'));
     expect(text('log')).toBe('saved');
     const help = canvas.getByRole('definition');
     expect(help).toHaveTextContent('Save');
@@ -374,7 +375,7 @@ export const ButtonKeysUnbound: Story = {
     // Drawn and announced as ever...
     expect(save.getAttribute('aria-keyshortcuts')).toBe(keyShortcut('mod+s', keyboard()));
     // ...and not bound: with no keymap, the app listens for the chord.
-    await userEvent.keyboard(mod('s'));
+    await press(mod('s'));
     expect(text('unbound')).toBe('saved 0');
   },
 };

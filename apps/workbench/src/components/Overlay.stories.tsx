@@ -12,6 +12,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useState } from 'react';
 import { Dialog, DialogTrigger, Heading, Menu, MenuItem, MenuTrigger } from 'react-aria-components';
 import { expect, userEvent, waitFor } from 'storybook/test';
+import { click, press } from '../keys.ts';
 import { measured } from '../settled.ts';
 
 /*
@@ -427,9 +428,9 @@ export const Dismiss: Story = {
 
     // Popover: Enter opens it, Escape closes it, focus returns.
     open('Popover').focus();
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(dialog('Popover')).not.toBeNull());
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(dialog('Popover')).toBeNull(), CLOSE);
     await waitFor(() => expect(open('Popover')).toHaveFocus(), CLOSE);
 
@@ -443,29 +444,30 @@ export const Dismiss: Story = {
 
     // The modals are opened from the keyboard, so their trigger has focus to
     // be given back: WebKit, like Safari, does not focus a button it presses.
-    const press = async (name: string): Promise<void> => {
+    const openByKey = async (name: string): Promise<void> => {
       open(name).focus();
-      await userEvent.keyboard('{Enter}');
+      await press('{Enter}');
       await waitFor(() => expect(dialog(name)).not.toBeNull());
     };
 
     // A modal that is not dismissable: the backdrop does nothing; Escape closes.
-    await press('Fixed');
+    await openByKey('Fixed');
+    // Pressed for real, in its corner: the dialog covers its middle, and a
+    // synthetic press moved focus out of the dialog where a reader's does not,
+    // so the real Escape after it went nowhere.
     const scrim = document.querySelector('.rk-overlay-scrim') as HTMLElement;
-    await userEvent.click(scrim, { skipHover: true });
+    await click(scrim, { x: 4, y: 4 });
     expect(dialog('Fixed')).not.toBeNull();
     // The press took no focus: still in the dialog, where Escape reaches it.
     // Firefox used to put it on the body, and Escape then closed nothing.
     expect(dialog('Fixed')?.contains(document.activeElement)).toBe(true);
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(dialog('Fixed')).toBeNull(), CLOSE);
     await waitFor(() => expect(open('Fixed')).toHaveFocus(), CLOSE);
 
     // A dismissable modal: a press on the backdrop closes it.
-    await press('Loose');
-    await userEvent.click(document.querySelector('.rk-overlay-scrim') as HTMLElement, {
-      skipHover: true,
-    });
+    await openByKey('Loose');
+    await click(document.querySelector('.rk-overlay-scrim') as HTMLElement, { x: 4, y: 4 });
     await waitFor(() => expect(dialog('Loose')).toBeNull(), CLOSE);
     await waitFor(() => expect(open('Loose')).toHaveFocus(), CLOSE);
   },
@@ -511,7 +513,7 @@ export const Nested: Story = {
       return button as HTMLElement;
     });
     actions.focus();
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(document.querySelector('[role="menu"]')).not.toBeNull());
     // Three surfaces' worth of layer: backdrop and dialog, then the menu above them.
     const [dialogSurface, menuSurface] = surfaces();
@@ -522,13 +524,13 @@ export const Nested: Story = {
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
 
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(document.querySelector('[role="menu"]')).toBeNull());
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
     // Focus goes back a frame after the menu unmounts.
     await waitFor(() => expect(actions).toHaveFocus());
 
-    await userEvent.keyboard('{Escape}');
+    await press('{Escape}');
     await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
     await waitFor(() => expect(settings).toHaveFocus());
   },
@@ -620,7 +622,9 @@ export const ForcedColors: Story = {
 
 /**
  * A minimum width: as wide as the trigger, in whole cells (a select's list),
- * or a number of columns, the frame's two included.
+ * or a number of columns, the frame's two included. A trigger a few
+ * hundredths of a pixel over its cells, as a select's five runs came out on
+ * CI, takes those cells and not one more (0228).
  */
 export const MinCols: Story = {
   name: 'Minimum width',
@@ -632,6 +636,14 @@ export const MinCols: Story = {
           <OverlayPopover minCols="trigger">
             <Dialog aria-label="Trigger wide">
               <p style={{ margin: 0 }}>one</p>
+            </Dialog>
+          </OverlayPopover>
+        </DialogTrigger>
+        <DialogTrigger defaultOpen>
+          <Button style={{ inlineSize: 'calc(var(--rk-cell-width) * 12 + 0.04px)' }}>Hair</Button>
+          <OverlayPopover minCols="trigger">
+            <Dialog aria-label="Hair over">
+              <p style={{ margin: 0 }}>three</p>
             </Dialog>
           </OverlayPopover>
         </DialogTrigger>
@@ -650,11 +662,13 @@ export const MinCols: Story = {
     await measured(document.body);
     const wide = canvas.getByRole('button', { name: 'A wide trigger of a button' });
     const open = canvas.getByRole('button', { name: 'Open' });
-    const [first, second] = surfaces();
-    if (!first || !second) throw new Error('no popovers');
+    const hair = canvas.getByRole('button', { name: 'Hair' });
+    const [first, third, second] = surfaces();
+    if (!first || !second || !third) throw new Error('no popovers');
     const [, , triggerWidth] = placeOf(wide, wide);
     expect(placeOf(first, wide)[2]).toBe(triggerWidth);
     expect(edgeOf(first)).toBe(`┏${'━'.repeat(triggerWidth - 2)}┓`);
+    expect(placeOf(third, hair)[2]).toBe(12);
     expect(placeOf(second, open)[2]).toBe(24);
   },
 };

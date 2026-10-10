@@ -14,8 +14,12 @@
  * lowest priority first, and the ones left share the room. A collapsed pane is
  * hidden rather than unmounted, so its content keeps its state.
  *
- * A titled pane is a region named by its title. Panes add no keyboard of their
- * own: focus moves through the panes' content in document order.
+ * A titled pane is a region named by its title, unless it says it is not one
+ * (`landmark={false}`, cairn 0248): a pane that only frames landmarks of its
+ * own — a page's `nav`, `main` and `aside` — would otherwise wrap each of them
+ * in a region, and a reader's list of landmarks would say everything twice.
+ * Panes add no keyboard of their own: focus moves through the panes' content
+ * in document order.
  */
 import type { BorderSetName, Size } from '@rockaway/grid';
 import {
@@ -28,7 +32,7 @@ import {
 } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { type Inset, Screen, type ScreenProps } from '../screen.tsx';
+import { type Inset, Screen, type ScreenProps, type Surface } from '../screen.tsx';
 import {
   layoutPanes,
   type PanePlacement,
@@ -57,8 +61,20 @@ export interface PaneProps {
    * default, the proportions `Frame` uses.
    */
   readonly pad?: number | Inset;
+  /**
+   * The ground under the pane's content and padding: `sunken`, `base` (the
+   * default), `raised` or `overlay`. The borders around it stay the screen's.
+   */
+  readonly surface?: Surface;
   /** The accessible name, when the title is not the right one to say. */
   readonly label?: string;
+  /**
+   * Whether a named pane is a region landmark. True by default. False makes it
+   * a plain container with no name, its title still drawn in its top edge:
+   * for a pane whose content is a landmark of its own, a `nav`, `main` or
+   * `aside`, which should stay at the top of a reader's list of landmarks.
+   */
+  readonly landmark?: boolean;
   readonly className?: string;
   /** The pane's content, or a `Panes` of its own to split it further. */
   readonly children?: ReactNode;
@@ -188,11 +204,14 @@ function PaneBox({
   placed,
   title,
   label,
+  landmark = true,
   pad,
+  surface,
   className,
   children,
 }: PaneProps & { readonly placed: PanePlacement }): ReactNode {
-  const name = label ?? title;
+  // An empty name names nothing, so it is no landmark either.
+  const name = landmark ? (label ?? title) : undefined;
   const inset = padOf(pad);
   const style = {
     '--rk-pane-x': placed.content.x,
@@ -206,10 +225,11 @@ function PaneBox({
     className: cx('rk-pane', className),
     'data-rk-pane': '',
     ...(placed.collapsed ? { 'data-collapsed': '', hidden: true } : {}),
+    ...(surface === undefined ? {} : { 'data-rk-surface': surface }),
     style,
   };
   // A titled pane is a region a reader can jump to, named by its title.
-  return name === undefined ? (
+  return name === undefined || name === '' ? (
     <div {...props}>{children}</div>
   ) : (
     <section {...props} aria-label={name}>

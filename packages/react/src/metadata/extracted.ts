@@ -800,6 +800,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "Padding inside the border, in cells. The border's own cell is added to it, so the default puts content one cell in from the left edge and hard against the rows above and below — the proportions a terminal uses."
       },
       {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground the frame sits on, border cells included: `sunken`, `base` (the default), `raised` or `overlay`. Unset, the frame is transparent and shows what is behind it."
+      },
+      {
         "name": "label",
         "type": "string",
         "required": false,
@@ -815,6 +821,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1255,10 +1263,22 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "Padding inside the pane's borders, in cells. One across and none down by default, the proportions `Frame` uses."
       },
       {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground under the pane's content and padding: `sunken`, `base` (the default), `raised` or `overlay`. The borders around it stay the screen's."
+      },
+      {
         "name": "label",
         "type": "string",
         "required": false,
         "description": "The accessible name, when the title is not the right one to say."
+      },
+      {
+        "name": "landmark",
+        "type": "boolean",
+        "required": false,
+        "description": "Whether a named pane is a region landmark. True by default. False makes it a plain container with no name, its title still drawn in its top edge: for a pane whose content is a landmark of its own, a `nav`, `main` or `aside`, which should stay at the top of a reader's list of landmarks."
       },
       {
         "name": "className",
@@ -1274,6 +1294,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1318,6 +1340,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
     ],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1329,6 +1353,22 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
     ]
+  },
+  "Popover": {
+    "file": "popover.tsx",
+    "props": [
+      {
+        "name": "minCols",
+        "type": "number | 'trigger'",
+        "required": false,
+        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width in whole cells, or a count. `0` lets it be as narrow as what it holds.\n @default 'trigger'",
+        "default": "'trigger'"
+      }
+    ],
+    "inherits": [
+      "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
+    ],
+    "tokens": []
   },
   "Row": {
     "file": "table.tsx",
@@ -1554,6 +1594,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "How many rows a `multiline` box shows.",
         "default": "DEFAULT_ROWS"
+      },
+      {
+        "name": "inputRef",
+        "type": "Ref<HTMLInputElement | HTMLTextAreaElement>",
+        "required": false,
+        "description": "The text box itself, `<input>` or, `multiline`, `<textarea>`: for an app to focus it, select its text or read its caret. An object or a callback; the field keeps its own beside it. `ref` is the field around it."
       },
       {
         "name": "className",
