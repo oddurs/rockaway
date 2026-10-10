@@ -30,7 +30,7 @@
  * the box. Behaviour is React Aria's `TextField`, `Input` and `TextArea`; the
  * keyboard is the platform's own.
  */
-import { type CSSProperties, type ReactNode, useMemo, useRef } from 'react';
+import { type CSSProperties, type ReactNode, type Ref, useMemo, useRef } from 'react';
 import {
   TextField as AriaTextField,
   type TextFieldProps as AriaTextFieldProps,
@@ -41,6 +41,7 @@ import {
 import { useCellScroll } from '../cell-scroll.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { Chrome } from '../paint/chrome.tsx';
+import { useBothRefs } from '../refs.ts';
 import type { VariantProps, VariantValue } from '../variants.ts';
 import { Description, FieldError, fieldClass, Label } from './field.tsx';
 import { FieldFrame } from './fieldset.tsx';
@@ -67,6 +68,12 @@ export interface TextFieldProps
   readonly multiline?: boolean;
   /** How many rows a `multiline` box shows. */
   readonly rows?: number;
+  /**
+   * The text box itself, `<input>` or, `multiline`, `<textarea>`: for an app
+   * to focus it, select its text or read its caret. An object or a callback;
+   * the field keeps its own beside it. `ref` is the field around it.
+   */
+  readonly inputRef?: Ref<HTMLInputElement | HTMLTextAreaElement>;
   readonly className?: string;
   readonly style?: CSSProperties;
 }
@@ -94,13 +101,19 @@ function Row({
   framed,
   readOnly,
   placeholder,
+  inputRef,
 }: {
   readonly framed: boolean;
   readonly readOnly: boolean;
   readonly placeholder: string | undefined;
+  readonly inputRef: Ref<HTMLInputElement | HTMLTextAreaElement> | undefined;
 }): ReactNode {
   const glyphs = useGlyphs();
   const input = useRef<HTMLInputElement>(null);
+  const refs = useBothRefs<HTMLInputElement, HTMLInputElement | HTMLTextAreaElement>(
+    input,
+    inputRef,
+  );
   const { overflow } = useCellScroll(input, 'x');
   const [open, close] = glyphs.delimiter.control;
   // Framed, the frame is the boundary and the cells are air; read-only, the
@@ -112,7 +125,7 @@ function Row({
         {overflow.start ? glyphs.mark['overflow-start'] : plain ? glyphs.mark.blank : open}
       </span>
       <Input
-        ref={input}
+        ref={refs}
         // Scrolls across: no bar of the browser's (0207); the overflow marks show where.
         className="rk-scroll rk-text-field-input"
         {...(placeholder === undefined ? {} : { placeholder })}
@@ -128,11 +141,17 @@ function Row({
 function Area({
   rows,
   placeholder,
+  inputRef,
 }: {
   readonly rows: number;
   readonly placeholder: string | undefined;
+  readonly inputRef: Ref<HTMLInputElement | HTMLTextAreaElement> | undefined;
 }): ReactNode {
   const area = useRef<HTMLTextAreaElement>(null);
+  const refs = useBothRefs<HTMLTextAreaElement, HTMLInputElement | HTMLTextAreaElement>(
+    area,
+    inputRef,
+  );
   const { lines } = useCellScroll(area, 'y');
   const glyphs = useGlyphs();
   return (
@@ -141,7 +160,7 @@ function Area({
         {glyphs.mark.blank}
       </span>
       <TextArea
-        ref={area}
+        ref={refs}
         rows={rows}
         // Scrolls down: no bar of the browser's (0207); the scrollbar column shows where.
         className="rk-scroll rk-text-field-area"
@@ -161,6 +180,7 @@ export function TextField({
   size,
   multiline = false,
   rows = DEFAULT_ROWS,
+  inputRef,
   className,
   style,
   ...aria
@@ -192,9 +212,9 @@ export function TextField({
             >
               <span className="rk-text-field-box">
                 {multiline ? (
-                  <Area rows={rows} placeholder={placeholder} />
+                  <Area rows={rows} placeholder={placeholder} inputRef={inputRef} />
                 ) : (
-                  <Row framed readOnly={isReadOnly} placeholder={placeholder} />
+                  <Row framed readOnly={isReadOnly} placeholder={placeholder} inputRef={inputRef} />
                 )}
               </span>
             </FieldFrame>
@@ -202,7 +222,12 @@ export function TextField({
             <>
               <Label isRequired={isRequired}>{label}</Label>
               <span className="rk-text-field-box">
-                <Row framed={false} readOnly={isReadOnly} placeholder={placeholder} />
+                <Row
+                  framed={false}
+                  readOnly={isReadOnly}
+                  placeholder={placeholder}
+                  inputRef={inputRef}
+                />
               </span>
             </>
           )}

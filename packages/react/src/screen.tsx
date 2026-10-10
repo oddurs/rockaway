@@ -41,6 +41,13 @@ export interface Inset {
   readonly y: number;
 }
 
+/**
+ * A panel's ground. `sunken` sits back from the page, `raised` and `overlay`
+ * come forward of it; `base` is the page's own. Components that take a
+ * `surface` read the `--rk-bg-surface-*` roles, never a palette slot.
+ */
+export type Surface = 'sunken' | 'base' | 'raised' | 'overlay';
+
 export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'color'> {
   /** Draw the screen at the size it has been given, in cells. */
   draw: (size: Size) => Buffer;
@@ -63,8 +70,18 @@ export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
    * measured screen is not a whole number of cells wide.
    */
   contentInset?: Inset;
-  /** Real elements, laid over the chrome. */
-  children?: ReactNode;
+  /**
+   * Space left empty around the screen, in whole cells: one number for every
+   * side, or `{ x, y }`. It is margin, so the page shows through it and the
+   * chrome is never drawn into it. The measured size is the box inside it.
+   */
+  gutter?: number | Inset;
+  /**
+   * Real elements, laid over the chrome. A function is given the size the
+   * screen drew at, in cells, for content placed by the same layout as the
+   * chrome: a pane's content in the cells its borders enclose.
+   */
+  children?: ReactNode | ((size: Size) => ReactNode);
 }
 
 const FALLBACK: Size = { width: 80, height: 24 };
@@ -79,6 +96,7 @@ export function Screen({
   rows,
   fallback = FALLBACK,
   contentInset,
+  gutter,
   className,
   style,
   children,
@@ -178,7 +196,7 @@ export function Screen({
       data-rk-painter={painter}
       data-rk-cols={size.width}
       data-rk-rows={size.height}
-      style={{ ...vars, ...style }}
+      style={{ ...vars, ...gutterStyle(gutter), ...style }}
       {...rest}
     >
       <div
@@ -191,7 +209,7 @@ export function Screen({
       </div>
       {children === undefined ? null : (
         <div className="rk-content" style={insetStyle(contentInset)}>
-          {children}
+          {typeof children === 'function' ? children(size) : children}
         </div>
       )}
       <span ref={probe} aria-hidden="true" style={PROBE} />
@@ -218,6 +236,15 @@ function insetStyle(inset: Inset | undefined): CSSProperties | undefined {
   return {
     paddingInline: `calc(var(--rk-cell-width) * ${inset.x})`,
     paddingBlock: `calc(var(--rk-cell-height) * ${inset.y})`,
+  };
+}
+
+function gutterStyle(gutter: number | Inset | undefined): CSSProperties | undefined {
+  if (gutter === undefined) return undefined;
+  const { x, y } = typeof gutter === 'number' ? { x: gutter, y: gutter } : gutter;
+  return {
+    marginInline: `calc(var(--rk-cell-width) * ${x})`,
+    marginBlock: `calc(var(--rk-cell-height) * ${y})`,
   };
 }
 

@@ -1,10 +1,21 @@
-import { Frame, GlyphProvider, Tree, TreeItem, treeBuffer } from '@rockaway/react';
+import {
+  Frame,
+  GlyphProvider,
+  Keymap,
+  Tree,
+  TreeItem,
+  treeBuffer,
+  useKeymap,
+} from '@rockaway/react';
 import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
+import type { Key } from 'react-aria-components';
 import { RouterProvider } from 'react-aria-components';
 import { expect, fn, userEvent, waitFor } from 'storybook/test';
+import { runner } from '../../.storybook/runner.ts';
+import { press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -162,27 +173,27 @@ export const Keyboard: Story = {
         .map((row) => row.querySelector('.rk-tree-label')?.textContent ?? '')
         .join();
 
-    await userEvent.tab();
+    await tab();
     await waitFor(() => expect(focused()).toBe('src'));
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() => expect(focused()).toBe('components'));
     expect(cursorOn()).toBe('components');
 
     // Right expands, and the rows under it come into the tree.
-    await userEvent.keyboard('{ArrowRight}');
+    await press('{ArrowRight}');
     await waitFor(() =>
       expect(canvas.getByRole('row', { name: 'components' })).toHaveAttribute(
         'aria-expanded',
         'true',
       ),
     );
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{ArrowDown}');
     await waitFor(() => expect(focused()).toBe('button.tsx'));
 
     // Left goes to the parent; left again collapses it.
-    await userEvent.keyboard('{ArrowLeft}');
+    await press('{ArrowLeft}');
     await waitFor(() => expect(focused()).toBe('components'));
-    await userEvent.keyboard('{ArrowLeft}');
+    await press('{ArrowLeft}');
     await waitFor(() =>
       expect(canvas.getByRole('row', { name: 'components' })).toHaveAttribute(
         'aria-expanded',
@@ -190,22 +201,102 @@ export const Keyboard: Story = {
       ),
     );
 
-    await userEvent.keyboard('{End}');
+    await press('{End}');
     await waitFor(() => expect(focused()).toBe('README.md'));
-    await userEvent.keyboard('{Home}');
+    await press('{Home}');
     await waitFor(() => expect(focused()).toBe('src'));
 
     // Type-ahead finds a row by its title.
-    await userEvent.keyboard('ind');
+    await press('ind');
     await waitFor(() => expect(focused()).toBe('index.ts'));
 
     // Enter selects: reverse video, and the cursor still in its own cell. (A
     // space straight after type-ahead would be read as part of the search.)
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     const index = canvas.getByRole('row', { name: 'index.ts' });
     await waitFor(() => expect(index).toHaveAttribute('aria-selected', 'true'));
     expect(getComputedStyle(index).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     expect(cursorOn()).toBe('index.ts');
+  },
+};
+
+/**
+ * A tree beside the page's own single-letter shortcuts, as the site's
+ * navigation sits beside `j`, `k` and `/` (0278). With `disallowTypeAhead`
+ * a printable key is not taken for a search: it reaches the keymap, and the
+ * arrows still move. `onFocusedKeyChange` says which row has focus, here in
+ * the line under the tree, and says so when focus leaves.
+ */
+function Shortcuts(): ReactNode {
+  const [focused, setFocused] = useState<Key | null>(null);
+  const [heard, setHeard] = useState<string>('');
+  return (
+    <Keymap>
+      <Bindings onHeard={setHeard} />
+      <Framed title="shortcuts">
+        <Tree
+          aria-label="Shortcuts"
+          defaultExpandedKeys={['src']}
+          disallowTypeAhead
+          onFocusedKeyChange={setFocused}
+        >
+          <TreeItem id="src" title="src">
+            <TreeItem id="index" title="index.ts" />
+            <TreeItem id="jump" title="jump.ts" />
+          </TreeItem>
+          <TreeItem id="readme" title="README.md" />
+        </Tree>
+      </Framed>
+      <p data-testid="focused">{focused === null ? 'none' : String(focused)}</p>
+      <p data-testid="heard">{heard}</p>
+      <button type="button">After</button>
+    </Keymap>
+  );
+}
+
+/** The page's own shortcuts: what the tree must not take for type-ahead. */
+function Bindings({ onHeard }: { onHeard: (key: string) => void }): null {
+  useKeymap([
+    { keys: 'j', description: 'Next file', action: () => onHeard('j') },
+    { keys: '/', description: 'Search', action: () => onHeard('/') },
+  ]);
+  return null;
+}
+
+export const SingleLetterShortcuts: Story = {
+  name: 'Beside single-letter shortcuts',
+  render: () => <Shortcuts />,
+  play: async ({ canvas }) => {
+    // Real keys: a synthetic one runs every listener at once and could not
+    // show whose a key became.
+    const run = runner();
+    if (!run) return;
+    await settled();
+    const tree = canvas.getByRole('treegrid', { name: 'Shortcuts' });
+    const focusedRow = (): string =>
+      tree.querySelector('[data-focused] .rk-tree-label')?.textContent ?? '';
+    const said = (id: string) => canvas.getByTestId(id).textContent;
+
+    canvas.getByRole('row', { name: 'src' }).focus();
+    await waitFor(() => expect(said('focused')).toBe('src'));
+
+    // A letter that would find "jump.ts" by type-ahead is the page's instead.
+    await run.type('j');
+    await waitFor(() => expect(said('heard')).toBe('j'));
+    expect(focusedRow()).toBe('src');
+    await run.type('/');
+    await waitFor(() => expect(said('heard')).toBe('/'));
+
+    // The arrows still move, and the row that has focus is reported.
+    await run.type('{ArrowDown}');
+    await waitFor(() => expect(focusedRow()).toBe('index.ts'));
+    expect(said('focused')).toBe('index');
+    await run.type('{End}');
+    await waitFor(() => expect(said('focused')).toBe('readme'));
+
+    // Focus leaving the tree is reported as none.
+    canvas.getByRole('button', { name: 'After' }).focus();
+    await waitFor(() => expect(said('focused')).toBe('none'));
   },
 };
 
@@ -286,12 +377,12 @@ export const Links: Story = {
     // A press on a link row follows it, and so does Enter.
     await userEvent.click(canvas.getByRole('row', { name: 'Concept' }));
     await waitFor(() => expect(followed()).toEqual(['#concept']));
-    await userEvent.keyboard('{Home}');
-    await userEvent.keyboard('{ArrowDown}');
+    await press('{Home}');
+    await press('{ArrowDown}');
     await waitFor(() =>
       expect(canvas.getByRole('row', { name: 'Install' })).toHaveAttribute('data-focused', 'true'),
     );
-    await userEvent.keyboard('{Enter}');
+    await press('{Enter}');
     await waitFor(() => expect(followed()).toEqual(['#concept', '#install']));
   },
 };

@@ -10,6 +10,7 @@
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
+import { themeGlyphs, themeNames, themes } from '@rockaway/tokens';
 import Ajv2020 from 'ajv/dist/2020.js';
 import type { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -280,6 +281,18 @@ describe('every component has metadata', () => {
     expect(Object.keys(FIXTURES).sort()).toEqual(registry.map(({ file }) => file).sort());
   });
 
+  // The component as a reader first meets it, `<name>.example.tsx`: the
+  // site's page shows it, and the workbench's kitchen sink finds it and lays
+  // it out with every other (0064). Beside the component, so a new one brings
+  // its own and edits no list.
+  test('every component has an example beside it, and every example a component', () => {
+    const examples = readdirSync(componentsDir)
+      .filter((file) => file.endsWith('.example.tsx'))
+      .map((file) => file.replace(/\.example\.tsx$/, ''))
+      .sort();
+    expect(examples).toEqual(registry.map(({ file }) => file).sort());
+  });
+
   test('the extracted props and tokens are up to date', () => {
     const written = readFileSync(path.join(packageRoot, 'src/metadata/extracted.ts'), 'utf8');
     // Regenerate with `pnpm --filter @rockaway/react metadata`.
@@ -426,8 +439,14 @@ describe('what is extracted', () => {
     const { tokens } = byName('Frame');
     expect(tokens).toContain('--rk-stroke-glyph-light');
     expect(tokens).toContain('--rk-stroke-rule-light');
-    // `.rk-callout > .rk-content` is Callout's, though Frame writes rk-content.
-    expect(tokens).not.toContain('--rk-bg-surface');
+    // Callout's `.rk-callout > .rk-content` is not Frame's (`owns`, above). Frame's own
+    // surfaces (0308) fall back to `--rk-bg-surface`, so the token is no longer the proof.
+    expect(
+      owns('.rk-callout > .rk-content', {
+        classes: new Set(['rk-frame-box']),
+        attributes: new Set(),
+      }),
+    ).toBe(false);
   });
 
   test('tokens come from the stylesheets and the focus ring, and a local property is not one', () => {
@@ -447,6 +466,37 @@ describe('what is extracted', () => {
       description: 'How many rows the viewport shows. The list is exactly this tall.',
     } satisfies PropMeta);
     expect(list?.inherits).toEqual(["Omit<ListBoxProps<T>, 'className' | 'style'>"]);
+  });
+});
+
+describe('the snapshots, in every theme (0171)', () => {
+  const drawn = components.flatMap((c) => c.snapshots.map((s) => [c.name, s] as const));
+
+  test('list only the themes that draw them differently, by name', () => {
+    for (const [name, snapshot] of drawn) {
+      for (const [theme, text] of Object.entries(snapshot.themes ?? {})) {
+        expect(themeNames, `${name}: ${snapshot.title}`).toContain(theme);
+        expect(text, `${name}: ${snapshot.title} in ${theme}`).not.toBe(snapshot.text);
+      }
+    }
+  });
+
+  test('a theme drawn in another border set draws its frames in it', () => {
+    const frame = byName('Frame').snapshots[0];
+    const set = (theme: keyof typeof themes) => themes[theme].borderSet;
+    for (const theme of themeNames.filter((t) => set(t) !== set('default'))) {
+      const corner = themeGlyphs[theme].border['top-left'];
+      expect(frame?.themes?.[theme]?.[0], theme).toBe(corner);
+    }
+    // A theme in the default's set draws what the default draws, so it is not listed.
+    for (const theme of themeNames.filter((t) => set(t) === set('default'))) {
+      expect(frame?.themes?.[theme], theme).toBeUndefined();
+    }
+  });
+
+  test('a snapshot that shows one set on purpose is the same in every theme', () => {
+    const everySet = byName('Frame').snapshots.find((s) => s.title === 'Every border set');
+    expect(everySet?.themes).toBeUndefined();
   });
 });
 

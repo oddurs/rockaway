@@ -117,14 +117,17 @@ export const treeMeta: ComponentMetaInput = defineMeta({
     typeAhead: true,
     announces:
       'The row\'s title, its level, whether it is expanded, and its place in the set: "components, expanded, level 2, 1 of 3".',
-    notes: ['The guides and marks are never announced: the treegrid carries the same facts.'],
+    notes: [
+      'The guides and marks are never announced: the treegrid carries the same facts.',
+      'Beside single-letter shortcuts, as a site’s navigation is, set disallowTypeAhead: a printable key then reaches the page’s keymap, and the arrows, Home and End still move. onFocusedKeyChange reports the row that has focus, and null when focus leaves.',
+    ],
   },
   snapshots: [
     {
       title: 'A file tree',
       description:
         'The cursor on list.tsx, index.ts selected (reverse video, which text cannot show), paint collapsed.',
-      text: toText(treeBuffer({ rows: FILES, width: 24 }), { trimEnd: false }),
+      draw: (glyphs) => toText(treeBuffer({ rows: FILES, width: 24 }, glyphs), { trimEnd: false }),
     },
   ],
 });

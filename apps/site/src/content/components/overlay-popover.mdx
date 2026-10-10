@@ -1,0 +1,13 @@
+---
+name: OverlayPopover
+---
+
+import { Example } from '../../../../../packages/react/src/components/overlay.example.tsx';
+import source from '../../../../../packages/react/src/components/overlay.example.tsx?raw';
+import Source from '../../components/Source.astro';
+
+Popover, Dialog, Menu and the rest are not built yet, so this sketches a popover the way they will be: React Aria's `Dialog` inside `OverlayPopover`, opened by a `Button`, with an `OverlayLayer` around it. Press the button to open it; Escape or a press outside closes it.
+
+<Example client:load />
+
+<Source code={source} lang="tsx" />

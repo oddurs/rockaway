@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, inject } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
+import type { OverBudget } from './budget.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
 
@@ -9,6 +10,7 @@ declare module 'vitest/browser' {
     readWithoutScripts: (html: string) => Promise<{ rows: string[]; shapes: number; ran: boolean }>;
     recordKnown: (use: KnownUse) => Promise<void>;
     emulateContrast: (contrast: 'more' | 'no-preference') => Promise<void>;
+    recordPaint: (over: OverBudget) => Promise<void>;
     watchdog: (ms: number | null) => Promise<void>;
   }
 }
@@ -32,7 +34,13 @@ setRunner({
   record: (use) => commands.recordKnown(use),
   // The provider's keyboard: trusted events, as a reader's keys are.
   type: (keys) => userEvent.keyboard(keys),
+  // At a point, the press goes to whatever a reader would hit there, without
+  // waiting for the element itself to be the one on top: a backdrop is under
+  // the layer that holds the dialog.
+  click: (element, at) =>
+    userEvent.click(element, at === undefined ? {} : { position: at, force: true }),
   contrast: (preference) => commands.emulateContrast(preference),
+  paint: (over) => commands.recordPaint(over),
 });
 
 /**

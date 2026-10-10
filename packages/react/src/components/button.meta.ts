@@ -1,10 +1,11 @@
 import { toText } from '@rockaway/grid';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
 import { buttonBuffer, buttonVariants } from './button.pure.ts';
 import type { ButtonTextOptions } from './button.tsx';
 
-const cells = (label: string, options: ButtonTextOptions = {}): string =>
-  toText(buttonBuffer(label, options), { trimEnd: false });
+const cells = (label: string, options: ButtonTextOptions = {}, glyphs?: Glyphs): string =>
+  toText(buttonBuffer(label, options, glyphs), { trimEnd: false });
 
 export const buttonMeta: ComponentMetaInput = defineMeta({
   name: 'Button',
@@ -79,7 +80,11 @@ export const buttonMeta: ComponentMetaInput = defineMeta({
       part: 'Button',
       note: '`fill` reverses back to the page colours, so a press always shows; `danger` presses to bg.danger-solid.',
     },
-    { state: 'disabled', part: 'Button' },
+    {
+      state: 'disabled',
+      part: 'Button',
+      note: '`fill` stays reversed and dims its block: fg.disabled behind bg.page, a light grey in greyscale and GrayText in forced colors, where an enabled fill is the text colour. The same cells either way.',
+    },
   ],
   accessibility: {
     name: "The label's text. The delimiters, the mark and the key hint are aria-hidden, so the name never contains a glyph.",
@@ -97,25 +102,28 @@ export const buttonMeta: ComponentMetaInput = defineMeta({
       title: 'Variants',
       description:
         'Text has no attributes, so `fill` draws the same cells as `default`: the difference is reverse video. Danger marks the cell every delimited button has.',
-      text: buttonVariants.values.variant
-        .map((variant) => `${variant.padEnd(8)}${cells('Publish', { variant })}`)
-        .join('\n'),
+      draw: (glyphs) =>
+        buttonVariants.values.variant
+          .map((variant) => `${variant.padEnd(8)}${cells('Publish', { variant }, glyphs)}`)
+          .join('\n'),
     },
     {
       title: 'Without delimiters',
       description: 'For a toolbar. The air goes with the delimiters; danger keeps both.',
-      text: [
-        `default ${cells('Publish', { delimiters: 'none' })}`,
-        `danger  ${cells('Discard', { variant: 'danger', delimiters: 'none' })}`,
-      ].join('\n'),
+      draw: (glyphs) =>
+        [
+          `default ${cells('Publish', { delimiters: 'none' }, glyphs)}`,
+          `danger  ${cells('Discard', { variant: 'danger', delimiters: 'none' }, glyphs)}`,
+        ].join('\n'),
     },
     {
       title: 'With a shortcut',
       description: 'The hint follows the keyboard: Control elsewhere, Command on an Apple one.',
-      text: [
-        cells('Save', { keys: 'mod+s' }),
-        cells('Save', { keys: 'mod+s', platform: 'apple' }),
-      ].join('\n'),
+      draw: (glyphs) =>
+        [
+          cells('Save', { keys: 'mod+s' }, glyphs),
+          cells('Save', { keys: 'mod+s', platform: 'apple' }, glyphs),
+        ].join('\n'),
     },
   ],
 });

@@ -31,6 +31,7 @@
  * character advances, so that half is checked. The line box it sits in belongs
  * to the block that holds it, and that block is checked like any other.
  */
+import { anchorOf } from '../anchor.ts';
 import { cellOf } from './cell.ts';
 
 /** Strictness is a dial (cairn 0072). */
@@ -77,7 +78,25 @@ export interface UnknownLevel {
   readonly declared: string;
 }
 
-export type Violation = OffGrid | WrongPainter | Unexplained | UnknownLevel;
+/**
+ * An overlay's surface off the grid it was moved onto: the grid of the screen
+ * its trigger is in, not its own (cairn 0128). Its own boxes are checked
+ * against its own corner like any screen's; this is where that corner is.
+ */
+export interface OffAnchor {
+  readonly what: 'anchor';
+  /** Across or down. */
+  readonly axis: 'x' | 'y';
+  readonly element: string;
+  readonly level: ConformanceLevel;
+  /** The screen the overlay was opened from, or `the page` for a trigger in none. */
+  readonly anchor: string;
+  /** The surface's offset from that grid's corner, in its cells. */
+  readonly cells: number;
+  readonly pixels: number;
+}
+
+export type Violation = OffGrid | WrongPainter | Unexplained | UnknownLevel | OffAnchor;
 
 export interface Exception {
   readonly element: string;
@@ -254,6 +273,8 @@ export function checkConformance(
       }
     }
 
+    if (!excusedBy(screen, level)) violations.push(...offAnchor(screen, level, tolerance));
+
     const { width: cellWidth, height: cellHeight } = cellOf(screen);
     if (!(cellWidth > 0) || !(cellHeight > 0)) continue;
 
@@ -332,8 +353,52 @@ export function checkConformance(
   };
 }
 
+/**
+ * Where an overlay's surface sits on its anchor's grid (cairn 0128). An
+ * overlay is a screen of its own, so the elements loop measures it from its
+ * own corner and would pass a surface a fraction of a cell off its trigger's
+ * grid. The surface records its anchor (`setAnchor`), and its corner is
+ * measured in the cells of the screen the anchor is in. A sheet spans the
+ * viewport, so across it is on the viewport's columns, as it is placed.
+ */
+function offAnchor(screen: HTMLElement, level: ConformanceLevel, tolerance: number): OffAnchor[] {
+  const surface = screen.closest('.rk-overlay');
+  // The surface's own screen only, not one drawn inside its content.
+  if (!surface || surface.querySelector('.rk-screen') !== screen) return [];
+  const anchor = anchorOf(surface);
+  if (!anchor?.isConnected) return [];
+  const home = anchor.closest<HTMLElement>('.rk-screen');
+  const grid = home ? home.getBoundingClientRect() : { left: 0, top: 0 };
+  const cell = cellOf(home ?? screen.ownerDocument.body);
+  if (!(cell.width > 0) || !(cell.height > 0)) return [];
+  const sheet = surface.classList.contains('rk-overlay-sheet');
+  const box = screen.getBoundingClientRect();
+  const offsets: [OffAnchor['axis'], number, number][] = [
+    ['x', box.left - (sheet ? 0 : grid.left), cell.width],
+    ['y', box.top - grid.top, cell.height],
+  ];
+  const found: OffAnchor[] = [];
+  for (const [axis, pixels, size] of offsets) {
+    const cells = pixels / size;
+    if (Math.abs(cells - Math.round(cells)) * size <= tolerance) continue;
+    const name = home ? describe(home) : 'the page';
+    found.push({
+      what: 'anchor',
+      axis,
+      element: describe(screen),
+      level,
+      anchor: name,
+      cells,
+      pixels,
+    });
+  }
+  return found;
+}
+
 function line(v: Violation): string {
   switch (v.what) {
+    case 'anchor':
+      return `  ${v.element}  ${v.axis === 'x' ? 'across' : 'down'} ${v.pixels.toFixed(2)}px from the grid of ${v.anchor}, which it was opened from = ${v.cells.toFixed(2)} of its cells`;
     case 'painter':
       return `  ${v.element}  painted by the ${v.painter} painter, and ${v.level} allows only the glyph painter`;
     case 'reason':

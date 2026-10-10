@@ -55,7 +55,8 @@ import {
   type PopoverProps,
   useSlottedContext,
 } from 'react-aria-components';
-import { measureCell } from '../cell-metrics.ts';
+import { setAnchor } from '../anchor.ts';
+import { cellsCovering, floorCell, measureCell, nearestCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
 import { type PainterName, Screen } from '../screen.tsx';
@@ -212,18 +213,6 @@ function gridOf(el: Element | null | undefined): Grid {
  * transformed layer is shifted after its backgrounds are snapped to pixels,
  * and a translate of a fraction of a pixel parts the strokes of the frame.
  */
-/**
- * Rounding a position in cells, the same in every engine. A modal centred
- * in an odd number of spare cells sits on a half cell exactly, and each
- * engine's float lengths put it a hair either side (Chromium's 1/64px, Firefox's
- * 1/60px), so a plain `Math.round` sent it a column left in one and right in
- * the other. A tie goes left, or up, everywhere; and a position a hair under a
- * whole cell is that cell, as `cellsIn` takes a box a hair under n cells as n.
- */
-const TIE = 0.01;
-const nearest = (cells: number): number => Math.ceil(cells - 0.5 - TIE);
-const down = (cells: number): number => Math.floor(cells + TIE);
-
 function useCellSnap(
   surface: RefObject<HTMLElement | null>,
   anchor: () => Element | null | undefined,
@@ -243,9 +232,9 @@ function useCellSnap(
       // row round towards the corner.
       const left = sheet ? 0 : grid.left;
       const cols = (rawX - left) / grid.width;
-      const x = left + (sheet ? down(cols) : nearest(cols)) * grid.width;
+      const x = left + (sheet ? floorCell(cols) : nearestCell(cols)) * grid.width;
       const rows = (rawY - grid.top) / grid.height;
-      const y = grid.top + (sheet ? down(rows) : nearest(rows)) * grid.height;
+      const y = grid.top + (sheet ? floorCell(rows) : nearestCell(rows)) * grid.height;
       const next = { x: x - rawX, y: y - rawY };
       if (Math.abs(next.x - shift.x) < 0.01 && Math.abs(next.y - shift.y) < 0.01) return;
       shift = next;
@@ -295,6 +284,52 @@ function useSheet(el: () => Element | null | undefined): boolean {
     return () => window.removeEventListener('resize', read);
   }, [el]);
   return sheet;
+}
+
+/**
+ * Whether React Aria may place the popover now: briefly false after the
+ * trigger moves without changing size, then true again, which is a change it
+ * places again on. React Aria places again when its trigger resizes, but a
+ * trigger also moves without resizing, when the screen it is in remeasures
+ * its cell (0199): a density switched at the root, a sheet giving way to a
+ * popover. Then React Aria's pixels are where the trigger was, and snapping
+ * them to the grid only finds the nearest wrong row (0246).
+ */
+function usePlaceOnMove(anchor: () => Element | null | undefined): boolean {
+  const [held, setHeld] = useState(false);
+  // Kept across renders: where the trigger was when React Aria last placed.
+  const at = useRef<{ left: number; top: number } | undefined>(undefined);
+  useIsomorphicLayoutEffect(() => {
+    const el = anchor();
+    if (!el) return;
+    let frame = 0;
+    const check = (): void => {
+      const box = anchor()?.getBoundingClientRect();
+      if (!box) return;
+      const was = at.current;
+      at.current = { left: box.left, top: box.top };
+      if (!was || (Math.abs(box.left - was.left) < 0.01 && Math.abs(box.top - was.top) < 0.01)) {
+        return;
+      }
+      // Moved: hold for a frame, then let go, and React Aria places again.
+      setHeld(true);
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setHeld(false));
+    };
+    check();
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(check);
+    const screen = el.closest('.rk-screen');
+    if (screen) observer?.observe(screen);
+    const unobserve = observeContexts(check);
+    window.addEventListener('scroll', check, true);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      unobserve();
+      window.removeEventListener('scroll', check, true);
+    };
+  }, [anchor]);
+  return !held;
 }
 
 /** Cells between an overlay's frame and its content. */
@@ -361,7 +396,36 @@ function Surface({
   const body = useRef<HTMLDivElement>(null);
   const [scroll, setScroll] = useState<OverlayScroll | undefined>(undefined);
   const [fit, setFit] = useState<number | undefined>(undefined);
+  const [triggerCols, setTriggerCols] = useState<number | undefined>(undefined);
   useCellSnap(host, anchor, sheet);
+
+  // As wide as the trigger, in whole cells: the cells that cover its width
+  // (0228). A trigger laid out as thirty cells measures a hair either side of
+  // them, by as many layout units as it has boxes, and is thirty cells, not
+  // thirty-one.
+  useIsomorphicLayoutEffect(() => {
+    if (minCols !== 'trigger') return;
+    const trigger = anchor();
+    const surface = host.current;
+    if (!trigger || !surface) return;
+    const read = (): void => {
+      const cols = cellsCovering(trigger.getBoundingClientRect().width, measureCell(surface).width);
+      setTriggerCols((was) => (was === cols ? was : cols));
+    };
+    read();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(read);
+    observer.observe(trigger);
+    return () => observer.disconnect();
+  }, [minCols, anchor]);
+
+  // Say which grid the surface was moved onto, so conformance can hold it there.
+  useIsomorphicLayoutEffect(() => {
+    const el = host.current;
+    if (!el) return;
+    setAnchor(el, anchor);
+    return () => setAnchor(el, undefined);
+  }, [anchor]);
 
   // React Aria gives a popover the most height it has room for, in pixels;
   // the surface takes the whole rows of it, its border's two included, and
@@ -454,18 +518,12 @@ function Surface({
     ...(fit === undefined ? {} : { '--rk-overlay-fit-rows': fit }),
     ...(typeof minCols === 'number'
       ? { '--rk-overlay-min-cols': Math.max(0, Math.floor(minCols)) }
-      : {}),
+      : minCols === 'trigger' && triggerCols !== undefined
+        ? { '--rk-overlay-min-cols': triggerCols }
+        : {}),
   } as CSSProperties;
   return (
-    <div
-      ref={host}
-      className={cx(
-        'rk-overlay',
-        sheet && 'rk-overlay-sheet',
-        minCols === 'trigger' && 'rk-overlay-min-trigger',
-      )}
-      style={style}
-    >
+    <div ref={host} className={cx('rk-overlay', sheet && 'rk-overlay-sheet')} style={style}>
       <Screen
         draw={draw}
         contentInset={{ x: 1 + padX, y: 1 + padY }}
@@ -541,6 +599,7 @@ export function OverlayPopover({
   const sheet = useSheet(anchor);
   const origin = useOrigin(anchor);
   const contexts = origin.contexts;
+  const placeable = usePlaceOnMove(anchor);
   // The shift in pixels of the trigger's cell, which React Aria offsets by
   // exactly, so the snap after it has nothing to round. Read at render: a
   // change of context re-renders through the origin, and the cell with it.
@@ -557,6 +616,7 @@ export function OverlayPopover({
       {...aria}
       {...contexts}
       placement={sheet ? 'bottom start' : placement}
+      shouldUpdatePosition={placeable && (aria.shouldUpdatePosition ?? true)}
       offset={offset}
       crossOffset={crossOffset}
       containerPadding={0}
@@ -592,6 +652,9 @@ export interface OverlayModalProps
 }
 
 /** The backdrop: a screen of shade over the viewport's whole cells. */
+/** A press that leaves focus where it is. */
+const keepFocus = (event: { preventDefault: () => void }): void => event.preventDefault();
+
 function Backdrop({ painter }: { readonly painter: PainterName | undefined }): ReactNode {
   const glyphs = useGlyphs();
   const draw = useCallback((size: Size) => backdropBuffer(size, glyphs), [glyphs]);
@@ -600,6 +663,11 @@ function Backdrop({ painter }: { readonly painter: PainterName | undefined }): R
       draw={draw}
       className="rk-overlay-scrim"
       aria-hidden="true"
+      // A press on the backdrop takes no focus. Firefox moves focus to the
+      // page's body on a press on anything that cannot hold it, and from the
+      // body Escape never reaches the modal, so a modal that is not
+      // dismissable could not be closed from the keyboard after a stray press.
+      onMouseDown={keepFocus}
       {...(painter === undefined ? {} : { painter })}
     />
   );

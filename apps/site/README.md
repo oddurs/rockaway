@@ -28,6 +28,7 @@ a packaging bug, and it is fixed in the package.
 | `src/islands/` | Compositions of the system's components that the site hydrates. A single component is hydrated from its own entry, `@rockaway/react/<component>`, never from the package's index: an island keeps every export of the module it comes from, and the index would ship the whole package for one box. |
 | `src/content/foundations/`, `src/pages/foundations/` | The foundations (0106), in MDX: prose, with examples the engine draws at build time (`src/lib/foundations.ts`) and tables read from the tokens (`src/lib/tokens.ts`). |
 | `src/components/` | Build-time pieces for MDX: `Painted` (a buffer as the painter's own markup, no JavaScript), `Table` (data set as prose, columns sized in cells), `ThemeCard`. Never a component the system should have. |
+| `src/pages/components/`, `src/content/components/` | A page per component (0147), generated from `@rockaway/react/meta.json`. The only hand-written part is each component's live example, `<name>.example.tsx` beside the component in `packages/react/src/components` (it is also the workbench's kitchen sink, 0064), and the MDX that hydrates it and shows its source. A component without a page, or a page without a component, fails the build. |
 | `src/pages/terminal/` | Every theme's terminal files, served from what `@rockaway/tokens` ships. |
 | `src/lib/` | Logic, in TypeScript. Astro frontmatter is not typechecked, so keep it thin. |
 | `src/styles/site.css` | The system's CSS as a consumer imports it, and page layout. |

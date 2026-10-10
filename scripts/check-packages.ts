@@ -40,6 +40,12 @@ const forbidden: ReadonlyArray<[RegExp, string]> = [
   [/\.(test|spec)\.[cm]?[jt]sx?$/, 'a test'],
   [/\.stories\.[jt]sx?$/, 'a story'],
   [/(^|\/)__screenshots__\//, 'a screenshot'],
+  // What sits beside a component for the workbench, the site and the tests:
+  // its example, its metadata fixture and its text snapshots. Nothing in the
+  // package imports them, so they are never built; this says so if they are.
+  [/\.example\.(d\.)?[cm]?[jt]sx?$/, 'a component example'],
+  [/\.fixture\.(d\.)?[cm]?[jt]sx?$/, 'a metadata fixture'],
+  [/\.snapshots\.txt$/, 'a text snapshot'],
   // Declarations are allowed, including a stylesheet's (`index.d.css.ts`).
   [/(?<!\.d)(?<!\.d\.[a-z]+)\.[cm]?tsx?$/, 'TypeScript source'],
   [/\.tsbuildinfo$/, 'build state'],
