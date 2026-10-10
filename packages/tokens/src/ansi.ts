@@ -8,7 +8,11 @@
  * terminal (0094).
  *
  * Alongside them are the role slots a design system needs and a terminal does
- * not name — surface, muted, border — which the export simply leaves out. They
+ * not name — surface, muted, border — which the export simply leaves out.
+ * Two of them, `focus` and `inverse`, are the accent and the foreground in a
+ * generated or imported theme; they are slots of their own so an authored
+ * theme (sunset) can focus in another colour than it links in, and reverse to
+ * a colour rather than its ink. They
  * exist because the sixteen are not role-symmetric: `black` is dark in both
  * modes, so a semantic tier written once cannot alias it for "a quiet
  * background".
@@ -52,6 +56,8 @@ export const roleSlots = [
   'border-strong',
   'cursor',
   'selection',
+  'focus',
+  'inverse',
   'tint-blue',
   'tint-cyan',
   'tint-green',
@@ -175,6 +181,9 @@ export function palette(inputs: ThemeInputs, mode: Mode): Palette {
     'border-strong': grey(ramp.borderStrong),
     cursor: colour(inputs.accentHue),
     selection: tint(inputs.accentHue),
+    // A generated theme focuses in its accent, and reverses to its ink.
+    focus: colour(inputs.accentHue),
+    inverse: grey(ramp.foreground),
 
     'tint-blue': tint(inputs.accentHue),
     'tint-cyan': tint(slotHue.cyan),
@@ -277,6 +286,8 @@ export function importPalette(theme: TerminalTheme): Palette {
     'border-strong': between(background, foreground, 0.6),
     cursor: theme.cursor ? fromHex(theme.cursor) : slot.blue,
     selection: theme.selection ? fromHex(theme.selection) : tintOf(slot.blue),
+    focus: slot.blue,
+    inverse: foreground,
     'tint-blue': tintOf(slot.blue),
     'tint-cyan': tintOf(slot.cyan),
     'tint-green': tintOf(slot.green),
