@@ -1,11 +1,11 @@
 import { CodeBlock } from '@rockaway/react';
 
-const code = [
-  "import { Frame } from '@rockaway/react';",
-  '',
-  'export const panel = <Frame title="tokens" />;',
-].join('\n');
+const CODE = `export function Greeting() {
+  return <Frame title="hello">
+    Rockaway
+  </Frame>;
+}`;
 
 export function Example() {
-  return <CodeBlock code={code} lang="tsx" title="panel.tsx" lineNumbers />;
+  return <CodeBlock code={CODE} title="greeting.tsx" lang="tsx" lineNumbers cols={34} />;
 }
