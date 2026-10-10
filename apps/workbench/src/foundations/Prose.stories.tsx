@@ -154,7 +154,7 @@ export const Fixture: Story = {
 /**
  * The default face is IBM Plex Mono, and its italic is a face of its own: an
  * `em` in prose is set in it, never in a slant the browser fakes, which would
- * lean a glyph over the edge of its cell. Its advance is the grid's 0.6em.
+ * lean a glyph over the edge of its cell. Its advance is the upright's.
  */
 export const TrueItalic: Story = {
   play: async ({ canvas }) => {
@@ -173,9 +173,14 @@ export const TrueItalic: Story = {
     await expect(faces.some((f) => f.status === 'loaded')).toBe(true);
     await expect(document.fonts.check(`italic 400 1em "IBM Plex Mono"`)).toBe(true);
 
-    // Monospace on the grid: a cell is 0.6 of the font size, upright or italic.
-    const size = Number.parseFloat(style.fontSize);
-    await expect(cellOf(screen).width / size).toBeCloseTo(0.6, 2);
+    // On the grid upright or italic: eighty italic zeros are eighty cells.
+    const probe = document.createElement('em');
+    probe.textContent = '0'.repeat(80);
+    probe.style.cssText = 'position: absolute; visibility: hidden; white-space: pre';
+    screen.append(probe);
+    const italic = probe.getBoundingClientRect().width / 80;
+    probe.remove();
+    await expect(italic).toBeCloseTo(cellOf(screen).width, 3);
   },
 };
 

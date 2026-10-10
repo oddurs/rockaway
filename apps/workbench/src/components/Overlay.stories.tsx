@@ -300,9 +300,19 @@ export const Beside: Story = {
     const trigger = canvas.getByRole('button', { name: 'Odd' });
     const [surface] = surfaces();
     if (!surface) throw new Error('no popover');
-    // The trigger's edge is not on the page's pixels.
+    // The trigger's edge is not on the page's pixels, wherever the cell is
+    // not a whole number of them. A face hinted to whole pixels (IBM Plex
+    // Mono on Linux at 16px is 10px a cell) puts every edge on them; the zoom
+    // project then makes the case at fractional zooms.
     const edge = trigger.getBoundingClientRect().right;
-    expect(Math.abs(edge - Math.round(edge))).toBeGreaterThan(1 / 32);
+    const cell = Number.parseFloat(
+      getComputedStyle(trigger.closest('.rk-screen') as Element).getPropertyValue(
+        '--rk-cell-width',
+      ),
+    );
+    if (Math.abs(cell - Math.round(cell)) > 1 / 64) {
+      expect(Math.abs(edge - Math.round(edge))).toBeGreaterThan(1 / 32);
+    }
     // The surface is on whole cells all the same: the cell after the
     // trigger's last, on its row.
     const [tx, ty, tw] = placeOf(trigger, trigger);

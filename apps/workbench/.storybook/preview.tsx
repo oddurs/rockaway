@@ -11,6 +11,8 @@ import '@fontsource/ibm-plex-mono/500.css';
 import '@fontsource/ibm-plex-mono/600.css';
 import '@fontsource/ibm-plex-mono/700.css';
 import '@fontsource/ibm-plex-mono/700-italic.css';
+// The marks and key glyphs Plex lacks, from a face with its advance.
+import '../src/fonts/plex-symbols.css';
 import '@rockaway/css';
 import '@rockaway/tokens/tokens.css';
 // Every theme but the default is a stylesheet of its own, loaded after the
