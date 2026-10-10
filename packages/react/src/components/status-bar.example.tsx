@@ -3,16 +3,13 @@ import type { ReactNode } from 'react';
 
 export function Example(): ReactNode {
   return (
-    <StatusBar cols={48}>
-      <StatusSegment variant="mode" priority={3}>
-        NORMAL
+    <StatusBar cols={34}>
+      <StatusSegment variant="mode" priority={2}>
+        LIST
       </StatusSegment>
-      <StatusSegment priority={1}>README.md</StatusSegment>
-      <StatusSegment align="end" priority={2}>
-        <KeyHint keys="?">help</KeyHint>
-      </StatusSegment>
-      <StatusSegment align="end" priority={2}>
-        Top
+      <StatusSegment priority={1}>3 of 12</StatusSegment>
+      <StatusSegment align="end" label="Keys">
+        <KeyHint keys="mod+o">open</KeyHint>
       </StatusSegment>
     </StatusBar>
   );

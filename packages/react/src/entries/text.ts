@@ -2,10 +2,12 @@
 
 // The pure half: no client boundary, so a server can call these (cairn 0126).
 export {
+  halfTextSizes,
   type TextMetrics,
   type TextSize,
   textBuffer,
   textCols,
+  textRows,
   textScale,
   textSizes,
 } from '../components/text.pure.ts';

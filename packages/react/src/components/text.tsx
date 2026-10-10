@@ -7,8 +7,10 @@ import {
   type HTMLAttributes,
   isValidElement,
   type ReactNode,
+  useRef,
 } from 'react';
 import { cx } from '../cx.ts';
+import { useSeam } from '../flow.tsx';
 import type { TextSize } from './text.pure.ts';
 
 /** The elements a sized run can be. */
@@ -17,7 +19,10 @@ export type TextElement = 'div' | 'p' | 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5
 export interface TextProps
   extends Omit<HTMLAttributes<HTMLElement>, 'children' | 'className' | 'style'> {
   readonly children?: ReactNode;
-  /** How many rows tall the glyphs are: 2, 3 or 4. One row is ordinary text. */
+  /**
+   * How many rows tall the glyphs are: 2, 3 or 4, or 1.5 or 2.5, padded up to
+   * whole rows (0323). One row is ordinary text.
+   */
   readonly size: TextSize;
   /**
    * Set it in a line of other text, its box rounded up to whole cells, rather
@@ -59,6 +64,12 @@ export function Text({
   ...rest
 }: TextProps): ReactNode {
   const Element = as ?? (inline ? 'span' : 'div');
+  // A block of type a half-row size is a seam (0311, 0323): its lines are a
+  // row and a half each, and its box closes to whole rows. CSS does it where
+  // it can round an auto height; useSeam does it elsewhere.
+  const box = useRef<HTMLElement>(null);
+  const none = useRef<HTMLElement>(null);
+  useSeam(!inline && !Number.isInteger(size) ? box : none);
   const sized = {
     '--rk-size': size,
     ...(inline ? { '--rk-chars': cellsOf(children) } : {}),
@@ -67,7 +78,8 @@ export function Text({
   return (
     <Element
       {...rest}
-      className={cx('rk-text', inline && 'rk-text-inline', className)}
+      ref={box as never}
+      className={cx('rk-text', !inline && 'rk-seam', inline && 'rk-text-inline', className)}
       style={sized}
     >
       <span className="rk-text-glyphs">{children}</span>

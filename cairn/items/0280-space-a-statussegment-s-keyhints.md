@@ -3,10 +3,12 @@ id: 280
 uid: 04aaa528-3c3e-4c3f-9929-1c4233ab2af9
 title: Space a StatusSegment's KeyHints
 type: bug
-status: ready
+status: done
 milestone: primitives
+assignee: Oddur Sigurdsson
 created: 2026-10-09
 updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p3
 layer: components
 effort: s
