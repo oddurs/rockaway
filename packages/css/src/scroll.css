@@ -56,7 +56,11 @@
   .rk-prose :where(pre) {
     container-type: scroll-state;
     display: grid;
-    grid-template-columns: max-content;
+    /* As wide as what it holds, and stretched to the region when that is
+     * wider: a screen the page sizes has no width of its own, and in a column
+     * only as wide as its content it measured itself one cell wide (found by
+     * the site, 0152). */
+    grid-template-columns: minmax(max-content, auto);
     /* The marks are lifted over the content, and only over the content: the
      * region is their stacking context, so a modal's backdrop after it on
      * the page still covers them. */

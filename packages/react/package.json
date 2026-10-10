@@ -16,6 +16,16 @@
       "types": "./dist/paint/index.d.ts",
       "default": "./dist/paint/index.js"
     },
+    "./copy": {
+      "@rockaway/source": "./src/copy.ts",
+      "types": "./dist/copy/index.d.ts",
+      "default": "./dist/copy/index.js"
+    },
+    "./dom": {
+      "@rockaway/source": "./src/dom.ts",
+      "types": "./dist/dom/index.d.ts",
+      "default": "./dist/dom/index.js"
+    },
     "./testing": {
       "@rockaway/source": "./src/testing/index.ts",
       "types": "./dist/testing/index.d.ts",
@@ -83,6 +93,14 @@
       "./paint": {
         "types": "./dist/paint/index.d.ts",
         "default": "./dist/paint/index.js"
+      },
+      "./copy": {
+        "types": "./dist/copy/index.d.ts",
+        "default": "./dist/copy/index.js"
+      },
+      "./dom": {
+        "types": "./dist/dom/index.d.ts",
+        "default": "./dist/dom/index.js"
       },
       "./testing": {
         "types": "./dist/testing/index.d.ts",
