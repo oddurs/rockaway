@@ -140,6 +140,13 @@ const checks: [string, unknown, unknown][] = [
     pure.keymapHelpBuffer([{ keys: 'mod+k', description: 'Palette' }], 'apple').row(0),
     '⌘K  Palette',
   ],
+  [
+    'panesBuffer',
+    pure
+      .panesBuffer({ width: 16, height: 3 }, { panes: [{ size: 6, title: 'a' }, { title: 'b' }] })
+      .row(0),
+    '┌ a ───┬ b ────┐',
+  ],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)
