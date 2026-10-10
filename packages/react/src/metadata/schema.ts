@@ -19,6 +19,7 @@
  * whole of it serialises to `meta.json` and validates against
  * `meta.schema.json`, which a test keeps in step with these types.
  */
+import type { Glyphs } from '@rockaway/tokens';
 import type { VariantDefinition, Variants } from '../variants.ts';
 import type { StateName, StateRow } from './states.ts';
 
@@ -120,9 +121,32 @@ export interface Accessibility {
 export interface Snapshot {
   readonly title: string;
   readonly description?: string;
-  /** Drawn by the component's own buffer functions, one line per row. */
+  /**
+   * Drawn by the component's own buffer functions, one line per row, with the
+   * default theme's glyphs.
+   */
   readonly text: string;
+  /**
+   * The same snapshot drawn with another theme's glyphs, by theme name, for
+   * every theme that draws it differently (cairn 0171): a theme in the
+   * rounded set draws its corners round. Absent when every theme draws it as
+   * `text`, which is also what a theme not listed here draws.
+   */
+  readonly themes?: Readonly<Record<string, string>>;
 }
+
+/**
+ * A snapshot as a `.meta.ts` writes it: drawn, as a function of the glyphs,
+ * so it can be drawn in every theme; or fixed text, for a snapshot that shows
+ * one set on purpose (every border set, or an ASCII theme).
+ */
+export type SnapshotInput = {
+  readonly title: string;
+  readonly description?: string;
+} & (
+  | { readonly draw: (glyphs: Glyphs) => string; readonly text?: never }
+  | { readonly text: string; readonly draw?: never }
+);
 
 /** A component, published. */
 export interface ComponentMeta {
@@ -185,7 +209,7 @@ export interface ComponentMetaInput<Part extends string = string> {
     readonly note?: string;
   }[];
   readonly accessibility: Accessibility;
-  readonly snapshots: readonly Snapshot[];
+  readonly snapshots: readonly SnapshotInput[];
   readonly knownIssues?: ComponentMeta['knownIssues'];
 }
 

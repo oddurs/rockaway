@@ -3,6 +3,7 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, type ViteUserConfig } from 'vitest/config';
 import type { BrowserInstanceOption, Reporter, Vitest } from 'vitest/node';
+import { paintBudget, recordPaint } from './.storybook/budget.ts';
 import {
   emulateContrast,
   knownLedger,
@@ -83,7 +84,15 @@ const browser = (context: Context = {}, screen: Screen = 'srgb', scrollbars = fa
     contextOptions: { ...context, viewport: { width: 1600, height: 2400 } },
   }),
   instances: [{ browser: 'chromium' }] satisfies BrowserInstanceOption[],
-  commands: { emulateContrast, printToPdf, readWithoutScripts, recordKnown, watchdog, wheel },
+  commands: {
+    emulateContrast,
+    printToPdf,
+    readWithoutScripts,
+    recordKnown,
+    recordPaint,
+    watchdog,
+    wheel,
+  },
 });
 
 /**
@@ -148,8 +157,18 @@ const staleKnown = (): Reporter => {
     },
     async onTestRunStart(specifications) {
       if (!vitest) return;
-      const every = await vitest.globTestSpecifications();
-      partial = specifications.length < every.length || vitest.config.testNamePattern !== undefined;
+      // CI runs one project per job, and cuts the busiest with --shard, so
+      // "the whole workbench" is the whole of each project the run names: a
+      // run of every file of a project can still find a stale entry, a shard
+      // of it cannot.
+      const projects = new Set(specifications.map((s) => s.project.name));
+      const every = (await vitest.globTestSpecifications()).filter((s) =>
+        projects.has(s.project.name),
+      );
+      partial =
+        specifications.length < every.length ||
+        vitest.config.testNamePattern !== undefined ||
+        vitest.config.shard !== undefined;
     },
     onTestRunEnd() {
       const ledger = knownLedger();
@@ -176,7 +195,7 @@ const staleKnown = (): Reporter => {
 
 const config: ViteUserConfig = defineConfig({
   test: {
-    reporters: ['default', staleKnown(), slowStories()],
+    reporters: ['default', staleKnown(), slowStories(), paintBudget()],
     projects: [
       {
         plugins: [storybookTest({ configDir, tags: { exclude: [FORCED_COLORS, P3] } })],
