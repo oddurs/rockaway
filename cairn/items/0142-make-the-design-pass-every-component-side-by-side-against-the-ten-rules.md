@@ -3,10 +3,9 @@ id: 142
 uid: 561d9fa4-c6f3-488c-b4e4-7b7f74223a51
 title: 'Make the design pass: every component, side by side, against the ten rules'
 type: chore
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-09
 depends_on:
 - 34
 - 35
@@ -41,6 +40,7 @@ depends_on:
 - 140
 created: 2026-10-03
 updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p0
 layer: components
 effort: l
@@ -121,3 +121,7 @@ Every component meets rule 7 at strict through the sink's Everything story, so n
 Criterion 4: all findings are either fixed or filed. The metadata gaps (Tree focus ring, FieldFrame required, TextField placeholder) are filed as 0310.
 
 Criterion 6: waived by the CTO. The checked-in kitchen-sink snapshot (text) serves as the before-and-after.
+
+## Result
+
+Design pass done: component x rule table on the item, spacing set in the recipe, no-pixel-lengths test, Painters stories for Form and Keymap; metadata gaps filed as 0310. Shipped in #228.
