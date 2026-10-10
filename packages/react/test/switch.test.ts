@@ -124,6 +124,6 @@ describe('switchBuffer', () => {
     const html = renderToStaticMarkup(createElement(Switch, null, 'Wrap lines'));
     expect(html).toMatch(/<span aria-hidden="true" class="rk-switch-indicator">/);
     expect(html).toMatch(/role="switch"/);
-    expect(html).toMatch(/class="rk-field rk-switch"/);
+    expect(html).toMatch(/class="rk-field rk-seam rk-switch"/);
   });
 });

@@ -88,7 +88,8 @@
           "uniqueItems": true,
           "items": { "type": "string", "pattern": "^--rk-[a-z0-9]+(-[a-z0-9]+)*$" }
         },
-        "snapshots": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/snapshot" } }
+        "snapshots": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/snapshot" } },
+        "knownIssues": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/text" } }
       }
     },
     "importedPart": {

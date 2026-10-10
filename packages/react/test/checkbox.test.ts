@@ -60,7 +60,7 @@ describe('checkboxBuffer', () => {
             { control: checkboxBuffer('Sign commits', { mark: 'checked' }) },
             { control: group, description: 'Where the hooks run.' },
           ],
-          { width: 40 },
+          { comfort: 'compact', width: 40 },
         ),
       )}`,
     ).toMatchInlineSnapshot(`
