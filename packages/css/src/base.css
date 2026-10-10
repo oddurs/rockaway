@@ -13,6 +13,20 @@
  * and leave form controls in the wrong scheme.
  */
 @layer rk.base {
+  /*
+   * The cell is a fraction of a pixel (9.6px at 16px), and every glyph must
+   * advance by exactly that. Chromium on Linux rounds a face's advances to
+   * whole pixels unless it is asked for geometric precision, which turns on
+   * subpixel positioning and the font's own unhinted advance (0295). On every
+   * element, not inherited: the browser's own sheet resets it on buttons and
+   * form fields.
+   */
+  *,
+  *::before,
+  *::after {
+    text-rendering: geometricPrecision;
+  }
+
   body,
   [data-density] {
     line-height: var(--rk-cell-line);
@@ -26,13 +40,6 @@
     font-variant-ligatures: none;
     font-variant-numeric: tabular-nums;
     font-synthesis-style: none;
-    /*
-     * The cell is a fraction of a pixel (9.6px at 16px), and every glyph must
-     * advance by exactly that. Chromium on Linux rounds a face's advances to
-     * whole pixels unless it is asked for geometric precision, which turns on
-     * subpixel positioning and the font's own unhinted advance (0295).
-     */
-    text-rendering: geometricPrecision;
     -webkit-font-smoothing: antialiased;
   }
 
