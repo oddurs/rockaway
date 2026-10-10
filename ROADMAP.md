@@ -100,13 +100,9 @@ The CSS contract every consumer shares.
 
 ## grid — The frame engine
 
-`##########` 90% · 19 of 21 done · due 2026-12-06
+`##########` 95% · 20 of 21 done · due 2026-12-06
 
 The heart of a TUI system: a pure, integer model of a character grid, and
-
-### ready
-
-- [ ] [`0296`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0296-size-type-in-whole-rows-at-its-natural-width.md) Size type in whole rows, at its natural width <sup>decision · grid · p0</sup>
 
 ### in review
 
@@ -133,10 +129,11 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 - [x] [`0110`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0110-the-rule-painter-draws-cell-boxes-not-lines.md) The rule painter draws cell boxes, not lines <sup>bug · grid · p0</sup>
 - [x] [`0246`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0246-remeasure-a-screen-given-explicit-cols-and-rows-when-its-context-changes.md) Remeasure a screen given explicit cols and rows when its context changes <sup>bug · grid · p2</sup>
 - [x] [`0274`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0274-draw-strokes-on-whole-pixels-the-same-in-every-engine.md) Draw strokes on whole pixels, the same in every engine <sup>bug · css · p2</sup>
+- [x] [`0296`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0296-size-type-in-whole-rows-at-its-natural-width.md) Size type in whole rows, at its natural width <sup>decision · grid · p0</sup>
 
 ## primitives — First primitives
 
-`#######···` 64% · 114 of 178 done · due 2027-01-31
+`#######···` 65% · 115 of 178 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -187,7 +184,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0292`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0292-keep-focus-in-a-modal-when-its-backdrop-is-pressed.md) Keep focus in a modal when its backdrop is pressed <sup>bug · components · p1</sup>
 - [ ] [`0293`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0293-carry-the-painter-to-every-component-through-a-provider.md) Carry the painter to every component through a provider <sup>feature · components · p2</sup>
 - [ ] [`0294`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0294-keep-list-s-cursor-cell-a-cell-inside-prose.md) Keep List's cursor cell a cell inside prose <sup>bug · css · p2</sup>
-- [ ] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 - [ ] [`0301`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0301-stretch-an-unmeasured-screen-s-frame-inside-a-flexible-pane.md) Stretch an unmeasured screen's frame inside a flexible pane <sup>feature · grid · p1</sup>
 - [ ] [`0305`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0305-quiet-the-resizeobserver-notice-on-density-switches.md) Quiet the ResizeObserver notice on density switches <sup>bug · grid · p3</sup>
 - [ ] [`0306`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0306-prove-form-and-keymap-in-both-painters-and-name-their-missing-states.md) Prove Form and Keymap in both painters and name their missing states <sup>chore · tooling · p3</sup>
@@ -315,6 +311,7 @@ The component contract, proven on a first set of components.
 - [x] [`0281`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0281-show-a-table-s-rows-in-a-window-that-follows-the-cursor.md) Show a Table's rows in a window that follows the cursor <sup>feature · components · p2</sup>
 - [x] [`0282`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0282-hand-a-textfield-s-input-to-a-ref.md) Hand a TextField's input to a ref <sup>feature · components · p3</sup>
 - [x] [`0295`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0295-set-the-system-in-ibm-plex-mono.md) Set the system in IBM Plex Mono <sup>decision · tokens · p0</sup>
+- [x] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 - [x] [`0299`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0299-select-text-the-way-a-terminal-does.md) Select text the way a terminal does <sup>feature · css · p0</sup>
 - [x] [`0300`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0300-render-every-link-the-system-draws-through-the-app-s-own-link.md) Render every link the system draws through the app's own link <sup>feature · components · p1</sup>
 - [x] [`0302`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0302-help-an-app-change-routes-focus-announce-restore-scroll.md) Help an app change routes: focus, announce, restore scroll <sup>feature · behaviour · p2</sup>
@@ -349,7 +346,7 @@ The token pipeline survives the pivot; its contents do not.
 
 ## site — The dog-food site
 
-`#####·····` 43% · 16 of 37 done · due 2027-02-21
+`#####·····` 46% · 17 of 37 done · due 2027-02-21
 
 A website built out of the system it documents, which is the only honest way
 
@@ -378,7 +375,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0109`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0109-hold-the-site-to-a-budget-in-ci.md) Hold the site to a budget in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0148`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0148-switch-theme-mode-and-density-on-the-site-and-remember-the-choice-without-a-flash.md) Switch theme, mode and density on the site, and remember the choice without a flash <sup>feature · site · p0</sup>
 - [ ] [`0152`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0152-review-the-site-end-to-end-phone-zoom-keyboard-screen-reader-slow-network.md) Review the site end to end: phone, zoom, keyboard, screen reader, slow network <sup>chore · site · p0</sup>
-- [ ] [`0324`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0324-lay-the-site-out-in-the-three-tiers.md) Lay the site out in the three tiers <sup>feature · site · p1</sup>
 
 ### in review
 
@@ -404,6 +400,7 @@ A website built out of the system it documents, which is the only honest way
 - [x] [`0218`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0218-show-overflow-marks-where-scroll-state-queries-are-missing.md) Show overflow marks where scroll-state queries are missing <sup>feature · css · p2</sup>
 - [x] [`0273`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0273-show-a-phone-its-page-before-the-shell-s-script.md) Show a phone its page before the shell's script <sup>bug · site · p1</sup>
 - [x] [`0287`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0287-make-the-docs-left-navigation-a-sidebar-worth-using.md) Make the docs' left navigation a sidebar worth using <sup>feature · site · p0</sup>
+- [x] [`0324`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0324-lay-the-site-out-in-the-three-tiers.md) Lay the site out in the three tiers <sup>feature · site · p1</sup>
 
 ## v0.1 — v0.1 — first release
 
