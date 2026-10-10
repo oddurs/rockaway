@@ -13,20 +13,17 @@ permissions:
   contents: read
 
 jobs:
-  check:
-    name: Lint, typecheck, build, test
+  # The checks that need no browser. Lint, types, the packages and the site
+  # built as a consumer would build them, the packed packages, the packages'
+  # Node tests and the contrast report. The site's tests and the stories run
+  # beside it.
+  static:
+    name: Lint, typecheck, build, package tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Lint and format
         run: pnpm lint
@@ -58,52 +55,116 @@ jobs:
       - name: Packed packages (contents, publint, attw, server components)
         run: pnpm packages:check
 
-      - name: Install Chromium
-        run: pnpm --filter workbench exec playwright install --with-deps chromium
-
-      # Chromium's stories here; Firefox and WebKit run beside this job, in
-      # their own (cairn 0124).
-      - name: Tests (tokens, stories in Vitest browser mode with axe, the built site)
-        run: pnpm test
-        env:
-          ASTRO_TELEMETRY_DISABLED: '1'
-          ENGINES: chromium
+      - name: Tests (tokens, grid, css, react, mcp)
+        run: pnpm -r --filter './packages/*' test
 
       - name: Contrast report (every declared pair, both modes)
         run: pnpm --filter @rockaway/tokens contrast
 
-      - name: Production build of the workbench (a minifier sees the CSS)
-        run: pnpm --filter workbench build
-
-  # Every story again in Firefox and WebKit (cairn 0124): the cell is `1ch` by
-  # `1lh`, which is exactly where engines differ. A job of its own so it runs
-  # beside Chromium's rather than after it.
-  engines:
-    name: Stories in Firefox and WebKit
+  # The site's own tests load its built pages in a browser, at two bases, and
+  # take longer than the rest of `static` together, so they have a job of their
+  # own. It builds the site again (twenty seconds) rather than wait for one.
+  site-tests:
+    name: Site tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
+      - uses: ./.github/actions/setup
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
+      - name: Build packages and the site
+        run: pnpm build
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
 
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/playwright
 
-      # The workbench's config reads the contexts from @rockaway/tokens' dist.
-      - name: Build packages
+      - name: Tests (the built site)
+        run: pnpm --filter site test
+        env:
+          ASTRO_TELEMETRY_DISABLED: '1'
+
+  # A minifier sees the CSS here. Storybook's build needs nothing from the
+  # other jobs, so it runs beside them.
+  workbench-build:
+    name: Production build of the workbench
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Build the packages the workbench imports
         run: pnpm -r --filter './packages/*' build
 
-      - name: Install Firefox and WebKit
-        run: pnpm --filter workbench exec playwright install --with-deps firefox webkit
+      - name: Production build of the workbench
+        run: pnpm --filter workbench build
 
-      - name: Stories in Firefox and WebKit
-        run: pnpm --filter workbench test
+  # The stories, one Vitest project per job, and the busiest projects cut again
+  # with --shard (apps/workbench/vitest.config.ts). The packages are built
+  # first because the config imports @rockaway/tokens. Every shard is a
+  # separate runner, so CI wall clock is the slowest shard, not the sum.
+  stories:
+    name: Stories, ${{ matrix.project }} ${{ matrix.shard }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { project: storybook, shard: 1/4, browser: chromium }
+          - { project: storybook, shard: 2/4, browser: chromium }
+          - { project: storybook, shard: 3/4, browser: chromium }
+          - { project: storybook, shard: 4/4, browser: chromium }
+          - { project: p3, shard: 1/2, browser: chromium }
+          - { project: p3, shard: 2/2, browser: chromium }
+          - { project: forced-colors, shard: 1/1, browser: chromium }
+          - { project: zoom, shard: 1/1, browser: chromium }
+          - { project: classic-scrollbars, shard: 1/1, browser: chromium }
+          # Every story again in Firefox and WebKit (cairn 0124): the cell is
+          # `1ch` by `1lh`, which is exactly where engines differ.
+          - { project: firefox, shard: 1/2, browser: firefox }
+          - { project: firefox, shard: 2/2, browser: firefox }
+          - { project: webkit, shard: 1/2, browser: webkit }
+          - { project: webkit, shard: 2/2, browser: webkit }
+          - { project: forced-colors-firefox, shard: 1/1, browser: firefox }
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup
+
+      - name: Build the packages the workbench imports
+        run: pnpm -r --filter './packages/*' build
+
+      - if: matrix.browser == 'chromium'
+        uses: ./.github/actions/playwright
+
+      - if: matrix.browser != 'chromium'
+        name: Install ${{ matrix.browser }}
+        run: pnpm --filter workbench exec playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Stories in Vitest browser mode with axe
+        run: >-
+          pnpm --filter workbench exec vitest run
+          --project ${{ matrix.project }} --shard ${{ matrix.shard }}
+
+  # The required check. Its name is what branch protection asks for, so it stays
+  # when the work behind it is split up; it passes when every job it stands for
+  # has, and `always()` makes it fail, rather than skip, when one does not.
+  check:
+    name: Lint, typecheck, build, test
+    if: always()
+    needs: [static, site-tests, workbench-build, stories]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Every job it stands for passed
         env:
-          ENGINES: firefox,webkit
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "results: $RESULTS"
+          for result in $RESULTS; do
+            [ "$result" = success ] || exit 1
+          done
+
   # The site's budget (cairn 0109): its first page's JavaScript, a first paint
   # with no script, axe on every page in both modes at touch, the grid and its
   # lines on the built pages, and no layout shift through first load. A job of
@@ -114,21 +175,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       # The site is built from the packages' dist, as a consumer's app would be.
       - name: Build packages
         run: pnpm -r --filter './packages/*' build
 
-      - name: Install Chromium
-        run: pnpm --filter site exec playwright install --with-deps chromium
+      - uses: ./.github/actions/playwright
+        with:
+          filter: site
 
       - name: Hold the built site to its budget
         run: pnpm --filter site budget

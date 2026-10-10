@@ -17,6 +17,7 @@ import '@rockaway/tokens/themes/dracula.css';
 import '@rockaway/tokens/themes/nord.css';
 import '@rockaway/tokens/themes/solarized.css';
 import '@rockaway/tokens/themes/tokyo-night.css';
+import { overBudget } from './budget.ts';
 import { setContexts } from './contexts.ts';
 import { type Parameters, walk } from './matrix.ts';
 import { runner } from './runner.ts';
@@ -164,6 +165,9 @@ export const afterEach = async (context: StoryContext): Promise<void> => {
   if (parameters.names !== false) expectNames(context.canvasElement, { glyphs });
   const run = runner();
   const a11y = context.parameters.a11y as { disable?: boolean } | undefined;
+  // The paint budget (0113): named at the end of the run, never a failure.
+  const over = overBudget(context.canvasElement);
+  if (run && over.length > 0) await run.paint({ story: context.id, screens: over });
   await walk(context.id, context.canvasElement, parameters, {
     project: run?.project,
     platform: run?.platform,

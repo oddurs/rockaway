@@ -152,6 +152,7 @@ export const ThreeLines: Story = {
                 return;
               }
             }
+            throw new Error(`the prose wrapped to ${lines} lines, not the three this needs`);
           },
         ],
         [
@@ -178,6 +179,12 @@ export const ThreeLines: Story = {
       for (const [name, pick] of cases) {
         const root = canvas.getByTestId(name);
         await afterSelectionChange(() => pick(root));
+        // The boxes are painted from `selectionchange`, a task after the
+        // selection is made: wait for them rather than count frames, which
+        // is not enough on every engine and runner.
+        await waitFor(() =>
+          expect(document.querySelectorAll('.rk-selection-row'), name).toHaveLength(3),
+        );
         const selection = getSelection();
         if (!selection) throw new Error('no selection');
         const lines = selectionLines(selection);

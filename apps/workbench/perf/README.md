@@ -1,0 +1,1 @@
+Paint budget measurements (cairn 0113): `pnpm build && pnpm --filter workbench exec vite build -c perf/vite.config.ts && node apps/workbench/perf/worst.mjs` for the worst case, and `SITE_BASE=/ pnpm --filter site build && node apps/workbench/perf/shell.mjs` for the site shell; each prints one JSON line a case.
