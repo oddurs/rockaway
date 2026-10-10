@@ -156,7 +156,9 @@ describe('in a form', () => {
         description: 'The first line is the summary.',
       },
     ];
-    expect(`\n${toText(formBuffer(fields, { width: 64 }))}`).toMatchInlineSnapshot(`
+    expect(
+      `\n${toText(formBuffer(fields, { comfort: 'compact', width: 64 }))}`,
+    ).toMatchInlineSnapshot(`
       "
       Name    [Ada Lovelace        ]
 

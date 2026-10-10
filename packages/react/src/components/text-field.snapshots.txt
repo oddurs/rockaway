@@ -15,11 +15,16 @@
 │ twelve          █│
 └──────────────────┘
 ── In a form
-Name    [Ada Lovelace        ]
+Name
 
-Email*  [ada@                ]
-        ✗ Enter an email address.
+[Ada Lovelace        ]
 
-        ┌ Repository ──────────┐
-        │ rockaway             │
-        └──────────────────────┘
+Email*
+
+[ada@                ]
+
+✗ Enter an email address.
+
+┌ Repository ──────────┐
+│ rockaway             │
+└──────────────────────┘

@@ -30,6 +30,7 @@ export * from './entries/switch.ts';
 export * from './entries/table.ts';
 export * from './entries/text-field.ts';
 export * from './entries/tree.ts';
+export { Flow, type FlowProps, useSeam } from './flow.tsx';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
 export { Cells, type CellsProps, type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle, shapeAttributes } from './paint/index.ts';
 export { detectPlatform, type PlatformHints, usePlatform } from './platform.ts';
