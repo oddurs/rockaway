@@ -104,7 +104,7 @@ function pointerTarget(el: HTMLElement, view: Window | null): HTMLElement | unde
   if (el.tagName !== 'INPUT') return el;
   for (let up = el.parentElement; up; up = up.parentElement) {
     const style = view?.getComputedStyle(up);
-    if (style && clipped(style)) {
+    if (style && visuallyHidden(style)) {
       return el.closest('label') ?? (el as HTMLInputElement).labels?.[0] ?? undefined;
     }
   }
