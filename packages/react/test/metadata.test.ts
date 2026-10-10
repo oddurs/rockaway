@@ -417,10 +417,11 @@ describe('the checks fail when the metadata is wrong', () => {
       ...button.accessibility,
       keyboard: [{ keys: ['return'], action: 'Not a key KeyHint knows.' }],
     };
-    const related = [{ name: 'Sparkline', why: 'Not written yet.' }];
+    // A name no component will take, so the case outlives the components.
+    const related = [{ name: 'NoSuchComponent', why: 'Not written.' }];
     expect(problems({ ...button, accessibility, related }, found)).toEqual([
       'key return is not a chord KeyHint can draw',
-      'it names Sparkline, which has no metadata',
+      'it names NoSuchComponent, which has no metadata',
     ]);
   });
 });

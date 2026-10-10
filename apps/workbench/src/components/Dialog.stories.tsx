@@ -155,15 +155,18 @@ export const Keyboard: Story = {
     const cancel = () => canvas.getByRole('button', { name: 'Cancel' });
     await waitFor(() => expect(dialog).toHaveFocus());
     await userEvent.tab();
-    expect(cancel()).toHaveFocus();
+    // Focus returns a frame after the dialog closes, later in WebKit.
+    await waitFor(() => expect(cancel()).toHaveFocus());
     await userEvent.tab();
     expect(document.activeElement?.textContent).toContain('Rename');
     expect(dialog.contains(document.activeElement)).toBe(true);
     await userEvent.tab();
-    expect(cancel()).toHaveFocus();
+    // Focus returns a frame after the dialog closes, later in WebKit.
+    await waitFor(() => expect(cancel()).toHaveFocus());
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(canvas.queryByRole('dialog')).toBeNull(), { timeout: 5000 });
-    expect(trigger).toHaveFocus();
+    // Focus returns a frame after the dialog closes, later in WebKit.
+    await waitFor(() => expect(trigger).toHaveFocus());
   },
 };
 
@@ -217,7 +220,8 @@ export const Alert: Story = {
     await waitFor(() => expect(document.querySelector('[role="alertdialog"]')).toBeNull(), {
       timeout: 5000,
     });
-    expect(trigger).toHaveFocus();
+    // Focus returns a frame after the dialog closes, later in WebKit.
+    await waitFor(() => expect(trigger).toHaveFocus());
   },
 };
 
