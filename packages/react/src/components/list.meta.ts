@@ -128,44 +128,57 @@ export const listMeta: ComponentMetaInput = defineMeta({
       title: 'Single select',
       description:
         'The cursor on the first row; the second selected, which is reverse video (text cannot show it); the fourth disabled, which is dim.',
-      text: toText(
-        listBuffer({
-          rows: files({ 0: { cursor: true }, 1: { selected: true }, 3: { disabled: true } }),
-          width: 18,
-          visible: 5,
-        }),
-        { trimEnd: false },
-      ),
+      draw: (glyphs) =>
+        toText(
+          listBuffer(
+            {
+              rows: files({ 0: { cursor: true }, 1: { selected: true }, 3: { disabled: true } }),
+              width: 18,
+              visible: 5,
+            },
+            glyphs,
+          ),
+          { trimEnd: false },
+        ),
     },
     {
       title: 'Multi-select',
       description: 'Two reserved cells: two rows checked, and the cursor on the second of them.',
-      text: toText(
-        listBuffer({
-          rows: files({ 1: { selected: true }, 2: { cursor: true, selected: true } }),
-          width: 18,
-          visible: 5,
-          multiple: true,
-        }),
-        { trimEnd: false },
-      ),
+      draw: (glyphs) =>
+        toText(
+          listBuffer(
+            {
+              rows: files({ 1: { selected: true }, 2: { cursor: true, selected: true } }),
+              width: 18,
+              visible: 5,
+              multiple: true,
+            },
+            glyphs,
+          ),
+          { trimEnd: false },
+        ),
     },
     {
       title: 'Scrolled',
       description: 'Twelve rows in a viewport of four, scrolled to the end; long labels are cut.',
-      text: toText(
-        listBuffer({
-          rows: Array.from({ length: 12 }, (_, i) => ({ label: `line ${i} of a long list` })),
-          width: 14,
-          visible: 4,
-          offset: 8,
-        }),
-        { trimEnd: false },
-      ),
+      draw: (glyphs) =>
+        toText(
+          listBuffer(
+            {
+              rows: Array.from({ length: 12 }, (_, i) => ({ label: `line ${i} of a long list` })),
+              width: 14,
+              visible: 4,
+              offset: 8,
+            },
+            glyphs,
+          ),
+          { trimEnd: false },
+        ),
     },
     {
       title: 'Empty',
-      text: toText(listBuffer({ rows: [], width: 18, visible: 3 }), { trimEnd: false }),
+      draw: (glyphs) =>
+        toText(listBuffer({ rows: [], width: 18, visible: 3 }, glyphs), { trimEnd: false }),
     },
   ],
 });

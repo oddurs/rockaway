@@ -206,12 +206,16 @@ describe('the site, as built', () => {
   test('ships under 100 kB of JavaScript on its first page, and says how much', async () => {
     const page = await browser.newPage();
     const scripts = new Map<string, Buffer>();
-    page.on('response', async (response) => {
+    // Each body is read after its response event, so the page is closed only
+    // once every read has finished: closing it first rejected a read, unhandled.
+    const reads: Promise<void>[] = [];
+    page.on('response', (response) => {
       if (response.request().resourceType() !== 'script') return;
-      scripts.set(response.url(), await response.body());
+      reads.push(response.body().then((body) => void scripts.set(response.url(), body)));
     });
     await page.goto(`${origin}/`);
     await settle(page);
+    await Promise.all(reads);
     await page.close();
 
     const bytes = [...scripts.values()].reduce((sum, body) => sum + body.length, 0);
