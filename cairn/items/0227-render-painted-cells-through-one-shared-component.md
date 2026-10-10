@@ -3,14 +3,14 @@ id: 227
 uid: 612af759-5f0d-44d0-abd7-6f7c48a115bf
 title: Render painted cells through one shared component
 type: chore
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 126
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p3
 layer: components
 effort: s
@@ -24,8 +24,12 @@ buffer painter>` in `paint/` would give all of them one renderer.
 
 ## Acceptance criteria
 
-- [ ] A shared component renders a buffer's runs, server and client alike, and Switch, Tree, List and Screen use it
+- [x] A shared component renders a buffer's runs, server and client alike, and Switch, Tree, List and Screen use it
 
 ## 2026-10-03
 
 Cells, in paint/render.tsx, replaces Chrome and chromeRows (unreleased): a block of rows, or one row inline; colours={false} where the stylesheet colours cells by state (Tree's guides); stretch for 0238's elastic first paint. Screen, List and Tree render through it. Switch is not on main yet (feat/switch); it takes Cells there, and the criterion is ticked when it does.
+
+## 2026-10-09
+
+Ticked: <Cells> renders a buffer's runs on server and client, and Screen, List, Tree and TextField's scrollbar use it. Switch is not on main yet (#114); when it lands it should draw with <Cells> too.
