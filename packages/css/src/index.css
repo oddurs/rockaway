@@ -46,6 +46,7 @@
 @import "./components/progress.css";
 @import "./components/sparkline.css";
 @import "./components/spinner.css";
+@import "./components/select.css";
 @import "./components/table.css";
 @import "./components/text-field.css";
 @import "./components/tree.css";

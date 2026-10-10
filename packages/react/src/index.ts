@@ -27,6 +27,7 @@ export * from './entries/progress.ts';
 export * from './entries/sparkline.ts';
 export * from './entries/spinner.ts';
 export * from './entries/popover.ts';
+export * from './entries/select.ts';
 export * from './entries/table.ts';
 export * from './entries/text-field.ts';
 export * from './entries/tree.ts';
@@ -38,4 +39,6 @@ export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenPr
 export { markOverflow, type OverflowMarkOptions, scrollStateQueries, watchOverflowMarks } from './scroll.ts';
 export { selectionLines, watchSelection } from './selection.ts';
 export { useReducedMotion, useTick } from './tick.ts';
+export { useTick } from './tick.ts';
+export { useCellsWide } from './use-cells-wide.ts';
 export { defineVariants, type VariantAttributes, type VariantDefinition, type VariantInput, type VariantProps, type VariantSelection, type Variants, type VariantValue, type VariantValues } from './variants.ts';

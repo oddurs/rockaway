@@ -17,13 +17,10 @@ import { keyHintMeta } from '../components/key-hint.meta.ts';
 import { keymapMeta } from '../components/keymap.meta.ts';
 import { linkMeta } from '../components/link.meta.ts';
 import { listMeta } from '../components/list.meta.ts';
-import { meterMeta } from '../components/meter.meta.ts';
 import { overlayMeta } from '../components/overlay.meta.ts';
 import { panesMeta } from '../components/panes.meta.ts';
 import { popoverMeta } from '../components/popover.meta.ts';
-import { progressBarMeta } from '../components/progress.meta.ts';
-import { sparklineMeta } from '../components/sparkline.meta.ts';
-import { spinnerMeta } from '../components/spinner.meta.ts';
+import { selectMeta } from '../components/select.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
@@ -44,13 +41,10 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'keymap', meta: keymapMeta },
   { file: 'link', meta: linkMeta },
   { file: 'list', meta: listMeta },
-  { file: 'meter', meta: meterMeta },
   { file: 'overlay', meta: overlayMeta },
   { file: 'panes', meta: panesMeta },
   { file: 'popover', meta: popoverMeta },
-  { file: 'progress', meta: progressBarMeta },
-  { file: 'sparkline', meta: sparklineMeta },
-  { file: 'spinner', meta: spinnerMeta },
+  { file: 'select', meta: selectMeta },
   { file: 'table', meta: tableMeta },
   { file: 'text-field', meta: textFieldMeta },
   { file: 'tree', meta: treeMeta },

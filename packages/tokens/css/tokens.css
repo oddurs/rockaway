@@ -3578,3 +3578,23 @@
     color-scheme: dark;
   }
 }
+
+/*
+ * Content for some themes only (cairn 0171): an element marked
+ * data-rk-theme-only shows only under the themes it names.
+ */
+@layer rk.tokens {
+  [data-rk-theme-only]:not([data-rk-theme-only~='default']):not([data-rk-theme] *),
+  [data-rk-theme='default'] [data-rk-theme-only]:not([data-rk-theme-only~='default']):not([data-rk-theme='default'] [data-rk-theme] *),
+  [data-rk-theme='ice'] [data-rk-theme-only]:not([data-rk-theme-only~='ice']):not([data-rk-theme='ice'] [data-rk-theme] *),
+  [data-rk-theme='ink'] [data-rk-theme-only]:not([data-rk-theme-only~='ink']):not([data-rk-theme='ink'] [data-rk-theme] *),
+  [data-rk-theme='phosphor'] [data-rk-theme-only]:not([data-rk-theme-only~='phosphor']):not([data-rk-theme='phosphor'] [data-rk-theme] *),
+  [data-rk-theme='ascii'] [data-rk-theme-only]:not([data-rk-theme-only~='ascii']):not([data-rk-theme='ascii'] [data-rk-theme] *),
+  [data-rk-theme='catppuccin'] [data-rk-theme-only]:not([data-rk-theme-only~='catppuccin']):not([data-rk-theme='catppuccin'] [data-rk-theme] *),
+  [data-rk-theme='dracula'] [data-rk-theme-only]:not([data-rk-theme-only~='dracula']):not([data-rk-theme='dracula'] [data-rk-theme] *),
+  [data-rk-theme='nord'] [data-rk-theme-only]:not([data-rk-theme-only~='nord']):not([data-rk-theme='nord'] [data-rk-theme] *),
+  [data-rk-theme='solarized'] [data-rk-theme-only]:not([data-rk-theme-only~='solarized']):not([data-rk-theme='solarized'] [data-rk-theme] *),
+  [data-rk-theme='tokyo-night'] [data-rk-theme-only]:not([data-rk-theme-only~='tokyo-night']):not([data-rk-theme='tokyo-night'] [data-rk-theme] *) {
+    display: none !important;
+  }
+}
