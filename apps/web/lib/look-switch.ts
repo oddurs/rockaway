@@ -49,6 +49,8 @@ export interface LookSwitch {
   readonly theme: (step: number) => void;
   readonly mode: () => void;
   readonly density: () => void;
+  /** One part of the look, set outright: from the toolbar's menu. */
+  readonly set: (part: keyof Look, value: string) => void;
 }
 
 /**
@@ -107,6 +109,10 @@ export function lookSwitch(
     density: () => {
       const density = next(DENSITIES, look.density);
       void choose({ ...look, density }, `Density: ${density}.`);
+    },
+    set: (part, value) => {
+      const chosen = readLook(JSON.stringify({ ...look, [part]: value }), themes());
+      void choose(chosen, `${part[0]?.toUpperCase()}${part.slice(1)}: ${chosen[part]}.`);
     },
   };
   for (const button of buttons) {

@@ -40,7 +40,7 @@ import {
 } from 'react-aria-components';
 import { useCellScroll } from '../cell-scroll.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { Chrome } from '../paint/chrome.tsx';
+import { Cells } from '../paint/render.tsx';
 import { useBothRefs } from '../refs.ts';
 import type { VariantProps, VariantValue } from '../variants.ts';
 import { Description, FieldError, fieldClass, Label } from './field.tsx';
@@ -93,7 +93,7 @@ function Scrollbar({
     () => scrollbarBuffer({ total, visible, offset }, glyphs),
     [total, visible, offset, glyphs],
   );
-  return <Chrome buffer={buffer} className="rk-text-field-scrollbar" />;
+  return <Cells buffer={buffer} className="rk-text-field-scrollbar" />;
 }
 
 /** One row: the input between two cells that are delimiters, air or overflow marks. */

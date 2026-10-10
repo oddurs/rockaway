@@ -253,7 +253,7 @@
   "motion": {
     "tick": {
       "$type": "duration",
-      "$description": "Frames on a tick (cairn 0120): how long each frame of a stepped animation holds. Under reduced motion the frames stop and the first frame stays.",
+      "$description": "Frames on a tick (cairn 0120): how long each frame of a stepped animation holds. Under reduced motion the frames stop and the first frame stays, except refresh, which is data rather than motion and slows to tick-reduced.",
       "spinner": {
         "$value": {
           "value": 80,
@@ -269,6 +269,22 @@
       "progress": {
         "$value": {
           "value": 100,
+          "unit": "ms"
+        }
+      },
+      "refresh": {
+        "$value": {
+          "value": 1000,
+          "unit": "ms"
+        }
+      }
+    },
+    "tick-reduced": {
+      "$type": "duration",
+      "$description": "The ticks that keep counting under reduced motion, at this interval: live data stays current while nothing animates.",
+      "refresh": {
+        "$value": {
+          "value": 5000,
           "unit": "ms"
         }
       }

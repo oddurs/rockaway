@@ -21,9 +21,10 @@ import './globals.css';
 import { PaneChrome } from '../components/shell/PaneChrome.tsx';
 import { Shell } from '../components/shell/Shell.tsx';
 import { SiteTree } from '../components/shell/SiteTree.tsx';
+import { ToolbarPart } from '../components/shell/ToolbarPart.tsx';
 import { fontFaces, fontsTogether } from '../lib/font.ts';
 import { glyphSetCss } from '../lib/glyph-sets.ts';
-import { prePaint, SITE_THEME, STORAGE_KEY } from '../lib/look.ts';
+import { prePaint, SITE_THEME } from '../lib/look.ts';
 import { asset } from '../lib/paths.ts';
 import { shellBindings } from '../lib/shell.ts';
 import { NAV, THEME_URLS } from '../lib/site.ts';
@@ -77,21 +78,6 @@ const markCurrent = `(() => {
   }
 })();`;
 
-/** And the look's buttons say the reader's look, which only the browser knows. */
-const markLook = `(() => {
-  let look = {};
-  try { look = JSON.parse(localStorage.getItem(${JSON.stringify(STORAGE_KEY)}) || '{}') || {}; } catch {}
-  for (const button of document.querySelectorAll('.site-status [data-site-look]')) {
-    const part = button.dataset.siteLook;
-    const value = button.querySelector('[data-site-look-value]');
-    const chosen = typeof look[part] === 'string' && look[part] !== '' ? look[part] : null;
-    if (!chosen || !value) continue;
-    if (part === 'theme' && !(self.rockawayThemeNames || []).includes(chosen)) continue;
-    value.textContent = chosen;
-    button.setAttribute('aria-label', part[0].toUpperCase() + part.slice(1) + ': ' + chosen);
-  }
-})();`;
-
 export default function RootLayout({
   children,
   outline,
@@ -124,6 +110,9 @@ export default function RootLayout({
           Skip to the page
         </a>
         <div className="site-shell">
+          <div className="site-toolbar">
+            <ToolbarPart />
+          </div>
           <nav className="site-pane site-map" id="site-map" aria-label="Site">
             <PaneChrome title="rockaway" />
             <div className="rk-scroll site-scroll" data-site-scroll="map">
@@ -143,8 +132,6 @@ export default function RootLayout({
             </div>
           </aside>
           <Shell nav={NAV} bindings={bindings} />
-          {/* biome-ignore lint/security/noDangerouslySetInnerHtml: the site's own script, written at build. */}
-          <script dangerouslySetInnerHTML={{ __html: markLook }} />
         </div>
       </body>
     </html>
