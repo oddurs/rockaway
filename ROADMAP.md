@@ -123,7 +123,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`######····` 53% · 78 of 148 done · due 2027-01-31
+`######····` 54% · 80 of 148 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -167,7 +167,6 @@ The component contract, proven on a first set of components.
 
 - [ ] [`0237`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0237-split-switch-radio-group-table-and-keymap-buffers-into-pure-halves.md) Split Switch, Radio group, Table and Keymap buffers into pure halves <sup>chore · components · p3</sup>
 - [ ] [`0242`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0242-hold-overlay-surfaces-to-their-anchor-s-grid-in-checkconformance.md) Hold overlay surfaces to their anchor's grid in checkConformance <sup>feature · tooling · p2</sup>
-- [ ] [`0248`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0248-let-a-pane-opt-out-of-being-a-region-landmark.md) Let a Pane opt out of being a region landmark <sup>feature · components · p3</sup>
 - [ ] [`0249`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0249-own-a-skip-link-in-the-system.md) Own a skip link in the system <sup>feature · components · p2</sup>
 - [ ] [`0250`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0250-draw-a-scrolling-pane-s-position-in-its-border.md) Draw a scrolling Pane's position in its border <sup>feature · components · p3</sup>
 - [ ] [`0257`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0257-line-a-form-up-at-exactly-the-sixty-cell-threshold-in-every-engine.md) Line a form up at exactly the sixty-cell threshold in every engine <sup>bug · css · p2</sup>
@@ -178,7 +177,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0279`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0279-share-a-hook-for-a-screen-s-width-in-cells.md) Share a hook for a screen's width in cells <sup>feature · components · p3</sup>
 - [ ] [`0280`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0280-space-a-statussegment-s-keyhints.md) Space a StatusSegment's KeyHints <sup>bug · components · p3</sup>
 - [ ] [`0281`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0281-show-a-table-s-rows-in-a-window-that-follows-the-cursor.md) Show a Table's rows in a window that follows the cursor <sup>feature · components · p2</sup>
-- [ ] [`0282`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0282-hand-a-textfield-s-input-to-a-ref.md) Hand a TextField's input to a ref <sup>feature · components · p3</sup>
 - [ ] [`0285`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0285-place-a-keyhint-status-segment-on-the-server.md) Place a KeyHint status segment on the server <sup>feature · components · p2</sup>
 - [ ] [`0289`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0289-hold-the-remaining-components-at-strict.md) Hold the remaining components at strict <sup>chore · tooling · p2</sup>
 - [ ] [`0290`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0290-point-the-recipe-s-reverse-video-paragraph-at-each-component-s-own-block.md) Point the recipe's reverse-video paragraph at each component's own block <sup>docs · docs · p3</sup>
@@ -276,6 +274,7 @@ The component contract, proven on a first set of components.
 - [x] [`0240`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0240-make-keyhint-phrasing-content-so-it-can-sit-inside-a-paragraph.md) Make KeyHint phrasing content, so it can sit inside a paragraph <sup>bug · components · p2</sup>
 - [x] [`0243`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0243-keep-a-titled-table-s-title-when-there-is-no-javascript.md) Keep a titled Table's title when there is no JavaScript <sup>bug · components · p1</sup>
 - [x] [`0244`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0244-give-a-link-alone-in-a-frame-the-touch-line-box.md) Give a link alone in a frame the touch line box <sup>bug · components · p2</sup>
+- [x] [`0248`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0248-let-a-pane-opt-out-of-being-a-region-landmark.md) Let a Pane opt out of being a region landmark <sup>feature · components · p3</sup>
 - [x] [`0260`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0260-name-the-new-checks-in-the-component-recipe.md) Name the new checks in the component recipe <sup>docs · docs · p3</sup>
 - [x] [`0261`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0261-read-a-screen-without-changing-the-document.md) Read a screen without changing the document <sup>bug · tooling · p1</sup>
 - [x] [`0264`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0264-judge-an-inset-mark-against-its-own-geometry-in-the-leak-rule.md) Judge an inset mark against its own geometry in the leak rule <sup>bug · grid · p2</sup>
@@ -284,6 +283,7 @@ The component contract, proven on a first set of components.
 - [x] [`0270`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0270-dim-a-disabled-fill-button-s-reversal.md) Dim a disabled fill Button's reversal <sup>bug · components · p2</sup>
 - [x] [`0276`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0276-keep-codeblock-s-overflow-marks-under-a-modal.md) Keep CodeBlock's overflow marks under a modal <sup>bug · components · p1</sup>
 - [x] [`0277`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0277-draw-a-codeblock-without-its-own-frame.md) Draw a CodeBlock without its own frame <sup>feature · components · p2</sup>
+- [x] [`0282`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0282-hand-a-textfield-s-input-to-a-ref.md) Hand a TextField's input to a ref <sup>feature · components · p3</sup>
 - [x] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 - [x] [`0299`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0299-select-text-the-way-a-terminal-does.md) Select text the way a terminal does <sup>feature · css · p0</sup>
 
