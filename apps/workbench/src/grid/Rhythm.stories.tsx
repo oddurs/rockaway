@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
+import { tab } from '../keys.ts';
 
 /**
  * The grid rhythm (cairn 0093): counts become lengths, density is the line
@@ -71,9 +72,9 @@ export const StateIsAnAttribute: Story = {
 
 export const FilledControlsTakeReverseFocus: Story = {
   name: 'A filled control takes reverse focus',
-  play: async ({ canvas, userEvent }) => {
+  play: async ({ canvas }) => {
     const fill = canvas.getByTestId('fill');
-    await userEvent.tab();
+    await tab();
     await waitFor(() => expect(document.activeElement).toBe(fill));
 
     const focused = getComputedStyle(fill);

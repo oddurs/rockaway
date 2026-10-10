@@ -33,6 +33,31 @@ function count(paths: string[]): Map<string, number> {
 /** Component names, `frame` for `components/frame.tsx`. */
 const names = components(react, '.tsx').map((file) => file.replace(/\.tsx$/, ''));
 
+/** Every module in the package's source, by its path from `src`. */
+function sources(dir: string, from = ''): string[] {
+  return readdirSync(path.join(dir, from), { withFileTypes: true }).flatMap((entry) => {
+    const at = from === '' ? entry.name : `${from}/${entry.name}`;
+    if (entry.isDirectory()) return sources(dir, at);
+    return /\.tsx?$/.test(entry.name) ? [at] : [];
+  });
+}
+
+describe('what sits beside a component', () => {
+  // An example (0064), a metadata fixture and its snapshots are for the site,
+  // the workbench and the tests. Imported by anything in the package, one
+  // would be built and shipped; packages:check also refuses one in a tarball.
+  test('no module of the package imports an example or a fixture', () => {
+    const imports = sources(react).flatMap((file) => {
+      if (/\.(example|fixture)\.tsx?$/.test(file)) return [];
+      const code = readFileSync(path.join(react, file), 'utf8');
+      return [...code.matchAll(/from ['"]([^'"]+\.(?:example|fixture)(?:\.tsx?)?)['"]/g)].map(
+        (m) => `${file}: ${m[1]}`,
+      );
+    });
+    expect(imports).toEqual([]);
+  });
+});
+
 describe('src/entries', () => {
   const entries = readdirSync(path.join(react, 'entries')).sort();
 
