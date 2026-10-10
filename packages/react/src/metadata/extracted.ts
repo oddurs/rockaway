@@ -688,6 +688,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-attribute-bold",
       "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
       "--rk-bg-surface",
@@ -722,6 +723,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-attribute-bold",
       "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
       "--rk-bg-surface",
