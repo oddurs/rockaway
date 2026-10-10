@@ -6,7 +6,12 @@
  * when the browser is idle or at the first key or press, so no page waits
  * for any of it; nothing here changes where anything is.
  */
-import { attachKeymap, detectPlatform, KeymapEngine } from '@rockaway/react/keymap';
+import {
+  attachKeymap,
+  detectPlatform,
+  type KeyEventSource,
+  KeymapEngine,
+} from '@rockaway/react/keymap';
 import type { Route } from 'next';
 import { usePathname, useRouter } from 'next/navigation';
 import { lazy, type ReactNode, Suspense, useEffect, useRef, useState } from 'react';
@@ -46,6 +51,29 @@ function mapLinks(): HTMLElement[] {
 }
 
 /** The section a row of the map is in, or is. */
+/** Whether a key was pressed inside an example app (0151), which has a keymap of its own. */
+const inApp = (event: KeyboardEvent): boolean =>
+  event.target instanceof Element && event.target.closest('[data-site-example]') !== null;
+
+/** The keys from `target` that pass `test`. */
+function only(target: EventTarget, test: (event: KeyboardEvent) => boolean): KeyEventSource {
+  const wrapped = new Map<(event: KeyboardEvent) => void, EventListener>();
+  return {
+    addEventListener: (type, listener) => {
+      const each = (event: Event): void => {
+        if (test(event as KeyboardEvent)) listener(event as KeyboardEvent);
+      };
+      wrapped.set(listener, each);
+      target.addEventListener(type, each);
+    },
+    removeEventListener: (type, listener) => {
+      const each = wrapped.get(listener);
+      if (each) target.removeEventListener(type, each);
+      wrapped.delete(listener);
+    },
+  };
+}
+
 const sectionOf = (el: Element | null): string | undefined =>
   el?.closest<HTMLElement>('[data-site-section]')?.dataset.siteSection;
 
@@ -272,16 +300,29 @@ export function ShellExtras({ bindings, say, helping, setHelping }: ShellExtrasP
       action: fold(true),
     });
     engine.register(scope, { keys: 'esc', description: 'Back to the page', action: actions.back });
-    // Space and Enter on a control are the control's.
+    // Space and Enter on a control are the control's; with a modifier they
+    // are a shortcut, as mod+enter commits from a field.
     const own = (event: KeyboardEvent): void => {
       if (event.key !== ' ' && event.key !== 'Enter') return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
       const at = event.target instanceof Element ? event.target : null;
       if (at?.closest('button, a[href], summary, [role="button"], input, select, textarea')) {
         event.stopImmediatePropagation();
       }
     };
     document.addEventListener('keydown', own);
-    const detach = attachKeymap(engine, document);
+    // An example app's keys come first inside it, as an inner scope's shadow
+    // the page's: there the shell hears a key from the window, after the app's
+    // own listener on the document has passed on it (0151).
+    const detachPage = attachKeymap(
+      engine,
+      only(document, (event) => !inApp(event)),
+    );
+    const detachApp = attachKeymap(engine, only(window, inApp));
+    const detach = (): void => {
+      detachPage();
+      detachApp();
+    };
     return () => {
       document.removeEventListener('focusin', follows);
       document.removeEventListener('pointerdown', follows);

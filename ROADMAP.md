@@ -361,7 +361,6 @@ A website built out of the system it documents, which is the only honest way
 - [ ] [`0145`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0145-enable-github-pages-for-the-repository.md) Enable GitHub Pages for the repository <sup>chore · tooling · p0 · needs-owner</sup>
 - [ ] [`0146`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0146-deploy-the-site-to-github-pages-on-every-push-to-main.md) Deploy the site to GitHub Pages on every push to main <sup>chore · tooling · p0</sup>
 - [ ] [`0149`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0149-index-every-page-for-the-command-palette-at-build-time.md) Index every page for the command palette at build time <sup>feature · site · p1</sup>
-- [ ] [`0151`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0151-compose-three-example-apps-from-the-system-a-git-client-a-monitor-a-settings-form.md) Compose three example apps from the system: a git client, a monitor, a settings form <sup>feature · site · p1</sup>
 - [ ] [`0219`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0219-prove-the-static-callout-in-the-workbench.md) Prove the static callout in the workbench <sup>chore · tooling · p2</sup>
 - [ ] [`0347`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0347-hydrate-a-large-example-in-place-with-no-script.md) Hydrate a large example in place with no script <sup>bug · site · p1</sup>
 - [ ] [`0350`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0350-draw-the-site-s-home-in-the-owner-s-sunset.md) Draw the site's home in the owner's sunset <sup>feature · site · p1</sup>
@@ -388,6 +387,7 @@ A website built out of the system it documents, which is the only honest way
 
 - [ ] [`0107`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0107-write-the-getting-started-guide.md) Write the getting-started guide <sup>docs · docs · p0</sup>
 - [ ] [`0147`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0147-document-every-component-on-its-own-page-generated-from-its-metadata.md) Document every component on its own page, generated from its metadata <sup>feature · site · p0</sup>
+- [ ] [`0151`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0151-compose-three-example-apps-from-the-system-a-git-client-a-monitor-a-settings-form.md) Compose three example apps from the system: a git client, a monitor, a settings form <sup>feature · site · p1</sup>
 - [ ] [`0171`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0171-draw-each-component-s-snapshot-in-every-theme-on-the-site.md) Draw each component's snapshot in every theme on the site <sup>feature · site · p3</sup>
 
 ### done

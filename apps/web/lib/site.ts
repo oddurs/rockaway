@@ -3,6 +3,7 @@
  * the theme stylesheets. Server-side only where it reads files.
  */
 import { themeNames } from '@rockaway/tokens';
+import { items } from '../registry/items.ts';
 import { components, slugOf } from './components.ts';
 import { FOUNDATION_PAGES } from './foundations-list.ts';
 import { SITE_THEME } from './look.ts';
@@ -17,6 +18,7 @@ export const FOUNDATIONS: readonly { readonly id: string; readonly title: string
 export const NAV: readonly NavNode[] = siteNav({
   foundations: FOUNDATIONS,
   components: components.map((c) => ({ slug: slugOf(c.name), name: c.name })),
+  examples: items.filter((item) => item.example === true),
 });
 
 /** Every theme's stylesheet but the site's own and the default, which are in the main one. */

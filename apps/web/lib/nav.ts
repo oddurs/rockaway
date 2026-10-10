@@ -20,10 +20,12 @@ export interface NavNode {
 export interface SitePages {
   readonly foundations: readonly { readonly id: string; readonly title: string }[];
   readonly components: readonly { readonly slug: string; readonly name: string }[];
+  /** The example apps (0151), each a page of its own. */
+  readonly examples?: readonly { readonly name: string; readonly title: string }[];
 }
 
 /** The tree, given the pages the collections hold. */
-export function siteNav({ foundations, components }: SitePages): readonly NavNode[] {
+export function siteNav({ foundations, components, examples = [] }: SitePages): readonly NavNode[] {
   return [
     { id: 'home', title: 'Home', href: href('') },
     {
@@ -36,6 +38,19 @@ export function siteNav({ foundations, components }: SitePages): readonly NavNod
         { id: 'registry', title: 'Registry', href: href('registry/') },
       ],
     },
+    ...(examples.length === 0
+      ? []
+      : [
+          {
+            id: 'examples',
+            title: 'Examples',
+            children: examples.map((example) => ({
+              id: `examples/${example.name}`,
+              title: example.title,
+              href: href(`examples/${example.name}/`),
+            })),
+          },
+        ]),
     ...(foundations.length === 0
       ? []
       : [

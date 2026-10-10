@@ -163,9 +163,13 @@ export function fontFaces(web: readonly string[], measured: Metrics = metrics): 
   const cell = `calc(1ch + ${SLACK}px)`;
   const set = (families: string) =>
     `--rk-font-family-mono:${families};--rk-font-family-display:${families}`;
-  faces.push(`:root{${set(fallback)};--rk-cell-width:${cell}}`);
-  faces.push(`:root[data-site-fonts]{${set(stack)}}`);
-  faces.push(`@media (scripting: none){:root{${set(stack)}}}`);
+  // A theme names its own face, "IBM Plex Mono", which the site serves
+  // under its own name: so the site's stack is set again on every element
+  // that takes a theme of its own (an example app, the themes page), or the
+  // face there is a fallback and its cell another width (0151).
+  faces.push(`:root,[data-rk-theme]{${set(fallback)};--rk-cell-width:${cell}}`);
+  faces.push(`:root[data-site-fonts],:root[data-site-fonts] [data-rk-theme]{${set(stack)}}`);
+  faces.push(`@media (scripting: none){:root,[data-rk-theme]{${set(stack)}}}`);
   return faces.join('\n');
 }
 
