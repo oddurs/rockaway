@@ -26,6 +26,9 @@ export const textMeta: ComponentMetaInput = defineMeta({
       text: 'At strict conformance. A terminal has one size, so a screen held to strict draws none of this.',
     },
     {
+      text: 'As a block in a box that shrinks to what it holds, an item in a flex row or a float: the block would be as wide as its scaled words, a fraction of a cell. Set it `inline` there, which rounds its own box up to whole cells.',
+    },
+    {
       text: 'For letters built from block characters. That is a picture of a word, drawn by the cell renderer (0298), with the real heading beside it.',
     },
   ],

@@ -2,7 +2,9 @@
  * Base (cairn 0025, 0093). Element defaults, all of them reading semantic
  * tokens, on a character grid.
  *
- * One size: a heading is weight, case or reverse, never a larger font (0075).
+ * One size for every element: a heading is weight, case or reverse, never a
+ * larger font (0075). Larger type is asked for, with `.rk-text`, and is sized
+ * in whole rows (0296).
  * Ligatures are off, because a ligature is two characters in one cell.
  * Density is the line box, so the cells get taller and nothing moves.
  *
@@ -26,7 +28,8 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* One size on a character grid: weight and case carry a heading. */
+  /* One size on a character grid: weight and case carry a heading. A
+   * heading in whole rows is `.rk-text` (0296), never an element default. */
   h1,
   h2,
   h3,

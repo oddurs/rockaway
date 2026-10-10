@@ -21,8 +21,8 @@ export interface TextProps
   readonly size: TextSize;
   /**
    * Set it in a line of other text, its box rounded up to whole cells, rather
-   * than as a block the width of its container. Its words should be plain
-   * text: the cells it takes are counted from them.
+   * than as a block the width of its container. It never wraps. Its words
+   * should be plain text: the cells it takes are counted from them.
    */
   readonly inline?: boolean;
   /** The element: a heading's level, a paragraph. `div`, or `span` inline, by default. */

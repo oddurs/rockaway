@@ -42,7 +42,11 @@ export function textScale(size: TextSize, metrics: TextMetrics = {}): number {
 
 /**
  * The columns a run takes set inline: its width at the ordinary size, scaled,
- * and rounded up to whole cells.
+ * and rounded up to whole cells. The stylesheet takes the wider of this and
+ * the run as the scaled face lays it out, so this is the fewest a page draws.
+ * Where a face is hinted (Chromium on Linux rounds each scaled advance to a
+ * whole pixel), a run can be wider than its ordinary width scaled, and take a
+ * cell more.
  */
 export function textCols(text: string, size: TextSize, metrics: TextMetrics = {}): number {
   return Math.max(0, Math.ceil(stringWidth(text) * textScale(size, metrics) - TEXT_SLACK));

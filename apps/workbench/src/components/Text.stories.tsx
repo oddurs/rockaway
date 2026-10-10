@@ -1,3 +1,4 @@
+import { stringWidth } from '@rockaway/grid';
 import {
   Frame,
   frameBuffer,
@@ -6,6 +7,7 @@ import {
   Text,
   type TextSize,
   textCols,
+  textScale,
   textSizes,
 } from '@rockaway/react';
 import { checkConformance, screenshot } from '@rockaway/react/testing';
@@ -43,17 +45,42 @@ function metricsOf(el: Element) {
 /** Pixels as cells, to the nearest hundredth. */
 const cells = (px: number, cell: number): number => Math.round((px / cell) * 100) / 100;
 
+/** The box the words themselves take, as the scaled face lays them out. */
+function runOf(el: Element): DOMRect {
+  const range = document.createRange();
+  range.selectNodeContents(el.querySelector('.rk-text-glyphs') ?? el);
+  return range.getBoundingClientRect();
+}
+
 /**
- * A run set inline is `size` rows tall and as many whole cells wide as its
- * scaled text needs, wherever it is: the block it is in, the density, the face.
+ * A run set inline is `size` rows tall and a whole number of cells wide,
+ * wherever it is: the block it is in, the density, the face. Its box covers
+ * its words as the scaled face lays them out, which is not always the
+ * ordinary advance scaled (a hinted face rounds each), and is never narrower
+ * than the cells `textCols` counts; past the wider of the two it pads less
+ * than a cell.
  */
 function expectSized(el: HTMLElement, text: string, size: TextSize): void {
   const m = metricsOf(el);
   const box = el.getBoundingClientRect();
   expect(cells(box.height, m.height), `${text} at ${size}: rows`).toBe(size);
-  expect(cells(box.width, m.width), `${text} at ${size}: columns`).toBe(
-    textCols(text, size, { line: m.line, content: m.content }),
+  const cols = cells(box.width, m.width);
+  const counted = textCols(text, size, { line: m.line, content: m.content });
+  const run = runOf(el).width;
+  const scaled =
+    stringWidth(text) * m.width * textScale(size, { line: m.line, content: m.content });
+  const seen = `box ${box.width}px, words ${run}px, scaled ${scaled}px, cell ${m.width}px`;
+  expect(Number.isInteger(cols), `${text} at ${size}: whole cells (${seen})`).toBe(true);
+  expect(cols, `${text} at ${size}: at least the cells counted (${seen})`).toBeGreaterThanOrEqual(
+    counted,
   );
+  expect(box.width, `${text} at ${size}: covers its words (${seen})`).toBeGreaterThanOrEqual(
+    run - 1 / 64,
+  );
+  expect(
+    box.width - Math.max(run, scaled),
+    `${text} at ${size}: pads less than a cell (${seen})`,
+  ).toBeLessThan(m.width);
   // Its glyph box fills the rows exactly: the line box is the font's ascent
   // plus descent.
   const glyphs = el.querySelector('.rk-text-glyphs') as HTMLElement;
@@ -67,10 +94,13 @@ function expectSized(el: HTMLElement, text: string, size: TextSize): void {
 /**
  * Every size, set inline, one to a line: each `size` rows tall and a whole
  * number of cells wide, and read back as its word from the first cell, then
- * padding to the end of its box.
+ * padding to the end of its box. The same at 200% zoom.
  */
 export const EverySize: Story = {
   name: 'Every size',
+  // Again at 200%, where every CSS pixel is two: the rows, the cells and the
+  // glyphs scale together, so nothing changes in cells.
+  tags: ['zoom'],
   render: () => (
     <Frame title="sizes" cols={40} rows={11} data-testid="sizes">
       {textSizes.map((size) => (
@@ -142,6 +172,68 @@ export const DensitiesGlyph: Story = { ...densities('glyph'), name: 'Densities, 
 /** The same, in the rule painter's frame. */
 export const DensitiesRule: Story = { ...densities('rule'), name: 'Densities, rule' };
 
+/** The face the workbench loads, whose glyph box is known: 1020 + 300 per thousand. */
+const JETBRAINS = '"JetBrains Mono Variable"';
+
+/**
+ * The glyphs fill the rows, in a face whose metrics the theme knows. Set in
+ * JetBrains Mono with its content height, 1.32, each size's glyph box, the
+ * face's ascent plus descent as the engine lays it out, is its rows and
+ * starts on its first, at every density. Within a pixel: Gecko and Chromium
+ * on Linux round the ascent and the descent each to a whole pixel.
+ */
+export const FillsItsRows: Story = {
+  name: 'Glyphs fill their rows',
+  args: { size: 2 },
+  render: () => (
+    <div
+      data-testid="face"
+      data-density="dense"
+      style={{
+        ['--rk-font-family-mono' as string]: JETBRAINS,
+        ['--rk-font-content' as string]: 1.32,
+      }}
+    >
+      <Frame title="face" cols={36} rows={10}>
+        {textSizes.map((size) => (
+          <div key={size}>
+            <Text size={size} inline data-testid={`fill ${size}`}>
+              Rock
+            </Text>
+          </div>
+        ))}
+      </Frame>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await document.fonts.load(`16px ${JETBRAINS}`);
+    const face = canvas.getByTestId('face');
+    for (const density of DENSITIES) {
+      face.dataset.density = density;
+      await settled();
+      for (const size of textSizes) {
+        const el = canvas.getByTestId(`fill ${size}`);
+        const m = metricsOf(el);
+        expect(
+          getComputedStyle(el.querySelector('.rk-text-glyphs') as Element).fontFamily,
+        ).toContain('JetBrains Mono Variable');
+        expectSized(el, 'Rock', size);
+        const box = el.getBoundingClientRect();
+        const glyphs = runOf(el);
+        const seen = `glyph box ${glyphs.top - box.top}px to ${glyphs.bottom - box.top}px, rows ${box.height}px`;
+        expect(
+          Math.abs(glyphs.height - size * m.height),
+          `${density} ${size}: fills (${seen})`,
+        ).toBeLessThanOrEqual(1);
+        expect(
+          Math.abs(glyphs.top - box.top),
+          `${density} ${size}: from the first row (${seen})`,
+        ).toBeLessThanOrEqual(1);
+      }
+    }
+  },
+};
+
 /**
  * A two-row heading in a frame. It is a block, so it takes the frame's inner
  * width; it is two rows, so the frame holds it in whole rows, and the frame's
@@ -180,6 +272,37 @@ export const HeadingInFrame: Story = {
         border.row(4),
       ].join('\n'),
     );
+  },
+};
+
+/**
+ * A two-row heading in a page of prose, whose h1 and h2 shrink to their words
+ * so the rule under them is as long as they are. Shrunk to scaled words a
+ * heading would be a fraction of a cell wide, so a sized one takes the
+ * measure, which is whole cells, and its rule runs the measure's length. The
+ * check after the story holds every box to the grid.
+ */
+export const HeadingInProse: Story = {
+  name: 'A heading in prose',
+  args: { size: 2 },
+  render: () => (
+    <Frame title="prose" cols={30} rows={7}>
+      <article className="rk-prose">
+        <Text size={2} as="h2">
+          Install
+        </Text>
+        <p>Add the packages.</p>
+      </article>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await settled();
+    const heading = canvas.getByRole('heading', { level: 2, name: 'Install' });
+    const m = metricsOf(heading);
+    const box = heading.getBoundingClientRect();
+    // Two rows of words and the rule's row under them, the measure across.
+    expect(cells(box.height, m.height)).toBe(3);
+    expect(cells(box.width, m.width)).toBe(26);
   },
 };
 
@@ -254,9 +377,10 @@ export const Copy: Story = {
     } finally {
       document.removeEventListener('copy', listen);
     }
-    // What the page shows, a heading's capitals included (0075), and nothing
-    // after it: no padding, no rows of space.
-    expect(copied?.replace(/\n+$/, '')).toBe(heading.innerText);
+    // The words, and nothing after them: no padding, no rows of space.
+    // Chromium and WebKit copy what the page shows, a heading's capitals
+    // included (0075); Gecko copies the letters as written.
+    expect([heading.innerText, heading.textContent]).toContain(copied?.replace(/\n+$/, ''));
     expect(copied?.trim().toLowerCase()).toBe('start');
   },
 };

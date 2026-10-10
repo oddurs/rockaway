@@ -16,27 +16,47 @@ effort: m
 
 ## Purpose
 
-A primitive for sized text (sizes 2, 3 and 4 rows) that works with no script, at every density and in both painters, sits inside frames whose lines meet it, and reads back through screenshot and copy.
+A primitive for sized text (heading sizes 2 and 3 rows first) that works with no script, at every density and in both painters, sits inside frames whose lines meet it, and reads back through screenshot and copy.
 
-## What's shipped
+It is for a page title and a landing line. It is not for a heading inside a component or a form, which weight, case and reverse carry at one row (0075), and not for block letters, which are a picture drawn by the cell renderer (0298).
 
-- **Text component** (`@rockaway/react`): React component with `size` (2, 3, 4), `inline`, and `as` props; renders with `.rk-text` and `.rk-text-glyphs` for sized display
-- **Pure functions** (`text.pure.ts`): `textSizes`, `TextSize`, `textScale`, `textCols`, `textBuffer`, `TEXT_SLACK`; all sized text at ordinary size
-- **CSS** (`@rockaway/css`): `.rk-text`, `.rk-text-glyphs` (scaled font and line box), `.rk-text-inline` (inline-block with width rounded up to cells)
-- **Metadata** (`text.meta.ts`, `text.fixture.ts`, `text.snapshots.txt`): component description, fixture with states, snapshot test
-- **Stories** (`Text.stories.tsx`): Every size, densities glyph and rule, heading in frame, display line beside text, copy (triple-click), ASCII, refused at strict, sized off-script, forced colours; 19 stories, all passing locally
-- **Tokens** (`@rockaway/tokens`): `contentHeight` for IBM Plex (1.3), JetBrains (1.32), system (1.36), Berkeley (1.36)
-- **Entries and index**: `entries/text.ts`, index line in `@rockaway/react`, test file `test/text.test.ts`
-- **Conformance**: `SizedText` violation at strict level; exported from testing
+## Anatomy
+
+- `Text`, the element it is asked to be (`as`: a `div`, a `span` when `inline`, a paragraph or a heading of any level), with `.rk-text` and, inline, `.rk-text-inline`. It writes `--rk-size` and, inline, `--rk-chars`.
+- `.rk-text-glyphs`, the words at their scaled size, in a line box N rows tall.
+
+The rule, the formula and the measurements are decision 0296.
+
+## States
+
+None. It is text.
+
+## Tokens consumed
+
+`--rk-cell-line` (the density), `--rk-font-content` (the face's glyph box, new here), `--rk-cell-width`.
+
+## Accessibility
+
+Text, so no role of its own: a heading is a heading by its element. Its size is not announced. Copy gives its words alone. Zoom scales it with everything else, and forced colours draw it in the reader's text colour.
 
 ## Acceptance criteria
 
-1. [x] Component builds with no errors or warnings
-2. [x] Stories render and pass conformance at all densities and in both painters
-3. [x] Screenshot reads a run's characters one to a cell from start, padding to K, blank rows below
-4. [x] Copy gets words alone (uppercase for h1/h2/h3 per base.css)
-5. [x] Continuity passes: glyphs are transparent in chromeOnly; ink stays inside N rows
-6. [x] Conforms at strict with SizedText exception declared
-7. [ ] Linux CI hinting: font metrics match macOS measurements
-8. [x] Changeset added for @rockaway/react, @rockaway/css, @rockaway/tokens
-9. [ ] Final PR ready to land alongside 0296
+- [x] Built on the behaviour layer; no hand-rolled focus or keyboard logic
+- [x] Styled from `data-*` state and semantic tokens only
+- [x] Stories cover every state, and run as Vitest browser tests
+- [x] axe passes; keyboard walkthrough recorded in the story
+- [x] Light, dark and forced-colors verified
+- [x] Metadata written: props, anatomy, when to use, when not to
+- [x] Sized in cells, and drawn by the frame engine: no box characters written by hand
+- [x] Both painters render it identically, measured in cells
+- [x] Frame glyphs are `aria-hidden`; the accessible name never contains one
+- [x] Ships a text snapshot, which is its documentation as much as its test
+- [x] Operable by keyboard alone, and usable with a finger at touch density
+- [x] State reads without colour: an attribute or a mark carries it too
+- [ ] Conforms at `strict`, or declares its exception with a reason
+- [ ] Sizes 2, 3 and 4 are N rows and whole cells at every density, in both painters, with JavaScript off, at 200% zoom, and on Linux CI
+- [ ] Every page with JavaScript off and on is the same, and the site has a page for it
+
+## 2026-10-09
+
+Rule 7 is left open on purpose: sized text does not conform at strict and is not excused there. Decision 0296 makes strict mean one size, so the conformance check reports each .rk-text on a strict screen as a SizedText violation that says why. The reviewer may prefer to call that the declared exception and tick it.
