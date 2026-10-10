@@ -2,7 +2,8 @@
  * Write a route per component (cairn 0147): `app/components/(each)/<name>/`
  * and its outline. Each imports only its own example, so each page loads
  * only its own example's script. Every component the metadata describes
- * gets one; one without an example fails here, before the build.
+ * gets one; one without an example fails here, before the build. And the
+ * Markdown twin of every component and every document (cairn 0048).
  *
  * The routes are build output, not source: they are ignored by git and
  * written again before every build and every dev server.
@@ -71,4 +72,32 @@ export default function Page(): ReactNode {
 }
 `,
   );
+}
+
+// The Markdown twins (cairn 0048): each document's and each component's, a
+// route apiece, since a twin's address is its page's with `.md` after it.
+const { docs } = await import('../lib/docs.ts');
+const docTwins = path.join(app, '(twins)');
+const componentTwins = path.join(app, 'components', '(twins)');
+rmSync(docTwins, { recursive: true, force: true });
+rmSync(componentTwins, { recursive: true, force: true });
+const twin = (dir: string, call: string, up: string): void => {
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    path.join(dir, 'route.ts'),
+    `${header}import { ${call.split('(')[0]} } from '${up}lib/twins.ts';
+
+export const dynamic = 'force-static';
+
+export function GET(): Response {
+  return ${call};
+}
+`,
+  );
+};
+for (const id of Object.keys(docs)) {
+  twin(path.join(docTwins, `${id}.md`), `docTwin('${id}')`, '../../../');
+}
+for (const { name } of meta.components) {
+  twin(path.join(componentTwins, `${slugOf(name)}.md`), `componentTwin('${name}')`, '../../../../');
 }

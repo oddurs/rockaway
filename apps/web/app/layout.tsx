@@ -34,7 +34,13 @@ export const metadata: Metadata = {
   title: { default: 'rockaway', template: '%s — rockaway' },
   description:
     'A design system for terminal interfaces on the web: every box drawn on a grid of character cells, and every page still a web page.',
-  icons: { icon: asset('favicon.svg') },
+  icons: {
+    icon: [
+      { url: asset('favicon.svg'), type: 'image/svg+xml' },
+      { url: asset('favicon.png'), type: 'image/png', sizes: '180x180' },
+    ],
+    apple: asset('favicon.png'),
+  },
 };
 
 export const viewport: Viewport = { width: 'device-width', initialScale: 1 };

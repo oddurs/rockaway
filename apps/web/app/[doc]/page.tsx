@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { PageBody } from '../../components/shell/PageBody.tsx';
 import { docFor } from '../../lib/docs.ts';
 import { DOC_IDS, renderDoc } from '../../lib/docs-pages.ts';
+import { pageMetadata } from '../../lib/pages.ts';
 
 export const dynamicParams = false;
 
@@ -16,8 +17,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ doc: string }>;
 }): Promise<Metadata> {
-  const { title, description } = docFor((await params).doc);
-  return { title, description };
+  return pageMetadata(`${(await params).doc}/`);
 }
 
 export default async function Doc({

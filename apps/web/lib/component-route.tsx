@@ -15,6 +15,7 @@ import { ScrollRegion } from '../components/ScrollRegion.tsx';
 import { PageBody } from '../components/shell/PageBody.tsx';
 import { headHtml, restHtml, sectionsOf } from './component-page.ts';
 import { components, slugOf } from './components.ts';
+import { pageMetadata } from './pages.ts';
 
 const metaOf = (slug: string) => {
   const meta = components.find((c) => slugOf(c.name) === slug);
@@ -23,8 +24,7 @@ const metaOf = (slug: string) => {
 };
 
 export function componentMetadata(slug: string): Metadata {
-  const meta = metaOf(slug);
-  return { title: meta.name, description: meta.summary.replaceAll('`', '') };
+  return pageMetadata(`components/${slugOf(metaOf(slug).name)}/`);
 }
 
 export function ComponentPage({

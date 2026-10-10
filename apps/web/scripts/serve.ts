@@ -21,6 +21,12 @@ const TYPES: Readonly<Record<string, string>> = {
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
   '.xml': 'application/xml',
+  '.md': 'text/markdown; charset=utf-8',
+  '.conf': 'text/plain; charset=utf-8',
+  '.toml': 'application/toml',
+  '.itermcolors': 'application/xml',
+  // Ghostty's themes have no extension.
+  '': 'text/plain; charset=utf-8',
 };
 
 /** Already compressed: sent as they are. */
