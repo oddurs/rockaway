@@ -61,6 +61,7 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     "Keymap's engine as a class, for a page with no React (cairn 0237). It draws nothing, and is documented with Keymap.",
   RouterProvider:
     "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
+  Flow: 'Layout, not a widget: blocks down the page on rhythm half-steps, closed to whole rows (0312). Documented with the grid.',
   MenuTrigger:
     "React Aria's menu trigger, re-exported beside Menu so it is the instance Menu's popover reads, and so copied-in code can open a menu. It draws nothing, and is documented in Menu's notes.",
   SubmenuTrigger:
@@ -521,6 +522,9 @@ const NEITHER: Readonly<Record<string, string>> = {
   Form: 'Lays out fields in rows and a column of labels; each control is its own.',
   KeyHint: 'Words in a line of text, or inside a control that is marked itself.',
   Keymap: 'Binds keys; its help screen is drawn inside whatever pane shows it.',
+  Menu: 'Draws nothing of its own: its surface is OverlayPopover’s, which marks itself a pane.',
+  Picture:
+    'An image in a box of whole cells: nothing to press, and nothing it holds but the picture.',
   Popover: 'Draws nothing of its own: its surface is OverlayPopover’s, which marks itself a pane.',
 };
 

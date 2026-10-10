@@ -72,4 +72,13 @@ export const pictureMeta: ComponentMetaInput = defineMeta({
       text: toText(pictureBuffer({ cols: 12, rows: 2 }, glyphsFor({ borderSet: 'ascii' }))),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: a cell of picture, with no caption.
+    min: toText(pictureBuffer({ cols: 1, rows: 1 }), { trimEnd: false }),
+    // The default: sixteen by nine, 24 cells wide, at normal density.
+    default: toText(pictureBuffer({ cols: 24, rows: pictureRows(24, 16 / 9, CELL) }), {
+      trimEnd: false,
+    }),
+  },
 });

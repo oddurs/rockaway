@@ -175,4 +175,11 @@ export const menuMeta: ComponentMetaInput = defineMeta({
       ),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one row of one letter in its frame.
+    min: toText(menuBuffer({ rows: [{ label: 'x' }] }), { trimEnd: false }),
+    // The default: the File menu.
+    default: toText(menuBuffer({ rows: FILE }), { trimEnd: false }),
+  },
 });

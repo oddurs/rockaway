@@ -184,6 +184,11 @@ export interface ComponentMeta {
   /** The tokens its stylesheets and painters read, as custom properties. */
   readonly tokens: readonly string[];
   readonly snapshots: readonly Snapshot[];
+  /**
+   * What is wrong and not yet fixed, outside the component's control: a
+   * dependency's quirk a consumer may meet, and what to do about it.
+   */
+  readonly knownIssues?: readonly string[];
   /** How it sits on the grid: read from its code and its stories, never written by hand. */
   readonly grid: GridMeta;
 }
@@ -248,6 +253,7 @@ export interface ComponentMetaInput<Part extends string = string> {
   }[];
   readonly accessibility: Accessibility;
   readonly snapshots: readonly SnapshotInput[];
+  readonly knownIssues?: ComponentMeta['knownIssues'];
   /**
    * The component drawn by its own buffer functions, as a snapshot's text is,
    * at its smallest and at its default: what the published sizes are
