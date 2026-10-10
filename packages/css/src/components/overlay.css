@@ -42,13 +42,16 @@
 
   /*
    * As wide as the trigger, in whole cells: React Aria sets --trigger-width on
-   * the popover. A trigger on the grid is a whole number of cells already; a
-   * thirty-second of a pixel over is measurement, not another cell.
+   * the popover. A trigger on the grid is a whole number of cells already, but
+   * measured in the font's true advance, and the cell is that advance rounded
+   * to a sixty-fourth of a pixel (0117): up to a hundred-and-twenty-eighth
+   * per cell, which across thirty cells of IBM Plex Mono's 9.6px is a fifth
+   * of a pixel over. That is measurement, not another cell.
    */
   .rk-overlay-min-trigger > .rk-screen {
     --rk-overlay-min-trigger: round(
       up,
-      max(0px, var(--trigger-width, 0px) - 1px / 32),
+      max(0px, var(--trigger-width, 0px) * 127 / 128 - 1px / 32),
       var(--rk-cell-width)
     );
   }
