@@ -263,15 +263,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "CheckboxGroup": {
@@ -318,15 +315,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "Column": {
@@ -1120,21 +1114,120 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Popover": {
-    "file": "popover.tsx",
+  "Pane": {
+    "file": "panes.tsx",
     "props": [
       {
-        "name": "minCols",
-        "type": "number | 'trigger'",
+        "name": "size",
+        "type": "PaneSize",
         "required": false,
-        "description": "The fewest cells across the popover takes, its frame included: `'trigger'` for its trigger's width in whole cells, or a count. `0` lets it be as narrow as what it holds.\n @default 'trigger'",
-        "default": "'trigger'"
+        "description": "Cells, a share of what is left (`'2fr'`), or `'auto'`. `'auto'` by default."
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "description": "The fewest cells of content it takes along the split before it collapses."
+      },
+      {
+        "name": "priority",
+        "type": "number",
+        "required": false,
+        "description": "When there is not room for every pane, the lowest priority collapses first. 0 by default."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the pane's top edge, and its accessible name."
+      },
+      {
+        "name": "titleAlign",
+        "type": "'start' | 'center' | 'end'",
+        "required": false,
+        "description": "Where the title sits in the top edge: after the corner, by default."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the pane's borders, in cells. One across and none down by default, the proportions `Frame` uses."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The accessible name, when the title is not the right one to say."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The pane's content, or a `Panes` of its own to split it further."
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Panes": {
+    "file": "panes.tsx",
+    "props": [
+      {
+        "name": "direction",
+        "type": "PanesDirection",
+        "required": false,
+        "description": "`row` puts the panes side by side, `column` stacks them."
+      },
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set draws every border; the theme's when not given."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The whole layout's accessible name, which makes it a group."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "`Pane`s, in order."
       }
     ],
     "inherits": [
-      "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
     ],
-    "tokens": []
+    "tokens": [
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
   },
   "Row": {
     "file": "table.tsx",
@@ -1406,6 +1499,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false,
         "description": "How the guides are stroked: weighted like type, or hairlines. Match the screen it sits in.",
         "default": "'glyph'"
+      },
+      {
+        "name": "disallowTypeAhead",
+        "type": "boolean",
+        "required": false,
+        "description": "No type-ahead: a printable key moves nothing, and reaches the page, for a tree beside single-letter shortcuts (`j`, `k`, `/`). The arrows, Home and End still move. React Aria's own option, which its GridList offers and its Tree honours."
+      },
+      {
+        "name": "onFocusedKeyChange",
+        "type": "(key: Key | null) => void",
+        "required": false,
+        "description": "Called with the row that has focus whenever it changes, and with `null` when focus leaves the tree: what a keymap beside the tree acts on, or what a status bar shows."
       },
       {
         "name": "className",

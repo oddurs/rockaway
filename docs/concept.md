@@ -292,6 +292,8 @@ pinned at each level.
 
 The screen's own box is exempt: the page decides how much room a screen gets,
 and the grid governs what is drawn inside it.
+An overlay is the exception that proves it: it is a screen of its own, but it
+lands on the grid of the screen its trigger is in, and is held to that grid.
 
 ## 7. The buffer is the test oracle
 
