@@ -123,13 +123,12 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`######····` 55% · 82 of 148 done · due 2027-01-31
+`######····` 57% · 85 of 148 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
 ### backlog
 
-- [ ] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
 - [ ] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
 - [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
 - [ ] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
@@ -140,7 +139,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0098`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0098-statusbar.md) StatusBar <sup>component · components · p0</sup>
 - [ ] [`0101`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0101-progress.md) Progress <sup>component · components · p1</sup>
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
-- [ ] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p2</sup>
 - [ ] [`0124`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0124-run-the-story-tests-in-firefox-and-webkit-as-well-as-chromium.md) Run the story tests in Firefox and WebKit as well as Chromium <sup>chore · tooling · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0167`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0167-add-size-in-cells-and-conformance-level-to-component-metadata.md) Add size in cells and conformance level to component metadata <sup>feature · docs · p1</sup>
@@ -162,7 +160,6 @@ The component contract, proven on a first set of components.
 
 ### ready
 
-- [ ] [`0237`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0237-split-switch-radio-group-table-and-keymap-buffers-into-pure-halves.md) Split Switch, Radio group, Table and Keymap buffers into pure halves <sup>chore · components · p3</sup>
 - [ ] [`0242`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0242-hold-overlay-surfaces-to-their-anchor-s-grid-in-checkconformance.md) Hold overlay surfaces to their anchor's grid in checkConformance <sup>feature · tooling · p2</sup>
 - [ ] [`0249`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0249-own-a-skip-link-in-the-system.md) Own a skip link in the system <sup>feature · components · p2</sup>
 - [ ] [`0250`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0250-draw-a-scrolling-pane-s-position-in-its-border.md) Draw a scrolling Pane's position in its border <sup>feature · components · p3</sup>
@@ -206,6 +203,7 @@ The component contract, proven on a first set of components.
 
 - [x] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p0</sup>
 - [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
+- [x] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
 - [x] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [x] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
 - [x] [`0057`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0057-table.md) Table <sup>component · components · p1</sup>
@@ -217,6 +215,7 @@ The component contract, proven on a first set of components.
 - [x] [`0100`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0100-list.md) List <sup>component · components · p0</sup>
 - [x] [`0111`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0111-render-in-the-dom-and-treat-painting-as-a-strategy.md) Render in the DOM, and treat painting as a strategy <sup>decision · grid · p0</sup>
 - [x] [`0112`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0112-write-the-concept-doc-how-a-tui-becomes-a-web-page.md) Write the concept doc: how a TUI becomes a web page <sup>docs · docs · p0</sup>
+- [x] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p2</sup>
 - [x] [`0116`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0116-draw-lines-blocks-and-cell-backgrounds-from-the-cell-never-from-the-font.md) Draw lines, blocks and cell backgrounds from the cell, never from the font <sup>decision · grid · p0</sup>
 - [x] [`0117`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0117-render-box-drawing-blocks-and-cell-backgrounds-procedurally-at-full-cell-size.md) Render box-drawing, blocks and cell backgrounds procedurally, at full cell size <sup>feature · grid · p0</sup>
 - [x] [`0118`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0118-fix-the-state-vocabulary-how-every-state-is-drawn-on-the-grid.md) Fix the state vocabulary: how every state is drawn on the grid <sup>decision · css · p0</sup>
@@ -269,6 +268,7 @@ The component contract, proven on a first set of components.
 - [x] [`0230`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0230-clip-checkcontinuity-to-what-a-scroll-region-shows.md) Clip checkContinuity to what a scroll region shows <sup>feature · tooling · p2</sup>
 - [x] [`0231`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0231-use-the-theme-s-ellipsis-in-the-dom.md) Use the theme's ellipsis in the DOM <sup>feature · components · p3</sup>
 - [x] [`0236`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0236-ink-shapes-inside-a-reversed-element-in-the-reversed-figure-under-forced-colours.md) Ink shapes inside a reversed element in the reversed figure under forced colours <sup>bug · css · p2</sup>
+- [x] [`0237`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0237-split-switch-radio-group-table-and-keymap-buffers-into-pure-halves.md) Split Switch, Radio group, Table and Keymap buffers into pure halves <sup>chore · components · p3</sup>
 - [x] [`0238`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0238-size-a-server-rendered-screen-from-its-content-not-screen-s-fallback.md) Size a server-rendered screen from its content, not Screen's fallback <sup>bug · components · p1</sup>
 - [x] [`0240`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0240-make-keyhint-phrasing-content-so-it-can-sit-inside-a-paragraph.md) Make KeyHint phrasing content, so it can sit inside a paragraph <sup>bug · components · p2</sup>
 - [x] [`0243`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0243-keep-a-titled-table-s-title-when-there-is-no-javascript.md) Keep a titled Table's title when there is no JavaScript <sup>bug · components · p1</sup>
