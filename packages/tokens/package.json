@@ -64,7 +64,7 @@
     "@terrazzo/cli": "2.7.1",
     "@terrazzo/parser": "2.7.1",
     "@terrazzo/plugin-css": "2.7.1",
-    "@types/node": "26.6.2",
+    "@types/node": "26.6.4",
     "tailwindcss": "4.3.3",
     "vite": "8.3.0",
     "vitest": "4.1.11"
