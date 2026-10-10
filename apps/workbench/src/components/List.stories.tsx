@@ -401,7 +401,9 @@ export const Keyboard: Story = {
     await waitFor(() => expect(cursorOn()).toBe('biome.json'));
     await press('{Home}');
     await waitFor(() => expect(cursorOn()).toBe('src/index.ts'));
-    expect(box.scrollTop).toBe(0);
+    // The cursor is on the first row a moment before the box has scrolled
+    // back to it: Firefox scrolls after the focus moves.
+    await waitFor(() => expect(box.scrollTop).toBe(0));
     await press('{PageDown}');
     await waitFor(() => expect(cursorOn()).not.toBe('src/index.ts'));
 

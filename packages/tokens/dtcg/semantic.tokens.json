@@ -10,6 +10,22 @@
       "$value": "{ansi.surface}",
       "$description": "A raised surface. On a grid it is its border that raises it."
     },
+    "surface-sunken": {
+      "$value": "{ansi.surface-sunken}",
+      "$description": "A layer below its neighbours: a well a panel sits in (0307)."
+    },
+    "surface-base": {
+      "$value": "{ansi.surface-base}",
+      "$description": "The ordinary panel layer (0307)."
+    },
+    "surface-raised": {
+      "$value": "{ansi.surface-raised}",
+      "$description": "A panel above the base layer (0307)."
+    },
+    "surface-overlay": {
+      "$value": "{ansi.surface-overlay}",
+      "$description": "The topmost layer: what floats above a panel (0307)."
+    },
     "subtle": {
       "$value": "{ansi.subtle}",
       "$description": "Quiet element backgrounds: inputs, wells, code."
@@ -23,8 +39,8 @@
       "$description": "An element being pressed, or selected."
     },
     "inverse": {
-      "$value": "{ansi.foreground}",
-      "$description": "Reverse video: the foreground becomes the ground."
+      "$value": "{ansi.inverse}",
+      "$description": "Reverse video: the foreground becomes the ground. The foreground itself, unless the theme reverses to a colour."
     },
     "accent": {
       "solid": {
@@ -163,8 +179,8 @@
       "$description": "The edge of a resting surface. On a grid, a surface is its border, so it is border.default."
     },
     "focus": {
-      "$value": "{ansi.blue}",
-      "$description": "The focus ring, and the cursor (0061)."
+      "$value": "{ansi.focus}",
+      "$description": "The focus ring, and the cursor (0061). The accent, unless the theme focuses in a colour of its own."
     },
     "accent": {
       "$value": "{ansi.blue}"
@@ -237,7 +253,7 @@
   "motion": {
     "tick": {
       "$type": "duration",
-      "$description": "Frames on a tick (cairn 0120): how long each frame of a stepped animation holds. Under reduced motion the frames stop and the first frame stays.",
+      "$description": "Frames on a tick (cairn 0120): how long each frame of a stepped animation holds. Under reduced motion the frames stop and the first frame stays, except refresh, which is data rather than motion and slows to tick-reduced.",
       "spinner": {
         "$value": {
           "value": 80,
@@ -253,6 +269,22 @@
       "progress": {
         "$value": {
           "value": 100,
+          "unit": "ms"
+        }
+      },
+      "refresh": {
+        "$value": {
+          "value": 1000,
+          "unit": "ms"
+        }
+      }
+    },
+    "tick-reduced": {
+      "$type": "duration",
+      "$description": "The ticks that keep counting under reduced motion, at this interval: live data stays current while nothing animates.",
+      "refresh": {
+        "$value": {
+          "value": 5000,
           "unit": "ms"
         }
       }

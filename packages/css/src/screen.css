@@ -49,6 +49,10 @@
    */
   .rk-row {
     block-size: var(--rk-cell-height);
+    /* A row never wraps, wherever it is painted: in prose, which wraps, a
+     * row wider than the measure broke between its runs and drew the rest
+     * of itself a row down, over the next (found by the site's shell, 0104). */
+    white-space: pre;
   }
 
   /* Only Gecko knows `-moz-orient`, and only Gecko lays out in sixtieths. */
@@ -94,10 +98,19 @@
    * fraction of the font size, weighted like the type beside them, and the
    * rule painter's are hairlines. `shapes.css` places the strokes.
    */
+  /*
+   * A stroke is a whole number of pixels, at least one. Every engine snaps a
+   * stroke's two edges to whole pixels on its own, so a stroke of 1.28px is
+   * one pixel or two depending on where it lands, and engines land it
+   * differently: the same line read light in Chromium and heavy in Firefox
+   * and WebKit. Rounded to a whole pixel, both edges move together wherever
+   * it lands. Whole CSS pixels, because Chromium snaps a background to them
+   * and the others to device pixels, which at whole-number zoom agree.
+   */
   [data-rk-painted] {
-    --rk-stroke-light: calc(var(--rk-stroke-glyph-light) * 1em);
-    --rk-stroke-heavy: calc(var(--rk-stroke-glyph-heavy) * 1em);
-    --rk-stroke-gap: calc(var(--rk-stroke-glyph-gap) * 1em);
+    --rk-stroke-light: max(1px, round(nearest, calc(var(--rk-stroke-glyph-light) * 1em), 1px));
+    --rk-stroke-heavy: max(1px, round(nearest, calc(var(--rk-stroke-glyph-heavy) * 1em), 1px));
+    --rk-stroke-gap: max(1px, round(nearest, calc(var(--rk-stroke-glyph-gap) * 1em), 1px));
   }
 
   [data-rk-painted="rule"] {

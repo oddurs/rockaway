@@ -41,6 +41,12 @@ export const overlayMeta: ComponentMetaInput = defineMeta({
     },
     {
       kind: 'import',
+      name: 'OverlayTooltip',
+      description:
+        "React Aria's Tooltip on the cell grid of its trigger's screen: one row of reverse video, or framed heavy when its words wrap, at most 40 cells wide. Never a sheet.",
+    },
+    {
+      kind: 'import',
       name: 'OverlayLayer',
       description:
         'The portal root every overlay opens into, inside the app’s contexts. It draws nothing.',

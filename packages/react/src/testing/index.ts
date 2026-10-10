@@ -10,6 +10,7 @@ export {
   formatReport,
   type OffAnchor,
   type OffGrid,
+  type SizedText,
   type Unexplained,
   type UnknownLevel,
   type Violation,

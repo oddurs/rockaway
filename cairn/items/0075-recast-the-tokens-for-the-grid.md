@@ -6,7 +6,7 @@ type: decision
 status: done
 milestone: retheme
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-09
 closed_at: 2026-09-22
 priority: p0
 layer: tokens
@@ -48,3 +48,7 @@ survives the pivot.
 - The contrast gate (0022) runs unchanged, and gains a case: reverse video, checked both ways round
 - The generator loses three categories and gains four; the resolver and the contexts do not change at all
 - A terminal theme export becomes trivial, because the palette is already ANSI 16
+
+## 2026-10-09
+
+Amended by 0296: one size stays the default for every element, and type larger than a cell is asked for with Text (0297) and measured in whole rows, at sizes 2, 3 and 4. The table's 'a display size exists only on a 2-cell row' is superseded.

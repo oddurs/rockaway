@@ -1,5 +1,5 @@
 {
-  "$description": "Catppuccin (cairn 0052). Imported from https://github.com/catppuccin/ghostty under MIT (Copyright (c) 2021 Catppuccin). Fitted to the contrast gate: light foreground: #4c4f69 → #3b3d56 (for fg.default on bg.surface); light muted: #797c91 → #575a6d (for fg.muted on bg.page); light blue: #1e66f5 → #0b55e4 (for fg.accent on bg.page); light bright-blue: #1e66f5 → #0032c1 (for fg.on-accent on bg.accent.solid-hover); light cyan: #179299 → #006f76 (for fg.info on bg.page); light bright-cyan: #179299 → #004e54 (for fg.on-info on bg.info.solid-hover); light green: #40a02b → #017500 (for fg.success on bg.page); light bright-green: #40a02b → #005200 (for fg.on-success on bg.success.solid-hover); light yellow: #df8e1d → #965300 (for fg.warning on bg.page); light bright-yellow: #df8e1d → #6e3a00 (for fg.on-warning on bg.warning.solid-hover); light red: #d20f39 → #c70030 (for fg.danger on bg.surface); light border: #9ea6b4 → #79808e (for border.default on bg.page); light border-strong: #858e9f → #767f90 (for border.control on bg.page); light magenta: #ea76cb → #a6378c (for syntax.keyword on bg.surface); light bright-red: #d20f39 → #840017 (for fg.danger on bg.page, in more contrast); light bright-magenta: #ea76cb → #840e6d (for syntax.keyword on bg.surface, in more contrast); dark muted: #929ab4 → #9ba3bd (for fg.muted on bg.hover); dark border: #686980 → #74758c (for border.default on bg.surface); dark bright-blue: #89b4fa → #95c1ff (for fg.accent on bg.accent.subtle, in more contrast); dark bright-red: #f38ba8 → #ffa7c2 (for fg.danger on bg.surface, in more contrast).",
+  "$description": "Catppuccin (cairn 0052). Imported from https://github.com/catppuccin/ghostty under MIT (Copyright (c) 2021 Catppuccin). Fitted to the contrast gate: light foreground: #4c4f69 → #3b3d56 (for fg.default on bg.surface); light muted: #797c91 → #575a6d (for fg.muted on bg.page); light blue: #1e66f5 → #0b55e4 (for fg.accent on bg.page); light bright-blue: #1e66f5 → #0032c1 (for fg.on-accent on bg.accent.solid-hover); light cyan: #179299 → #006f76 (for fg.info on bg.page); light bright-cyan: #179299 → #004e54 (for fg.on-info on bg.info.solid-hover); light green: #40a02b → #017500 (for fg.success on bg.page); light bright-green: #40a02b → #005200 (for fg.on-success on bg.success.solid-hover); light yellow: #df8e1d → #965300 (for fg.warning on bg.page); light bright-yellow: #df8e1d → #6e3a00 (for fg.on-warning on bg.warning.solid-hover); light red: #d20f39 → #c70030 (for fg.danger on bg.surface); light border: #9ea6b4 → #79808e (for border.default on bg.page); light border-strong: #858e9f → #767f90 (for border.control on bg.page); light magenta: #ea76cb → #a6378c (for syntax.keyword on bg.surface); light bright-red: #d20f39 → #840017 (for fg.danger on bg.page, in more contrast); light bright-magenta: #ea76cb → #840e6d (for syntax.keyword on bg.surface, in more contrast); light surface-sunken: #dcdfe6 → #dde1e7 (for fg.info on bg.surface-sunken); dark muted: #929ab4 → #9ba3bd (for fg.muted on bg.hover); dark border: #686980 → #74758c (for border.default on bg.surface); dark bright-blue: #89b4fa → #95c1ff (for fg.accent on bg.accent.subtle, in more contrast); dark bright-red: #f38ba8 → #ffa7c2 (for fg.danger on bg.surface, in more contrast).",
   "$extensions": {
     "dev.rockaway": {
       "kind": "imported",
@@ -198,6 +198,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.908,
+            0.0097,
+            264.5
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.921,
+            0.0084,
+            264.5
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.94,
+            0.0071,
+            264.5
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.958,
+            0.0058,
+            264.5
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -305,6 +345,26 @@
             0.889,
             0.0098,
             273.3
+          ]
+        }
+      },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.509,
+            0.2255,
+            262.1
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.37,
+            0.043,
+            279.3
           ]
         }
       },
@@ -541,6 +601,46 @@
           ]
         }
       },
+      "surface-sunken": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.243,
+            0.0304,
+            283.9
+          ]
+        }
+      },
+      "surface-base": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.265,
+            0.0308,
+            283.9
+          ]
+        }
+      },
+      "surface-raised": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.288,
+            0.0313,
+            283.9
+          ]
+        }
+      },
+      "surface-overlay": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.31,
+            0.0317,
+            283.9
+          ]
+        }
+      },
       "subtle": {
         "$value": {
           "colorSpace": "oklch",
@@ -651,6 +751,26 @@
           ]
         }
       },
+      "focus": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.766,
+            0.1113,
+            259.9
+          ]
+        }
+      },
+      "inverse": {
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.879,
+            0.0426,
+            272.3
+          ]
+        }
+      },
       "tint-blue": {
         "$value": {
           "colorSpace": "oklch",
@@ -709,6 +829,7 @@
       "$type": "fontFamily",
       "mono": {
         "$value": [
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "SF Mono",
@@ -720,6 +841,7 @@
       },
       "display": {
         "$value": [
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "SF Mono",
@@ -744,6 +866,11 @@
       "bold": {
         "$value": 700
       }
+    },
+    "content": {
+      "$type": "number",
+      "$description": "The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296).",
+      "$value": 1.3
     }
   },
   "glyph": {
@@ -1133,6 +1260,9 @@
       },
       "external": {
         "$value": "↗"
+      },
+      "separator": {
+        "$value": "›"
       }
     },
     "block": {
@@ -1173,6 +1303,32 @@
       },
       "7": {
         "$value": "▇"
+      },
+      "8": {
+        "$value": "█"
+      }
+    },
+    "fill": {
+      "1": {
+        "$value": "▏"
+      },
+      "2": {
+        "$value": "▎"
+      },
+      "3": {
+        "$value": "▍"
+      },
+      "4": {
+        "$value": "▌"
+      },
+      "5": {
+        "$value": "▋"
+      },
+      "6": {
+        "$value": "▊"
+      },
+      "7": {
+        "$value": "▉"
       },
       "8": {
         "$value": "█"

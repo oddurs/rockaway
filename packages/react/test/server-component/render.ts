@@ -101,6 +101,7 @@ const checks: [string, unknown, unknown][] = [
   ['dividerBuffer', pure.dividerBuffer({ width: 6, height: 1 }).row(0), '╶────╴'],
   ['scrollbarBuffer', pure.scrollbarBuffer({ total: 4, visible: 2, offset: 0 }).row(0), '█'],
   ['formatKeys', pure.formatKeys('mod+s', 'apple'), '⌘S'],
+  ['breadcrumbsBuffer', pure.breadcrumbsBuffer(['a', 'b']).row(0), 'a › b'],
   ['buttonBuffer', pure.buttonBuffer('Go').row(0), '[ Go ]'],
   [
     'fieldFrameBuffer',
@@ -118,6 +119,12 @@ const checks: [string, unknown, unknown][] = [
     `Name   [ Go ]${' '.repeat(51)}`,
   ],
   ['pictureBuffer', pure.pictureBuffer({ cols: 4, rows: 1 }).row(0), '░░░░'],
+  ['toolbarBuffer', pure.toolbarBuffer([['Go']]).row(0), ' Go '],
+  [
+    'cardBuffer',
+    pure.cardBuffer({ width: 12, height: 3 }, { title: 'Card' }).row(0),
+    '┌ Card ────┐',
+  ],
   [
     'calloutBuffer',
     pure.calloutBuffer({ width: 14, height: 3 }, { tone: 'tip' }).row(0),
@@ -136,6 +143,7 @@ const checks: [string, unknown, unknown][] = [
       .row(1),
     ' └── a.ts ',
   ],
+  ['tabsText', pure.tabsText({ width: 16, height: 2 }, ['a', 'b'], 0).row(0), '┌ a ─ b ───────┐'],
   ['codeBlockText', pure.codeBlockText('a', { cols: 8 }).row(1), '│ a    │'],
   [
     'tableBuffer',
@@ -153,6 +161,27 @@ const checks: [string, unknown, unknown][] = [
       .panesBuffer({ width: 16, height: 3 }, { panes: [{ size: 6, title: 'a' }, { title: 'b' }] })
       .row(0),
     '┌ a ───┬ b ────┐',
+  ],
+  ['textBuffer', pure.textBuffer('Rockaway', 3).row(0), `Rockaway${' '.repeat(20)}`],
+  [
+    'statusBarBuffer',
+    pure
+      .statusBarBuffer(16, [
+        { text: 'NORMAL', variant: 'mode' },
+        { text: '1:1', align: 'end' },
+      ])
+      .row(0),
+    ' NORMAL     1:1 ',
+  ],
+  [
+    'tableBuffer',
+    pure.tableBuffer({ columns: [{ header: 'Name' }], rows: [{ cells: ['a.ts'] }] }).row(0),
+    '┌──────┐',
+  ],
+  [
+    'keymapHelpBuffer',
+    pure.keymapHelpBuffer([{ keys: 'mod+k', description: 'Palette' }], 'apple').row(0),
+    '⌘K  Palette',
   ],
 ];
 for (const [name, got, want] of checks) {

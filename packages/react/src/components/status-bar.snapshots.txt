@@ -1,0 +1,10 @@
+── Start, centre and end
+ NORMAL          centre            12:4 
+── Cut by priority
+ NORMAL  src/components/status-bar.tsx                                                          12:4  ? help  : command 
+ NORMAL  src/components/status-bar.tsx                  12:4  ? help  : command 
+ NORMAL  src/components/status-bar.tsx  12:4  ? help  : co… 
+ NORMAL  src/components/status-b…  12:4 
+ NORMAL  src…  12:4 
+── Under an ASCII theme
+ NORMAL  src/component~  12:4 
