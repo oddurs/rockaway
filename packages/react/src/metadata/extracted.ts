@@ -1019,6 +1019,33 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled"
     ]
   },
+  "LinkComponentProvider": {
+    "file": "link.tsx",
+    "props": [
+      {
+        "name": "component",
+        "type": "LinkComponent",
+        "required": true,
+        "description": "The framework's link, which every link the system draws renders through."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-attribute-underline-thickness",
+      "--rk-bg-page",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled"
+    ]
+  },
   "List": {
     "file": "list.tsx",
     "props": [
@@ -1409,33 +1436,104 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "SkipLink": {
-    "file": "skip-link.tsx",
+  "Select": {
+    "file": "select.tsx",
     "props": [
       {
-        "name": "target",
+        "name": "label",
         "type": "string",
         "required": true,
-        "description": "The id of the element to jump to, without the `#`: usually the page's `main`."
+        "description": "The field's name, in the label column."
       },
       {
         "name": "children",
+        "type": "ReactNode | ((item: T) => ReactNode)",
+        "required": false,
+        "description": "The options: `SelectItem`s, or a function of each of `items`."
+      },
+      {
+        "name": "items",
+        "type": "Iterable<T>",
+        "required": false,
+        "description": "The items to render with a function child."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The trigger's width in cells, its delimiters included.",
+        "default": "24"
+      },
+      {
+        "name": "description",
         "type": "ReactNode",
         "required": false,
-        "description": "What it says. Default \"Skip to content\".",
-        "default": "'Skip to content'"
+        "description": "Help under the trigger, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
+        "required": false,
+        "description": "Words for the error under the trigger; the select's own validation's when not given."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the popover takes before its rows scroll.",
+        "default": "8"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
       }
     ],
     "inherits": [
-      "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'children'>"
+      "Omit<AriaSelectProps<T>, 'children' | 'className' | 'style' | 'selectionMode'>"
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
-      "--rk-attribute-underline-thickness",
-      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
       "--rk-cell-height",
       "--rk-cell-width",
-      "--rk-fg-on-inverse"
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "SelectItem": {
+    "file": "select.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The option's words."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
     ]
   },
   "Table": {
