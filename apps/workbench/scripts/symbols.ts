@@ -134,33 +134,47 @@ const fromJetBrains = outside.filter((c) => jetbrains.has(code(c)));
 const unfound = outside.filter((c) => !jetbrains.has(code(c)));
 if (unfound.length > 0) console.warn(`neither face has: ${unfound.join(' ')}`);
 
-const subset = (font: Buffer, text: readonly string[]): Promise<Buffer> =>
+const subset = (font: Buffer, text: readonly string[], wght: number): Promise<Buffer> =>
   subsetFont(font, text.join(''), {
     targetFormat: 'woff2',
-    variationAxes: { wght: { min: 400, max: 700, default: 400 } },
+    // One static instance per weight, not a variable face: Chromium on Linux
+    // rounds a variable face's advances to whole pixels, 10px for the grid's
+    // 9.6, where Plex's own static faces keep 9.6 (0295).
+    variationAxes: { wght },
     noLayoutClosure: true,
-    // No instructions, no hinting tables (0295): hinted, Chromium on Linux rounds
-    // each advance to a whole pixel, 10px for the grid's 9.6, and every badge and
-    // key hint with a mark in it lands a fraction of a cell off.
     noHinting: true,
     preserveNameIds: [0, 13, 14],
   });
 
 const out = path.join(import.meta.dirname, '..', 'src', 'fonts');
-writeFileSync(path.join(out, 'plex-symbols.woff2'), await subset(jetbrainsFont, fromJetBrains));
+writeFileSync(
+  path.join(out, 'plex-symbols.woff2'),
+  await subset(jetbrainsFont, fromJetBrains, 400),
+);
+writeFileSync(
+  path.join(out, 'plex-symbols-bold.woff2'),
+  await subset(jetbrainsFont, fromJetBrains, 700),
+);
 
-const faces = (file: string, chars: readonly string[]): string =>
-  ['normal', 'italic']
-    .map(
-      (style) => `@font-face {
+const weights = [
+  { file: 'plex-symbols.woff2', weight: '400 599' },
+  { file: 'plex-symbols-bold.woff2', weight: '600 700' },
+] as const;
+
+const faces = (chars: readonly string[]): string =>
+  weights
+    .flatMap(({ file, weight }) =>
+      ['normal', 'italic'].map(
+        (style) => `@font-face {
   font-family: "IBM Plex Mono";
   src: url("./${file}") format("woff2");
-  font-weight: 400 700;
+  font-weight: ${weight};
   font-style: ${style};
   font-display: block;
   unicode-range: ${unicodeRange(chars)};
 }
 `,
+      ),
     )
     .join('\n');
 
@@ -172,6 +186,6 @@ writeFileSync(
  * to a face of another width. From JetBrains Mono (OFL 1.1, OFL.txt), whose
  * advance is Plex's 0.6em: ${fromJetBrains.join(' ')}
  */
-${faces('plex-symbols.woff2', fromJetBrains)}`,
+${faces(fromJetBrains)}`,
 );
 console.log(`plex-symbols.woff2, from JetBrains Mono: ${fromJetBrains.join(' ')}`);
