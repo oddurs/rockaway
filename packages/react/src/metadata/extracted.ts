@@ -1436,140 +1436,104 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "StatusBar": {
-    "file": "status-bar.tsx",
+  "Select": {
+    "file": "select.tsx",
     "props": [
       {
         "name": "label",
         "type": "string",
-        "required": false,
-        "description": "What the bar is called, for a reader. `Status` by default.",
-        "default": "'Status'"
+        "required": true,
+        "description": "The field's name, in the label column."
       },
       {
         "name": "children",
+        "type": "ReactNode | ((item: T) => ReactNode)",
+        "required": false,
+        "description": "The options: `SelectItem`s, or a function of each of `items`."
+      },
+      {
+        "name": "items",
+        "type": "Iterable<T>",
+        "required": false,
+        "description": "The items to render with a function child."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The trigger's width in cells, its delimiters included.",
+        "default": "24"
+      },
+      {
+        "name": "description",
         "type": "ReactNode",
         "required": false,
-        "description": "`StatusSegment`s and at most one `StatusMessage`, in order."
-      }
-    ],
-    "inherits": [
-      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows'>"
-    ],
-    "tokens": [
-      "--rk-bg-subtle",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
-  },
-  "StatusMessage": {
-    "file": "status-bar.tsx",
-    "props": [
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "description": "The message. A new one replaces the one before."
+        "description": "Help under the trigger, dim, linked to it by `aria-describedby`."
       },
       {
-        "name": "id",
-        "type": "string | number",
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
         "required": false,
-        "description": "Changes to show the same message again: a second \"Copied\" is a new message, though its text has not changed."
+        "description": "Words for the error under the trigger; the select's own validation's when not given."
       },
       {
-        "name": "duration",
+        "name": "maxRows",
         "type": "number",
         "required": false,
-        "description": "How long it shows, in milliseconds. Four seconds by default."
-      },
-      {
-        "name": "priority",
-        "type": "number",
-        "required": false
-      },
-      {
-        "name": "align",
-        "type": "StatusAlign",
-        "required": false
-      }
-    ],
-    "inherits": [],
-    "tokens": [
-      "--rk-bg-subtle",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
-  },
-  "StatusSegment": {
-    "file": "status-bar.tsx",
-    "props": [
-      {
-        "name": "priority",
-        "type": "number",
-        "required": false,
-        "description": "When the bar is too narrow, the lowest priority is cut first. 0 by default."
-      },
-      {
-        "name": "align",
-        "type": "StatusAlign",
-        "required": false,
-        "description": "Which end of the bar it packs against, or the middle. `start` by default."
-      },
-      {
-        "name": "variant",
-        "type": "StatusSegmentVariant",
-        "required": false,
-        "description": "`mode` is what the bar is about now, `NORMAL` or `INSERT`: drawn in reverse video."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "required": false,
-        "description": "What the segment is, for a reader, when its text alone does not say."
+        "description": "The most rows the popover takes before its rows scroll.",
+        "default": "8"
       },
       {
         "name": "className",
         "type": "string",
         "required": false
-      },
+      }
+    ],
+    "inherits": [
+      "Omit<AriaSelectProps<T>, 'children' | 'className' | 'style' | 'selectionMode'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "SelectItem": {
+    "file": "select.tsx",
+    "props": [
       {
         "name": "children",
-        "type": "ReactNode",
+        "type": "string",
+        "required": true,
+        "description": "The option's words."
+      },
+      {
+        "name": "className",
+        "type": "string",
         "required": false
       }
     ],
     "inherits": [
-      "VariantProps<typeof statusSegmentVariants>"
+      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
     ],
     "tokens": [
-      "--rk-bg-subtle",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
     ]
   },
   "Table": {

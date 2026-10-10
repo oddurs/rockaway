@@ -24,6 +24,7 @@ export * from './entries/overlay.ts';
 export * from './entries/panes.ts';
 export * from './entries/status-bar.ts';
 export * from './entries/popover.ts';
+export * from './entries/select.ts';
 export * from './entries/table.ts';
 export * from './entries/text-field.ts';
 export * from './entries/tree.ts';
