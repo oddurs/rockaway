@@ -28,7 +28,7 @@ import {
 } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { type Inset, Screen, type ScreenProps } from '../screen.tsx';
+import { type Inset, Screen, type ScreenProps, type Surface } from '../screen.tsx';
 import {
   layoutPanes,
   type PanePlacement,
@@ -57,6 +57,11 @@ export interface PaneProps {
    * default, the proportions `Frame` uses.
    */
   readonly pad?: number | Inset;
+  /**
+   * The ground under the pane's content and padding: `sunken`, `base` (the
+   * default), `raised` or `overlay`. The borders around it stay the screen's.
+   */
+  readonly surface?: Surface;
   /** The accessible name, when the title is not the right one to say. */
   readonly label?: string;
   readonly className?: string;
@@ -189,6 +194,7 @@ function PaneBox({
   title,
   label,
   pad,
+  surface,
   className,
   children,
 }: PaneProps & { readonly placed: PanePlacement }): ReactNode {
@@ -206,6 +212,7 @@ function PaneBox({
     className: cx('rk-pane', className),
     'data-rk-pane': '',
     ...(placed.collapsed ? { 'data-collapsed': '', hidden: true } : {}),
+    ...(surface === undefined ? {} : { 'data-rk-surface': surface }),
     style,
   };
   // A titled pane is a region a reader can jump to, named by its title.
