@@ -60,10 +60,19 @@ export const readWithoutScripts: BrowserCommand<[html: string]> = async (context
   try {
     const page = await isolated.newPage();
     await page.setContent(html);
+    // Boxes the page asks to have measured, read through the protocol, which
+    // needs no script in the page.
+    const boxes: Record<string, { x: number; y: number; width: number; height: number }> = {};
+    for (const el of await page.locator('[data-measure]').all()) {
+      const name = await el.getAttribute('data-measure');
+      const box = await el.boundingBox();
+      if (name !== null && box !== null) boxes[name] = box;
+    }
     return {
       rows: await page.locator('.rk-frame .rk-row').allTextContents(),
       shapes: await page.locator('[data-rk-shape]').count(),
       ran: (await page.locator('body').getAttribute('data-ran')) === 'yes',
+      boxes,
     };
   } finally {
     await isolated.close();

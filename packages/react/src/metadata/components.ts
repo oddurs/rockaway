@@ -37,6 +37,7 @@ import { switchMeta } from '../components/switch.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { tabsMeta } from '../components/tabs.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
+import { textMeta } from '../components/text.meta.ts';
 import { toolbarMeta } from '../components/toolbar.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import type { ComponentMetaInput } from './schema.ts';
@@ -76,6 +77,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'table', meta: tableMeta },
   { file: 'tabs', meta: tabsMeta },
   { file: 'text-field', meta: textFieldMeta },
+  { file: 'text', meta: textMeta },
   { file: 'toolbar', meta: toolbarMeta },
   { file: 'tree', meta: treeMeta },
 ];
