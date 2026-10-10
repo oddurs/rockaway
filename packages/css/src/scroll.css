@@ -57,6 +57,10 @@
     container-type: scroll-state;
     display: grid;
     grid-template-columns: max-content;
+    /* The marks are lifted over the content, and only over the content: the
+     * region is their stacking context, so a modal's backdrop after it on
+     * the page still covers them. */
+    isolation: isolate;
   }
 
   .rk-scroll-marks > *,

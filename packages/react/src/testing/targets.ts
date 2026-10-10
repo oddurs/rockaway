@@ -17,6 +17,8 @@
  * checked by asking for 44 at `touch`.
  */
 
+import { visuallyHidden } from './hidden.ts';
+
 export interface TargetFailure {
   /** The target itself, so a caller can ask what context it is in. */
   readonly target: HTMLElement;
@@ -77,9 +79,6 @@ function describe(el: Element): string {
   return `${el.tagName.toLowerCase()}${id}${cls}${testId ? `[${testId}]` : ''}${name ? ` "${name}"` : ''}`;
 }
 
-const clipped = (style: CSSStyleDeclaration): boolean =>
-  style.clipPath.startsWith('inset(50%') || style.clip === 'rect(0px, 0px, 0px, 0px)';
-
 function isHidden(el: HTMLElement, style: CSSStyleDeclaration): boolean {
   if (style.visibility === 'hidden' || style.display === 'none') return true;
   if (el.closest('[aria-hidden="true"], [inert]') !== null) return true;
@@ -89,7 +88,7 @@ function isHidden(el: HTMLElement, style: CSSStyleDeclaration): boolean {
   const view = el.ownerDocument.defaultView;
   for (let node: HTMLElement | null = el; node; node = node.parentElement) {
     const own = node === el ? style : view?.getComputedStyle(node);
-    if (own && clipped(own)) return true;
+    if (own && visuallyHidden(own)) return true;
   }
   return false;
 }

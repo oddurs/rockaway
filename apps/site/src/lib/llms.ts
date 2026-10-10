@@ -60,6 +60,9 @@ const ABOUT = [
   'Each component below is described by its metadata: what it is for, when not to use it, ' +
     'its parts and props, variants, states, keyboard, tokens, and snapshots of it drawn as ' +
     'text. The snapshots are the component’s own output, so they are what it draws.',
+  'The same metadata, the tokens and the docs are served to agents over MCP by ' +
+    '`@rockaway/mcp` (stdio, the `rockaway-mcp` command): `list_components`, ' +
+    '`get_component`, `get_tokens` and `search_docs`.',
 ];
 
 /**
