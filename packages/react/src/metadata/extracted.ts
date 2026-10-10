@@ -59,6 +59,56 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-warning"
     ]
   },
+  "Breadcrumbs": {
+    "file": "breadcrumbs.tsx",
+    "props": [
+      {
+        "name": "items",
+        "type": "readonly BreadcrumbItem[]",
+        "required": true,
+        "description": "The path, from the top: each level a label and where it is. The last is the current page."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "What the `nav` is called. \"Breadcrumbs\" by default.",
+        "default": "'Breadcrumbs'"
+      },
+      {
+        "name": "maxItems",
+        "type": "number",
+        "required": false,
+        "description": "Fold the middle of a longer path into a menu, keeping the first level and the last ones."
+      },
+      {
+        "name": "moreLabel",
+        "type": "string",
+        "required": false,
+        "description": "What the folded middle's button says to a screen reader. \"More levels\" by default.",
+        "default": "'More levels'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-bg-page",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-muted"
+    ]
+  },
   "Button": {
     "file": "button.tsx",
     "props": [
@@ -1208,6 +1258,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "file": "menu.tsx",
     "props": [
       {
+        "name": "comfort",
+        "type": "Comfort",
+        "required": false,
+        "description": "The air beside its rules and section titles (0317): none when compact, a terminal's menu and the default; half a row after each when comfortable; a row when spacious. A rule is always on a whole row.",
+        "default": "'compact'"
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -1225,6 +1282,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1255,6 +1314,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1291,6 +1352,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1313,6 +1376,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1901,6 +1966,48 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Tab": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "id",
+        "type": "Key",
+        "required": true,
+        "description": "The tab's key: its `TabPanel` takes the same `id`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The tab's label."
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabProps, 'className' | 'style' | 'children' | 'id'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Table": {
     "file": "table.tsx",
     "props": [
@@ -2045,6 +2152,115 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "TabList": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabListProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "TabPanel": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabPanelProps, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Tabs": {
+    "file": "tabs.tsx",
+    "props": [
+      {
+        "name": "border",
+        "type": "BorderSetName",
+        "required": false,
+        "description": "Which border set draws the frame; the theme's when not given."
+      },
+      {
+        "name": "pad",
+        "type": "number | Inset",
+        "required": false,
+        "description": "Padding inside the frame, in cells: one across by default, as `Frame` has."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "A `TabList` and its `TabPanel`s."
+      }
+    ],
+    "inherits": [
+      "Omit<AriaTabsProps, 'className' | 'style' | 'children'>",
+      "Pick<ScreenProps, 'painter' | 'cols' | 'rows' | 'fallback'>"
+    ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "TextField": {
     "file": "text-field.tsx",
     "props": [
@@ -2130,6 +2346,148 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-rhythm-pad-y",
       "--rk-step-y",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Toolbar": {
+    "file": "toolbar.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What the toolbar is called, for a reader."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "moreLabel",
+        "type": "string",
+        "required": false,
+        "description": "What the ellipsis that holds the folded items is called. \"More\" by default.",
+        "default": "'More'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono",
+      "--rk-step-x",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "ToolbarButton": {
+    "file": "toolbar.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": true
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaButtonProps, 'className' | 'style' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono",
+      "--rk-step-x",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "ToolbarGroup": {
+    "file": "toolbar.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What the group is called, for a reader: \"History\", \"Format\"."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono",
+      "--rk-step-x",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "ToolbarSeparator": {
+    "file": "toolbar.tsx",
+    "props": [],
+    "inherits": [],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-font-family-mono",
+      "--rk-step-x",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",

@@ -1,3 +1,4 @@
+import { toText } from '@rockaway/grid';
 import {
   Button,
   detectPlatform,
@@ -11,6 +12,7 @@ import {
   MenuSection,
   MenuSeparator,
   MenuTrigger,
+  menuBuffer,
   SubmenuTrigger,
 } from '@rockaway/react';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
@@ -177,6 +179,84 @@ export const Default: Story = {
     expect(surface.querySelector('.rk-frame')?.getAttribute('aria-hidden')).toBe('true');
     expect(item('New file')).toBeTruthy();
     expect(item('Open recent')).toBeTruthy();
+  },
+};
+
+/** The Edit menu of an editor's toolbar, in sections. */
+const EDIT = [
+  ['Undo', 'mod+z'],
+  ['Redo', 'shift+mod+z'],
+  ['Clipboard'],
+  ['Cut', 'mod+x'],
+  ['Copy', 'mod+c'],
+  ['Paste', 'mod+v'],
+  ['Find'],
+  ['Find', 'mod+f'],
+  ['Replace'],
+] as const;
+
+/**
+ * Comfortable sections (0317): half a row of air after each section's title,
+ * beside its rule and never in it, and every rule on a whole row, where the
+ * frame draws it, which the second takes an extra half-row to reach. The
+ * frame is read back against the text model at every density, and the menu is
+ * held to `standard`: its rows rest on half-rows inside it, its box is whole.
+ */
+export const Comfortable: Story = {
+  render: () => (
+    <Frame title="editor" cols={48} rows={18}>
+      <MenuTrigger defaultOpen>
+        <Button>Edit</Button>
+        <Menu aria-label="Edit" comfort="comfortable">
+          <MenuSection aria-label="History">
+            <MenuItem id="undo" keys="mod+z">
+              Undo
+            </MenuItem>
+            <MenuItem id="redo" keys="shift+mod+z">
+              Redo
+            </MenuItem>
+          </MenuSection>
+          <MenuSection aria-label="Clipboard" title="Clipboard">
+            <MenuItem id="cut" keys="mod+x">
+              Cut
+            </MenuItem>
+            <MenuItem id="copy" keys="mod+c">
+              Copy
+            </MenuItem>
+            <MenuItem id="paste" keys="mod+v">
+              Paste
+            </MenuItem>
+          </MenuSection>
+          <MenuSection aria-label="Find" title="Find">
+            <MenuItem id="find" keys="mod+f">
+              Find
+            </MenuItem>
+            <MenuItem id="replace">Replace</MenuItem>
+          </MenuSection>
+        </Menu>
+      </MenuTrigger>
+    </Frame>
+  ),
+  play: async () => {
+    await measured(document.body);
+    const [surface] = await surfaces();
+    if (!surface) throw new Error('no menu');
+    const rows = EDIT.map(([label, keys]) =>
+      keys === undefined && (label === 'Clipboard' || label === 'Find')
+        ? { section: label }
+        : { label, ...(keys === undefined ? {} : { keys }) },
+    );
+    const model = toText(
+      menuBuffer({ rows, comfort: 'comfortable', width: edges(surface)[0]?.length ?? 0 }),
+    ).split('\n');
+    // The frame's own rows: a side for every row but a rule's, which is the rule.
+    const frame = model.map((row) =>
+      /^[┏┗┠]/.test(row) ? row : `┃${' '.repeat(row.length - 2)}┃`,
+    );
+    await waitFor(() => expect(edges(surface)).toEqual(frame));
+    const cell = Number.parseFloat(getComputedStyle(surface).lineHeight);
+    const rowsTall = surface.getBoundingClientRect().height / cell;
+    expect(Math.abs(rowsTall - Math.round(rowsTall))).toBeLessThan(1 / 32);
   },
 };
 
