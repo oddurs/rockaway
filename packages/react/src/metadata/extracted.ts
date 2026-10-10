@@ -59,6 +59,56 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-warning"
     ]
   },
+  "Breadcrumbs": {
+    "file": "breadcrumbs.tsx",
+    "props": [
+      {
+        "name": "items",
+        "type": "readonly BreadcrumbItem[]",
+        "required": true,
+        "description": "The path, from the top: each level a label and where it is. The last is the current page."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "What the `nav` is called. \"Breadcrumbs\" by default.",
+        "default": "'Breadcrumbs'"
+      },
+      {
+        "name": "maxItems",
+        "type": "number",
+        "required": false,
+        "description": "Fold the middle of a longer path into a menu, keeping the first level and the last ones."
+      },
+      {
+        "name": "moreLabel",
+        "type": "string",
+        "required": false,
+        "description": "What the folded middle's button says to a screen reader. \"More levels\" by default.",
+        "default": "'More levels'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-bg-page",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-muted"
+    ]
+  },
   "Button": {
     "file": "button.tsx",
     "props": [

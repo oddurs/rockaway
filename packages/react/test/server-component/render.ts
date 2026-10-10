@@ -101,6 +101,7 @@ const checks: [string, unknown, unknown][] = [
   ['dividerBuffer', pure.dividerBuffer({ width: 6, height: 1 }).row(0), '╶────╴'],
   ['scrollbarBuffer', pure.scrollbarBuffer({ total: 4, visible: 2, offset: 0 }).row(0), '█'],
   ['formatKeys', pure.formatKeys('mod+s', 'apple'), '⌘S'],
+  ['breadcrumbsBuffer', pure.breadcrumbsBuffer(['a', 'b']).row(0), 'a › b'],
   ['buttonBuffer', pure.buttonBuffer('Go').row(0), '[ Go ]'],
   [
     'fieldFrameBuffer',
