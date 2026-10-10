@@ -87,7 +87,7 @@ The CSS contract every consumer shares.
 
 ## grid — The frame engine
 
-`#########·` 81% · 17 of 21 done · due 2026-12-06
+`#########·` 86% · 18 of 21 done · due 2026-12-06
 
 The heart of a TUI system: a pure, integer model of a character grid, and
 
@@ -99,7 +99,6 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 ### in review
 
 - [ ] [`0245`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0245-stop-fieldset-s-frame-leaking-above-its-corner-at-dense-on-macos.md) Stop Fieldset's frame leaking above its corner at dense on macOS <sup>bug · grid · p3</sup>
-- [ ] [`0246`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0246-remeasure-a-screen-given-explicit-cols-and-rows-when-its-context-changes.md) Remeasure a screen given explicit cols and rows when its context changes <sup>bug · grid · p2</sup>
 
 ### done
 
@@ -120,6 +119,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 - [x] [`0087`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0087-make-the-text-snapshot-the-house-test-for-components.md) Make the text snapshot the house test for components <sup>chore · tooling · p0</sup>
 - [x] [`0088`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0088-enforce-grid-conformance-and-count-the-exceptions.md) Enforce grid conformance, and count the exceptions <sup>chore · tooling · p0</sup>
 - [x] [`0110`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0110-the-rule-painter-draws-cell-boxes-not-lines.md) The rule painter draws cell boxes, not lines <sup>bug · grid · p0</sup>
+- [x] [`0246`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0246-remeasure-a-screen-given-explicit-cols-and-rows-when-its-context-changes.md) Remeasure a screen given explicit cols and rows when its context changes <sup>bug · grid · p2</sup>
 
 ## primitives — First primitives
 
