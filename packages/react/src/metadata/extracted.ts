@@ -1219,7 +1219,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-x-3"
-    ]
+    ],
+    "marks": [],
+    "level": "strict"
   },
   "MenuItem": {
     "file": "menu.tsx",
@@ -1249,7 +1251,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-x-3"
-    ]
+    ],
+    "marks": [],
+    "level": "strict"
   },
   "MenuSection": {
     "file": "menu.tsx",
@@ -1285,7 +1289,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-x-3"
-    ]
+    ],
+    "marks": [],
+    "level": "strict"
   },
   "MenuSeparator": {
     "file": "menu.tsx",
@@ -1307,7 +1313,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted",
       "--rk-x-2",
       "--rk-x-3"
-    ]
+    ],
+    "marks": [],
+    "level": "strict"
   },
   "OverlayLayer": {
     "file": "overlay.tsx",
@@ -1673,7 +1681,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-muted"
-    ]
+    ],
+    "marks": [],
+    "level": "strict"
   },
   "Popover": {
     "file": "popover.tsx",
@@ -1895,7 +1905,9 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [],
+    "level": "strict"
   },
   "Table": {
     "file": "table.tsx",
