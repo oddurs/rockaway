@@ -588,6 +588,9 @@ export interface OverlayModalProps
 }
 
 /** The backdrop: a screen of shade over the viewport's whole cells. */
+/** A press that leaves focus where it is. */
+const keepFocus = (event: { preventDefault: () => void }): void => event.preventDefault();
+
 function Backdrop({ painter }: { readonly painter: PainterName | undefined }): ReactNode {
   const glyphs = useGlyphs();
   const draw = useCallback((size: Size) => backdropBuffer(size, glyphs), [glyphs]);
@@ -596,6 +599,11 @@ function Backdrop({ painter }: { readonly painter: PainterName | undefined }): R
       draw={draw}
       className="rk-overlay-scrim"
       aria-hidden="true"
+      // A press on the backdrop takes no focus. Firefox moves focus to the
+      // page's body on a press on anything that cannot hold it, and from the
+      // body Escape never reaches the modal, so a modal that is not
+      // dismissable could not be closed from the keyboard after a stray press.
+      onMouseDown={keepFocus}
       {...(painter === undefined ? {} : { painter })}
     />
   );
