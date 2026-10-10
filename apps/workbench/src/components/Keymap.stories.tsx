@@ -378,3 +378,23 @@ export const ButtonKeysUnbound: Story = {
     expect(text('unbound')).toBe('saved 0');
   },
 };
+
+/**
+ * Forced colors: the help screen in the reader's palette, its keys and
+ * their descriptions still apart. axe and the walk after it run here, where
+ * they cannot anywhere else (0142).
+ */
+export const ForcedColors: Story = {
+  name: 'Forced colors',
+  tags: ['forced-colors'],
+  render: () => (
+    <Keymap>
+      <HelpPage />
+    </Keymap>
+  ),
+  play: async ({ canvas }) => {
+    expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    await settled();
+    expect(canvas.getByRole('group', { name: 'keys' })).toBeVisible();
+  },
+};
