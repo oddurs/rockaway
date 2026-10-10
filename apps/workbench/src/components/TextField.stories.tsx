@@ -11,7 +11,7 @@ import {
 import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type ReactNode, useState } from 'react';
+import { createRef, type ReactNode, useState } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { measured } from '../settled.ts';
@@ -280,6 +280,55 @@ export const Typing: Story = {
     await type(free, 'Z');
     await waitFor(() => expect(free).toHaveValue('abcZ'));
     expect(heard).toHaveTextContent('free abcZ');
+  },
+};
+
+/** The caller's refs, outside the story so its play can reach them. */
+const nameRef = createRef<HTMLInputElement | HTMLTextAreaElement>();
+const seen: { notes: HTMLInputElement | HTMLTextAreaElement | null } = { notes: null };
+
+/**
+ * An app reaches the text box through `inputRef`: the `<input>` of a row and
+ * the `<textarea>` of a box of rows, by an object ref or a callback. It can
+ * focus it and select its text, and the field still keeps its text on whole
+ * cells, because its own ref is set beside the caller's.
+ */
+export const InputRef: Story = {
+  name: 'Input ref',
+  render: () => (
+    <Frame title="refs" cols={48} rows={8}>
+      <Form>
+        <TextField label="Name" defaultValue="Ada Lovelace" inputRef={nameRef} />
+        <TextField
+          label="Notes"
+          multiline
+          rows={2}
+          defaultValue="first line"
+          inputRef={(el) => {
+            seen.notes = el;
+          }}
+        />
+      </Form>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const name = canvas.getByRole('textbox', { name: 'Name' });
+    const notes = canvas.getByRole('textbox', { name: 'Notes' });
+    expect(nameRef.current).toBe(name);
+    expect(nameRef.current?.tagName).toBe('INPUT');
+    expect(seen.notes).toBe(notes);
+    expect(seen.notes?.tagName).toBe('TEXTAREA');
+
+    nameRef.current?.focus();
+    nameRef.current?.select();
+    expect(name).toHaveFocus();
+    expect([
+      (name as HTMLInputElement).selectionStart,
+      (name as HTMLInputElement).selectionEnd,
+    ]).toEqual([0, 'Ada Lovelace'.length]);
+    seen.notes?.focus();
+    expect(notes).toHaveFocus();
   },
 };
 
