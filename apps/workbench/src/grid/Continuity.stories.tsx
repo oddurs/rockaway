@@ -408,6 +408,52 @@ export const Spills: Story = {
 };
 
 /**
+ * Marks set a little in from an edge: braille dots, an eighth of a cell from
+ * each side, and blocks that leave an eighth or more of their cell bare. At a
+ * cell that starts part-way through a pixel, the mark's edge antialiases into
+ * the first whole pixel inside the cell's edge. The check reads only the lines
+ * a whole pixel clear of a shape's own marks, by the shape's geometry, so
+ * these read as the marks they are, not as lines on the edge (0264).
+ */
+const INSETS = ['⣿⡇⢸⠁⠈⡀⢀⣀⠉', '▉▊▋▌▍▎▏▕⣿', '⠿⡏⢹⣇⣸⠛⣤⡷⢾'].join('\n');
+
+export const InsetMarks: Story = {
+  name: 'Marks set in from an edge',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)' }}>
+      {[15.3, 16.4, 17].flatMap((size) =>
+        [0.13, 0.41, 0.69].map((shift) => (
+          <div
+            key={`${size} ${shift}`}
+            data-testid={`insets ${size} ${shift}`}
+            style={{
+              fontSize: `${size}px`,
+              paddingInlineStart: `${shift}px`,
+              paddingBlockStart: `${shift}px`,
+            }}
+          >
+            <Screen draw={() => fromText(INSETS)} cols={9} rows={3} />
+          </div>
+        )),
+      )}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    for (const size of [15.3, 16.4, 17]) {
+      for (const shift of [0.13, 0.41, 0.69]) {
+        const report = await expectContinuity(canvas.getByTestId(`insets ${size} ${shift}`), {
+          capture: run.capture,
+        });
+        expect(report.shapes).toBe(27);
+      }
+    }
+  },
+};
+
+/**
  * One cell, measured. The ink of a vertical line runs the full height of its
  * cell at every density: no gap to the next row and no overlap into it.
  */
