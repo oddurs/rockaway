@@ -502,6 +502,10 @@ export const Nested: Story = {
   ),
   play: async ({ canvas }) => {
     await measured(document.body);
+    // Focus goes back a frame after an overlay unmounts, and on a loaded runner
+    // that frame outlasted waitFor's default second: the check then saw focus
+    // on the dialog, where React Aria parks it until the restore runs.
+    const SETTLE = { timeout: 5000 };
     const settings = canvas.getByRole('button', { name: 'Settings' });
     // Opened from the keyboard, so the trigger has focus to be given back:
     // WebKit, like Safari, does not focus a button it presses.
@@ -511,10 +515,10 @@ export const Nested: Story = {
       const button = document.querySelector<HTMLElement>('[role="dialog"] button');
       expect(button).not.toBeNull();
       return button as HTMLElement;
-    });
+    }, SETTLE);
     actions.focus();
     await press('{Enter}');
-    await waitFor(() => expect(document.querySelector('[role="menu"]')).not.toBeNull());
+    await waitFor(() => expect(document.querySelector('[role="menu"]')).not.toBeNull(), SETTLE);
     // Three surfaces' worth of layer: backdrop and dialog, then the menu above them.
     const [dialogSurface, menuSurface] = surfaces();
     expect(edgeOf(dialogSurface as Element)).toMatch(/^╔/);
@@ -525,14 +529,14 @@ export const Nested: Story = {
     ).toBeTruthy();
 
     await press('{Escape}');
-    await waitFor(() => expect(document.querySelector('[role="menu"]')).toBeNull());
+    await waitFor(() => expect(document.querySelector('[role="menu"]')).toBeNull(), SETTLE);
     expect(document.querySelector('[role="dialog"]')).not.toBeNull();
     // Focus goes back a frame after the menu unmounts.
-    await waitFor(() => expect(actions).toHaveFocus());
+    await waitFor(() => expect(actions).toHaveFocus(), SETTLE);
 
     await press('{Escape}');
-    await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull());
-    await waitFor(() => expect(settings).toHaveFocus());
+    await waitFor(() => expect(document.querySelector('[role="dialog"]')).toBeNull(), SETTLE);
+    await waitFor(() => expect(settings).toHaveFocus(), SETTLE);
   },
 };
 
@@ -734,10 +738,11 @@ export const Ruled: Story = {
 
 /**
  * The root's density switched while a popover is open: the popover takes the
- * new density across the portal at each one, and lands on whole cells of its
- * trigger's screen, on the row under the trigger. Until a screen remeasures
- * on a context change (0199) the page's screen keeps the cell it first
- * measured, so the trigger's grid is read as that screen reports it.
+ * new density across the portal, and its trigger's screen, sized in cells,
+ * remeasures its cell (0199, 0246). At each density the popover is exactly
+ * where it opened: on the row under its trigger, from its column, in the new
+ * cell. Touch is a sheet, on the viewport's columns, so only its row is
+ * checked there.
  */
 export const Densities: Story = {
   render: () => (
@@ -762,18 +767,18 @@ export const Densities: Story = {
         await measured(document.body);
         const [surface] = surfaces();
         if (!surface) throw new Error('no popover');
-        await waitFor(() =>
-          expect(surface.closest('[data-density]')?.getAttribute('data-density')).toBe(density),
-        );
-        // On whole cells of the trigger's screen, whatever cell it reports.
-        await waitFor(() => cornerOf(surface));
+        await waitFor(() => {
+          expect(surface.closest('[data-density]')?.getAttribute('data-density')).toBe(density);
+          // The trigger's screen has caught up with the new cell: the trigger
+          // is one row tall in it.
+          expect(trigger.getBoundingClientRect().height).toBeCloseTo(gridOf(trigger).height, 1);
+          const [col, row] = cornerOf(trigger);
+          const [x, y] = cornerOf(surface);
+          expect(y, `${density}: on the row under the trigger`).toBe(row + 1);
+          // At touch a popover is a sheet, on the viewport's columns.
+          if (density !== 'touch') expect(x, `${density}: from its column`).toBe(col);
+        });
       }
-      // Back at the density the screen measured in, on the row under the
-      // trigger, from its column. At every density once 0199 lands.
-      const [surface] = surfaces();
-      if (!surface) throw new Error('no popover');
-      const [col, row] = cornerOf(trigger);
-      await waitFor(() => expect(cornerOf(surface)).toEqual([col, row + 1]));
     } finally {
       if (was === null) root.removeAttribute('data-density');
       else root.setAttribute('data-density', was);

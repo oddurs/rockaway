@@ -80,9 +80,10 @@ export const calloutMeta: ComponentMetaInput = defineMeta({
     {
       title: 'Every tone',
       description: 'Each a weight, a mark and a colour. The middle row is where the prose goes.',
-      text: calloutVariants.values.tone
-        .map((tone) => toText(calloutBuffer(SIZE, { tone }), { trimEnd: false }))
-        .join('\n'),
+      draw: (glyphs) =>
+        calloutVariants.values.tone
+          .map((tone) => toText(calloutBuffer(SIZE, { tone }, glyphs), { trimEnd: false }))
+          .join('\n'),
     },
     {
       title: 'Under an ASCII theme',

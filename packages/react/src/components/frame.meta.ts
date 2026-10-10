@@ -70,7 +70,7 @@ export const frameMeta: ComponentMetaInput = defineMeta({
   snapshots: [
     {
       title: 'A titled frame with a divider',
-      text: cells(28, 7, { title: 'tokens', dividers: [4] }),
+      draw: (glyphs) => cells(28, 7, { title: 'tokens', dividers: [4] }, glyphs),
     },
     {
       title: 'Every border set',
@@ -83,12 +83,13 @@ export const frameMeta: ComponentMetaInput = defineMeta({
       title: 'Titles',
       description:
         'At the start, the centre and the end of the top edge, and truncated with the ellipsis when the edge is too short.',
-      text: [
-        ...(['start', 'center', 'end'] as const).map(
-          (titleAlign) => cells(20, 2, { title: titleAlign, titleAlign }).split('\n')[0],
-        ),
-        cells(20, 2, { title: 'a title far too long for it' }).split('\n')[0],
-      ].join('\n'),
+      draw: (glyphs) =>
+        [
+          ...(['start', 'center', 'end'] as const).map(
+            (titleAlign) => cells(20, 2, { title: titleAlign, titleAlign }, glyphs).split('\n')[0],
+          ),
+          cells(20, 2, { title: 'a title far too long for it' }, glyphs).split('\n')[0],
+        ].join('\n'),
     },
     {
       title: 'Dividers in a lighter set',

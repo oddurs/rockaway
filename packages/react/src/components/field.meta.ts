@@ -1,13 +1,10 @@
 import { Buffer, drawText, toText } from '@rockaway/grid';
-import { themeGlyphs } from '@rockaway/tokens';
+import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
 import { buttonBuffer } from './button.pure.ts';
 import { formBuffer } from './field.pure.ts';
 import type { FieldText } from './field.tsx';
 import { fieldFrameBuffer } from './fieldset.pure.ts';
-
-const glyphs = themeGlyphs.default;
-const [open, close] = glyphs.delimiter.control;
 
 /** A line of text as a one-row buffer: a stand-in for a control's own buffer. */
 function line(text: string): Buffer {
@@ -16,29 +13,34 @@ function line(text: string): Buffer {
   });
 }
 
-/** A one-row text box, the way Text field (0035) draws one. */
-const box = (value: string): Buffer => line(`${open}${value.padEnd(20)}${close}`);
-
-const FIELDS: readonly FieldText[] = [
-  { label: 'Name', control: box('Ada Lovelace') },
-  {
-    label: 'Email',
-    required: true,
-    control: box('ada@'),
-    description: 'Where the receipts go.',
-    error: 'Enter an email address.',
-  },
-  { label: 'Repository', control: box('rockaway') },
-  { control: line(`${open}${glyphs.mark.check}${close} Sign commits`) },
-  {
-    control: (width) =>
-      fieldFrameBuffer({ width, height: 3 }, { label: 'Notify', required: true }).draw((draft) => {
-        const row = `${glyphs.mark.radio} always  ${glyphs.mark['radio-empty']} never`;
-        drawText(draft, { x: 2, y: 1 }, row);
-      }),
-  },
-  { control: buttonBuffer('Save') },
-];
+/** The form's fields, in a theme's glyphs. */
+function fields(glyphs: Glyphs): readonly FieldText[] {
+  const [open, close] = glyphs.delimiter.control;
+  /** A one-row text box, the way Text field (0035) draws one. */
+  const box = (value: string): Buffer => line(`${open}${value.padEnd(20)}${close}`);
+  return [
+    { label: 'Name', control: box('Ada Lovelace') },
+    {
+      label: 'Email',
+      required: true,
+      control: box('ada@'),
+      description: 'Where the receipts go.',
+      error: 'Enter an email address.',
+    },
+    { label: 'Repository', control: box('rockaway') },
+    { control: line(`${open}${glyphs.mark.check}${close} Sign commits`) },
+    {
+      control: (width) =>
+        fieldFrameBuffer({ width, height: 3 }, { label: 'Notify', required: true }, glyphs).draw(
+          (draft) => {
+            const row = `${glyphs.mark.radio} always  ${glyphs.mark['radio-empty']} never`;
+            drawText(draft, { x: 2, y: 1 }, row);
+          },
+        ),
+    },
+    { control: buttonBuffer('Save', {}, glyphs) },
+  ];
+}
 
 export const formMeta: ComponentMetaInput = defineMeta({
   name: 'Form',
@@ -143,12 +145,12 @@ export const formMeta: ComponentMetaInput = defineMeta({
       title: 'A form of mixed fields',
       description:
         'Text boxes, a checkbox, a fieldset and a button: every control starts in the same cell, after the longest label, its mark cell and two cells of air.',
-      text: toText(formBuffer(FIELDS, { width: 64 })),
+      draw: (glyphs) => toText(formBuffer(fields(glyphs), { width: 64 }, glyphs)),
     },
     {
       title: 'Under 60 cells',
       description: 'The same form, stacked: each label on the row above its control.',
-      text: toText(formBuffer(FIELDS, { width: 40 })),
+      draw: (glyphs) => toText(formBuffer(fields(glyphs), { width: 40 }, glyphs)),
     },
   ],
   // Drawn by its own buffer functions: the published size is measured from these (0167).
@@ -158,6 +160,6 @@ export const formMeta: ComponentMetaInput = defineMeta({
       trimEnd: false,
     }),
     // The default variant, with words like these.
-    default: toText(formBuffer(FIELDS, { width: 64 }), { trimEnd: false }),
+    default: toText(formBuffer(fields(themeGlyphs.default), { width: 64 }), { trimEnd: false }),
   },
 });

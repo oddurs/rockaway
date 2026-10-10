@@ -127,7 +127,7 @@ export const treeMeta: ComponentMetaInput = defineMeta({
       title: 'A file tree',
       description:
         'The cursor on list.tsx, index.ts selected (reverse video, which text cannot show), paint collapsed.',
-      text: toText(treeBuffer({ rows: FILES, width: 24 }), { trimEnd: false }),
+      draw: (glyphs) => toText(treeBuffer({ rows: FILES, width: 24 }, glyphs), { trimEnd: false }),
     },
   ],
   // Drawn by its own buffer functions: the published size is measured from these (0167).

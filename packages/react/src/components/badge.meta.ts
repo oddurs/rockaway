@@ -1,10 +1,11 @@
 import { toText } from '@rockaway/grid';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
 import { badgeBuffer, badgeVariants } from './badge.pure.ts';
 import type { BadgeOptions, BadgeTone } from './badge.tsx';
 
-const cells = (text: string, options: BadgeOptions = {}): string =>
-  toText(badgeBuffer(text, options), { trimEnd: false });
+const cells = (text: string, options: BadgeOptions = {}, glyphs?: Glyphs): string =>
+  toText(badgeBuffer(text, options, glyphs), { trimEnd: false });
 
 /** What each tone might say. */
 const WORDS: Readonly<Record<BadgeTone, string>> = {
@@ -84,11 +85,14 @@ export const badgeMeta: ComponentMetaInput = defineMeta({
     {
       title: 'Every tone',
       description: 'Each with its mark, then the same tones drawn with `mark={false}`.',
-      text: [true, false]
-        .map((mark) =>
-          badgeVariants.values.tone.map((tone) => cells(WORDS[tone], { tone, mark })).join('  '),
-        )
-        .join('\n'),
+      draw: (glyphs) =>
+        [true, false]
+          .map((mark) =>
+            badgeVariants.values.tone
+              .map((tone) => cells(WORDS[tone], { tone, mark }, glyphs))
+              .join('  '),
+          )
+          .join('\n'),
     },
   ],
   // Drawn by its own buffer functions: the published size is measured from these (0167).
