@@ -61,6 +61,7 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     "React Aria's DialogTrigger, re-exported beside Dialog so it is the instance Dialog and OverlayPopover read, and so copied code needs no import from React Aria. It draws nothing, and is documented in Dialog's anatomy.",
   TooltipTrigger:
     "React Aria's TooltipTrigger, re-exported beside Tooltip for the reason DialogTrigger is. It draws nothing, and is documented in Tooltip's description.",
+  Flow: 'Layout, not a widget: blocks down the page on rhythm half-steps, closed to whole rows (0312). Documented with the grid.',
   MenuTrigger:
     "React Aria's menu trigger, re-exported beside Menu so it is the instance Menu's popover reads, and so copied-in code can open a menu. It draws nothing, and is documented in Menu's notes.",
   SubmenuTrigger:

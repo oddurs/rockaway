@@ -553,8 +553,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-x-2",
-      "--rk-y-1"
+      "--rk-rhythm-field",
+      "--rk-rhythm-help",
+      "--rk-step-y",
+      "--rk-x-2"
     ]
   },
   "Dialog": {
@@ -696,8 +698,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-x-2",
-      "--rk-y-1"
+      "--rk-rhythm-field",
+      "--rk-rhythm-help",
+      "--rk-step-y",
+      "--rk-x-2"
     ]
   },
   "FieldFrame": {
@@ -850,6 +854,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "The label column, in cells, the gap after the labels included. As wide as the longest label in the form when not given; a label longer than the column wraps inside it."
       },
       {
+        "name": "comfort",
+        "type": "Comfort",
+        "required": false,
+        "description": "How generous the form's spacing is (0313, 0316). Comfortable, the default, puts each label over its control in a padded two-row box; compact is the terminal's form, two columns of cells and no padding. Inherited from the region when not given."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -871,8 +881,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-x-2",
-      "--rk-y-1"
+      "--rk-rhythm-field",
+      "--rk-rhythm-help",
+      "--rk-step-y",
+      "--rk-x-2"
     ]
   },
   "Frame": {
@@ -1086,8 +1098,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-x-2",
-      "--rk-y-1"
+      "--rk-rhythm-field",
+      "--rk-rhythm-help",
+      "--rk-step-y",
+      "--rk-x-2"
     ]
   },
   "Link": {
@@ -2174,6 +2188,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-pad-y",
+      "--rk-step-y",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",
