@@ -323,6 +323,111 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-disabled"
     ]
   },
+  "CodeBlock": {
+    "file": "code-block.tsx",
+    "props": [
+      {
+        "name": "code",
+        "type": "string",
+        "required": true,
+        "description": "The code, exactly: what is shown, what is copied."
+      },
+      {
+        "name": "tokens",
+        "type": "readonly CodeLine[]",
+        "required": false,
+        "description": "The same code, highlighted: one line of tokens per line, each token a role from the syntax tokens (0144). Joined, it must be `code`."
+      },
+      {
+        "name": "lang",
+        "type": "string",
+        "required": false,
+        "description": "The language, for a reader, and the title when there is none."
+      },
+      {
+        "name": "copyable",
+        "type": "boolean",
+        "required": false,
+        "description": "A copy button in the top edge. On by default; a block with no frame has none.",
+        "default": "true"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "The block's accessible name, when the title is not the right one."
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows' | 'title'>",
+      "Omit<CodeBlockOptions, 'copyable'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "CodeSnapshot": {
+    "file": "code-block.tsx",
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "description": "The text snapshot, as `toText` writes it."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What the snapshot shows, said in words: a reader hears this, not the box characters one by one."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Set into the top edge: what it is a snapshot of."
+      },
+      {
+        "name": "copyable",
+        "type": "boolean",
+        "required": false,
+        "description": "A copy button in the top edge. On by default.",
+        "default": "true"
+      }
+    ],
+    "inherits": [
+      "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role' | 'rows' | 'title'>"
+    ],
+    "tokens": [
+      "--rk-bg-page",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-muted",
+      "--rk-font-family-mono",
+      "--rk-glyph-mark-overflow-end",
+      "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Column": {
     "file": "table.tsx",
     "props": [
@@ -697,6 +802,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "Padding inside the border, in cells. The border's own cell is added to it, so the default puts content one cell in from the left edge and hard against the rows above and below — the proportions a terminal uses."
       },
       {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground the frame sits on, border cells included: `sunken`, `base` (the default), `raised` or `overlay`. Unset, the frame is transparent and shows what is behind it."
+      },
+      {
         "name": "label",
         "type": "string",
         "required": false,
@@ -712,6 +823,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'title' | 'role' | 'aria-label'>"
     ],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1154,6 +1267,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "Padding inside the pane's borders, in cells. One across and none down by default, the proportions `Frame` uses."
       },
       {
+        "name": "surface",
+        "type": "Surface",
+        "required": false,
+        "description": "The ground under the pane's content and padding: `sunken`, `base` (the default), `raised` or `overlay`. The borders around it stay the screen's."
+      },
+      {
         "name": "label",
         "type": "string",
         "required": false,
@@ -1173,6 +1292,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1217,6 +1338,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit<ScreenProps, 'draw' | 'contentInset' | 'children' | 'role'>"
     ],
     "tokens": [
+      "--rk-bg-subtle",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
