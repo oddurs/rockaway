@@ -123,7 +123,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`######····` 57% · 85 of 148 done · due 2027-01-31
+`######····` 58% · 86 of 148 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -139,7 +139,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0098`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0098-statusbar.md) StatusBar <sup>component · components · p0</sup>
 - [ ] [`0101`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0101-progress.md) Progress <sup>component · components · p1</sup>
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
-- [ ] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p2</sup>
 - [ ] [`0124`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0124-run-the-story-tests-in-firefox-and-webkit-as-well-as-chromium.md) Run the story tests in Firefox and WebKit as well as Chromium <sup>chore · tooling · p1</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0167`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0167-add-size-in-cells-and-conformance-level-to-component-metadata.md) Add size in cells and conformance level to component metadata <sup>feature · docs · p1</sup>
@@ -215,6 +214,7 @@ The component contract, proven on a first set of components.
 - [x] [`0100`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0100-list.md) List <sup>component · components · p0</sup>
 - [x] [`0111`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0111-render-in-the-dom-and-treat-painting-as-a-strategy.md) Render in the DOM, and treat painting as a strategy <sup>decision · grid · p0</sup>
 - [x] [`0112`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0112-write-the-concept-doc-how-a-tui-becomes-a-web-page.md) Write the concept doc: how a TUI becomes a web page <sup>docs · docs · p0</sup>
+- [x] [`0115`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0115-virtualise-the-list-by-row.md) Virtualise the list by row <sup>feature · components · p2</sup>
 - [x] [`0116`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0116-draw-lines-blocks-and-cell-backgrounds-from-the-cell-never-from-the-font.md) Draw lines, blocks and cell backgrounds from the cell, never from the font <sup>decision · grid · p0</sup>
 - [x] [`0117`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0117-render-box-drawing-blocks-and-cell-backgrounds-procedurally-at-full-cell-size.md) Render box-drawing, blocks and cell backgrounds procedurally, at full cell size <sup>feature · grid · p0</sup>
 - [x] [`0118`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0118-fix-the-state-vocabulary-how-every-state-is-drawn-on-the-grid.md) Fix the state vocabulary: how every state is drawn on the grid <sup>decision · css · p0</sup>
