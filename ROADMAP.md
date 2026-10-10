@@ -136,7 +136,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#######···` 61% · 108 of 176 done · due 2027-01-31
+`#######···` 61% · 108 of 178 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -174,6 +174,8 @@ The component contract, proven on a first set of components.
 - [ ] [`0336`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0336-write-the-example-for-every-overlay-with-the-system-s-own-exports.md) Write the example for every overlay with the system's own exports <sup>chore · components · p3</sup>
 - [ ] [`0337`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0337-decide-whether-menus-are-comfortable-by-default-in-an-app.md) Decide whether menus are comfortable by default in an app <sup>decision · components · p2</sup>
 - [ ] [`0338`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0338-give-select-and-combobox-comfortable-sections.md) Give Select and ComboBox comfortable sections <sup>feature · components · p3</sup>
+- [ ] [`0339`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0339-reach-a-cell-s-edges-with-a-one-eighth-block-in-webkit.md) Reach a cell's edges with a one-eighth block in WebKit <sup>bug · css · p2</sup>
+- [ ] [`0340`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0340-place-a-popover-again-in-webkit-after-the-density-changes.md) Place a popover again in WebKit after the density changes <sup>bug · behaviour · p1</sup>
 
 ### ready
 
