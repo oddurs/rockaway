@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, inject } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
+import type { OverBudget } from './budget.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
 
@@ -9,6 +10,7 @@ declare module 'vitest/browser' {
     readWithoutScripts: (html: string) => Promise<{ rows: string[]; shapes: number; ran: boolean }>;
     recordKnown: (use: KnownUse) => Promise<void>;
     emulateContrast: (contrast: 'more' | 'no-preference') => Promise<void>;
+    recordPaint: (over: OverBudget) => Promise<void>;
     watchdog: (ms: number | null) => Promise<void>;
   }
 }
@@ -38,6 +40,7 @@ setRunner({
   click: (element, at) =>
     userEvent.click(element, at === undefined ? {} : { position: at, force: true }),
   contrast: (preference) => commands.emulateContrast(preference),
+  paint: (over) => commands.recordPaint(over),
 });
 
 /**
