@@ -83,14 +83,13 @@ The CSS contract every consumer shares.
 
 ## grid — The frame engine
 
-`#########·` 85% · 17 of 20 done · due 2026-12-06
+`#########·` 90% · 18 of 20 done · due 2026-12-06
 
 The heart of a TUI system: a pure, integer model of a character grid, and
 
 ### ready
 
 - [ ] [`0246`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0246-remeasure-a-screen-given-explicit-cols-and-rows-when-its-context-changes.md) Remeasure a screen given explicit cols and rows when its context changes <sup>bug · grid · p2</sup>
-- [ ] [`0274`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0274-draw-strokes-on-whole-pixels-the-same-in-every-engine.md) Draw strokes on whole pixels, the same in every engine <sup>bug · css · p2</sup>
 
 ### in review
 
@@ -115,6 +114,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 - [x] [`0087`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0087-make-the-text-snapshot-the-house-test-for-components.md) Make the text snapshot the house test for components <sup>chore · tooling · p0</sup>
 - [x] [`0088`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0088-enforce-grid-conformance-and-count-the-exceptions.md) Enforce grid conformance, and count the exceptions <sup>chore · tooling · p0</sup>
 - [x] [`0110`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0110-the-rule-painter-draws-cell-boxes-not-lines.md) The rule painter draws cell boxes, not lines <sup>bug · grid · p0</sup>
+- [x] [`0274`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0274-draw-strokes-on-whole-pixels-the-same-in-every-engine.md) Draw strokes on whole pixels, the same in every engine <sup>bug · css · p2</sup>
 
 ## primitives — First primitives
 
