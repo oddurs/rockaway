@@ -301,7 +301,12 @@ function usePlaceOnMove(anchor: () => Element | null | undefined): boolean {
   const at = useRef<{ left: number; top: number } | undefined>(undefined);
   useIsomorphicLayoutEffect(() => {
     const el = anchor();
-    if (!el) return;
+    // A trigger inside another overlay, a submenu's item, moves only when its
+    // own surface snaps, by under a cell, and this surface's snap lands it on
+    // the grid. Placed again there, React Aria reads its container as the
+    // document rather than the overlay layer, and a submenu flipped to the
+    // left lands off the page.
+    if (!el || el.closest('.rk-overlay')) return;
     let frame = 0;
     const check = (): void => {
       const box = anchor()?.getBoundingClientRect();
