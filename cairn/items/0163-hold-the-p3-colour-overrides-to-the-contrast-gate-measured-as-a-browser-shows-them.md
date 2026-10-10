@@ -3,12 +3,12 @@ id: 163
 uid: 91fa6325-6a6e-4dad-acd1-99affa0ea159
 title: Hold the p3 colour overrides to the contrast gate, measured as a browser shows them
 type: bug
-status: review
+status: done
 milestone: primitives
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p0
 layer: tokens
 effort: s
@@ -32,7 +32,7 @@ generator adjusts whatever falls short.
 
 - [x] The gate measures every p3 override, mapped to what a browser will display, in both modes
 - [x] Every declared pair passes 4.5:1 (or 3:1 for non-text) in sRGB and in p3, with the margin reported
-- [ ] Badge's stories pass axe on a p3 display
+- [x] Badge's stories pass axe on a p3 display
 - [x] 0052's theme contexts go through the same gate
 
 ## 2026-10-03
@@ -46,3 +46,7 @@ Surprise: the old gate was wrong on sRGB screens too. It mapped by bisecting chr
 ## 2026-10-03
 
 The generator corrects with fitContrast: a slot failing a declared pair moves away from the background in lightness, hue and chroma kept, until it passes in every view; the moves are printed by pnpm generate and written into the ansi group's description. For the default theme that is light cyan #007b81 -> #007279 and light green #008130 -> #007f2f. The workbench now runs every story on a forced sRGB screen and again on a forced p3 one (--force-color-profile), so axe checks p3 everywhere, and a Mac and a Linux runner see the same thing.
+
+## 2026-10-10
+
+The p3 project runs every story, Badge's among them, with axe on a forced p3 screen, and passes in CI.
