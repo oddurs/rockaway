@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, inject } from 'vitest';
 import { commands, page, userEvent } from 'vitest/browser';
-import type { Platform } from './known.ts';
 import type { OverBudget } from './budget.ts';
+import type { Platform } from './known.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 import { setRunner } from './runner.ts';
 

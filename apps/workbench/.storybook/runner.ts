@@ -1,6 +1,6 @@
 import type { Capture } from '@rockaway/react/testing';
-import type { Platform } from './known.ts';
 import type { OverBudget } from './budget.ts';
+import type { Platform } from './known.ts';
 import type { KnownUse, Plan } from './matrix.ts';
 
 /**
