@@ -3,17 +3,17 @@ id: 147
 uid: c5ee5aaa-8795-4d69-bfe6-a78604d615b5
 title: Document every component on its own page, generated from its metadata
 type: feature
-status: review
+status: done
 milestone: site
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 47
 - 104
 - 138
 - 144
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-10
+closed_at: 2026-10-10
 priority: p0
 layer: site
 effort: l
@@ -79,3 +79,7 @@ Criterion 5 stays open: copying a page as text and as ANSI is 0105's button, whi
 ## 2026-10-03
 
 Criterion 5 is true on feat/copy-screens (0105): every snapshot on every component page copies as its text, checked one by one in the site test, and the page itself copies as the screen it is.
+
+## 2026-10-10
+
+On main in the Next.js site (#245): every component has its page, generated from its metadata, with its example beside it. Closed from review.

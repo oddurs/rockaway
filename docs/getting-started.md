@@ -136,6 +136,7 @@ you use. The title is the frame's accessible name: a screen reader hears
 - **Use your font.** The cell is your font's: set `--rk-font-family-mono` to
   any monospace family and every size follows it.
 - **Build your own component** on the grid: every component is held to [the
-  same ten rules](concept.md#the-contract-a-component-is-held-to). A
-  step-by-step recipe is being written.
+  same ten rules](concept.md#the-contract-a-component-is-held-to), and [the
+  component recipe](component-recipe.md) takes you through it step by step:
+  the files, the export lines and the checklist.
 - **Read why** it works this way: [the concept](concept.md).
