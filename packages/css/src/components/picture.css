@@ -1,0 +1,48 @@
+/*
+ * Picture (cairn 0320).
+ *
+ * A real image in a box of whole cells. Across, `--rk-picture-cols` cells, or
+ * every whole cell the container gives it. Down, the nearest whole row to the
+ * width over the image's ratio, `--rk-picture-ratio`, or `--rk-picture-height`
+ * when it is given: `round()` against the cell does in CSS what
+ * `pictureRows` does in the pure half, so there is no script and nothing
+ * moves when the image arrives. The image is cropped to fill the box.
+ *
+ * The figure is the container its width is asked of, so the image reads that
+ * width as `100cqi`.
+ */
+@layer rk.components {
+  /* Unset, the cells and the rows fall back to the container and the ratio:
+   * no attribute says which, so nothing is keyed on a prop. */
+  .rk-picture {
+    container: rk-picture / inline-size;
+    display: block;
+    margin: 0;
+    inline-size: min(
+      calc(var(--rk-picture-cols, 100000) * var(--rk-cell-width)),
+      round(down, 100%, var(--rk-cell-width))
+    );
+  }
+
+  .rk-picture-image {
+    display: block;
+    inline-size: 100%;
+    block-size: var(
+      --rk-picture-height,
+      max(
+        var(--rk-cell-height),
+        round(calc(100cqi / var(--rk-picture-ratio, 1)), var(--rk-cell-height))
+      )
+    );
+    object-fit: cover;
+    object-position: var(--rk-picture-position, center);
+    /* Under the image while it loads: the ground a cell of nothing shows. */
+    background: var(--rk-bg-subtle);
+  }
+
+  .rk-picture-caption {
+    color: var(--rk-fg-muted);
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
