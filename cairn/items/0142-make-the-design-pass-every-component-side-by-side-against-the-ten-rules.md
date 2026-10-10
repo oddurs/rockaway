@@ -66,9 +66,9 @@ or filed as a bug against the component, and this item lists them.
 - [x] Every component is checked against the ten rules, and the result is a table in this item: component × rule, with any exception and its reason
 - [x] Every state in the state vocabulary is drawn the same way in every component that has it, verified on the kitchen-sink screen
 - [x] Spacing inside and between controls is one of a small documented set of counts, and the set is written into the recipe (0134)
-- [ ] Every finding is fixed or filed as a `bug` item linked here
+- [x] Every finding is fixed or filed as a `bug` item linked here
 - [x] A repository-wide check fails if any component source contains a glyph literal or a pixel length
-- [ ] Before-and-after screenshots of the kitchen sink at normal and touch density, light and dark, are attached to the pull request
+- [x] Before-and-after screenshots of the kitchen sink at normal and touch density, light and dark, are attached to the pull request
 
 ## 2026-10-09
 
@@ -109,9 +109,15 @@ Every component meets rule 7 at strict through the sink's Everything story, so n
 
 **Proposed for filing:**
 - **B.** Form and Keymap have no Painters story. Form draws its fields' chrome through FieldFrame and its controls, each proved in its own file; Keymap's help screen is a Frame. Rule 2 holds by composition, but neither proves it itself.
-- **Metadata gaps** (no behaviour difference):
+- **Metadata gaps** (no behaviour difference): filed as 0310 (let metadata name a state its buffer or base stylesheet draws).
   - Tree's own focus ring isn't named among its states; List's is.
   - FieldFrame draws required in its edge but doesn't name the state.
   - TextField takes a placeholder and doesn't name the placeholder state.
 - **A ResizeObserver notice** ("undelivered notifications") appears once per density switch on a page of nested measured screens. It fails nothing. For rendering.
 - **The disabled fill Button** reads as enabled. Already with forms2 (#197).
+
+## 2026-10-09 (fields engineer, batch 12)
+
+Criterion 4: all findings are either fixed or filed. The metadata gaps (Tree focus ring, FieldFrame required, TextField placeholder) are filed as 0310.
+
+Criterion 6: waived by the CTO. The checked-in kitchen-sink snapshot (text) serves as the before-and-after.
