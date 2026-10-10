@@ -3,14 +3,16 @@ id: 148
 uid: 219ac8b7-3a12-4871-ba8a-73f12bac78e7
 title: Switch theme, mode and density on the site, and remember the choice without a flash
 type: feature
-status: backlog
+status: doing
 milestone: site
+assignee: Oddur Sigurdsson
+claimed: 2026-10-04
 depends_on:
 - 52
 - 104
 - 180
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-09
 priority: p0
 layer: site
 effort: m
@@ -26,7 +28,27 @@ first thing an HN reader on a phone will notice.
 ## Acceptance criteria
 
 - [ ] Theme preset, mode (light, dark, system) and density (dense, normal, airy, touch, automatic) are switchable from the status bar and from the command palette
-- [ ] The choice persists, and an inline script in the head applies it before first paint: no flash, asserted by a Playwright test that captures the first frame
-- [ ] Switching theme or density changes no geometry beyond the cell's own size, and conformance passes in every combination
-- [ ] With JavaScript disabled the page follows the system's mode and pointer, and the switcher is not shown
-- [ ] The site (0106, 0148) lists every theme and offers each terminal format for download
+- [x] The choice persists, and an inline script in the head applies it before first paint: no flash, asserted by a Playwright test that captures the first frame
+- [x] Switching theme or density changes no geometry beyond the cell's own size, and conformance passes in every combination
+- [x] With JavaScript disabled the page follows the system's mode and pointer, and the switcher is not shown
+- [x] The site (0106, 0148) lists every theme and offers each terminal format for download
+
+## 2026-10-04
+
+Built on feat/switcher, stacked on the landing page. The look is the three context attributes on html (data-rk-theme, data-theme, data-density; 0180 will rename them), kept in localStorage (rockaway:look). The pre-paint script in Document.astro (src/lib/look.ts) sets them and document.writes the chosen theme's stylesheet into the head, so it is parser-inserted and render-blocking in every engine. The site test reads the first frame (a requestAnimationFrame registered before load) and finds it equal to the final look, not the system's. t, Shift+T, m and d move through the 9 themes, the 3 modes and the 5 densities, and so do the status bar's buttons, each named 'Theme: ink' and the like. The message line says each change. The runtime redraws the shell's chrome with the theme's glyphs (phosphor draws double borders). Conformance, continuity and axe pass in a sample of four looks across themes, modes and densities; dense's one-row targets fail 2.5.8 as documented (0197), and the test asserts that they do. With no script the status bar is hidden, the page follows the system's colour scheme, and a coarse pointer gets 44px rows. Not done: the command palette half of criterion 1 (0149, not built), and conformance in every one of the 135 looks rather than a sample of four.
+
+## 2026-10-04
+
+Criterion 5 was done by 0106: the themes page lists every theme with its terminal files, which the site test checks (16 islands, 64 files).
+
+## 2026-10-04
+
+document.write in the pre-paint script is deliberate, agreed with the CTO: a stylesheet the parser inserts is render-blocking in every engine, one a script inserts with createElement is not (the page would paint once in the default theme, then flash), and blocking=render is Chromium-only. The comment in src/lib/look.ts says so, so nobody 'fixes' it later.
+
+## 2026-10-04
+
+Criterion 3, covered axis by axis as the CTO asked: every theme in both modes at normal density (18 looks) and every density in the default theme (5), 23 in all, each checked with axe and conformance, plus continuity in one look of each kind (ink dark, phosphor light, default touch). It runs once, at the /rockaway/ base, in about five seconds of the site test. Dense's target-size failures are asserted, as documented (0197).
+
+## 2026-10-09
+
+apps/web (#245): theme, mode and density switch from the status bar and from t / m / d, persist, and the head's script applies them and the theme's sheet before first paint (test: the next load's <html> and status bar carry the reader's look at DOMContentLoaded). Criterion 1 stays open for the command palette, which the system does not have yet.

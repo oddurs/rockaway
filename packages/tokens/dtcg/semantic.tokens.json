@@ -10,6 +10,22 @@
       "$value": "{ansi.surface}",
       "$description": "A raised surface. On a grid it is its border that raises it."
     },
+    "surface-sunken": {
+      "$value": "{ansi.surface-sunken}",
+      "$description": "A layer below its neighbours: a well a panel sits in (0307)."
+    },
+    "surface-base": {
+      "$value": "{ansi.surface-base}",
+      "$description": "The ordinary panel layer (0307)."
+    },
+    "surface-raised": {
+      "$value": "{ansi.surface-raised}",
+      "$description": "A panel above the base layer (0307)."
+    },
+    "surface-overlay": {
+      "$value": "{ansi.surface-overlay}",
+      "$description": "The topmost layer: what floats above a panel (0307)."
+    },
     "subtle": {
       "$value": "{ansi.subtle}",
       "$description": "Quiet element backgrounds: inputs, wells, code."

@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "isolatedDeclarations": false,
+    "declaration": false,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "plugins": [{ "name": "next" }],
+    // A stranger's view of the packages: their published types, from `dist`.
+    "customConditions": []
+  },
+  "include": [
+    "next-env.d.ts",
+    "app",
+    "components",
+    "lib",
+    "test",
+    "next.config.ts",
+    ".next/types/**/*.ts"
+  ]
+}
