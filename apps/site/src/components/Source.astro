@@ -1,0 +1,18 @@
+---
+/**
+ * An example's source (cairn 0147), highlighted at build time the way the
+ * site's Markdown is: the ANSI theme of roles, and classes rather than
+ * colours, so it follows the theme and the mode with no script.
+ */
+import { Code } from 'astro:components';
+import { ansiTheme, roleClasses } from '../lib/highlight.ts';
+
+interface Props {
+  code: string;
+  lang: string;
+}
+
+const { code, lang } = Astro.props;
+---
+
+<Code code={code.replace(/\n$/, '')} lang={lang as 'tsx'} theme={ansiTheme} transformers={[roleClasses]} />
