@@ -91,6 +91,13 @@ export const meterMeta: ComponentMetaInput = defineMeta({
       'The tone is not announced: put it in `valueLabel` when a reader needs it.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: a bar of four cells, unlabelled.
+    min: text(meterBuffer({ value: 50, cols: 4 })),
+    // The default: a labelled bar of sixteen.
+    default: text(meterBuffer({ label: 'cpu', value: 50, warning: 70, danger: 90, cols: 16 })),
+  },
   snapshots: [
     {
       title: 'Below, at and past the thresholds',

@@ -104,4 +104,11 @@ export const dividerMeta: ComponentMetaInput = defineMeta({
       text: cells(20, { label: 'a label far too long for it' }, glyphsFor({ borderSet: 'ascii' })),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: cells(3),
+    // The default variant, with words like these.
+    default: cells(20),
+  },
 });

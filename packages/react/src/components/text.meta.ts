@@ -66,6 +66,13 @@ export const textMeta: ComponentMetaInput = defineMeta({
       'Copying it gives its words alone. The padding is a box, not characters.',
     ],
   },
+  // Drawn by its own buffer function: the published size is measured from these (0167).
+  size: {
+    // Its least: a letter at the smallest size, a row and a half closed to two.
+    min: toText(textBuffer('x', 1.5), { trimEnd: false }),
+    // The default: a word at two rows.
+    default: toText(textBuffer('Rockaway', 2), { trimEnd: false }),
+  },
   snapshots: textSizes.map((size) => ({
     title: `Size ${size}`,
     description: `“Rockaway” set inline at size ${size}, at each density from dense to touch, with the box’s right edge drawn: its words from the first cell, then padding to whole cells. The words are written one to a cell, as \`screenshot()\` reads them; on the page they are wider.`,

@@ -51,6 +51,13 @@ export const spinnerMeta: ComponentMetaInput = defineMeta({
     announces: '"Indexing", once, as a status.',
     notes: ['The frame is aria-hidden: a reader is never told a braille pattern.'],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: its one cell.
+    min: spinnerFrame(0, themeGlyphs.default),
+    // The default: the cell and a label.
+    default: `${spinnerFrame(0, themeGlyphs.default)} Indexing`,
+  },
   snapshots: [
     {
       title: 'Every frame',

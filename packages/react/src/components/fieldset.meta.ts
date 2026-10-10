@@ -1,5 +1,5 @@
 import { toText } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
+import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta, describeVariants } from '../metadata/schema.ts';
 import { fieldFrameBuffer, fieldFrameVariants } from './fieldset.pure.ts';
 import type { FieldFrameState } from './fieldset.tsx';
@@ -108,4 +108,11 @@ export const fieldsetMeta: ComponentMetaInput = defineMeta({
         ].join('\n'),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(fieldFrameBuffer({ width: 6, height: 3 }, { label: '' }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: frame({}, themeGlyphs.default),
+  },
 });

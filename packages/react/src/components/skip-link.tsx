@@ -20,8 +20,9 @@
  * target, so a screen reader starts reading there: a target that cannot take
  * focus is given `tabindex="-1"` first, which puts it in no tab order.
  *
- * The same markup without React is `<a class="rk-skip-link" href="#main">`:
- * the stylesheet is all it needs to show and hide.
+ * The same markup without React is `<a class="rk-skip-link" href="#main">`
+ * (with `data-rk-control` for the conformance levels): the stylesheet is all
+ * it needs to show and hide.
  */
 import type { AnchorHTMLAttributes, MouseEvent, ReactNode } from 'react';
 import { cx } from '../cx.ts';
@@ -57,7 +58,14 @@ export function SkipLink({
     to.focus();
   };
   return (
-    <a {...rest} href={`#${target}`} className={cx('rk-skip-link', className)} onClick={jump}>
+    <a
+      {...rest}
+      href={`#${target}`}
+      className={cx('rk-skip-link', className)}
+      // A control, to the conformance levels (0182).
+      data-rk-control=""
+      onClick={jump}
+    >
       {children}
     </a>
   );

@@ -1,5 +1,5 @@
 import { Buffer, drawText, toText } from '@rockaway/grid';
-import type { Glyphs } from '@rockaway/tokens';
+import { type Glyphs, themeGlyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
 import { buttonBuffer } from './button.pure.ts';
 import { formBuffer } from './field.pure.ts';
@@ -163,4 +163,13 @@ export const formMeta: ComponentMetaInput = defineMeta({
         toText(formBuffer(fields(glyphs), { comfort: 'compact', width: 40 }, glyphs)),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(formBuffer([{ label: '', control: line(' ') }], { width: 1 }), {
+      trimEnd: false,
+    }),
+    // The default variant, with words like these.
+    default: toText(formBuffer(fields(themeGlyphs.default), { width: 64 }), { trimEnd: false }),
+  },
 });

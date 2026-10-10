@@ -148,6 +148,13 @@ export const comboBoxMeta: ComponentMetaInput = defineMeta({
       'With nothing matching the list stays open and says so, rather than closing as if there were no list.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: a box of six cells, closed.
+    min: toText(comboBoxBuffer({ cols: 6, options: AUTHORS })),
+    // The default: a box of twenty, closed.
+    default: cells({}),
+  },
   snapshots: [
     {
       title: 'Closed',

@@ -88,6 +88,13 @@ export const tabsMeta: ComponentMetaInput = defineMeta({
       'A tab scrolled out of the edge is still in the tab list, so a reader hears every tab and the arrow keys reach it; selecting it draws it in.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one tab over one row.
+    min: toText(tabsText({ width: 8, height: 2 }, ['a'], 0), { trimEnd: false }),
+    // The default: three tabs over a pane.
+    default: toText(tabsText({ width: 30, height: 4 }, LABELS, 0), { trimEnd: false }),
+  },
   snapshots: [
     {
       title: 'Tabs in the top edge',

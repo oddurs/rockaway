@@ -170,4 +170,11 @@ export const textFieldMeta: ComponentMetaInput = defineMeta({
       ),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, and a box one cell wide.
+    min: toText(textFieldBuffer({ cols: 1 }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: box({ value: 'Ada Lovelace' }),
+  },
 });

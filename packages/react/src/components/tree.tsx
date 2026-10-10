@@ -135,6 +135,8 @@ export function Tree<T extends object>({
           // on, as its GridList does, but its props do not declare it.
           {...((disallowTypeAhead === undefined ? {} : { disallowTypeAhead }) as object)}
           className={cx('rk-tree', className)}
+          // A pane, to the conformance levels: whole cells even at `loose` (0182).
+          data-rk-pane=""
           {...(style === undefined ? {} : { style })}
         />
       </FocusReport.Provider>

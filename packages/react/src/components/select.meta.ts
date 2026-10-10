@@ -139,4 +139,15 @@ export const selectMeta: ComponentMetaInput = defineMeta({
       ),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: a one-cell value in its delimiters, closed.
+    min: toText(selectBuffer({ cols: 1, options: [{ label: 'x' }], value: 'x' }), {
+      trimEnd: false,
+    }),
+    // The default: a theme chosen, closed.
+    default: toText(selectBuffer({ cols: 16, options: THEMES, value: 'phosphor' }), {
+      trimEnd: false,
+    }),
+  },
 });

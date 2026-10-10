@@ -79,6 +79,13 @@ export const progressBarMeta: ComponentMetaInput = defineMeta({
       '"Installing, 62%, progress bar"; indeterminate, no value, which is how a screen reader says busy.',
     notes: accessibilityNotes,
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: a bar of four cells, unlabelled.
+    min: text(progressBuffer({ value: 50, cols: 4 })),
+    // The default: a labelled bar of sixteen.
+    default: text(progressBuffer({ label: 'Installing', value: 50, cols: 16 })),
+  },
   snapshots: [
     {
       title: 'From empty to done',

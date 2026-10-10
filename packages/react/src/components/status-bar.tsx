@@ -238,6 +238,8 @@ export function StatusBar({
   return (
     <Screen
       {...screen}
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
       rows={1}
       draw={draw}
       className={cx('rk-statusbar', className)}

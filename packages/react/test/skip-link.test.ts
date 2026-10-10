@@ -32,13 +32,17 @@ describe('skipLinkBuffer', () => {
 describe('SkipLink', () => {
   test('an anchor to the target, in the system class, with words by default', () => {
     const html = renderToStaticMarkup(createElement(SkipLink, { target: 'main' }));
-    expect(html).toBe('<a href="#main" class="rk-skip-link">Skip to content</a>');
+    expect(html).toBe(
+      '<a href="#main" class="rk-skip-link" data-rk-control="">Skip to content</a>',
+    );
   });
 
   test('its own words, and a class of the caller beside the system one', () => {
     const html = renderToStaticMarkup(
       createElement(SkipLink, { target: 'content', className: 'page-skip' }, 'Skip to the page'),
     );
-    expect(html).toBe('<a href="#content" class="rk-skip-link page-skip">Skip to the page</a>');
+    expect(html).toBe(
+      '<a href="#content" class="rk-skip-link page-skip" data-rk-control="">Skip to the page</a>',
+    );
   });
 });

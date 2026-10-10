@@ -45,6 +45,13 @@ export const sparklineMeta: ComponentMetaInput = defineMeta({
     announces: 'Its name, as an image.',
     notes: ['The words are written from the values, so they change when the series does.'],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one cell.
+    min: text(sparklineBuffer({ values: LOAD, cols: 1 })),
+    // The default: one row of sixteen.
+    default: text(sparklineBuffer({ values: LOAD, cols: 16 })),
+  },
   snapshots: [
     {
       title: 'Braille, one row and three',

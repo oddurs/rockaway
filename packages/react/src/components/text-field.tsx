@@ -210,7 +210,8 @@ export function TextField({
               pad={0}
               className="rk-text-field-frame"
             >
-              <span className="rk-text-field-box">
+              {/* The box is the control (0182): half a cell inside it at `standard`. */}
+              <span className="rk-text-field-box" data-rk-control="">
                 {multiline ? (
                   <Area rows={rows} placeholder={placeholder} inputRef={inputRef} />
                 ) : (
@@ -221,7 +222,8 @@ export function TextField({
           ) : (
             <>
               <Label isRequired={isRequired}>{label}</Label>
-              <span className="rk-text-field-box">
+              {/* The box is the control (0182): half a cell inside it at `standard`. */}
+              <span className="rk-text-field-box" data-rk-control="">
                 <Row
                   framed={false}
                   readOnly={isReadOnly}

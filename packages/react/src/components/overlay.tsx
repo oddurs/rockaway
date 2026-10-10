@@ -543,6 +543,8 @@ function Surface({
   return (
     <div
       ref={host}
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
       className={cx(
         'rk-overlay',
         sheet && 'rk-overlay-sheet',

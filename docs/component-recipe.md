@@ -161,6 +161,29 @@ the reversed state's selector to the shared block in
 `packages/css/src/forced-colors.css` that sets `forced-color-adjust: none`
 (0181).
 
+## Control, pane, or neither
+
+The conformance levels (0123) treat two kinds of box differently, and see
+them by an attribute the component writes on its own element (0182):
+
+- **A control** is what a reader presses, checks or types into. Put
+  `data-rk-control=""` on the element that is the control: Button's `button`,
+  Link's `a`, Checkbox's row. At `standard`, a box inside it may sit on half a
+  cell, for the padding that makes it read as one control; its own box is whole
+  cells at every level.
+- **A pane** is a region that holds other content: a frame, a list, a tree, a
+  table, an overlay's surface. Put `data-rk-pane=""` on its root. At `loose`,
+  panes (and screens) are the only boxes still held to whole cells, and what is
+  inside one is free.
+- **Neither** is text in a line (Badge, KeyHint), a rule (Divider), or a
+  layout of other components (Form). List it in `NEITHER` in
+  `test/metadata.test.ts`, with its reason.
+
+The metadata reads which it is from the source (`grid.is`), and
+`metadata.test.ts` fails a component that is none of the three. Real
+components are held to each level in `Grid/Conformance`, in the stories
+named *Real components*.
+
 ## Scrolling
 
 Anything that scrolls takes `rk-scroll`, so the browser draws no scrollbar of
@@ -182,7 +205,9 @@ they do with a mouse attached.
 when to use it and when not (with the component to use instead), related
 components, the anatomy, which 0118 state each part draws, the keyboard map,
 and snapshots drawn by the buffer function. `button.meta.ts` is the one to
-copy. A component can also list `knownIssues`: what is wrong outside its
+copy. Its `size` is drawn the same way: the component at its smallest (no
+words, or the least room its chrome needs) and as drawn by default, which the
+published metadata measures in cells (0167). A component can also list `knownIssues`: what is wrong outside its
 control, such as a dependency's quirk a consumer may meet, and what to do
 about it.
 
@@ -192,8 +217,13 @@ Then generate what can be read from the source, its props and tokens:
 pnpm --filter @rockaway/react metadata   # writes src/metadata/extracted.ts
 ```
 
-Run it again after any change to the component's props or stylesheet, and
-after merging main. `test/metadata.test.ts` fails when `extracted.ts` is
+It also reads which marks the component writes, `data-rk-control` and
+`data-rk-pane` (0182), and the level it holds (0167): the strictest level of
+any workbench story that renders it with the conformance check on. No one
+writes a level by hand, so it cannot claim more than the stories prove.
+
+Run it again after any change to the component's props or stylesheet, to its
+stories' levels, and after merging main. `test/metadata.test.ts` fails when `extracted.ts` is
 stale, when a component is exported without metadata, and when the metadata
 says something the component does not bear out: a part it does not render, a
 variant value it does not write, a state it does not draw (or draws and does
@@ -481,7 +511,8 @@ named, and review is what holds it.
 7. **Conforms at `strict`, or declares its exception.** A story at
    `globals: { conformance: 'strict' }`: conformance after it fails any box off
    the grid, and any painter but the glyph one. Every `data-rk-offgrid` reason
-   is printed in the run.
+   is printed in the run. That story is also what lets the metadata say the
+   component holds `strict` (0167).
 8. **Operable by keyboard alone, and with a finger at touch density.** The
    **Keyboard** story, and the target-size check after every story at every
    density, which holds touch to WCAG 2.5.8. The **Touch** story asserts the

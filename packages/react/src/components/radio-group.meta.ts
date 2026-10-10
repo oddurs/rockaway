@@ -143,6 +143,13 @@ export const radioGroupMeta: ComponentMetaInput = defineMeta({
       'The description and the error are linked to the group by aria-describedby.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one option.
+    min: group({ options: BRANCHES.slice(0, 1), width: 12 }),
+    // The default: the group in its snapshot.
+    default: group(),
+  },
   snapshots: [
     {
       title: 'Vertical',

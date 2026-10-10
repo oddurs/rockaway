@@ -130,4 +130,13 @@ export const treeMeta: ComponentMetaInput = defineMeta({
       draw: (glyphs) => toText(treeBuffer({ rows: FILES, width: 24 }, glyphs), { trimEnd: false }),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(treeBuffer({ rows: [{ label: '', level: 1, last: [] }], width: 1 }), {
+      trimEnd: false,
+    }),
+    // The default variant, with words like these.
+    default: toText(treeBuffer({ rows: FILES, width: 24 }), { trimEnd: false }),
+  },
 });

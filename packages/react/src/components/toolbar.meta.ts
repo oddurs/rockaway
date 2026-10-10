@@ -87,6 +87,13 @@ export const toolbarMeta: ComponentMetaInput = defineMeta({
       'Folded commands are inert: out of the tab order and the accessibility tree. The menu names each one.',
     ],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one command.
+    min: toText(toolbarBuffer([['x']])),
+    // The default: two groups.
+    default: toText(toolbarBuffer(GROUPS)),
+  },
   snapshots: [
     {
       title: 'Two groups',

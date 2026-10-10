@@ -11,13 +11,16 @@
  * variant helpers and buffer functions. In a React Server Component graph
  * their exports are client references, so read `meta.json` there instead.
  */
+import { stringWidth } from '@rockaway/grid';
 import { type ThemeName, themeGlyphs, themeNames } from '@rockaway/tokens';
 import { registry } from './components.ts';
 import { extracted, focusRingTokens } from './extracted.ts';
 import type {
   AnatomyPart,
+  CellSize,
   ComponentMeta,
   ComponentMetaInput,
+  GridMeta,
   MetadataDocument,
   PropMeta,
   Snapshot,
@@ -30,8 +33,12 @@ import { type StateRow, stateVocabulary } from './states.ts';
 export type {
   Accessibility,
   AnatomyPart,
+  CellSize,
   ComponentMeta,
+  ConformanceLevel,
   ElementPart,
+  GridMark,
+  GridMeta,
   ImportedPart,
   KeyBinding,
   MetadataDocument,
@@ -109,6 +116,32 @@ function assemble(input: ComponentMetaInput): ComponentMeta {
     tokens: [...tokens].sort(),
     snapshots: input.snapshots.map(drawn),
     ...(input.knownIssues === undefined ? {} : { knownIssues: input.knownIssues }),
+    grid: gridOf(input),
+  };
+}
+
+/** The cells a drawing takes: its widest row, by its rows. */
+function sizeOf(text: string): CellSize {
+  const rows = text.split('\n');
+  return { width: Math.max(...rows.map(stringWidth)), height: rows.length };
+}
+
+function gridOf(input: ComponentMetaInput): GridMeta {
+  const parts = input.anatomy.flatMap((part) =>
+    part.kind === 'import' ? [extracted[part.name]] : [],
+  );
+  const level = extracted[input.name]?.level;
+  if (level === undefined) {
+    throw new TypeError(
+      `${input.name}: no workbench story renders it with the conformance check on, so there is no level it has been held to.`,
+    );
+  }
+  return {
+    is: (['control', 'pane'] as const).filter((mark) =>
+      parts.some((part) => part?.marks.includes(mark)),
+    ),
+    level,
+    size: { min: sizeOf(input.size.min), default: sizeOf(input.size.default) },
   };
 }
 

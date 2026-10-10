@@ -178,6 +178,13 @@ export const listMeta: ComponentMetaInput = defineMeta({
         toText(listBuffer({ rows: [], width: 18, visible: 3 }, glyphs), { trimEnd: false }),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(listBuffer({ rows: [{ label: '' }], width: 2, visible: 1 }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(listBuffer({ rows: files({}), width: 18, visible: 5 }), { trimEnd: false }),
+  },
   knownIssues: [
     "Under NODE_ENV=test, React Aria's virtualiser reads process.env.VIRT_ON (react-stately 3.50.0, Virtualizer.mjs line 144 and Rect.mjs line 61), and a browser has no process, so List throws when its tests run in a real browser. Before the tests, give the page one: globalThis.process ??= { env: { VIRT_ON: '1' } }. Under jsdom nothing is needed: there the virtualiser renders every row on purpose, since jsdom has no layout. Reporting it upstream is cairn 0239.",
   ],

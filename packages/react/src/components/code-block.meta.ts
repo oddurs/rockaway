@@ -128,4 +128,14 @@ export const codeBlockMeta: ComponentMetaInput = defineMeta({
       ),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one character of code, a cell of air either side, and the
+    // frame, with no title and nothing to copy.
+    min: toText(codeBlockText('x', { cols: 5, copyable: false }), { trimEnd: false }),
+    // The default: a titled block with its copy button, as the first snapshot.
+    default: toText(codeBlockText(CODE, { cols: 52, title: 'panel.tsx', copyable: true }), {
+      trimEnd: false,
+    }),
+  },
 });

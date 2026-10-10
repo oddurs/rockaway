@@ -173,4 +173,11 @@ export const tableMeta: ComponentMetaInput = defineMeta({
       text: toText(tableBuffer({ ...FILES, visible: 2, offset: 1 })),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(tableBuffer({ columns: [{ header: '' }], rows: [] }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(tableBuffer({ ...FILES, title: 'files' }), { trimEnd: false }),
+  },
 });

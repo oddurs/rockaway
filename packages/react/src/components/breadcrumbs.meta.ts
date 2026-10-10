@@ -74,6 +74,13 @@ export const breadcrumbsMeta: ComponentMetaInput = defineMeta({
       '"Breadcrumbs, navigation, list, 4 items", then each level; the last "current page".',
     notes: ['The separators are aria-hidden: the list says where each level is.'],
   },
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: one crumb, the current page.
+    min: toText(breadcrumbsBuffer(['Home'])),
+    // The default: the path.
+    default: toText(breadcrumbsBuffer(PATH)),
+  },
   snapshots: [
     {
       title: 'A path',
