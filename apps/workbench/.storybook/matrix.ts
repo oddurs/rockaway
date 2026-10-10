@@ -405,7 +405,12 @@ export async function walk(
         skipped.push(`${describeCell(cell)}: ${skip.reason}`);
         continue;
       }
-      if (cell !== own) await switchTo(root, canvas, cell);
+      // The story's own cell settles too. A story that switched contexts in
+      // its play function can hand the page over while a screen is still a
+      // frame from remeasuring (an overlay at the end of a density walk); a
+      // screen still stale once the page is still is a failure, one caught
+      // mid-remeasure is not (0327).
+      await switchTo(root, canvas, cell);
       const pixels = plan && readsPixels(plan, own, cell) ? capture : undefined;
       const { failures, ran } = await checkCell(canvas, cell, parameters, pixels);
       if (cell === own) {
