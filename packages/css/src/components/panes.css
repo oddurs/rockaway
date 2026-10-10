@@ -9,6 +9,9 @@
  * A pane clips what does not fit, the way a terminal pane does, but lets a
  * focus ring through into the border around it: the ring costs no cell, and
  * clipping it would hide where focus is.
+ *
+ * Surfaces style a pane's background with `--rk-bg-surface-*` tokens.
+ * Forced colours collapse them to Canvas.
  */
 @layer rk.components {
   .rk-pane {
@@ -22,5 +25,27 @@
     padding-block: calc(var(--rk-pane-pad-y) * var(--rk-cell-height));
     overflow: clip;
     overflow-clip-margin: calc(var(--rk-cell-height) / 2);
+  }
+
+  .rk-pane[data-rk-surface='sunken'] {
+    background-color: var(--rk-bg-surface-sunken, transparent);
+  }
+
+  .rk-pane[data-rk-surface='base'] {
+    background-color: var(--rk-bg-surface-base, transparent);
+  }
+
+  .rk-pane[data-rk-surface='raised'] {
+    background-color: var(--rk-bg-surface-raised, transparent);
+  }
+
+  .rk-pane[data-rk-surface='overlay'] {
+    background-color: var(--rk-bg-surface-overlay, transparent);
+  }
+
+  @media (forced-colors: active) {
+    .rk-pane[data-rk-surface] {
+      background-color: Canvas;
+    }
   }
 }

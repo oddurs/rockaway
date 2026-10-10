@@ -64,6 +64,11 @@ export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
    */
   contentInset?: Inset;
   /**
+   * Outer margin around the screen, in whole cells. Applied as margin on the
+   * screen itself, so it does not consume space the chrome is drawn in.
+   */
+  gutter?: number | Inset;
+  /**
    * Real elements, laid over the chrome. A function is given the size the
    * screen drew at, in cells, for content placed by the same layout as the
    * chrome: a pane's content in the cells its borders enclose.
@@ -83,6 +88,7 @@ export function Screen({
   rows,
   fallback = FALLBACK,
   contentInset,
+  gutter,
   className,
   style,
   children,
@@ -163,6 +169,7 @@ export function Screen({
   // chrome's nodes alone.
   const chrome = useMemo(() => chromeRows(buffer, stretch), [buffer, stretch]);
 
+  const gutterInset = gutterOf(gutter);
   const vars = {
     '--rk-cell-width': cell ? `${cell.width}px` : '1ch',
     '--rk-cell-height': cell ? `${cell.height}px` : '1lh',
@@ -174,6 +181,7 @@ export function Screen({
     ...(cols === undefined ? {} : { width: `calc(var(--rk-cell-width) * ${cols})` }),
     ...(rows === undefined ? {} : { height: `calc(var(--rk-cell-height) * ${rows})` }),
   } as CSSProperties;
+  const gutterStyle = gutterInset ? gutterMarginStyle(gutterInset) : undefined;
 
   return (
     <div
@@ -182,7 +190,7 @@ export function Screen({
       data-rk-painter={painter}
       data-rk-cols={size.width}
       data-rk-rows={size.height}
-      style={{ ...vars, ...style }}
+      style={{ ...vars, ...gutterStyle, ...style }}
       {...rest}
     >
       <div
@@ -222,6 +230,19 @@ function insetStyle(inset: Inset | undefined): CSSProperties | undefined {
   return {
     paddingInline: `calc(var(--rk-cell-width) * ${inset.x})`,
     paddingBlock: `calc(var(--rk-cell-height) * ${inset.y})`,
+  };
+}
+
+function gutterOf(gutter: number | Inset | undefined): Inset | undefined {
+  if (gutter === undefined) return undefined;
+  return typeof gutter === 'number' ? { x: gutter, y: gutter } : gutter;
+}
+
+function gutterMarginStyle(inset: Inset | undefined): CSSProperties | undefined {
+  if (!inset) return undefined;
+  return {
+    marginInline: `calc(var(--rk-cell-width) * ${inset.x})`,
+    marginBlock: `calc(var(--rk-cell-height) * ${inset.y})`,
   };
 }
 

@@ -51,6 +51,11 @@ export interface FrameProps
    * against the rows above and below — the proportions a terminal uses.
    */
   readonly pad?: number | Inset;
+  /**
+   * The frame's surface: `sunken`, `base` (the default), `raised`, or `overlay`.
+   * Each reads a background token: `--rk-bg-surface-sunken`, etc.
+   */
+  readonly surface?: 'sunken' | 'base' | 'raised' | 'overlay';
   /** The accessible name, when the title is not the right one to say. */
   readonly label?: string;
   readonly children?: ReactNode;
@@ -71,6 +76,7 @@ export function Frame({
   dividers,
   dividerBorder,
   pad,
+  surface,
   label,
   className,
   children,
@@ -110,6 +116,7 @@ export function Frame({
       draw={draw}
       className={cx('rk-frame-box', className)}
       contentInset={insetOf(pad)}
+      {...(surface === undefined ? {} : { 'data-rk-surface': surface })}
       {...(name === undefined ? {} : { role: 'group', 'aria-label': name })}
     >
       {children}

@@ -57,6 +57,11 @@ export interface PaneProps {
    * default, the proportions `Frame` uses.
    */
   readonly pad?: number | Inset;
+  /**
+   * The pane's surface: `sunken`, `base` (the default), `raised`, or `overlay`.
+   * Each reads a background token: `--rk-bg-surface-sunken`, etc.
+   */
+  readonly surface?: 'sunken' | 'base' | 'raised' | 'overlay';
   /** The accessible name, when the title is not the right one to say. */
   readonly label?: string;
   readonly className?: string;
@@ -189,6 +194,7 @@ function PaneBox({
   title,
   label,
   pad,
+  surface,
   className,
   children,
 }: PaneProps & { readonly placed: PanePlacement }): ReactNode {
@@ -206,6 +212,7 @@ function PaneBox({
     className: cx('rk-pane', className),
     'data-rk-pane': '',
     ...(placed.collapsed ? { 'data-collapsed': '', hidden: true } : {}),
+    ...(surface === undefined ? {} : { 'data-rk-surface': surface }),
     style,
   };
   // A titled pane is a region a reader can jump to, named by its title.
