@@ -264,6 +264,15 @@ export const Widths: Story = {
       }
     } finally {
       await run.viewport();
+      // The trigger's frame re-measures at the restored width, and the dialog
+      // snaps to it a frame or two later: let it settle before the matrix
+      // reads the page.
+      await measured(document.body);
+      await waitFor(() => {
+        const grid = gridOf(trigger);
+        const box = surface().getBoundingClientRect();
+        expect(Number.isInteger(cells(box.left - grid.left, grid.width))).toBe(true);
+      });
     }
   },
 };
