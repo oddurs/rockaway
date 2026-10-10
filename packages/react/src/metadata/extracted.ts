@@ -1436,62 +1436,104 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Switch": {
-    "file": "switch.tsx",
+  "Select": {
+    "file": "select.tsx",
     "props": [
       {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The field's name, in the label column."
+      },
+      {
         "name": "children",
-        "type": "ReactNode",
+        "type": "ReactNode | ((item: T) => ReactNode)",
         "required": false,
-        "description": "The label: the switch's own words, after the track. It does not change with the state."
+        "description": "The options: `SelectItem`s, or a function of each of `items`."
+      },
+      {
+        "name": "items",
+        "type": "Iterable<T>",
+        "required": false,
+        "description": "The items to render with a function child."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The trigger's width in cells, its delimiters included.",
+        "default": "24"
       },
       {
         "name": "description",
         "type": "ReactNode",
         "required": false,
-        "description": "Help under the switch, dim, linked to it by `aria-describedby`."
+        "description": "Help under the trigger, dim, linked to it by `aria-describedby`."
       },
       {
-        "name": "painter",
-        "type": "PainterName",
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
         "required": false,
-        "description": "How the track's line is stroked: weighted like the type, or a hairline.",
-        "default": "'glyph'"
+        "description": "Words for the error under the trigger; the select's own validation's when not given."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the popover takes before its rows scroll.",
+        "default": "8"
       },
       {
         "name": "className",
         "type": "string",
         "required": false
-      },
-      {
-        "name": "style",
-        "type": "CSSProperties",
-        "required": false
       }
     ],
     "inherits": [
-      "Omit< AriaSwitchFieldProps, | 'children' | 'className' | 'style' | 'isRequired' | 'isInvalid' | 'validate' | 'validationBehavior' >"
+      "Omit<AriaSelectProps<T>, 'children' | 'className' | 'style' | 'selectionMode'>"
     ],
     "tokens": [
       "--rk-attribute-underline-offset",
-      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-surface",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-on-inverse",
-      "--rk-focus-offset",
-      "--rk-focus-width",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
+      "--rk-fg-muted"
+    ]
+  },
+  "SelectItem": {
+    "file": "select.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The option's words."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
     ]
   },
   "Table": {
