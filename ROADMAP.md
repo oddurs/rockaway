@@ -42,7 +42,7 @@ The decisions everything else inherits, and the repo that holds them.
 
 ## tokens — Token pipeline
 
-`########··` 74% · 14 of 19 done · due 2026-10-25
+`########··` 79% · 15 of 19 done · due 2026-10-25
 
 Design decisions as data, compiled to CSS custom properties.
 
@@ -51,7 +51,6 @@ Design decisions as data, compiled to CSS custom properties.
 - [ ] [`0262`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0262-ship-an-ascii-theme-preset.md) Ship an ASCII theme preset <sup>feature · tokens · p2</sup>
 - [ ] [`0283`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0283-keep-data-refreshing-under-reduced-motion.md) Keep data refreshing under reduced motion <sup>feature · tokens · p2</sup>
 - [ ] [`0307`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0307-layer-surfaces-sunken-base-raised-and-overlay.md) Layer surfaces: sunken, base, raised and overlay <sup>feature · tokens · p0</sup>
-- [ ] [`0313`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0313-add-the-rhythm-scale-and-the-comfort-axis.md) Add the rhythm scale and the comfort axis <sup>feature · tokens · p0</sup>
 
 ### in review
 
@@ -73,6 +72,7 @@ Design decisions as data, compiled to CSS custom properties.
 - [x] [`0060`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0060-set-the-elevation-rules-surfaces-follow-the-input-overlays-always-lift.md) Set the elevation rules: surfaces follow the input, overlays always lift <sup>decision · tokens · p1</sup>
 - [x] [`0062`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0062-build-the-theme-generator-inputs-in-dtcg-sources-out.md) Build the theme generator: inputs in, DTCG sources out <sup>feature · tokens · p0</sup>
 - [x] [`0286`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0286-ship-a-sunset-theme-rockaway-at-dusk-as-the-site-s-default.md) Ship a sunset theme, Rockaway at dusk, as the site's default <sup>feature · tokens · p0</sup>
+- [x] [`0313`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0313-add-the-rhythm-scale-and-the-comfort-axis.md) Add the rhythm scale and the comfort axis <sup>feature · tokens · p0</sup>
 
 ## runtime — Runtime CSS
 
@@ -134,7 +134,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`######····` 52% · 89 of 170 done · due 2027-01-31
+`#######···` 62% · 106 of 170 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -187,23 +187,11 @@ The component contract, proven on a first set of components.
 - [ ] [`0294`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0294-keep-list-s-cursor-cell-a-cell-inside-prose.md) Keep List's cursor cell a cell inside prose <sup>bug · css · p2</sup>
 - [ ] [`0295`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0295-set-the-system-in-ibm-plex-mono.md) Set the system in IBM Plex Mono <sup>decision · tokens · p0</sup>
 - [ ] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
-- [ ] [`0300`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0300-render-every-link-the-system-draws-through-the-app-s-own-link.md) Render every link the system draws through the app's own link <sup>feature · components · p1</sup>
 - [ ] [`0301`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0301-stretch-an-unmeasured-screen-s-frame-inside-a-flexible-pane.md) Stretch an unmeasured screen's frame inside a flexible pane <sup>feature · grid · p1</sup>
-- [ ] [`0302`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0302-help-an-app-change-routes-focus-announce-restore-scroll.md) Help an app change routes: focus, announce, restore scroll <sup>feature · behaviour · p2</sup>
 - [ ] [`0305`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0305-quiet-the-resizeobserver-notice-on-density-switches.md) Quiet the ResizeObserver notice on density switches <sup>bug · grid · p3</sup>
 - [ ] [`0306`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0306-prove-form-and-keymap-in-both-painters-and-name-their-missing-states.md) Prove Form and Keymap in both painters and name their missing states <sup>chore · tooling · p3</sup>
 - [ ] [`0308`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0308-give-panes-and-frames-a-surface-padding-and-a-gutter-in-cells.md) Give panes and frames a surface, padding and a gutter in cells <sup>feature · components · p0</sup>
 - [ ] [`0310`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0310-let-metadata-name-a-state-a-buffer-or-the-base-stylesheet-draws.md) Let metadata name a state a buffer or the base stylesheet draws <sup>chore · tooling · p3</sup>
-- [ ] [`0312`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0312-lay-out-in-half-units-and-add-flow.md) Lay out in half-units, and add Flow <sup>feature · grid · p0</sup>
-- [ ] [`0314`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0314-snap-a-block-s-seams-to-whole-cells.md) Snap a block's seams to whole cells <sup>feature · css · p0</sup>
-- [ ] [`0315`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0315-hold-each-tier-to-its-own-rule-in-conformance.md) Hold each tier to its own rule in conformance <sup>feature · tooling · p0</sup>
-- [ ] [`0316`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0316-make-fields-comfortable-by-default.md) Make fields comfortable by default <sup>component · components · p0</sup>
-- [ ] [`0317`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0317-give-menus-selects-and-comboboxes-comfortable-sections.md) Give menus, selects and comboboxes comfortable sections <sup>feature · components · p1</sup>
-- [ ] [`0318`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0318-toolbar.md) Toolbar <sup>component · components · p1</sup>
-- [ ] [`0319`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0319-breadcrumbs.md) Breadcrumbs <sup>component · components · p1</sup>
-- [ ] [`0320`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0320-picture.md) Picture <sup>component · components · p1</sup>
-- [ ] [`0321`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0321-card.md) Card <sup>component · components · p2</sup>
-- [ ] [`0322`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0322-give-prose-a-reading-rhythm.md) Give prose a reading rhythm <sup>feature · css · p1</sup>
 - [ ] [`0323`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0323-size-type-in-half-rows.md) Size type in half rows <sup>feature · components · p2</sup>
 - [ ] [`0325`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0325-let-a-keyhint-be-a-link.md) Let a KeyHint be a link <sup>feature · components · p3</sup>
 - [ ] [`0326`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0326-prefetch-tree-rows-that-are-links.md) Prefetch Tree rows that are links <sup>feature · components · p3</sup>
@@ -215,12 +203,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0036`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0036-checkbox.md) Checkbox <sup>component · components · p1</sup>
 - [ ] [`0041`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0041-menu.md) Menu <sup>component · components · p1</sup>
 - [ ] [`0047`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0047-publish-component-metadata-as-data-props-anatomy-when-to-use-when-not-to.md) Publish component metadata as data: props, anatomy, when to use, when not to <sup>feature · docs · p0</sup>
-- [ ] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
-- [ ] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
 - [ ] [`0134`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0134-write-the-component-recipe-the-files-the-export-lines-the-checklist.md) Write the component recipe: the files, the export lines, the checklist <sup>docs · docs · p1</sup>
-- [ ] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
-- [ ] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
-- [ ] [`0164`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0164-make-hover-and-pointer-stories-reliable-in-ci.md) Make hover and pointer stories reliable in CI <sup>chore · tooling · p1</sup>
 - [ ] [`0203`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0203-check-the-field-contract-from-the-testing-package.md) Check the field contract from the testing package <sup>feature · tooling · p1</sup>
 - [ ] [`0208`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0208-hide-every-native-scrollbar-show-position-in-cells-and-check-it-after-every-story.md) Hide every native scrollbar, show position in cells, and check it after every story <sup>bug · css · p0</sup>
 - [ ] [`0212`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0212-round-the-cell-to-the-engine-s-layout-unit.md) Round the cell to the engine's layout unit <sup>bug · grid · p1</sup>
@@ -256,11 +239,14 @@ The component contract, proven on a first set of components.
 - [x] [`0123`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0123-make-conformance-level-aware-and-refuse-an-exception-without-a-reason.md) Make conformance level-aware, and refuse an exception without a reason <sup>feature · tooling · p1</sup>
 - [x] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
 - [x] [`0126`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0126-paint-a-screen-s-chrome-on-the-server-so-the-first-paint-needs-no-javascript.md) Paint a screen's chrome on the server, so the first paint needs no JavaScript <sup>feature · grid · p0</sup>
+- [x] [`0127`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0127-build-the-field-contract-label-description-error-required-disabled.md) Build the field contract: label, description, error, required, disabled <sup>feature · components · p0</sup>
+- [x] [`0128`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0128-build-the-overlay-contract-layering-focus-dismissal-and-cell-positioning.md) Build the overlay contract: layering, focus, dismissal and cell positioning <sup>feature · components · p0</sup>
 - [x] [`0129`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0129-polish-frame-against-the-contract-and-the-cell-renderer.md) Polish Frame against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0130`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0130-polish-divider-against-the-contract-and-the-cell-renderer.md) Polish Divider against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0131`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0131-polish-button-against-the-contract-and-the-cell-renderer.md) Polish Button against the contract and the cell renderer <sup>chore · components · p1</sup>
 - [x] [`0132`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0132-polish-keyhint-against-the-contract.md) Polish KeyHint against the contract <sup>chore · components · p1</sup>
 - [x] [`0133`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0133-polish-list-against-the-contract-and-the-cell-renderer.md) Polish List against the contract and the cell renderer <sup>chore · components · p1</sup>
+- [x] [`0135`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0135-link.md) Link <sup>component · components · p1</sup>
 - [x] [`0136`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0136-panes.md) Panes <sup>component · components · p1</sup>
 - [x] [`0137`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0137-tree.md) Tree <sup>component · components · p1</sup>
 - [x] [`0138`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0138-codeblock.md) CodeBlock <sup>component · components · p1</sup>
@@ -269,6 +255,8 @@ The component contract, proven on a first set of components.
 - [x] [`0141`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0141-keymap-global-chords-sequences-and-a-help-screen-built-from-them.md) Keymap: global chords, sequences, and a help screen built from them <sup>feature · behaviour · p1</sup>
 - [x] [`0159`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0159-follow-custom-properties-in-the-geometry-check.md) Follow custom properties in the geometry check <sup>chore · tooling · p2</sup>
 - [x] [`0160`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0160-clip-screenshot-to-what-its-scroll-container-shows.md) Clip screenshot() to what its scroll container shows <sup>bug · tooling · p1</sup>
+- [x] [`0163`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0163-hold-the-p3-colour-overrides-to-the-contrast-gate-measured-as-a-browser-shows-them.md) Hold the p3 colour overrides to the contrast gate, measured as a browser shows them <sup>bug · tokens · p0</sup>
+- [x] [`0164`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0164-make-hover-and-pointer-stories-reliable-in-ci.md) Make hover and pointer stories reliable in CI <sup>chore · tooling · p1</sup>
 - [x] [`0165`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0165-ship-one-entry-point-per-component-so-an-islands-site-does-not-hydrate-the-whole-package.md) Ship one entry point per component, so an islands site does not hydrate the whole package <sup>feature · distribution · p1</sup>
 - [x] [`0166`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0166-draw-braille-from-the-cell-like-blocks.md) Draw braille from the cell, like blocks <sup>feature · grid · p2</sup>
 - [x] [`0168`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0168-re-export-or-document-the-router-hook-up-for-link.md) Re-export or document the router hook-up for Link <sup>feature · components · p2</sup>
@@ -318,7 +306,19 @@ The component contract, proven on a first set of components.
 - [x] [`0281`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0281-show-a-table-s-rows-in-a-window-that-follows-the-cursor.md) Show a Table's rows in a window that follows the cursor <sup>feature · components · p2</sup>
 - [x] [`0282`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0282-hand-a-textfield-s-input-to-a-ref.md) Hand a TextField's input to a ref <sup>feature · components · p3</sup>
 - [x] [`0299`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0299-select-text-the-way-a-terminal-does.md) Select text the way a terminal does <sup>feature · css · p0</sup>
+- [x] [`0300`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0300-render-every-link-the-system-draws-through-the-app-s-own-link.md) Render every link the system draws through the app's own link <sup>feature · components · p1</sup>
+- [x] [`0302`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0302-help-an-app-change-routes-focus-announce-restore-scroll.md) Help an app change routes: focus, announce, restore scroll <sup>feature · behaviour · p2</sup>
 - [x] [`0311`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0311-lay-out-on-one-grid-in-three-tiers-structure-rhythm-and-free.md) Lay out on one grid in three tiers: structure, rhythm and free <sup>decision · grid · p0</sup>
+- [x] [`0312`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0312-lay-out-in-half-units-and-add-flow.md) Lay out in half-units, and add Flow <sup>feature · grid · p0</sup>
+- [x] [`0314`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0314-snap-a-block-s-seams-to-whole-cells.md) Snap a block's seams to whole cells <sup>feature · css · p0</sup>
+- [x] [`0315`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0315-hold-each-tier-to-its-own-rule-in-conformance.md) Hold each tier to its own rule in conformance <sup>feature · tooling · p0</sup>
+- [x] [`0316`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0316-make-fields-comfortable-by-default.md) Make fields comfortable by default <sup>component · components · p0</sup>
+- [x] [`0317`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0317-give-menus-selects-and-comboboxes-comfortable-sections.md) Give menus, selects and comboboxes comfortable sections <sup>feature · components · p1</sup>
+- [x] [`0318`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0318-toolbar.md) Toolbar <sup>component · components · p1</sup>
+- [x] [`0319`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0319-breadcrumbs.md) Breadcrumbs <sup>component · components · p1</sup>
+- [x] [`0320`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0320-picture.md) Picture <sup>component · components · p1</sup>
+- [x] [`0321`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0321-card.md) Card <sup>component · components · p2</sup>
+- [x] [`0322`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0322-give-prose-a-reading-rhythm.md) Give prose a reading rhythm <sup>feature · css · p1</sup>
 
 ## retheme — Tokens on the grid
 
