@@ -149,6 +149,33 @@
     scroll-snap-align: start;
   }
 
+  /*
+   * A window of rows (0281): the body is exactly `--rk-table-rows` rows tall,
+   * and scrolls down in whole rows, stopping on a row's start however it was
+   * scrolled. It is an `rk-scroll` region: no native scrollbar; the table draws
+   * one in cells, in the cell inside its right edge.
+   */
+  .rk-table-windowed .rk-table-body {
+    block-size: calc(var(--rk-cell-height) * var(--rk-table-rows));
+    overflow: hidden auto;
+    scroll-snap-type: block mandatory;
+  }
+
+  .rk-table-windowed .rk-table-body > tr {
+    scroll-snap-align: start;
+  }
+
+  /* The scrollbar's column: placed in the screen's cells, beside the body. */
+  .rk-table-scrollbar {
+    position: absolute;
+    inset-block-start: calc(var(--rk-cell-height) * 3);
+    inset-inline-start: calc(var(--rk-cell-width) * var(--rk-table-bar-x));
+    inline-size: var(--rk-cell-width);
+    color: var(--rk-fg-muted);
+    /* The track is decoration; the rows carry the position for a reader. */
+    user-select: none;
+  }
+
   /* A reversed cell is the reader's text and canvas swapped (0181). */
   @media (forced-colors: active) {
     .rk-table-row[data-selected] > .rk-table-cell {
