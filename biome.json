@@ -57,7 +57,6 @@
         "**/*.config.ts",
         "**/.storybook/**",
         "**/*.stories.tsx",
-        "apps/site/scripts/subset-font.d.ts",
         "apps/web/app/**/page.tsx",
         "apps/web/app/**/layout.tsx",
         "apps/web/app/**/default.tsx",

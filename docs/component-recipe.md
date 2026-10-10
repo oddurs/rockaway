@@ -26,6 +26,7 @@ after them. `<name>` is kebab-case (`key-hint`); `<Name>` is the export.
 | `packages/css/src/components/<name>.css` | Its stylesheet, inside `@layer rk.components`. |
 | `packages/react/test/<name>.test.ts` | The buffer function, in Node, with inline text snapshots. |
 | `apps/workbench/src/components/<Name>.stories.tsx` | Its stories, which are its browser tests. |
+| `apps/web/examples/<name>.tsx` | The live example on its page of the site, which is drawn from its metadata. The site's build fails for a component without one. |
 | `.changeset/<name>.md` | What a user upgrading can now do. |
 
 ### The lines
