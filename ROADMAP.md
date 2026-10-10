@@ -44,7 +44,7 @@ The decisions everything else inherits, and the repo that holds them.
 
 ## tokens — Token pipeline
 
-`########··` 79% · 15 of 19 done · due 2026-10-25
+`#########·` 84% · 16 of 19 done · due 2026-10-25
 
 Design decisions as data, compiled to CSS custom properties.
 
@@ -52,7 +52,6 @@ Design decisions as data, compiled to CSS custom properties.
 
 - [ ] [`0262`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0262-ship-an-ascii-theme-preset.md) Ship an ASCII theme preset <sup>feature · tokens · p2</sup>
 - [ ] [`0283`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0283-keep-data-refreshing-under-reduced-motion.md) Keep data refreshing under reduced motion <sup>feature · tokens · p2</sup>
-- [ ] [`0307`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0307-layer-surfaces-sunken-base-raised-and-overlay.md) Layer surfaces: sunken, base, raised and overlay <sup>feature · tokens · p0</sup>
 
 ### in review
 
@@ -74,6 +73,7 @@ Design decisions as data, compiled to CSS custom properties.
 - [x] [`0060`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0060-set-the-elevation-rules-surfaces-follow-the-input-overlays-always-lift.md) Set the elevation rules: surfaces follow the input, overlays always lift <sup>decision · tokens · p1</sup>
 - [x] [`0062`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0062-build-the-theme-generator-inputs-in-dtcg-sources-out.md) Build the theme generator: inputs in, DTCG sources out <sup>feature · tokens · p0</sup>
 - [x] [`0286`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0286-ship-a-sunset-theme-rockaway-at-dusk-as-the-site-s-default.md) Ship a sunset theme, Rockaway at dusk, as the site's default <sup>feature · tokens · p0</sup>
+- [x] [`0307`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0307-layer-surfaces-sunken-base-raised-and-overlay.md) Layer surfaces: sunken, base, raised and overlay <sup>feature · tokens · p0</sup>
 - [x] [`0313`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0313-add-the-rhythm-scale-and-the-comfort-axis.md) Add the rhythm scale and the comfort axis <sup>feature · tokens · p0</sup>
 
 ## runtime — Runtime CSS
