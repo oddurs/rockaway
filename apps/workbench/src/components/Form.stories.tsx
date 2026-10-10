@@ -364,7 +364,7 @@ export const LabelWidth: Story = {
   name: 'Label width in cells',
   render: () => (
     <Frame title="commit" cols={64} rows={6}>
-      <Form labelWidth={11}>
+      <Form labelWidth={11} comfort="compact">
         <SketchTextField label="Branch" name="branch" cols={16} />
         <SketchTextField label="Commit message" name="message" cols={16} />
       </Form>
@@ -400,7 +400,9 @@ export const Densities: Story = {
     await measured(document.body);
     for (const density of ['dense', 'normal', 'airy', 'touch']) {
       const frame = canvas.getByRole('group', { name: density });
-      expect(inside(screenshot(frame, { legend: false }), WIDE)).toBe(toText(mixedModel(WIDE - 4)));
+      expect(inside(screenshot(frame, { legend: false }), WIDE), density).toBe(
+        toText(mixedModel(WIDE - 4)),
+      );
     }
   },
 };

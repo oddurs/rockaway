@@ -108,6 +108,7 @@ function assemble(input: ComponentMetaInput): ComponentMeta {
     accessibility: input.accessibility,
     tokens: [...tokens].sort(),
     snapshots: input.snapshots.map(drawn),
+    ...(input.knownIssues === undefined ? {} : { knownIssues: input.knownIssues }),
   };
 }
 
