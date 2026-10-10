@@ -10,9 +10,11 @@ import path from 'node:path';
 import { type Browser, chromium, type Page } from 'playwright';
 import { afterAll, beforeAll, expect, test } from 'vitest';
 import { type Serving, serve } from '../scripts/serve.ts';
-import { servePackageFile } from './checks.ts';
+import { checkPage, servePackageFile } from './checks.ts';
 
 const out = path.join(import.meta.dirname, '..', 'out');
+
+const EXAMPLES = ['settings', 'git-client', 'top'] as const;
 
 let browser: Browser;
 let site: Serving;
@@ -38,6 +40,14 @@ const hydrated = (page: Page, name: string) =>
       return first != null && Object.keys(first).some((key) => key.startsWith('__reactProps'));
     },
     [name, FOCUSABLE] as const,
+  );
+
+/** The shell hydrated, and its keys and copy loaded. */
+const live = (page: Page) =>
+  page.waitForFunction(
+    () =>
+      document.documentElement.dataset.siteShell === 'live' &&
+      document.documentElement.dataset.siteExtras !== undefined,
   );
 
 /** Focus the app's first stop, as Tab from the content before it would. */
@@ -344,3 +354,54 @@ test('the system monitor works by keyboard alone, and its rows hold still on the
   await expect(frame.textContent()).resolves.toBe(turned);
   await still.close();
 }, 60_000);
+
+test.each([
+  [1280, 800],
+  [390, 844],
+] as const)(
+  'each example passes axe, conformance and continuity, live, at %i wide (0151)',
+  async (width, height) => {
+    const context = await browser.newContext({ viewport: { width, height } });
+    const page = await context.newPage();
+    const failures: string[] = [];
+    for (const name of EXAMPLES) {
+      await page.goto(`${site.url}examples/${name}/`);
+      await hydrated(page, name);
+      await page.evaluate(() => document.fonts.ready);
+      const report = await checkPage(page);
+      if (report.axe.length > 0) failures.push(`${name} axe:\n  ${report.axe.join('\n  ')}`);
+      if (report.offGrid > 0) failures.push(`${name} conformance:\n${report.conformance}`);
+      if (report.breaks > 0) failures.push(`${name} continuity:\n${report.continuity}`);
+    }
+    await context.close();
+    expect(failures.join('\n')).toBe('');
+  },
+  180_000,
+);
+
+test('each example copies as text and as ANSI, with the shell keys (0151)', async () => {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'], {
+    origin: new URL(site.url).origin,
+  });
+  const page = await context.newPage();
+  for (const [name, words] of [
+    ['settings', 'Profile'],
+    ['git-client', 'log'],
+    ['top', 'cpu'],
+  ] as const) {
+    await page.goto(`${site.url}examples/${name}/`);
+    await hydrated(page, name);
+    await live(page);
+    await page.locator('#content h1').click();
+    await page.keyboard.press('y');
+    await expect.poll(() => page.locator('.site-status-message').textContent()).toMatch(/^Copied/);
+    const text = await page.evaluate(() => navigator.clipboard.readText());
+    expect(text, name).toContain(words);
+    await page.keyboard.press('Shift+Y');
+    await expect
+      .poll(() => page.evaluate(() => navigator.clipboard.readText()), { message: name })
+      .toContain(`${String.fromCharCode(27)}[`);
+  }
+  await context.close();
+});

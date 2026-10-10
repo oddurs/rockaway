@@ -3,7 +3,7 @@ id: 151
 uid: da308364-3422-4766-8c64-7baf314430d7
 title: 'Compose three example apps from the system: a git client, a monitor, a settings form'
 type: feature
-status: doing
+status: review
 milestone: site
 assignee: Oddur Sigurdsson
 claimed: 2026-10-03
@@ -18,7 +18,7 @@ depends_on:
 - 136
 - 137
 created: 2026-10-03
-updated: 2026-10-03
+updated: 2026-10-10
 priority: p1
 layer: site
 effort: l
@@ -45,9 +45,9 @@ Three full-screen examples on the site, each built only from
 
 ## Acceptance criteria
 
-- [ ] Each example is a page on the site, works by keyboard alone, at 40 and 120 cells, and at touch density
-- [ ] Each passes axe, conformance and continuity in the built site
-- [ ] Each uses nothing outside `@rockaway/react` and `@rockaway/css`: no local components, no local CSS beyond layout
+- [x] Each example is a page on the site, works by keyboard alone, at 40 and 120 cells, and at touch density
+- [x] Each passes axe, conformance and continuity in the built site
+- [x] Each uses nothing outside `@rockaway/react` and `@rockaway/css`: no local components, no local CSS beyond layout
 - [ ] Each can be copied as text and as ANSI (0105), and looks right when the ANSI is pasted into a terminal
 
 ## Design
@@ -210,3 +210,7 @@ Each page:
 - has its text snapshot compared against the seeded model.
 
 Copy as text and as ANSI waits on 0105.
+
+## 2026-10-10
+
+Ported to the Next.js site in #176: /examples/{settings,git-client,top}/, the registry items' own code. apps/web/test/examples.test.ts walks each by keyboard at 1200px, 420px and 420px touch, and holds each to axe, conformance and continuity at 1280 and 390, live. Criterion 3: the apps import only @rockaway/react and its CSS, plus @rockaway/tokens for the settings theme picker; the registry check holds every item to the packages. Criterion 4 is half shown: y and shift+y copy each app as text and as ANSI (tested), but nobody has pasted the ANSI into a terminal and looked, so it stays unticked. Found on the way: the shell's keymap took an app's keys before the app (k, /, ?), and its Space/Enter rule swallowed mod+enter; and an element with its own theme set its face to IBM Plex Mono, which the site serves only as siteMono. All three fixed in the same PR.
