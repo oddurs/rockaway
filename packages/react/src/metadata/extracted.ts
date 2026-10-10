@@ -2207,7 +2207,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "marks": [
       "pane"
     ],
-    "level": "standard"
+    "level": "strict"
   },
   "Panes": {
     "file": "panes.tsx",

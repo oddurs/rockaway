@@ -133,10 +133,27 @@ function Sink({ borderSet, painter }: SinkArgs): ReactNode {
   );
 }
 
+/**
+ * Every component at once is over a minute to walk at every density in
+ * WebKit. There the sink is checked in normal light, its own cell; each
+ * component's own stories walk every density in WebKit.
+ */
+const IN_WEBKIT = [
+  ...(['dense', 'airy', 'touch'] as const).map((density) => ({
+    density,
+    project: 'webkit',
+    reason: 'the whole sink is over a minute to walk in WebKit; each component walks it alone',
+  })),
+  {
+    mode: 'dark' as const,
+    project: 'webkit',
+    reason: 'the whole sink is over a minute to walk in WebKit; each component walks it alone',
+  },
+];
+
 const meta = {
   title: 'Kitchen sink',
   component: Sink,
-  parameters: { layout: 'padded' },
   // Theme, mode, density and conformance are the toolbar's, as for every
   // story; these two are the sink's own.
   argTypes: {
@@ -147,18 +164,30 @@ const meta = {
     painter: { control: 'inline-radio', options: ['glyph', 'rule'] },
   },
   args: { borderSet: 'theme', painter: 'glyph' },
+  parameters: { layout: 'padded', matrix: { skip: IN_WEBKIT } },
+  // Still, as a reference is: a spinner or an indeterminate bar that moves
+  // while the checks read it is a gap at whichever cell it had reached.
+  beforeEach: () => {
+    document.documentElement.dataset.motion = 'reduced';
+    return () => {
+      delete document.documentElement.dataset.motion;
+    };
+  },
 } satisfies Meta<typeof Sink>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 /**
- * Every component, each in a pane named for it, held to `strict` at every
- * density in both modes. The screen as text is checked in, so a change to any
- * component shows here as a diff of the whole sink.
+ * Every component, each in a pane named for it, held to `standard` at every
+ * density in both modes: the level of app UI (0311), where a comfortable
+ * form, a toolbar and type sized in rows rest on half-steps inside their own
+ * blocks. `strict` is structure only, and each component's own stories hold
+ * it there where it can be. The screen as text is checked in, so a change to
+ * any component shows here as a diff of the whole sink.
  */
 export const Everything: Story = {
-  globals: { conformance: 'strict' },
+  globals: { conformance: 'standard' },
   // The examples are real usage, so they read the reader's keyboard: a chord
   // is ⌘S on a Mac and Ctrl+S elsewhere, and the cells around it differ. The
   // sink is drawn for the same keyboard on every machine, so its snapshot is
@@ -208,7 +237,10 @@ const DENSITIES = ['dense', 'normal', 'airy', 'touch'] as const;
 /** Walk light only: mode changes no cell. */
 const lightOnly = {
   matrix: {
-    skip: [{ mode: 'dark', reason: 'a mode changes colours, not cells: Everything walks both' }],
+    skip: [
+      { mode: 'dark', reason: 'a mode changes colours, not cells: Everything walks both' },
+      ...IN_WEBKIT,
+    ],
   },
 } as const;
 
