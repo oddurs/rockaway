@@ -52,6 +52,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-border-danger",
       "--rk-border-success",
       "--rk-border-warning",
+      "--rk-cell-height",
+      "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-muted",
