@@ -40,9 +40,30 @@ async function slow4g(context: BrowserContext, page: Page): Promise<void> {
 
 /** Every layout shift Chromium counts, with what moved. */
 const recordShifts = (): void => {
-  const w = window as unknown as { shifts: { value: number; sources: string[] }[] };
+  const w = window as unknown as {
+    shifts: { value: number; sources: string[] }[];
+    trace: string[];
+  };
   w.shifts = [];
+  // What each example's box measured, and what had happened, at each moment
+  // that matters: for a failure's message, since a box that grows is not
+  // itself a shift, only what it pushes.
+  w.trace = [];
+  const note = (why: string): void => {
+    const parts = [...document.querySelectorAll('[data-site-deferred]')].map((el) => {
+      const r = el.getBoundingClientRect();
+      return `${Math.round(r.y)}+${Math.round(r.height)}${el.firstElementChild && Object.keys(el.firstElementChild).some((k) => k.startsWith('__react')) ? ' live' : ''}`;
+    });
+    const fonts = [...document.fonts].filter((f) => f.status === 'loaded').length;
+    w.trace.push(
+      `${Math.round(performance.now())}ms ${why}: parts ${parts.join(' ')}; fonts ${fonts}; shell ${document.documentElement.dataset.siteShell ?? '-'}`,
+    );
+  };
+  document.addEventListener('DOMContentLoaded', () => note('parsed'));
+  addEventListener('load', () => note('loaded'));
+  document.fonts?.addEventListener?.('loadingdone', () => note('fonts'));
   new PerformanceObserver((list) => {
+    note('shift');
     for (const entry of list.getEntries() as (PerformanceEntry & {
       value: number;
       sources: { node?: Node; previousRect: DOMRect; currentRect: DOMRect }[];
@@ -98,8 +119,11 @@ describe('nothing moves while a page loads', () => {
           );
           const total = shifts.reduce((sum, s) => sum + s.value, 0);
           if (total > 0) {
+            const trace = await page.evaluate(
+              () => (window as unknown as { trace: string[] }).trace,
+            );
             failures.push(
-              `/${route}: CLS ${total.toFixed(4)}\n${shifts.flatMap((s) => s.sources.map((x) => `    ${x}`)).join('\n')}`,
+              `/${route}: CLS ${total.toFixed(4)}\n${shifts.flatMap((s) => s.sources.map((x) => `    ${x}`)).join('\n')}\n  ${trace.join('\n  ')}`,
             );
           }
           await context.close();

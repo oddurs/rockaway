@@ -412,6 +412,21 @@ body {
 }
 
 /*
+ * A part React writes after the page (an example larger than its progressive
+ * chunk) leaves an empty box, a <template>, where it goes until the script
+ * beside it moves it in. On a slow connection the browser can paint before
+ * then, and when the part arrives everything under it moves. So whatever
+ * follows a part still on its way is not shown until it is in: nothing seen
+ * moves. With no script the part never moves in, so this waits for script.
+ */
+@media (scripting: enabled) {
+  .site-page > article > :has(.site-deferred > template) ~ *,
+  .site-page > article > .site-deferred:has(> template) ~ * {
+    visibility: hidden;
+  }
+}
+
+/*
  * With no script, the shell is a document: the map, the page and its outline
  * one after another, every link in them working, and no chrome drawn at a
  * size the window is not.
