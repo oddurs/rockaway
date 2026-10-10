@@ -31,3 +31,4 @@ rk.overrides
 - `data-motion`: reduced or full, over the system setting (renamed data-rk-motion by 0180)
 - `data-rk-theme`: a theme, by name (0052)
 - `data-rk-fill`: marks a control of your own as filled, so its focus is reverse video (0093)
+- `data-rk-contrast`: more or standard, over the system setting, on the root or any region

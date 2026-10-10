@@ -50,6 +50,7 @@ const contexts: Readonly<Record<string, string>> = {
   'data-motion': 'reduced or full, over the system setting (renamed data-rk-motion by 0180)',
   'data-rk-theme': 'a theme, by name (0052)',
   'data-rk-fill': 'marks a control of your own as filled, so its focus is reverse video (0093)',
+  'data-rk-contrast': 'more or standard, over the system setting, on the root or any region',
 };
 
 /** Attributes the stylesheets read that a page does not set. */
@@ -60,6 +61,12 @@ const internalAttributes: Readonly<Record<string, string>> = {
   'data-rk-dots': 'the raised dots of a braille cell the cell draws (0166)',
   'data-pressed': "React Aria's state, reported with the component that draws it",
   'data-selected': "React Aria's state, reported with the component that draws it",
+  'data-disabled': "React Aria's state, reported with the component that draws it",
+  'data-focus-visible': "React Aria's state, reported with the component that draws it",
+  'data-rk-selection': 'set on the root while watchSelection draws the selection',
+  'data-rk-elastic': 'a painted frame whose rows stretch to their box',
+  'data-rk-stretch': 'the row or run of an elastic frame that takes the slack',
+  'data-rk-more': 'which ends of a scroll box have more beyond them, written by watchOverflowMarks',
   'data-variant': 'a variant, reported with the component',
 };
 
