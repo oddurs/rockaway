@@ -8,6 +8,7 @@
 export { CELL_COVER_GRACE, CELL_SNAP, CELL_TIE, type CellMetrics, cellsCovering, cellsIn, DEFAULT_CELL, floorCell, measureCell, nearestCell } from './cell-metrics.ts';
 export { cx } from './cx.ts';
 export * from './entries/badge.ts';
+export * from './entries/breadcrumbs.ts';
 export * from './entries/button.ts';
 export * from './entries/callout.ts';
 export * from './entries/card.ts';
@@ -29,7 +30,9 @@ export * from './entries/popover.ts';
 export * from './entries/select.ts';
 export * from './entries/switch.ts';
 export * from './entries/table.ts';
+export * from './entries/tabs.ts';
 export * from './entries/text-field.ts';
+export * from './entries/toolbar.ts';
 export * from './entries/tree.ts';
 export { Flow, type FlowProps, useSeam } from './flow.tsx';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
