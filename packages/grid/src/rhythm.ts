@@ -19,7 +19,7 @@ export const comforts: readonly Comfort[] = ['compact', 'comfortable', 'spacious
 export interface Rhythm {
   /** Between blocks in a flow: fields, cards, paragraphs. */
   readonly gap: number;
-  /** Between groups: a form's sections, a menu's groups. */
+  /** Between groups: a form's sections. */
   readonly section: number;
   /** Inside a control's box, above and below its one row of text. */
   readonly padY: number;
@@ -29,6 +29,8 @@ export interface Rhythm {
   readonly help: number;
   /** Between one field and the next in a form. Always even, so every field starts on a whole row. */
   readonly field: number;
+  /** After a menu's rule or section title, beside it and never in it (0317). */
+  readonly group: number;
 }
 
 /**
@@ -39,9 +41,9 @@ export interface Rhythm {
  * packages/css/test/rhythm.test.ts holds to this table.
  */
 export const rhythm: Readonly<Record<Comfort, Rhythm>> = {
-  compact: { gap: 2, section: 2, padY: 0, padX: 2, help: 0, field: 2 },
-  comfortable: { gap: 3, section: 4, padY: 1, padX: 2, help: 1, field: 2 },
-  spacious: { gap: 4, section: 6, padY: 2, padX: 4, help: 2, field: 4 },
+  compact: { gap: 2, section: 2, padY: 0, padX: 2, help: 0, field: 2, group: 0 },
+  comfortable: { gap: 3, section: 4, padY: 1, padX: 2, help: 1, field: 2, group: 1 },
+  spacious: { gap: 4, section: 6, padY: 2, padX: 4, help: 2, field: 4, group: 2 },
 };
 
 /** Whole rows needed to hold a run of half-steps: the seam rounds up. */

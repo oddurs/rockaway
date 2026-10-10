@@ -30,6 +30,7 @@
  * them; packages/react/test/barrels.test.ts fails on a missing or doubled line.
  */
 @import "./components/badge.css";
+@import "./components/breadcrumbs.css";
 @import "./components/button.css";
 @import "./components/callout.css";
 @import "./components/card.css";
@@ -49,5 +50,7 @@
 @import "./components/select.css";
 @import "./components/switch.css";
 @import "./components/table.css";
+@import "./components/tabs.css";
 @import "./components/text-field.css";
+@import "./components/toolbar.css";
 @import "./components/tree.css";

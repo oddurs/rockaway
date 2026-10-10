@@ -1227,6 +1227,11 @@
   inherits: true;
 }
 
+@property --rk-glyph-mark-separator {
+  syntax: '*';
+  inherits: true;
+}
+
 @property --rk-glyph-mark-sort-ascending {
   syntax: '*';
   inherits: true;
@@ -2447,6 +2452,7 @@
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-separator: "›";
     --rk-glyph-mark-sort-ascending: "▴";
     --rk-glyph-mark-sort-descending: "▾";
     --rk-glyph-mark-switch-thumb: "●";
@@ -3206,6 +3212,7 @@
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-separator: "›";
     --rk-glyph-mark-sort-ascending: "▴";
     --rk-glyph-mark-sort-descending: "▾";
     --rk-glyph-mark-switch-thumb: "●";
