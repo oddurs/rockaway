@@ -3,10 +3,8 @@ id: 298
 uid: 33ce982d-95a2-4e58-b67f-0698b5287bd8
 title: Draw block-letter display type with the cell renderer
 type: feature
-status: doing
+status: backlog
 milestone: later
-assignee: Oddur Sigurdsson
-claimed: 2026-10-09
 created: 2026-10-09
 updated: 2026-10-09
 priority: p2
@@ -64,3 +62,7 @@ The character set is A–Z, 0–9 and `. , : ! ? - ' / & @`. Lower case is set a
 - [ ] Too narrow, it shows its `Text` fallback with no script, and the site test sees no difference with JavaScript off
 - [ ] Copy gives the words and `screenshot()` gives the blocks
 - [ ] A site page with an example, and metadata
+
+## 2026-10-09
+
+Design only; nothing is built. Left for the CTO when the team wound down. Build it after #230 (Text, 0296/0297) and #170 (<Cells>) land: it needs Cells for the shaped layer and Text for its narrow-container fallback. The owner should answer the aspect question (letterform per density) before the tables are drawn.
