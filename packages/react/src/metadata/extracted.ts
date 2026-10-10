@@ -1136,6 +1136,13 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "file": "menu.tsx",
     "props": [
       {
+        "name": "comfort",
+        "type": "Comfort",
+        "required": false,
+        "description": "The air beside its rules and section titles (0317): none when compact, a terminal's menu and the default; half a row after each when comfortable; a row when spacious. A rule is always on a whole row.",
+        "default": "'compact'"
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -1153,6 +1160,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1183,6 +1192,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1219,6 +1230,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
@@ -1241,6 +1254,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-group",
+      "--rk-step-y",
       "--rk-x-2",
       "--rk-x-3"
     ]
