@@ -72,7 +72,8 @@
     justify-self: stretch;
   }
 
-  @container rk-form (width < 60ch) {
+  /* Fewer than sixty whole cells, asked at the midpoint: see field.css. */
+  @container rk-form (width < 59.5ch) {
     .rk-fieldset-fields {
       grid-template-columns: [label-start control-start] minmax(0, 1fr) [label-end control-end];
     }

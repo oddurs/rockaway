@@ -8,6 +8,7 @@ export {
   type ExceptionGroup,
   expectConformance,
   formatReport,
+  type OffAnchor,
   type OffGrid,
   type Unexplained,
   type UnknownLevel,

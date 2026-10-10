@@ -31,8 +31,10 @@ const HANDLER = /^on(?:key|focus|blur)/;
  * The listeners a component may hold, by file and what is found, with why.
  */
 const ALLOWED: Readonly<Record<string, string>> = {
-  "keymap.pure.ts  addEventListener('keydown')":
-    'Keymap is the behaviour layer for the page’s own shortcuts (0141): the one document listener every useKeymap binding goes through. It is attachKeymap, in the pure half, so a page with no React listens through the same one (0237).',
+  "keymap.pure.ts  addEventListener(‘keydown’)":
+    ‘Keymap is the behaviour layer for the page’s own shortcuts (0141): the one document listener every useKeymap binding goes through. It is attachKeymap, in the pure half, so a page with no React listens through the same one (0237).’,
+  ‘tree.tsx  onFocusedKeyChange’:
+    ‘Not a listener: the callback Tree calls with the focused row, which each row reads from React Aria’s render props (0278). Its name says what it reports.’,
 };
 
 interface AstNode {
