@@ -12,6 +12,11 @@ export interface Doc {
 }
 
 export const docs: Readonly<Record<string, Doc>> = {
+  'component-recipe': {
+    title: 'The component recipe',
+    description:
+      'How to add a component: the files and the lines that wire them in, its metadata, stories and changeset, and the ten rules with the test that proves each.',
+  },
   concept: {
     title: 'The concept',
     description:

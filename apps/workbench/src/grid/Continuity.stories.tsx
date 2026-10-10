@@ -66,12 +66,10 @@ function junctions(border: BorderSetName, rule: BorderSetName = border, title: s
  * of it.
  *
  * Every mark that reaches an edge of its cell meets one that reaches the same
- * edge from the other side, or nothing: at 200% Chrome snaps a background to
- * whole CSS pixels, so ink that reaches an edge on a half-pixel boundary lands
- * a device pixel inside the next cell, and against a mark with no line on that
- * edge the check reads it as a leak. Hence the order: the eighth bars first,
- * the halves so that `▌` stands on `▕`, and the quadrants so that each one
- * that reaches its right edge is followed by one that reaches its left.
+ * edge from the other side, or nothing. That order once kept a device pixel
+ * of spilt ink at 200% from reading as a leak; the check now allows it within
+ * its slack (see "Edge ink beside an edge with none"), and the order stays
+ * because it reads well.
  */
 const BLOCKS: readonly (readonly [label: string, cells: string])[] = [
   ['eighth bars', '▁▂▃▄▅▆▇█'],
@@ -111,14 +109,20 @@ const filled = ({ width, height }: Size): Buffer =>
     });
   });
 
-function Matrix({ density }: { density: Density }) {
+function Matrix({
+  density,
+  painters = PAINTERS,
+}: {
+  density: Density;
+  painters?: readonly PainterName[];
+}) {
   return (
     <div
       data-density={density}
       data-testid={density}
       style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}
     >
-      {PAINTERS.map((painter) => (
+      {painters.map((painter) => (
         <div
           key={painter}
           style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)', alignItems: 'start' }}
@@ -180,9 +184,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Nine screens a painter, two painters: the check has to have looked at all of them. */
-const matrix = (density: Density): Story => ({
-  args: { density },
+/**
+ * Nine screens, at one density with one painter: the check has to have looked
+ * at all of them. One story a painter, so each does half the work of both and
+ * runs well inside the zoom browser's time on CI (a story of both took 31s
+ * there, against a 30s limit).
+ */
+const matrix = (density: Density, painter: PainterName): Story => ({
+  args: { density, painters: [painter] },
   play: async ({ canvasElement }) => {
     // Every frame is wide enough for its title, so each one reads whole: a
     // reader is told what each frame is, not shown an ellipsis.
@@ -191,34 +200,36 @@ const matrix = (density: Density): Story => ({
       ['mixed', 'mixed'],
       ['heavy rules', 'weights'],
     ];
-    for (const painter of PAINTERS) {
-      for (const [id, name] of titled) {
-        const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${id}"]`);
-        const top = screen?.querySelector('.rk-row')?.textContent ?? '';
-        expect(top.split(' ')[1], `${id}: ${top}`).toBe(name);
-      }
-      // And every row of blocks says what it is.
-      const blocks = canvasElement.querySelector(`[data-testid="${density} ${painter} blocks"]`);
-      const rows = [...(blocks?.querySelectorAll('.rk-row') ?? [])].map((r) => r.textContent ?? '');
-      expect(rows.map((r) => r.slice(0, NAMES).trim())).toEqual(BLOCKS.map(([label]) => label));
+    for (const [id, name] of titled) {
+      const screen = canvasElement.querySelector(`[data-testid="${density} ${painter} ${id}"]`);
+      const top = screen?.querySelector('.rk-row')?.textContent ?? '';
+      expect(top.split(' ')[1], `${id}: ${top}`).toBe(name);
     }
+    // And every row of blocks says what it is.
+    const blocks = canvasElement.querySelector(`[data-testid="${density} ${painter} blocks"]`);
+    const rows = [...(blocks?.querySelectorAll('.rk-row') ?? [])].map((r) => r.textContent ?? '');
+    expect(rows.map((r) => r.slice(0, NAMES).trim())).toEqual(BLOCKS.map(([label]) => label));
     const run = runner();
     if (!run) return;
     const report = await expectContinuity(canvasElement, { capture: run.capture });
     // Not a vacuous pass: every screen was looked at, and lines were compared
     // across a great many shared edges.
-    expect(report.layers).toBe(18);
-    expect(report.shapes).toBeGreaterThan(600);
-    expect(report.joins).toBeGreaterThan(500);
-    // Reverse video and a filled run, three and one rows, in each painter.
-    expect(report.fills).toBe(8);
+    expect(report.layers).toBe(9);
+    expect(report.shapes).toBeGreaterThan(300);
+    expect(report.joins).toBeGreaterThan(250);
+    // Reverse video and a filled run, three and one rows.
+    expect(report.fills).toBe(4);
   },
 });
 
-export const Dense: Story = matrix('dense');
-export const Normal: Story = matrix('normal');
-export const Airy: Story = matrix('airy');
-export const Touch: Story = matrix('touch');
+export const DenseGlyph: Story = matrix('dense', 'glyph');
+export const DenseRule: Story = matrix('dense', 'rule');
+export const NormalGlyph: Story = matrix('normal', 'glyph');
+export const NormalRule: Story = matrix('normal', 'rule');
+export const AiryGlyph: Story = matrix('airy', 'glyph');
+export const AiryRule: Story = matrix('airy', 'rule');
+export const TouchGlyph: Story = matrix('touch', 'glyph');
+export const TouchRule: Story = matrix('touch', 'rule');
 
 /**
  * The check can fail, and here is what it fails on: the same frame with its
@@ -252,6 +263,147 @@ export const FontDrawn: Story = {
     // Every vertical stroke misses its cell's top or bottom edge.
     expect(gaps.length, formatContinuity(report)).toBeGreaterThan(10);
     expect(gaps.some((b) => b.ch === '│' && b.side === 'north')).toBe(true);
+  },
+};
+
+/** Lines every few cells, both ways, and a block run: every kind of seam, many times over. */
+const lattice = ({ width, height }: Size): Buffer =>
+  Buffer.create({ width, height }).draw((d) => {
+    const area = rect(0, 0, width, height);
+    drawBox(d, area, { set: borderSets.single, title: 'scrolled' });
+    for (let y = 2; y < height - 1; y += 2) drawDivider(d, area, y, { set: borderSets.single });
+    drawColumnRules(
+      d,
+      area,
+      Array.from({ length: Math.floor((width - 2) / 4) }, (_, i) => 4 * (i + 1)),
+      { set: borderSets.double },
+    );
+    drawText(d, { x: 2, y: 1 }, '█▓▒░▁▂▃▄▅▆▇█');
+  });
+
+/** A screen bigger than its region, scrolled to a part of it that starts between pixels. */
+const REGION = { inlineSize: '260.4px', blockSize: '200.6px', overflow: 'auto' } as const;
+
+function Scrolled({ testId, className }: { testId: string; className?: string }) {
+  const name = `a screen, scrolled (${testId})`;
+  const cls = ['rk-scroll', className].filter(Boolean).join(' ');
+  return (
+    // A region a reader can scroll, so one they can reach from the keyboard.
+    // biome-ignore lint/a11y/noNoninteractiveTabindex: axe requires it (scrollable-region-focusable)
+    <section aria-label={name} tabIndex={0} data-testid={testId} className={cls} style={REGION}>
+      <Screen draw={lattice} cols={40} rows={13} />
+    </section>
+  );
+}
+
+/**
+ * A scrolled region shows part of a screen, and only that part can be
+ * photographed. The check reads the cells wholly in view and counts the rest
+ * as unseen, so a scrolled table or list can be checked as it stands. It still
+ * finds what is broken in view: the same region with its shapes handed back to
+ * the font breaks, as it would whole.
+ */
+export const ScrolledRegion: Story = {
+  name: 'In a scrolled region',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+      <style>
+        {
+          '.font-drawn [data-rk-shape] { background-image: none; -webkit-text-fill-color: currentColor; }'
+        }
+      </style>
+      <Scrolled testId="drawn" />
+      <Scrolled testId="font" className="font-drawn" />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    for (const id of ['drawn', 'font']) {
+      const region = canvas.getByTestId(id);
+      region.scrollTo(61.3, 37.7);
+    }
+    const run = runner();
+    if (!run) return;
+    const drawn = canvas.getByTestId('drawn');
+    // Every cell that draws a shape: a run of them is one element.
+    const total = [...drawn.querySelectorAll('[data-rk-shape]')].reduce(
+      (n, run) => n + [...(run.textContent ?? '')].length,
+      0,
+    );
+    const report = await expectContinuity(drawn, { capture: run.capture });
+    // Some of it was looked at, some of it could not be, and nothing was
+    // counted twice or dropped.
+    expect(report.shapes).toBeGreaterThan(100);
+    expect(report.joins).toBeGreaterThan(100);
+    expect(report.unseen).toBeGreaterThan(100);
+    expect(report.shapes + report.unseen).toBe(total);
+    // The region is still where the play function put it.
+    expect(drawn.scrollLeft).toBeGreaterThan(60);
+
+    const font = await checkContinuity(canvas.getByTestId('font'), { capture: run.capture });
+    const gaps = font.breaks.filter((b) => b.what === 'gap');
+    expect(gaps.length, formatContinuity(font)).toBeGreaterThan(10);
+    expect(font.shapes).toBe(report.shapes);
+    // And only in view: no break is reported for a cell it could not see.
+    expect(font.unseen).toBe(report.unseen);
+  },
+};
+
+/**
+ * Ink that reaches an edge, beside a cell with no line on that edge: `▂` over
+ * `▄`, `▙` before `▗`, row after row, so some of the boundaries between them
+ * fall on half a pixel. At 200% Chrome snaps a background to whole CSS pixels,
+ * and the ink that reaches the edge there lands a device pixel into the next
+ * cell; the check reads that cell's leak past the slack, as it reads a reach
+ * within it. A real leak is still one: the same `▄` filled to its top is
+ * caught beside the same neighbours.
+ */
+const SPILLS = ['▂▙▗▙▗▙▗', '▄▄▂▂▂▂▂', '▂▙▗▙▗▙▗', '▄▄▄▄▄▄▄', '▂▙▗▙▗▙▗', '▄▄▄▄▄▄▄'].join('\n');
+
+export const Spills: Story = {
+  name: 'Edge ink beside an edge with none',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)' }}>
+      <style>
+        {
+          '.leaky [data-rk-shape="block-2584"] { background-size: 100% 100% !important; background-position: 0 0 !important; }'
+        }
+      </style>
+      {[15.3, 16.4, 17].flatMap((size) =>
+        [0.13, 0.41, 0.69].map((shift) => (
+          <div
+            key={`${size} ${shift}`}
+            data-testid={`spills ${size} ${shift}`}
+            style={{
+              fontSize: `${size}px`,
+              paddingInlineStart: `${shift}px`,
+              paddingBlockStart: `${shift}px`,
+            }}
+          >
+            <Screen draw={() => fromText(SPILLS)} cols={7} rows={6} />
+          </div>
+        )),
+      )}
+      <div data-testid="leaky" className="leaky" style={{ fontSize: '17px' }}>
+        <Screen draw={() => fromText(SPILLS)} cols={7} rows={6} />
+      </div>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    for (const size of [15.3, 16.4, 17]) {
+      for (const shift of [0.13, 0.41, 0.69]) {
+        const report = await expectContinuity(canvas.getByTestId(`spills ${size} ${shift}`), {
+          capture: run.capture,
+        });
+        expect(report.shapes).toBe(42);
+      }
+    }
+    const leaky = await checkContinuity(canvas.getByTestId('leaky'), { capture: run.capture });
+    const leaks = leaky.breaks.filter((b) => b.what === 'leak' && b.ch === '▄');
+    expect(leaks.length, formatContinuity(leaky)).toBeGreaterThan(5);
   },
 };
 
@@ -407,6 +559,37 @@ export const SubPixel: Story = {
     const report = await expectContinuity(canvasElement, { capture: run.capture });
     expect(report.layers).toBe(27);
     expect(report.joins).toBeGreaterThan(900);
+  },
+};
+
+/**
+ * Two screens that overlap by half a row, so each one's lines cross the
+ * other's edge: the upper frame's bottom line runs along the lower frame's
+ * top edge, and the lower frame's top line along the upper's bottom. Each
+ * layer is read alone, with the other's ink hidden, so neither is charged
+ * with a leak that is the other's (0245). A title's descender at dense, on
+ * a font whose descent is deeper than the line box, reaches into the screen
+ * below it the same way; this is that, on any font.
+ */
+export const Overlapping: Story = {
+  name: 'Overlapping screens',
+  args: { density: 'normal' },
+  render: () => (
+    <div data-testid="overlapping" style={{ display: 'grid' }}>
+      <Screen draw={junctions('single')} cols={JUNCTION.cols} rows={JUNCTION.rows} />
+      <Screen
+        draw={junctions('single', 'single', 'below')}
+        cols={JUNCTION.cols}
+        rows={JUNCTION.rows}
+        style={{ marginBlockStart: 'calc(var(--rk-cell-height) / -2)' }}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const run = runner();
+    if (!run) return;
+    const report = await expectContinuity(canvasElement, { capture: run.capture });
+    expect(report.layers).toBe(2);
   },
 };
 

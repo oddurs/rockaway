@@ -25,6 +25,12 @@
      */
     --rk-layout-unit: 0.015625px;
     position: relative;
+    /*
+     * A screen is a stacking context of its own: what it lifts over its own
+     * layers (an overflow mark, a callout's frame) stays inside it, and never
+     * paints over an overlay's backdrop that comes after it on the page.
+     */
+    isolation: isolate;
     font-family: var(--rk-font-family-mono);
     /* Chrome is drawn in the cells it was drawn in: never collapse, never wrap. */
     white-space: pre;
@@ -133,11 +139,18 @@
    * where a title follows it (0214). A positioned cell paints after the
    * row's unpositioned runs, backplates included, so the stroke stays on
    * top. It still paints under the content layer, which comes later.
+   *
+   * In reverse video the reader's text colour is the ground, and a line in it
+   * is no line at all: a selected tree row's guides, a box drawn reversed. So
+   * whatever reverses sets `--rk-forced-ink` to the reversed figure beside
+   * its opt-out from the adjustment, and a shape inside it, or a reversed
+   * shape itself, is inked in that. A test in this package holds every
+   * reversal's opt-out to it.
    */
   @media (forced-colors: active) {
     [data-rk-shape] {
       forced-color-adjust: none;
-      --rk-ink-colour: CanvasText;
+      --rk-ink-colour: var(--rk-forced-ink, CanvasText);
       position: relative;
     }
   }

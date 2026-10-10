@@ -28,6 +28,7 @@ a packaging bug, and it is fixed in the package.
 | `src/islands/` | Compositions of the system's components that the site hydrates. A single component is hydrated from its own entry, `@rockaway/react/<component>`, never from the package's index: an island keeps every export of the module it comes from, and the index would ship the whole package for one box. |
 | `src/content/foundations/`, `src/pages/foundations/` | The foundations (0106), in MDX: prose, with examples the engine draws at build time (`src/lib/foundations.ts`) and tables read from the tokens (`src/lib/tokens.ts`). |
 | `src/components/` | Build-time pieces for MDX: `Painted` (a buffer as the painter's own markup, no JavaScript), `Table` (data set as prose, columns sized in cells), `ThemeCard`. Never a component the system should have. |
+| `src/pages/components/`, `src/content/components/` | A page per component (0147), generated from `@rockaway/react/meta.json`. The only hand-written part is each component's live example (`src/islands/examples/<name>.tsx`) and the MDX that hydrates it and shows its source. A component without a page, or a page without a component, fails the build. |
 | `src/pages/terminal/` | Every theme's terminal files, served from what `@rockaway/tokens` ships. |
 | `src/lib/` | Logic, in TypeScript. Astro frontmatter is not typechecked, so keep it thin. |
 | `src/styles/site.css` | The system's CSS as a consumer imports it, and page layout. |
@@ -73,11 +74,44 @@ production, and reads the screen back as text against the fence marked
 `quickstart="screen"`. It needs the network, so it is not part of `pnpm
 check`; CI runs it (0155).
 
+## The registry
+
+Compositions a team is expected to change are copied in, not installed
+(cairn 0011): `src/registry/<name>/` holds each item's source, and
+`src/registry/items.ts` its title, description and the component the
+registry page draws. The build serves each as `/r/<name>.json` in shadcn's
+format, generated from the source by `src/lib/registry.ts`, with an index at
+`/r/registry.json`, and `/registry/` draws every item with the line that
+copies it in.
+
+An item imports only from `@rockaway/*`, React, and its own files, never from
+another item, so copying one never brings another; the build fails if one
+does, and `test/registry.test.ts` says which. `pnpm --filter site quickstart
+registry` copies every item into a new Vite app with shadcn's CLI and checks
+that it draws what the registry page draws.
+
 ## The base path
 
 GitHub Pages serves the site at `oddurs.github.io/rockaway/`, so that is the
 default. `SITE_BASE=/` builds it for a domain root, and `SITE_URL` sets the
 origin. Link inside the site with `href()` from `src/lib/paths.ts`.
+
+## For agents
+
+The site serves itself as text for coding agents (0048), all of it generated
+at build from `@rockaway/react/meta.json` and `docs/` by `src/lib/llms.ts`,
+none of it written by hand:
+
+| Path | What |
+| --- | --- |
+| `/llms.txt` | What rockaway is, and a link to every twin below, in [llmstxt.org](https://llmstxt.org)'s shape. |
+| `/llms-full.txt` | Every twin, in one file. |
+| `/components/<name>.md` | A component's twin: everything its metadata says, snapshots as text. |
+| `/<doc>.md` | A document from `docs/`, its relative links sent to GitHub. |
+| `/meta.json` | The metadata itself. |
+
+A component added to the metadata is listed and twinned on the next build;
+`test/llms.test.ts` checks every twin against the metadata it came from.
 
 ## The font
 

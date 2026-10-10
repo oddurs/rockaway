@@ -95,3 +95,7 @@ Confirmed against a real multi-select in 0133, row by row, for the rows List dra
 ## Result
 
 The state vocabulary holds. Every component draws each state one way, from the table in docs/concept.md section 9 (and stateVocabulary in @rockaway/react/metadata), and no state changes geometry. Cursor and selection are separate signals: the cursor mark in a reserved cell, and reverse video plus a check in a second reserved cell under multi-select. Reverse video means an element's own figure and ground swapped, so forced colors keeps it.
+
+## 2026-10-03
+
+0183 adds a reading of the 'goes heavy' rows for ASCII: an ASCII frame that goes heavy keeps +-| and draws them bold. Recorded under the table in docs/concept.md section 9.
