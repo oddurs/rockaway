@@ -16,7 +16,7 @@ import { checkConformance, screenshot } from '@rockaway/react/testing';
 import { contentHeight, glyphsFor } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { renderToString } from 'react-dom/server';
-import { expect, userEvent } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
 import { settled } from '../settled.ts';
 
@@ -222,22 +222,27 @@ export const FillsItsRows: Story = {
       await settled();
       for (const size of textSizes) {
         const el = canvas.getByTestId(`fill ${size}`);
-        const m = metricsOf(el);
-        expect(
-          getComputedStyle(el.querySelector('.rk-text-glyphs') as Element).fontFamily,
-        ).toContain(family);
-        expectSized(el, 'Rock', size);
-        const box = el.getBoundingClientRect();
-        const glyphs = runOf(el);
-        const seen = `glyph box ${glyphs.top - box.top}px to ${glyphs.bottom - box.top}px, rows ${box.height}px`;
-        expect(
-          Math.abs(glyphs.height - size * m.height),
-          `${density} ${size}: fills (${seen})`,
-        ).toBeLessThanOrEqual(1);
-        expect(
-          Math.abs(glyphs.top - box.top),
-          `${density} ${size}: from the first row (${seen})`,
-        ).toBeLessThanOrEqual(1);
+        // A new density and face relay the run a frame or two after the
+        // root settles in WebKit and Firefox on Linux: hold each size to its
+        // checks until they are true, not to the first frame (0342).
+        await waitFor(() => {
+          const m = metricsOf(el);
+          expect(
+            getComputedStyle(el.querySelector('.rk-text-glyphs') as Element).fontFamily,
+          ).toContain(family);
+          expectSized(el, 'Rock', size);
+          const box = el.getBoundingClientRect();
+          const glyphs = runOf(el);
+          const seen = `glyph box ${glyphs.top - box.top}px to ${glyphs.bottom - box.top}px, rows ${box.height}px`;
+          expect(
+            Math.abs(glyphs.height - size * m.height),
+            `${density} ${size}: fills (${seen})`,
+          ).toBeLessThanOrEqual(1);
+          expect(
+            Math.abs(glyphs.top - box.top),
+            `${density} ${size}: from the first row (${seen})`,
+          ).toBeLessThanOrEqual(1);
+        });
       }
     }
   },
