@@ -1501,6 +1501,18 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "default": "'glyph'"
       },
       {
+        "name": "disallowTypeAhead",
+        "type": "boolean",
+        "required": false,
+        "description": "No type-ahead: a printable key moves nothing, and reaches the page, for a tree beside single-letter shortcuts (`j`, `k`, `/`). The arrows, Home and End still move. React Aria's own option, which its GridList offers and its Tree honours."
+      },
+      {
+        "name": "onFocusedKeyChange",
+        "type": "(key: Key | null) => void",
+        "required": false,
+        "description": "Called with the row that has focus whenever it changes, and with `null` when focus leaves the tree: what a keymap beside the tree acts on, or what a status bar shows."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
