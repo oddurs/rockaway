@@ -1436,46 +1436,104 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Tab": {
-    "file": "tabs.tsx",
+  "Select": {
+    "file": "select.tsx",
     "props": [
       {
-        "name": "id",
-        "type": "Key",
+        "name": "label",
+        "type": "string",
         "required": true,
-        "description": "The tab's key: its `TabPanel` takes the same `id`."
+        "description": "The field's name, in the label column."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | ((item: T) => ReactNode)",
+        "required": false,
+        "description": "The options: `SelectItem`s, or a function of each of `items`."
+      },
+      {
+        "name": "items",
+        "type": "Iterable<T>",
+        "required": false,
+        "description": "The items to render with a function child."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The trigger's width in cells, its delimiters included.",
+        "default": "24"
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help under the trigger, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
+        "required": false,
+        "description": "Words for the error under the trigger; the select's own validation's when not given."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the popover takes before its rows scroll.",
+        "default": "8"
       },
       {
         "name": "className",
         "type": "string",
         "required": false
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "description": "The tab's label."
       }
     ],
     "inherits": [
-      "Omit<AriaTabProps, 'className' | 'style' | 'children' | 'id'>"
+      "Omit<AriaSelectProps<T>, 'children' | 'className' | 'style' | 'selectionMode'>"
     ],
     "tokens": [
-      "--rk-attribute-bold",
       "--rk-attribute-underline-offset",
       "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
       "--rk-fg-disabled",
-      "--rk-fg-muted",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
+      "--rk-fg-muted"
+    ]
+  },
+  "SelectItem": {
+    "file": "select.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The option's words."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
     ]
   },
   "Table": {
@@ -1611,115 +1669,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono",
       "--rk-glyph-mark-overflow-end",
       "--rk-glyph-mark-overflow-start",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
-  },
-  "TabList": {
-    "file": "tabs.tsx",
-    "props": [
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      }
-    ],
-    "inherits": [
-      "Omit<AriaTabListProps<T>, 'className' | 'style'>"
-    ],
-    "tokens": [
-      "--rk-attribute-bold",
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-fg-muted",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
-  },
-  "TabPanel": {
-    "file": "tabs.tsx",
-    "props": [
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      }
-    ],
-    "inherits": [
-      "Omit<AriaTabPanelProps, 'className' | 'style'>"
-    ],
-    "tokens": [
-      "--rk-attribute-bold",
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-fg-muted",
-      "--rk-font-family-mono",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
-  },
-  "Tabs": {
-    "file": "tabs.tsx",
-    "props": [
-      {
-        "name": "border",
-        "type": "BorderSetName",
-        "required": false,
-        "description": "Which border set draws the frame; the theme's when not given."
-      },
-      {
-        "name": "pad",
-        "type": "number | Inset",
-        "required": false,
-        "description": "Padding inside the frame, in cells: one across by default, as `Frame` has."
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      },
-      {
-        "name": "children",
-        "type": "ReactNode",
-        "required": false,
-        "description": "A `TabList` and its `TabPanel`s."
-      }
-    ],
-    "inherits": [
-      "Omit<AriaTabsProps, 'className' | 'style' | 'children'>",
-      "Pick<ScreenProps, 'painter' | 'cols' | 'rows' | 'fallback'>"
-    ],
-    "tokens": [
-      "--rk-attribute-bold",
-      "--rk-attribute-underline-offset",
-      "--rk-bg-page",
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-fg-muted",
-      "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",
