@@ -13,7 +13,9 @@
  *
  * - **gap**: does the ink reach every edge the shape reaches — the cell's own
  *   outermost row or column of pixels, or the one its edge runs through?
- * - **leak**: is there no line on an edge the shape does not reach?
+ * - **leak**: is there no line on an edge the shape does not reach? A
+ *   neighbour whose ink reaches that edge may spill as far as the snapping
+ *   slack into this cell, so beside one the leak is read past the slack.
  * - **step**: where two neighbours both reach the edge they share, does the
  *   ink sit in the same pixels on both sides of it, so the line runs on?
  * - **broken**: does every stroke that reaches an edge join, inside the cell,
@@ -22,6 +24,11 @@
  *
  * And for every run with a background: does it reach the top and bottom rows
  * of the cell (**stripe**), so reverse video is a solid block?
+ *
+ * A layer inside a region that scrolls or clips is checked where it can be
+ * seen: the screenshot is of the part the region shows, and only the cells
+ * wholly inside it are read. The cells it hides are counted as `unseen`, so a
+ * check of a scrolled table says how much of it was looked at.
  *
  * Only a test runner can take a screenshot, so the caller supplies one:
  * `capture` gets an element and returns a PNG of it, as base64 or a Blob.
@@ -59,6 +66,8 @@ export interface ContinuityReport {
   readonly joins: number;
   /** Runs with a background, checked top and bottom. */
   readonly fills: number;
+  /** Cells that draw their own shape but are scrolled or clipped out of view, so not checked. */
+  readonly unseen: number;
   readonly breaks: readonly Break[];
 }
 
@@ -71,6 +80,21 @@ interface Image {
 }
 
 const SIDES: readonly Side[] = ['north', 'east', 'south', 'west'];
+
+/** The neighbour across each side, as a column and row step. */
+const STEP: Readonly<Record<Side, readonly [number, number]>> = {
+  north: [0, -1],
+  east: [1, 0],
+  south: [0, 1],
+  west: [-1, 0],
+};
+
+const OPPOSITE: Readonly<Record<Side, Side>> = {
+  north: 'south',
+  east: 'west',
+  south: 'north',
+  west: 'east',
+};
 
 function describe(el: Element): string {
   const cls =
@@ -168,17 +192,41 @@ export async function checkContinuity(
   let shapes = 0;
   let joins = 0;
   let fills = 0;
+  let unseen = 0;
 
   for (const layer of layers) {
     const bounds = layer.getBoundingClientRect();
     if (bounds.width === 0 || bounds.height === 0) continue;
-    const image = await decode(await chromeOnly(layer, options.capture));
+    const shown = shownPart(layer);
+    if (shown && (shown.width <= 0 || shown.height <= 0)) {
+      for (const run of layer.querySelectorAll('[data-rk-shape]')) {
+        unseen += [...graphemes(run.textContent ?? '')].length;
+      }
+      continue;
+    }
+    // A clipped layer is photographed through a window over the part it
+    // shows; anything else, whole.
+    const pane = shown ? openWindow(layer, shown) : undefined;
+    let image: Image;
+    let frame: DOMRect;
+    try {
+      image = await decode(await chromeOnly(layer, options.capture, pane ?? layer));
+      // The screenshot was taken after any scrolling it needed, so it is all
+      // measured again: only positions relative to what was taken are used.
+      frame = (pane ?? layer).getBoundingClientRect();
+    } finally {
+      pane?.remove();
+    }
     const view = layer.ownerDocument.defaultView;
     const dpr = view?.devicePixelRatio ?? 1;
-    // The screenshot was taken after any scrolling it needed, so the layer is
-    // measured again: only positions relative to it are used.
-    const frame = layer.getBoundingClientRect();
     const [originX, originY] = origin(frame, dpr, image);
+    /** Whether a box, in CSS pixels, is wholly in what was photographed. */
+    const seen = (left: number, top: number, right: number, bottom: number): boolean =>
+      !pane ||
+      (left >= frame.left - 1e-3 &&
+        top >= frame.top - 1e-3 &&
+        right <= frame.right + 1e-3 &&
+        bottom <= frame.bottom + 1e-3);
 
     const pixel = (x: number, y: number): RGB => {
       const i = (y * image.width + x) * 4;
@@ -186,6 +234,17 @@ export async function checkContinuity(
     };
     const name = describe(layer);
     const cells = new Map<string, Checked>();
+    /**
+     * Edges a shape does not reach, read for ink at each depth in from the
+     * edge, and decided once the neighbour across each one is known.
+     */
+    const unreached: {
+      readonly col: number;
+      readonly row: number;
+      readonly ch: string;
+      readonly side: Side;
+      readonly inked: readonly boolean[];
+    }[] = [];
     // Chrome snaps a box's background to whole CSS pixels, so on a dense
     // screen the device pixel just inside a fractional edge may be bare by
     // design: an edge counts as reached within half a CSS pixel of it. This is
@@ -219,7 +278,7 @@ export async function checkContinuity(
 
         if (!shape) {
           const bg = getComputedStyle(run).backgroundColor;
-          if (opaque(bg)) {
+          if (opaque(bg) && seen(rect.left, rect.top, rect.right, rect.bottom)) {
             fills += 1;
             const want = rgb(bg);
             const { x0, y0, x1, y1 } = inside(rect.left, rect.top, rect.right, rect.bottom);
@@ -251,8 +310,12 @@ export async function checkContinuity(
         const alpha = Math.max(...shape.marks.map((m) => (m.kind === 'rect' ? m.alpha : 1)));
 
         for (let i = 0; i < clusters.length; i++) {
-          shapes += 1;
           const left = rect.left + i * cellWidth;
+          if (!seen(left, rect.top, left + cellWidth, rect.bottom)) {
+            unseen += 1;
+            continue;
+          }
+          shapes += 1;
           const box = inside(left, rect.top, left + cellWidth, rect.bottom);
           const outer = touching(left, rect.top, left + cellWidth, rect.bottom);
           const { x0, y0, x1, y1 } = box;
@@ -315,16 +378,17 @@ export async function checkContinuity(
             } else {
               // Only the cell's own pixels, and only the middle of the edge,
               // where a line on that side would cross it: a neighbour's ink
-              // is next door, and its letter may lean into a corner.
-              const positions = edgeLine(box, side)
-                .filter(([x, y]) => covered(x, y))
-                .map(across);
+              // is next door, and its letter may lean into a corner. Each
+              // line within the slack is read, the outermost first.
               const length = side === 'north' || side === 'south' ? x1 - x0 : y1 - y0;
               const start = side === 'north' || side === 'south' ? x0 : y0;
-              const middle = positions.filter(
-                (p) => p >= start + length / 4 && p < start + (length * 3) / 4,
+              const inked = lines(0, slack).map((depth) =>
+                edgeLine(box, side, depth)
+                  .filter(([x, y]) => covered(x, y))
+                  .map(across)
+                  .some((p) => p >= start + length / 4 && p < start + (length * 3) / 4),
               );
-              if (middle.length > 0) at('leak', `ink on the ${side} edge, which has no line`, side);
+              unreached.push({ col: col + i, row, ch, side, inked });
             }
           }
           if (shape.kind !== 'block') {
@@ -340,6 +404,62 @@ export async function checkContinuity(
         col += span;
       }
     });
+
+    // A shape's own ink on an edge it does not reach is a leak. Beside a
+    // neighbour whose ink reaches that edge, the outer lines within the slack
+    // are the neighbour's to spill into: Chrome snaps a background to whole
+    // CSS pixels, so ink that reaches an edge on a half-pixel boundary lands a
+    // device pixel past it, as it may fall a device pixel short of reaching
+    // it. There the leak is read on the innermost line of the slack instead.
+    // The same spill reaches into the ends of the lines across that edge: a
+    // `▄` under a `▙` has the `▙`'s spilt pixel at the top of its east and
+    // west edges, and its line along them would seem to start there. So where
+    // a neighbour reaches an edge this cell does not, the lines that cross
+    // the other edges lose their ends within the slack of it.
+    const spill = slack - 1;
+    if (spill > 0) {
+      for (const [key, cell] of cells) {
+        const [c, r] = key.split(',').map(Number) as [number, number];
+        for (const side of SIDES) {
+          if (cell.shape.reach[side]) continue;
+          const [dc, dr] = STEP[side];
+          if (cells.get(`${c + dc},${r + dr}`)?.shape.reach[OPPOSITE[side]] !== true) continue;
+          const { box } = cell;
+          const keep = (p: number): boolean =>
+            side === 'north'
+              ? p >= box.y0 + spill
+              : side === 'south'
+                ? p < box.y1 - spill
+                : side === 'west'
+                  ? p >= box.x0 + spill
+                  : p < box.x1 - spill;
+          const across: readonly Side[] =
+            side === 'north' || side === 'south' ? ['east', 'west'] : ['north', 'south'];
+          const spans = cell.spans as Partial<Record<Side, number[]>>;
+          for (const other of across) {
+            const kept = spans[other]?.filter(keep);
+            if (kept && kept.length > 0) spans[other] = kept;
+          }
+        }
+      }
+    }
+
+    for (const { col, row, ch, side, inked } of unreached) {
+      const [dc, dr] = STEP[side];
+      const next = cells.get(`${col + dc},${row + dr}`);
+      const spilt = next?.shape.reach[OPPOSITE[side]] === true;
+      if (spilt ? inked.at(-1) : inked[0]) {
+        breaks.push({
+          element: name,
+          col,
+          row,
+          ch,
+          what: 'leak',
+          side,
+          detail: `ink on the ${side} edge, which has no line`,
+        });
+      }
+    }
 
     // Where two neighbours both reach the edge between them, their ink must
     // cross it in the same place — or the line steps there — and every pixel
@@ -394,15 +514,22 @@ export async function checkContinuity(
     }
   }
 
-  return { layers: layers.length, shapes, joins, fills, breaks };
+  return { layers: layers.length, shapes, joins, fills, unseen, breaks };
 }
+
+/** Marks a region whose overflow marks are hidden for a screenshot. */
+const UNMARKED = 'data-rk-continuity-unmarked';
 
 /**
  * A screenshot of this chrome alone. A screen's content layer sits over its
  * chrome on purpose — a button may stand on a rule — and what it covers is the
- * page's business; whether the lines meet is the painter's. The content is made
- * transparent for the moment of the screenshot, which moves nothing and takes
- * focus from nothing.
+ * page's business; whether the lines meet is the painter's. So do a scrolling
+ * region's overflow marks, each covering the cell at its edge (0208). The
+ * content is made transparent and the marks hidden for the moment of the
+ * screenshot, which moves nothing and takes focus from nothing.
+ *
+ * And every letter on the page is made transparent: a letter is the font's,
+ * never a line, and a descender reaches into the row below at dense.
  *
  * So is every other painted layer on the page. A letter is as tall as the
  * font says, not as the cell (0116): at dense, where the line box is the font
@@ -413,7 +540,11 @@ export async function checkContinuity(
  * and the ground a cell is compared with is read from its own ancestors,
  * which this leaves alone.
  */
-async function chromeOnly(layer: HTMLElement, capture: Capture): Promise<string | Blob> {
+async function chromeOnly(
+  layer: HTMLElement,
+  capture: Capture,
+  target: HTMLElement,
+): Promise<string | Blob> {
   // Not the content layer the chrome is itself inside, like a list's scrollbar
   // in a frame: only the ones laid over it.
   const content = [
@@ -425,6 +556,24 @@ async function chromeOnly(layer: HTMLElement, capture: Capture): Promise<string 
   const hidden = [...content, ...others];
   const before = hidden.map((el) => el.style.opacity);
   for (const el of hidden) el.style.opacity = '0';
+  const doc = layer.ownerDocument;
+  const regions: HTMLElement[] = [];
+  for (let el = layer.parentElement; el; el = el.parentElement) {
+    if (el.matches('.rk-scroll-marks, .rk-prose pre')) regions.push(el);
+  }
+  const hide = doc.createElement('style');
+  hide.textContent = `[${UNMARKED}]::before, [${UNMARKED}]::after { visibility: hidden !important; }`;
+  if (regions.length > 0) doc.head.append(hide);
+  for (const el of regions) el.setAttribute(UNMARKED, '');
+  // Nor any letter, anywhere: a letter is as tall as the font says, not as
+  // the cell (0116), so at dense a descender in the line above a screen, or
+  // in a title row of its own, reaches into the cell below it. Letters are
+  // the font's and never a line; the check reads the cell's own geometry,
+  // which is drawn as backgrounds and is left alone.
+  const letters = doc.createElement('style');
+  letters.textContent =
+    '* { -webkit-text-fill-color: transparent !important; text-decoration-color: transparent !important; text-shadow: none !important; }';
+  doc.head.append(letters);
   // Nor any overlay open above it (cairn 0128): a backdrop would be read as
   // the frame's own ink. An overlay's own chrome is read with every other
   // part of the overlay layer hidden, so a dialog does not cover its backdrop.
@@ -435,16 +584,90 @@ async function chromeOnly(layer: HTMLElement, capture: Capture): Promise<string 
   for (const el of layers) el.style.visibility = 'hidden';
   if (own && layers.some((el) => el.contains(own))) own.style.visibility = 'visible';
   try {
-    return await capture(layer);
+    return await capture(target);
   } finally {
     hidden.forEach((el, i) => {
       el.style.opacity = before[i] ?? '';
     });
+    for (const el of regions) el.removeAttribute(UNMARKED);
+    hide.remove();
+    letters.remove();
     layers.forEach((el, i) => {
       el.style.visibility = shown[i] ?? '';
     });
     if (own) own.style.visibility = ownShown;
   }
+}
+
+/**
+ * The part of a layer the page shows, when an ancestor clips it: its box cut
+ * by the padding box of every ancestor whose overflow is not visible, on the
+ * axes that one clips. Undefined when nothing clips it, so it is photographed
+ * whole as before. The page itself is not a clip: a screenshot of an element
+ * scrolls the page to it.
+ */
+function shownPart(layer: HTMLElement): DOMRect | undefined {
+  const doc = layer.ownerDocument;
+  const box = layer.getBoundingClientRect();
+  let left = box.left;
+  let top = box.top;
+  let right = box.right;
+  let bottom = box.bottom;
+  for (
+    let el = layer.parentElement;
+    el && el !== doc.body && el !== doc.documentElement;
+    el = el.parentElement
+  ) {
+    const style = getComputedStyle(el);
+    const clipsX = style.overflowX !== 'visible';
+    const clipsY = style.overflowY !== 'visible';
+    if (!clipsX && !clipsY) continue;
+    const r = el.getBoundingClientRect();
+    const x0 = r.left + el.clientLeft;
+    const y0 = r.top + el.clientTop;
+    if (clipsX) {
+      left = Math.max(left, x0);
+      right = Math.min(right, x0 + el.clientWidth);
+    }
+    if (clipsY) {
+      top = Math.max(top, y0);
+      bottom = Math.min(bottom, y0 + el.clientHeight);
+    }
+  }
+  const clipped =
+    left > box.left + 1e-3 ||
+    top > box.top + 1e-3 ||
+    right < box.right - 1e-3 ||
+    bottom < box.bottom - 1e-3;
+  return clipped ? new DOMRect(left, top, right - left, bottom - top) : undefined;
+}
+
+/**
+ * A transparent element exactly over part of the page, to photograph that part
+ * by: a screenshot of an element is of the page within its box. It is placed
+ * in the document, not the viewport, so scrolling the page to take it moves it
+ * with everything else, and corrected once by where it actually landed.
+ */
+function openWindow(layer: HTMLElement, shown: DOMRect): HTMLElement {
+  const doc = layer.ownerDocument;
+  const pane = doc.createElement('div');
+  pane.setAttribute('aria-hidden', 'true');
+  const place = (left: number, top: number) => {
+    pane.style.cssText = [
+      'position: absolute',
+      `left: ${left}px`,
+      `top: ${top}px`,
+      `width: ${shown.width}px`,
+      `height: ${shown.height}px`,
+      'margin: 0',
+      'pointer-events: none',
+    ].join('; ');
+  };
+  place(shown.left, shown.top);
+  doc.body.append(pane);
+  const landed = pane.getBoundingClientRect();
+  place(shown.left + (shown.left - landed.left), shown.top + (shown.top - landed.top));
+  return pane;
 }
 
 /**

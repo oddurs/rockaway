@@ -17,7 +17,10 @@ export interface Column {
 }
 
 export interface Cell {
+  /** As text; also what the column is sized by. */
   readonly text: string;
+  /** Markup to show instead, when the text needs a link or code in it. */
+  readonly html?: string;
   /** A custom property to draw a swatch in, before the text: `--rk-ansi-red`. */
   readonly swatch?: string;
 }
@@ -25,10 +28,12 @@ export interface Cell {
 interface Props {
   columns: readonly Column[];
   rows: readonly (readonly (string | Cell)[])[];
+  /** An id for each row, for a link to it. */
+  ids?: readonly string[];
   caption?: string;
 }
 
-const { columns, rows, caption } = Astro.props;
+const { columns, rows, ids, caption } = Astro.props;
 
 /** Text, with anything the cell draws (a `─`, a `█`) as a cell of its own, as in prose. */
 const shaped = (text: string): string =>
@@ -59,8 +64,8 @@ const widths = columnCells([
   </thead>
   <tbody>
     {
-      rows.map((row) => (
-        <tr>
+      rows.map((row, r) => (
+        <tr id={ids?.[r]}>
           {row.map((raw, i) => {
             const cell = cellOf(raw);
             const column = columns[i];
@@ -69,7 +74,13 @@ const widths = columnCells([
                 {cell.swatch && (
                   <span data-rk-painted="glyph" aria-hidden="true"><span class="rk-run" data-rk-shape="block-2588" style={`--rk-run: ${SWATCH}; color: var(${cell.swatch})`}>{'█'.repeat(SWATCH)}</span> </span>
                 )}
-                {column?.code ? <code>{cell.text}</code> : <Fragment set:html={shaped(cell.text)} />}
+                {cell.html !== undefined ? (
+                  <Fragment set:html={cell.html} />
+                ) : column?.code ? (
+                  <code>{cell.text}</code>
+                ) : (
+                  <Fragment set:html={shaped(cell.text)} />
+                )}
               </td>
             );
           })}
