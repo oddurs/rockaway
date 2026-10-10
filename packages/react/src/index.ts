@@ -29,6 +29,7 @@ export * from './entries/picture.ts';
 export * from './entries/popover.ts';
 export * from './entries/radio-group.ts';
 export * from './entries/select.ts';
+export * from './entries/skip-link.ts';
 export * from './entries/switch.ts';
 export * from './entries/table.ts';
 export * from './entries/tabs.ts';
