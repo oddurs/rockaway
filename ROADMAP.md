@@ -138,7 +138,6 @@ The component contract, proven on a first set of components.
 ### backlog
 
 - [ ] [`0044`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p1</sup>
-- [ ] [`0064`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0064-build-the-kitchen-sink-screen-every-component-with-the-theme-inputs-as-controls.md) Build the kitchen-sink screen: every component, with the theme inputs as controls <sup>feature · docs · p1</sup>
 - [ ] [`0102`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0102-commandpalette.md) CommandPalette <sup>component · components · p0</sup>
 - [ ] [`0142`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0142-make-the-design-pass-every-component-side-by-side-against-the-ten-rules.md) Make the design pass: every component, side by side, against the ten rules <sup>chore · components · p0</sup>
 - [ ] [`0169`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0169-give-inline-controls-a-full-cell-hit-area-and-ground.md) Give inline controls a full-cell hit area and ground <sup>feature · css · p3</sup>
@@ -185,6 +184,10 @@ The component contract, proven on a first set of components.
 - [ ] [`0323`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0323-size-type-in-half-rows.md) Size type in half rows <sup>feature · components · p2</sup>
 - [ ] [`0325`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0325-let-a-keyhint-be-a-link.md) Let a KeyHint be a link <sup>feature · components · p3</sup>
 - [ ] [`0326`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0326-prefetch-tree-rows-that-are-links.md) Prefetch Tree rows that are links <sup>feature · components · p3</sup>
+
+### in progress
+
+- [ ] [`0064`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0064-build-the-kitchen-sink-screen-every-component-with-the-theme-inputs-as-controls.md) Build the kitchen-sink screen: every component, with the theme inputs as controls <sup>feature · docs · p1</sup>
 
 ### in review
 

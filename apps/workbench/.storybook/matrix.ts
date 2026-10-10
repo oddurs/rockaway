@@ -53,6 +53,8 @@ export interface Cell {
 export interface Skip {
   readonly density?: Density;
   readonly mode?: Mode;
+  /** The Vitest project it is confined to, an engine's: `webkit`, `firefox`. */
+  readonly project?: string;
   readonly reason: string;
 }
 
@@ -128,7 +130,11 @@ export function readsPixels(plan: Plan, own: Cell, cell: Cell): boolean {
   return cell.mode === own.mode || cell.density === own.density;
 }
 
-export function skipFor(cell: Cell, skips: readonly Skip[] = []): Skip | undefined {
+export function skipFor(
+  cell: Cell,
+  skips: readonly Skip[] = [],
+  project?: string,
+): Skip | undefined {
   for (const skip of skips) {
     if (skip.reason.trim() === '') {
       throw new Error(
@@ -139,7 +145,8 @@ export function skipFor(cell: Cell, skips: readonly Skip[] = []): Skip | undefin
   return skips.find(
     (s) =>
       (s.density === undefined || s.density === cell.density) &&
-      (s.mode === undefined || s.mode === cell.mode),
+      (s.mode === undefined || s.mode === cell.mode) &&
+      (s.project === undefined || s.project === project),
   );
 }
 
@@ -420,7 +427,7 @@ export async function walk(
 
   try {
     for (const cell of cells) {
-      const skip = skipFor(cell, parameters.matrix?.skip);
+      const skip = skipFor(cell, parameters.matrix?.skip, project);
       if (skip) {
         skipped.push(`${describeCell(cell)}: ${skip.reason}`);
         continue;
@@ -451,7 +458,7 @@ export async function walk(
     const axeModes = [own.mode, ...(plan?.axe ? plan.modes : []).filter((m) => m !== own.mode)];
     for (const mode of axeModes) {
       const cell = { density: own.density, mode };
-      if (skipFor(cell, parameters.matrix?.skip)) continue;
+      if (skipFor(cell, parameters.matrix?.skip, project)) continue;
       await switchTo(root, canvas, cell);
       try {
         await axe();
