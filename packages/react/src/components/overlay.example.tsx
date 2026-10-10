@@ -1,7 +1,8 @@
 import { Button, OverlayLayer, OverlayPopover } from '@rockaway/react';
+import type { ReactNode } from 'react';
 import { Dialog, DialogTrigger } from 'react-aria-components';
 
-export function Example() {
+export function Example(): ReactNode {
   return (
     <OverlayLayer>
       <DialogTrigger>

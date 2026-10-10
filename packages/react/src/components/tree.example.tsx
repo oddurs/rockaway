@@ -1,6 +1,7 @@
 import { Tree, TreeItem } from '@rockaway/react';
+import type { ReactNode } from 'react';
 
-export function Example() {
+export function Example(): ReactNode {
   return (
     <Tree aria-label="Files" defaultExpandedKeys={['src', 'components']} selectionMode="single">
       <TreeItem id="src" title="src">
