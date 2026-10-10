@@ -122,12 +122,30 @@ function from(m: Measure): Expr {
 function axis(start: Measure, end: Measure, which: Axis): { size: string; position: string } {
   const s = from(start);
   const e = from(end);
-  const size = combine(
-    { ...e, cells: 0, percent: (end.cell - start.cell) * 100 },
-    { ...s, cells: 0 },
-    -1,
-  );
-  return { size: css(size, which), position: css(s, which) };
+  // A layer that runs the length of the box: a share of it, so one layer
+  // covers a run of any number of cells, and its ends overshoot the box.
+  if (onEdge(start, 0) && onEdge(end, 1)) {
+    const size = combine(
+      { ...e, cells: 0, percent: (end.cell - start.cell) * 100 },
+      { ...s, cells: 0 },
+      -1,
+    );
+    return { size: css(size, which), position: css(s, which) };
+  }
+  // Anything else starts on a whole pixel (cairn 0266). Every engine snaps a
+  // layer's edges to whole pixels outward from where it lands, so a stroke
+  // a pixel wide that starts part-way through one covers two. Started on a
+  // whole pixel, and a whole number of pixels wide (screen.css rounds the
+  // strokes), it covers exactly its width in every engine. A mark whose size
+  // is strokes or dots alone is that size rounded, the same wherever it is; a
+  // mark that ends at a fraction of the cell ends on that fraction's pixel.
+  const position = `round(nearest, ${css(s, which)}, 1px)`;
+  const delta = combine(e, s, -1);
+  const size =
+    (delta.cells ?? 0) === 0
+      ? `max(1px, round(nearest, ${css(delta, which)}, 1px))`
+      : `calc(round(nearest, ${css(e, which)}, 1px) - ${position})`;
+  return { size, position };
 }
 
 const same = (a: Measure, b: Measure): boolean =>
