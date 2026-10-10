@@ -15,7 +15,11 @@
  *   outermost row or column of pixels, or the one its edge runs through?
  * - **leak**: is there no line on an edge the shape does not reach? A
  *   neighbour whose ink reaches that edge may spill as far as the snapping
- *   slack into this cell, so beside one the leak is read past the slack.
+ *   slack into this cell, so beside one the leak is read past the slack. A
+ *   shape's own mark set a little in from an edge, a braille dot or the bare
+ *   eighth of `▉`, antialiases into the pixels next to it, so only the lines
+ *   at least a pixel clear of the nearest mark, by the shape's own geometry,
+ *   are read; none, if the mark is that close.
  * - **step**: where two neighbours both reach the edge they share, does the
  *   ink sit in the same pixels on both sides of it, so the line runs on?
  * - **broken**: does every stroke that reaches an edge join, inside the cell,
@@ -35,7 +39,15 @@
  * Under Vitest's browser mode that is
  * `(element) => page.screenshot({ element, save: false })`.
  */
-import { clusterWidth, graphemes, type Shape, type Side, shapeOf } from '@rockaway/grid';
+import {
+  clusterWidth,
+  graphemes,
+  type Metrics,
+  resolve,
+  type Shape,
+  type Side,
+  shapeOf,
+} from '@rockaway/grid';
 
 export type Capture = (element: HTMLElement) => Promise<string | Blob>;
 
@@ -244,7 +256,12 @@ export async function checkContinuity(
       readonly ch: string;
       readonly side: Side;
       readonly inked: readonly boolean[];
+      /** The deepest line, from the edge in, that is clear of the shape's own marks. */
+      readonly clear: number;
     }[] = [];
+    // The stroke widths the layer's painter draws with, for resolving its
+    // shapes' marks to pixels: read once, from the first shaped run.
+    let strokes: Pick<Metrics, 'light' | 'heavy' | 'gap'> | undefined;
     // Chrome snaps a box's background to whole CSS pixels, so on a dense
     // screen the device pixel just inside a fractional edge may be bare by
     // design: an edge counts as reached within half a CSS pixel of it. This is
@@ -388,7 +405,23 @@ export async function checkContinuity(
                   .map(across)
                   .some((p) => p >= start + length / 4 && p < start + (length * 3) / 4),
               );
-              unreached.push({ col: col + i, row, ch, side, inked });
+              // How far in the shape's nearest mark on this side is, in device
+              // pixels from the cell's true edge, and how far the cell's own
+              // outermost line already is from that edge. A line is clear when
+              // a whole pixel of antialiasing still separates it from the mark.
+              strokes ??= strokeWidths(run);
+              const metrics: Metrics = { width: cellWidth, height: rect.height, ...strokes };
+              const inset = insetOf(shape, side, metrics) * dpr;
+              const edge =
+                side === 'west'
+                  ? x0 - (left * dpr - originX)
+                  : side === 'east'
+                    ? (left + cellWidth) * dpr - originX - x1
+                    : side === 'north'
+                      ? y0 - (rect.top * dpr - originY)
+                      : rect.bottom * dpr - originY - y1;
+              const clear = Math.floor(inset - 2 - edge + 1e-6);
+              unreached.push({ col: col + i, row, ch, side, inked, clear });
             }
           }
           if (shape.kind !== 'block') {
@@ -444,11 +477,16 @@ export async function checkContinuity(
       }
     }
 
-    for (const { col, row, ch, side, inked } of unreached) {
+    for (const { col, row, ch, side, inked, clear } of unreached) {
       const [dc, dr] = STEP[side];
       const next = cells.get(`${col + dc},${row + dr}`);
       const spilt = next?.shape.reach[OPPOSITE[side]] === true;
-      if (spilt ? inked.at(-1) : inked[0]) {
+      // The lines that can be read: within the slack, and clear of the
+      // shape's own marks. Beside a neighbour that spills, the innermost.
+      const readable = inked.map((_, depth) => depth).filter((depth) => depth <= clear);
+      if (readable.length === 0) continue;
+      const depth = (spilt ? readable.at(-1) : readable[0]) as number;
+      if (inked[depth]) {
         breaks.push({
           element: name,
           col,
@@ -517,6 +555,45 @@ export async function checkContinuity(
   return { layers: layers.length, shapes, joins, fills, unseen, breaks };
 }
 
+/**
+ * How far in from one side of its cell a shape's nearest mark starts, in CSS
+ * pixels: its own geometry from `shape.ts`, resolved at this cell's size and
+ * strokes. Infinity for a shape with no marks.
+ */
+function insetOf(shape: Shape, side: Side, metrics: Metrics): number {
+  let nearest = Number.POSITIVE_INFINITY;
+  for (const mark of shape.marks) {
+    const d =
+      side === 'west'
+        ? resolve(mark.x0, metrics.width, metrics)
+        : side === 'east'
+          ? metrics.width - resolve(mark.x1, metrics.width, metrics)
+          : side === 'north'
+            ? resolve(mark.y0, metrics.height, metrics)
+            : metrics.height - resolve(mark.y1, metrics.height, metrics);
+    nearest = Math.min(nearest, d);
+  }
+  return nearest;
+}
+
+/** The stroke widths a run is painted with, in CSS pixels, read through a probe. */
+function strokeWidths(run: HTMLElement): Pick<Metrics, 'light' | 'heavy' | 'gap'> {
+  const probe = run.ownerDocument.createElement('span');
+  probe.style.cssText = 'position:absolute; visibility:hidden; block-size:0';
+  run.append(probe);
+  const width = (name: string): number => {
+    probe.style.inlineSize = `var(${name}, 0px)`;
+    return probe.getBoundingClientRect().width;
+  };
+  const out = {
+    light: width('--rk-stroke-light'),
+    heavy: width('--rk-stroke-heavy'),
+    gap: width('--rk-stroke-gap'),
+  };
+  probe.remove();
+  return out;
+}
+
 /** Marks a region whose overflow marks are hidden for a screenshot. */
 const UNMARKED = 'data-rk-continuity-unmarked';
 
@@ -527,6 +604,9 @@ const UNMARKED = 'data-rk-continuity-unmarked';
  * region's overflow marks, each covering the cell at its edge (0208). The
  * content is made transparent and the marks hidden for the moment of the
  * screenshot, which moves nothing and takes focus from nothing.
+ *
+ * And every letter on the page is made transparent: a letter is the font's,
+ * never a line, and a descender reaches into the row below at dense.
  *
  * So is every other painted layer on the page. A letter is as tall as the
  * font says, not as the cell (0116): at dense, where the line box is the font
@@ -562,6 +642,15 @@ async function chromeOnly(
   hide.textContent = `[${UNMARKED}]::before, [${UNMARKED}]::after { visibility: hidden !important; }`;
   if (regions.length > 0) doc.head.append(hide);
   for (const el of regions) el.setAttribute(UNMARKED, '');
+  // Nor any letter, anywhere: a letter is as tall as the font says, not as
+  // the cell (0116), so at dense a descender in the line above a screen, or
+  // in a title row of its own, reaches into the cell below it. Letters are
+  // the font's and never a line; the check reads the cell's own geometry,
+  // which is drawn as backgrounds and is left alone.
+  const letters = doc.createElement('style');
+  letters.textContent =
+    '* { -webkit-text-fill-color: transparent !important; text-decoration-color: transparent !important; text-shadow: none !important; }';
+  doc.head.append(letters);
   // Nor any overlay open above it (cairn 0128): a backdrop would be read as
   // the frame's own ink. An overlay's own chrome is read with every other
   // part of the overlay layer hidden, so a dialog does not cover its backdrop.
@@ -579,6 +668,7 @@ async function chromeOnly(
     });
     for (const el of regions) el.removeAttribute(UNMARKED);
     hide.remove();
+    letters.remove();
     layers.forEach((el, i) => {
       el.style.visibility = shown[i] ?? '';
     });
