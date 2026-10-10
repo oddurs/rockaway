@@ -24,14 +24,31 @@ import {
   useSyncExternalStore,
 } from 'react';
 
-/** One promise per part, made once, settled when the part nears the view. */
+/**
+ * When a part comes alive: as it nears the view (an example, a shot), or when
+ * the browser is idle or the reader reaches for it (the shell's toolbar,
+ * always in view, whose script no first paint should wait on).
+ */
+export type When = 'near' | 'idle';
+
+/** One promise per part, made once, settled when the part is due. */
 const near = new Map<string, Promise<void>>();
 
-function nearView(id: string): Promise<void> {
+function nearView(id: string, when: When): Promise<void> {
   let promise = near.get(id);
   if (promise !== undefined) return promise;
   promise = new Promise<void>((done) => {
     const host = document.querySelector(`[data-site-deferred="${CSS.escape(id)}"]`);
+    if (when === 'idle') {
+      const go = (): void => {
+        for (const name of REACH) host?.removeEventListener(name, go);
+        done();
+      };
+      for (const name of REACH) host?.addEventListener(name, go, { once: true, passive: true });
+      if (typeof requestIdleCallback === 'function') requestIdleCallback(go, { timeout: 2500 });
+      else setTimeout(go, 1000);
+      return;
+    }
     if (host === null || typeof IntersectionObserver === 'undefined') {
       done();
       return;
@@ -53,26 +70,45 @@ function nearView(id: string): Promise<void> {
   return promise;
 }
 
+/** What a reader does to reach for a part before it is idle time. */
+const REACH = ['pointerover', 'pointerdown', 'focusin', 'touchstart'] as const;
+
 const subscribe = (): (() => void) => () => {};
 
 /** Renders its children; while the page hydrates, not until they are near the view. */
-function Gate({ id, children }: { readonly id: string; readonly children: ReactNode }): ReactNode {
+function Gate({
+  id,
+  when,
+  children,
+}: {
+  readonly id: string;
+  readonly when: When;
+  readonly children: ReactNode;
+}): ReactNode {
   // False on the server and while hydrating, true in any render after.
   const live = useSyncExternalStore(
     subscribe,
     () => true,
     () => false,
   );
-  if (!live && typeof window !== 'undefined') use(nearView(id));
+  if (!live && typeof window !== 'undefined') use(nearView(id, when));
   return children;
 }
 
-export function Deferred({ children }: { readonly children: ReactNode }): ReactNode {
+export function Deferred({
+  when = 'near',
+  children,
+}: {
+  readonly when?: When;
+  readonly children: ReactNode;
+}): ReactNode {
   const id = useId();
   return (
     <div data-site-deferred={id} className="site-deferred">
       <Suspense fallback={null}>
-        <Gate id={id}>{children}</Gate>
+        <Gate id={id} when={when}>
+          {children}
+        </Gate>
       </Suspense>
     </div>
   );
@@ -83,7 +119,7 @@ export function Deferred({ children }: { readonly children: ReactNode }): ReactN
  * renders it, the client hydrates it when it is about to be seen, in the
  * reader's glyphs. Call it at a module's top level, once per part.
  */
-export function deferred(load: () => Promise<ComponentType>): () => ReactNode {
+export function deferred(load: () => Promise<ComponentType>, when: When = 'near'): () => ReactNode {
   const Live = lazy(async () => {
     const [Part, { Glyphed }] = await Promise.all([load(), import('./Glyphed.tsx')]);
     return {
@@ -98,7 +134,7 @@ export function deferred(load: () => Promise<ComponentType>): () => ReactNode {
   });
   return function DeferredPart(): ReactNode {
     return (
-      <Deferred>
+      <Deferred when={when}>
         <Live />
       </Deferred>
     );

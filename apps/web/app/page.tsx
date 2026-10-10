@@ -97,8 +97,10 @@ export default function Home(): ReactNode {
             </div>
           </ScrollRegion>
           <figcaption>
-            A <Link href="/components/frame">Frame</Link> and{' '}
-            <Link href="/components/button">Buttons</Link>, with the theme's marks for the choices.
+            A comfortable <Link href="/components/form">Form</Link>: a{' '}
+            <Link href="/components/text-field">TextField</Link>, two{' '}
+            <Link href="/components/switch">Switches</Link> and{' '}
+            <Link href="/components/button">Buttons</Link>, in a Frame.
           </figcaption>
         </figure>
 

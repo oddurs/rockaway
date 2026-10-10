@@ -267,33 +267,6 @@ export function Shell({ nav, bindings }: ShellProps): ReactNode {
       <output className="site-status-message">
         {message.text === '' ? null : <span key={message.id}>{message.text}</span>}
       </output>
-      <span className="rk-status-segment site-status-look">
-        <LookButton part="theme" hint="t" value="sunset" />{' '}
-        <LookButton part="mode" hint="m" value="system" />{' '}
-        <LookButton part="density" hint="d" value="automatic" />
-      </span>
-      <span className="rk-status-segment site-status-copy">
-        <button
-          type="button"
-          className="rk-button"
-          aria-label="Copy the screen as text"
-          data-site-copy="text"
-        >
-          <span className="rk-button-label">
-            <Hint keys={'y'} /> copy
-          </span>
-        </button>{' '}
-        <button
-          type="button"
-          className="rk-button"
-          aria-label="Copy the screen as ANSI, for a terminal"
-          data-site-copy="ANSI"
-        >
-          <span className="rk-button-label">
-            <Hint keys={'Y'} /> ansi
-          </span>
-        </button>
-      </span>
       <span className="rk-status-segment site-status-keys">
         <Hint keys={helping ? 'esc' : '?'} /> {helping ? 'back' : 'keys'}
       </span>
@@ -316,37 +289,5 @@ function Hint({ keys }: { readonly keys: string }): ReactNode {
     <span className="rk-keyhint" aria-hidden="true">
       <kbd className="rk-keyhint-keys">{keys}</kbd>
     </span>
-  );
-}
-
-/**
- * One of the look's buttons. Its value is written by the head's look before
- * the first paint (the script after the bar) and by the extras after, never
- * by React, which renders the site's own look and leaves the words alone.
- */
-function LookButton({
-  part,
-  hint,
-  value,
-}: {
-  readonly part: string;
-  readonly hint: string;
-  readonly value: string;
-}): ReactNode {
-  return (
-    <button
-      type="button"
-      className="rk-button"
-      aria-label={`${part[0]?.toUpperCase()}${part.slice(1)}: ${value}`}
-      data-site-look={part}
-      suppressHydrationWarning
-    >
-      <span className="rk-button-label">
-        <Hint keys={hint} />{' '}
-        <span data-site-look-value suppressHydrationWarning>
-          {value}
-        </span>
-      </span>
-    </button>
   );
 }
