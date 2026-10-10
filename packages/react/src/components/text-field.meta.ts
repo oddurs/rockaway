@@ -155,11 +155,12 @@ export const textFieldMeta: ComponentMetaInput = defineMeta({
       text: toText(
         formBuffer(
           [
-            { label: 'Name', control: textFieldBuffer({ value: 'Ada Lovelace' }) },
+            { label: 'Name', control: textFieldBuffer({ value: 'Ada Lovelace' }), box: true },
             {
               label: 'Email',
               required: true,
               control: textFieldBuffer({ value: 'ada@' }),
+              box: true,
               error: 'Enter an email address.',
             },
             { control: textFieldBuffer({ size: 'lg', label: 'Repository', value: 'rockaway' }) },
@@ -169,4 +170,11 @@ export const textFieldMeta: ComponentMetaInput = defineMeta({
       ),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, and a box one cell wide.
+    min: toText(textFieldBuffer({ cols: 1 }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: box({ value: 'Ada Lovelace' }),
+  },
 });

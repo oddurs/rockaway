@@ -60,6 +60,7 @@ catppuccin
   light magenta: #ea76cb → #a6378c (for syntax.keyword on bg.surface)
   light bright-red: #d20f39 → #840017 (for fg.danger on bg.page, in more contrast)
   light bright-magenta: #ea76cb → #840e6d (for syntax.keyword on bg.surface, in more contrast)
+  light surface-sunken: #dcdfe6 → #dde1e7 (for fg.info on bg.surface-sunken)
   dark muted: #929ab4 → #9ba3bd (for fg.muted on bg.hover)
   dark border: #686980 → #74758c (for border.default on bg.surface)
   dark bright-blue: #89b4fa → #95c1ff (for fg.accent on bg.accent.subtle, in more contrast)
@@ -71,6 +72,7 @@ dracula
   dark bright-blue: #d6acff → #e6c0ff (for fg.accent on bg.surface, in more contrast)
   dark bright-red: #ff6e6e → #ffccc8 (for fg.danger on bg.page, in more contrast)
   dark bright-magenta: #ff92df → #ffc1f4 (for syntax.keyword on bg.surface, in more contrast)
+  dark surface-overlay: #3a3c48 → #383a45 (for fg.danger on bg.surface-overlay)
 nord
   dark foreground: #d8dee9 → #e5ebf6 (for fg.default on bg.hover)
   dark muted: #a1a7b3 → #b8bfcb (for fg.muted on bg.subtle)
@@ -84,6 +86,7 @@ nord
   dark bright-green: #a3be8c → #c7e3b0 (for fg.success on bg.page, in more contrast)
   dark bright-yellow: #ebcb8b → #fddd9c (for fg.warning on bg.warning.subtle, in more contrast)
   dark bright-magenta: #b48ead → #f4cbec (for syntax.keyword on bg.surface, in more contrast)
+  dark surface-overlay: #3d4450 → #3b414d (for fg.accent on bg.surface-overlay)
 solarized
   light foreground: #657b83 → #354a51 (for fg.default on bg.page)
   light muted: #89a0a8 → #51666d (for fg.muted on bg.page)
@@ -101,6 +104,7 @@ solarized
   light magenta: #d33682 → #c32375 (for syntax.keyword on bg.surface)
   light bright-green: #586e75 → #394e54 (for fg.success on bg.page, in more contrast)
   light bright-magenta: #6c71c4 → #424392 (for syntax.keyword on bg.surface, in more contrast)
+  light surface-sunken: #efe8d5 → #f1ead6 (for syntax.keyword on bg.surface-sunken)
   dark foreground: #839496 → #b9cbcd (for fg.default on bg.page)
   dark muted: #5b7376 → #8ca5a8 (for fg.muted on bg.page)
   dark blue: #268bd2 → #41a1ea (for fg.accent on bg.page)
@@ -117,6 +121,7 @@ solarized
   dark bright-blue: #839496 → #b4c6c8 (for fg.accent on bg.page, in more contrast)
   dark bright-cyan: #93a1a1 → #b7c5c5 (for fg.info on bg.page, in more contrast)
   dark bright-magenta: #6c71c4 → #afb8ff (for syntax.keyword on bg.surface, in more contrast)
+  dark surface-overlay: #103540 → #0d333d (for syntax.keyword on bg.surface-overlay)
 tokyo-night
   light foreground: #3760bf → #0f318c (for fg.default on bg.page)
   light muted: #6788cd → #375495 (for fg.muted on bg.page)
@@ -134,6 +139,7 @@ tokyo-night
   light border-strong: #8790d1 → #6b74b2 (for border.control on bg.page)
   light magenta: #9854f1 → #7b30ce (for syntax.keyword on bg.surface)
   light bright-magenta: #a463ff → #5e00ab (for syntax.keyword on bg.surface, in more contrast)
+  light surface-sunken: #d0d4e4 → #d4d7e7 (for syntax.keyword on bg.surface-sunken)
   dark muted: #8990b1 → #959dbe (for fg.muted on bg.hover)
   dark border: #60627b → #6e718a (for border.default on bg.page)
   dark bright-blue: #8db0ff → #95b8ff (for fg.accent on bg.accent.subtle, in more contrast)

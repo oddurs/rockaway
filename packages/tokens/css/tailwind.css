@@ -30,6 +30,10 @@
   --color-success-hover: var(--rk-bg-success-solid-hover);
   --color-success-subtle: var(--rk-bg-success-subtle);
   --color-surface: var(--rk-bg-surface);
+  --color-surface-base: var(--rk-bg-surface-base);
+  --color-surface-overlay: var(--rk-bg-surface-overlay);
+  --color-surface-raised: var(--rk-bg-surface-raised);
+  --color-surface-sunken: var(--rk-bg-surface-sunken);
   --color-warning: var(--rk-bg-warning-solid);
   --color-warning-hover: var(--rk-bg-warning-solid-hover);
   --color-warning-subtle: var(--rk-bg-warning-subtle);

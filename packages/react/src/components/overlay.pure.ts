@@ -18,10 +18,14 @@ import {
   type Style,
 } from '@rockaway/grid';
 import type { Glyphs } from '@rockaway/tokens';
-import { themeGlyphs } from '@rockaway/tokens';
+import { marks, themeGlyphs } from '@rockaway/tokens';
 import { drawRule } from './divider.pure.ts';
 
-export type OverlayKind = 'popover' | 'modal';
+/**
+ * What floats: a popover, a modal, or a tooltip, which is one row of reverse
+ * video, or framed as a popover is when it wraps.
+ */
+export type OverlayKind = 'popover' | 'modal' | 'tooltip';
 
 /** Where the content of a scrolled overlay is, in rows: what its right edge shows. */
 export interface OverlayScroll {
@@ -50,6 +54,12 @@ export interface OverlayFrameOptions {
    * outside it, is dropped rather than clipped, so the seam stays sound.
    */
   readonly dividers?: readonly OverlayDivider[];
+  /**
+   * Words set into the top edge, `╔ Discard changes? ═══╗`, in the text
+   * colour, truncated with the theme's ellipsis. Chrome: the overlay's content
+   * names it to a reader.
+   */
+  readonly title?: string;
 }
 
 /**
@@ -59,6 +69,9 @@ export interface OverlayFrameOptions {
  */
 const LINE: Style = { fg: 'border.default', attrs: Attr.none };
 const ASCII_LINE: Style = { fg: 'border.default', attrs: Attr.bold };
+const TITLE: Style = { fg: 'fg.default', attrs: Attr.bold };
+/** A one-row tooltip: reverse video, the state vocabulary's figure and ground swapped. */
+const ROW: Style = { attrs: Attr.reverse };
 
 /** The border set an overlay is framed in: heavier than the page, and heavier still for a modal. */
 function setOf(kind: OverlayKind, glyphs: Glyphs): BorderSetName {
@@ -68,7 +81,8 @@ function setOf(kind: OverlayKind, glyphs: Glyphs): BorderSetName {
 
 /**
  * An overlay's frame as a buffer: heavy for a popover, double for a modal,
- * ASCII under an ASCII theme, with any dividers across it. When its content scrolls, the right edge
+ * ASCII under an ASCII theme, with any dividers across it. A tooltip one row
+ * tall is a row of reverse video instead, and framed as a popover when taller. When its content scrolls, the right edge
  * carries the thumb, in the theme's full block, so the position is shown in
  * the frame's own cells and no column is added.
  */
@@ -80,10 +94,23 @@ export function overlayBuffer(
   const kind = options.kind ?? 'popover';
   const set = setOf(kind, glyphs);
   return Buffer.create(size).draw((draft) => {
+    if (kind === 'tooltip' && size.height === 1) {
+      // One row: reverse video across it, the words' ground, and no frame.
+      fillArea(draft, rect(0, 0, size.width, 1), ' ', ROW);
+      return;
+    }
     if (size.width < 2 || size.height < 2) return;
     drawBox(draft, rect(0, 0, size.width, size.height), {
       set: borderSets[set],
       style: set === 'ascii' ? ASCII_LINE : LINE,
+      ...(options.title === undefined || options.title === ''
+        ? {}
+        : {
+            title: options.title,
+            titleStyle: TITLE,
+            // A frame drawn in ASCII truncates in ASCII, whatever the theme.
+            ellipsis: set === 'ascii' ? marks.ascii.ellipsis : glyphs.mark.ellipsis,
+          }),
     });
     for (const divider of options.dividers ?? []) {
       const y = divider.row;

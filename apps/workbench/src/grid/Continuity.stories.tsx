@@ -13,7 +13,12 @@ import {
   shapeOf,
 } from '@rockaway/grid';
 import { type PainterName, Screen } from '@rockaway/react';
-import { checkContinuity, expectContinuity, formatContinuity } from '@rockaway/react/testing';
+import {
+  checkContinuity,
+  expectContinuity,
+  formatContinuity,
+  proseShapes,
+} from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
@@ -408,6 +413,157 @@ export const Spills: Story = {
 };
 
 /**
+ * A light stroke, read across in device pixels: how many lines of pixels it
+ * covers, and how fully. A stroke is crisp when every pixel it touches is
+ * wholly ink, and the same stroke in every engine covers the same number.
+ */
+async function strokeProfile(
+  el: HTMLElement,
+  capture: (el: HTMLElement) => Promise<string | Blob>,
+  across: 'x' | 'y',
+): Promise<number[]> {
+  const png = await capture(el);
+  const blob =
+    typeof png === 'string'
+      ? new Blob([Uint8Array.from(atob(png), (c) => c.charCodeAt(0))], { type: 'image/png' })
+      : png;
+  const bitmap = await createImageBitmap(blob);
+  const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+  const ctx = canvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+  ctx.drawImage(bitmap, 0, 0);
+  const { data, width, height } = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+  const lum = (i: number) => ((data[i] ?? 0) + (data[i + 1] ?? 0) + (data[i + 2] ?? 0)) / 3;
+  // The ground is the corner; coverage is how far each pixel along the
+  // middle of the cell is from it towards the ink.
+  const ground = lum(0);
+  const out: number[] = [];
+  if (across === 'x') {
+    const y = Math.floor(height / 2);
+    for (let x = 0; x < width; x++) out.push(lum((y * width + x) * 4));
+  } else {
+    const x = Math.floor(width / 2);
+    for (let y = 0; y < height; y++) out.push(lum((y * width + x) * 4));
+  }
+  // The ink is the run's own colour, resolved through a canvas.
+  const probe = new OffscreenCanvas(1, 1).getContext('2d') as OffscreenCanvasRenderingContext2D;
+  probe.fillStyle = getComputedStyle(el).color;
+  probe.fillRect(0, 0, 1, 1);
+  const [r, g, b] = probe.getImageData(0, 0, 1, 1).data;
+  const ink = ((r ?? 0) + (g ?? 0) + (b ?? 0)) / 3;
+  return out.map((v) => Math.round(((ground - v) / Math.max(1, ground - ink)) * 100) / 100);
+}
+
+export const StrokeWidth: Story = {
+  name: 'A stroke is whole device pixels',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--rk-x-2)' }}>
+      {[15.3, 16, 16.4, 17].flatMap((size) =>
+        [0, 0.41].map((shift) => (
+          <div
+            key={`${size} ${shift}`}
+            data-testid={`stroke ${size} ${shift}`}
+            style={{
+              fontSize: `${size}px`,
+              paddingInlineStart: `${shift}px`,
+              paddingBlockStart: `${shift}px`,
+              display: 'flex',
+              gap: 'var(--rk-x-2)',
+            }}
+          >
+            {/* Each alone and apart, so no neighbour's ink is in its screenshot. */}
+            <Screen draw={() => fromText('│')} cols={1} rows={1} />
+            <Screen draw={() => fromText('─')} cols={1} rows={1} />
+          </div>
+        )),
+      )}
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    const report: string[] = [];
+    for (const size of [15.3, 16, 16.4, 17]) {
+      for (const shift of [0, 0.41]) {
+        const here = canvas.getByTestId(`stroke ${size} ${shift}`);
+        const [v, h] = [...here.querySelectorAll<HTMLElement>('[data-rk-shape]')];
+        const vertical = await strokeProfile(v as HTMLElement, run.capture, 'x');
+        const horizontal = await strokeProfile(h as HTMLElement, run.capture, 'y');
+        const lines = (p: number[]) => p.filter((c) => c > 0.1);
+        // The stroke's own width, resolved to pixels through a probe.
+        const probe = document.createElement('span');
+        probe.style.cssText = 'position:absolute; inline-size:var(--rk-stroke-light)';
+        (v as HTMLElement).append(probe);
+        const stroke = probe.getBoundingClientRect().width;
+        probe.remove();
+        const want = Math.round(stroke * devicePixelRatio);
+        report.push(
+          `${size}px +${shift}: stroke ${stroke}px; │ ${JSON.stringify(lines(vertical))}; ─ ${JSON.stringify(lines(horizontal))}`,
+        );
+        // Whole pixels, the same count across and down, every one wholly ink.
+        expect(Number.isInteger(stroke), `${size}px: ${stroke}px`).toBe(true);
+        expect(lines(vertical).length, `│ at ${size}px +${shift}`).toBe(want);
+        expect(lines(horizontal).length, `─ at ${size}px +${shift}`).toBe(want);
+        expect(Math.min(...lines(vertical), ...lines(horizontal))).toBeGreaterThan(0.9);
+      }
+    }
+    console.info(`strokes at ${devicePixelRatio}x\n${report.join('\n')}`);
+  },
+};
+
+/**
+ * Shapes drawn outside a painted layer (0177). Prose draws the rule under a
+ * heading and a quote's gutter on pseudo-elements, which hold no character to
+ * look up, so the caller says where each is (`proseShapes` does it for prose)
+ * and they are read cell by cell as a painted `─` or `│` is. The same rule
+ * drawn half as long is caught where it stops, and a heading's descenders in
+ * the row above the rule are the heading's, not the rule's.
+ */
+export const Outside: Story = {
+  name: 'Shapes outside a painted layer',
+  args: { density: 'normal' },
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--rk-y-1)' }}>
+      <style>
+        {'.short h2::after { background-size: 50% var(--rk-stroke-light) !important; }'}
+      </style>
+      <article
+        className="rk-prose"
+        data-testid="whole"
+        style={{ inlineSize: 'calc(30 * var(--rk-cell-width))' }}
+      >
+        <h2>Spacing, glyphs</h2>
+        <blockquote>
+          <p>A quote two rows tall in a box this narrow, so its gutter runs on.</p>
+        </blockquote>
+      </article>
+      <article className="rk-prose short" data-testid="short">
+        <h2>Spacing, glyphs</h2>
+      </article>
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    const run = runner();
+    if (!run) return;
+    const whole = canvas.getByTestId('whole');
+    const shapes = proseShapes(whole);
+    expect(shapes.map((s) => s.shape)).toEqual(['\u2500', '\u2502']);
+    const report = await expectContinuity(whole, { capture: run.capture, shapes });
+    expect(report.outside).toBe(2);
+    // Fifteen cells of rule, and the gutter's rows: every one read, and joined.
+    expect(report.shapes).toBeGreaterThan(16);
+    expect(report.joins).toBeGreaterThan(14);
+
+    const short = canvas.getByTestId('short');
+    const cut = await checkContinuity(short, { capture: run.capture, shapes: proseShapes(short) });
+    const gaps = cut.breaks.filter((b) => b.what === 'gap');
+    expect(gaps.length, formatContinuity(cut)).toBeGreaterThan(3);
+    // Where the rule stops, past the middle of the heading.
+    expect(Math.min(...gaps.map((b) => b.col))).toBeGreaterThan(5);
+  },
+};
+
+/**
  * Marks set a little in from an edge: braille dots, an eighth of a cell from
  * each side, and blocks that leave an eighth or more of their cell bare. At a
  * cell that starts part-way through a pixel, the mark's edge antialiases into
@@ -442,11 +598,19 @@ export const InsetMarks: Story = {
   play: async ({ canvas }) => {
     const run = runner();
     if (!run) return;
+    // WebKit draws the one-eighth block short of its cell at 16.4px, at some
+    // offsets in (0339). There, at that size, the only break allowed is that
+    // block's gap; every other mark is held as in every engine.
+    const webkit = /AppleWebKit/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
     for (const size of [15.3, 16.4, 17]) {
       for (const shift of [0.13, 0.41, 0.69]) {
-        const report = await expectContinuity(canvas.getByTestId(`insets ${size} ${shift}`), {
-          capture: run.capture,
-        });
+        const el = canvas.getByTestId(`insets ${size} ${shift}`);
+        if (webkit && size === 16.4) {
+          const known = await checkContinuity(el, { capture: run.capture });
+          expect(known.breaks.every((b) => b.ch === '\u2595' && b.what === 'gap')).toBe(true);
+          continue;
+        }
+        const report = await expectContinuity(el, { capture: run.capture });
         expect(report.shapes).toBe(27);
       }
     }
@@ -524,6 +688,8 @@ async function inkRows(
  */
 export const Prints: Story = {
   args: { density: 'normal' },
+  // Playwright prints to PDF only in Chromium (cairn 0124).
+  tags: ['print'],
   render: () => (
     <Screen
       data-testid="print"

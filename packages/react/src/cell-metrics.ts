@@ -21,27 +21,34 @@ export const DEFAULT_CELL: CellMetrics = { width: 8.4, height: 24 };
 const PROBE = '0'.repeat(50);
 
 /**
- * Measure one cell of the font `el` is rendering in. The probe is fifty
- * characters wide, so sub-pixel advances average out instead of rounding.
+ * Measure one cell of the font `el` is rendering in. Layout rounds a box up to
+ * 1/64px, a constant that a single probe fifty characters wide spreads over
+ * the cell as a bias (9.6003 for 9.6, which made a box of 120 cells hold 119
+ * of them). So the cell is the difference between a probe of a hundred
+ * characters and one of fifty: the rounding cancels and the advance is left.
  */
 export function measureCell(el: HTMLElement): CellMetrics {
   const doc = el.ownerDocument;
-  const probe = doc.createElement('span');
-  probe.textContent = PROBE;
-  probe.setAttribute('aria-hidden', 'true');
-  probe.style.position = 'absolute';
-  probe.style.visibility = 'hidden';
-  probe.style.whiteSpace = 'pre';
-  probe.style.pointerEvents = 'none';
-  el.append(probe);
-
-  const rect = probe.getBoundingClientRect();
+  const probe = (text: string): HTMLElement => {
+    const span = doc.createElement('span');
+    span.textContent = text;
+    span.setAttribute('aria-hidden', 'true');
+    span.style.position = 'absolute';
+    span.style.visibility = 'hidden';
+    span.style.whiteSpace = 'pre';
+    span.style.pointerEvents = 'none';
+    el.append(span);
+    return span;
+  };
+  const [short, long] = [probe(PROBE), probe(PROBE + PROBE)];
+  const [one, two] = [short.getBoundingClientRect(), long.getBoundingClientRect()];
   const style = doc.defaultView?.getComputedStyle(el);
   const lineHeight = Number.parseFloat(style?.lineHeight ?? '');
-  probe.remove();
+  short.remove();
+  long.remove();
 
-  const width = rect.width / PROBE.length;
-  const height = Number.isFinite(lineHeight) && lineHeight > 0 ? lineHeight : rect.height;
+  const width = (two.width - one.width) / PROBE.length;
+  const height = Number.isFinite(lineHeight) && lineHeight > 0 ? lineHeight : one.height;
   return {
     width: width > 0 ? width : DEFAULT_CELL.width,
     height: height > 0 ? height : DEFAULT_CELL.height,

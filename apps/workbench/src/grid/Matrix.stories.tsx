@@ -147,6 +147,20 @@ export const Targets: Story = {
           a checkbox drawn in cells
         </label>
       </div>
+      {/* The same hidden input with no label around it: nothing to press. */}
+      <div data-testid="unlabelled">
+        <span
+          style={{
+            position: 'absolute',
+            inlineSize: '1px',
+            blockSize: '1px',
+            overflow: 'hidden',
+            clipPath: 'inset(50%)',
+          }}
+        >
+          <input type="checkbox" aria-label="nothing to press" />
+        </span>
+      </div>
     </div>
   ),
   play: async ({ canvas }) => {
@@ -160,8 +174,12 @@ export const Targets: Story = {
     expect(checkTargets(big, { minHeight: 44 }).failures).toEqual([
       expect.objectContaining({ rule: 'height', height: 32 }),
     ]);
-    // A visually hidden input is not a target, however big its box claims to be.
-    expect(checkTargets(canvas.getByTestId('visually-hidden'), { minHeight: 44 })).toEqual({
+    // A visually hidden input is measured by the label around it, which is
+    // what a pointer meets: here 44px tall, so it passes even at minHeight 44.
+    const hidden = checkTargets(canvas.getByTestId('visually-hidden'), { minHeight: 44 });
+    expect(hidden).toEqual({ targets: 1, failures: [] });
+    // With no label, it is no target at all, however big its box claims to be.
+    expect(checkTargets(canvas.getByTestId('unlabelled'), { minHeight: 44 })).toEqual({
       targets: 0,
       failures: [],
     });

@@ -6,8 +6,10 @@
   [data-rk-theme='nord'] {
     /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
     --rk-conformance: standard;
-    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
-    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    /* The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296). */
+    --rk-font-content: 1.3;
+    --rk-font-family-display: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
     --rk-font-weight-medium: 500;
     --rk-font-weight-regular: 400;
@@ -126,6 +128,14 @@
     --rk-glyph-border-single-vertical: "│";
     --rk-glyph-delimiter-control-close: "]";
     --rk-glyph-delimiter-control-open: "[";
+    --rk-glyph-fill-1: "▏";
+    --rk-glyph-fill-2: "▎";
+    --rk-glyph-fill-3: "▍";
+    --rk-glyph-fill-4: "▌";
+    --rk-glyph-fill-5: "▋";
+    --rk-glyph-fill-6: "▊";
+    --rk-glyph-fill-7: "▉";
+    --rk-glyph-fill-8: "█";
     --rk-glyph-key-alt: "⌥";
     --rk-glyph-key-backspace: "⌫";
     --rk-glyph-key-ctrl: "⌃";
@@ -160,6 +170,7 @@
     --rk-glyph-mark-radio: "●";
     --rk-glyph-mark-radio-empty: "○";
     --rk-glyph-mark-required: "*";
+    --rk-glyph-mark-separator: "›";
     --rk-glyph-mark-sort-ascending: "▴";
     --rk-glyph-mark-sort-descending: "▾";
     --rk-glyph-mark-switch-thumb: "●";
@@ -192,15 +203,21 @@
     --rk-palette-dark-cursor: oklch(89.9% 0.0164 262.7);
     --rk-palette-dark-cyan: oklch(77.5% 0.0622 217.5);
     --rk-palette-dark-faint: oklch(58.3% 0.02 262.7);
+    --rk-palette-dark-focus: oklch(74.7% 0.0591 248.7);
     --rk-palette-dark-foreground: oklch(93.9% 0.0164 262.7);
     --rk-palette-dark-green: oklch(76.8% 0.0749 131.1);
     --rk-palette-dark-hover: oklch(39.9% 0.0221 264.2);
+    --rk-palette-dark-inverse: oklch(93.9% 0.0164 262.7);
     --rk-palette-dark-magenta: oklch(75.7% 0.0625 332.7);
     --rk-palette-dark-muted: oklch(80.2% 0.0184 262.7);
     --rk-palette-dark-red: oklch(76.1% 0.1206 15.3);
     --rk-palette-dark-selection: oklch(45.2% 0.0352 264.1);
     --rk-palette-dark-subtle: oklch(37.6% 0.0223 264.2);
     --rk-palette-dark-surface: oklch(35.3% 0.0226 264.2);
+    --rk-palette-dark-surface-base: oklch(34.4% 0.0227 264.2);
+    --rk-palette-dark-surface-overlay: oklch(37.4% 0.0222 264.2);
+    --rk-palette-dark-surface-raised: oklch(36.4% 0.0224 264.2);
+    --rk-palette-dark-surface-sunken: oklch(32.4% 0.0229 264.2);
     --rk-palette-dark-tint-blue: oklch(37.6% 0.028 264.2);
     --rk-palette-dark-tint-cyan: oklch(38.7% 0.0284 264.2);
     --rk-palette-dark-tint-green: oklch(38.6% 0.0302 264.2);
@@ -226,15 +243,21 @@
     --rk-palette-light-cursor: oklch(89.9% 0.0164 262.7);
     --rk-palette-light-cyan: oklch(77.5% 0.0622 217.5);
     --rk-palette-light-faint: oklch(58.3% 0.02 262.7);
+    --rk-palette-light-focus: oklch(74.7% 0.0591 248.7);
     --rk-palette-light-foreground: oklch(93.9% 0.0164 262.7);
     --rk-palette-light-green: oklch(76.8% 0.0749 131.1);
     --rk-palette-light-hover: oklch(39.9% 0.0221 264.2);
+    --rk-palette-light-inverse: oklch(93.9% 0.0164 262.7);
     --rk-palette-light-magenta: oklch(75.7% 0.0625 332.7);
     --rk-palette-light-muted: oklch(80.2% 0.0184 262.7);
     --rk-palette-light-red: oklch(76.1% 0.1206 15.3);
     --rk-palette-light-selection: oklch(45.2% 0.0352 264.1);
     --rk-palette-light-subtle: oklch(37.6% 0.0223 264.2);
     --rk-palette-light-surface: oklch(35.3% 0.0226 264.2);
+    --rk-palette-light-surface-base: oklch(34.4% 0.0227 264.2);
+    --rk-palette-light-surface-overlay: oklch(37.4% 0.0222 264.2);
+    --rk-palette-light-surface-raised: oklch(36.4% 0.0224 264.2);
+    --rk-palette-light-surface-sunken: oklch(32.4% 0.0229 264.2);
     --rk-palette-light-tint-blue: oklch(37.6% 0.028 264.2);
     --rk-palette-light-tint-cyan: oklch(38.7% 0.0284 264.2);
     --rk-palette-light-tint-green: oklch(38.6% 0.0302 264.2);

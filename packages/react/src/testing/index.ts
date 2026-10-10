@@ -10,6 +10,7 @@ export {
   formatReport,
   type OffAnchor,
   type OffGrid,
+  type SizedText,
   type Unexplained,
   type UnknownLevel,
   type Violation,
@@ -23,6 +24,8 @@ export {
   checkContinuity,
   expectContinuity,
   formatContinuity,
+  type OutsideShape,
+  proseShapes,
 } from './continuity.ts';
 export {
   checkField,

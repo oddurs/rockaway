@@ -178,6 +178,8 @@ export function CodeBlock({
       {...screen}
       rows={lines.length + (frame ? 2 : 0)}
       draw={draw}
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
       className={cx('rk-code', className)}
       role="group"
       aria-label={name}
@@ -292,6 +294,7 @@ export function CodeSnapshot({
         cols={buffer.width}
         rows={buffer.height}
         draw={draw}
+        data-rk-pane=""
         className="rk-code rk-code-snapshot"
       >
         {/* The picture, for a reader: one image named in words, over its cells. */}

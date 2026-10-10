@@ -35,6 +35,15 @@ export interface PropMeta {
   readonly description?: string;
 }
 
+/** How strict "whole cells" is (0072, 0123), loosest first. */
+export type ConformanceLevel = 'strict' | 'standard' | 'loose';
+
+/**
+ * What the conformance levels see a component as (0182): a control holds half
+ * a cell inside it at `standard`, and a pane holds whole cells even at `loose`.
+ */
+export type GridMark = 'control' | 'pane';
+
 /**
  * What `scripts/metadata.ts` reads for each exported component, and writes to
  * `extracted.ts`.
@@ -45,6 +54,10 @@ export interface ExtractedPart {
   readonly props: readonly PropMeta[];
   readonly inherits: readonly string[];
   readonly tokens: readonly string[];
+  /** The marks its source writes: `data-rk-control`, `data-rk-pane`. */
+  readonly marks: readonly GridMark[];
+  /** The strictest level a workbench story renders it at with the check on; none if no story does. */
+  readonly level?: ConformanceLevel;
 }
 
 /** A part the reader imports: `List`, `ListItem`. */
@@ -171,6 +184,41 @@ export interface ComponentMeta {
   /** The tokens its stylesheets and painters read, as custom properties. */
   readonly tokens: readonly string[];
   readonly snapshots: readonly Snapshot[];
+  /**
+   * What is wrong and not yet fixed, outside the component's control: a
+   * dependency's quirk a consumer may meet, and what to do about it.
+   */
+  readonly knownIssues?: readonly string[];
+  /** How it sits on the grid: read from its code and its stories, never written by hand. */
+  readonly grid: GridMeta;
+}
+
+/** A size in cells. */
+export interface CellSize {
+  readonly width: number;
+  readonly height: number;
+}
+
+/** How a component sits on the grid (0167, 0182). */
+export interface GridMeta {
+  /**
+   * What the conformance levels see it as, from the attributes it writes
+   * (0182): a control, a pane, or neither.
+   */
+  readonly is: readonly GridMark[];
+  /**
+   * The strictest level it is held to: the strictest level of any workbench
+   * story that renders it with the conformance check on, every one of which
+   * passes in CI (0123).
+   */
+  readonly level: ConformanceLevel;
+  /** In cells, as its buffer functions draw it. */
+  readonly size: {
+    /** The smallest it draws: no words, or the least room its chrome needs. */
+    readonly min: CellSize;
+    /** Its default variant, with typical words, or at a typical size where the page sizes it. */
+    readonly default: CellSize;
+  };
 }
 
 /** The whole of `meta.json`. */
@@ -205,6 +253,13 @@ export interface ComponentMetaInput<Part extends string = string> {
   }[];
   readonly accessibility: Accessibility;
   readonly snapshots: readonly SnapshotInput[];
+  readonly knownIssues?: ComponentMeta['knownIssues'];
+  /**
+   * The component drawn by its own buffer functions, as a snapshot's text is,
+   * at its smallest and at its default: what the published sizes are
+   * measured from.
+   */
+  readonly size: { readonly min: string; readonly default: string };
 }
 
 /**

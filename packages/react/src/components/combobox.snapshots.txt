@@ -1,0 +1,14 @@
+── Closed
+[ Find an author  ▾]
+[ Grace Hopper    ▾]
+── Filtering
+[ aur             ▾]
+┏━━━━━━━━━━━━━━━━━━┓
+┃ ▸ Aurora Rhee    ┃
+┃   Laurent Kim    ┃
+┗━━━━━━━━━━━━━━━━━━┛
+── Nothing matches
+[ xyz             ▾]
+┏━━━━━━━━━━━━━━━━━━┓
+┃   No matches     ┃
+┗━━━━━━━━━━━━━━━━━━┛

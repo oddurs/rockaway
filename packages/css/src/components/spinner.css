@@ -1,0 +1,21 @@
+/*
+ * Spinner (cairn 0101): a frame the cell draws, then a cell and the label.
+ */
+@layer rk.components {
+  .rk-spinner {
+    display: inline-block;
+    vertical-align: top;
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+  }
+
+  .rk-spinner-frame,
+  .rk-spinner-frame > .rk-row {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .rk-spinner-frame {
+    color: var(--rk-fg-accent);
+  }
+}

@@ -41,6 +41,12 @@ export const overlayMeta: ComponentMetaInput = defineMeta({
     },
     {
       kind: 'import',
+      name: 'OverlayTooltip',
+      description:
+        "React Aria's Tooltip on the cell grid of its trigger's screen: one row of reverse video, or framed heavy when its words wrap, at most 40 cells wide. Never a sheet.",
+    },
+    {
+      kind: 'import',
       name: 'OverlayLayer',
       description:
         'The portal root every overlay opens into, inside the app’s contexts. It draws nothing.',
@@ -106,4 +112,11 @@ export const overlayMeta: ComponentMetaInput = defineMeta({
       text: toText(backdropBuffer({ width: 16, height: 2 })),
     },
   ],
+  // Drawn by its own buffer functions: the published size is measured from these (0167).
+  size: {
+    // Its least: no words, or the least room its chrome needs.
+    min: toText(overlayBuffer({ width: 2, height: 2 }), { trimEnd: false }),
+    // The default variant, with words like these.
+    default: toText(overlayBuffer({ width: 16, height: 4 }), { trimEnd: false }),
+  },
 });

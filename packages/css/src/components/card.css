@@ -1,0 +1,42 @@
+/*
+ * Card (cairn 0321).
+ *
+ * A screen whose frame the engine draws and whose content decides its
+ * height, as Callout's does: the content layer is in the page's flow, and the
+ * screen measures it and draws the frame to fit.
+ *
+ * Inside the border the content is rhythm (0311): a Flow, padded by the
+ * comfort's half-steps, half a row above and below when comfortable, and a
+ * cell either side, since half-steps across always pair. The flow is the seam
+ * (0314): it starts on a whole row and closes to whole rows, padding and all,
+ * so the card's outer box is whole rows.
+ */
+@layer rk.components {
+  .rk-card {
+    display: block;
+  }
+
+  .rk-card > .rk-content {
+    position: relative;
+    box-sizing: border-box;
+    /* The screen's own count, `floor(width / cell)`, said in CSS. */
+    inline-size: round(down, 100%, var(--rk-cell-width));
+    padding-block: var(--rk-cell-height);
+    padding-inline: calc(var(--rk-cell-width) + var(--rk-rhythm-pad-x) * var(--rk-step-x));
+    white-space: normal;
+  }
+
+  /* The half-steps above and below are inside the flow, which is the seam:
+   * it starts on the row under the border, and its padding pairs to whole
+   * rows, so the flow and the card around it end on whole rows. */
+  .rk-card-body {
+    padding-block: calc(var(--rk-rhythm-pad-y) * var(--rk-step-y));
+  }
+
+  /* The frame is lifted over the content's ground, and takes no pointer, so a
+   * link inside is still a link. */
+  .rk-card > .rk-frame {
+    z-index: 1;
+    pointer-events: none;
+  }
+}

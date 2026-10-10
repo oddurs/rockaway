@@ -33,8 +33,30 @@
      * focus with no row under the cursor. React Aria leaves it there when the
      * row it would have entered on is disabled, or when there are no rows. */
     /* A scrolled list stops on a whole row at every density, however it was
-     * scrolled: the wheel, a finger, or the keyboard bringing a row in. */
-    scroll-snap-type: block mandatory;
+     * scrolled: the wheel, a finger, or the keyboard bringing a row in. Only
+     * the rows near the viewport are in the page (0115), so they are the only
+     * snap points: "mandatory" would pull a jump far down the list back to
+     * them. "proximity" lets it land, then the rows there snap it to a whole
+     * row; List keeps its top row across a change of density itself. */
+    scroll-snap-type: block proximity;
+    /* The virtualiser places every row itself; the browser's scroll anchoring
+     * would move the position again when the rows in the page change. */
+    overflow-anchor: none;
+  }
+
+  /* The virtualiser sizes its rows in whole pixels from the box's clientWidth,
+   * which rounds: a viewport 201.64px wide gets rows 202px wide, off the grid,
+   * and a fraction of a pixel to scroll across. Its sizes are inline styles,
+   * so only !important reaches them. The rows' heights and offsets are its
+   * own, and right: they are the measured cell. */
+  .rk-list-box > [role="presentation"] {
+    /* biome-ignore lint/complexity/noImportantStyles: the virtualiser's size is an inline style */
+    inline-size: auto !important;
+  }
+
+  .rk-list-box > [role="presentation"] > [role="presentation"] {
+    /* biome-ignore lint/complexity/noImportantStyles: the virtualiser's size is an inline style */
+    inline-size: 100% !important;
   }
 
   .rk-list-scrollbar {
@@ -67,6 +89,10 @@
   /* The reserved cells: the cursor's, and the check's under multi-select. */
   .rk-list-mark {
     inline-size: var(--rk-cell-width);
+    /* A whole cell down as well as across: an empty mark, on every row but
+     * the cursor's, is otherwise a box of no height in the middle of its
+     * row, half a row off the grid (found by the site's shell, 0104). */
+    block-size: var(--rk-cell-height);
     flex: none;
     /* A blank is a cell too: in prose, where whitespace collapses, a mark with
      * no cursor would otherwise have no height, and sit half a row down. */
@@ -88,7 +114,7 @@
    * reversed words are exactly the list's ground. In forced colors that is the
    * reader's text behind their canvas, opted out of the backplate below. */
   .rk-list-item[data-selected] {
-    background: var(--rk-fg-default);
+    background: var(--rk-bg-inverse);
     color: var(--rk-bg-surface);
   }
 

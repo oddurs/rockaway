@@ -36,27 +36,12 @@
  *     cell is the ring
  *
  * A table wider than the room it has keeps its columns and scrolls across in
- * whole columns, its overflow marked; nothing else scrolls.
+ * whole columns, its overflow marked. Given `rows`, it shows that many at
+ * once and its body scrolls down in whole rows, following the cursor as React
+ * Aria brings the focused row into view; a scrollbar drawn in cells, List's,
+ * stands in the cell inside the right edge (0281).
  */
-import {
-  Attr,
-  type BorderSetName,
-  Buffer,
-  borderSets,
-  type Draft,
-  drawBox,
-  drawText,
-  fixed,
-  grow,
-  rect,
-  type Size,
-  type Style,
-  solve,
-  stringWidth,
-  type Track,
-  truncate,
-} from '@rockaway/grid';
-import { type Glyphs, marks } from '@rockaway/tokens';
+import { type BorderSetName, type Size, stringWidth } from '@rockaway/grid';
 import {
   Children,
   type CSSProperties,
@@ -89,10 +74,21 @@ import {
 } from 'react-aria-components';
 import { cellsIn, measureCell } from '../cell-metrics.ts';
 import { cx } from '../cx.ts';
-import { defaultGlyphs, useGlyphs } from '../glyphs.tsx';
+import { useGlyphs } from '../glyphs.tsx';
+import { Cells } from '../paint/render.tsx';
 import { type PainterName, Screen } from '../screen.tsx';
 import { watchOverflowMarks } from '../scroll.ts';
-import { drawRule } from './divider.pure.ts';
+import { scrollbarBuffer } from './list.pure.ts';
+import {
+  EMPTY,
+  fitCell,
+  rowMarks,
+  sortMark,
+  tableChromeBuffer,
+  tableHeight,
+  tableLayout,
+  windowOffset,
+} from './table.pure.ts';
 
 /** How wide a column's content is: cells, a share of what is left, or its widest value. */
 export type ColumnWidth = number | 'auto' | `${number}fr`;
@@ -130,105 +126,8 @@ export interface TableLayout {
   readonly width: number;
   /** True when the columns could not fit the room given, and the table scrolls. */
   readonly overflows: boolean;
-}
-
-/** Cells reserved at the start of every row: the cursor's, and the check's under multi-select. */
-export function markCells(selectionMode: SelectionMode = 'none'): number {
-  return selectionMode === 'multiple' ? 2 : 1;
-}
-
-function shareOf(width: ColumnWidth | undefined): number | undefined {
-  if (typeof width !== 'string' || !width.endsWith('fr')) return undefined;
-  const weight = Number.parseFloat(width);
-  return Number.isFinite(weight) && weight > 0 ? weight : 1;
-}
-
-/**
- * Solves the columns in whole cells. `values` are each column's widest value
- * in cells, for `auto`. `room` is the frame's width; left out, every share
- * column takes its minimum and the table is as narrow as it can be.
- */
-export function tableLayout(
-  columns: readonly ColumnShape[],
-  values: readonly number[],
-  options: { readonly room?: number; readonly selectionMode?: SelectionMode } = {},
-): TableLayout {
-  const lead = columns.map((_, i) => (i === 0 ? markCells(options.selectionMode) : 1));
-  const chrome =
-    2 + Math.max(0, columns.length - 1) + lead.reduce((a, b) => a + b, 0) + columns.length;
-  const tracks: Track[] = columns.map((column, i) => {
-    const header = stringWidth(column.header);
-    const share = shareOf(column.width);
-    if (share !== undefined) {
-      return grow(share, { min: Math.max(1, column.minWidth ?? Math.min(header, 4)) });
-    }
-    if (typeof column.width === 'number') return fixed(Math.max(1, Math.trunc(column.width)));
-    return fixed(Math.max(1, header, values[i] ?? 0));
-  });
-  const natural = solve(
-    0,
-    tracks.map((t) => (t.kind === 'grow' ? fixed(t.min ?? 1) : t)),
-  );
-  const narrowest = natural.overflow;
-  const room = options.room === undefined ? narrowest : options.room - chrome;
-  const solved = solve(Math.max(room, narrowest), tracks);
-  const content = solved.sizes;
-  const sizes = content.map((cells, i) => (lead[i] ?? 1) + cells + 1);
-  // The left border is cell 0; each track follows the one before and its rule.
-  const rules: number[] = [];
-  let x = 1;
-  sizes.forEach((size, i) => {
-    x += size;
-    if (i < sizes.length - 1) {
-      rules.push(x);
-      x += 1;
-    }
-  });
-  const width = 2 + sizes.reduce((a, b) => a + b, 0) + Math.max(0, sizes.length - 1);
-  return {
-    content,
-    lead,
-    tracks: sizes,
-    rules,
-    width,
-    overflows: options.room !== undefined && room < narrowest,
-  };
-}
-
-/** The line's style: the ordinary edge, as Frame draws it. */
-const LINE: Style = { fg: 'border.default', attrs: Attr.none };
-const TITLE: Style = { fg: 'fg.default', attrs: Attr.none };
-
-/**
- * The chrome: the frame, the header rule and the column rules. The rules are
- * edges, so the junction table makes every crossing; a title in the top edge
- * stops short of the first `┬` (0175).
- */
-function drawChrome(
-  draft: Draft,
-  size: Size,
-  layout: TableLayout,
-  options: { readonly title?: string; readonly border?: BorderSetName; readonly empty?: boolean },
-  glyphs: Glyphs,
-): void {
-  const border = options.border ?? glyphs.borderSet;
-  const set = borderSets[border];
-  drawBox(draft, rect(0, 0, size.width, size.height), {
-    set,
-    style: LINE,
-    titleStyle: TITLE,
-    ellipsis: set.ascii ? marks.ascii.ellipsis : glyphs.mark.ellipsis,
-    ...(options.title === undefined ? {} : { title: options.title }),
-  });
-  if (size.height > 3) drawRule(draft, rect(0, 2, size.width, 1), { border }, glyphs);
-  // An empty body is one row of words across the table, so the column rules
-  // stop at the header rule rather than run through it.
-  const down = options.empty ? Math.min(3, size.height) : size.height;
-  for (const x of layout.rules) {
-    if (x > 0 && x < size.width - 1) {
-      drawRule(draft, rect(x, 0, 1, down), { border, orientation: 'vertical' }, glyphs);
-    }
-  }
+  /** True when a cell inside the right edge holds the body's scrollbar (0281). */
+  readonly scrollbar: boolean;
 }
 
 /** A row as text. */
@@ -252,155 +151,10 @@ export interface TableText {
   readonly border?: BorderSetName;
   /** What an empty table says. */
   readonly empty?: string;
-}
-
-/** A value laid into its column: cut with the theme's ellipsis, and aligned. */
-export function fitCell(
-  text: string,
-  width: number,
-  align: ColumnAlign = 'start',
-  glyphs: Glyphs = defaultGlyphs,
-): string {
-  const cut = truncate(text, width, glyphs.mark.ellipsis);
-  const spare = Math.max(0, width - stringWidth(cut));
-  return align === 'end' ? ' '.repeat(spare) + cut : cut + ' '.repeat(spare);
-}
-
-/** The marks at the start of a row: the cursor's cell, and under multi-select the check's. */
-export function rowMarks(
-  row: Pick<RowText, 'cursor' | 'selected'>,
-  selectionMode: SelectionMode = 'none',
-  glyphs: Glyphs = defaultGlyphs,
-): string {
-  const cursor = row.cursor ? glyphs.mark.cursor : glyphs.mark.blank;
-  if (selectionMode !== 'multiple') return cursor;
-  return cursor + (row.selected ? glyphs.mark.check : glyphs.mark.blank);
-}
-
-/** The header's last cell: the sort mark, or blank. */
-export function sortMark(sort: SortDirection | undefined, glyphs: Glyphs = defaultGlyphs): string {
-  if (sort === 'ascending') return glyphs.mark['sort-ascending'];
-  if (sort === 'descending') return glyphs.mark['sort-descending'];
-  return glyphs.mark.blank;
-}
-
-const EMPTY = 'Nothing here.';
-
-/** The widest value in each column, in cells. */
-function widest(columns: number, rows: readonly RowText[]): number[] {
-  return Array.from({ length: columns }, (_, i) =>
-    Math.max(0, ...rows.map((row) => stringWidth(row.cells[i] ?? ''))),
-  );
-}
-
-/** How tall a table is: the frame, the header, its rule, and a row each (or one, empty). */
-export function tableHeight(rows: number): number {
-  return 4 + Math.max(1, rows);
-}
-
-/**
- * The whole table as cells: chrome, header, rows and marks. Its text
- * snapshot, and the model a story holds the page to. The attributes are
- * `table.css`'s, restated: reverse video for a selected row, dim for a
- * disabled one, the header muted.
- */
-export function tableBuffer(table: TableText, glyphs: Glyphs = defaultGlyphs): Buffer {
-  const mode = table.selectionMode ?? 'none';
-  const layout = tableLayout(table.columns, widest(table.columns.length, table.rows), {
-    ...(table.width === undefined ? {} : { room: table.width }),
-    selectionMode: mode,
-  });
-  const size = { width: layout.width, height: tableHeight(table.rows.length) };
-  return Buffer.create(size).draw((draft) => {
-    drawChrome(
-      draft,
-      size,
-      layout,
-      {
-        ...(table.title === undefined ? {} : { title: table.title }),
-        ...(table.border === undefined ? {} : { border: table.border }),
-        empty: table.rows.length === 0,
-      },
-      glyphs,
-    );
-    const starts = columnStarts(layout);
-    const header: Style = { fg: 'fg.muted', attrs: Attr.none };
-    table.columns.forEach((column, i) => {
-      const x = starts[i] ?? 1;
-      const lead = layout.lead[i] ?? 1;
-      const content = layout.content[i] ?? 0;
-      drawText(draft, { x, y: 1 }, ' '.repeat(lead), { style: header });
-      drawText(
-        draft,
-        { x: x + lead, y: 1 },
-        fitCell(column.header, content, column.align, glyphs),
-        {
-          style: header,
-        },
-      );
-      drawText(draft, { x: x + lead + content, y: 1 }, sortMark(column.sort, glyphs), {
-        style: header,
-      });
-    });
-    if (table.rows.length === 0) {
-      const lead = layout.lead[0] ?? 1;
-      drawText(draft, { x: 1 + lead, y: 3 }, table.empty ?? EMPTY, {
-        maxWidth: layout.width - 2 - lead,
-        ellipsis: glyphs.mark.ellipsis,
-        style: { fg: 'fg.muted', attrs: Attr.none },
-      });
-    }
-    table.rows.forEach((row, r) => {
-      const y = 3 + r;
-      let attrs = Attr.none;
-      if (row.selected) attrs |= Attr.reverse;
-      if (row.disabled) attrs |= Attr.dim;
-      const style: Style = { fg: row.disabled ? 'fg.disabled' : 'fg.default', attrs };
-      table.columns.forEach((column, i) => {
-        const x = starts[i] ?? 1;
-        const lead = layout.lead[i] ?? 1;
-        const content = layout.content[i] ?? 0;
-        const marksText = i === 0 ? rowMarks(row, mode, glyphs) : ' ';
-        drawText(draft, { x, y }, marksText, { style });
-        drawText(
-          draft,
-          { x: x + lead, y },
-          fitCell(row.cells[i] ?? '', content, column.align, glyphs),
-          {
-            style,
-          },
-        );
-        drawText(draft, { x: x + lead + content, y }, ' ', { style });
-      });
-    });
-  });
-}
-
-/** Where each column's track starts, in cells from the frame's left edge. */
-function columnStarts(layout: TableLayout): number[] {
-  const starts: number[] = [];
-  let x = 1;
-  for (const track of layout.tracks) {
-    starts.push(x);
-    x += track + 1;
-  }
-  return starts;
-}
-
-/** The chrome alone, for the screen under the real table. */
-export function tableChromeBuffer(
-  size: Size,
-  layout: TableLayout,
-  options: {
-    readonly title?: string;
-    readonly border?: BorderSetName;
-    readonly empty?: boolean;
-  } = {},
-  glyphs: Glyphs = defaultGlyphs,
-): Buffer {
-  return Buffer.create(size).draw((draft) => {
-    drawChrome(draft, size, layout, options, glyphs);
-  });
+  /** The rows shown at once; every row when not given. */
+  readonly visible?: number;
+  /** The first row shown, when `visible` is given. */
+  readonly offset?: number;
 }
 
 // ── The component ──────────────────────────────────────────────────────────
@@ -542,6 +296,12 @@ export interface TableProps extends Omit<AriaTableProps, 'className' | 'style' |
   readonly cols?: number;
   readonly border?: BorderSetName;
   readonly painter?: PainterName;
+  /**
+   * The body rows shown at once: the table is exactly this tall, and its body
+   * scrolls in whole rows, following the cursor, with a scrollbar in cells.
+   * Every row, and no scrollbar, when not given.
+   */
+  readonly rows?: number;
   readonly className?: string;
   /** A TableHeader and a TableBody. */
   readonly children?: ReactNode;
@@ -556,6 +316,7 @@ export function Table({
   cols,
   border,
   painter = 'glyph',
+  rows: visible,
   className,
   children,
   selectionMode = 'none',
@@ -596,11 +357,40 @@ export function Table({
       tableLayout(measured?.columns ?? [], measured?.values ?? [], {
         ...(room === undefined ? {} : { room }),
         selectionMode: mode,
+        scrollbar: visible !== undefined,
       }),
-    [measured, room, mode],
+    [measured, room, mode, visible],
   );
   const rows = measured?.rows ?? 0;
-  const size = { width: layout.width, height: tableHeight(rows) };
+  const shown = visible === undefined ? undefined : Math.max(1, Math.trunc(visible));
+  const size = { width: layout.width, height: tableHeight(shown ?? rows) };
+
+  // Where the body is scrolled to, in rows, for the scrollbar. Read with a
+  // native listener, as List does, and measured when it is needed, because
+  // density decides how tall a row is. Caught on the way down from the table,
+  // because the body is the caller's element, drawn after the screen measures.
+  const [scrolled, setScrolled] = useState(0);
+  useEffect(() => {
+    const el = host.current;
+    if (shown === undefined || !el) return;
+    const read = (event: Event): void => {
+      const body = event.target;
+      if (!(body instanceof HTMLElement) || !body.classList.contains('rk-table-body')) return;
+      setScrolled(Math.round(body.scrollTop / measureCell(body).height));
+    };
+    el.addEventListener('scroll', read, { capture: true, passive: true });
+    return () => el.removeEventListener('scroll', read, { capture: true });
+  }, [shown]);
+  const bar = useMemo(
+    () =>
+      shown === undefined
+        ? undefined
+        : scrollbarBuffer(
+            { total: rows, visible: shown, offset: windowOffset(rows, shown, scrolled) },
+            glyphs,
+          ),
+    [shown, rows, scrolled, glyphs],
+  );
 
   // Its overflow marks, where the stylesheet cannot show them itself (0218).
   const overflows = layout.overflows;
@@ -646,11 +436,15 @@ export function Table({
   return (
     <div
       ref={host}
+      // A pane, to the conformance levels: whole cells even at `loose` (0182).
+      data-rk-pane=""
       className={cx(
         'rk-table',
         layout.overflows && 'rk-scroll rk-scroll-marks rk-table-scrolls',
+        shown !== undefined && 'rk-table-windowed',
         className,
       )}
+      {...(shown === undefined ? {} : { style: { '--rk-table-rows': shown } as CSSProperties })}
       // A table wider than its room scrolls across, a column at a time.
       {...(layout.overflows
         ? {
@@ -679,6 +473,15 @@ export function Table({
             {children}
           </AriaTable>
         </LayoutContext.Provider>
+        {bar === undefined ? null : (
+          // In the cell inside the right edge, from the first body row.
+          <span
+            className="rk-table-scrollbar"
+            style={{ '--rk-table-bar-x': layout.width - 2 } as CSSProperties}
+          >
+            <Cells buffer={bar} />
+          </span>
+        )}
       </Screen>
     </div>
   );
@@ -824,7 +627,9 @@ export function TableBody<T extends object>({
   return (
     <AriaTableBody
       {...aria}
-      className={cx('rk-table-body', className)}
+      // Scrolls down when the table shows fewer rows than it has: no bar of
+      // the browser's (0207); the table draws one in cells.
+      className={cx('rk-table-body rk-scroll', className)}
       renderEmptyState={(state) => (
         <span className="rk-table-empty">
           <EmptyLead />

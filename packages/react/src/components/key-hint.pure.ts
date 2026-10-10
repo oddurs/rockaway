@@ -9,8 +9,19 @@
 import { stringWidth } from '@rockaway/grid';
 import type { Glyphs, KeyName } from '@rockaway/tokens';
 import { themeGlyphs } from '@rockaway/tokens';
-import type { Platform } from '../platform.ts';
-import type { KeyNotation, KeySpec } from './key-hint.tsx';
+import type { Platform } from '../platform.pure.ts';
+
+/** How a chord is written: the platform's own way, or a terminal's (`^S`, `M-x`). */
+export type KeyNotation = 'platform' | 'terminal';
+
+/** A chord, parsed: which modifiers it holds, and its one key. */
+export interface KeySpec {
+  readonly ctrl: boolean;
+  readonly alt: boolean;
+  readonly shift: boolean;
+  readonly meta: boolean;
+  readonly key: string;
+}
 
 type Modifier = 'ctrl' | 'alt' | 'shift' | 'meta';
 
@@ -204,4 +215,20 @@ export function keyShortcut(spec: string, platform: Platform = 'other'): string 
   const keys = parseKeys(spec, platform);
   const names = { ctrl: 'Control', alt: 'Alt', shift: 'Shift', meta: 'Meta' } as const;
   return [...held(keys, names), ariaKey(keys.key)].join('+');
+}
+
+/**
+ * How many cells a hint takes, from its props alone: the legend, and a cell
+ * and the label after it when there is one (key-hint.css puts a cell between
+ * them). Known without a page, so a status bar can place a hint on a server.
+ */
+export function keyHintCells(
+  spec: string,
+  label: string | undefined,
+  platform: Platform = 'other',
+  notation: KeyNotation = 'platform',
+  glyphs: Glyphs = themeGlyphs.default,
+): number {
+  const legend = stringWidth(formatKeys(spec, platform, notation, glyphs));
+  return label === undefined || label === '' ? legend : legend + 1 + stringWidth(label);
 }

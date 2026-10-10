@@ -19,4 +19,6 @@ export {
   type OverlayPopoverProps,
   type OverlayShift,
   type OverlaySurfaceOptions,
+  OverlayTooltip,
+  type OverlayTooltipProps,
 } from '../components/overlay.tsx';

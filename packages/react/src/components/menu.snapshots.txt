@@ -1,0 +1,29 @@
+── Comfortable sections
+┏━━━━━━━━━━━━━━━━━━━━┓
+┃▸Undo        Ctrl+Z ┃
+┃ Redo  Ctrl+Shift+Z ┃
+┠ Clipboard ─────────┨
+┃                    ┃
+┃ Cut         Ctrl+X ┃
+┃ Copy        Ctrl+C ┃
+┃ Paste       Ctrl+V ┃
+┠ Find ──────────────┨
+┃                    ┃
+┃ Find        Ctrl+F ┃
+┃ Replace            ┃
+┗━━━━━━━━━━━━━━━━━━━━┛
+── A menu
+┏━━━━━━━━━━━━━━━━━━┓
+┃▸New file  Ctrl+N ┃
+┃ Open      Ctrl+O ┃
+┃ Open recent     ▸┃
+┠──────────────────┨
+┠ Danger ──────────┨
+┃ Delete           ┃
+┗━━━━━━━━━━━━━━━━━━┛
+── Checkable
+┏━━━━━━━━━━━━━━━┓
+┃ ✓Word wrap    ┃
+┃  Minimap      ┃
+┃▸✓Line numbers ┃
+┗━━━━━━━━━━━━━━━┛
