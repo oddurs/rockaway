@@ -12,7 +12,8 @@ export interface NavNode {
   /** Unique in the tree. */
   readonly id: string;
   readonly title: string;
-  readonly href: string;
+  /** A section with no page of its own has none: its row opens and closes it. */
+  readonly href?: string;
   readonly children?: readonly NavNode[];
 }
 
@@ -25,18 +26,29 @@ export interface SitePages {
 export function siteNav({ foundations, components }: SitePages): readonly NavNode[] {
   return [
     { id: 'home', title: 'Home', href: href('') },
-    { id: 'getting-started', title: 'Getting started', href: href('getting-started/') },
-    { id: 'concept', title: 'The concept', href: href('concept/') },
     {
-      id: 'foundations',
-      title: 'Foundations',
-      href: href('foundations/'),
-      children: foundations.map((page) => ({
-        id: `foundations/${page.id}`,
-        title: page.title,
-        href: href(`foundations/${page.id}/`),
-      })),
+      id: 'guides',
+      title: 'Guides',
+      children: [
+        { id: 'getting-started', title: 'Getting started', href: href('getting-started/') },
+        { id: 'concept', title: 'The concept', href: href('concept/') },
+        { id: 'component-recipe', title: 'The component recipe', href: href('component-recipe/') },
+      ],
     },
+    ...(foundations.length === 0
+      ? []
+      : [
+          {
+            id: 'foundations',
+            title: 'Foundations',
+            href: href('foundations/'),
+            children: foundations.map((page) => ({
+              id: `foundations/${page.id}`,
+              title: page.title,
+              href: href(`foundations/${page.id}/`),
+            })),
+          },
+        ]),
     {
       id: 'components',
       title: 'Components',
@@ -48,6 +60,11 @@ export function siteNav({ foundations, components }: SitePages): readonly NavNod
       })),
     },
   ];
+}
+
+/** Every row of the tree, depth first. */
+export function flatten(nodes: readonly NavNode[]): NavNode[] {
+  return nodes.flatMap((node) => [node, ...flatten(node.children ?? [])]);
 }
 
 /** The rows from the top of the tree down to the one at `current`, or nothing. */
@@ -65,5 +82,6 @@ export function modeOf(path: readonly NavNode[]): string {
   const top = path[0]?.id;
   if (top === 'home') return 'HOME';
   if (top === 'foundations' || top === 'components') return top.toUpperCase();
+  if (top === undefined) return 'ROCKAWAY';
   return 'GUIDE';
 }

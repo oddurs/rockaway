@@ -7,16 +7,7 @@
  * attributes on `<html>`, so no frame is drawn in a theme whose colours have
  * not arrived. The page is told after, to lay itself out at the new cell.
  */
-import {
-  attributesOf,
-  DENSITIES,
-  type Look,
-  MODES,
-  next,
-  readLook,
-  STORAGE_KEY,
-  THEMES,
-} from '../lib/look.ts';
+import { attributesOf, DENSITIES, type Look, MODES, next, readLook, STORAGE_KEY } from './look.ts';
 
 /** The reader's stored look, if the browser keeps one. */
 function stored(): string | null {
@@ -25,6 +16,11 @@ function stored(): string | null {
   } catch {
     return null;
   }
+}
+
+/** Every theme, as the head's script left them. */
+function themes(): readonly string[] {
+  return (globalThis as { rockawayThemeNames?: string[] }).rockawayThemeNames ?? [];
 }
 
 /** The built theme stylesheets, by theme, as the head's script left them. */
@@ -63,7 +59,7 @@ export function lookSwitch(
   root: ParentNode,
   changed: (look: Look, said: string) => void,
 ): LookSwitch {
-  let look: Look = readLook(stored());
+  let look: Look = readLook(stored(), themes());
   const buttons = [...root.querySelectorAll<HTMLElement>('[data-site-look]')];
 
   /** Show the look on its buttons, with what each is for a reader. */
@@ -101,7 +97,7 @@ export function lookSwitch(
   const turns: LookSwitch = {
     current: () => look,
     theme: (step) => {
-      const theme = next(THEMES, look.theme, step);
+      const theme = next(themes(), look.theme, step);
       void choose({ ...look, theme }, `Theme: ${theme}.`);
     },
     mode: () => {

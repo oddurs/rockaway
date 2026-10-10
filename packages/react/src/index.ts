@@ -29,7 +29,6 @@ export * from './entries/table.ts';
 export * from './entries/text-field.ts';
 export * from './entries/tree.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
-export type { Stretch } from './paint/chrome.tsx';
 export { Chrome, type ChromeProps, chromeRows, type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle, shapeAttributes } from './paint/index.ts';
 export { detectPlatform, type PlatformHints, usePlatform } from './platform.ts';
 export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenProps } from './screen.tsx';

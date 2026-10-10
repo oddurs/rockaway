@@ -12,6 +12,7 @@ import type { ReactNode } from 'react';
 import { Code } from '../components/Code.tsx';
 import { Outline } from '../components/Outline.tsx';
 import { ScrollRegion } from '../components/ScrollRegion.tsx';
+import { PageBody } from '../components/shell/PageBody.tsx';
 import { headHtml, restHtml, sectionsOf } from './component-page.ts';
 import { components, slugOf } from './components.ts';
 
@@ -37,14 +38,16 @@ export function ComponentPage({
   const meta = metaOf(slug);
   const source = readFileSync(path.join(process.cwd(), 'examples', `${slug}.tsx`), 'utf8');
   return (
-    <article className="rk-prose">
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: written at build from the package's metadata. */}
-      <div className="site-html" dangerouslySetInnerHTML={{ __html: headHtml(meta) }} />
-      <ScrollRegion label="Example">{children}</ScrollRegion>
-      <Code code={source.replace(/^'use client';\n\n/, '')} lang="tsx" />
-      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: written at build from the package's metadata. */}
-      <div className="site-html" dangerouslySetInnerHTML={{ __html: restHtml(meta) }} />
-    </article>
+    <PageBody title={meta.name}>
+      <article className="rk-prose">
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: written at build from the package's metadata. */}
+        <div className="site-html" dangerouslySetInnerHTML={{ __html: headHtml(meta) }} />
+        <ScrollRegion label="Example">{children}</ScrollRegion>
+        <Code code={source.replace(/^'use client';\n\n/, '')} lang="tsx" />
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: written at build from the package's metadata. */}
+        <div className="site-html" dangerouslySetInnerHTML={{ __html: restHtml(meta) }} />
+      </article>
+    </PageBody>
   );
 }
 

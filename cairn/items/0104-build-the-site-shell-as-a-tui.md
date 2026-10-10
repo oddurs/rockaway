@@ -17,7 +17,7 @@ depends_on:
 - 141
 - 143
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-09
 priority: p0
 layer: site
 effort: l
@@ -67,3 +67,7 @@ Rework, approved by the CTO: the site's chrome runs on the system's pure halves,
 ## 2026-10-03
 
 Reworked as approved: the shell is the system's components rendered by Astro with no hydration, laid out by @rockaway/react/dom (measureScreen, relayoutPanes, fitStatusBar: the DOM halves, new) and keyed by the keymap engine from #146 (merged locally). The map and the outline are LinkTree (new system component: a nested list of real links with Tree's guides, server-only, metadata, page and stories); NavigationTree is dropped. KeymapHelp takes bindings, so the help screen renders on the server from the list the script binds (src/lib/shell.ts holds the panes, segments and keys once, for both). No drift: apps/workbench/src/grid/Static.stories.tsx lays out Panes and StatusBar both ways at the same sizes and compares the chrome node for node, the text cell for cell and the placements; KeymapHelp from bindings equals KeymapHelp from a live keymap. A page of prose now loads about 25 kB gzipped of script, with no React; the site test holds it under 40 kB. When #190 lands, LinkTree's cut label should use its theme ellipsis rather than CSS text-overflow (the font's …), as the CTO asked; LinkTree renders on a server, so that wants a server-safe form of the cut.
+
+## 2026-10-09
+
+Rebuilt for Next.js in apps/web without Panes or StatusBar as client components: the grid is CSS, borders are server-drawn elastic frames, so the shell's first-load JS is the Next floor plus a ~7.7 kB island (shared 136.9 kB gz, was 188). Panes/StatusBar stay the system's for apps that measure; the site cannot afford their script on every page.

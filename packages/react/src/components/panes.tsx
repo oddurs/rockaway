@@ -28,7 +28,6 @@ import {
 } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import type { Stretch } from '../paint/chrome.tsx';
 import { type Inset, Screen, type ScreenProps } from '../screen.tsx';
 import {
   layoutPanes,
@@ -164,34 +163,11 @@ export function Panes({
     };
   }, [key, border, glyphs]);
   const draw = useMemo(() => (size: Size) => layout(size).buffer, [layout]);
-  // Before it is measured, the frame stretches inside the pane that takes the
-  // room, a share of what is left, so the panes either side keep their widths
-  // and their borders stay where the layout put them. Its last column (or row)
-  // inside its borders is a plain run of the top and bottom edges.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on the spec's contents.
-  const stretch = useMemo(
-    () =>
-      (size: Size): Stretch => {
-        const laid = layout(size);
-        const grows = laid.panes.find((placed) => {
-          if (placed.path.length !== 1 || placed.collapsed) return false;
-          const grow = leaves.get(placed.path.join('.'))?.props.size;
-          return grow === undefined || (typeof grow === 'string' && grow.endsWith('fr'));
-        });
-        if (grows === undefined) return {};
-        const { x, y, width, height } = grows.content;
-        return chosen.direction === 'column'
-          ? { row: y + height - 1 }
-          : { col: x + width - 1, row: y + height - 1 };
-      },
-    [layout, key, chosen.direction],
-  );
 
   return (
     <Screen
       {...screen}
       draw={draw}
-      stretch={stretch}
       className={cx('rk-panes', className)}
       {...panesVariants.dataAttributes(chosen)}
       {...(label === undefined ? {} : { role: 'group', 'aria-label': label })}

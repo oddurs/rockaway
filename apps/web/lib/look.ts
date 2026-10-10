@@ -12,9 +12,6 @@
  * applies it before the first frame, so a reader who chose dark never sees
  * light for one.
  */
-import { themeNames } from '@rockaway/tokens';
-
-export const THEMES: readonly string[] = themeNames;
 export const MODES = ['system', 'light', 'dark'] as const;
 export const DENSITIES = ['automatic', 'dense', 'normal', 'airy', 'touch'] as const;
 
@@ -36,11 +33,11 @@ export const DEFAULT_LOOK: Look = { theme: SITE_THEME, mode: 'system', density: 
 export const STORAGE_KEY = 'rockaway:look';
 
 /** A stored look, or the default for anything missing or not one of the choices. */
-export function readLook(stored: string | null): Look {
+export function readLook(stored: string | null, themes: readonly string[]): Look {
   try {
     const raw = JSON.parse(stored ?? '{}') as Partial<Record<keyof Look, string>>;
     return {
-      theme: THEMES.includes(raw.theme ?? '') ? (raw.theme as string) : DEFAULT_LOOK.theme,
+      theme: themes.includes(raw.theme ?? '') ? (raw.theme as string) : DEFAULT_LOOK.theme,
       mode: (MODES as readonly string[]).includes(raw.mode ?? '')
         ? (raw.mode as Mode)
         : DEFAULT_LOOK.mode,
@@ -69,12 +66,20 @@ export function next<T>(list: readonly T[], at: T, step = 1): T {
   return list[(i + step + list.length) % list.length] as T;
 }
 
+/** Where the shell's own state is kept: which sections of the map are shut, and which panes are hidden. */
+export const SHELL_KEY = 'rockaway:shell';
+
 /**
  * The script at the top of the head: it marks that script runs, reads the
  * reader's look and sets it on `<html>` before the body is parsed, and writes
  * the chosen theme's stylesheet into the head, so the first frame is drawn in
  * it. Written as a string, because it runs before any module could load;
  * `themeUrls` are the built stylesheets, by theme.
+ *
+ * It sets the shell's state too (0287): the map's shut sections, and whether
+ * the map and the outline are hidden. Each is an attribute the stylesheet
+ * lays the grid out from, so the first frame is the shell the reader left,
+ * and no script moves a pane after it.
  *
  * `document.write` is deliberate; do not replace it. A stylesheet the parser
  * inserts blocks the first frame in every engine. One a script inserts with
@@ -84,18 +89,22 @@ export function next<T>(list: readonly T[], at: T, step = 1): T {
  * head is the one way to get a parser-inserted, render-blocking stylesheet
  * everywhere (0148, agreed with the CTO).
  */
-export function prePaint(themeUrls: Readonly<Record<string, string>>): string {
+export function prePaint(
+  themeUrls: Readonly<Record<string, string>>,
+  themes: readonly string[],
+): string {
   return `(() => {
   const root = document.documentElement;
   root.dataset.rkScript = '';
-  let look = {};
-  try { look = JSON.parse(localStorage.getItem(${JSON.stringify(STORAGE_KEY)}) || '{}') || {}; } catch {}
+  const read = (key) => { try { return JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch { return {}; } };
+  const look = read(${JSON.stringify(STORAGE_KEY)});
   const urls = ${JSON.stringify(themeUrls)};
+  const themes = ${JSON.stringify(themes)};
   // For the page's script, which switches the theme later.
   self.rockawayThemes = urls;
+  self.rockawayThemeNames = themes;
   const modes = ${JSON.stringify(MODES.slice(1))};
   const densities = ${JSON.stringify(DENSITIES.slice(1))};
-  const themes = ${JSON.stringify(THEMES)};
   if (themes.includes(look.theme)) {
     root.dataset.rkTheme = look.theme;
     // The site's theme and the default are in the stylesheet already.
@@ -103,5 +112,9 @@ export function prePaint(themeUrls: Readonly<Record<string, string>>): string {
   }
   if (modes.includes(look.mode)) root.dataset.theme = look.mode;
   if (densities.includes(look.density)) root.dataset.density = look.density;
+  const shell = read(${JSON.stringify(SHELL_KEY)});
+  if (Array.isArray(shell.shut)) root.dataset.siteShut = shell.shut.filter((s) => typeof s === 'string').join(' ');
+  if (shell.map === 'hidden') root.dataset.siteMap = 'hidden';
+  if (shell.outline === 'hidden') root.dataset.siteOutline = 'hidden';
 })();`;
 }
