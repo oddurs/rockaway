@@ -262,3 +262,19 @@ export const Strict: Story = {
   globals: { conformance: 'strict' },
   render: () => <Variants title="strict" />,
 };
+
+/**
+ * Forced colors: the reader's palette, and every variant still there, drawn
+ * by the cell in their text colour. axe and the walk after it run here,
+ * where they cannot anywhere else (0142).
+ */
+export const ForcedColors: Story = {
+  name: 'Forced colors',
+  tags: ['forced-colors'],
+  render: () => <Variants title="hints" />,
+  play: async ({ canvas }) => {
+    expect(matchMedia('(forced-colors: active)').matches).toBe(true);
+    const frame = canvas.getByRole('group', { name: 'hints' });
+    expect(screenshot(frame, { legend: false })).toBe(VARIANTS_TEXT('hints'));
+  },
+};
