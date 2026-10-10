@@ -94,6 +94,80 @@ export function stackedPage(shape: ShellShapeOf): Placed & { readonly minRows: n
   return { ...placed, minRows };
 }
 
+/** A pane side by side with the others: where it is, and how wide, in cells. */
+export interface SidePane {
+  /** Its first column inside its borders, from the screen's left edge. */
+  readonly x: number;
+  /** Its first row inside its borders. */
+  readonly y: number;
+  /** How many rows shorter than the screen it is. */
+  readonly lessRows: number;
+  /** A pane of fixed width: its width. */
+  readonly cols?: number;
+  /** The pane that takes the room: how many columns narrower than the screen it is. */
+  readonly lessCols?: number;
+  /** A pane after the one that takes the room: its first column, from the right edge. */
+  readonly fromEnd?: number;
+}
+
+export interface SideBySide {
+  /** The fewest columns this layout holds at, and up from which it holds at every width. */
+  readonly from: number;
+  /** The fewest rows of panes it holds at. */
+  readonly rows: number;
+  readonly map: SidePane;
+  readonly page: SidePane;
+  /** Only when the outline shows. */
+  readonly outline?: SidePane;
+}
+
+/** The panes side by side at one size. */
+function sideAt(size: { width: number; height: number }, shape: ShellShapeOf) {
+  return layoutPanes(size, shellSplit({ ...shape, stacked: false })).panes;
+}
+
+/**
+ * The panes side by side (0273): the map and the outline fixed, the page
+ * between them taking the room, so from the width the outline appears at
+ * (or `STACK_BELOW`, with no outline) every pane is at the same distance from
+ * one edge or the other at every width. The server draws the panes at `from`
+ * by `rows`, their frame stretching inside the page's pane, and the page's
+ * stylesheet places each pane's content from these, so a desktop is shown the
+ * shell at first paint and nothing moves when the script measures it.
+ */
+export function sideBySide(shape: ShellShapeOf): SideBySide {
+  let from = STACK_BELOW;
+  if (shape.outline) {
+    while (sideAt({ width: from, height: 40 }, shape)[2]?.collapsed) from += 1;
+  }
+  const wide = from + 40;
+  const [map, page, outline] = sideAt({ width: wide, height: 40 }, shape);
+  if (!map || !page || map.collapsed || page.collapsed) throw new Error('no room for the panes');
+  const lessRows = 40 - page.content.height;
+  let rows = 40;
+  while (rows > 1) {
+    const at = sideAt({ width: wide, height: rows - 1 }, shape);
+    if (at.some((pane, i) => pane.collapsed !== [map, page, outline][i]?.collapsed)) break;
+    if (at[1]?.content.height !== rows - 1 - lessRows) break;
+    rows -= 1;
+  }
+  const side = (pane: typeof map, kind: 'fixed' | 'grows' | 'end'): SidePane => ({
+    x: pane.content.x,
+    y: pane.content.y,
+    lessRows: 40 - pane.content.height,
+    ...(kind === 'fixed' ? { cols: pane.content.width } : {}),
+    ...(kind === 'grows' ? { lessCols: wide - pane.content.width } : {}),
+    ...(kind === 'end' ? { fromEnd: wide - pane.content.x, cols: pane.content.width } : {}),
+  });
+  return {
+    from,
+    rows,
+    map: side(map, 'fixed'),
+    page: side(page, 'grows'),
+    ...(outline && !outline.collapsed ? { outline: side(outline, 'end') } : {}),
+  };
+}
+
 /** The status bar's segments, in order, as `StatusSegment` gives them: the message line is not one. */
 export const STATUS_SEGMENTS = [
   { name: 'mode', priority: 4 },

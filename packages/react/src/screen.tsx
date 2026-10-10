@@ -57,6 +57,14 @@ export interface ScreenProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
    */
   fallback?: Size;
   /**
+   * Where the unmeasured frame stretches, given the size it was drawn at: the
+   * row and the column that lengthen to fill the box. The last row and
+   * column but one by default, a box's plain sides. A screen whose last
+   * column is not the one that grows, like panes whose middle pane takes the
+   * room, names the one that does.
+   */
+  stretch?: (size: Size) => Stretch;
+  /**
    * Inset the content layer by this many cells, so real elements start inside
    * the chrome rather than on top of it. It goes on the content layer itself,
    * which the grid check already excuses: the page sizes that box, and a
@@ -82,6 +90,7 @@ export function Screen({
   cols,
   rows,
   fallback = FALLBACK,
+  stretch: stretchAt,
   contentInset,
   className,
   style,
@@ -154,11 +163,12 @@ export function Screen({
     const across = cols === undefined && buffer.width >= 3;
     const down = rows === undefined && buffer.height >= 3;
     if (!across && !down) return undefined;
+    const at = stretchAt?.(size) ?? {};
     return {
-      ...(down ? { row: buffer.height - 2 } : {}),
-      ...(across ? { col: buffer.width - 2 } : {}),
+      ...(down ? { row: at.row ?? buffer.height - 2 } : {}),
+      ...(across ? { col: at.col ?? buffer.width - 2 } : {}),
     };
-  }, [measured, cols, rows, buffer]);
+  }, [measured, cols, rows, buffer, stretchAt, size]);
   // Built once per buffer: a re-render that only measured the cell leaves the
   // chrome's nodes alone.
   const chrome = useMemo(() => chromeRows(buffer, stretch), [buffer, stretch]);
