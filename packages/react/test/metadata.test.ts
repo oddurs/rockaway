@@ -57,6 +57,8 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
   DialogTrigger:
     "React Aria's DialogTrigger, re-exported beside Dialog so it is the instance Dialog and OverlayPopover read, and so copied code needs no import from React Aria. It draws nothing, and is documented in Dialog's anatomy.",
+  TooltipTrigger:
+    "React Aria's TooltipTrigger, re-exported beside Tooltip for the reason DialogTrigger is. It draws nothing, and is documented in Tooltip's description.",
   Chrome:
     "A painted layer: a buffer's cells as elements, which Screen and List's scrollbar render. Part of the cell renderer, documented with the grid.",
 };

@@ -11,7 +11,7 @@
  * reverse video; or they wrap, and it is framed heavy, as a popover is. Either
  * way it is at most 40 cells wide.
  *
- * Put it in React Aria's `TooltipTrigger` beside the element it describes.
+ * Put it in `TooltipTrigger` (React Aria's, re-exported here) beside the element it describes.
  * React Aria shows it on hover after a delay and at once on keyboard focus,
  * links it to the trigger by `aria-describedby`, hides it on Escape, and
  * never moves focus. Nothing here handles a key.
@@ -19,6 +19,14 @@
 import type { ReactNode } from 'react';
 import { cx } from '../cx.ts';
 import { OverlayTooltip, type OverlayTooltipProps } from './overlay.tsx';
+
+/**
+ * React Aria's `TooltipTrigger`, which pairs the tooltip with the element it
+ * describes. Re-exported for the reason Dialog re-exports `DialogTrigger`: a
+ * second copy of React Aria in a bundle would be a second context, and code
+ * from the registry may import only `@rockaway/*` and React.
+ */
+export { TooltipTrigger } from 'react-aria-components';
 
 export interface TooltipProps extends Omit<OverlayTooltipProps, 'children' | 'className'> {
   /** The hint: a few words, wrapping at 36 cells. */

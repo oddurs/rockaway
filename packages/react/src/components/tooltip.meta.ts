@@ -28,7 +28,7 @@ export const tooltipMeta: ComponentMetaInput = defineMeta({
       kind: 'import',
       name: 'Tooltip',
       description:
-        'React Aria\'s Tooltip through OverlayTooltip, role="tooltip" as React Aria writes it once shown (a server renders no tooltip, so its stories assert the role). Put it in React Aria\'s TooltipTrigger beside the element it describes.',
+        'React Aria\'s Tooltip through OverlayTooltip, role="tooltip" as React Aria writes it once shown (a server renders no tooltip, so its stories assert the role). Put it in TooltipTrigger, re-exported here from React Aria, beside the element it describes.',
     },
     {
       kind: 'element',
