@@ -15,7 +15,7 @@ import { type BorderSetName, type Size, stringWidth } from '@rockaway/grid';
 import { type ReactNode, useMemo } from 'react';
 import { cx } from '../cx.ts';
 import { useGlyphs } from '../glyphs.tsx';
-import { type Inset, Screen, type ScreenProps } from '../screen.tsx';
+import { type Inset, Screen, type ScreenProps, type Surface } from '../screen.tsx';
 import { frameBuffer } from './frame.pure.ts';
 
 export interface FrameOptions {
@@ -51,6 +51,12 @@ export interface FrameProps
    * against the rows above and below — the proportions a terminal uses.
    */
   readonly pad?: number | Inset;
+  /**
+   * The ground the frame sits on, border cells included: `sunken`, `base`
+   * (the default), `raised` or `overlay`. Unset, the frame is transparent and
+   * shows what is behind it.
+   */
+  readonly surface?: Surface;
   /** The accessible name, when the title is not the right one to say. */
   readonly label?: string;
   readonly children?: ReactNode;
@@ -71,6 +77,7 @@ export function Frame({
   dividers,
   dividerBorder,
   pad,
+  surface,
   label,
   className,
   children,
@@ -110,6 +117,7 @@ export function Frame({
       draw={draw}
       className={cx('rk-frame-box', className)}
       contentInset={insetOf(pad)}
+      {...(surface === undefined ? {} : { 'data-rk-surface': surface })}
       {...(name === undefined ? {} : { role: 'group', 'aria-label': name })}
     >
       {children}
