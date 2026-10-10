@@ -161,6 +161,23 @@ the reversed state's selector to the shared block in
 `packages/css/src/forced-colors.css` that sets `forced-color-adjust: none`
 (0181).
 
+## Spacing
+
+Space is a count of cells, and it comes from a small set. Find yours in it
+before you reach for another; the kitchen sink shows them side by side
+(0142).
+
+| Where | Across | Down |
+| --- | --- | --- |
+| Inside a frame, between its border and what it holds | 1 cell (`pad` defaults to `{ x: 1, y: 0 }`: Frame, Fieldset, Panes, overlays, Callout) | 0 rows |
+| Between the parts of one thing in a row: a key and its label, a dialog's buttons | 1 cell (`--rk-x-1`) | |
+| Between a label and its control, a shortcut and what it does, columns | 2 cells (`--rk-x-2`) | |
+| Between rows of a form, paragraphs in a callout | | 1 row (`--rk-y-1`) |
+| Inside a row of a list, a tree or a table | 0: the reserved mark cells are the margin | |
+
+A component that needs another count says why in its stylesheet; a frame
+that holds rows edge to edge takes `pad={0}`, as a menu does.
+
 ## Scrolling
 
 Anything that scrolls takes `rk-scroll`, so the browser draws no scrollbar of
@@ -444,7 +461,9 @@ named, and review is what holds it.
 1. **Sized in cells, drawn by the frame engine.** Conformance after every
    story, at every density, fails any box that is not a whole number of cells
    unless it carries `data-rk-offgrid="reason"`. `no-literal-glyphs.test.ts`
-   fails a box character written in `src/components`. Continuity after every
+   fails a box character written in `src/components`, and
+   `no-pixel-lengths.test.ts` a length in pixels there or in a component's
+   stylesheet (0142). Continuity after every
    story fails a stroke the font drew instead of the cell renderer.
 2. **Both painters render it identically.** The component's **Painters**
    story: each painter's `screenshot()` equals the other's and the buffer's.
