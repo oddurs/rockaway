@@ -60,9 +60,21 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
     cells: Array.from({ length: rows }, () => Array.from({ length: cols }, () => ' ')),
   };
 
+  // An element on a whole row reads as that row; one resting on a half-step
+  // (the rhythm tier, 0311) reads as the row below it, whichever way layout's
+  // subpixel snapping nudged it: half a row is never left to Math.round.
   const at = (rect: DOMRect): { col: number; row: number } => ({
     col: Math.round((rect.left - box.left) / cellWidth),
-    row: Math.round((rect.top - box.top) / cellHeight),
+    row: Math.floor((rect.top - box.top) / cellHeight + 0.5 + 1 / 16),
+  });
+
+  // Text is placed by its middle. A range's rect is the font's content area,
+  // which can be taller than the row (Plex at dense is) and starts above the
+  // line box, but it is centred on the line box: a line on row n has its
+  // middle at n + ½, and a line half a row down has it at n + 1.
+  const textAt = (rect: DOMRect): { col: number; row: number } => ({
+    col: Math.round((rect.left - box.left) / cellWidth),
+    row: Math.floor(((rect.top + rect.bottom) / 2 - box.top) / cellHeight + 1 / 16),
   });
 
   const attributes: { text: string; attrs: string; col: number; row: number }[] = [];
@@ -140,12 +152,12 @@ export function screenshot(target: HTMLElement | Buffer, options: ScreenshotOpti
       if (clip.right <= clip.left || clip.bottom <= clip.top) continue;
       const range = root.ownerDocument.createRange();
       range.selectNodeContents(node);
-      const start = at(range.getBoundingClientRect());
+      const start = textAt(range.getBoundingClientRect());
       if (range.getClientRects().length > 1) {
         // Text that wraps is on several rows: each line of it is written where
         // that line is, which only the line's own characters can say.
         for (const line of linesOf(node, root.ownerDocument)) {
-          const { col, row } = at(line.rect);
+          const { col, row } = textAt(line.rect);
           if (row >= clip.top && row < clip.bottom) write(grid, col, row, line.text, clip);
         }
       } else {

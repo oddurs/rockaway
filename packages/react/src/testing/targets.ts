@@ -82,15 +82,33 @@ function describe(el: Element): string {
 function isHidden(el: HTMLElement, style: CSSStyleDeclaration): boolean {
   if (style.visibility === 'hidden' || style.display === 'none') return true;
   if (el.closest('[aria-hidden="true"], [inert]') !== null) return true;
-  // Visually hidden, on the element or by a wrapper: React Aria's checkbox and
-  // radio put the native input inside a clipped span, and the label around it
-  // is the target a pointer meets.
+  // Visually hidden, on the element or by a wrapper, is nothing a pointer can
+  // meet. A hidden input in a label never gets here: `pointerTarget` has
+  // already swapped it for the label.
   const view = el.ownerDocument.defaultView;
   for (let node: HTMLElement | null = el; node; node = node.parentElement) {
     const own = node === el ? style : view?.getComputedStyle(node);
     if (own && visuallyHidden(own)) return true;
   }
   return false;
+}
+
+/**
+ * What a pointer actually hits for this element. React Aria's checkbox, radio
+ * and switch keep the native input inside a visually hidden span: its own box
+ * is a 13px square nobody can see or press, and the target is the label
+ * around it, which is what a reader sees and what toggles the control. An
+ * input hidden that way with no label is no target at all.
+ */
+function pointerTarget(el: HTMLElement, view: Window | null): HTMLElement | undefined {
+  if (el.tagName !== 'INPUT') return el;
+  for (let up = el.parentElement; up; up = up.parentElement) {
+    const style = view?.getComputedStyle(up);
+    if (style && visuallyHidden(style)) {
+      return el.closest('label') ?? (el as HTMLInputElement).labels?.[0] ?? undefined;
+    }
+  }
+  return el;
 }
 
 function isDisabled(el: HTMLElement): boolean {
@@ -131,9 +149,14 @@ export function checkTargets(root: HTMLElement, options: TargetOptions = {}): Ta
   const view = root.ownerDocument.defaultView;
   const targets: Target[] = [];
 
-  for (const el of root.querySelectorAll<HTMLElement>(TARGETS)) {
+  const seen = new Set<HTMLElement>();
+  for (const control of root.querySelectorAll<HTMLElement>(TARGETS)) {
+    if (isDisabled(control)) continue;
+    const el = pointerTarget(control, view);
+    if (el === undefined || seen.has(el)) continue;
+    seen.add(el);
     const style = view?.getComputedStyle(el);
-    if (!style || isHidden(el, style) || isDisabled(el)) continue;
+    if (!style || isHidden(el, style)) continue;
     const box = el.getBoundingClientRect();
     if (box.width === 0 || box.height === 0) continue;
     if (isInSentence(el, style)) continue;
