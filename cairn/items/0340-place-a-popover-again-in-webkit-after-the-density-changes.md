@@ -29,3 +29,7 @@ The popover is on the row under its trigger, from its column, at every density, 
 
 - [ ] The cause is named in a note.
 - [ ] The story's WebKit exception for airy comes off, and Densities passes in all three engines on Linux.
+
+## 2026-10-10
+
+Seen again on main (run 38054664035, ef4bcc80, 2026-10-10), both passing on a rerun: Overlay's Densities in Firefox at airy (the popover on the trigger's row, expected the row under it), and Screen's Responds to a resize in WebKit at airy (a screen kept a 16px cell in a 32px line box: it did not remeasure when the context changed). The same family as this item: a remeasure after the switch to airy that lands late outside Chromium. The fix belongs in the remeasure, not in the stories.
