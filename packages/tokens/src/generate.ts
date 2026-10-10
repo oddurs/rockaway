@@ -125,7 +125,7 @@ function theme(t: ThemeContext): Group {
         $value: contentHeight[t.inputs.typePairing],
       },
     },
-    ...glyphs(t.inputs.borderSet),
+    ...glyphs(t.inputs.borderSet, t.inputs.weights),
     ...conformance(t.inputs),
   } as unknown as Group;
 }

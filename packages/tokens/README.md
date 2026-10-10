@@ -6,7 +6,7 @@ Resolver.
 
 ## The theme
 
-[`themes/default.json`](themes/default.json) holds the five inputs and nothing else:
+[`themes/default.json`](themes/default.json) holds the five inputs and nothing else (a sixth, `weights`, is optional):
 
 | Input | Values |
 | --- | --- |
@@ -15,6 +15,7 @@ Resolver.
 | `typePairing` | `system`, `jetbrains`, `ibm-plex`, `berkeley` |
 | `borderSet` | `single`, `double`, `heavy`, `rounded`, `ascii` |
 | `conformance` | `strict`, `standard`, `loose` |
+| `weights` (optional) | Any of `emphasis`, `raised`, `modal`, each a border set |
 
 The others under `themes/` are presets, and `themes/terminal/` holds imported
 terminal palettes, each with its source and its licence beside it.
@@ -87,6 +88,19 @@ scrollbar — not just its boxes.
 The `ascii` preset is that theme: a neutral palette for any terminal that can
 be trusted with nothing past `~`, and the one to reach for when chrome has to
 survive a paste anywhere.
+
+With no shadows on a grid, a frame stands out by its weight (cairn 0247), and
+the weights are glyphs too. `glyphs.weight` names the set for each reason:
+
+| Weight | Drawn for | Default |
+| --- | --- | --- |
+| `emphasis` | A frame in a state that asks for attention: a focused or invalid field | `heavy` |
+| `raised` | A frame above the page: a popover, a menu, a select's list | `heavy` |
+| `modal` | A frame above everything: a dialog | `double` |
+
+Under an ASCII theme all three are `ascii`, and bold carries the difference.
+A theme sets its own in `weights`, within its repertoire: a Unicode theme
+cannot draw a weight in ASCII, or the other way round.
 
 The `--rk-glyph-*` properties are written from the same object, but components
 do not read them: chrome is drawn into a buffer in JavaScript, possibly on a
