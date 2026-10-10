@@ -75,4 +75,16 @@ export const known: readonly Known[] = [
       'dense is a deliberate opt-in that trades target size for density: one-row targets 16px tall that sit close cannot meet WCAG 2.5.8, and dense says so where it is documented. A permanent entry, never a silent pass',
     ticket: '0197: the default density meets AA; dense is the documented opt-in that does not',
   },
+  {
+    id: 'firefox-forced-syntax',
+    check: 'axe',
+    projects: ['forced-colors-firefox'],
+    stories: ['components-codeblock--forced-colors'],
+    element: /rk-syntax/,
+    present: '.rk-syntax-type',
+    reason:
+      "Playwright's Firefox matches forced-colors but leaves an author's text colour alone: a syntax token reads #3399ff on white (2.94:1) where Chromium, like a reader's browser, replaces it with the reader's text colour. The stylesheet leaves forced colours to the browser (syntax.css), so either Firefox's emulation is the limit, or the roles need a forced-colors rule of their own",
+    ticket:
+      'unnumbered, proposed: syntax roles under forced colors in Firefox: decide between a CanvasText rule in syntax.css and the emulation limit',
+  },
 ];
