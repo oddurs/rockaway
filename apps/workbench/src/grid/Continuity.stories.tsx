@@ -598,11 +598,20 @@ export const InsetMarks: Story = {
   play: async ({ canvas }) => {
     const run = runner();
     if (!run) return;
+    // WebKit draws the one-eighth block short of its cell at 16.4px, 0.13px in
+    // (0339). There, that one case is expected to break exactly as found, so
+    // the day WebKit draws it whole this fails and the exception comes off.
+    const webkit = /AppleWebKit/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
     for (const size of [15.3, 16.4, 17]) {
       for (const shift of [0.13, 0.41, 0.69]) {
-        const report = await expectContinuity(canvas.getByTestId(`insets ${size} ${shift}`), {
-          capture: run.capture,
-        });
+        const el = canvas.getByTestId(`insets ${size} ${shift}`);
+        if (webkit && size === 16.4 && shift === 0.13) {
+          const known = await checkContinuity(el, { capture: run.capture });
+          expect(known.breaks.length).toBeGreaterThan(0);
+          expect(known.breaks.every((b) => b.ch === '\u2595' && b.what === 'gap')).toBe(true);
+          continue;
+        }
+        const report = await expectContinuity(el, { capture: run.capture });
         expect(report.shapes).toBe(27);
       }
     }

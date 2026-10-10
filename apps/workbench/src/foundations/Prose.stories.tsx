@@ -172,7 +172,8 @@ export const TrueItalic: Story = {
     const em = screen.querySelector('em') as HTMLElement;
     const style = getComputedStyle(em);
     await expect(style.fontStyle).toBe('italic');
-    await expect(style.fontFamily.startsWith('"IBM Plex Mono"')).toBe(true);
+    // WebKit serialises the family without its quotes.
+    await expect(style.fontFamily.replace(/"/g, '').startsWith('IBM Plex Mono')).toBe(true);
     // WebKit has no `font-synthesis-style`: it reads back empty there.
     const synthesis = getComputedStyle(document.body).getPropertyValue('font-synthesis-style');
     if (synthesis !== '') await expect(synthesis).toBe('none');
