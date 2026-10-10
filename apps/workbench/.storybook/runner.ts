@@ -46,6 +46,12 @@ export interface Runner {
   /** Tells the run a story's screens are over the paint budget, to be named at its end (0113). */
   readonly paint: (over: OverBudget) => Promise<void>;
   /**
+   * Resizes the frame the story runs in, in CSS pixels; with no size, back to
+   * the project's own. A story that resizes puts it back before it ends, so
+   * the checks after it read the page at the size every story is read at.
+   */
+  readonly viewport: (size?: { readonly width: number; readonly height: number }) => Promise<void>;
+  /**
    * Types as a reader does, through the browser itself: trusted key events,
    * each listener called from an empty stack, so a microtask can run between
    * one listener and the next. A synthetic event dispatched from a script

@@ -1,0 +1,29 @@
+/*
+ * Dialog (cairn 0039).
+ *
+ * The overlay contract draws the backdrop and the frame and puts the dialog on
+ * the grid (0128); this lays out what is inside it. The content is prose and
+ * whatever controls it holds; the action row is a row of buttons at the bottom
+ * right, a blank row under the content, in whole cells.
+ */
+@layer rk.components {
+  .rk-dialog {
+    display: block;
+    outline: none;
+  }
+
+  .rk-dialog-content {
+    white-space: normal;
+  }
+
+  .rk-dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    column-gap: var(--rk-x-1);
+  }
+
+  .rk-dialog-content + .rk-dialog-actions {
+    margin-block-start: var(--rk-cell-height);
+  }
+}

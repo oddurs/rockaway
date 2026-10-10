@@ -57,6 +57,10 @@ const NOT_COMPONENTS: Readonly<Record<string, string>> = {
     "Keymap's engine as a class, for a page with no React (cairn 0237). It draws nothing, and is documented with Keymap.",
   RouterProvider:
     "React Aria's router context, re-exported beside Link so it is the instance Link reads (0168). It draws nothing, and is documented in Link's notes.",
+  DialogTrigger:
+    "React Aria's DialogTrigger, re-exported beside Dialog so it is the instance Dialog and OverlayPopover read, and so copied code needs no import from React Aria. It draws nothing, and is documented in Dialog's anatomy.",
+  TooltipTrigger:
+    "React Aria's TooltipTrigger, re-exported beside Tooltip for the reason DialogTrigger is. It draws nothing, and is documented in Tooltip's description.",
   Flow: 'Layout, not a widget: blocks down the page on rhythm half-steps, closed to whole rows (0312). Documented with the grid.',
   MenuTrigger:
     "React Aria's menu trigger, re-exported beside Menu so it is the instance Menu's popover reads, and so copied-in code can open a menu. It draws nothing, and is documented in Menu's notes.",
@@ -413,10 +417,11 @@ describe('the checks fail when the metadata is wrong', () => {
       ...button.accessibility,
       keyboard: [{ keys: ['return'], action: 'Not a key KeyHint knows.' }],
     };
-    const related = [{ name: 'Tooltip', why: 'Not written yet.' }];
+    // A name no component will take, so the case outlives the components.
+    const related = [{ name: 'NoSuchComponent', why: 'Not written.' }];
     expect(problems({ ...button, accessibility, related }, found)).toEqual([
       'key return is not a chord KeyHint can draw',
-      'it names Tooltip, which has no metadata',
+      'it names NoSuchComponent, which has no metadata',
     ]);
   });
 });

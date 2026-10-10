@@ -50,9 +50,13 @@ import {
   Modal,
   ModalOverlay,
   type ModalOverlayProps,
+  OverlayTriggerStateContext,
   Popover,
   PopoverContext,
   type PopoverProps,
+  Tooltip,
+  TooltipContext,
+  type TooltipProps,
   useSlottedContext,
 } from 'react-aria-components';
 import { setAnchor } from '../anchor.ts';
@@ -374,6 +378,8 @@ export interface OverlaySurfaceOptions {
    * overlay was opened from, so a popover from a ruled frame is ruled too.
    */
   readonly painter?: PainterName;
+  /** Words set into the frame's top edge. Chrome: name the content for a reader as well. */
+  readonly title?: string;
 }
 
 /** The surface options as a component passes them on: each given or `undefined`. */
@@ -389,6 +395,7 @@ function Surface({
   padding = PADDING,
   dividers,
   painter,
+  title,
   children,
 }: Passed<OverlaySurfaceOptions> & {
   readonly kind: OverlayKind;
@@ -494,6 +501,11 @@ function Surface({
     };
   }, []);
 
+  // A tooltip whose words fit on one row is that row, in reverse video, with
+  // a cell of it either side; when they wrap, it is framed as a popover is.
+  // The words wrap at the same width either way, so which it is never
+  // changes what it holds.
+  const row = kind === 'tooltip' && (scroll?.total ?? 1) <= 1;
   const padX = Math.max(0, Math.floor(padding.x));
   const padY = Math.max(0, Math.floor(padding.y));
   const draw = useMemo(
@@ -512,11 +524,12 @@ function Surface({
           kind,
           ...(scroll === undefined ? {} : { scroll }),
           ...(rules.length === 0 ? {} : { dividers: rules }),
+          ...(title === undefined ? {} : { title }),
         },
         glyphs,
       );
     },
-    [kind, scroll, glyphs, dividers, padY],
+    [kind, scroll, glyphs, dividers, padY, title],
   );
   const style = {
     ...(maxRows === undefined ? {} : { '--rk-overlay-max-rows': Math.max(1, Math.floor(maxRows)) }),
@@ -528,10 +541,19 @@ function Surface({
         : {}),
   } as CSSProperties;
   return (
-    <div ref={host} className={cx('rk-overlay', sheet && 'rk-overlay-sheet')} style={style}>
+    <div
+      ref={host}
+      className={cx(
+        'rk-overlay',
+        sheet && 'rk-overlay-sheet',
+        kind === 'tooltip' && 'rk-overlay-tooltip',
+        row && 'rk-overlay-row',
+      )}
+      style={style}
+    >
       <Screen
         draw={draw}
-        contentInset={{ x: 1 + padX, y: 1 + padY }}
+        contentInset={row ? { x: 1, y: 0 } : { x: 1 + padX, y: 1 + padY }}
         fallback={{ width: 2, height: 2 }}
         {...(painter === undefined ? {} : { painter })}
       >
@@ -592,6 +614,7 @@ export function OverlayPopover({
   padding,
   dividers,
   painter,
+  title,
   className,
   shift,
   placement = 'bottom start',
@@ -642,10 +665,73 @@ export function OverlayPopover({
         padding={padding}
         dividers={dividers}
         painter={painter ?? origin.painter}
+        title={title}
       >
         {children}
       </Surface>
     </Popover>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tooltip
+
+export interface OverlayTooltipProps
+  extends Omit<
+    TooltipProps,
+    | 'children'
+    | 'className'
+    | 'style'
+    | 'offset'
+    | 'crossOffset'
+    | 'containerPadding'
+    | 'UNSTABLE_portalContainer'
+  > {
+  readonly children?: ReactNode;
+  readonly className?: string;
+  /** The painter. By default, the painter of the screen its trigger is in. */
+  readonly painter?: PainterName;
+}
+
+/**
+ * A hint beside its trigger: React Aria's `Tooltip`, on the cell grid of its
+ * trigger's screen, on the row next to it with no gap. One row of reverse
+ * video, or framed heavy when its words wrap, at most 40 cells wide. Never a
+ * sheet: a tooltip is shown on hover and keyboard focus, not on touch.
+ */
+export function OverlayTooltip({
+  children,
+  className,
+  painter,
+  placement = 'top',
+  ...aria
+}: OverlayTooltipProps): ReactNode {
+  const container = useContext(LayerContext);
+  const context = useSlottedContext(TooltipContext);
+  const triggerRef = aria.triggerRef ?? context?.triggerRef;
+  const anchor = useCallback(() => triggerRef?.current, [triggerRef]);
+  const origin = useOrigin(anchor);
+  return (
+    <Tooltip
+      {...aria}
+      {...origin.contexts}
+      placement={placement}
+      offset={0}
+      crossOffset={0}
+      containerPadding={0}
+      className={cx('rk-overlay-tooltip-root', className)}
+      {...(container === null ? {} : { UNSTABLE_portalContainer: container })}
+    >
+      <Surface
+        kind="tooltip"
+        anchor={anchor}
+        sheet={false}
+        padding={{ x: 1, y: 0 }}
+        painter={painter ?? origin.painter}
+      >
+        {children}
+      </Surface>
+    </Tooltip>
   );
 }
 
@@ -698,19 +784,30 @@ export function OverlayModal({
   padding,
   dividers,
   painter,
+  title,
   className,
   ...aria
 }: OverlayModalProps): ReactNode {
   const container = useContext(LayerContext);
   // A modal has no anchor of its own, but it was opened from somewhere: the
   // trigger a DialogTrigger names, or else the element that had focus when it
-  // opened, read once.
+  // opened, read each time it opens. A modal mounted closed, as a command
+  // palette is with the page, would otherwise be anchored for good to
+  // whatever had focus when the page loaded.
   const trigger = useSlottedContext(PopoverContext)?.triggerRef;
+  const state = useContext(OverlayTriggerStateContext);
+  const open = aria.isOpen ?? state?.isOpen ?? aria.defaultOpen ?? false;
   const opener = useRef<Element | null>(null);
-  if (opener.current === null && typeof document !== 'undefined') {
+  const wasOpen = useRef(false);
+  const openings = useRef(0);
+  if (open && !wasOpen.current && typeof document !== 'undefined') {
     opener.current = document.activeElement;
+    openings.current += 1;
   }
-  const anchor = useCallback(() => trigger?.current ?? opener.current, [trigger]);
+  wasOpen.current = open;
+  const opening = openings.current;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: a new opening is a new anchor
+  const anchor = useCallback(() => trigger?.current ?? opener.current, [trigger, opening]);
   const sheet = useSheet(anchor);
   const origin = useOrigin(anchor);
   const contexts = origin.contexts;
@@ -733,6 +830,7 @@ export function OverlayModal({
           padding={padding}
           dividers={dividers}
           painter={painted}
+          title={title}
         >
           {children}
         </Surface>

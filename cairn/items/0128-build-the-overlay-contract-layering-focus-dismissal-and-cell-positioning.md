@@ -12,8 +12,8 @@ depends_on:
 - 118
 - 126
 created: 2026-10-03
-updated: 2026-10-10
-closed_at: 2026-10-10
+updated: 2026-10-03
+closed_at: 2026-10-03
 priority: p0
 layer: components
 effort: l
@@ -99,4 +99,4 @@ Added shift (cells along and across the placement, mirrored on a flip) for subme
 
 ## Result
 
-The overlay contract (overlay.tsx): OverlayLayer, OverlayPopover and OverlayModal on the cell grid of their trigger's screen, backdrop in cells, dismissal and focus return per the proposal; checkConformance holds each surface to its anchor's grid.
+The overlay contract, landed in #149: OverlayLayer, OverlayPopover, OverlayModal and (from 0043) OverlayTooltip. React Aria places, contains focus and dismisses; the surface is a screen of its own, snapped onto whole cells of the trigger's screen by a laid-out offset, carrying the trigger's theme, mode, density, motion, conformance and painter across the portal. Popover heavy, modal double over a backdrop of light shade; sheets under 60 cells or at touch. Surface options: maxRows, minCols (number or 'trigger'), padding, dividers, painter, title; OverlayPopover also shift (cells). Scrolled content shows its thumb in the frame and stays on whole rows. screenshot() composes overlays; checkContinuity reads each layer alone. Dialog (#169) is the first component built on it.
