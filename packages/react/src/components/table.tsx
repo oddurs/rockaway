@@ -58,8 +58,10 @@ import {
 } from '@rockaway/grid';
 import { type Glyphs, marks } from '@rockaway/tokens';
 import {
+  Children,
   type CSSProperties,
   createContext,
+  isValidElement,
   type ReactNode,
   useCallback,
   useContext,
@@ -468,6 +470,68 @@ function Measure(): null {
   return null;
 }
 
+/** A cell's words, when they are words: what its column is as wide as. */
+function textOf(node: unknown): string {
+  return typeof node === 'string' || typeof node === 'number' ? String(node) : '';
+}
+
+/**
+ * The columns and rows, read from the elements the table is given rather than
+ * from React Aria's collection. The collection can only be read inside it,
+ * after the table has drawn its frame, and only in an effect, which a server
+ * never runs: without this, a page with no script, or the first paint before
+ * hydration, drew a frame with no columns, and no room for its title. It reads
+ * what `Measure` reads, in the same shape, so the client's first measurement
+ * agrees with it and nothing moves when it arrives. A collection it cannot
+ * read this way (columns from a function) is left to `Measure`.
+ */
+function staticMeasure(children: ReactNode): Measured | undefined {
+  const columns: ColumnShape[] = [];
+  const values: number[] = [];
+  let rows = 0;
+  const visit = (node: ReactNode): void => {
+    Children.forEach(node, (child) => {
+      if (!isValidElement(child)) return;
+      const props = child.props as Record<string, unknown>;
+      if (child.type === Column) {
+        const min = props.minWidth as number | undefined;
+        columns.push({
+          header: textOf(props.children),
+          width: (props.width as ColumnWidth | undefined) ?? 'auto',
+          ...(min === undefined ? {} : { minWidth: min }),
+          align: (props.align as ColumnAlign | undefined) ?? 'start',
+          sortable: props.allowsSorting === true,
+        });
+        return;
+      }
+      if (child.type === Row) {
+        rows += 1;
+        let at = 0;
+        Children.forEach(props.children as ReactNode, (cell) => {
+          if (!isValidElement(cell) || cell.type !== Cell) return;
+          const words = textOf((cell.props as { children?: unknown }).children);
+          values[at] = Math.max(values[at] ?? 0, stringWidth(words));
+          at += 1;
+        });
+        return;
+      }
+      const kids = props.children;
+      if (typeof kids === 'function') {
+        // A body of items, rendered by a function: each item's row.
+        const items = props.items as Iterable<unknown> | undefined;
+        if (child.type === TableBody && items !== undefined) {
+          for (const item of items) visit((kids as (item: unknown) => ReactNode)(item));
+        }
+        return;
+      }
+      visit(kids as ReactNode);
+    });
+  };
+  visit(children);
+  if (columns.length === 0) return undefined;
+  return { columns, values: columns.map((_, i) => values[i] ?? 0), rows };
+}
+
 export interface TableProps extends Omit<AriaTableProps, 'className' | 'style' | 'children'> {
   /** Set into the frame's top edge; the table's accessible name unless `aria-label` says otherwise. */
   readonly title?: string;
@@ -498,7 +562,9 @@ export function Table({
   ...aria
 }: TableProps): ReactNode {
   const glyphs = useGlyphs();
-  const [measured, setMeasured] = useState<Measured | undefined>(undefined);
+  // Read from the elements first, so a server, and the first paint, draw the
+  // real columns and the title; React Aria's collection confirms it after.
+  const [measured, setMeasured] = useState<Measured | undefined>(() => staticMeasure(children));
   const report = useCallback(
     (next: Measured) => setMeasured((now) => (sameMeasure(now, next) ? now : next)),
     [],
@@ -699,7 +765,12 @@ function HeaderContent({
 }): ReactNode {
   const glyphs = useGlyphs();
   const context = useContext(LayoutContext);
-  const [ref, index] = useCellIndex();
+  const state = useContext(TableStateContext);
+  const [ref, measuredIndex] = useCellIndex();
+  // Before the page can say which column this is (on a server, and in the
+  // first paint), the collection can, by the header's words.
+  const found = state?.collection.columns.findIndex((node) => node.textValue === text) ?? -1;
+  const index = measuredIndex ?? (found < 0 ? undefined : found);
   const lead = index === undefined ? 1 : (context?.layout.lead[index] ?? 1);
   const width = index === undefined ? undefined : context?.layout.content[index];
   const align = index === undefined ? 'start' : (context?.aligns[index] ?? 'start');

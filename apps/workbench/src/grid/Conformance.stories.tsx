@@ -1,5 +1,14 @@
 import { Buffer, drawBox, rect, type Size } from '@rockaway/grid';
-import { Badge, Button, Checkbox, Frame, List, ListItem, Screen } from '@rockaway/react';
+import {
+  Badge,
+  Button,
+  Checkbox,
+  Frame,
+  List,
+  ListItem,
+  OverlayPopover,
+  Screen,
+} from '@rockaway/react';
 import {
   type ConformanceLevel,
   type ConformanceReport,
@@ -9,7 +18,9 @@ import {
 } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CSSProperties, ReactNode } from 'react';
+import { Dialog, DialogTrigger } from 'react-aria-components';
 import { expect, waitFor } from 'storybook/test';
+import { measured } from '../settled.ts';
 
 const draw = ({ width, height }: Size): Buffer =>
   Buffer.create({ width, height }).draw((d) => {
@@ -524,5 +535,66 @@ export const InsideVisuallyHidden: Story = {
     const screen = canvas.getByTestId('host').firstElementChild as HTMLElement;
     await waitFor(() => expect(screen.querySelector('.rk-row')).not.toBeNull());
     expect(checkConformance(screen).violations).toEqual([]);
+  },
+};
+
+/**
+ * An overlay is a screen of its own, so the check measures its boxes from its
+ * own corner, and that corner is on someone else's grid: the one it was moved
+ * onto, of the screen its trigger is in (cairn 0128). The surface says which
+ * that is, and the check holds its corner there: placed, it passes; half a
+ * cell off across or down, it fails, naming the axis and the screen.
+ */
+export const AnchoredOverlay: Story = {
+  name: "An overlay on its anchor's grid",
+  render: () => (
+    <Frame title="page" cols={40} rows={10}>
+      <DialogTrigger defaultOpen>
+        <Button>Branches</Button>
+        <OverlayPopover>
+          <Dialog aria-label="Branches">
+            <p style={{ margin: 0 }}>main</p>
+          </Dialog>
+        </OverlayPopover>
+      </DialogTrigger>
+    </Frame>
+  ),
+  play: async ({ canvasElement }) => {
+    await measured(document.body);
+    const surface = await waitFor(() => {
+      const el = canvasElement.querySelector<HTMLElement>('.rk-overlay');
+      expect(el).not.toBeNull();
+      return el as HTMLElement;
+    });
+    const anchors = (report: ConformanceReport) =>
+      report.violations.filter((v) => v.what === 'anchor');
+
+    // Placed, it is on the grid of the frame it was opened from.
+    await waitFor(() => expect(anchors(checkConformance(canvasElement))).toEqual([]));
+
+    // Moved half a cell either way, it is not, and the check says where from.
+    const page = canvasElement.querySelector<HTMLElement>('.rk-frame-box') as HTMLElement;
+    const style = getComputedStyle(page);
+    const half = {
+      x: Number.parseFloat(style.getPropertyValue('--rk-cell-width')) / 2,
+      y: Number.parseFloat(style.getPropertyValue('--rk-cell-height')) / 2,
+    };
+    const was = { left: surface.style.left, top: surface.style.top };
+    try {
+      for (const axis of ['x', 'y'] as const) {
+        const side = axis === 'x' ? 'left' : 'top';
+        surface.style[side] = `${(Number.parseFloat(was[side]) || 0) + half[axis]}px`;
+        const report = checkConformance(canvasElement);
+        expect(anchors(report)).toEqual([
+          expect.objectContaining({ what: 'anchor', axis, anchor: 'div.rk-screen.rk-frame-box' }),
+        ]);
+        expect(formatReport(report)).toContain('which it was opened from');
+        surface.style[side] = was[side];
+      }
+    } finally {
+      surface.style.left = was.left;
+      surface.style.top = was.top;
+    }
+    await waitFor(() => expect(anchors(checkConformance(canvasElement))).toEqual([]));
   },
 };

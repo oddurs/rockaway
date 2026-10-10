@@ -79,7 +79,11 @@ export const buttonMeta: ComponentMetaInput = defineMeta({
       part: 'Button',
       note: '`fill` reverses back to the page colours, so a press always shows; `danger` presses to bg.danger-solid.',
     },
-    { state: 'disabled', part: 'Button' },
+    {
+      state: 'disabled',
+      part: 'Button',
+      note: '`fill` stays reversed and dims its block: fg.disabled behind bg.page, a light grey in greyscale and GrayText in forced colors, where an enabled fill is the text colour. The same cells either way.',
+    },
   ],
   accessibility: {
     name: "The label's text. The delimiters, the mark and the key hint are aria-hidden, so the name never contains a glyph.",
