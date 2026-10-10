@@ -55,6 +55,8 @@ setRunner({
   project: inject('project'),
   platform: inject('platform'),
   record: (use) => commands.recordKnown(use),
+  // The frame's own size is the project's, in vitest.config.ts.
+  viewport: (size) => page.viewport(size?.width ?? 1200, size?.height ?? 900),
   wheel: (selector, deltaY) => commands.wheel(selector, deltaY),
   // The provider's keyboard: trusted events, as a reader's keys are.
   type: (keys) => userEvent.keyboard(keys),
