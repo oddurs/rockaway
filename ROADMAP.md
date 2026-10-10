@@ -142,7 +142,6 @@ The component contract, proven on a first set of components.
 
 ### backlog
 
-- [ ] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
 - [ ] [`0039`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0039-dialog.md) Dialog <sup>component · components · p1</sup>
 - [ ] [`0043`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0043-tooltip.md) Tooltip <sup>component · components · p1</sup>
 - [ ] [`0044`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0044-add-a-playwright-visual-regression-baseline-across-themes.md) Add a Playwright visual-regression baseline across themes <sup>chore · tooling · p1</sup>
@@ -224,6 +223,7 @@ The component contract, proven on a first set of components.
 - [x] [`0032`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0032-write-the-typed-variant-helper.md) Write the typed variant helper <sup>feature · components · p0</sup>
 - [x] [`0033`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0033-button.md) Button <sup>component · components · p0</sup>
 - [x] [`0037`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0037-switch.md) Switch <sup>component · components · p1</sup>
+- [x] [`0038`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0038-radio-group.md) Radio group <sup>component · components · p1</sup>
 - [x] [`0040`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0040-tabs.md) Tabs <sup>component · components · p1</sup>
 - [x] [`0042`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0042-select.md) Select <sup>component · components · p1</sup>
 - [x] [`0052`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0052-ship-every-theme-as-a-css-context-including-imported-terminal-themes.md) Ship every theme as a CSS context, including imported terminal themes <sup>feature · tokens · p1</sup>
