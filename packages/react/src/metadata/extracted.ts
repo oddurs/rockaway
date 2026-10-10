@@ -1266,7 +1266,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "strict"
   },
   "Panes": {
     "file": "panes.tsx",
@@ -1310,7 +1314,11 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
-    ]
+    ],
+    "marks": [
+      "pane"
+    ],
+    "level": "standard"
   },
   "Row": {
     "file": "table.tsx",
