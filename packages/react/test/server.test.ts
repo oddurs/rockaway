@@ -7,6 +7,7 @@ import { Frame } from '../src/components/frame.tsx';
 import { KeyHint } from '../src/components/key-hint.tsx';
 import { List, ListItem } from '../src/components/list.tsx';
 import { StatusBar, StatusMessage, StatusSegment } from '../src/components/status-bar.tsx';
+import { Tab, TabList, TabPanel, Tabs } from '../src/components/tabs.tsx';
 import { Screen } from '../src/screen.tsx';
 
 /** The text of each painted row in some markup, entities decoded. */
@@ -131,5 +132,33 @@ describe('a screen rendered on a server (0126)', () => {
     // The message has not arrived until the page runs: an empty live region.
     expect(html).toMatch(/role="status"/);
     expect(html).not.toContain('Saved');
+  });
+
+  test('sends tabs placed in their gaps, so a page with no script shows them', () => {
+    const tabs = (labels: readonly (string | ReturnType<typeof createElement>)[]) =>
+      renderToString(
+        createElement(
+          Tabs,
+          { cols: 40, rows: 4 },
+          createElement(
+            TabList,
+            { 'aria-label': 'View' },
+            ...labels.map((label, i) => createElement(Tab, { key: i, id: `t${i}` }, label)),
+          ),
+          ...labels.map((_, i) => createElement(TabPanel, { key: i, id: `t${i}` }, `view ${i}`)),
+        ),
+      );
+    const html = tabs(['files', 'log', 'diff']);
+    // The edge has a gap for each tab, a cell of line between two.
+    expect(rows(html).at(-4)).toBe('┌       ─     ─      ──────────────────┐');
+    // And each tab sits in its gap, its label's width and a cell either side.
+    const style = (id: string) =>
+      new RegExp(`<div class="rk-tab" style="([^"]*)"[^>]*data-key="${id}"`).exec(html)?.[1];
+    expect(style('t0')).toBe('--rk-tab-x:1;--rk-tab-cols:7;--rk-tab-shown:1;--rk-tab-clip:none');
+    expect(style('t1')).toBe('--rk-tab-x:9;--rk-tab-cols:5;--rk-tab-shown:1;--rk-tab-clip:none');
+    expect(style('t2')).toBe('--rk-tab-x:15;--rk-tab-cols:6;--rk-tab-shown:1;--rk-tab-clip:none');
+    // A label only the page can measure: the tabs wait for it, out of sight.
+    const later = tabs(['files', createElement(KeyHint, { keys: 'mod+s' })]);
+    expect(later).toContain('--rk-tab-shown:0;--rk-tab-clip:inset(50%)');
   });
 });

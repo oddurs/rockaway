@@ -1,0 +1,97 @@
+/*
+ * Toolbar (cairn 0318).
+ *
+ * One row, as many whole cells as it is given: a seam. Inside, the rhythm
+ * tier (0311): the track starts half a cell in, each item is padded half a
+ * cell either side, and a group's rule has half a cell of air either side, so
+ * every label and every rule lands on a whole cell. The ellipsis that holds
+ * the folded items is the bar's last two cells, its mark in the last.
+ */
+@layer rk.components {
+  .rk-toolbar {
+    display: flex;
+    inline-size: round(down, 100%, var(--rk-cell-width));
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+  }
+
+  .rk-toolbar-track {
+    display: flex;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    padding-inline-start: var(--rk-step-x);
+  }
+
+  .rk-toolbar-group {
+    display: flex;
+    flex: none;
+  }
+
+  .rk-toolbar-item {
+    flex: none;
+    block-size: var(--rk-cell-height);
+    margin: 0;
+    border: none;
+    padding: 0 var(--rk-step-x);
+    background: none;
+    color: var(--rk-fg-default);
+    font: inherit;
+    line-height: var(--rk-cell-height);
+    cursor: pointer;
+  }
+
+  .rk-toolbar-item[data-rk-folded] {
+    visibility: hidden;
+  }
+
+  .rk-toolbar-item[data-hovered] {
+    background: var(--rk-bg-subtle);
+  }
+
+  .rk-toolbar-item[data-pressed] {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-page);
+  }
+
+  .rk-toolbar-item[data-disabled] {
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+
+  .rk-toolbar-separator {
+    display: flex;
+    flex: none;
+    padding-inline: var(--rk-step-x);
+  }
+
+  .rk-toolbar-more {
+    flex: none;
+    inline-size: calc(2 * var(--rk-cell-width));
+    block-size: var(--rk-cell-height);
+    margin: 0;
+    border: none;
+    padding: 0 0 0 var(--rk-cell-width);
+    background: none;
+    color: var(--rk-fg-accent);
+    font: inherit;
+    line-height: var(--rk-cell-height);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .rk-toolbar-more[data-pressed] {
+    background: var(--rk-fg-accent);
+    color: var(--rk-bg-page);
+  }
+
+  /* Reversed words are drawn in a ground colour, which under forced colors is
+   * the canvas the browser paints behind text unless told not to (0181). */
+  @media (forced-colors: active) {
+    .rk-toolbar-item[data-pressed],
+    .rk-toolbar-more[data-pressed] {
+      forced-color-adjust: none;
+      --rk-forced-ink: Canvas;
+    }
+  }
+}
