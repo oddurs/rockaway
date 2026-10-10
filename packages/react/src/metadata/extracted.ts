@@ -263,15 +263,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "CheckboxGroup": {
@@ -318,15 +315,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-page",
       "--rk-border-control",
       "--rk-border-danger",
-      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-accent",
       "--rk-fg-danger",
       "--rk-fg-default",
-      "--rk-fg-disabled",
-      "--rk-focus-offset",
-      "--rk-focus-width"
+      "--rk-fg-disabled"
     ]
   },
   "Column": {
