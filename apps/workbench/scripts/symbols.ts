@@ -156,9 +156,14 @@ writeFileSync(
   await subset(jetbrainsFont, fromJetBrains, 700),
 );
 
+// One face per weight the fontsource faces declare, not a range: a range that
+// overlaps theirs (500 sits inside 400 to 599) lost the match in Chromium, and
+// the mark fell back to a face of another width.
 const weights = [
-  { file: 'plex-symbols.woff2', weight: '400 599' },
-  { file: 'plex-symbols-bold.woff2', weight: '600 700' },
+  { file: 'plex-symbols.woff2', weight: '400' },
+  { file: 'plex-symbols.woff2', weight: '500' },
+  { file: 'plex-symbols-bold.woff2', weight: '600' },
+  { file: 'plex-symbols-bold.woff2', weight: '700' },
 ] as const;
 
 const faces = (chars: readonly string[]): string =>

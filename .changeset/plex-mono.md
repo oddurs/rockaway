@@ -8,3 +8,5 @@ Set the default theme, every preset and every imported theme in IBM Plex Mono, w
 The base stylesheet sets `font-synthesis-style: none`, so an italic is the face's own or none at all. A slant the browser fakes leans a glyph over the edge of its cell.
 
 An overlay as wide as its trigger allowed a thirty-second of a pixel of measuring error. Across thirty cells of Plex's 9.6px advance, the cell's rounding to a sixty-fourth of a pixel adds up to a fifth of a pixel, so the overlay came out a cell too wide. It now allows a hundred-and-twenty-eighth per cell.
+
+The base stylesheet also sets `text-rendering: geometricPrecision`. Chromium on Linux otherwise rounds every glyph advance to a whole pixel, 10px for the 9.6px cell, and text lands a fraction of a cell off the grid.

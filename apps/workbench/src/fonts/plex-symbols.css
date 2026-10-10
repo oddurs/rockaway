@@ -7,7 +7,7 @@
 @font-face {
   font-family: "IBM Plex Mono";
   src: url("./plex-symbols.woff2") format("woff2");
-  font-weight: 400 599;
+  font-weight: 400;
   font-style: normal;
   font-display: block;
   unicode-range:
@@ -17,7 +17,27 @@
 @font-face {
   font-family: "IBM Plex Mono";
   src: url("./plex-symbols.woff2") format("woff2");
-  font-weight: 400 599;
+  font-weight: 400;
+  font-style: italic;
+  font-display: block;
+  unicode-range:
+    U+2197, U+21E5, U+21E7, U+2303, U+2318, U+2325, U+2326, U+232B, U+238B, U+23CE, U+25B4, U+25B8, U+25BE, U+25CB, U+25CF, U+2713, U+2717;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("./plex-symbols.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  unicode-range:
+    U+2197, U+21E5, U+21E7, U+2303, U+2318, U+2325, U+2326, U+232B, U+238B, U+23CE, U+25B4, U+25B8, U+25BE, U+25CB, U+25CF, U+2713, U+2717;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("./plex-symbols.woff2") format("woff2");
+  font-weight: 500;
   font-style: italic;
   font-display: block;
   unicode-range:
@@ -27,7 +47,7 @@
 @font-face {
   font-family: "IBM Plex Mono";
   src: url("./plex-symbols-bold.woff2") format("woff2");
-  font-weight: 600 700;
+  font-weight: 600;
   font-style: normal;
   font-display: block;
   unicode-range:
@@ -37,7 +57,27 @@
 @font-face {
   font-family: "IBM Plex Mono";
   src: url("./plex-symbols-bold.woff2") format("woff2");
-  font-weight: 600 700;
+  font-weight: 600;
+  font-style: italic;
+  font-display: block;
+  unicode-range:
+    U+2197, U+21E5, U+21E7, U+2303, U+2318, U+2325, U+2326, U+232B, U+238B, U+23CE, U+25B4, U+25B8, U+25BE, U+25CB, U+25CF, U+2713, U+2717;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("./plex-symbols-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  unicode-range:
+    U+2197, U+21E5, U+21E7, U+2303, U+2318, U+2325, U+2326, U+232B, U+238B, U+23CE, U+25B4, U+25B8, U+25BE, U+25CB, U+25CF, U+2713, U+2717;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("./plex-symbols-bold.woff2") format("woff2");
+  font-weight: 700;
   font-style: italic;
   font-display: block;
   unicode-range:
