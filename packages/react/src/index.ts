@@ -8,6 +8,7 @@
 export { CELL_COVER_GRACE, CELL_SNAP, CELL_TIE, type CellMetrics, cellsCovering, cellsIn, DEFAULT_CELL, floorCell, measureCell, nearestCell } from './cell-metrics.ts';
 export { cx } from './cx.ts';
 export * from './entries/badge.ts';
+export * from './entries/breadcrumbs.ts';
 export * from './entries/button.ts';
 export * from './entries/callout.ts';
 export * from './entries/card.ts';

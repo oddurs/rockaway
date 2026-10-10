@@ -5,6 +5,7 @@
  * regenerate. A test fails when this is stale.
  */
 import { badgeMeta } from '../components/badge.meta.ts';
+import { breadcrumbsMeta } from '../components/breadcrumbs.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
 import { cardMeta } from '../components/card.meta.ts';
@@ -33,6 +34,7 @@ import type { ComponentMetaInput } from './schema.ts';
 /** Every component's metadata, by the file it is written in. */
 export const registry: readonly { readonly file: string; readonly meta: ComponentMetaInput }[] = [
   { file: 'badge', meta: badgeMeta },
+  { file: 'breadcrumbs', meta: breadcrumbsMeta },
   { file: 'button', meta: buttonMeta },
   { file: 'callout', meta: calloutMeta },
   { file: 'card', meta: cardMeta },
