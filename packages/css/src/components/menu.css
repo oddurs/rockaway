@@ -1,0 +1,101 @@
+/*
+ * Menu (cairn 0041), in a Popover (0034) with no padding across, so a row
+ * runs from one side of the frame to the other.
+ *
+ * Rows are List's rows: one cell tall, a reserved cell for the cursor's mark
+ * and, in a menu with checkable items, one for the check, so no state adds a
+ * cell and every label starts in the same column. The cursor's row is
+ * reverse video, the menu's own figure and ground swapped; pressing it
+ * reverses it back, which is how a filled control shows a press (0118).
+ *
+ * A separator, and the row a section's title is on, are empty here: the
+ * frame draws a rule across them, the title set into it.
+ */
+@layer rk.components {
+  .rk-menu {
+    outline: none;
+  }
+
+  .rk-menu-item {
+    display: flex;
+    align-items: center;
+    block-size: var(--rk-cell-height);
+    white-space: pre;
+    cursor: pointer;
+    /* The cursor's mark and the reversed row show where focus is: an outline
+     * round the row as well would be the same thing said twice (0209). */
+    outline: none;
+  }
+
+  /* The reserved cells: the cursor's, the check's, and the submenu's at the end. */
+  .rk-menu-mark {
+    inline-size: var(--rk-cell-width);
+    flex: none;
+  }
+
+  .rk-menu-label {
+    flex: 1 0 auto;
+  }
+
+  /* Two cells at the least between a label and its chord, which is muted. */
+  .rk-menu-keys {
+    padding-inline-start: var(--rk-x-2);
+    color: var(--rk-fg-muted);
+  }
+
+  .rk-menu-keys .rk-keyhint-keys {
+    color: inherit;
+  }
+
+  .rk-menu-item[data-hovered] .rk-menu-label {
+    text-decoration: underline;
+    text-underline-offset: var(--rk-attribute-underline-offset);
+  }
+
+  .rk-menu-item[data-focused] {
+    background: var(--rk-fg-default);
+    color: var(--rk-bg-surface);
+  }
+
+  .rk-menu-item[data-focused] .rk-menu-keys {
+    color: inherit;
+  }
+
+  .rk-menu-item[data-focused][data-pressed] {
+    background: var(--rk-bg-surface);
+    color: var(--rk-fg-default);
+  }
+
+  .rk-menu-item[data-disabled] {
+    color: var(--rk-fg-disabled);
+    cursor: default;
+  }
+
+  /* The frame draws these rows; the title's text stays for the reader. */
+  .rk-menu-separator,
+  .rk-menu-title {
+    display: block;
+    block-size: var(--rk-cell-height);
+    margin: 0;
+    border: none;
+  }
+
+  /* As wide as the rule needs: a cell of line and a cell of air before the
+   * title, a cell of air and two of line after it. */
+  .rk-menu-title {
+    padding-inline: var(--rk-x-2) var(--rk-x-3);
+    visibility: hidden;
+    white-space: pre;
+    font: inherit;
+  }
+
+  /* Reverse video in forced colors is the reader's text and canvas swapped,
+   * and opts out of the backplate that would hide its words (0181). */
+  @media (forced-colors: active) {
+    .rk-menu-item[data-focused] {
+      forced-color-adjust: none;
+      /* A shape the cell draws in here takes the reversed figure (screen.css). */
+      --rk-forced-ink: Canvas;
+    }
+  }
+}

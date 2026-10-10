@@ -3,18 +3,16 @@ import { glyphsFor } from '@rockaway/tokens';
 import { createElement as h, type ReactNode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
+import { fitCell, tableBuffer, tableLayout } from '../src/components/table.pure.ts';
 import {
   Cell,
   Column,
   type ColumnShape,
-  fitCell,
   Row,
   Table,
   TableBody,
   TableHeader,
   type TableText,
-  tableBuffer,
-  tableLayout,
 } from '../src/components/table.tsx';
 
 const COLUMNS: TableText['columns'] = [
