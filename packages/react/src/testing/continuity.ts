@@ -605,6 +605,9 @@ const UNMARKED = 'data-rk-continuity-unmarked';
  * content is made transparent and the marks hidden for the moment of the
  * screenshot, which moves nothing and takes focus from nothing.
  *
+ * And every letter on the page is made transparent: a letter is the font's,
+ * never a line, and a descender reaches into the row below at dense.
+ *
  * So is every other painted layer on the page. A letter is as tall as the
  * font says, not as the cell (0116): at dense, where the line box is the font
  * size, a descender in one screen's title reaches into the row below it, and
@@ -639,6 +642,15 @@ async function chromeOnly(
   hide.textContent = `[${UNMARKED}]::before, [${UNMARKED}]::after { visibility: hidden !important; }`;
   if (regions.length > 0) doc.head.append(hide);
   for (const el of regions) el.setAttribute(UNMARKED, '');
+  // Nor any letter, anywhere: a letter is as tall as the font says, not as
+  // the cell (0116), so at dense a descender in the line above a screen, or
+  // in a title row of its own, reaches into the cell below it. Letters are
+  // the font's and never a line; the check reads the cell's own geometry,
+  // which is drawn as backgrounds and is left alone.
+  const letters = doc.createElement('style');
+  letters.textContent =
+    '* { -webkit-text-fill-color: transparent !important; text-decoration-color: transparent !important; text-shadow: none !important; }';
+  doc.head.append(letters);
   // Nor any overlay open above it (cairn 0128): a backdrop would be read as
   // the frame's own ink. An overlay's own chrome is read with every other
   // part of the overlay layer hidden, so a dialog does not cover its backdrop.
@@ -656,6 +668,7 @@ async function chromeOnly(
     });
     for (const el of regions) el.removeAttribute(UNMARKED);
     hide.remove();
+    letters.remove();
     layers.forEach((el, i) => {
       el.style.visibility = shown[i] ?? '';
     });
