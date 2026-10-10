@@ -1,7 +1,10 @@
 import { toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
+import { createElement, type ReactElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import { layoutPanes, panesBuffer, type SplitSpec } from '../src/components/panes.pure.ts';
+import { Pane, type PaneProps, Panes } from '../src/components/panes.tsx';
 
 /**
  * Three panes, one of them split again: a fixed list of files, and a diff
@@ -266,5 +269,56 @@ describe('sizes', () => {
         `at ${width}`,
       ).toEqual([1]);
     }
+  });
+});
+
+describe('landmarks (cairn 0248)', () => {
+  /** One pane, rendered on the server at a size that fits it, as its opening tag. */
+  function paneTag(props: PaneProps): string {
+    const pane: ReactElement = createElement(Pane, props, 'content');
+    const html = renderToStaticMarkup(
+      createElement(Panes, { cols: 30, rows: 4, fallback: { width: 30, height: 4 } }, pane),
+    );
+    const tag = /<(section|div)\b[^>]*\bdata-rk-pane[^>]*>/.exec(html)?.[0] ?? '';
+    return tag.replace(/ style="[^"]*"/, '');
+  }
+
+  test('a titled pane is a region named by its title, or by its label', () => {
+    expect(paneTag({ title: 'files' })).toBe(
+      '<section class="rk-pane" data-rk-pane="" aria-label="files">',
+    );
+    expect(paneTag({ title: 'files', label: 'Files' })).toBe(
+      '<section class="rk-pane" data-rk-pane="" aria-label="Files">',
+    );
+  });
+
+  test('an untitled pane is a plain container', () => {
+    expect(paneTag({})).toBe('<div class="rk-pane" data-rk-pane="">');
+  });
+
+  test('landmark={false} is a plain container with no name, titled or labelled', () => {
+    expect(paneTag({ title: 'files', landmark: false })).toBe(
+      '<div class="rk-pane" data-rk-pane="">',
+    );
+    expect(paneTag({ title: 'files', label: 'Files', landmark: false })).toBe(
+      '<div class="rk-pane" data-rk-pane="">',
+    );
+  });
+
+  test('its title is still drawn when it is not a landmark', () => {
+    const html = (landmark: boolean): string =>
+      renderToStaticMarkup(
+        createElement(
+          Panes,
+          { cols: 30, rows: 4, fallback: { width: 30, height: 4 } },
+          createElement(Pane, { title: 'files', landmark }, 'content'),
+        ),
+      ).replace(/<(section|div) class="rk-pane"[\s\S]*$/, '');
+    expect(html(false)).toBe(html(true));
+    expect(html(false)).toContain('files');
+  });
+
+  test('an empty name names nothing, so it is no landmark either', () => {
+    expect(paneTag({ title: 'files', label: '' })).toBe('<div class="rk-pane" data-rk-pane="">');
   });
 });
