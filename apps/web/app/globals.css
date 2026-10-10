@@ -30,14 +30,6 @@
 body {
   margin: 0;
   container: site / inline-size;
-  /*
-   * No bold or italic made up from the regular face while the real one is on
-   * its way. A made-up bold is wider where letters are whole pixels (Linux),
-   * so a paragraph with a bold run wrapped a row longer while Plex's regular
-   * was in and its bold was not, and shrank back when the bold arrived: the
-   * page moved twice (Slow 4G, 390 wide).
-   */
-  font-synthesis: none;
 }
 
 .site-shell {
