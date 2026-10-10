@@ -14,8 +14,20 @@ import { Buffer, drawText, stringWidth } from '@rockaway/grid';
 import { contentHeight, lineBox } from '@rockaway/tokens';
 
 /** The sizes, in rows. One row is ordinary text, which needs no component. */
-export type TextSize = 2 | 3 | 4;
+export type TextSize = 1.5 | 2 | 2.5 | 3 | 4;
 export const textSizes: readonly TextSize[] = [2, 3, 4];
+
+/**
+ * The half-row sizes (0323): the glyphs a row and a half, or two and a half,
+ * tall, in a box padded up to the next whole row, so a page of them stays on
+ * the grid (0311).
+ */
+export const halfTextSizes: readonly TextSize[] = [1.5, 2.5];
+
+/** The whole rows a line of type this size takes: its glyphs, and any padding up to a whole row. */
+export function textRows(size: TextSize): number {
+  return Math.ceil(size);
+}
 
 /** What a size depends on besides itself: the line box and the face. */
 export interface TextMetrics {
@@ -59,7 +71,9 @@ export function textCols(text: string, size: TextSize, metrics: TextMetrics = {}
  * characters alone, which is what the cells say.
  */
 export function textBuffer(text: string, size: TextSize, metrics: TextMetrics = {}): Buffer {
-  return Buffer.create({ width: textCols(text, size, metrics), height: size }).draw((draft) => {
-    drawText(draft, { x: 0, y: 0 }, text);
-  });
+  return Buffer.create({ width: textCols(text, size, metrics), height: textRows(size) }).draw(
+    (draft) => {
+      drawText(draft, { x: 0, y: 0 }, text);
+    },
+  );
 }
