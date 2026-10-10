@@ -508,3 +508,14 @@ body {
   flex-wrap: wrap;
   column-gap: calc(2 * var(--rk-cell-width));
 }
+
+/*
+ * The foundations pages (0106). A theme's card is an island of that theme in
+ * one of its modes: its own ground and text, a row and two cells in.
+ */
+.site-theme-card {
+  margin-inline: 0;
+  padding: var(--rk-y-1) var(--rk-x-2);
+  background: var(--rk-bg-page);
+  color: var(--rk-fg-default);
+}

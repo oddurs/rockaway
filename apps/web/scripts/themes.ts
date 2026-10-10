@@ -2,8 +2,11 @@
  * Copy every theme but the site's own into `public/themes/`, where the
  * pre-paint script and the switcher load them from (0148). Sunset is in the
  * main stylesheet, and the default is the tokens themselves.
+ *
+ * And every theme's terminal files into `public/terminal/`, for the themes
+ * page to link to (0106): the files the package ships, as they are.
  */
-import { copyFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { copyFileSync, cpSync, mkdirSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 
@@ -16,3 +19,7 @@ for (const file of readdirSync(from)) {
   if (file.endsWith('.css') && file !== 'sunset.css')
     copyFileSync(path.join(from, file), path.join(to, file));
 }
+
+cpSync(path.join(tokens, 'terminal'), path.join(import.meta.dirname, '..', 'public', 'terminal'), {
+  recursive: true,
+});
