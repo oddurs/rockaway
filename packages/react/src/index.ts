@@ -47,7 +47,7 @@ export * from './entries/toolbar.ts';
 export * from './entries/tree.ts';
 export { Flow, type FlowProps, useSeam } from './flow.tsx';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';
-export { Chrome, type ChromeProps, chromeRows, type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle, shapeAttributes } from './paint/index.ts';
+export { Cells, type CellsProps, type PaintOptions, paintCells, paintGlyph, paintRule, type Run, rowRuns, type StrokeStyle, shapeAttributes } from './paint/index.ts';
 export { detectPlatform, type PlatformHints, usePlatform } from './platform.ts';
 export { createRouteChanges, type HeadingTarget, type RouteChangeOptions, type RouteChanges, type RouteChangesOptions, type ScrollContainer, type Scrollers } from './route-change.ts';
 export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenProps, type Surface } from './screen.tsx';
