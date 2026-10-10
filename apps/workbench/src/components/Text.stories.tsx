@@ -11,7 +11,7 @@ import {
   textSizes,
 } from '@rockaway/react';
 import { checkConformance, screenshot } from '@rockaway/react/testing';
-import { glyphsFor } from '@rockaway/tokens';
+import { contentHeight, glyphsFor } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { renderToString } from 'react-dom/server';
 import { expect, userEvent } from 'storybook/test';
@@ -172,28 +172,33 @@ export const DensitiesGlyph: Story = { ...densities('glyph'), name: 'Densities, 
 /** The same, in the rule painter's frame. */
 export const DensitiesRule: Story = { ...densities('rule'), name: 'Densities, rule' };
 
-/** The face the workbench loads, whose glyph box is known: 1020 + 300 per thousand. */
-const JETBRAINS = '"JetBrains Mono Variable"';
+/** Faces whose glyph box is known, with it, in the order to look for them. */
+const FACES = [
+  { family: 'IBM Plex Mono', content: contentHeight['ibm-plex'] },
+  { family: 'JetBrains Mono Variable', content: contentHeight.jetbrains },
+] as const;
+
+/** The first of those the workbench has loaded. */
+async function knownFace(): Promise<(typeof FACES)[number]> {
+  for (const face of FACES) {
+    if ((await document.fonts.load(`16px "${face.family}"`)).length > 0) return face;
+  }
+  throw new Error(`the workbench loads none of ${FACES.map((f) => f.family).join(', ')}`);
+}
 
 /**
- * The glyphs fill the rows, in a face whose metrics the theme knows. Set in
- * JetBrains Mono with its content height, 1.32, each size's glyph box, the
- * face's ascent plus descent as the engine lays it out, is its rows and
- * starts on its first, at every density. Within a pixel: Gecko and Chromium
- * on Linux round the ascent and the descent each to a whole pixel.
+ * The glyphs fill the rows, in a face whose glyph box is known. Set in IBM
+ * Plex Mono or JetBrains Mono, whichever the workbench loads, with its
+ * content height, each size's glyph box, the face's ascent plus descent as
+ * the engine lays it out, is its rows and starts on its first, at every
+ * density. Within a pixel: Gecko and Chromium on Linux round the ascent and
+ * the descent each to a whole pixel.
  */
 export const FillsItsRows: Story = {
   name: 'Glyphs fill their rows',
   args: { size: 2 },
   render: () => (
-    <div
-      data-testid="face"
-      data-density="dense"
-      style={{
-        ['--rk-font-family-mono' as string]: JETBRAINS,
-        ['--rk-font-content' as string]: 1.32,
-      }}
-    >
+    <div data-testid="face" data-density="dense">
       <Frame title="face" cols={36} rows={10}>
         {textSizes.map((size) => (
           <div key={size}>
@@ -206,8 +211,10 @@ export const FillsItsRows: Story = {
     </div>
   ),
   play: async ({ canvas }) => {
-    await document.fonts.load(`16px ${JETBRAINS}`);
+    const { family, content } = await knownFace();
     const face = canvas.getByTestId('face');
+    face.style.setProperty('--rk-font-family-mono', `"${family}"`);
+    face.style.setProperty('--rk-font-content', String(content));
     for (const density of DENSITIES) {
       face.dataset.density = density;
       await settled();
@@ -216,7 +223,7 @@ export const FillsItsRows: Story = {
         const m = metricsOf(el);
         expect(
           getComputedStyle(el.querySelector('.rk-text-glyphs') as Element).fontFamily,
-        ).toContain('JetBrains Mono Variable');
+        ).toContain(family);
         expectSized(el, 'Rock', size);
         const box = el.getBoundingClientRect();
         const glyphs = runOf(el);

@@ -103,7 +103,7 @@ On Linux, Chromium hints faces: IBM Plex Mono at 16px lays out at a 10px advance
 
 - At 16px every scaled advance comes out under the scaled cell, so the box is `textCols` cells.
 - At a base size whose advance rounds down, such as 14px in Plex (8.4px laid out at 8px), the scaled run is wider than its ordinary width scaled by about the scale times what the ordinary advance lost: about a pixel a letter at size 2. A box worked from the ordinary cell alone would be narrower than its words. The `1ch` term is what covers it.
-- CI checks height, whole cells, that the box covers the laid-out words, and that it pads less than a cell, on every run (*Every size*, *Densities*). *Glyphs fill their rows* sets JetBrains Mono with its token and checks the engine's glyph box is N rows, from the first row, within a pixel, at all four densities.
+- CI checks height, whole cells, that the box covers the laid-out words, and that it pads less than a cell, on every run (*Every size*, *Densities*). *Glyphs fill their rows* sets whichever of IBM Plex Mono and JetBrains Mono the workbench loads, with its token, and checks the engine's glyph box is N rows, from the first row, within a pixel, at all four densities.
 
 ### Beside ordinary text
 
