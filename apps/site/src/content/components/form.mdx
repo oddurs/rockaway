@@ -1,0 +1,11 @@
+---
+name: Form
+---
+
+import { Example } from '../../islands/examples/form.tsx';
+import source from '../../islands/examples/form.tsx?raw';
+import Source from '../../components/Source.astro';
+
+<Example client:load />
+
+<Source code={source} lang="tsx" />

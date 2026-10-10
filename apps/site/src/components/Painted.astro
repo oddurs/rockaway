@@ -7,7 +7,9 @@
  * foundations page is the system and not a picture of it. Selecting it copies
  * the text it was drawn from.
  *
- * A reader hears the label, never the glyphs.
+ * A reader hears the label, never the glyphs. A screen wider than the
+ * measure scrolls across in its own box, as code does, with the overflow marks
+ * at the edge that has more, and a tab stop so a keyboard can scroll it.
  */
 import { fromText } from '@rockaway/grid';
 import { rowRuns } from '@rockaway/react';
@@ -42,6 +44,6 @@ const html = Array.from({ length: buffer.height }, (_, y) => {
 }).join('');
 ---
 
-<figure role="img" aria-label={label}>
+<figure role="img" aria-label={label} class="rk-scroll-marks" tabindex="0">
   <div data-rk-painted="glyph" aria-hidden="true" set:html={html} />
 </figure>
