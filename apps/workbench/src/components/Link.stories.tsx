@@ -1,7 +1,15 @@
-import { Frame, Link, linkBuffer, RouterProvider } from '@rockaway/react';
+import {
+  Frame,
+  Link,
+  type LinkComponent,
+  LinkComponentProvider,
+  linkBuffer,
+  RouterProvider,
+} from '@rockaway/react';
 import { checkTargets, screenshot } from '@rockaway/react/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactNode, useState } from 'react';
+import { renderToString } from 'react-dom/server';
 import { expect, fireEvent, fn, userEvent, waitFor } from 'storybook/test';
 import { press, tab } from '../keys.ts';
 import { settled } from '../settled.ts';
@@ -642,5 +650,133 @@ export const ClientRouter: Story = {
     await press('{Enter}');
     await waitFor(() => expect(canvas.getByTestId('path')).toHaveTextContent('at /changelog'));
     expect(window.location.href).toBe(before);
+  },
+};
+
+/**
+ * What a framework's `Link` does, in small: it prefetches the page when the
+ * link is pointed at or focused, and follows it itself, without a load. The
+ * real `next/link` is an anchor with the same two jobs.
+ */
+function frameworkLink(
+  prefetched: (href: string) => void,
+  followed: (href: string) => void,
+): LinkComponent {
+  return function FrameworkLink({ href, onClick, onPointerEnter, onFocus, ...anchor }) {
+    return (
+      <a
+        {...anchor}
+        href={href}
+        data-framework=""
+        onPointerEnter={(event) => {
+          prefetched(href);
+          onPointerEnter?.(event);
+        }}
+        onFocus={(event) => {
+          prefetched(href);
+          onFocus?.(event);
+        }}
+        onClick={(event) => {
+          onClick?.(event);
+          event.preventDefault();
+          followed(href);
+        }}
+      />
+    );
+  };
+}
+
+/**
+ * Every Link renders through the app's own link (0300): the framework's, so
+ * it can prefetch, with a real `a href` underneath, and the system's classes
+ * and states on it. A disabled link is never handed to it.
+ */
+export const ThroughTheAppsLink: Story = {
+  name: 'Through the app’s own link',
+  render: () => {
+    const [seen, setSeen] = useState<string[]>([]);
+    const [at, setAt] = useState('/');
+    // Once: a new component each render would unmount the anchor under the pointer.
+    const [component] = useState(() =>
+      frameworkLink((href) => setSeen((all) => (all.includes(href) ? all : [...all, href])), setAt),
+    );
+    return (
+      <LinkComponentProvider component={component}>
+        <Frame title="app link" cols={40} rows={6}>
+          <nav aria-label="Pages" style={{ display: 'flex', gap: 'var(--rk-x-2)' }}>
+            <Link href="/docs">docs</Link>
+            <Link href="/guide">guide</Link>
+            <Link href="/off" isDisabled>
+              off
+            </Link>
+          </nav>
+          <p data-testid="at" style={{ margin: 0 }}>{`at ${at}`}</p>
+          <p data-testid="seen" style={{ margin: 0 }}>{`prefetched ${seen.join(' ')}`}</p>
+        </Frame>
+      </LinkComponentProvider>
+    );
+  },
+  play: async ({ canvas }) => {
+    await settled();
+    const docs = canvas.getByRole('link', { name: 'docs' });
+    expect(docs.tagName).toBe('A');
+    expect(docs).toHaveAttribute('href', '/docs');
+    expect(docs).toHaveAttribute('data-framework');
+    expect(docs).toHaveClass('rk-link');
+    // Disabled: still in the reading order, but the framework never had it.
+    expect(canvas.getByRole('link', { name: 'off' })).not.toHaveAttribute('data-framework');
+
+    // Pointed at: prefetched. Focused: prefetched. Neither is a visit.
+    await userEvent.hover(docs);
+    await waitFor(() => expect(canvas.getByTestId('seen')).toHaveTextContent('prefetched /docs'));
+    canvas.getByRole('link', { name: 'guide' }).focus();
+    await waitFor(() =>
+      expect(canvas.getByTestId('seen')).toHaveTextContent('prefetched /docs /guide'),
+    );
+    expect(canvas.getByTestId('at')).toHaveTextContent('at /');
+
+    // Followed by the framework, not the browser.
+    const before = window.location.href;
+    await userEvent.click(docs);
+    await waitFor(() => expect(canvas.getByTestId('at')).toHaveTextContent('at /docs'));
+    expect(window.location.href).toBe(before);
+  },
+};
+
+/**
+ * With no script, the same tree is a real `a href`: the server's HTML, whether
+ * or not an app supplied a link, links to the page.
+ */
+export const LinkWithoutScript: Story = {
+  name: 'A real anchor with no JavaScript',
+  render: () => (
+    <Frame title="no script" cols={30} rows={3}>
+      <Link href="/docs">docs</Link>
+    </Frame>
+  ),
+  play: () => {
+    const framework = frameworkLink(
+      () => undefined,
+      () => undefined,
+    );
+    const plain = new DOMParser().parseFromString(
+      renderToString(<Link href="/docs">docs</Link>),
+      'text/html',
+    );
+    const through = new DOMParser().parseFromString(
+      renderToString(
+        <LinkComponentProvider component={framework}>
+          <Link href="/docs">docs</Link>
+        </LinkComponentProvider>,
+      ),
+      'text/html',
+    );
+    for (const page of [plain, through]) {
+      const anchor = page.querySelector('a');
+      expect(anchor?.getAttribute('href')).toBe('/docs');
+      expect(anchor?.textContent).toBe('docs');
+    }
+    // The server's links are the framework's, so they hydrate into it.
+    expect(through.querySelector('a')?.hasAttribute('data-framework')).toBe(true);
   },
 };

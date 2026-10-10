@@ -2,4 +2,13 @@
 
 // The pure half: no client boundary, so a server can call these (cairn 0126).
 export { linkBuffer } from '../components/link.pure.ts';
-export { Link, type LinkProps, type LinkState, RouterProvider } from '../components/link.tsx';
+export {
+  Link,
+  type LinkComponent,
+  LinkComponentProvider,
+  type LinkComponentProviderProps,
+  type LinkProps,
+  type LinkState,
+  RouterProvider,
+  useLinkComponent,
+} from '../components/link.tsx';

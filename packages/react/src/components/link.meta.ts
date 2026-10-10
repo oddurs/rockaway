@@ -37,6 +37,12 @@ export const linkMeta: ComponentMetaInput = defineMeta({
         'React Aria\'s Link: an anchor, or a span with role="link" when disabled. Navigation goes through a RouterProvider when there is one.',
     },
     {
+      kind: 'import',
+      name: 'LinkComponentProvider',
+      description:
+        "Renders every Link inside it through the app's own link (next/link, a router's Link), so the framework prefetches and follows it. Without it a Link is a plain anchor.",
+    },
+    {
       kind: 'element',
       name: 'cursor',
       className: 'rk-link-cursor',
@@ -84,6 +90,7 @@ export const linkMeta: ComponentMetaInput = defineMeta({
       '"changelog, link", or "changelog (opens in a new tab), link". A current link is announced as the current page.',
     notes: [
       'A disabled link renders as a span with role="link", so it stays in the reading order.',
+      "To render every Link through a framework's own link, so it prefetches, wrap the app in LinkComponentProvider with that link as `component`. Use it or a RouterProvider for navigation, not both.",
       "For client-side routing, wrap the app in RouterProvider from @rockaway/react, given the router's navigate (and useHref for a base path). It is React Aria's, re-exported so it is the same instance Link reads.",
     ],
   },
