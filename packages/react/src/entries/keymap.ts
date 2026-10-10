@@ -11,6 +11,7 @@ export {
   chordMatches,
   // The keyboard, for the engine's `setPlatform` and for drawing chords.
   detectPlatform,
+  isControlKey,
   isEditable,
   type KeyEventSource,
   type KeymapConflict,

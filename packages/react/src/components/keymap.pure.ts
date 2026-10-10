@@ -423,6 +423,25 @@ export function isEditable(target: EventTarget | null): boolean {
   return !NOT_TYPING.has(String(element.type ?? 'text').toLowerCase());
 }
 
+/** What a focused control does with Space or Enter, as the browser does it. */
+const ACTIVATABLE = 'button, a[href], summary, [role="button"], input, select, textarea';
+
+/**
+ * Whether a keystroke is the focused control's own: Space or Enter with no
+ * Control, Alt or Command, on (or inside) a button, a link, a summary, a
+ * `role="button"` or a form field. The browser presses or follows the control
+ * with it, and does so even when no script has claimed the key, as on a page
+ * rendered on the server and never hydrated. A keymap that took the key there
+ * would prevent the press. With a modifier it is a chord, and the page's.
+ */
+export function isControlKey(stroke: KeyStroke, target: EventTarget | null): boolean {
+  if (stroke.key !== ' ' && stroke.key !== 'Enter') return false;
+  if (stroke.ctrlKey || stroke.altKey || stroke.metaKey) return false;
+  if (target === null || typeof target !== 'object') return false;
+  const closest = (target as { closest?: (selector: string) => unknown }).closest;
+  return typeof closest === 'function' && closest.call(target, ACTIVATABLE) != null;
+}
+
 /** What `attachKeymap` listens on: a document, or any target of key events. */
 export interface KeyEventSource {
   addEventListener(type: 'keydown', listener: (event: KeyboardEvent) => void): void;
@@ -433,14 +452,16 @@ export interface KeyEventSource {
  * Feeds a document's keys to an engine: the page-level listener, which
  * `Keymap` uses and a page without React can call. A key a component has
  * already handled (its default prevented) or one that is composing text never
- * reaches it; a plain key in a field that takes text is typing; a key the
- * keymap acts on has its default prevented. The function returned stops
+ * reaches it; a plain key in a field that takes text is typing; Space or Enter
+ * on a focused control is the control's, scripted or not (`isControlKey`); a
+ * key the keymap acts on has its default prevented. The function returned stops
  * listening and forgets a sequence half typed.
  */
 export function attachKeymap(engine: KeymapEngine, source: KeyEventSource): () => void {
   const listen = (event: KeyboardEvent): void => {
     // A component that handled the key has said so; the page does not get it too.
     if (event.defaultPrevented || event.isComposing) return;
+    if (isControlKey(event, event.target)) return;
     if (engine.handle(event, isEditable(event.target))) event.preventDefault();
   };
   source.addEventListener('keydown', listen);
