@@ -11,14 +11,14 @@
  *
  * The same scaling covers characters Plex does not draw: the few the system
  * sets that it lacks are cut from JetBrains Mono, whose advance is also 0.6em
- * (`plex-symbols.woff2`, scripts/font.ts), and anything else falls through to
+ * (`site-symbols.woff2`, scripts/font.ts), and anything else falls through to
  * the adjusted fallback, at the same advance, so it still fills one cell.
  *
  * The faces themselves are `next/font/local`'s (app/fonts.ts): self-hosted,
  * hashed, preloaded, and declared by Next; this declares the fallbacks and
  * the stack the tokens read.
  */
-import font from '../app/fonts/plex-mono.json' with { type: 'json' };
+import font from '../app/fonts/site-mono.json' with { type: 'json' };
 
 /** A system monospace font, and how wide its cell is. */
 export interface Fallback {

@@ -12,9 +12,9 @@ import localFont from 'next/font/local';
 
 export const siteMono = localFont({
   src: [
-    { path: './fonts/plex-mono-regular.woff2', weight: '400', style: 'normal' },
-    { path: './fonts/plex-mono-bold.woff2', weight: '700', style: 'normal' },
-    { path: './fonts/plex-mono-italic.woff2', weight: '400', style: 'italic' },
+    { path: './fonts/site-mono-regular.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/site-mono-bold.woff2', weight: '700', style: 'normal' },
+    { path: './fonts/site-mono-italic.woff2', weight: '400', style: 'italic' },
   ],
   display: 'swap',
   preload: true,
@@ -26,7 +26,7 @@ export const siteMono = localFont({
  * a page that sets one of them.
  */
 export const siteSymbols = localFont({
-  src: [{ path: './fonts/plex-symbols.woff2', weight: '400 700', style: 'normal' }],
+  src: [{ path: './fonts/site-symbols.woff2', weight: '400 700', style: 'normal' }],
   display: 'swap',
   preload: false,
   adjustFontFallback: false,

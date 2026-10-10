@@ -8,6 +8,9 @@
  *
  *   pnpm --filter web font
  *
+ * The cut faces are renamed: a subset is a modified version, and the OFL
+ * reserves the name Plex (app/fonts/NOTICE.md).
+ *
  * Run by hand when the character set or a font's version changes, and commit
  * the outputs. The build never touches the network and never runs a
  * subsetter: each source is pinned by commit and hash here, and what it
@@ -18,14 +21,33 @@ import { createHash } from 'node:crypto';
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { marks, spinnerFrames } from '@rockaway/tokens';
+import fontverter from 'fontverter';
 import subsetFont from 'subset-font';
 
 const PLEX =
   'https://raw.githubusercontent.com/IBM/plex/017181e320cd0bea18f798d9ceb27a11c885c618/packages/plex-mono/fonts/complete/ttf';
 const FACES = [
-  { file: 'IBMPlexMono-Regular.ttf', out: 'plex-mono-regular', weight: 400, style: 'normal' },
-  { file: 'IBMPlexMono-Bold.ttf', out: 'plex-mono-bold', weight: 700, style: 'normal' },
-  { file: 'IBMPlexMono-Italic.ttf', out: 'plex-mono-italic', weight: 400, style: 'italic' },
+  {
+    file: 'IBMPlexMono-Regular.ttf',
+    out: 'site-mono-regular',
+    name: 'Regular',
+    weight: 400,
+    style: 'normal',
+  },
+  {
+    file: 'IBMPlexMono-Bold.ttf',
+    out: 'site-mono-bold',
+    name: 'Bold',
+    weight: 700,
+    style: 'normal',
+  },
+  {
+    file: 'IBMPlexMono-Italic.ttf',
+    out: 'site-mono-italic',
+    name: 'Italic',
+    weight: 400,
+    style: 'italic',
+  },
 ] as const;
 const SHA256: Readonly<Record<string, string>> = {
   'IBMPlexMono-Regular.ttf': '7c6fbddca4b700be918f5f6183d9bd4464fa427fe435f0b480d77fe2bb8c5a43',
@@ -183,15 +205,145 @@ async function fetchPinned(url: string, name: string): Promise<Buffer> {
   return source;
 }
 
+/** The name table's strings, by name ID, as Windows reads them (platform 3, encoding 1, US English). */
+function names({ font, at }: Tables): Map<number, string> {
+  const table = at('name');
+  const count = font.readUInt16BE(table + 2);
+  const strings = table + font.readUInt16BE(table + 4);
+  const found = new Map<number, string>();
+  for (let i = 0; i < count; i++) {
+    const record = table + 6 + i * 12;
+    const [platform, encoding, language, id] = [0, 2, 4, 6].map((o) =>
+      font.readUInt16BE(record + o),
+    ) as [number, number, number, number];
+    if (platform !== 3 || encoding !== 1 || language !== 0x409) continue;
+    const length = font.readUInt16BE(record + 8);
+    const offset = strings + font.readUInt16BE(record + 10);
+    found.set(
+      id,
+      font
+        .subarray(offset, offset + length)
+        .swap16()
+        .toString('utf16le'),
+    );
+    // `swap16` turned the bytes round in place: turn them back.
+    font.subarray(offset, offset + length).swap16();
+  }
+  return found;
+}
+
+/** A name table of the given strings, for Windows and so for every browser. */
+function nameTable(strings: ReadonlyMap<number, string>): Buffer {
+  const ids = [...strings.keys()].sort((a, b) => a - b);
+  const encoded = ids.map((id) => Buffer.from(strings.get(id) ?? '', 'utf16le').swap16());
+  const header = Buffer.alloc(6 + ids.length * 12);
+  header.writeUInt16BE(0, 0);
+  header.writeUInt16BE(ids.length, 2);
+  header.writeUInt16BE(header.length, 4);
+  let offset = 0;
+  ids.forEach((id, i) => {
+    const at = 6 + i * 12;
+    header.writeUInt16BE(3, at);
+    header.writeUInt16BE(1, at + 2);
+    header.writeUInt16BE(0x409, at + 4);
+    header.writeUInt16BE(id, at + 6);
+    header.writeUInt16BE(encoded[i]?.length ?? 0, at + 8);
+    header.writeUInt16BE(offset, at + 10);
+    offset += encoded[i]?.length ?? 0;
+  });
+  return Buffer.concat([header, ...encoded]);
+}
+
+const checksum = (data: Buffer): number => {
+  const padded = Buffer.concat([data, Buffer.alloc((4 - (data.length % 4)) % 4)]);
+  let sum = 0;
+  for (let i = 0; i < padded.length; i += 4) sum = (sum + padded.readUInt32BE(i)) >>> 0;
+  return sum;
+};
+
+/** The font with its name table replaced, its directory and checksums written again. */
+function withNames(font: Buffer, name: Buffer): Buffer {
+  const count = font.readUInt16BE(4);
+  const entries = Array.from({ length: count }, (_, i) => {
+    const at = 12 + i * 16;
+    const tag = font.toString('latin1', at, at + 4);
+    const offset = font.readUInt32BE(at + 8);
+    const length = font.readUInt32BE(at + 12);
+    return {
+      tag,
+      data: tag === 'name' ? name : Buffer.from(font.subarray(offset, offset + length)),
+    };
+  }).sort((a, b) => (a.tag < b.tag ? -1 : 1));
+  const head = entries.find((e) => e.tag === 'head');
+  if (!head) throw new Error('the font has no head table');
+  head.data.writeUInt32BE(0, 8);
+  const directory = Buffer.alloc(12 + count * 16);
+  font.copy(directory, 0, 0, 4);
+  const power = 2 ** Math.floor(Math.log2(count));
+  directory.writeUInt16BE(count, 4);
+  directory.writeUInt16BE(power * 16, 6);
+  directory.writeUInt16BE(Math.log2(power), 8);
+  directory.writeUInt16BE(count * 16 - power * 16, 10);
+  const bodies: Buffer[] = [];
+  let offset = directory.length;
+  entries.forEach(({ tag, data }, i) => {
+    const at = 12 + i * 16;
+    directory.write(tag, at, 'latin1');
+    directory.writeUInt32BE(checksum(data), at + 4);
+    directory.writeUInt32BE(offset, at + 8);
+    directory.writeUInt32BE(data.length, at + 12);
+    const padded = Buffer.concat([data, Buffer.alloc((4 - (data.length % 4)) % 4)]);
+    bodies.push(padded);
+    offset += padded.length;
+  });
+  const whole = Buffer.concat([directory, ...bodies]);
+  const headAt = whole.readUInt32BE(12 + entries.indexOf(head) * 16 + 8);
+  whole.writeUInt32BE((0xb1b0afba - checksum(whole)) >>> 0, headAt + 8);
+  return whole;
+}
+
+/**
+ * The face, renamed (cairn 0295). A subset is a modified version of the font,
+ * and the OFL keeps a Reserved Font Name for the original: IBM's "Plex". So
+ * the cut faces are named Rockaway Mono Site Subset, in every name a browser
+ * or a system reads, and keep IBM's copyright and the licence's description
+ * and URL. NOTICE.md beside them says what they were cut from.
+ */
+async function cut(
+  source: Buffer,
+  text: string,
+  family: string,
+  style: string,
+  extra: Partial<Parameters<typeof subsetFont>[2]> = {},
+): Promise<Buffer> {
+  const original = names(tables(source));
+  const ttf = await subsetFont(source, text, { ...options, ...extra, targetFormat: 'truetype' });
+  const postscript = `${family.replaceAll(' ', '')}-${style.replaceAll(' ', '')}`;
+  const strings = new Map<number, string>([
+    [0, original.get(0) ?? ''],
+    [1, family],
+    [2, style],
+    [3, `${postscript};${original.get(5) ?? ''}`],
+    [4, `${family} ${style}`],
+    [5, original.get(5) ?? ''],
+    [6, postscript],
+    [13, original.get(13) ?? ''],
+    [14, original.get(14) ?? ''],
+    // A variable face's axes and instances name themselves from 256 up: kept.
+    ...[...names(tables(Buffer.from(ttf)))].filter(([id]) => id >= 256),
+  ]);
+  return fontverter.convert(withNames(Buffer.from(ttf), nameTable(strings)), 'woff2');
+}
+
 // Ligatures are off on the grid (a ligature is two characters in one cell),
 // so `calt` and the stylistic sets go; mark positioning stays, for accents.
-// Copyright and the licence travel in the font's own names.
 const options = {
-  targetFormat: 'woff2',
   keepFeatures: ['ccmp', 'locl', 'mark', 'mkmk'],
   noLayoutClosure: true,
-  preserveNameIds: [0, 13, 14],
 } as const;
+
+const FAMILY = 'Rockaway Mono Site Subset';
+const SYMBOLS_FAMILY = 'Rockaway Mono Site Symbols';
 
 const out = path.join(import.meta.dirname, '..', 'app', 'fonts');
 const wanted = charset();
@@ -207,30 +359,32 @@ for (const face of FACES) {
     regular = metrics(read);
     missing = wanted.filter((c) => !has.has(c.codePointAt(0) ?? 0));
   }
-  const woff2 = await subsetFont(source, drawn.join(''), options);
+  const woff2 = await cut(source, drawn.join(''), FAMILY, face.name);
   writeFileSync(path.join(out, `${face.out}.woff2`), woff2);
   faces.push({ ...face, bytes: woff2.length, unicodeRange: unicodeRange(drawn) });
   console.log(`${face.out}.woff2: ${drawn.length} characters, ${woff2.length} bytes`);
 }
 
 const jetbrains = await fetchPinned(JETBRAINS, 'JetBrainsMono[wght].ttf');
-const symbols = await subsetFont(jetbrains, missing.join(''), {
-  ...options,
+const symbols = await cut(jetbrains, missing.join(''), SYMBOLS_FAMILY, 'Regular', {
   variationAxes: { wght: { min: 400, max: 700, default: 400 } },
 });
-writeFileSync(path.join(out, 'plex-symbols.woff2'), symbols);
-console.log(`plex-symbols.woff2: ${missing.join(' ')}, ${symbols.length} bytes`);
+writeFileSync(path.join(out, 'site-symbols.woff2'), symbols);
+console.log(`site-symbols.woff2: ${missing.join(' ')}, ${symbols.length} bytes`);
 
 writeFileSync(
-  path.join(out, 'plex-mono.json'),
+  path.join(out, 'site-mono.json'),
   `${JSON.stringify(
     {
-      family: 'IBM Plex Mono',
+      family: FAMILY,
+      derivedFrom: 'IBM Plex Mono',
       license: 'OFL-1.1',
       source: PLEX,
       metrics: regular,
       faces,
       symbols: {
+        family: SYMBOLS_FAMILY,
+        derivedFrom: 'JetBrains Mono',
         source: JETBRAINS,
         characters: missing.join(''),
         unicodeRange: unicodeRange(missing),
