@@ -5,9 +5,9 @@
 // lists its names here. A new component adds one line and touches no other; `merge=union` in
 // .gitattributes joins lines that parallel branches add, and test/barrels.test.ts fails if a
 // component is missing, has no entry, or is listed twice.
-export { type CellMetrics, cellsIn, DEFAULT_CELL, measureCell } from './cell-metrics.ts';
-export { readScreen, screenAnsi, screenPalette, screenText } from './copy.ts';
+
 export { CELL_COVER_GRACE, CELL_SNAP, CELL_TIE, type CellMetrics, cellsCovering, cellsIn, DEFAULT_CELL, floorCell, measureCell, nearestCell } from './cell-metrics.ts';
+export { readScreen, screenAnsi, screenPalette, screenText } from './copy.ts';
 export { cx } from './cx.ts';
 export { fitStatusBar, type Measured, measureScreen, relayoutPanes, type StatusSegmentFit } from './dom.ts';
 export * from './entries/badge.ts';

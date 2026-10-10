@@ -47,4 +47,13 @@
     background: var(--rk-fg-default);
     color: var(--rk-bg-subtle);
   }
+
+  /* Out of the backplate, which would hide its canvas-coloured words (0181),
+   * and any shape in it inked in the reversed figure (0236). */
+  @media (forced-colors: active) {
+    .rk-status-segment[data-variant="mode"] {
+      forced-color-adjust: none;
+      --rk-forced-ink: Canvas;
+    }
+  }
 }

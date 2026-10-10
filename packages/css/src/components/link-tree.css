@@ -75,11 +75,8 @@
     /* Out of the backplate, which would hide canvas-coloured words (0181). */
     .rk-link-tree-row:has(> .rk-link-tree-link[aria-current]) {
       forced-color-adjust: none;
-    }
-
-    /* A shape is inked in the text colour, which a reversed row has as its ground. */
-    .rk-link-tree-row:has(> .rk-link-tree-link[aria-current]) [data-rk-shape] {
-      --rk-ink-colour: Canvas;
+      /* A shape in it, a guide, is inked in the reversed figure (screen.css, 0236). */
+      --rk-forced-ink: Canvas;
     }
   }
 }
