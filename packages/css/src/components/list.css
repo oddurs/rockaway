@@ -68,6 +68,9 @@
   .rk-list-mark {
     inline-size: var(--rk-cell-width);
     flex: none;
+    /* A blank is a cell too: in prose, where whitespace collapses, a mark with
+     * no cursor would otherwise have no height, and sit half a row down. */
+    white-space: pre;
   }
 
   .rk-list-label {

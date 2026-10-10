@@ -4,7 +4,16 @@ const temperatures = ['cool', 'neutral', 'warm'];
 const pairings = ['system', 'jetbrains', 'ibm-plex', 'berkeley'];
 const sets = ['single', 'double', 'heavy', 'rounded', 'ascii'];
 const levels = ['strict', 'standard', 'loose'];
-const keys = ['accentHue', 'neutralTemperature', 'typePairing', 'borderSet', 'conformance'];
+const keys = [
+  'accentHue',
+  'neutralTemperature',
+  'typePairing',
+  'borderSet',
+  'conformance',
+  'weights',
+];
+const weightNames = ['emphasis', 'raised', 'modal'];
+const ascii = (set: unknown): boolean => set === 'ascii';
 
 /** Parse a theme file, with errors that say what to change. */
 export function parseTheme(value: unknown, source = 'theme'): ThemeInputs {
@@ -26,6 +35,25 @@ export function parseTheme(value: unknown, source = 'theme'): ThemeInputs {
     errors.push(`borderSet must be one of ${sets.join(', ')}`);
   if (!levels.includes(v.conformance as string))
     errors.push(`conformance must be one of ${levels.join(', ')}`);
+  if (v.weights !== undefined) {
+    const w = v.weights;
+    if (typeof w !== 'object' || w === null || Array.isArray(w)) {
+      errors.push(`weights must be an object with any of ${weightNames.join(', ')}`);
+    } else {
+      for (const [name, set] of Object.entries(w)) {
+        if (!weightNames.includes(name)) {
+          errors.push(`unknown weight "${name}": one of ${weightNames.join(', ')}`);
+        } else if (!sets.includes(set as string)) {
+          errors.push(`weights.${name} must be one of ${sets.join(', ')}`);
+        } else if (ascii(set) !== ascii(v.borderSet)) {
+          // The border set decides the repertoire, for every glyph (0091).
+          errors.push(
+            `weights.${name} is ${set}, but a theme drawn in ${v.borderSet} draws ${ascii(v.borderSet) ? 'only ascii' : 'no ascii'}`,
+          );
+        }
+      }
+    }
+  }
   if (errors.length > 0) throw new Error(`${source}:\n  ${errors.join('\n  ')}`);
   return v as unknown as ThemeInputs;
 }

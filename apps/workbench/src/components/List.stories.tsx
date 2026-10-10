@@ -1,5 +1,6 @@
 import { toText } from '@rockaway/grid';
 import {
+  Callout,
   Frame,
   List,
   ListItem,
@@ -771,6 +772,34 @@ export const InAFrame: Story = {
     const frame = canvas.getByRole('group', { name: 'files' });
     expect(frame.textContent).toContain('├');
     expect(canvas.getByRole('listbox', { name: 'Files' })).toBeVisible();
+  },
+};
+
+/**
+ * In prose, where whitespace collapses: a callout's content wraps as text
+ * does. The cursor's cell holds a blank when no row has the cursor, and a
+ * collapsed blank is no cell at all, so the marks stood half a row down. The
+ * marks keep their whitespace, and every row is on the grid. Found by the
+ * kitchen sink (0064), whose panes hold their examples as prose.
+ */
+export const InProse: Story = {
+  name: 'In prose',
+  render: () => (
+    <Callout title="Files">
+      <Files label="Files" rows={4} />
+    </Callout>
+  ),
+  play: async ({ canvas }) => {
+    const list = canvas.getByRole('listbox', { name: 'Files' });
+    await settled();
+    const marks = [...list.querySelectorAll<HTMLElement>('.rk-list-cursor')];
+    expect(marks.length).toBeGreaterThan(0);
+    for (const mark of marks) {
+      // A whole cell tall, where its row is.
+      const row = mark.closest('.rk-list-item') as HTMLElement;
+      expect(mark.getBoundingClientRect().height).toBe(row.getBoundingClientRect().height);
+      expect(mark.getBoundingClientRect().top).toBe(row.getBoundingClientRect().top);
+    }
   },
 };
 

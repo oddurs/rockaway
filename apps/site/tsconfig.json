@@ -11,5 +11,14 @@
     // consumer can import, so it is switched off here (cairn 0103).
     "customConditions": []
   },
-  "include": [".astro/types.d.ts", "src", "scripts", "test", "astro.config.ts", "vitest.config.ts"]
+  "include": [
+    ".astro/types.d.ts",
+    "src",
+    "scripts",
+    "test",
+    "budget",
+    "astro.config.ts",
+    "vitest.config.ts",
+    "vitest.budget.config.ts"
+  ]
 }

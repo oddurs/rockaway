@@ -13,6 +13,11 @@
  *   2. Component CSS asks `@container rk (min-width: …)`, never `@media`.
  *   3. Widths are written in `ch`, because a container query condition cannot
  *      read a custom property, and because a screen is measured in columns.
+ *      A step is asked at the midpoint, half a cell under it: `width < 59.5ch`
+ *      for "fewer than sixty cells". A box laid out n cells wide can measure a
+ *      hair under `n ch` (layout snaps to 1/64px, the cell is the font's true
+ *      advance), and no width between two whole cells ever happens, so the
+ *      midpoint asks the question exactly in every engine.
  *      The steps are the ones terminals have always used:
  *
  *        40ch   a phone, or a sidebar: one column, stacked
