@@ -1,7 +1,9 @@
 import { toText } from '@rockaway/grid';
 import {
   Button,
+  detectPlatform,
   KeyHint,
+  keyHintCells,
   type PainterName,
   StatusBar,
   StatusMessage,
@@ -135,7 +137,11 @@ export const Widths: Story = {
   },
 };
 
-/** What the keys do, as key hints, in a segment of their own at the end. */
+/**
+ * What the keys do, as key hints, in a segment of their own at the end. Hints
+ * side by side are a cell apart with nothing written between them (0280), and
+ * the segment is as wide as the server said it would be (0285).
+ */
 export const KeyHints: Story = {
   name: 'Key hints',
   render: () => (
@@ -145,7 +151,8 @@ export const KeyHints: Story = {
       </StatusSegment>
       <StatusSegment priority={1}>3 of 12</StatusSegment>
       <StatusSegment align="end" label="Keys">
-        <KeyHint keys="enter">open</KeyHint> <KeyHint keys="esc">close</KeyHint>
+        <KeyHint keys="enter">open</KeyHint>
+        <KeyHint keys="esc">close</KeyHint>
       </StatusSegment>
     </StatusBar>
   ),
@@ -158,6 +165,17 @@ export const KeyHints: Story = {
     const box = keys?.getBoundingClientRect();
     const right = bar.getBoundingClientRect().right;
     expect(Math.abs((box?.right ?? 0) - right)).toBeLessThan(0.5);
+    // A cell between the hints, and the width keyHintCells gives, padded.
+    const cell = Number.parseFloat(getComputedStyle(bar).getPropertyValue('--rk-cell-width'));
+    const [open, close] = [...(keys?.querySelectorAll('.rk-keyhint') ?? [])].map((h) =>
+      h.getBoundingClientRect(),
+    );
+    expect(Math.abs((close?.left ?? 0) - (open?.right ?? 0) - cell)).toBeLessThan(0.5);
+    // The reader's keyboard, as the hints draw it once the page has run.
+    const platform = detectPlatform(navigator);
+    const cols =
+      keyHintCells('enter', 'open', platform) + 1 + keyHintCells('esc', 'close', platform) + 2;
+    expect(keys?.style.getPropertyValue('--rk-status-cols')).toBe(String(cols));
   },
 };
 
