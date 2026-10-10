@@ -136,7 +136,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`#######···` 61% · 108 of 178 done · due 2027-01-31
+`#######···` 61% · 109 of 178 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
