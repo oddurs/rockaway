@@ -12,6 +12,7 @@ import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, userEvent, waitFor } from 'storybook/test';
+import { press, tab } from '../keys.ts';
 import { measured } from '../settled.ts';
 
 const meta = {
@@ -140,14 +141,14 @@ export const Keyboard: Story = {
   play: async ({ canvas }) => {
     await measured(document.body);
     const sign = canvas.getByRole('checkbox', { name: 'Sign commits' });
-    await userEvent.tab();
+    await tab();
     expect(sign).toHaveFocus();
     expect(rowOf(sign).dataset.focusVisible).toBe('true');
     expect(getComputedStyle(rowOf(sign)).outlineStyle).toBe('solid');
-    await userEvent.keyboard(' ');
+    await press(' ');
     expect(sign).toBeChecked();
     expect(markIn(sign)).toBe(mark.check);
-    await userEvent.tab();
+    await tab();
     expect(canvas.getByRole('checkbox', { name: 'Push tags' })).toHaveFocus();
   },
 };
