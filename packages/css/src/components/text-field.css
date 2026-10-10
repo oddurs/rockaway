@@ -15,11 +15,20 @@
     --rk-text-field-end: var(--rk-border-control);
   }
 
+  /*
+   * The box is the text's rows plus the comfort's padding above and below
+   * (0316): half a row each side when comfortable, so a one-line box is two
+   * rows and reads as a field to type in. The padding pairs, so the box is
+   * whole rows. Compact has none: the terminal's one-row field.
+   */
   .rk-text-field-box {
     display: inline-flex;
     align-items: start;
+    box-sizing: content-box;
+    padding-block: calc(var(--rk-rhythm-pad-y) * var(--rk-step-y));
     /* The row the box is in is the cell, whatever the font's own height. */
     block-size: calc(var(--rk-cell-height) * var(--rk-text-field-rows, 1));
+    background: var(--rk-bg-subtle);
   }
 
   .rk-text-field-end {
@@ -80,6 +89,12 @@
     user-select: none;
   }
 
+  /* A framed box's frame is its padding: the box inside it keeps its row. */
+  .rk-text-field-frame .rk-text-field-box {
+    padding-block: 0;
+    background: none;
+  }
+
   /* A framed box is as wide as its text and the cells around it, not its column. */
   .rk-text-field-frame.rk-field-frame {
     justify-self: start;
@@ -92,6 +107,7 @@
   }
 
   /* Read-only: the value alone, without the ground. */
+  .rk-text-field[data-readonly] .rk-text-field-box,
   .rk-text-field[data-readonly] .rk-text-field-input,
   .rk-text-field[data-readonly] .rk-text-field-area {
     background: none;

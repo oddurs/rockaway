@@ -61,7 +61,9 @@ const FIELDS: readonly FieldText[] = [
 describe('formBuffer', () => {
   // The artefact this ticket is for: mixed fields, one column of controls.
   test('a form of mixed fields lines its controls up in one column of cells', () => {
-    expect(`\n${toText(formBuffer(FIELDS, { width: 64 }))}`).toMatchInlineSnapshot(`
+    expect(
+      `\n${toText(formBuffer(FIELDS, { comfort: 'compact', width: 64 }))}`,
+    ).toMatchInlineSnapshot(`
       "
       Name         [Ada Lovelace        ]
 
@@ -84,7 +86,9 @@ describe('formBuffer', () => {
   test('every control starts in the same cell', () => {
     // The label column is the longest label, its mark cell, and two of air:
     // every row that holds anything has it at cell 13, and nothing between.
-    const rows = toText(formBuffer(FIELDS, { width: 64 }), { trimEnd: false }).split('\n');
+    const rows = toText(formBuffer(FIELDS, { comfort: 'compact', width: 64 }), {
+      trimEnd: false,
+    }).split('\n');
     for (const row of rows.filter((r) => r.trim() !== '')) {
       expect(row[13], row).not.toBe(' ');
       expect(row.slice(10, 13), row).toBe('   ');
@@ -92,7 +96,9 @@ describe('formBuffer', () => {
   });
 
   test('under 60 cells it stacks: each label on the row above its control', () => {
-    expect(`\n${toText(formBuffer(FIELDS, { width: 40 }))}`).toMatchInlineSnapshot(`
+    expect(
+      `\n${toText(formBuffer(FIELDS, { comfort: 'compact', width: 40 }))}`,
+    ).toMatchInlineSnapshot(`
       "
       Name
       [Ada Lovelace        ]
@@ -114,8 +120,12 @@ describe('formBuffer', () => {
       [ Save ]"
     `);
     // 59 cells stacks; 60 does not.
-    expect(toText(formBuffer(FIELDS, { width: 59 })).startsWith('Name\n')).toBe(true);
-    expect(toText(formBuffer(FIELDS, { width: 60 })).startsWith('Name         [')).toBe(true);
+    expect(toText(formBuffer(FIELDS, { comfort: 'compact', width: 59 })).startsWith('Name\n')).toBe(
+      true,
+    );
+    expect(
+      toText(formBuffer(FIELDS, { comfort: 'compact', width: 60 })).startsWith('Name         ['),
+    ).toBe(true);
   });
 
   test('a label column given in cells; a longer label wraps inside it', () => {
@@ -123,7 +133,9 @@ describe('formBuffer', () => {
       { label: 'Name', control: textBox(12) },
       { label: 'Commit message', required: true, control: textBox(12) },
     ];
-    expect(`\n${toText(formBuffer(fields, { width: 60, labelWidth: 11 }))}`).toMatchInlineSnapshot(`
+    expect(
+      `\n${toText(formBuffer(fields, { comfort: 'compact', width: 60, labelWidth: 11 }))}`,
+    ).toMatchInlineSnapshot(`
         "
         Name       [            ]
 
@@ -141,7 +153,9 @@ describe('formBuffer', () => {
         error: 'No such file or directory in this tree.',
       },
     ];
-    expect(`\n${toText(formBuffer(fields, { width: 28 }))}`).toMatchInlineSnapshot(`
+    expect(
+      `\n${toText(formBuffer(fields, { comfort: 'compact', width: 28 }))}`,
+    ).toMatchInlineSnapshot(`
       "
       Path
       [                ]
@@ -153,7 +167,7 @@ describe('formBuffer', () => {
   });
 
   test('the label is bold, the mark and the error danger, the description dim', () => {
-    const buffer = formBuffer(FIELDS, { width: 64 });
+    const buffer = formBuffer(FIELDS, { comfort: 'compact', width: 64 });
     const at = (x: number, y: number) => buffer.at({ x, y })?.style;
     expect(hasAttr(at(0, 0) ?? { attrs: 0 }, Attr.bold)).toBe(true);
     expect(at(5, 2)?.fg).toBe('fg.danger');
@@ -162,13 +176,18 @@ describe('formBuffer', () => {
   });
 
   test('required and invalid add no cell to the control or move it', () => {
-    const plain = formBuffer([{ label: 'Email', control: textBox(20) }], { width: 64 });
+    const plain = formBuffer([{ label: 'Email', control: textBox(20) }], {
+      comfort: 'compact',
+      width: 64,
+    });
     const marked = formBuffer([{ label: 'Email', required: true, control: textBox(20) }], {
+      comfort: 'compact',
       width: 64,
     });
     expect(plain.row(0).indexOf(open)).toBe(marked.row(0).indexOf(open));
     // The error is a message, which is content: it adds rows below, never cells beside.
     const invalid = formBuffer([{ label: 'Email', control: textBox(20), error: 'Required.' }], {
+      comfort: 'compact',
       width: 64,
     });
     expect(invalid.row(0)).toBe(plain.row(0));
@@ -179,9 +198,7 @@ describe('formBuffer', () => {
     const text = toText(
       formBuffer(
         [{ label: 'Email', required: true, control: textBox(4), error: 'No.' }],
-        {
-          width: 64,
-        },
+        { comfort: 'compact', width: 64 },
         ascii,
       ),
     );
@@ -191,7 +208,7 @@ describe('formBuffer', () => {
 });
 
 describe('fieldFrameBuffer', () => {
-  const size = { width: 24, height: 3 };
+  const size = { comfort: 'compact', width: 24, height: 3 };
   test('the label set into the top edge, and every state', () => {
     const states = [
       ['rest', {}],
@@ -275,7 +292,9 @@ describe('the parts, as markup', () => {
   });
 
   test('fieldClass composes the field class with a component’s own', () => {
-    expect(fieldClass('rk-text-field', undefined, 'mine')).toBe('rk-field rk-text-field mine');
+    expect(fieldClass('rk-text-field', undefined, 'mine')).toBe(
+      'rk-field rk-seam rk-text-field mine',
+    );
   });
 
   test('a description is a description slot, and an error renders only when invalid', () => {
