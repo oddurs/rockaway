@@ -1,0 +1,32 @@
+/*
+ * Frame surfaces (cairn 0308).
+ *
+ * A frame given a `surface` fills its whole box, border cells included, with
+ * that surface's ground. The roles are `--rk-bg-surface-*`; the fallbacks are
+ * the roles that exist today, for a theme that has not got them yet. Unset, a
+ * frame paints nothing and shows what is behind it.
+ */
+@layer rk.components {
+  .rk-screen[data-rk-surface="sunken"] {
+    background-color: var(--rk-bg-surface-sunken, var(--rk-bg-subtle));
+  }
+
+  .rk-screen[data-rk-surface="base"] {
+    background-color: var(--rk-bg-surface-base, var(--rk-bg-surface));
+  }
+
+  .rk-screen[data-rk-surface="raised"] {
+    background-color: var(--rk-bg-surface-raised, var(--rk-bg-surface));
+  }
+
+  .rk-screen[data-rk-surface="overlay"] {
+    background-color: var(--rk-bg-surface-overlay, var(--rk-bg-surface));
+  }
+
+  /* Forced colours: no surface is a different ground from any other (0202). */
+  @media (forced-colors: active) {
+    .rk-screen[data-rk-surface] {
+      background-color: Canvas;
+    }
+  }
+}
