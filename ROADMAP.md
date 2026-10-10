@@ -131,7 +131,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 ## primitives — First primitives
 
-`########··` 73% · 132 of 180 done · due 2027-01-31
+`########··` 74% · 133 of 180 done · due 2027-01-31
 
 The component contract, proven on a first set of components.
 
@@ -180,7 +180,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0306`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0306-prove-form-and-keymap-in-both-painters-and-name-their-missing-states.md) Prove Form and Keymap in both painters and name their missing states <sup>chore · tooling · p3</sup>
 - [ ] [`0308`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0308-give-panes-and-frames-a-surface-padding-and-a-gutter-in-cells.md) Give panes and frames a surface, padding and a gutter in cells <sup>feature · components · p0</sup>
 - [ ] [`0310`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0310-let-metadata-name-a-state-a-buffer-or-the-base-stylesheet-draws.md) Let metadata name a state a buffer or the base stylesheet draws <sup>chore · tooling · p3</sup>
-- [ ] [`0323`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0323-size-type-in-half-rows.md) Size type in half rows <sup>feature · components · p2</sup>
 - [ ] [`0325`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0325-let-a-keyhint-be-a-link.md) Let a KeyHint be a link <sup>feature · components · p3</sup>
 - [ ] [`0326`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0326-prefetch-tree-rows-that-are-links.md) Prefetch Tree rows that are links <sup>feature · components · p3</sup>
 
@@ -329,6 +328,7 @@ The component contract, proven on a first set of components.
 - [x] [`0320`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0320-picture.md) Picture <sup>component · components · p1</sup>
 - [x] [`0321`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0321-card.md) Card <sup>component · components · p2</sup>
 - [x] [`0322`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0322-give-prose-a-reading-rhythm.md) Give prose a reading rhythm <sup>feature · css · p1</sup>
+- [x] [`0323`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0323-size-type-in-half-rows.md) Size type in half rows <sup>feature · components · p2</sup>
 
 ## retheme — Tokens on the grid
 
