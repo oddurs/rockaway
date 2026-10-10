@@ -3,12 +3,12 @@ id: 296
 uid: 70c467d6-ef2f-4a21-a5bc-69e658a75bcc
 title: Size type in whole rows, at its natural width
 type: decision
-status: doing
+status: done
 milestone: grid
 assignee: Oddur Sigurdsson
-claimed: 2026-10-09
 created: 2026-10-09
 updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p0
 layer: grid
 effort: m
@@ -126,3 +126,7 @@ So the two baselines do not coincide. The ordinary text's baseline is its own ro
 - **A face that fails to load:** the rows and the cells hold, because they come from the token and `1ch`, not from the glyphs. Only where the letters sit in their rows changes.
 - **0075 is amended.** One size is still the default for every element. Type larger than a cell is asked for with `Text` and measured in rows. `concept.md`, `base.css` and `prose.css` say so.
 - **We would revisit it** for a face whose hhea and typo metrics differ without `USE_TYPO_METRICS`, because engines would then disagree on the glyph box, or for a size between rows.
+
+## 2026-10-09
+
+Decided as written. CI on Linux (ad70ca96) confirms it: N rows, whole cells, the box covers the laid-out words, and the glyph box fills the rows within a pixel.

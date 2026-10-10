@@ -87,7 +87,7 @@ The CSS contract every consumer shares.
 
 ## grid — The frame engine
 
-`#########·` 81% · 17 of 21 done · due 2026-12-06
+`#########·` 86% · 18 of 21 done · due 2026-12-06
 
 The heart of a TUI system: a pure, integer model of a character grid, and
 
@@ -95,10 +95,6 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 
 - [ ] [`0246`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0246-remeasure-a-screen-given-explicit-cols-and-rows-when-its-context-changes.md) Remeasure a screen given explicit cols and rows when its context changes <sup>bug · grid · p2</sup>
 - [ ] [`0274`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0274-draw-strokes-on-whole-pixels-the-same-in-every-engine.md) Draw strokes on whole pixels, the same in every engine <sup>bug · css · p2</sup>
-
-### in progress
-
-- [ ] [`0296`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0296-size-type-in-whole-rows-at-its-natural-width.md) Size type in whole rows, at its natural width <sup>decision · grid · p0</sup>
 
 ### in review
 
@@ -123,6 +119,7 @@ The heart of a TUI system: a pure, integer model of a character grid, and
 - [x] [`0087`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0087-make-the-text-snapshot-the-house-test-for-components.md) Make the text snapshot the house test for components <sup>chore · tooling · p0</sup>
 - [x] [`0088`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0088-enforce-grid-conformance-and-count-the-exceptions.md) Enforce grid conformance, and count the exceptions <sup>chore · tooling · p0</sup>
 - [x] [`0110`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0110-the-rule-painter-draws-cell-boxes-not-lines.md) The rule painter draws cell boxes, not lines <sup>bug · grid · p0</sup>
+- [x] [`0296`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0296-size-type-in-whole-rows-at-its-natural-width.md) Size type in whole rows, at its natural width <sup>decision · grid · p0</sup>
 
 ## primitives — First primitives
 
@@ -204,7 +201,6 @@ The component contract, proven on a first set of components.
 ### in progress
 
 - [ ] [`0125`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0125-check-every-story-at-every-density-and-in-both-modes.md) Check every story at every density and in both modes <sup>chore · tooling · p1</sup>
-- [ ] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 
 ### in review
 
@@ -224,6 +220,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0226`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0226-draw-the-focus-ring-for-controls-whose-focus-is-on-a-hidden-input.md) Draw the focus ring for controls whose focus is on a hidden input <sup>feature · css · p2</sup>
 - [ ] [`0244`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0244-give-a-link-alone-in-a-frame-the-touch-line-box.md) Give a link alone in a frame the touch line box <sup>bug · components · p2</sup>
 - [ ] [`0278`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0278-let-a-focused-tree-take-single-letter-shortcuts-and-say-which-row-has-focus.md) Let a focused Tree take single-letter shortcuts, and say which row has focus <sup>feature · components · p2</sup>
+- [ ] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 
 ### done
 

@@ -3,7 +3,7 @@ id: 297
 uid: 4ab6cc01-4c94-4816-8ca8-0e0cb4537289
 title: Set text in sizes measured in rows
 type: component
-status: doing
+status: review
 milestone: primitives
 assignee: Oddur Sigurdsson
 claimed: 2026-10-09
@@ -54,9 +54,13 @@ Text, so no role of its own: a heading is a heading by its element. Its size is 
 - [x] Operable by keyboard alone, and usable with a finger at touch density
 - [x] State reads without colour: an attribute or a mark carries it too
 - [ ] Conforms at `strict`, or declares its exception with a reason
-- [ ] Sizes 2, 3 and 4 are N rows and whole cells at every density, in both painters, with JavaScript off, at 200% zoom, and on Linux CI
-- [ ] Every page with JavaScript off and on is the same, and the site has a page for it
+- [x] Sizes 2, 3 and 4 are N rows and whole cells at every density, in both painters, with JavaScript off, at 200% zoom, and on Linux CI
+- [x] Every page with JavaScript off and on is the same, and the site has a page for it
 
 ## 2026-10-09
 
 Rule 7 is left open on purpose: sized text does not conform at strict and is not excused there. Decision 0296 makes strict mean one size, so the conformance check reports each .rk-text on a strict screen as a SizedText violation that says why. The reviewer may prefer to call that the declared exception and tick it.
+
+## 2026-10-09
+
+CI green on Linux at ad70ca96: every Text story passes in the storybook, zoom, p3 and forced-colors projects, including Glyphs fill their rows and A heading in prose, and the site test passes with the new page. Status is review rather than done because rule 7 is still open (see the note above).
