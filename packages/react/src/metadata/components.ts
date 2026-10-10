@@ -21,6 +21,7 @@ import { overlayMeta } from '../components/overlay.meta.ts';
 import { panesMeta } from '../components/panes.meta.ts';
 import { pictureMeta } from '../components/picture.meta.ts';
 import { popoverMeta } from '../components/popover.meta.ts';
+import { selectMeta } from '../components/select.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
@@ -45,6 +46,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'panes', meta: panesMeta },
   { file: 'picture', meta: pictureMeta },
   { file: 'popover', meta: popoverMeta },
+  { file: 'select', meta: selectMeta },
   { file: 'table', meta: tableMeta },
   { file: 'text-field', meta: textFieldMeta },
   { file: 'tree', meta: treeMeta },
