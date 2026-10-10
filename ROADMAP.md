@@ -181,7 +181,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0275`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0275-keep-a-focused-tall-scroll-region-s-top-in-view.md) Keep a focused tall scroll region's top in view <sup>bug · components · p3</sup>
 - [ ] [`0276`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0276-keep-codeblock-s-overflow-marks-under-a-modal.md) Keep CodeBlock's overflow marks under a modal <sup>bug · components · p1</sup>
 - [ ] [`0277`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0277-draw-a-codeblock-without-its-own-frame.md) Draw a CodeBlock without its own frame <sup>feature · components · p2</sup>
-- [ ] [`0278`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0278-let-a-focused-tree-take-single-letter-shortcuts-and-say-which-row-has-focus.md) Let a focused Tree take single-letter shortcuts, and say which row has focus <sup>feature · components · p2</sup>
 - [ ] [`0279`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0279-share-a-hook-for-a-screen-s-width-in-cells.md) Share a hook for a screen's width in cells <sup>feature · components · p3</sup>
 - [ ] [`0280`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0280-space-a-statussegment-s-keyhints.md) Space a StatusSegment's KeyHints <sup>bug · components · p3</sup>
 - [ ] [`0281`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0281-show-a-table-s-rows-in-a-window-that-follows-the-cursor.md) Show a Table's rows in a window that follows the cursor <sup>feature · components · p2</sup>
@@ -208,6 +207,7 @@ The component contract, proven on a first set of components.
 - [ ] [`0212`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0212-round-the-cell-to-the-engine-s-layout-unit.md) Round the cell to the engine's layout unit <sup>bug · grid · p1</sup>
 - [ ] [`0214`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0214-corners-meet-under-forced-colours-in-firefox.md) Corners meet under forced colours in Firefox <sup>bug · css · p2</sup>
 - [ ] [`0244`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0244-give-a-link-alone-in-a-frame-the-touch-line-box.md) Give a link alone in a frame the touch line box <sup>bug · components · p2</sup>
+- [ ] [`0278`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0278-let-a-focused-tree-take-single-letter-shortcuts-and-say-which-row-has-focus.md) Let a focused Tree take single-letter shortcuts, and say which row has focus <sup>feature · components · p2</sup>
 
 ### done
 
