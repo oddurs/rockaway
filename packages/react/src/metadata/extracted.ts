@@ -205,7 +205,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -473,7 +472,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -511,8 +509,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-x-2",
-      "--rk-y-1"
+      "--rk-rhythm-field",
+      "--rk-rhythm-help",
+      "--rk-step-y",
+      "--rk-x-2"
     ]
   },
   "Divider": {
@@ -585,8 +585,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-x-2",
-      "--rk-y-1"
+      "--rk-rhythm-field",
+      "--rk-rhythm-help",
+      "--rk-step-y",
+      "--rk-x-2"
     ]
   },
   "FieldFrame": {
@@ -739,6 +741,12 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "description": "The label column, in cells, the gap after the labels included. As wide as the longest label in the form when not given; a label longer than the column wraps inside it."
       },
       {
+        "name": "comfort",
+        "type": "Comfort",
+        "required": false,
+        "description": "How generous the form's spacing is (0313, 0316). Comfortable, the default, puts each label over its control in a padded two-row box; compact is the terminal's form, two columns of cells and no padding. Inherited from the region when not given."
+      },
+      {
         "name": "className",
         "type": "string",
         "required": false
@@ -760,8 +768,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-x-2",
-      "--rk-y-1"
+      "--rk-rhythm-field",
+      "--rk-rhythm-help",
+      "--rk-step-y",
+      "--rk-x-2"
     ]
   },
   "Frame": {
@@ -861,7 +871,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       },
       {
         "name": "notation",
-        "type": "'platform' | 'terminal'",
+        "type": "KeyNotation",
         "required": false,
         "default": "'platform'"
       },
@@ -921,7 +931,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
     ]
@@ -944,7 +953,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
     ]
@@ -981,8 +989,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-x-2",
-      "--rk-y-1"
+      "--rk-rhythm-field",
+      "--rk-rhythm-help",
+      "--rk-step-y",
+      "--rk-x-2"
     ]
   },
   "Link": {
@@ -1014,6 +1024,33 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "inherits": [
       "Omit<AriaLinkProps, 'children' | 'className' | 'style'>"
     ],
+    "tokens": [
+      "--rk-attribute-bold",
+      "--rk-attribute-underline-offset",
+      "--rk-attribute-underline-thickness",
+      "--rk-bg-page",
+      "--rk-cell-width",
+      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled"
+    ]
+  },
+  "LinkComponentProvider": {
+    "file": "link.tsx",
+    "props": [
+      {
+        "name": "component",
+        "type": "LinkComponent",
+        "required": true,
+        "description": "The framework's link, which every link the system draws renders through."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "inherits": [],
     "tokens": [
       "--rk-attribute-bold",
       "--rk-attribute-underline-offset",
@@ -1101,6 +1138,119 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-gap",
       "--rk-stroke-rule-heavy",
       "--rk-stroke-rule-light"
+    ]
+  },
+  "Menu": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaMenuProps<T>, 'className' | 'style'>",
+      "Pick<PopoverProps, 'placement' | 'maxRows' | 'shouldFlip' | 'boundaryElement'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuItem": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "keys",
+        "type": "string",
+        "required": false,
+        "description": "A chord, `mod+s`: drawn right-aligned as a KeyHint, announced as `aria-keyshortcuts`."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaMenuItemProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuSection": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The items. For items from data, a React Aria `Collection` among them."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "The section's title, set into the rule above it in the frame, and the name its group is announced by."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaMenuSectionProps<T>, 'className' | 'style' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuSeparator": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
     ]
   },
   "OverlayLayer": {
@@ -1374,6 +1524,90 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Picture": {
+    "file": "picture.tsx",
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "required": true,
+        "description": "What the image shows, for a reader who cannot see it. Empty for a picture that is decoration."
+      },
+      {
+        "name": "ratio",
+        "type": "number",
+        "required": false,
+        "description": "The image's width over its height (`16 / 9`). With `width` and `height` instead, the ratio is theirs. One or the other is needed: it is what sizes the box before the image arrives."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "required": false,
+        "description": "The image's own width, in pixels, when `ratio` is not given."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "required": false,
+        "description": "The image's own height, in pixels, when `ratio` is not given."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "Its width in cells. Every whole cell its container gives it when not given."
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "Its height in rows, cropping the image to it. From the ratio when not given."
+      },
+      {
+        "name": "position",
+        "type": "string",
+        "required": false,
+        "description": "Which part of the image to keep when it is cropped, as `object-position`."
+      },
+      {
+        "name": "caption",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Text on the rows under the image."
+      },
+      {
+        "name": "loading",
+        "type": "'lazy' | 'eager'",
+        "required": false,
+        "description": "Load it when it is near the viewport (the default) or straight away.",
+        "default": "'lazy'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Pick< ImgHTMLAttributes<HTMLImageElement>, 'srcSet' | 'sizes' | 'crossOrigin' | 'referrerPolicy' | 'fetchPriority' >"
+    ],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-muted"
+    ]
+  },
   "Popover": {
     "file": "popover.tsx",
     "props": [
@@ -1407,7 +1641,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1417,6 +1650,166 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-font-family-mono",
       "--rk-glyph-mark-overflow-end",
       "--rk-glyph-mark-overflow-start",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
+  "Select": {
+    "file": "select.tsx",
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The field's name, in the label column."
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | ((item: T) => ReactNode)",
+        "required": false,
+        "description": "The options: `SelectItem`s, or a function of each of `items`."
+      },
+      {
+        "name": "items",
+        "type": "Iterable<T>",
+        "required": false,
+        "description": "The items to render with a function child."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "The trigger's width in cells, its delimiters included.",
+        "default": "24"
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help under the trigger, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "errorMessage",
+        "type": "FieldErrorProps['children']",
+        "required": false,
+        "description": "Words for the error under the trigger; the select's own validation's when not given."
+      },
+      {
+        "name": "maxRows",
+        "type": "number",
+        "required": false,
+        "description": "The most rows the popover takes before its rows scroll.",
+        "default": "8"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaSelectProps<T>, 'children' | 'className' | 'style' | 'selectionMode'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "SelectItem": {
+    "file": "select.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The option's words."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<ListBoxItemProps<T>, 'className' | 'children'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-bg-page",
+      "--rk-bg-surface",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted"
+    ]
+  },
+  "Switch": {
+    "file": "switch.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The label: the switch's own words, after the track. It does not change with the state."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help under the switch, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "How the track's line is stroked: weighted like the type, or a hairline.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit< AriaSwitchFieldProps, | 'children' | 'className' | 'style' | 'isRequired' | 'isInvalid' | 'validate' | 'validationBehavior' >"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-on-inverse",
+      "--rk-focus-offset",
+      "--rk-focus-width",
+      "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",
@@ -1471,7 +1864,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1497,7 +1889,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "string",
         "required": false,
         "description": "What an empty table says, in its first row. `renderEmptyState` replaces it.",
-        "default": "'Nothing here.'"
+        "default": "EMPTY"
       },
       {
         "name": "className",
@@ -1513,7 +1905,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1548,7 +1939,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1649,6 +2039,8 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-default",
       "--rk-fg-disabled",
       "--rk-fg-muted",
+      "--rk-rhythm-pad-y",
+      "--rk-step-y",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",

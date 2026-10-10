@@ -1,13 +1,10 @@
 import { Buffer, drawText, toText } from '@rockaway/grid';
-import { themeGlyphs } from '@rockaway/tokens';
+import type { Glyphs } from '@rockaway/tokens';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
 import { buttonBuffer } from './button.pure.ts';
 import { formBuffer } from './field.pure.ts';
 import type { FieldText } from './field.tsx';
 import { fieldFrameBuffer } from './fieldset.pure.ts';
-
-const glyphs = themeGlyphs.default;
-const [open, close] = glyphs.delimiter.control;
 
 /** A line of text as a one-row buffer: a stand-in for a control's own buffer. */
 function line(text: string): Buffer {
@@ -16,33 +13,40 @@ function line(text: string): Buffer {
   });
 }
 
-/** A one-row text box, the way Text field (0035) draws one. */
-const box = (value: string): Buffer => line(`${open}${value.padEnd(20)}${close}`);
-
-const FIELDS: readonly FieldText[] = [
-  { label: 'Name', control: box('Ada Lovelace') },
-  {
-    label: 'Email',
-    required: true,
-    control: box('ada@'),
-    description: 'Where the receipts go.',
-    error: 'Enter an email address.',
-  },
-  { label: 'Repository', control: box('rockaway') },
-  { control: line(`${open}${glyphs.mark.check}${close} Sign commits`) },
-  {
-    control: (width) =>
-      fieldFrameBuffer({ width, height: 3 }, { label: 'Notify', required: true }).draw((draft) => {
-        const row = `${glyphs.mark.radio} always  ${glyphs.mark['radio-empty']} never`;
-        drawText(draft, { x: 2, y: 1 }, row);
-      }),
-  },
-  { control: buttonBuffer('Save') },
-];
+/** The form's fields, in a theme's glyphs. */
+function fields(glyphs: Glyphs): readonly FieldText[] {
+  const [open, close] = glyphs.delimiter.control;
+  /** A one-row text box, the way Text field (0035) draws one. */
+  const box = (value: string): Buffer => line(`${open}${value.padEnd(20)}${close}`);
+  return [
+    { label: 'Name', control: box('Ada Lovelace'), box: true },
+    {
+      label: 'Email',
+      required: true,
+      control: box('ada@'),
+      box: true,
+      description: 'Where the receipts go.',
+      error: 'Enter an email address.',
+    },
+    { label: 'Repository', control: box('rockaway'), box: true },
+    { control: line(`${open}${glyphs.mark.check}${close} Sign commits`) },
+    {
+      control: (width) =>
+        fieldFrameBuffer({ width, height: 3 }, { label: 'Notify', required: true }, glyphs).draw(
+          (draft) => {
+            const row = `${glyphs.mark.radio} always  ${glyphs.mark['radio-empty']} never`;
+            drawText(draft, { x: 2, y: 1 }, row);
+          },
+        ),
+    },
+    { control: buttonBuffer('Save', {}, glyphs) },
+  ];
+}
 
 export const formMeta: ComponentMetaInput = defineMeta({
   name: 'Form',
-  summary: 'Fields in two columns of cells, labels and controls, the way a terminal form lines up.',
+  summary:
+    'Fields with room to breathe, each label over its control, or in two columns of cells the way a terminal form lines up.',
   description:
     "The field contract: the parts every field is built from, and the form that lines them up. A field's Label is bold on its first row, with a cell after it kept for the required mark; its Description is dim on the rows under the control; its FieldError is under that, a cross and the message in fg.danger. In a Form every field shares one label column, as wide as the longest label, so every control starts in the same cell, and under 60 cells the form stacks each label over its control. React Aria supplies the semantics: the label names the control, the description and the error describe it, and validation is native unless the form says otherwise.",
   whenToUse: [
@@ -140,15 +144,23 @@ export const formMeta: ComponentMetaInput = defineMeta({
   },
   snapshots: [
     {
-      title: 'A form of mixed fields',
+      title: 'A comfortable form',
       description:
-        'Text boxes, a checkbox, a fieldset and a button: every control starts in the same cell, after the longest label, its mark cell and two cells of air.',
-      text: toText(formBuffer(FIELDS, { width: 64 })),
+        'The default (0316): each label over its control, a text box padded half a row above and below so it reads as two rows, help half a row under it, and a row between fields. The half-rows sit inside each field, which closes to whole rows.',
+      draw: (glyphs) => toText(formBuffer(fields(glyphs), { width: 64 }, glyphs)),
     },
     {
-      title: 'Under 60 cells',
-      description: 'The same form, stacked: each label on the row above its control.',
-      text: toText(formBuffer(FIELDS, { width: 40 })),
+      title: 'A compact form',
+      description:
+        'The terminal\'s form, chosen with comfort="compact": every control starts in the same cell, after the longest label, its mark cell and two cells of air.',
+      draw: (glyphs) =>
+        toText(formBuffer(fields(glyphs), { comfort: 'compact', width: 64 }, glyphs)),
+    },
+    {
+      title: 'Compact, under 60 cells',
+      description: 'The compact form, stacked: each label on the row above its control.',
+      draw: (glyphs) =>
+        toText(formBuffer(fields(glyphs), { comfort: 'compact', width: 40 }, glyphs)),
     },
   ],
 });

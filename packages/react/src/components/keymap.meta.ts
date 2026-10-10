@@ -1,6 +1,6 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { keymapHelpBuffer } from './keymap.tsx';
+import { keymapHelpBuffer } from './keymap.pure.ts';
 
 const BINDINGS = [
   { keys: 'mod+k', description: 'Open the palette' },
@@ -78,12 +78,12 @@ export const keymapMeta: ComponentMetaInput = defineMeta({
       title: 'Help, on any keyboard but Apple’s',
       description:
         'The keys in a column as wide as the widest chord, two cells of air, what they do.',
-      text: toText(keymapHelpBuffer(BINDINGS, 'other')),
+      draw: (glyphs) => toText(keymapHelpBuffer(BINDINGS, 'other', glyphs)),
     },
     {
       title: 'Help, on an Apple keyboard',
       description: 'The same bindings, the chords in the legends an Apple keyboard prints.',
-      text: toText(keymapHelpBuffer(BINDINGS, 'apple')),
+      draw: (glyphs) => toText(keymapHelpBuffer(BINDINGS, 'apple', glyphs)),
     },
   ],
 });

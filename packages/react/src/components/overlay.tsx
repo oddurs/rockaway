@@ -286,6 +286,57 @@ function useSheet(el: () => Element | null | undefined): boolean {
   return sheet;
 }
 
+/**
+ * Whether React Aria may place the popover now: briefly false after the
+ * trigger moves without changing size, then true again, which is a change it
+ * places again on. React Aria places again when its trigger resizes, but a
+ * trigger also moves without resizing, when the screen it is in remeasures
+ * its cell (0199): a density switched at the root, a sheet giving way to a
+ * popover. Then React Aria's pixels are where the trigger was, and snapping
+ * them to the grid only finds the nearest wrong row (0246).
+ */
+function usePlaceOnMove(anchor: () => Element | null | undefined): boolean {
+  const [held, setHeld] = useState(false);
+  // Kept across renders: where the trigger was when React Aria last placed.
+  const at = useRef<{ left: number; top: number } | undefined>(undefined);
+  useIsomorphicLayoutEffect(() => {
+    const el = anchor();
+    // A trigger inside another overlay, a submenu's item, moves only when its
+    // own surface snaps, by under a cell, and this surface's snap lands it on
+    // the grid. Placed again there, React Aria reads its container as the
+    // document rather than the overlay layer, and a submenu flipped to the
+    // left lands off the page.
+    if (!el || el.closest('.rk-overlay')) return;
+    let frame = 0;
+    const check = (): void => {
+      const box = anchor()?.getBoundingClientRect();
+      if (!box) return;
+      const was = at.current;
+      at.current = { left: box.left, top: box.top };
+      if (!was || (Math.abs(box.left - was.left) < 0.01 && Math.abs(box.top - was.top) < 0.01)) {
+        return;
+      }
+      // Moved: hold for a frame, then let go, and React Aria places again.
+      setHeld(true);
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => setHeld(false));
+    };
+    check();
+    const observer = typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(check);
+    const screen = el.closest('.rk-screen');
+    if (screen) observer?.observe(screen);
+    const unobserve = observeContexts(check);
+    window.addEventListener('scroll', check, true);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+      unobserve();
+      window.removeEventListener('scroll', check, true);
+    };
+  }, [anchor]);
+  return !held;
+}
+
 /** Cells between an overlay's frame and its content. */
 export interface OverlayPadding {
   readonly x: number;
@@ -545,10 +596,12 @@ export function OverlayPopover({
   const container = useContext(LayerContext);
   const context = useSlottedContext(PopoverContext);
   const triggerRef = aria.triggerRef ?? context?.triggerRef;
+  const nested = (aria.trigger ?? context?.trigger) === 'SubmenuTrigger';
   const anchor = useCallback(() => triggerRef?.current, [triggerRef]);
   const sheet = useSheet(anchor);
   const origin = useOrigin(anchor);
   const contexts = origin.contexts;
+  const placeable = usePlaceOnMove(anchor);
   // The shift in pixels of the trigger's cell, which React Aria offsets by
   // exactly, so the snap after it has nothing to round. Read at render: a
   // change of context re-renders through the origin, and the cell with it.
@@ -565,11 +618,16 @@ export function OverlayPopover({
       {...aria}
       {...contexts}
       placement={sheet ? 'bottom start' : placement}
+      shouldUpdatePosition={placeable && (aria.shouldUpdatePosition ?? true)}
       offset={offset}
       crossOffset={crossOffset}
       containerPadding={0}
       className={cx('rk-overlay-popover', sheet && 'rk-overlay-popover-sheet', className)}
-      {...(container === null ? {} : { UNSTABLE_portalContainer: container })}
+      // A submenu, or a dialog opened from a menu, goes where React Aria puts
+      // it: inside its root popover's own container, which is already in the
+      // layer. Sent to the layer itself, it is outside the root popover, which
+      // then takes focus back from it as from anything outside.
+      {...(container === null || nested ? {} : { UNSTABLE_portalContainer: container })}
     >
       <Surface
         kind="popover"

@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { describe, expect, test } from 'vitest';
+import { themeOnly } from '../scripts/finish-css.ts';
 import { importPalette, palette } from '../src/ansi.ts';
 import { contrast } from '../src/color.ts';
 import { describeAdjustment, fitContrast } from '../src/fit.ts';
@@ -234,5 +235,21 @@ describe('surface levels (0307)', () => {
         }
       }
     }
+  });
+});
+
+describe('content for some themes only (0171)', () => {
+  test('tokens.css hides what the nearest theme context does not name, for every theme', async () => {
+    const css = await readFile(path.join(import.meta.dirname, '..', 'css', 'tokens.css'), 'utf8');
+    expect(css).toContain(themeOnly(themeContexts.map((t) => t.name)).trim());
+    for (const theme of themeContexts) {
+      expect(css).toContain(
+        `[data-rk-theme='${theme.name}'] [data-rk-theme-only]:not([data-rk-theme-only~='${theme.name}'])`,
+      );
+    }
+    // With no context at all, the page is the default theme.
+    expect(css).toContain(
+      "[data-rk-theme-only]:not([data-rk-theme-only~='default']):not([data-rk-theme] *)",
+    );
   });
 });

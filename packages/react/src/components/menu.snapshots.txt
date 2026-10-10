@@ -1,0 +1,15 @@
+── A menu
+┏━━━━━━━━━━━━━━━━━━┓
+┃▸New file  Ctrl+N ┃
+┃ Open      Ctrl+O ┃
+┃ Open recent     ▸┃
+┠──────────────────┨
+┠ Danger ──────────┨
+┃ Delete           ┃
+┗━━━━━━━━━━━━━━━━━━┛
+── Checkable
+┏━━━━━━━━━━━━━━━┓
+┃ ✓Word wrap    ┃
+┃  Minimap      ┃
+┃▸✓Line numbers ┃
+┗━━━━━━━━━━━━━━━┛
