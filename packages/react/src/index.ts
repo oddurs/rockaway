@@ -26,6 +26,7 @@ export * from './entries/panes.ts';
 export * from './entries/picture.ts';
 export * from './entries/popover.ts';
 export * from './entries/select.ts';
+export * from './entries/switch.ts';
 export * from './entries/table.ts';
 export * from './entries/text-field.ts';
 export * from './entries/tree.ts';

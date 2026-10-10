@@ -1733,6 +1733,64 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted"
     ]
   },
+  "Switch": {
+    "file": "switch.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The label: the switch's own words, after the track. It does not change with the state."
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Help under the switch, dim, linked to it by `aria-describedby`."
+      },
+      {
+        "name": "painter",
+        "type": "PainterName",
+        "required": false,
+        "description": "How the track's line is stroked: weighted like the type, or a hairline.",
+        "default": "'glyph'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Omit< AriaSwitchFieldProps, | 'children' | 'className' | 'style' | 'isRequired' | 'isInvalid' | 'validate' | 'validationBehavior' >"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-focus",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-on-inverse",
+      "--rk-focus-offset",
+      "--rk-focus-width",
+      "--rk-font-family-mono",
+      "--rk-stroke-glyph-gap",
+      "--rk-stroke-glyph-heavy",
+      "--rk-stroke-glyph-light",
+      "--rk-stroke-rule-gap",
+      "--rk-stroke-rule-heavy",
+      "--rk-stroke-rule-light"
+    ]
+  },
   "Table": {
     "file": "table.tsx",
     "props": [
