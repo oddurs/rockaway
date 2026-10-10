@@ -11,6 +11,7 @@ export * from './entries/badge.ts';
 export * from './entries/button.ts';
 export * from './entries/callout.ts';
 export * from './entries/checkbox.ts';
+export * from './entries/code-block.ts';
 export * from './entries/divider.ts';
 export * from './entries/field.ts';
 export * from './entries/fieldset.ts';
@@ -30,5 +31,6 @@ export { Chrome, type ChromeProps, chromeRows, type PaintOptions, paintCells, pa
 export { detectPlatform, type PlatformHints, usePlatform } from './platform.ts';
 export { type Inset, type PainterName, renderScreenToText, Screen, type ScreenProps } from './screen.tsx';
 export { markOverflow, type OverflowMarkOptions, scrollStateQueries, watchOverflowMarks } from './scroll.ts';
+export { selectionLines, watchSelection } from './selection.ts';
 export { useTick } from './tick.ts';
 export { defineVariants, type VariantAttributes, type VariantDefinition, type VariantInput, type VariantProps, type VariantSelection, type Variants, type VariantValue, type VariantValues } from './variants.ts';
