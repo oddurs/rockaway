@@ -209,7 +209,7 @@ jobs:
       # pin and the cache key together, or back to a release tag once one ships.
       - name: Cache cairn
         id: cairn-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cargo/bin/cairn
           key: cairn-${{ runner.os }}-${{ env.CAIRN_REV }}
