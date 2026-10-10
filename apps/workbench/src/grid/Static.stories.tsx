@@ -100,6 +100,18 @@ const PANE_SIZES = [
 
 export const PanesLikeTheComponent: Story = {
   name: 'Panes, laid out without React, as the component lays them out',
+  // The static half is laid out once, by a script that measures the cell
+  // when it runs, as a page with no React would; it does not watch for a new
+  // density. The matrix after the story only switches the root, so it would
+  // find the cell the play measured at (cairn 0125).
+  parameters: {
+    matrix: {
+      skip: (['dense', 'airy', 'touch'] as const).map((density) => ({
+        density,
+        reason: 'the static half is laid out once, at the density the play measured',
+      })),
+    },
+  },
   render: () => (
     <div style={{ display: 'grid', gap: '1lh' }}>
       {PANE_SIZES.map(({ cols, rows }) => (
@@ -175,6 +187,18 @@ const BAR_WIDTHS = [80, 48, 30, 12] as const;
 
 export const StatusBarLikeTheComponent: Story = {
   name: 'StatusBar, fitted without React, as the component fits it',
+  // The static half is laid out once, by a script that measures the cell
+  // when it runs, as a page with no React would; it does not watch for a new
+  // density. The matrix after the story only switches the root, so it would
+  // find the cell the play measured at (cairn 0125).
+  parameters: {
+    matrix: {
+      skip: (['dense', 'airy', 'touch'] as const).map((density) => ({
+        density,
+        reason: 'the static half is laid out once, at the density the play measured',
+      })),
+    },
+  },
   render: () => (
     <div style={{ display: 'grid', gap: '1lh' }}>
       {BAR_WIDTHS.map((cols) => (
