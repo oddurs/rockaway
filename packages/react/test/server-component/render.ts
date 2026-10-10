@@ -118,6 +118,11 @@ const checks: [string, unknown, unknown][] = [
     `Name   [ Go ]${' '.repeat(51)}`,
   ],
   [
+    'cardBuffer',
+    pure.cardBuffer({ width: 12, height: 3 }, { title: 'Card' }).row(0),
+    '┌ Card ────┐',
+  ],
+  [
     'calloutBuffer',
     pure.calloutBuffer({ width: 14, height: 3 }, { tone: 'tip' }).row(0),
     '╭ ✓ Tip ─────╮',

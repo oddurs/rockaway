@@ -7,6 +7,7 @@
 import { badgeMeta } from '../components/badge.meta.ts';
 import { buttonMeta } from '../components/button.meta.ts';
 import { calloutMeta } from '../components/callout.meta.ts';
+import { cardMeta } from '../components/card.meta.ts';
 import { checkboxMeta } from '../components/checkbox.meta.ts';
 import { codeBlockMeta } from '../components/code-block.meta.ts';
 import { dividerMeta } from '../components/divider.meta.ts';
@@ -30,6 +31,7 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'badge', meta: badgeMeta },
   { file: 'button', meta: buttonMeta },
   { file: 'callout', meta: calloutMeta },
+  { file: 'card', meta: cardMeta },
   { file: 'checkbox', meta: checkboxMeta },
   { file: 'code-block', meta: codeBlockMeta },
   { file: 'divider', meta: dividerMeta },
