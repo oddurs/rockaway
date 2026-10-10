@@ -446,7 +446,7 @@
 @property --rk-font-content {
   syntax: '<number>';
   inherits: true;
-  initial-value: 1.36;
+  initial-value: 1.3;
 }
 
 @property --rk-font-family-display {
@@ -2255,9 +2255,9 @@
     --rk-focus-offset: 2px;
     --rk-focus-width: 2px;
     /* The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296). */
-    --rk-font-content: 1.36;
-    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
-    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-content: 1.3;
+    --rk-font-family-display: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
     --rk-font-weight-medium: 500;
     --rk-font-weight-regular: 400;
@@ -3011,9 +3011,9 @@
     /* How strictly this theme holds the grid: strict, standard or loose (cairn 0072). Read by the conformance check; `data-rk-conformance` on an element overrides it. */
     --rk-conformance: standard;
     /* The face's ascent plus descent, over the em: how tall its glyph box is. Text sized in rows divides by it, so its glyphs fill whole rows (cairn 0296). */
-    --rk-font-content: 1.36;
-    --rk-font-family-display: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
-    --rk-font-family-mono: ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-content: 1.3;
+    --rk-font-family-display: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
+    --rk-font-family-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "SF Mono", "Menlo", "Consolas", "Liberation Mono", monospace;
     --rk-font-weight-bold: 700;
     --rk-font-weight-medium: 500;
     --rk-font-weight-regular: 400;
