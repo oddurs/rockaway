@@ -827,6 +827,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-bg-subtle",
       "--rk-bg-surface",
+      "--rk-bg-surface-base",
+      "--rk-bg-surface-overlay",
+      "--rk-bg-surface-raised",
+      "--rk-bg-surface-sunken",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1304,6 +1308,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-bg-subtle",
       "--rk-bg-surface",
+      "--rk-bg-surface-base",
+      "--rk-bg-surface-overlay",
+      "--rk-bg-surface-raised",
+      "--rk-bg-surface-sunken",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1350,6 +1358,10 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     "tokens": [
       "--rk-bg-subtle",
       "--rk-bg-surface",
+      "--rk-bg-surface-base",
+      "--rk-bg-surface-overlay",
+      "--rk-bg-surface-raised",
+      "--rk-bg-surface-sunken",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
