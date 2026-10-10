@@ -34,7 +34,16 @@ export interface Serving {
 /** Serve `dir` under `base` on `port` (0 for any free one). */
 export function serve(
   dir = path.join(import.meta.dirname, '..', 'out'),
-  { base = '/rockaway', port = 4340 }: { base?: string; port?: number } = {},
+  {
+    base = '/rockaway',
+    port = 4340,
+    extra,
+  }: {
+    base?: string;
+    port?: number;
+    /** Anything else to serve, as JavaScript, by path: the tests' checks. */
+    extra?: (pathname: string) => string | undefined;
+  } = {},
 ): Promise<Serving> {
   const cache = new Map<string, Buffer>();
   const send = (res: import('node:http').ServerResponse, file: string, status = 200): void => {
@@ -56,6 +65,11 @@ export function serve(
   };
   const server: Server = createServer((req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
+    const script = extra?.(url.pathname);
+    if (script !== undefined) {
+      res.writeHead(200, { 'content-type': 'text/javascript' }).end(script);
+      return;
+    }
     const missing = (): void => send(res, path.join(dir, '404.html'), 404);
     if (!url.pathname.startsWith(`${base}/`) && url.pathname !== base) return missing();
     let file = path.join(dir, decodeURIComponent(url.pathname.slice(base.length)));
