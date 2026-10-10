@@ -126,10 +126,17 @@ export const GlyphAndRule: Story = {
     expect(getComputedStyle(corner).backgroundImage).toContain('linear-gradient');
     expect(getComputedStyle(corner).borderTopWidth).toBe('0px');
 
-    // Two stroke styles: weighted like the type, or a hairline.
+    // Two stroke styles: weighted like the type, or a hairline. Both are
+    // whole pixels, so every engine draws them the same width wherever they
+    // land; the type's weight is a fraction of the font size, rounded, so at
+    // a reading size its light stroke is the hairline's pixel and its heavy
+    // stroke, and the gap of a double line, are wider than the rule's.
+    const size = Number.parseFloat(getComputedStyle(glyphLayer).fontSize);
     expect(stroke(ruleLayer, 'light')).toBe(1);
     expect(stroke(ruleLayer, 'heavy')).toBe(2);
-    expect(stroke(glyphLayer, 'light')).toBeGreaterThan(1);
+    expect(stroke(glyphLayer, 'light')).toBe(Math.max(1, Math.round(size * 0.08)));
+    expect(stroke(glyphLayer, 'heavy')).toBe(Math.max(1, Math.round(size * 0.16)));
+    expect(stroke(glyphLayer, 'heavy')).toBeGreaterThan(stroke(ruleLayer, 'heavy'));
     expect(stroke(glyphLayer, 'heavy')).toBeGreaterThan(stroke(glyphLayer, 'light'));
 
     // Both measure the same, in whole cells.

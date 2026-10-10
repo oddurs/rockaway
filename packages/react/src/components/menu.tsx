@@ -1,5 +1,6 @@
 'use client';
 
+import type { Comfort } from '@rockaway/grid';
 /**
  * `Menu` (cairn 0041): a list of actions opened from a trigger, the `⋯`
  * button, a context menu, a menubar's menus.
@@ -93,8 +94,22 @@ function useDividers(menu: HTMLElement | null): readonly OverlayDivider[] {
       const row = measureCell(menu.parentElement ?? menu.ownerDocument.body).height;
       if (!(row > 0)) return;
       const top = menu.getBoundingClientRect().top;
+      const rules = [...menu.querySelectorAll<HTMLElement>('.rk-menu-separator, .rk-menu-title')];
+      // The frame draws rules on whole rows (0311, 0317). With air after each
+      // rule, one may come to rest on a half-row: it takes the half-row before
+      // it too. In order, since each one moves the ones after it; nothing here
+      // changes the menu's children, so it does not call itself again.
+      for (const el of rules) {
+        el.style.marginBlockStart = '';
+        const rows = (el.getBoundingClientRect().top - top) / row;
+        if (Math.abs(rows - Math.round(rows)) > 0.25) el.style.marginBlockStart = `${row / 2}px`;
+      }
+      // And the menu closes to whole rows: the frame is whole rows.
+      menu.style.paddingBlockEnd = '';
+      const height = menu.getBoundingClientRect().height / row;
+      if (Math.abs(height - Math.round(height)) > 0.25) menu.style.paddingBlockEnd = `${row / 2}px`;
       const next: OverlayDivider[] = [];
-      for (const el of menu.querySelectorAll<HTMLElement>('.rk-menu-separator, .rk-menu-title')) {
+      for (const el of rules) {
         const at = Math.round((el.getBoundingClientRect().top - top) / row);
         const title = el.classList.contains('rk-menu-title') ? (el.textContent ?? '') : undefined;
         next.push(title === undefined || title === '' ? { row: at } : { row: at, title });
@@ -137,6 +152,12 @@ function useHasCheckable(menu: HTMLElement | null, declared: boolean): boolean {
 export interface MenuProps<T extends object>
   extends Omit<AriaMenuProps<T>, 'className' | 'style'>,
     Pick<PopoverProps, 'placement' | 'maxRows' | 'shouldFlip' | 'boundaryElement'> {
+  /**
+   * The air beside its rules and section titles (0317): none when compact, a
+   * terminal's menu and the default; half a row after each when comfortable;
+   * a row when spacious. A rule is always on a whole row.
+   */
+  readonly comfort?: Comfort;
   readonly className?: string;
 }
 
@@ -145,6 +166,7 @@ export function Menu<T extends object>({
   maxRows,
   shouldFlip,
   boundaryElement,
+  comfort = 'compact',
   className,
   ...menu
 }: MenuProps<T>): ReactNode {
@@ -174,7 +196,16 @@ export function Menu<T extends object>({
       {...(boundaryElement === undefined ? {} : { boundaryElement })}
     >
       <Checkable.Provider value={checkable}>
-        <AriaMenu {...menu} ref={setEl} className={cx('rk-menu', className)} />
+        <AriaMenu
+          {...menu}
+          ref={setEl}
+          className={cx('rk-menu', className)}
+          // Its own comfort, not the page's: a menu is a terminal's unless asked.
+          data-rk-comfort={comfort}
+          // With air beside its rules, its rows rest on half-rows: rhythm
+          // inside, whole rows outside (0311).
+          {...(comfort === 'compact' ? {} : { 'data-rk-rhythm': '' })}
+        />
       </Checkable.Provider>
     </Popover>
   );
