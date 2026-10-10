@@ -109,7 +109,12 @@ const checks: [string, unknown, unknown][] = [
   ],
   [
     'formBuffer',
-    pure.formBuffer([{ label: 'Name', control: pure.buttonBuffer('Go') }], { width: 64 }).row(0),
+    pure
+      .formBuffer([{ label: 'Name', control: pure.buttonBuffer('Go') }], {
+        comfort: 'compact',
+        width: 64,
+      })
+      .row(0),
     `Name   [ Go ]${' '.repeat(51)}`,
   ],
   [
