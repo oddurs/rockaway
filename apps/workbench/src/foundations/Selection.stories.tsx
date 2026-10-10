@@ -163,6 +163,12 @@ export const ThreeLines: Story = {
         const root = canvas.getByTestId(name);
         pick(root);
         await frames();
+        // The boxes are painted from `selectionchange`, a task after the
+        // selection is made: wait for them rather than count frames, which
+        // is not enough on every engine and runner.
+        await waitFor(() =>
+          expect(document.querySelectorAll('.rk-selection-row'), name).toHaveLength(3),
+        );
         const selection = getSelection();
         if (!selection) throw new Error('no selection');
         const lines = selectionLines(selection);
