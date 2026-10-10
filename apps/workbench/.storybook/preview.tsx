@@ -3,7 +3,16 @@ import { expectField, expectNames, expectNoNativeScrollbars } from '@rockaway/re
 import { type ThemeName, themeContexts, themeGlyphs } from '@rockaway/tokens';
 import { afterEach as axe } from '@storybook/addon-a11y/preview';
 import type { Decorator, Preview, StoryContext } from '@storybook/react-vite';
-import '@fontsource-variable/jetbrains-mono';
+// The default face (IBM Plex Mono): its four weights, and the true italic
+// prose and comments are set in, so nothing is a synthetic slant.
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/400-italic.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '@fontsource/ibm-plex-mono/700.css';
+import '@fontsource/ibm-plex-mono/700-italic.css';
+// The marks and key glyphs Plex lacks, from a face with its advance.
+import '../src/fonts/plex-symbols.css';
 import '@rockaway/css';
 import '@rockaway/tokens/tokens.css';
 // Every theme but the default is a stylesheet of its own, loaded after the
@@ -122,8 +131,11 @@ const preview: Preview = {
       },
       defaultViewport: 'rk-test-frame',
     },
-    // Every story is an accessibility test: a violation fails the run.
-    a11y: { test: 'error' },
+    // Every story is an accessibility test: a violation fails the run. The
+    // walk after the story runs axe itself (`afterEach` below), in every mode,
+    // so the addon's own run is off and axe's failures meet the known ones
+    // like any other check's.
+    a11y: { test: 'off' },
   },
 };
 
@@ -161,14 +173,23 @@ export const afterEach = async (context: StoryContext): Promise<void> => {
   // And outside a field, no name holds a glyph (0252): chrome is drawn, not said.
   if (parameters.names !== false) expectNames(context.canvasElement, { glyphs });
   const run = runner();
+  const a11y = context.parameters.a11y as { disable?: boolean } | undefined;
   // The paint budget (0113): named at the end of the run, never a failure.
   const over = overBudget(context.canvasElement);
   if (run && over.length > 0) await run.paint({ story: context.id, screens: over });
   await walk(context.id, context.canvasElement, parameters, {
+    project: run?.project,
+    platform: run?.platform,
     capture: run?.capture,
     plan: run?.plan,
     record: run?.record,
-    axe: () => axe(context),
+    axe: async () => {
+      if (a11y?.disable) return;
+      await axe({
+        ...context,
+        parameters: { ...context.parameters, a11y: { ...a11y, test: 'error' } },
+      });
+    },
   });
 };
 
