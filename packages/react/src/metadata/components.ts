@@ -20,6 +20,7 @@ import { overlayMeta } from '../components/overlay.meta.ts';
 import { panesMeta } from '../components/panes.meta.ts';
 import { tableMeta } from '../components/table.meta.ts';
 import { textFieldMeta } from '../components/text-field.meta.ts';
+import { textMeta } from '../components/text.meta.ts';
 import { treeMeta } from '../components/tree.meta.ts';
 import type { ComponentMetaInput } from './schema.ts';
 
@@ -41,5 +42,6 @@ export const registry: readonly { readonly file: string; readonly meta: Componen
   { file: 'panes', meta: panesMeta },
   { file: 'table', meta: tableMeta },
   { file: 'text-field', meta: textFieldMeta },
+  { file: 'text', meta: textMeta },
   { file: 'tree', meta: treeMeta },
 ];

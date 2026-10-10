@@ -22,6 +22,7 @@ export * from './entries/list.ts';
 export * from './entries/overlay.ts';
 export * from './entries/panes.ts';
 export * from './entries/table.ts';
+export * from './entries/text.ts';
 export * from './entries/text-field.ts';
 export * from './entries/tree.ts';
 export { GlyphProvider, type GlyphProviderProps, useGlyphs } from './glyphs.tsx';

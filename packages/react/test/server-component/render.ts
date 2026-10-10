@@ -137,6 +137,7 @@ const checks: [string, unknown, unknown][] = [
       .row(0),
     '┌ a ───┬ b ────┐',
   ],
+  ['textBuffer', pure.textBuffer('Rockaway', 3).row(0), `Rockaway${' '.repeat(20)}`],
 ];
 for (const [name, got, want] of checks) {
   if (got !== want)

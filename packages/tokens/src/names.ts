@@ -89,6 +89,7 @@ export const vars = {
   'fg.warning': 'var(--rk-fg-warning)',
   'focus.offset': 'var(--rk-focus-offset)',
   'focus.width': 'var(--rk-focus-width)',
+  'font.content': 'var(--rk-font-content)',
   'font.family.display': 'var(--rk-font-family-display)',
   'font.family.mono': 'var(--rk-font-family-mono)',
   'font.weight.bold': 'var(--rk-font-weight-bold)',

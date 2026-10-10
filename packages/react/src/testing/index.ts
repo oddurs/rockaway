@@ -9,6 +9,7 @@ export {
   expectConformance,
   formatReport,
   type OffGrid,
+  type SizedText,
   type Unexplained,
   type UnknownLevel,
   type Violation,
