@@ -162,6 +162,39 @@ export const Fixture: Story = {
 };
 
 /**
+ * The default face is IBM Plex Mono, and its italic is a face of its own: an
+ * `em` in prose is set in it, never in a slant the browser fakes, which would
+ * lean a glyph over the edge of its cell. Its advance is the upright's.
+ */
+export const TrueItalic: Story = {
+  play: async ({ canvas }) => {
+    const screen = canvas.getByTestId('prose');
+    const em = screen.querySelector('em') as HTMLElement;
+    const style = getComputedStyle(em);
+    await expect(style.fontStyle).toBe('italic');
+    await expect(style.fontFamily.startsWith('"IBM Plex Mono"')).toBe(true);
+    await expect(getComputedStyle(document.body).fontSynthesisStyle).toBe('none');
+
+    // The italic face is a real file, and it loaded for this text.
+    await document.fonts.load(`italic ${style.fontWeight} ${style.fontSize} "IBM Plex Mono"`);
+    const faces = [...document.fonts].filter(
+      (f) => f.family.replaceAll('"', '') === 'IBM Plex Mono' && f.style === 'italic',
+    );
+    await expect(faces.some((f) => f.status === 'loaded')).toBe(true);
+    await expect(document.fonts.check(`italic 400 1em "IBM Plex Mono"`)).toBe(true);
+
+    // On the grid upright or italic: eighty italic zeros are eighty cells.
+    const probe = document.createElement('em');
+    probe.textContent = '0'.repeat(80);
+    probe.style.cssText = 'position: absolute; visibility: hidden; white-space: pre';
+    screen.append(probe);
+    const italic = probe.getBoundingClientRect().width / 80;
+    probe.remove();
+    await expect(italic).toBeCloseTo(cellOf(screen).width, 3);
+  },
+};
+
+/**
  * Set for reading (0322): running text a quarter row looser than the cell,
  * blocks a row and a half apart, headings and code still on the cell's line.
  * A free zone, so the screen is `loose`; the block is a seam, so its outer box

@@ -3,16 +3,16 @@ id: 48
 uid: 87656858-a060-47ec-898c-bd1c37b7521a
 title: Expose the metadata through llms.txt and an MCP server
 type: feature
-status: review
+status: done
 milestone: v0.1
 assignee: Oddur Sigurdsson
-claimed: 2026-10-03
 depends_on:
 - 47
 - 104
 - 147
 created: 2026-09-22
-updated: 2026-10-03
+updated: 2026-10-09
+closed_at: 2026-10-09
 priority: p2
 layer: docs
 effort: m
@@ -41,3 +41,7 @@ llms.txt, llms-full.txt, /components/<slug>.md twins, /<doc>.md twins and /meta.
 ## 2026-10-03
 
 Criteria 3-4 on #161 (stacked on #147): packages/mcp, @rockaway/mcp, the stdio server rockaway-mcp with list_components, get_component, get_tokens and search_docs, answering from a snapshot (dist/data.json) of meta.json, the DTCG files and docs/ taken at build, so it installs without React. test/server.test.ts drives the built bin with the MCP SDK's Client and checks every tool against meta.json and the DTCG files read independently. Packable (check-packages: publint, attw) and not published: the owner decides (0045). meta.json is read at runtime, not imported, because CI typechecks before it builds.
+
+## 2026-10-09
+
+Shipped: llms.txt and the MCP server landed in #147 and #161. Closed by the tokens engineer, who took over the claim from the departed metadata engineer at the CTO's direction.

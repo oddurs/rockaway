@@ -185,7 +185,6 @@ The component contract, proven on a first set of components.
 - [ ] [`0292`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0292-keep-focus-in-a-modal-when-its-backdrop-is-pressed.md) Keep focus in a modal when its backdrop is pressed <sup>bug · components · p1</sup>
 - [ ] [`0293`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0293-carry-the-painter-to-every-component-through-a-provider.md) Carry the painter to every component through a provider <sup>feature · components · p2</sup>
 - [ ] [`0294`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0294-keep-list-s-cursor-cell-a-cell-inside-prose.md) Keep List's cursor cell a cell inside prose <sup>bug · css · p2</sup>
-- [ ] [`0295`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0295-set-the-system-in-ibm-plex-mono.md) Set the system in IBM Plex Mono <sup>decision · tokens · p0</sup>
 - [ ] [`0297`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0297-set-text-in-sizes-measured-in-rows.md) Set text in sizes measured in rows <sup>component · components · p0</sup>
 - [ ] [`0301`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0301-stretch-an-unmeasured-screen-s-frame-inside-a-flexible-pane.md) Stretch an unmeasured screen's frame inside a flexible pane <sup>feature · grid · p1</sup>
 - [ ] [`0305`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0305-quiet-the-resizeobserver-notice-on-density-switches.md) Quiet the ResizeObserver notice on density switches <sup>bug · grid · p3</sup>
@@ -195,6 +194,10 @@ The component contract, proven on a first set of components.
 - [ ] [`0323`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0323-size-type-in-half-rows.md) Size type in half rows <sup>feature · components · p2</sup>
 - [ ] [`0325`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0325-let-a-keyhint-be-a-link.md) Let a KeyHint be a link <sup>feature · components · p3</sup>
 - [ ] [`0326`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0326-prefetch-tree-rows-that-are-links.md) Prefetch Tree rows that are links <sup>feature · components · p3</sup>
+
+### in progress
+
+- [ ] [`0295`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0295-set-the-system-in-ibm-plex-mono.md) Set the system in IBM Plex Mono <sup>decision · tokens · p0</sup>
 
 ### in review
 
@@ -398,7 +401,7 @@ A website built out of the system it documents, which is the only honest way
 
 ## v0.1 — v0.1 — first release
 
-`####······` 38% · 6 of 16 done · due 2027-03-21
+`#####·····` 44% · 7 of 16 done · due 2027-03-21
 
 Something another project can install and build on.
 
@@ -418,11 +421,11 @@ Something another project can install and build on.
 ### in review
 
 - [ ] [`0046`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0046-serve-compositions-from-a-copy-in-registry.md) Serve compositions from a copy-in registry <sup>feature · distribution · p1</sup>
-- [ ] [`0048`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
 - [ ] [`0156`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0156-ready-the-repository-for-strangers-readme-templates-conduct.md) Ready the repository for strangers: README, templates, conduct <sup>docs · docs · p1</sup>
 
 ### done
 
+- [x] [`0048`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0048-expose-the-metadata-through-llms-txt-and-an-mcp-server.md) Expose the metadata through llms.txt and an MCP server <sup>feature · docs · p2</sup>
 - [x] [`0155`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0155-prove-the-quickstart-from-a-clean-install-in-ci.md) Prove the quickstart from a clean install in CI <sup>chore · tooling · p0</sup>
 - [x] [`0162`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0162-require-a-changeset-for-every-package-change-and-back-fill-the-missing-ones.md) Require a changeset for every package change, and back-fill the missing ones <sup>chore · distribution · p1</sup>
 - [x] [`0172`](https://github.com/oddurs/rockaway/blob/main/cairn/items/0172-decide-whether-the-first-release-is-0-1-0-or-1-0-0.md) Decide whether the first release is 0.1.0 or 1.0.0 <sup>decision · distribution · p2</sup>
