@@ -1,6 +1,7 @@
 import { toText } from '@rockaway/grid';
 import { type ComponentMetaInput, defineMeta } from '../metadata/schema.ts';
-import { type TableText, tableBuffer } from './table.tsx';
+import { tableBuffer } from './table.pure.ts';
+import type { TableText } from './table.tsx';
 
 const FILES: TableText = {
   columns: [

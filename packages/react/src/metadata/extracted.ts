@@ -205,7 +205,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -471,7 +470,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -855,7 +853,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       },
       {
         "name": "notation",
-        "type": "'platform' | 'terminal'",
+        "type": "KeyNotation",
         "required": false,
         "default": "'platform'"
       },
@@ -915,7 +913,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
     ]
@@ -938,7 +935,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
     ],
     "inherits": [],
     "tokens": [
-      "--rk-fg-accent",
       "--rk-fg-default",
       "--rk-x-2"
     ]
@@ -1122,105 +1118,117 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
-  "Meter": {
-    "file": "meter.tsx",
+  "Menu": {
+    "file": "menu.tsx",
     "props": [
       {
-        "name": "value",
-        "type": "number",
-        "required": true,
-        "description": "The level, from `minValue` to `maxValue`."
-      },
-      {
-        "name": "minValue",
-        "type": "number",
-        "required": false,
-        "default": "0"
-      },
-      {
-        "name": "maxValue",
-        "type": "number",
-        "required": false,
-        "default": "100"
-      },
-      {
-        "name": "warning",
-        "type": "number",
-        "required": false,
-        "description": "At or past this the meter is a warning: its fill is fg.warning and its mark cell draws the theme's `!`. In the meter's own units."
-      },
-      {
-        "name": "danger",
-        "type": "number",
-        "required": false,
-        "description": "At or past this the meter is in danger: fg.danger and the theme's `✗`. Give it below `warning` for a meter where low is bad, like a battery."
-      },
-      {
-        "name": "tone",
-        "type": "MeterToneName",
-        "required": false,
-        "description": "The tone outright, in place of the thresholds: `neutral` draws no mark."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "required": false,
-        "description": "The words before the bar, and its accessible name."
-      },
-      {
-        "name": "aria-label",
+        "name": "className",
         "type": "string",
         "required": false
-      },
+      }
+    ],
+    "inherits": [
+      "Omit<AriaMenuProps<T>, 'className' | 'style'>",
+      "Pick<PopoverProps, 'placement' | 'maxRows' | 'shouldFlip' | 'boundaryElement'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuItem": {
+    "file": "menu.tsx",
+    "props": [
       {
-        "name": "valueLabel",
+        "name": "keys",
         "type": "string",
         "required": false,
-        "description": "What the value reads as, after the bar, and what a reader hears: `11.2/16G`. A percentage unless given. Keep it one width as the value changes, or the meter's width will change with it."
-      },
-      {
-        "name": "cols",
-        "type": "number",
-        "required": false,
-        "description": "The bar's width in cells.",
-        "default": "20"
-      },
-      {
-        "name": "painter",
-        "type": "StrokeStyle",
-        "required": false,
-        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
-        "default": "'glyph'"
+        "description": "A chord, `mod+s`: drawn right-aligned as a KeyHint, announced as `aria-keyshortcuts`."
       },
       {
         "name": "className",
         "type": "string",
         "required": false
+      }
+    ],
+    "inherits": [
+      "Omit<AriaMenuItemProps<T>, 'className' | 'style'>"
+    ],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuSection": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false,
+        "description": "The items. For items from data, a React Aria `Collection` among them."
       },
       {
-        "name": "style",
-        "type": "CSSProperties",
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "The section's title, set into the rule above it in the frame, and the name its group is announced by."
+      },
+      {
+        "name": "className",
+        "type": "string",
         "required": false
       }
     ],
     "inherits": [
-      "VariantProps<typeof meterVariants>"
+      "Omit<AriaMenuSectionProps<T>, 'className' | 'style' | 'children'>"
     ],
     "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
       "--rk-cell-height",
       "--rk-cell-width",
-      "--rk-fg-accent",
-      "--rk-fg-danger",
       "--rk-fg-default",
+      "--rk-fg-disabled",
       "--rk-fg-muted",
-      "--rk-fg-success",
-      "--rk-fg-warning",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
+      "--rk-x-2",
+      "--rk-x-3"
+    ]
+  },
+  "MenuSeparator": {
+    "file": "menu.tsx",
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "inherits": [],
+    "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-surface",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-muted",
+      "--rk-x-2",
+      "--rk-x-3"
     ]
   },
   "OverlayLayer": {
@@ -1486,6 +1494,90 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-stroke-rule-light"
     ]
   },
+  "Picture": {
+    "file": "picture.tsx",
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "alt",
+        "type": "string",
+        "required": true,
+        "description": "What the image shows, for a reader who cannot see it. Empty for a picture that is decoration."
+      },
+      {
+        "name": "ratio",
+        "type": "number",
+        "required": false,
+        "description": "The image's width over its height (`16 / 9`). With `width` and `height` instead, the ratio is theirs. One or the other is needed: it is what sizes the box before the image arrives."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "required": false,
+        "description": "The image's own width, in pixels, when `ratio` is not given."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "required": false,
+        "description": "The image's own height, in pixels, when `ratio` is not given."
+      },
+      {
+        "name": "cols",
+        "type": "number",
+        "required": false,
+        "description": "Its width in cells. Every whole cell its container gives it when not given."
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "required": false,
+        "description": "Its height in rows, cropping the image to it. From the ratio when not given."
+      },
+      {
+        "name": "position",
+        "type": "string",
+        "required": false,
+        "description": "Which part of the image to keep when it is cropped, as `object-position`."
+      },
+      {
+        "name": "caption",
+        "type": "ReactNode",
+        "required": false,
+        "description": "Text on the rows under the image."
+      },
+      {
+        "name": "loading",
+        "type": "'lazy' | 'eager'",
+        "required": false,
+        "description": "Load it when it is near the viewport (the default) or straight away.",
+        "default": "'lazy'"
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
+        "required": false
+      }
+    ],
+    "inherits": [
+      "Pick< ImgHTMLAttributes<HTMLImageElement>, 'srcSet' | 'sizes' | 'crossOrigin' | 'referrerPolicy' | 'fetchPriority' >"
+    ],
+    "tokens": [
+      "--rk-bg-subtle",
+      "--rk-cell-height",
+      "--rk-cell-width",
+      "--rk-fg-muted"
+    ]
+  },
   "Popover": {
     "file": "popover.tsx",
     "props": [
@@ -1501,85 +1593,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "Omit< OverlayPopoverProps, 'crossOffset' | 'containerPadding' | 'maxHeight' | 'arrowBoundaryOffset' | 'arrowSize' >"
     ],
     "tokens": []
-  },
-  "ProgressBar": {
-    "file": "progress.tsx",
-    "props": [
-      {
-        "name": "value",
-        "type": "number",
-        "required": false,
-        "description": "How far along, from `minValue` to `maxValue`. Leave it out, or set `isIndeterminate`, when nobody knows."
-      },
-      {
-        "name": "minValue",
-        "type": "number",
-        "required": false,
-        "default": "0"
-      },
-      {
-        "name": "maxValue",
-        "type": "number",
-        "required": false,
-        "default": "100"
-      },
-      {
-        "name": "isIndeterminate",
-        "type": "boolean",
-        "required": false,
-        "description": "Busy with no amount: the bar is shaded across, and a block crosses it on the progress tick."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "required": false,
-        "description": "The words before the bar, and its accessible name."
-      },
-      {
-        "name": "aria-label",
-        "type": "string",
-        "required": false,
-        "description": "The accessible name, when there are no words to show."
-      },
-      {
-        "name": "cols",
-        "type": "number",
-        "required": false,
-        "description": "The bar's width in cells, not counting the label or the value.",
-        "default": "20"
-      },
-      {
-        "name": "painter",
-        "type": "StrokeStyle",
-        "required": false,
-        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
-        "default": "'glyph'"
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      },
-      {
-        "name": "style",
-        "type": "CSSProperties",
-        "required": false
-      }
-    ],
-    "inherits": [],
-    "tokens": [
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-accent",
-      "--rk-fg-default",
-      "--rk-fg-muted",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
   },
   "Row": {
     "file": "table.tsx",
@@ -1598,7 +1611,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1716,59 +1728,26 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-fg-muted"
     ]
   },
-  "Sparkline": {
-    "file": "sparkline.tsx",
+  "Switch": {
+    "file": "switch.tsx",
     "props": [
       {
-        "name": "values",
-        "type": "readonly number[]",
-        "required": true,
-        "description": "The series, oldest first. The newest that fit are drawn, at the right."
-      },
-      {
-        "name": "label",
-        "type": "string",
-        "required": true,
-        "description": "What the series is, for the text a reader hears in its place: `Load, 1 minute`."
-      },
-      {
-        "name": "cols",
-        "type": "number",
+        "name": "children",
+        "type": "ReactNode",
         "required": false,
-        "description": "Its width in cells: two values a cell in braille, one in bars.",
-        "default": "16"
+        "description": "The label: the switch's own words, after the track. It does not change with the state."
       },
       {
-        "name": "rows",
-        "type": "number",
+        "name": "description",
+        "type": "ReactNode",
         "required": false,
-        "description": "Its height in rows: four levels a row in braille, eight in bars.",
-        "default": "1"
-      },
-      {
-        "name": "min",
-        "type": "number",
-        "required": false,
-        "description": "The value at the bottom: the series' lowest, or 0 if that is lower."
-      },
-      {
-        "name": "max",
-        "type": "number",
-        "required": false,
-        "description": "The value at the top: the series' highest."
-      },
-      {
-        "name": "kind",
-        "type": "SparklineKind",
-        "required": false,
-        "description": "`braille`, two values a cell in dots, or `bars`, one a cell in eighths. An ASCII theme has no braille, and draws bars.",
-        "default": "'braille'"
+        "description": "Help under the switch, dim, linked to it by `aria-describedby`."
       },
       {
         "name": "painter",
-        "type": "StrokeStyle",
+        "type": "PainterName",
         "required": false,
-        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
+        "description": "How the track's line is stroked: weighted like the type, or a hairline.",
         "default": "'glyph'"
       },
       {
@@ -1782,51 +1761,23 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "required": false
       }
     ],
-    "inherits": [],
-    "tokens": [
-      "--rk-cell-height",
-      "--rk-cell-width",
-      "--rk-fg-accent",
-      "--rk-stroke-glyph-gap",
-      "--rk-stroke-glyph-heavy",
-      "--rk-stroke-glyph-light",
-      "--rk-stroke-rule-gap",
-      "--rk-stroke-rule-heavy",
-      "--rk-stroke-rule-light"
-    ]
-  },
-  "Spinner": {
-    "file": "spinner.tsx",
-    "props": [
-      {
-        "name": "label",
-        "type": "string",
-        "required": true,
-        "description": "What is happening, shown after the frame and announced: `Indexing`."
-      },
-      {
-        "name": "painter",
-        "type": "StrokeStyle",
-        "required": false,
-        "description": "How the cell draws its strokes: \\`glyph\\`, weighted like the type, or \\`rule\\`, hairlines. Blocks and dots look the same in both; it is here so a bar matches the screen it sits in.",
-        "default": "'glyph'"
-      },
-      {
-        "name": "className",
-        "type": "string",
-        "required": false
-      },
-      {
-        "name": "style",
-        "type": "CSSProperties",
-        "required": false
-      }
+    "inherits": [
+      "Omit< AriaSwitchFieldProps, | 'children' | 'className' | 'style' | 'isRequired' | 'isInvalid' | 'validate' | 'validationBehavior' >"
     ],
-    "inherits": [],
     "tokens": [
+      "--rk-attribute-underline-offset",
+      "--rk-bg-inverse",
+      "--rk-border-control",
+      "--rk-border-danger",
+      "--rk-border-focus",
       "--rk-cell-height",
       "--rk-cell-width",
-      "--rk-fg-accent",
+      "--rk-fg-default",
+      "--rk-fg-disabled",
+      "--rk-fg-on-inverse",
+      "--rk-focus-offset",
+      "--rk-focus-width",
+      "--rk-font-family-mono",
       "--rk-stroke-glyph-gap",
       "--rk-stroke-glyph-heavy",
       "--rk-stroke-glyph-light",
@@ -1881,7 +1832,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1907,7 +1857,7 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
         "type": "string",
         "required": false,
         "description": "What an empty table says, in its first row. `renderEmptyState` replaces it.",
-        "default": "'Nothing here.'"
+        "default": "EMPTY"
       },
       {
         "name": "className",
@@ -1923,7 +1873,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
@@ -1958,7 +1907,6 @@ export const extracted: { readonly [component: string]: ExtractedPart } = {
       "--rk-bg-inverse",
       "--rk-bg-page",
       "--rk-bg-subtle",
-      "--rk-border-default",
       "--rk-cell-height",
       "--rk-cell-width",
       "--rk-fg-default",
