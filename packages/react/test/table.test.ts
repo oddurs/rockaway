@@ -1,9 +1,17 @@
 import { stringWidth, toText } from '@rockaway/grid';
 import { glyphsFor } from '@rockaway/tokens';
+import { createElement as h, type ReactNode } from 'react';
+import { renderToString } from 'react-dom/server';
 import { describe, expect, test } from 'vitest';
 import {
+  Cell,
+  Column,
   type ColumnShape,
   fitCell,
+  Row,
+  Table,
+  TableBody,
+  TableHeader,
   type TableText,
   tableBuffer,
   tableLayout,
@@ -174,5 +182,70 @@ describe('tableLayout', () => {
     // │ + lead 1 + 12 + trail 1 = 15, so the rule is at 15.
     expect(layout.rules).toEqual([15]);
     expect(layout.width).toBe(1 + 14 + 1 + 8 + 1);
+  });
+});
+
+describe('on a server, with no script', () => {
+  /** The painted rows of some markup, as text. */
+  const rows = (html: string): string[] =>
+    [...html.matchAll(/<div class="rk-row">(.*?)<\/div>/g)].map((m) =>
+      (m[1] ?? '').replace(/<[^>]+>/g, '').replaceAll('&amp;', '&'),
+    );
+
+  const FILES = [
+    { id: 'index', name: 'src/index.ts', size: '1204' },
+    { id: 'readme', name: 'README.md', size: '340' },
+  ];
+
+  const columns = (): ReactNode[] => [
+    // biome-ignore lint/correctness/noChildrenProp: createElement's types cannot see a column's words in its third argument
+    h(Column, { key: 'name', id: 'name', isRowHeader: true, children: 'Name' }),
+    // biome-ignore lint/correctness/noChildrenProp: as above
+    h(Column, { key: 'size', id: 'size', width: 6, align: 'end', children: 'Size' }),
+  ];
+
+  test('draws its real columns and its title before any script runs', () => {
+    const html = renderToString(
+      h(
+        Table,
+        { title: 'files', cols: 40, 'aria-label': 'files' },
+        h(TableHeader, null, ...columns()),
+        h(TableBody<(typeof FILES)[number]>, {
+          items: FILES,
+          // biome-ignore lint/correctness/noChildrenProp: a body of items renders each with a function, which createElement's third argument cannot type
+          children: (file) =>
+            h(Row, { id: file.id }, h(Cell, null, file.name), h(Cell, null, file.size)),
+        }),
+      ),
+    );
+    const want = tableBuffer({
+      title: 'files',
+      width: 40,
+      columns: [{ header: 'Name' }, { header: 'Size', width: 6, align: 'end' }],
+      rows: FILES.map((f) => ({ cells: [f.name, f.size] })),
+    });
+    // The chrome is the model's, cell for cell, title and all.
+    const chrome = rows(html);
+    expect(chrome[0]).toBe(want.row(0));
+    expect(chrome[0]).toContain(' files ');
+    expect(chrome[2]).toBe(want.row(2));
+    expect(chrome).toHaveLength(want.height);
+    // The grid has its columns, so the cells sit between the rules.
+    expect(html).toMatch(/--rk-table-columns:calc\(var\(--rk-cell-width\) \* 15\)/);
+    // And the values are fitted to them, as the client fits them.
+    expect(html).toContain('src/index.ts');
+  });
+
+  test('static rows are read too', () => {
+    const html = renderToString(
+      h(
+        Table,
+        { title: 'x', cols: 30, 'aria-label': 'x' },
+        h(TableHeader, null, ...columns()),
+        h(TableBody, null, h(Row, { id: 'a' }, h(Cell, null, 'a.ts'), h(Cell, null, 12))),
+      ),
+    );
+    expect(rows(html)).toHaveLength(5);
+    expect(rows(html)[0]).toMatch(/^┌ x ─+┬─+┐$/);
   });
 });

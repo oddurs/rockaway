@@ -141,6 +141,7 @@ a terminal's tightness, at the cost of that target size. Layout responds to how 
 | `@rockaway/tokens` | DTCG sources, the ANSI palette, cell metrics, glyph sets, the resolver |
 | `@rockaway/css` | The CSS contract: cascade layers, reset, base, forced colors |
 | `@rockaway/react` | Components, on React Aria |
+| `@rockaway/mcp` | An MCP server: the components, tokens and docs, for coding agents |
 
 The engine has no dependencies and no DOM. The tokens and the CSS are
 framework-free. Only the components are React.

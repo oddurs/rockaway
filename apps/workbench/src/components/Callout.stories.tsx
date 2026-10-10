@@ -3,7 +3,8 @@ import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
+import { tab } from '../keys.ts';
 import { settled } from '../settled.ts';
 
 const meta = {
@@ -220,13 +221,13 @@ export const Keyboard: Story = {
   play: async ({ canvas }) => {
     const note = canvas.getByRole('note', { name: 'Before you rebase' });
     expect(note.tabIndex).toBe(-1);
-    await userEvent.tab();
+    await tab();
     expect(canvas.getByRole('link', { name: 'the concept' })).toHaveFocus();
-    await userEvent.tab();
+    await tab();
     expect(canvas.getByRole('link', { name: 'main' })).toHaveFocus();
-    await userEvent.tab();
+    await tab();
     expect(canvas.getByRole('link', { name: 'open a pull request' })).toHaveFocus();
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(canvas.getByRole('link', { name: 'main' })).toHaveFocus();
   },
 };

@@ -11,9 +11,10 @@ import {
 import { screenshot } from '@rockaway/react/testing';
 import { glyphsFor, themeGlyphs } from '@rockaway/tokens';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type ReactNode, useState } from 'react';
+import { createRef, type ReactNode, useState } from 'react';
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { runner } from '../../.storybook/runner.ts';
+import { press, tab } from '../keys.ts';
 import { measured } from '../settled.ts';
 
 const meta = {
@@ -66,6 +67,18 @@ function inside(shot: string, cols: number): string {
         .trimEnd(),
     )
     .join('\n');
+}
+
+/**
+ * A scroll position as whole cells, to within a device pixel. Chromium keeps
+ * a scroll position in fractions of a pixel, so the field puts it exactly on
+ * a cell; WebKit keeps it in whole device pixels, so the nearest it can be to
+ * a cell that starts on a fraction of a pixel is within one.
+ */
+function scrolledCells(px: number, cell: number): number {
+  const n = Math.round(px / cell);
+  expect(Math.abs(px - n * cell)).toBeLessThan(1 / window.devicePixelRatio + 1e-3);
+  return n;
 }
 
 /** A scroll the browser was asked for, once the field has had a frame to round it. */
@@ -179,15 +192,15 @@ export const Keyboard: Story = {
     await measured(document.body);
     const name = canvas.getByRole('textbox', { name: 'Name' });
     const repository = canvas.getByRole('textbox', { name: 'Repository' });
-    await userEvent.tab();
+    await tab();
     expect(name).toHaveFocus();
-    await userEvent.keyboard('Ada');
+    await press('Ada');
     expect(name).toHaveValue('Ada');
     expect(edge(fieldOf(repository))).toMatch(/^┌ Repository ─+┐$/);
-    await userEvent.tab();
+    await tab();
     expect(repository).toHaveFocus();
     await waitFor(() => expect(edge(fieldOf(repository))).toMatch(/^┏ Repository ━+┓$/));
-    await userEvent.tab({ shift: true });
+    await tab({ shift: true });
     expect(name).toHaveFocus();
     await waitFor(() => expect(edge(fieldOf(repository))).toMatch(/^┌ Repository ─+┐$/));
   },
@@ -271,6 +284,55 @@ export const Typing: Story = {
   },
 };
 
+/** The caller's refs, outside the story so its play can reach them. */
+const nameRef = createRef<HTMLInputElement | HTMLTextAreaElement>();
+const seen: { notes: HTMLInputElement | HTMLTextAreaElement | null } = { notes: null };
+
+/**
+ * An app reaches the text box through `inputRef`: the `<input>` of a row and
+ * the `<textarea>` of a box of rows, by an object ref or a callback. It can
+ * focus it and select its text, and the field still keeps its text on whole
+ * cells, because its own ref is set beside the caller's.
+ */
+export const InputRef: Story = {
+  name: 'Input ref',
+  render: () => (
+    <Frame title="refs" cols={48} rows={8}>
+      <Form>
+        <TextField label="Name" defaultValue="Ada Lovelace" inputRef={nameRef} />
+        <TextField
+          label="Notes"
+          multiline
+          rows={2}
+          defaultValue="first line"
+          inputRef={(el) => {
+            seen.notes = el;
+          }}
+        />
+      </Form>
+    </Frame>
+  ),
+  play: async ({ canvas }) => {
+    await measured(document.body);
+    const name = canvas.getByRole('textbox', { name: 'Name' });
+    const notes = canvas.getByRole('textbox', { name: 'Notes' });
+    expect(nameRef.current).toBe(name);
+    expect(nameRef.current?.tagName).toBe('INPUT');
+    expect(seen.notes).toBe(notes);
+    expect(seen.notes?.tagName).toBe('TEXTAREA');
+
+    nameRef.current?.focus();
+    nameRef.current?.select();
+    expect(name).toHaveFocus();
+    expect([
+      (name as HTMLInputElement).selectionStart,
+      (name as HTMLInputElement).selectionEnd,
+    ]).toEqual([0, 'Ada Lovelace'.length]);
+    seen.notes?.focus();
+    expect(notes).toHaveFocus();
+  },
+};
+
 /**
  * Text longer than the box scrolls inside it by whole cells, and the box
  * never grows. The overflow marks stand in the cells either side while text
@@ -302,9 +364,14 @@ export const Overflow: Story = {
       expect(ends(field)).toEqual([open, mark['overflow-end']]);
 
       // In the middle, wherever the browser was asked to put it, a whole cell.
+      // The field reads its scroll on the next frame, and its own rounding is
+      // a scroll of its own, so the marks are waited for rather than read at
+      // a fixed frame: a slower engine is a frame or two behind.
       await scrollTo(input, 'x', cell * 3.4);
-      expect(cells(input.scrollLeft, cell)).toBe(3);
-      expect(ends(field)).toEqual([mark['overflow-start'], mark['overflow-end']]);
+      await waitFor(() => {
+        expect(scrolledCells(input.scrollLeft, cell)).toBe(3);
+        expect(ends(field)).toEqual([mark['overflow-start'], mark['overflow-end']]);
+      });
 
       // At the end: more to the left only.
       await scrollTo(input, 'x', 10_000);
