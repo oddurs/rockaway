@@ -8,6 +8,7 @@ export {
   type ExceptionGroup,
   expectConformance,
   formatReport,
+  type OffAnchor,
   type OffGrid,
   type Unexplained,
   type UnknownLevel,
@@ -31,6 +32,14 @@ export {
   type FieldReport,
   formatFields,
 } from './field.ts';
+export {
+  checkNames,
+  expectNames,
+  formatNames,
+  type NameOptions,
+  type NameProblem,
+  type NameReport,
+} from './names.ts';
 export { type ScreenshotOptions, screenshot } from './screenshot.ts';
 export {
   checkScrollbars,
